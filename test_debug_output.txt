@@ -1,0 +1,639 @@
+
+> archipelago-json@1.0.0 test
+> node scripts/test/run-tests.js
+
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:52] "GET / HTTP/1.1" 200 -
+
+Running 1 test using 1 worker
+
+PW DEBUG: Navigating to application with parameters:
+  - mode: test-spoilers
+  - game: stardew_valley
+  - seed: 1
+PW DEBUG: URL: http://localhost:8000/frontend/?mode=test-spoilers&game=stardew_valley&seed=1
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/?mode=test-spoilers&game=stardew_valley&seed=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/styles/index.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/libs/golden-layout/css/themes/goldenlayout-dark-theme.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/styles/mobile.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/styles/loading-screen.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/libs/json-editor/jsoneditor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/libs/golden-layout/css/goldenlayout-base.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/libs/vanilla-jsoneditor/themes/jse-theme-dark.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/init.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/app/core/panelManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/app/core/loggerService.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/app/core/eventBus.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/app/core/settingsManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/app/core/centralRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/app/core/eventDispatcher.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/libs/golden-layout/js/esm/golden-layout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/app/core/mobileLayoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/app/initialization/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/app/initialization/fileLoadingUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/app/mode/modeManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/app/mode/modeConfigResolver.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/app/mode/modeDataLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/app/initialization/moduleLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/app/initialization/moduleInitializer.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/app/initialization/layoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/app/initialization/apiFactory.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/app/layout/layoutLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/app/layout/layoutFilter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:54] "GET /frontend/utils/settingsMerger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/app/core/moduleMetadata.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/app/layout/desktopLayout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modes.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] loadCombinedModeData started
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/presets/preset_files.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules-test-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/playwright_tests_config-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/presets/stardew_valley/AP_14089154938208861744/AP_14089154938208861744_rules.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/layout_presets.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/settings.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] Created stateManager module_config with sourceName: ./presets/stardew_valley/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [18:15:55.151] [INFO] [INIT_STEP] Module import and registration phase started
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/stateManager/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/stateManager/stateManagerProxySingleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/stateManager/stateManagerProxy.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/ruleEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/stateManager/stateManagerCommands.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/alttp/alttpLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/generic/genericLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/stateManager/stateManagerWorker.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/sphereState/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/sphereState/singleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/sphereState/sphereState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/stateManager/stateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/app/core/universalLogger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/stateManager/core/commandQueue.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/testSpoilers/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/testSpoilers/testSpoilerUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/gameLogicRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/stateInterface.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/stateManager/core/inventoryManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/stateManager/core/initialization.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/stateManager/core/reachabilityEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/stateManager/core/statePersistence.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/stateManager/core/locationChecking.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/stateManager/core/ruleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/stateManager/core/batchUpdateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/commonUI/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/testSpoilers/testSpoilerRuleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/testSpoilers/fileLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/testSpoilers/comparisonEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/testSpoilers/eventProcessor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/testSpoilers/analysisReporter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/testSpoilers/testOrchestrator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/ahit/ahitLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/aquaria/aquariaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/archipidle/archipidleLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/bombRushCyberfunkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/celeste64/celeste64Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/civ_6/civ6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/hk/hkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/factorio/factorioLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/hylics2/hylics2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/jakanddaxter/jakanddaxterLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/kh1/kh1Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/kh2/kh2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/ladx/ladxLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/lingo/lingoLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/mlss/mlssLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/marioland2/marioland2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/messenger/messengerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/pokemon_emerald/pokemon_emeraldLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/mm2/mm2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/ocarina_of_time/ootLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/raft/raftLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/v6/v6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/cv64/cv64Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/dark_souls_3/darkSouls3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/paint/paintLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/soe/soeLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/shapez/shapezLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/shivers/shiversLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/smz3/smz3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/sc2/sc2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/subnautica/subnauticaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/sm/smLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/stardew_valley/stardewValleyLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/terraria/terrariaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/timespinner/timespinnerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/tww/twwLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/wargroove/wargrooveLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/yoshisisland/yoshisislandLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/yugioh06/yugioh06Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/osrs/osrsLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/tloz/tlozLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/witness/witnessLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/commonUI/commonUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/jakanddaxter/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/ladx/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/marioland2/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/mmbn3/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/sm64ex/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/yachtdice/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/cv64/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/overcooked2/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/paint/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/shapez/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/shivers/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/sc2/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/subnautica/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/terraria/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/stardew_valley/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/tloz/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/shared/gameLogic/yachtdice/yacht_weights.js HTTP/1.1" 200 -
+BROWSER LOG (log): [universalLogger] Worker logger initialized
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testController.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testDiscovery.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testRegistry.js HTTP/1.1" 200 -
+BROWSER LOG (info): [18:15:55.650] [INFO] [INIT_STEP] Module import and registration phase completed
+BROWSER LOG (info): [18:15:55.652] [INFO] [INIT_STEP] Golden Layout initialization started
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testCases/coreTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/libs/golden-layout/img/lm_close_white.png HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/libs/golden-layout/img/lm_maximise_white.png HTTP/1.1" 200 -
+BROWSER LOG (info): [18:15:55.671] [INFO] [INIT_STEP] Golden Layout initialization completed
+BROWSER LOG (info): [18:15:55.671] [INFO] [INIT_STEP] Module initialization phase started (4 modules)
+BROWSER LOG (info): [18:15:55.672] [INFO] [INIT_STEP] Module initialization phase completed (4 modules)
+BROWSER LOG (info): [18:15:55.672] [INFO] [INIT_STEP] Module post-initialization phase started (1 modules)
+BROWSER LOG (debug): [Init - DEBUG] [Init _postInitializeSingleModule] Original genericModuleSpecificConfig FOR stateManager: {rulesConfig: Object, sourceName: ./presets/stardew_valley/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] Derived sourceName for StateManager: ./presets/stardew_valley/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] EXACT configForPostInitialize BEING PASSED to stateManager.postInitialize: {rulesConfig: Object, sourceName: ./presets/stardew_valley/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [18:15:55.745] [INFO] [INIT_STEP] Module post-initialization phase completed (1 modules)
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testCases/locationPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testCases/exitPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testCases/regionPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testCases/regionGraphPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testCases/loopsPanelTests.js HTTP/1.1" 200 -
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Spring, count: 1, itemDef: {name: Spring, id: 717124, groups: Array(2), advancement: true, useful: false}
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testCases/eventsPanelTests.js HTTP/1.1" 200 -
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Spring: items=1, percent=0 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Pet Bowl, count: 1, itemDef: {name: Pet Bowl, id: 717564, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Pet Bowl: items=2, percent=0 (total=322)
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testCases/pathAnalyzerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testCases/settingsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testCases/JSONPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testCases/progressBarTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testCases/metaGamePanelTests.js HTTP/1.1" 200 -
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/presets/stardew_valley/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testCases/textAdventurePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testCases/textAdventure-iframeTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testCases/textAdventure-windowTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testCases/iframe-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testCases/window-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testCases/timerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testCases/multiplayerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 18:15:55] "GET /frontend/modules/tests/testCases/testSpoilersPanelTests.js HTTP/1.1" 200 -
+PW DEBUG: Page navigation complete (network idle).
+PW DEBUG: Starting to wait for __playwrightTestsComplete__ flag on window...
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Progressive Watering Can, count: 1, itemDef: {name: Progressive Watering Can, id: 717068, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Progressive Watering Can: items=3, percent=0 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Amaranth Seeds, count: 1, itemDef: {name: Amaranth Seeds, id: 717128, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Amaranth Seeds: items=4, percent=1 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Progressive Pickaxe, count: 1, itemDef: {name: Progressive Pickaxe, id: 717066, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Progressive Pickaxe: items=5, percent=1 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Progressive Backpack, count: 1, itemDef: {name: Progressive Backpack, id: 717024, groups: Array(1), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Progressive Backpack: items=6, percent=1 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Fall, count: 1, itemDef: {name: Fall, id: 717126, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Fall: items=7, percent=2 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Progressive Barn, count: 1, itemDef: {name: Progressive Barn, id: 717085, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Progressive Barn: items=8, percent=2 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Island Obelisk, count: 1, itemDef: {name: Island Obelisk, id: 717081, groups: Array(4), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Island Obelisk: items=9, percent=2 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Special Order Board, count: 1, itemDef: {name: Special Order Board, id: 717228, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Special Order Board: items=10, percent=3 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: JotPK: Extra Life, count: 1, itemDef: {name: JotPK: Extra Life, id: 717103, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for JotPK: Extra Life: items=11, percent=3 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Ancient Seeds, count: 1, itemDef: {name: Ancient Seeds, id: 717165, groups: Array(4), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Ancient Seeds: items=12, percent=3 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Fishing Level, count: 1, itemDef: {name: Fishing Level, id: 717074, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Fishing Level: items=13, percent=4 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Foraging Level, count: 1, itemDef: {name: Foraging Level, id: 717075, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Foraging Level: items=14, percent=4 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Shipping Bin, count: 1, itemDef: {name: Shipping Bin, id: 717093, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Shipping Bin: items=15, percent=4 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: JotPK: Progressive Ammo, count: 1, itemDef: {name: JotPK: Progressive Ammo, id: 717102, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for JotPK: Progressive Ammo: items=16, percent=4 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Traveling Merchant Metal Detector, count: 1, itemDef: {name: Traveling Merchant Metal Detector, id: 717166, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Traveling Merchant Metal Detector: items=17, percent=5 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Progressive Raccoon, count: 1, itemDef: {name: Progressive Raccoon, id: 717480, groups: Array(1), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Progressive Raccoon: items=18, percent=5 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Solar Panel Recipe, count: 1, itemDef: {name: Solar Panel Recipe, id: 717229, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Solar Panel Recipe: items=19, percent=5 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Progressive Mine Elevator, count: 1, itemDef: {name: Progressive Mine Elevator, id: 717072, groups: Array(1), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Progressive Mine Elevator: items=20, percent=6 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Progressive Coop, count: 1, itemDef: {name: Progressive Coop, id: 717084, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Progressive Coop: items=21, percent=6 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Foraging Level, count: 1, itemDef: {name: Foraging Level, id: 717075, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Foraging Level: items=22, percent=6 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Taro Tuber, count: 1, itemDef: {name: Taro Tuber, id: 717275, groups: Array(3), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Taro Tuber: items=23, percent=7 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Parrot Express, count: 1, itemDef: {name: Parrot Express, id: 717272, groups: Array(3), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Parrot Express: items=24, percent=7 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Progressive Watering Can, count: 1, itemDef: {name: Progressive Watering Can, id: 717068, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Progressive Watering Can: items=25, percent=7 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Progressive House, count: 1, itemDef: {name: Progressive House, id: 717112, groups: Array(1), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Progressive House: items=26, percent=8 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Fairy Seeds, count: 1, itemDef: {name: Fairy Seeds, id: 717138, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Fairy Seeds: items=27, percent=8 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Artichoke Seeds, count: 1, itemDef: {name: Artichoke Seeds, id: 717129, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Artichoke Seeds: items=28, percent=8 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Club Card, count: 1, itemDef: {name: Club Card, id: 717096, groups: Array(1), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Club Card: items=29, percent=9 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Combat Level, count: 1, itemDef: {name: Combat Level, id: 717077, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Combat Level: items=30, percent=9 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Progressive Raccoon, count: 1, itemDef: {name: Progressive Raccoon, id: 717480, groups: Array(1), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Progressive Raccoon: items=31, percent=9 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Fairy Dust Recipe, count: 1, itemDef: {name: Fairy Dust Recipe, id: 717325, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Fairy Dust Recipe: items=32, percent=9 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Potato Seeds, count: 1, itemDef: {name: Potato Seeds, id: 717148, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Potato Seeds: items=33, percent=10 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Fruit Bats, count: 1, itemDef: {name: Fruit Bats, id: 717470, groups: Array(1), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Fruit Bats: items=34, percent=10 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Progressive Barn, count: 1, itemDef: {name: Progressive Barn, id: 717085, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Progressive Barn: items=35, percent=10 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Combat Mastery, count: 1, itemDef: {name: Combat Mastery, id: 717485, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Combat Mastery: items=36, percent=11 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Progressive Mine Elevator, count: 1, itemDef: {name: Progressive Mine Elevator, id: 717072, groups: Array(1), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Progressive Mine Elevator: items=37, percent=11 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Progressive Hoe, count: 1, itemDef: {name: Progressive Hoe, id: 717065, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Progressive Hoe: items=38, percent=11 (total=322)
+BROWSER LOG (log): [Stardew Valley afterItemAdded] Item: Farm Computer Recipe, count: 1, itemDef: {name: Farm Computer Recipe, id: 717231, groups: Array(2), advancement: true, useful: false}
+BROWSER LOG (log): [Stardew Valley afterItemAdded] totalProgressionItems: 322
+BROWSER LOG (log): [Stardew Valley Logic] Updated progression for Farm Computer Recipe: items=39, percent=12 (total=322)
+BROWSER LOG (error): [18:15:58.639] [ERROR] [testSpoilerUI] STATE MISMATCH found for: {"type":"state_update","sphere_number":"2.1","player_id":"1"}
+BROWSER LOG (error): [18:15:58.641] [ERROR] [testSpoilerUI:ComparisonEngine] STATE MISMATCH found for: {"type":"state_update","sphere_number":"2.1","player_id":"1"}
+BROWSER LOG (error): [18:15:58.643] [ERROR] [testSpoilerUI]  > Locations accessible in LOG but NOT in STATE (or checked): Museumsanity: 3 Artifacts, Museumsanity: 5 Donations, Museumsanity: 6 Artifacts
+BROWSER LOG (error): [18:15:58.643] [ERROR] [testSpoilerUI:ComparisonEngine]  > Locations accessible in LOG but NOT in STATE (or checked): Museumsanity: 3 Artifacts, Museumsanity: 5 Donations, Museumsanity: 6 Artifacts
+BROWSER LOG (error): [MISMATCH DETAIL] Missing from state (3): [Museumsanity: 3 Artifacts, Museumsanity: 5 Donations, Museumsanity: 6 Artifacts]
+BROWSER LOG (error): [18:15:58.681] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [18:15:58.717] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [18:15:58.748] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [18:15:58.752] [ERROR] [testSpoilerUI] Test failed at step 38: Comparison failed for event type 'state_update'.
+BROWSER LOG (error): [18:15:58.755] [ERROR] [testSpoilerUI] Mismatch for event 38 (Sphere 2.1): Comparison for state_update at step 38 Failed
+BROWSER LOG (warning): [18:15:58.758] [WARN] [testSpoilerUI] Test run halted due to "Stop on first error" being enabled.
+BROWSER LOG (error): [18:15:58.760] [ERROR] [testSpoilerUI] Spoiler test completed with 1 mismatch(es). See logs above for details.
+BROWSER LOG (error): [18:15:58.780] [ERROR] [TestRunner/test_spoiler_full_run] [spoilers-full-run-1763748956052] Spoiler test failed. Mismatches found in log:
+BROWSER LOG (error): [18:15:58.781] [ERROR] [TestRunner/test_spoiler_full_run]   - Mismatch for event 38 (Sphere 2.1): Comparison for state_update at step 38 Failed
+BROWSER LOG (error): [18:15:58.781] [ERROR] [TestRunner/test_spoiler_full_run]   - [6:15:58 PM] STATE MISMATCH found for: {"type":"state_update","sphere_number":"2.1","player_id":"1"}
+BROWSER LOG (error): [18:15:58.781] [ERROR] [TestRunner/test_spoiler_full_run]   - [6:15:58 PM] > Locations accessible in LOG but NOT in STATE (or checked): Museumsanity: 3 Artifacts, Museumsanity: 5 Donations, Museumsanity: 6 Artifacts
+BROWSER LOG (error): [18:15:58.782] [ERROR] [TestRunner/test_spoiler_full_run]   - [6:15:58 PM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [18:15:58.782] [ERROR] [TestRunner/test_spoiler_full_run]   - [6:15:58 PM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [18:15:58.782] [ERROR] [TestRunner/test_spoiler_full_run]   - [6:15:58 PM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [18:15:58.782] [ERROR] [TestRunner/test_spoiler_full_run]   - [6:15:58 PM] Test failed at step 38: Comparison failed for event type 'state_update'.
+BROWSER LOG (error): [18:15:58.783] [ERROR] [TestRunner/test_spoiler_full_run]   - [6:15:58 PM] Mismatch for event 38 (Sphere 2.1): Comparison for state_update at step 38 Failed
+BROWSER LOG (error): [18:15:58.783] [ERROR] [TestRunner/test_spoiler_full_run]   - [6:15:58 PM] Spoiler test completed with 1 mismatch(es). See logs above for details.
+PW DEBUG: __playwrightTestsComplete__ flag detected as true.
+PW DEBUG: __playwrightTestResults__ retrieved from window object.
+PW DEBUG: Full in-app test results: {
+  "summary": {
+    "totalRun": 1,
+    "passedCount": 0,
+    "failedCount": 1
+  },
+  "testDetails": [
+    {
+      "id": "test_spoiler_full_run",
+      "name": "Test Spoilers Panel - Full Run",
+      "status": "failed",
+      "category": "Test Spoilers Panel",
+      "startTime": "2025-11-21T18:15:56.051Z",
+      "endTime": "2025-11-21T18:15:58.797Z",
+      "durationMs": 2746,
+      "conditions": [
+        {
+          "description": "Test started",
+          "status": "passed",
+          "timestamp": "2025-11-21T18:15:56.052Z"
+        },
+        {
+          "description": "Test Spoilers panel found in DOM",
+          "status": "passed",
+          "timestamp": "2025-11-21T18:15:56.554Z"
+        },
+        {
+          "description": "\"Load Suggested Log\" button found and enabled",
+          "status": "passed",
+          "timestamp": "2025-11-21T18:15:56.805Z"
+        },
+        {
+          "description": "\"Run Full Test\" button appeared",
+          "status": "passed",
+          "timestamp": "2025-11-21T18:15:57.559Z"
+        },
+        {
+          "description": "Full spoiler test completed",
+          "status": "passed",
+          "timestamp": "2025-11-21T18:15:58.779Z"
+        },
+        {
+          "description": "Spoiler test passed all checks",
+          "status": "failed",
+          "timestamp": "2025-11-21T18:15:58.780Z"
+        }
+      ],
+      "logs": [
+        {
+          "message": "[spoilers-full-run-1763748956052] Starting testSpoilersPanelFullRun...",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:56.052Z"
+        },
+        {
+          "message": "Condition: \"Test started\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:56.052Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763748956052] Activating testSpoilersPanel panel...",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:56.052Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel initialization\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:56.053Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel initialization\".",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:56.303Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel DOM element\" (timeout: 5000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:56.303Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel DOM element\".",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:56.554Z"
+        },
+        {
+          "message": "Condition: \"Test Spoilers panel found in DOM\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:56.554Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Load Suggested Log\" button to be available\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:56.554Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Load Suggested Log\" button to be available\".",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:56.805Z"
+        },
+        {
+          "message": "Condition: \"\"Load Suggested Log\" button found and enabled\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:56.805Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763748956052] Clicking \"Load Suggested Log\" button...",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:56.805Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Spoiler log loading completion\" (timeout: 15000ms, interval: 500ms)...",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:56.808Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Spoiler log loading completion\".",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:57.309Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Run Full Test\" button to appear\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:57.309Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Run Full Test\" button to appear\".",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:57.559Z"
+        },
+        {
+          "message": "Condition: \"\"Run Full Test\" button appeared\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:57.559Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763748956052] Clicking \"Run Full Test\" button...",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:57.559Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test to start processing\" (timeout: 5000ms, interval: 100ms)...",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:57.563Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test to start processing\".",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:57.667Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763748956052] Waiting for full spoiler test to complete...",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:57.667Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test completion with detailed results\" (timeout: 300000ms, interval: 1000ms)...",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:57.667Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763748956052] Polling: buttonReady=true, hasDetailedResults=true, processedEvents=37/322",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:58.779Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763748956052] DEBUG detailedResults: {\"passed\":false,\"totalEvents\":322,\"processedEvents\":37,\"errorCount\":1,\"sphereCount\":38,\"testLogPath\":\"presets/stardew_valley/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl\"}",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:58.779Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test completion with detailed results\".",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:58.779Z"
+        },
+        {
+          "message": "Condition: \"Full spoiler test completed\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:58.779Z"
+        },
+        {
+          "message": "Condition: \"Spoiler test passed all checks\" - FAILED",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:58.780Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763748956052] Spoiler test failed. Mismatches found in log:",
+          "type": "error",
+          "timestamp": "2025-11-21T18:15:58.780Z"
+        },
+        {
+          "message": "  - Mismatch for event 38 (Sphere 2.1): Comparison for state_update at step 38 Failed",
+          "type": "error",
+          "timestamp": "2025-11-21T18:15:58.781Z"
+        },
+        {
+          "message": "  - [6:15:58 PM] STATE MISMATCH found for: {\"type\":\"state_update\",\"sphere_number\":\"2.1\",\"player_id\":\"1\"}",
+          "type": "error",
+          "timestamp": "2025-11-21T18:15:58.781Z"
+        },
+        {
+          "message": "  - [6:15:58 PM] > Locations accessible in LOG but NOT in STATE (or checked): Museumsanity: 3 Artifacts, Museumsanity: 5 Donations, Museumsanity: 6 Artifacts",
+          "type": "error",
+          "timestamp": "2025-11-21T18:15:58.781Z"
+        },
+        {
+          "message": "  - [6:15:58 PM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-21T18:15:58.782Z"
+        },
+        {
+          "message": "  - [6:15:58 PM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-21T18:15:58.782Z"
+        },
+        {
+          "message": "  - [6:15:58 PM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-21T18:15:58.782Z"
+        },
+        {
+          "message": "  - [6:15:58 PM] Test failed at step 38: Comparison failed for event type 'state_update'.",
+          "type": "error",
+          "timestamp": "2025-11-21T18:15:58.782Z"
+        },
+        {
+          "message": "  - [6:15:58 PM] Mismatch for event 38 (Sphere 2.1): Comparison for state_update at step 38 Failed",
+          "type": "error",
+          "timestamp": "2025-11-21T18:15:58.783Z"
+        },
+        {
+          "message": "  - [6:15:58 PM] Spoiler test completed with 1 mismatch(es). See logs above for details.",
+          "type": "error",
+          "timestamp": "2025-11-21T18:15:58.783Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763748956052] Spoiler test results stored in window.__spoilerTestResults__",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:58.783Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763748956052] Spoiler test results stored in localStorage",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:58.796Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763748956052] testSpoilersPanelFullRun finished. Overall Result: false.",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:58.796Z"
+        },
+        {
+          "message": "Test completion signal: FAILED",
+          "type": "info",
+          "timestamp": "2025-11-21T18:15:58.796Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-21T18:15:58.796Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-21T18:15:58.797Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-21T18:15:58.797Z"
+        }
+      ]
+    }
+  ],
+  "completedAt": "2025-11-21T18:15:58.898Z"
+}
+PW DEBUG: Test results saved to: /home/user/Archipelago-CC/test-results/in-app-tests/test-results-2025-11-21T18-15-58.json
+  ✘  1 tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results (4.4s)
+
+
+  1) tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m0[39m
+    Received: [31m1[39m
+
+      141 |
+      142 |     // The test system should complete successfully regardless of whether tests run
+    > 143 |     expect(results.summary.failedCount).toBe(0);
+          |                                         ^
+      144 |     
+      145 |     // If tests actually ran, they should pass
+      146 |     if (results.summary.totalRun > 0) {
+        at /home/user/Archipelago-CC/tests/e2e/app.spec.js:143:41
+
+    Error Context: test-results/app-Application-End-to-End-a086e-app-tests-and-check-results/error-context.md
+
+  1 failed
+    tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results ─
