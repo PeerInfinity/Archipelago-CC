@@ -41,13 +41,32 @@ The following VARIA logic helpers have been implemented with basic logic:
 
 ## Still Missing
 
-These helpers are referenced in rules but not yet implemented:
+**Total unimplemented helpers**: 68 of 94 unique helpers
 
-- Complex door/room transition helpers (many specific to rooms)
-- ROM patch checks (RomPatches.has)
-- Damage calculation helpers
-- Boss-specific requirements
-- Advanced technique combinations
+**Categories of missing helpers**:
+
+### High Priority (3+ uses)
+- `canDestroyBombWalls` (3) - Basic bomb wall destruction
+- `itemCountOk` (3) - Item count checks
+
+### Medium Priority (2 uses)
+- `canOpenGreenDoors` (2) - Super missile doors
+- `heatProof` (2) - Heat immunity check
+- `canKillBeetoms` (2) - Enemy defeat requirement
+- `canHellRunToSpeedBooster` (2)
+- `canAccessBillyMays` (2)
+- `canAccessItemsInWestSandHole` (2)
+- `knowsGravLessLevel3` (2)
+- `canGreenGateGlitch` (2)
+
+### Room/Boss-Specific (1 use each) - 57 helpers
+Examples:
+- Boss requirements: `enoughStuffsKraid`, `enoughStuffsPhantoon`, `enoughStuffsRidley`, `enoughStuffCroc`
+- Room transitions: `canAccessKraidsLair`, `canExitCathedral`, `canPassMtEverest`
+- Advanced techniques: `knowsCrocPBsDBoost`, `knowsMaridiaWallJumps`, `knowsRonPopeilScrew`
+- Complex checks: `canClimbBottomRedTower`, `canDefeatBotwoon`, `canGrappleEscape`
+
+See full list in analysis output - most are highly specialized for specific rooms/situations.
 
 ## Current Blocker
 
