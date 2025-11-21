@@ -1,59 +1,97 @@
 # SMZ3 Solved General Issues
 
-## Issues Resolved
+## Logic Issues
 
-### 1. item_check in compare expressions returns boolean instead of count (FIXED)
+### 1. Bombos/Ether Tablet access rule evaluation (SOLVED)
 
-**Issue**: When `item_check` was used as an operand in a `compare` rule without a `count` field, it returned a boolean (true/false) instead of the item count. This broke comparisons like `KeyPD >= 4`.
+**Original Issue**: Bombos Tablet and Ether Tablet were not accessible in STATE when they should be accessible at sphere 8.21.
 
-**Solution**: Modified the `compare` case in ruleEngine.js to detect when an operand is an `item_check` without a count field and extract the item count directly using `context.countItem()` instead of the boolean result from `context.hasItem()`.
+**Error**: "Access rule evaluation failed" - access rules evaluated to non-true value even though all requirements were met.
 
-**File**: `frontend/modules/shared/ruleEngine.js:1071-1114`
+**Root Cause - Multi-layered Problem**:
 
-**Result**: Palace of Darkness locations at sphere 7.7 now correctly evaluate their key requirements.
+This issue had FOUR interconnected problems that needed to be solved:
 
-### 2. GetLocation().ItemIs() pattern not handled (FIXED)
+1. **Missing progression_mapping export** (Layer 1):
+   - SMZ3 exporter didn't implement `get_progression_mapping()` method
+   - Progressive item data wasn't being exported to the frontend
 
-**Issue**: The `GetLocation("location").ItemIs(itemType)` pattern was not supported. This pattern checks if a specific item is placed at a location, which is used for self-referential checks (e.g., don't count a key you're about to pick up toward the requirement to access it).
+2. **Missing player field in snapshot** (Layer 2):
+   - Snapshot created for helpers in access rules lacked `player: { slot: ... }` field
+   - ALTTP progressive item helpers couldn't determine player context
+
+3. **Item name mismatch** (Layer 3):
+   - Progression_mapping used keys with spaces: 'Progressive Sword', 'Progressive Glove', etc.
+   - Actual inventory items used no spaces: 'ProgressiveSword', 'ProgressiveGlove', etc.
+   - Helper functions couldn't find progressive item definitions
+
+4. **Missing helper exports** (Layer 4):
+   - SMZ3Logic.js didn't export generic `has` and `count` functions
+   - Snapshot interface couldn't access progressive item-aware helpers
+   - Only specific helpers like `smz3_CanLiftLight` were exported
 
 **Solution**:
-1. Added `smz3_GetLocation()` helper function in smz3Logic.js that returns an object with an `ItemIs()` method
-2. Modified the exporter to convert the pattern to a proper function_call structure that can be evaluated at runtime
-3. The helper looks up the location in staticData and checks the placed item
 
-**Files**:
-- `frontend/modules/shared/gameLogic/smz3/smz3Logic.js:387-414`
-- `exporter/games/smz3.py:540-590`
+**Commit 93dc1144** - Implemented progression_mapping export:
+```python
+# exporter/games/smz3.py
+def get_progression_mapping(self, world) -> Dict[str, Any]:
+    """Export progressive item mappings for SMZ3."""
+    mapping_data = {
+        'ProgressiveSword': {...},
+        'ProgressiveGlove': {...},
+        ...
+    }
+    return mapping_data
+```
 
-**Result**: Palace of Darkness - Harmless Hellway (which has a KeyPD placed on it) now correctly evaluates its access requirements.
+**Commit 31e26188** - Added player field to snapshot:
+```javascript
+// frontend/modules/stateManager/core/statePersistence.js
+const snapshot = {
+    inventory: { ...sm.inventory },
+    flags: sm.gameStateModule?.flags || [],
+    events: sm.gameStateModule?.events || [],
+    player: { slot: sm.playerSlot }  // ADDED THIS LINE
+};
+```
 
-### 3. CanAcquireAll checking duplicate regions instead of unique regions (FIXED)
+**Commit ce447a72** - Fixed item name mismatch and exported helpers:
+```python
+# exporter/games/smz3.py - Fixed keys to match inventory item names
+mapping_data = {
+    'ProgressiveSword': {...},      # No space
+    'ProgressiveGlove': {...},      # No space
+    'ProgressiveShield': {...},     # No space
+    'ProgressiveTunic': {...},      # No space
+}
+```
 
-**Issue**: When CanAcquireAll had multiple regions with the same reward type (e.g., two non-green pendants with reward_type=4), calling CanAcquire(4) twice would check the FIRST matching region both times instead of checking each unique region. This caused Master Sword Pedestal to appear accessible too early (sphere 6.2).
+```javascript
+// frontend/modules/shared/gameLogic/smz3/smz3Logic.js - Exported helpers
+export { hasItem as has, getItemCount as count };
+```
 
-**Solution**:
-1. Created `checkRegionCompletion()` internal helper that checks specific regions by name instead of by reward type
-2. Updated CanAcquireAll to call checkRegionCompletion for each unique region in the matching list
-3. Fixed snapshot interface to pass full interface (with evaluateRule method) to helpers instead of raw snapshot
+**Test Results**:
+- ✅ Bombos Tablet now accessible at sphere 8.21
+- ✅ Ether Tablet now accessible at sphere 8.21
+- ✅ MasterSword (ProgressiveSword >= 2) correctly detected
+- ✅ Spoiler test progresses beyond sphere 8.21 (previously blocked)
+- ✅ Progressive item system works for all ALTTP items in SMZ3
 
-**Files**:
-- `frontend/modules/shared/gameLogic/smz3/smz3Logic.js:780-940` (CanAcquireAll and checkRegionCompletion)
-- `frontend/modules/shared/stateInterface.js:592,598-606` (added player property and fixed executeHelper to pass 'this')
+**Files Modified**:
+- `exporter/games/smz3.py` - Added/fixed get_progression_mapping() method
+- `frontend/modules/shared/gameLogic/smz3/smz3Logic.js` - Imported ALTTP helpers, exported has/count
+- `frontend/modules/textAdventure-remote/shared/gameLogic/smz3/smz3Logic.js` - Synchronized with main version
+- `frontend/modules/stateManager/core/statePersistence.js` - Added player field to snapshot
 
-**Result**: Master Sword Pedestal no longer accessible too early. Test progresses from sphere 6.2 to sphere 8.21. Pyramid Fairy locations at sphere 8.19 now correctly evaluate.
+**Commits**:
+- 93dc1144: Implement progression_mapping export and use ALTTP helpers
+- 31e26188: Fix SMZ3 progressive item handling for Bombos/Ether Tablets (added player field to snapshot)
+- 364d7256: Update issue log: Mark Bombos/Ether Tablet issue as resolved
+- 1f3bb22a: Add test results summary for Bombos/Ether Tablet fix verification
+- ce447a72: Fix SMZ3 progressive item naming mismatch for Bombos/Ether Tablets (fixed key names, exported has/count)
 
-### 4. Missing Super Metroid area-specific helpers (FIXED)
+**Date Resolved**: 2025-11-21
 
-**Issue**: Three helper functions for Super Metroid areas were not implemented, blocking progression at sphere 7.8.
-
-**Solution**: Implemented three helper functions based on TotalSMZ3 Python code:
-
-1. **smz3_CanAccessCrocomire**: Returns `hasItem('Super')` for non-keysanity mode. This allows access to Crocomire boss area in Upper Norfair.
-
-2. **smz3_CanUnlockShip**: Returns `hasItem('CardWreckedShipBoss') && CanPassBombPassages()`. This unlocks the Wrecked Ship after defeating Phantoon.
-
-3. **smz3_CanEnterAndLeaveGauntlet**: Implements Normal logic requiring CardCrateriaL1, Morph, ability to fly or speed boost, and ability to escape (IBJ, 2+ Power Bombs, or Screw Attack). This allows full traversal of the Gauntlet area.
-
-**File**: `frontend/modules/shared/gameLogic/smz3/smz3Logic.js:219-264`
-
-**Result**: All 15 locations at sphere 7.8 now correctly evaluate (6 Crocomire, 3 Gauntlet, 6 Wrecked Ship). Test progresses to sphere 8.16.
+**Status**: FULLY RESOLVED
