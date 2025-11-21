@@ -1,32 +1,10 @@
 # KH2 Remaining Helper Issues
 
-## Issue 2: Data Axel Region Not Accessible (Sphere 14.1)
+No remaining helper issues! All issues have been moved to solved-helper-issues.md.
 
-**Status:** Not Fixed
-**Sphere:** 14.1
-**Error Type:** Missing Helper Function
+---
 
-### Description
-The "Data Axel" region is not accessible because the helper function `get_data_axel_rules` is not implemented in JavaScript.
-
-### Error Details
-```
-Helper function "get_data_axel_rules" NOT FOUND in snapshotInterface
-
-Locations accessible in LOG but NOT in STATE (or checked):
-- (Post TT3: Betwixt and Between) Data Axel
-- Data Axel Event Location
-
-Regions accessible in LOG but NOT in STATE:
-- Data Axel
-```
-
-### Root Cause
-The helper function `get_data_axel_rules` needs to be implemented in kh2Logic.js.
-
-### Files Involved
-- `frontend/modules/shared/gameLogic/kh2/kh2Logic.js` - Need to add get_data_axel_rules() implementation
-- `worlds/kh2/Rules.py` - Source implementation to reference
+## Issue 2: Data Axel Region Not Accessible (Sphere 14.1) - MOVED TO SOLVED
 
 ---
 

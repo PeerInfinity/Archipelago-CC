@@ -1441,6 +1441,8 @@ export const helperFunctions = {
    * Check if Data Axel fight is accessible.
    * Based on worlds/kh2/Rules.py:1074-1083
    *
+   * Note: Limit level 5 requires form_list_unlock(LimitForm, 3) (from worlds/kh2/Rules.py:332)
+   *
    * @param {Object} snapshot - Game state snapshot
    * @param {Object} staticData - Static game data (contains settings)
    * @returns {boolean} True if player can access Data Axel fight
@@ -1449,13 +1451,16 @@ export const helperFunctions = {
     const settings = staticData?.settings || {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
+    // Limit level 5 requirement: form_list_unlock(Limit Form, 3)
+    const canReachLimitLvl5 = helperFunctions.form_list_unlock(snapshot, staticData, 'Limit Form', 3, false);
+
     if (fightLogic === 0) { // easy
       return helperFunctions.kh2_dict_count(EASY_DATA_AXEL, snapshot) &&
-             helperFunctions.kh2_can_reach(snapshot, staticData, 'Limit level 5') &&
+             canReachLimitLvl5 &&
              helperFunctions.kh2_list_any_sum([DONALD_LIMIT], snapshot) >= 1;
     } else if (fightLogic === 1) { // normal
       return helperFunctions.kh2_dict_count(NORMAL_DATA_AXEL, snapshot) &&
-             helperFunctions.kh2_can_reach(snapshot, staticData, 'Limit level 5') &&
+             canReachLimitLvl5 &&
              helperFunctions.kh2_list_any_sum([DONALD_LIMIT, GAP_CLOSER], snapshot) >= 2;
     } else { // hard
       return helperFunctions.kh2_dict_count(HARD_DATA_AXEL, snapshot) &&
