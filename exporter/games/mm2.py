@@ -31,6 +31,8 @@ class MM2GameExportHandler(GenericGameExportHandler):
         # Get base settings
         settings = super().get_settings_data(world, multiworld, player)
 
+        settings['use_resolved_items'] = True
+
         # Add MM2-specific settings for wily_5 requirements
         try:
             if hasattr(world, 'options') and hasattr(world.options, 'wily_5_requirement'):

@@ -269,6 +269,8 @@ class KH1GameExportHandler(BaseGameExportHandler):
         # Get base settings
         settings_dict = super().get_settings_data(world, multiworld, player)
 
+        settings_dict['use_resolved_items'] = True
+
         # Add cached KH1 options to settings
         # (options were already cached in preprocess_world_data)
         for option_name, value in self.options_cache.items():

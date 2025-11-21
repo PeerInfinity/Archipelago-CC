@@ -321,3 +321,9 @@ class LandstalkerGameExportHandler(GenericGameExportHandler):
                 return [item for item in value if isinstance(item, str)]
 
         return None
+
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Extracts Landstalker-specific game settings for export."""
+        settings_dict = super().get_settings_data(world, multiworld, player)
+        settings_dict['use_resolved_items'] = True
+        return settings_dict
