@@ -284,13 +284,12 @@ class SMGameExportHandler(GenericGameExportHandler):
 
                     # Check if the Available part is just evalSMBool(SMBool(True), ...)
                     if self._is_always_true_smbool(expanded):
-                        # For now, we need to determine if this location is accessible from the starting region
-                        # or if it requires items through accessFrom
-                        # Since we can't analyze accessFrom properly, we'll export the Available rule as-is
-                        # and let it evaluate (evalSMBool(SMBool(True), ...) should return True)
-                        logger.info("SM: Available is evalSMBool(SMBool(True), ...), preserving as-is")
-                        print("[SM] Preserving evalSMBool(SMBool(True), ...) for frontend evaluation")
-                        return expanded
+                        # The Available part has no requirements, so the actual requirements
+                        # are in the accessFrom comprehension, which we can't export properly.
+                        # Export as False to prevent incorrect accessibility until VARIA logic is implemented.
+                        logger.info("SM: Available is evalSMBool(SMBool(True), ...), but accessFrom has the real logic - exporting as False")
+                        print("[SM] Available is SMBool(True) with accessFrom - exporting as False (needs VARIA logic)")
+                        return {'type': 'constant', 'value': False}
 
                     # If Available has actual requirements, use it
                     logger.info("SM: Using Available part with actual requirements")
