@@ -8034,15 +8034,8 @@
             "name": "Master Sword Pedestal",
             "id": 85270,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "constant",
-                  "value": true
-                },
-                "attr": "CanAcquireAll"
-              },
+              "type": "helper",
+              "name": "smz3_CanAcquireAll",
               "args": [
                 {
                   "type": "constant",
@@ -9593,15 +9586,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": true
-                    },
-                    "attr": "CanAcquireAll"
-                  },
+                  "type": "helper",
+                  "name": "smz3_CanAcquireAll",
                   "args": [
                     {
                       "type": "constant",
@@ -9661,15 +9647,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": true
-                    },
-                    "attr": "CanAcquireAll"
-                  },
+                  "type": "helper",
+                  "name": "smz3_CanAcquireAll",
                   "args": [
                     {
                       "type": "constant",

@@ -369,6 +369,67 @@ export function smz3_CanAccessMaridiaPortal(snapshot, staticData) {
 }
 
 /**
+ * Check if player can reach the Aqueduct area in Maridia.
+ * Python (Normal): items.CardMaridiaL1 and (items.CanFly() or items.SpeedBooster or items.Grapple) \
+ *                  or items.CardMaridiaL2 and items.CanAccessMaridiaPortal(self.world)
+ * Python (Hard): items.CardMaridiaL1 and (items.Gravity or items.HiJump and (items.Ice or items.CanSpringBallJump()) and items.Grapple) \
+ *                or items.CardMaridiaL2 and items.CanAccessMaridiaPortal(self.world)
+ *
+ * Using Normal logic for now.
+ */
+export function smz3_CanReachAqueduct(snapshot, staticData) {
+  // Route 1: Through Maridia with L1 card and movement ability
+  const route1 = hasItem(snapshot, 'CardMaridiaL1') &&
+                 (smz3_CanFly(snapshot, staticData) ||
+                  hasItem(snapshot, 'SpeedBooster') ||
+                  hasItem(snapshot, 'Grapple'));
+
+  // Route 2: Through Maridia portal with L2 card
+  const route2 = hasItem(snapshot, 'CardMaridiaL2') &&
+                 smz3_CanAccessMaridiaPortal(snapshot, staticData);
+
+  return route1 || route2;
+}
+
+/**
+ * Check if player can defeat Botwoon (mini-boss in Maridia).
+ * Python (Normal): items.SpeedBooster or items.CanAccessMaridiaPortal(self.world)
+ * Python (Hard): items.Ice or items.SpeedBooster and items.Gravity or items.CanAccessMaridiaPortal(self.world)
+ *
+ * Using Normal logic for now.
+ */
+export function smz3_CanDefeatBotwoon(snapshot, staticData) {
+  return hasItem(snapshot, 'SpeedBooster') || smz3_CanAccessMaridiaPortal(snapshot, staticData);
+}
+
+/**
+ * Check if player can defeat Draygon (boss in Maridia).
+ * Python (Normal): (items.CardMaridiaL1 and items.CardMaridiaL2 and self.CanDefeatBotwoon(items) or
+ *                   items.CanAccessMaridiaPortal(self.world)
+ *                  ) and items.CardMaridiaBoss and items.Gravity and (items.SpeedBooster and items.HiJump or items.CanFly())
+ * Python (Hard): (items.CardMaridiaL1 and items.CardMaridiaL2 and self.CanDefeatBotwoon(items) or
+ *                 items.CanAccessMaridiaPortal(self.world)
+ *                ) and items.CardMaridiaBoss and items.Gravity
+ *
+ * Using Normal logic for now.
+ */
+export function smz3_CanDefeatDraygon(snapshot, staticData) {
+  // Can reach Draygon either through Maridia (defeating Botwoon) or via portal
+  const canReachDraygon = (hasItem(snapshot, 'CardMaridiaL1') &&
+                           hasItem(snapshot, 'CardMaridiaL2') &&
+                           smz3_CanDefeatBotwoon(snapshot, staticData)) ||
+                          smz3_CanAccessMaridiaPortal(snapshot, staticData);
+
+  // Must have boss card, gravity, and movement capability
+  const canDefeatDraygon = hasItem(snapshot, 'CardMaridiaBoss') &&
+                           hasItem(snapshot, 'Gravity') &&
+                           ((hasItem(snapshot, 'SpeedBooster') && hasItem(snapshot, 'HiJump')) ||
+                            smz3_CanFly(snapshot, staticData));
+
+  return canReachDraygon && canDefeatDraygon;
+}
+
+/**
  * Check if player can exit Norfair Lower East region.
  * This is specific to the Norfair Lower East region and determines if the player
  * can escape back to upper areas.
@@ -671,4 +732,60 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
 
   console.warn(`[smz3_CanAcquire] No region found with reward type: ${rewardType}`);
   return false;
+}
+
+/**
+ * Check if player can acquire ALL rewards of a specific type(s).
+ * Python: def CanAcquireAll(self, items, rewardsMask):
+ *     return all(region.CanComplete(items) for region in self.rewardLookup[rewardsMask.value])
+ *
+ * The rewardType parameter is a bit mask that can include multiple reward types:
+ * - PendantGreen = 2
+ * - PendantNonGreen = 4
+ * - Both Pendants = 6 (2 | 4)
+ * - CrystalRed = 16
+ * - etc.
+ *
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static data (contains settings with reward_regions)
+ * @param {number} rewardType - The reward type mask to check for
+ */
+export function smz3_CanAcquireAll(snapshot, staticData, rewardType) {
+  console.log('[smz3_CanAcquireAll] Called with rewardType:', rewardType);
+
+  // Get player slot
+  const playerSlot = String(typeof snapshot.player === 'object' ? snapshot.player.slot : snapshot.player);
+
+  // Get the reward_regions mapping from settings
+  const settings = staticData.settings?.[playerSlot] || {};
+  const rewardRegions = settings.reward_regions || {};
+
+  // Find all regions that have rewards matching ANY bit in the mask
+  const matchingRegions = [];
+  for (const [regionName, rewardInfo] of Object.entries(rewardRegions)) {
+    // Check if this region's reward type matches any bit in the mask
+    if ((rewardInfo.reward_type & rewardType) !== 0) {
+      matchingRegions.push({ name: regionName, rewardType: rewardInfo.reward_type });
+    }
+  }
+
+  console.log(`[smz3_CanAcquireAll] Found ${matchingRegions.length} regions matching mask ${rewardType}`);
+
+  // If no regions match, return false (can't acquire what doesn't exist)
+  if (matchingRegions.length === 0) {
+    console.log('[smz3_CanAcquireAll] No matching regions, returning false');
+    return false;
+  }
+
+  // Check if ALL matching regions can be completed
+  for (const region of matchingRegions) {
+    const canAcquire = smz3_CanAcquire(snapshot, staticData, region.rewardType);
+    if (!canAcquire) {
+      console.log(`[smz3_CanAcquireAll] Cannot acquire reward from region '${region.name}', returning false`);
+      return false;
+    }
+  }
+
+  console.log(`[smz3_CanAcquireAll] All ${matchingRegions.length} regions can be completed, returning true`);
+  return true;
 }

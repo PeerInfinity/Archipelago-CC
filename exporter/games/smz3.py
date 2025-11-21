@@ -673,6 +673,26 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                             'args': [reward_type_arg]
                         }
 
+                # Handle self.world.CanAcquireAll(reward_type) - convert to helper
+                # or world.CanAcquireAll(reward_type) where world was converted to constant
+                if (method_name == 'CanAcquireAll' and
+                    (isinstance(obj, dict) and obj.get('type') == 'attribute' and
+                     obj.get('attr') == 'world' and
+                     isinstance(obj.get('object'), dict) and
+                     obj['object'].get('type') == 'name' and
+                     obj['object'].get('name') == 'self' or
+                     # Handle case where world became a constant
+                     isinstance(obj, dict) and obj.get('type') == 'constant')):
+
+                    if filtered_args and len(filtered_args) > 0:
+                        reward_type_arg = self.postprocess_rule(filtered_args[0])
+                        logger.debug(f"Converting world.CanAcquireAll() to helper")
+                        return {
+                            'type': 'helper',
+                            'name': 'smz3_CanAcquireAll',
+                            'args': [reward_type_arg]
+                        }
+
                 # Handle self.world.CanEnter(region_name, items) - convert to region_accessible
                 if (isinstance(obj, dict) and obj.get('type') == 'attribute' and
                     obj.get('attr') == 'world' and
