@@ -165,7 +165,7 @@ export class EventProcessor {
         // Use accumulated data from sphereState
         // Check game settings to determine which items to use
         const staticData = stateManager.getStaticData();
-        const useResolvedItems = staticData?.settings?.use_resolved_items || false;
+        const useResolvedItems = staticData?.settings?.[this.playerId]?.use_resolved_items || false;
 
         const base_items = sphereData.inventoryDetails?.base_items || {};
         const resolved_items = sphereData.inventoryDetails?.resolved_items || {};
@@ -240,7 +240,7 @@ export class EventProcessor {
           // Add newly discovered items from the sphere log to the state manager
           // This is only done for games that set add_sphere_items_upfront flag (like Blasphemous)
           // Most games get items naturally from checking locations
-          const addItemsUpfront = staticData?.settings?.add_sphere_items_upfront || false;
+          const addItemsUpfront = staticData?.settings?.[this.playerId]?.add_sphere_items_upfront || false;
 
           if (addItemsUpfront && newlyAddedItems.length > 0) {
             this.logCallback('info', `Adding ${newlyAddedItems.length} items from sphere log to inventory...`);
@@ -877,7 +877,7 @@ export class EventProcessor {
 
     // Step 3: Process resolved_items (behavior depends on game settings)
     // Check if this game wants to use resolved_items
-    const useResolvedItems = staticData.settings?.use_resolved_items ?? false;
+    const useResolvedItems = staticData.settings?.[this.playerId]?.use_resolved_items ?? false;
 
     if (useResolvedItems) {
       // Old logic: Process resolved_items for games that need them (e.g., Blasphemous)

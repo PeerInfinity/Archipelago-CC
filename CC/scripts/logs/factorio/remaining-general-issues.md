@@ -45,17 +45,56 @@ AP-2-072, AP-2-179, AP-2-255, AP-2-269, AP-2-270, AP-2-272, AP-2-328, AP-2-338, 
 ✅ Progressive item resolution working
 ✅ "Automated automation-science-pack" demonstrates event items CAN work
 
-**Root Cause Theory**:
-The test framework's inventory synchronization may have an issue when:
-- Multiple items have been collected (14 checked locations before this point)
-- Event items are collected after initial spheres
-- The `inventory_from_log` is not properly being used to create the snapshot for rule evaluation
+**Root Cause Analysis**:
+
+CRITICAL FINDING: The location check appears to complete but the item is NOT actually being added to inventory.
+
+Evidence:
+```
+Before checking "Automate logistic-science-pack": Fresh snapshot has 14 checked locations
+After checking "Automate logistic-science-pack": Fresh snapshot has 14 checked locations
+```
+
+The checked location count doesn't increase from 14 to 15, indicating the location was NOT successfully checked despite:
+- Pre-check validation passing (location is accessible)
+- checkLocationViaEvent being called
+- No error messages or rejection events
+
+Comparison with working case:
+- Sphere 0.1: "Automate automation-science-pack" → count increases from 0 to 1 ✅
+- Sphere 2.1: "Automate logistic-science-pack" → count stays at 14 ❌
+
+This suggests a state-related bug in the web worker or location checking code that manifests after multiple locations have been checked.
+
+**Investigation Trail**:
+
+1. ✅ Fixed: Found bug in `eventProcessor.js` where `staticData.settings` was accessed without player ID
+   - Changed `staticData?.settings?.use_resolved_items` to `staticData?.settings?.[this.playerId]?.use_resolved_items`
+   - This was preventing game-specific settings from being read correctly
+
+2. ❌ Rejected: Attempted workaround using `add_sphere_items_upfront` setting
+   - Added items at START of sphere instead of AFTER checking locations
+   - Caused timing issues: locations accessible one sub-sphere too early
+   - Reverted this approach
+
+3. 🔍 Current Investigation: Location check silently failing
+   - checkLocation is called but location not added to checkedLocations Set
+   - No error logs, no rejection events
+   - Possible web worker issue or race condition
+   - May be related to event item handling after inventory has accumulated items
+
+**Files Modified**:
+- `frontend/modules/testSpoilers/eventProcessor.js`: Fixed settings access bug (3 locations)
+- `exporter/games/factorio.py`: Reverted add_sphere_items_upfront workaround
 
 **Next Steps**:
-1. Investigate the state manager's handling of event item collection
-2. Check if there's a timing issue with when the snapshot is created vs when the inventory is updated
-3. Determine if this is Factorio-specific or a general infrastructure issue
-4. Test with other event items collected in later spheres (e.g., "Automated military-science-pack")
+1. Add debug logging to locationChecking.js to trace why location not being checked
+2. Check web worker command queue for race conditions
+3. Test if issue occurs with all event items collected after sphere 0, or only logistic-science-pack
+4. Consider if this is related to fractional sphere handling (2.1 vs integer spheres)
 
-**Potential Workarounds**:
-- None identified yet that wouldn't require infrastructure changes
+**Potential Root Causes**:
+- Web worker not processing checkLocation command properly
+- Race condition between snapshot retrieval and location checking
+- Event item special handling interfering with normal location check flow
+- Checked locations Set not being properly updated in worker state
