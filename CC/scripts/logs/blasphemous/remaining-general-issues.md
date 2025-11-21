@@ -41,6 +41,25 @@ The state manager is not adding the starting items from sphere 0's `resolved_ite
 **Location**:
 Frontend state manager code that handles `add_sphere_items_upfront` setting
 
+**Latest Investigation (2025-11-21) - Circular Dependency Chain**:
+
+The test is now failing with 374 missing regions. Investigation revealed:
+
+1. **8 D17Z01 regions ARE accessible**: D17Z01S01, D17Z01S01[E], D17Z01S02[E], D17Z01S02[W], D17Z01S05[E], D17Z01S05[W], D17Z01S11, D17Z01S11[W]
+
+2. **20 D17Z01 sub-regions are MISSING** due to complex circular dependencies involving `can_reach` rules
+
+3. **Root Cause - Missing D03Z01 Entry Point**:
+   - D17Z01S05[W] → D17Z01S05[S] requires `can_reach("D17BZ02S01[FrontR]")`
+   - The circular dependency chain goes: D17Z01S05[S] → D17Z01S04 → D17Z01S04[FrontL] → D17Z01S04[FrontR] → D17BZ02S01[FrontR]
+   - But ALL paths back to D17Z01S05[S] also depend on these same regions, creating a TRUE circular dependency
+   - **The ONLY way to break this cycle is through D03Z01S04[NW] → D17Z01S07[SE] → D17Z01S07[N] → D17Z01S04**
+   - D03Z01S04[NW] IS accessible in Python sphere 0, coming from D03Z01S03[W] or D03Z01S05[E]
+
+4. **Current Hypothesis**:
+   The frontend may not be reaching D03Z01 regions, which prevents breaking the D17Z01 circular dependency.
+   Need to investigate why D03Z01 regions aren't being reached.
+
 **Fix Applied**:
 Fixed bug in `frontend/modules/testSpoilers/eventProcessor.js:168, 243, 606` where settings were accessed incorrectly:
 - Changed `staticData?.settings?.add_sphere_items_upfront` to `staticData?.settings?.[String(this.playerId)]?.add_sphere_items_upfront`
