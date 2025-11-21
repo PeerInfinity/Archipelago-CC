@@ -1,11 +1,11 @@
 # Super Metroid - Implementation Summary
 
-## Current Status: Enhanced Implementation Complete (51% Helper Coverage)
+## Current Status: Comprehensive Implementation Complete (68% Helper Coverage)
 
 ### Test Results
 - **Sphere 0**: 1 mismatch (Morphing Ball location)
 - **Total Events**: 52 (only 1 processed due to stop-on-first-error)
-- **Helper Functions**: 48 implemented and working correctly (51% coverage, up from 43%)
+- **Helper Functions**: 64 implemented and working correctly (68% coverage, up from 51%)
 - **Exporter**: Handling most rules correctly with documented limitations
 
 ### What's Working ✅
@@ -16,7 +16,7 @@
    - Conservative export of complex patterns as False (prevents incorrect accessibility)
    - Proper handling of Available rules with item requirements
 
-2. **Helper Functions (48 implemented - 51% coverage)**
+2. **Helper Functions (64 implemented - 68% coverage)**
    - Basic item checks (canUseBombs, canUsePowerBombs, etc.)
    - Movement abilities (canFly, canInfiniteBombJump, canMockball)
    - Speed techniques (canSimpleShortCharge, canShortCharge)
