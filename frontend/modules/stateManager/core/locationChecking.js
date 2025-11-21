@@ -103,13 +103,6 @@ export function checkLocation(sm, locationName, addItems = true) {
     } else {
       // Validate that the location is accessible before checking
       if (!sm.isLocationAccessible(location)) {
-        // DEBUG: Log worker state to compare with main thread
-        console.log(`[WORKER DEBUG] Location ${locationName} NOT accessible`);
-        console.log(`[WORKER DEBUG] Worker inventory:`, JSON.stringify(sm.inventory));
-        console.log(`[WORKER DEBUG] Location region: ${location.region}, reachable: ${sm.knownReachableRegions?.has(location.region)}`);
-        if (location.access_rule) {
-          console.log(`[WORKER DEBUG] Access rule exists, evaluation failed`);
-        }
         sm._logDebug(`[StateManager Class] Location ${locationName} is not accessible, cannot check.`);
         rejectionReason = 'not_accessible';
 
@@ -119,10 +112,6 @@ export function checkLocation(sm, locationName, addItems = true) {
           reason: 'not_accessible'
         });
       } else {
-        // DEBUG: Log worker state on successful access check
-        console.log(`[WORKER DEBUG] Location ${locationName} IS accessible`);
-        console.log(`[WORKER DEBUG] Worker inventory:`, JSON.stringify(sm.inventory));
-
         // Location is accessible, proceed with checking
         sm.checkedLocations.add(locationName);
         sm._logDebug(`[StateManager Class] Checked location: ${locationName}`);

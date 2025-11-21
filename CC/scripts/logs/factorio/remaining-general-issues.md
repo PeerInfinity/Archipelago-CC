@@ -74,12 +74,7 @@ The worker's state (inventory, reachability) is out of sync with the main thread
 
 **Investigation Results** (Progressive Item Resolution Issue):
 
-✅ **Added diagnostic logging**:
-- `frontend/modules/stateManager/core/locationChecking.js`: Added console.log to show worker inventory when checking locations
-- `frontend/modules/stateManager/core/inventoryManager.js`: Added detailed logging for progressive item resolution
-- `frontend/modules/testSpoilers/eventProcessor.js`: Added main thread state logging before location checks
-
-✅ **Root Cause Identified**: Progressive item resolution in access rules
+✅ **ROOT CAUSE FOUND AND FIXED**: Missing progressionMapping in staticData
 
 The "Automate logistic-science-pack" location has this access rule:
 ```
@@ -92,16 +87,27 @@ Which expands to: "Check if player has all technologies in the list ['logistic-s
 **The Problem**:
 1. Worker inventory shows: `"progressive-science-pack": 2`
 2. Access rule checks for: `"logistic-science-pack"` (the resolved tech name)
-3. The `hasItem()` function in `inventoryManager.js` HAS progressive resolution logic (lines 437-461)
-4. It should check: "Do we have 'progressive-science-pack' >= level of 'logistic-science-pack'?"
-5. Level check: `progressiveCount (2) > itemLevel (0)` should return TRUE
+3. Factorio helper `has()` function tries to look up progressive resolution data from `staticData.progression_mapping[playerSlot]`
+4. But `staticData.progression_mapping` doesn't exist! Only `staticData.progressionMapping` (camelCase, not player-indexed) exists
+5. Therefore progressive item resolution fails and returns false
 
-**Investigation needed**:
-- The progressive resolution logic exists and looks correct
-- Need to verify why `hasItem("logistic-science-pack")` returns false in the worker
-- Possible issues:
-  - `progressionMapping` not loaded in worker?
-  - Progressive item not in correct format?
-  - Variable binding issue in `all_of` comprehension context?
+**The Fix** (`frontend/modules/shared/gameLogic/factorio/factorioLogic.js`):
+Changed line 68 from:
+```javascript
+const progressionMapping = staticData?.progression_mapping?.[playerSlot];
+```
 
-**Debug logs added but not yet captured in test output** - need to investigate why console.log from inventoryManager.js isn't appearing
+To:
+```javascript
+const progressionMapping = staticData?.progression_mapping?.[playerSlot] || staticData?.progressionMapping;
+```
+
+This adds a fallback to the camelCase `progressionMapping` field which IS populated by `statePersistence.js` line 671.
+
+**Why the mismatch?**:
+- `statePersistence.js` line 672 tries to populate `progression_mapping` from `sm.rules?.progression_mapping`
+- But `sm.rules` doesn't have `progression_mapping` at that path
+- The actual data is in `sm.progressionMapping` (loaded from JSON by `initialization.js` line 196)
+- The camelCase version `staticData.progressionMapping` IS populated correctly from line 671
+
+**Test Result**: ✅ ALL 67 events passed including Victory at sphere 12.1!
