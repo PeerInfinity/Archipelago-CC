@@ -1,22 +1,25 @@
-# Archipelago JSON Export Tools (Claude Code Fork)
-
-This repository is a fork of [PeerInfinity/Archipelago (JSONExport branch)](https://github.com/PeerInfinity/Archipelago/tree/JSONExport), specifically configured for development with Claude Code through the cloud interface.
+# Archipelago JSON Export Tools
 
 This project provides a system for exporting Archipelago's game logic into a standardized JSON format and includes a modular web client that uses this JSON for advanced tracking, accessibility analysis, and other utilities.
 
-**[Web Client Live Demo](https://peerinfinity.github.io/Archipelago-CC/)**
+**[Web Client Live Demo](https://peerinfinity.github.io/Archipelago-CC/)** (Latest Development Version)
 
-## Repository Structure & Differences from Upstream
+For a stable release, visit [Stable Demo](https://peerinfinity.github.io/Archipelago/)
 
-This fork differs from the upstream repository in several key ways:
+## About This Repository
 
-- **Main Branch Development:** Code is maintained in the `main` branch (instead of `JSONExport` branch) to simplify Claude Code cloud interface access
-- **Branch Management:** Each Claude Code session creates a new branch, which are preserved for reference rather than regularly cleaned up
+This is the active development repository for the Archipelago JSON Export Tools project. The original [PeerInfinity/Archipelago](https://github.com/PeerInfinity/Archipelago) repository has been archived, with development continuing here.
+
+### Repository Structure
+
+- **Main Branch Development:** Code is maintained in the `main` branch to simplify development workflows
+- **Claude Code Integration:** This repository is configured for development with Claude Code through the cloud interface
+  - Each Claude Code session creates a new branch, which are preserved for reference
 - **GitHub Pages Setup:**
   - Only the `frontend` directory is deployed to GitHub Pages (not the entire repository)
   - Deployed automatically via GitHub Actions on every push to `main`
-  - This provides the latest version of the code (may not always be stable)
-- **Upstream:** Based on [PeerInfinity/Archipelago](https://github.com/PeerInfinity/Archipelago/tree/JSONExport), which is forked from [ArchipelagoMW/Archipelago](https://github.com/ArchipelagoMW/Archipelago)
+  - Provides the latest version of the code (may not always be stable)
+- **Upstream Lineage:** Originally forked from [PeerInfinity/Archipelago](https://github.com/PeerInfinity/Archipelago/tree/JSONExport) (now archived), which itself was forked from [ArchipelagoMW/Archipelago](https://github.com/ArchipelagoMW/Archipelago)
 
 ## Key Features
 
@@ -45,7 +48,7 @@ This project contains a full documentation suite for both users and developers.
 
 ### Standard Mode
 
-1.  **Generate Your Game:** To get the necessary files, generate your seed using a version of Archipelago that contains the JSON exporter tool. You can download this from the [Archipelago JSON Export fork](https://github.com/PeerInfinity/Archipelago/tree/JSONExport). When you generate a seed, you will get two important files: your `.archipelago` file (for the server) and a `rules.json` file (for this web client).
+1.  **Generate Your Game:** To get the necessary files, generate your seed using a version of Archipelago that contains the JSON exporter tool. You can download this from this repository. When you generate a seed, you will get two important files: your `.archipelago` file (for the server) and a `rules.json` file (for this web client).
 2.  **Open the Web Client:** [Open the client](https://peerinfinity.github.io/Archipelago-CC/).
 3.  **Load Your Rules:** In one of the panels, find the "Presets" tab. At the top, click the "Load JSON File" button and select your `rules.json` file.
 4.  **Connect:** In the "Console & Status" panel, enter your server address and click "Connect".
