@@ -541,17 +541,36 @@ export const evaluateRule = (rule, context, depth = 0) => {
 
         let trueCount = 0;
         let undefinedCount = 0;
+        let falseCount = 0;
 
-        for (const condition of conditions) {
+        // Debug logging for Museumsanity locations
+        const debugCountTrue = requiredCount >= 3 && conditions.length > 15;
+        if (debugCountTrue) {
+          console.log(`[count_true DEBUG] Evaluating count_true(${requiredCount}, ${conditions.length} conditions)`);
+        }
+
+        for (let i = 0; i < conditions.length; i++) {
+          const condition = conditions[i];
           const conditionResult = evaluateRule(condition, context, depth + 1);
           if (conditionResult === true) {
             trueCount++;
+            if (debugCountTrue) {
+              console.log(`[count_true DEBUG]   Condition ${i}: TRUE (total true: ${trueCount})`);
+            }
           } else if (conditionResult === undefined) {
             undefinedCount++;
+            if (debugCountTrue) {
+              console.log(`[count_true DEBUG]   Condition ${i}: UNDEFINED`);
+            }
+          } else {
+            falseCount++;
           }
           // Short-circuit if we already have enough true conditions
           if (trueCount >= requiredCount) {
             result = true;
+            if (debugCountTrue) {
+              console.log(`[count_true DEBUG] Short-circuit: have ${trueCount} >= ${requiredCount} true conditions`);
+            }
             break;
           }
         }
@@ -564,9 +583,15 @@ export const evaluateRule = (rule, context, depth = 0) => {
           } else if (trueCount + undefinedCount >= requiredCount) {
             // We might have enough if some undefineds are true
             result = undefined;
+            if (debugCountTrue) {
+              console.log(`[count_true DEBUG] Result: UNDEFINED (true:${trueCount}, undefined:${undefinedCount}, false:${falseCount}, need:${requiredCount})`);
+            }
           } else {
             // Impossible to reach required count even if all undefineds were true
             result = false;
+            if (debugCountTrue) {
+              console.log(`[count_true DEBUG] Result: FALSE (true:${trueCount}, undefined:${undefinedCount}, false:${falseCount}, need:${requiredCount})`);
+            }
           }
         }
         break;
