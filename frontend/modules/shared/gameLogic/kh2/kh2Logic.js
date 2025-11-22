@@ -40,8 +40,8 @@ const EASY_DATA_XALDIN = {
   'Finishing Plus': 1,
   'Guard': 1,
   'Reflect Element': 3,
-  'Flare Force': 1,
-  'Fantasia': 1,
+  'Donald Flare Force': 1,
+  'Donald Fantasia': 1,
   'High Jump': 3,
   'Aerial Dodge': 3,
   'Glide': 3,
@@ -57,8 +57,8 @@ const NORMAL_DATA_XALDIN = {
   'Finishing Plus': 1,
   'Guard': 1,
   'Reflect Element': 3,
-  'Flare Force': 1,
-  'Fantasia': 1,
+  'Donald Flare Force': 1,
+  'Donald Fantasia': 1,
   'High Jump': 3,
   'Aerial Dodge': 3,
   'Glide': 3,
@@ -81,11 +81,65 @@ const HARD_DATA_XALDIN = {
 
 // Party limit items (from worlds/kh2/Logic.py:35-40)
 const PARTY_LIMIT = [
-  'Fantasia',
-  'Flare Force',
+  'Donald Fantasia',
+  'Donald Flare Force',
   'Teamwork',
   'Tornado Fusion'
 ];
+
+// Gap closer abilities (from worlds/kh2/Logic.py:9-12)
+const GAP_CLOSER = [
+  'Slide Dash',
+  'Flash Step'
+];
+
+// Ground finisher abilities (from worlds/kh2/Logic.py:30-34)
+const GROUND_FINISHER = [
+  'Guard Break',
+  'Explosion',
+  'Finishing Leap'
+];
+
+// Donald limit items (from worlds/kh2/Logic.py:41-44)
+const DONALD_LIMIT = [
+  'Donald Fantasia',
+  'Donald Flare Force'
+];
+
+// Data Axel fight requirements (from worlds/kh2/Logic.py:455-485)
+const EASY_DATA_AXEL = {
+  'Guard': 1,
+  'Reflect Element': 3,
+  'Slide Dash': 1,
+  'Flash Step': 1,
+  'Guard Break': 1,
+  'Explosion': 1,
+  'Dodge Roll': 3,
+  'Finishing Plus': 1,
+  'Second Chance': 1,
+  'Once More': 1,
+  'Blizzard Element': 3
+};
+
+const NORMAL_DATA_AXEL = {
+  'Guard': 1,
+  'Reflect Element': 2,
+  'Slide Dash': 1,
+  'Flash Step': 1,
+  'Guard Break': 1,
+  'Explosion': 1,
+  'Dodge Roll': 3,
+  'Finishing Plus': 1,
+  'Blizzard Element': 3
+};
+
+const HARD_DATA_AXEL = {
+  'Guard': 1,
+  'Reflect Element': 1,
+  'Dodge Roll': 2,
+  'Finishing Plus': 1,
+  'Blizzard Element': 2
+};
 
 export const helperFunctions = {
   /**
@@ -1380,6 +1434,37 @@ export const helperFunctions = {
       return helperFunctions.kh2_dict_count(HARD_DATA_XALDIN, snapshot) &&
              helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 3, true) &&
              helperFunctions.kh2_has_any(snapshot, staticData, PARTY_LIMIT);
+    }
+  },
+
+  /**
+   * Check if Data Axel fight is accessible.
+   * Based on worlds/kh2/Rules.py:1074-1083
+   *
+   * Note: Limit level 5 requires form_list_unlock(LimitForm, 3) (from worlds/kh2/Rules.py:332)
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Data Axel fight
+   */
+  get_data_axel_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    // Limit level 5 requirement: form_list_unlock(Limit Form, 3)
+    const canReachLimitLvl5 = helperFunctions.form_list_unlock(snapshot, staticData, 'Limit Form', 3, false);
+
+    if (fightLogic === 0) { // easy
+      return helperFunctions.kh2_dict_count(EASY_DATA_AXEL, snapshot) &&
+             canReachLimitLvl5 &&
+             helperFunctions.kh2_list_any_sum([DONALD_LIMIT], snapshot) >= 1;
+    } else if (fightLogic === 1) { // normal
+      return helperFunctions.kh2_dict_count(NORMAL_DATA_AXEL, snapshot) &&
+             canReachLimitLvl5 &&
+             helperFunctions.kh2_list_any_sum([DONALD_LIMIT, GAP_CLOSER], snapshot) >= 2;
+    } else { // hard
+      return helperFunctions.kh2_dict_count(HARD_DATA_AXEL, snapshot) &&
+             helperFunctions.kh2_list_any_sum([GAP_CLOSER, GROUND_FINISHER], snapshot) >= 2;
     }
   },
 
