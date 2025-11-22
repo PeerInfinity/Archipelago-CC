@@ -4,13 +4,13 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-22 08:49:34
+**Generated:** 2025-11-22 22:57:38
 
 ## Summary
 
-- **Total Games:** 78
-- **Passed:** 58 (74.4%)
-- **Failed:** 20 (25.6%)
+- **Total Games:** 76
+- **Passed:** 57 (75.0%)
+- **Failed:** 19 (25.0%)
 
 ## Test Results
 
@@ -58,7 +58,6 @@
 | Metamath | ✅ Passed | 0 | ✅ | 9 | 9 | ✅ | 9 | 9 | ✅ | ⚫ |
 | Muse Dash | ✅ Passed | 0 | ✅ | 90 | 90 | ✅ | 90 | 90 | ⚫ | ⚫ |
 | Noita | ✅ Passed | 0 | ✅ | 117 | 109 | ✅ | 117 | 117 | ⚫ | ⚫ |
-| Ocarina of Time | ❌ Failed | 3 | ❌ | 0 | 0 | ❌ | 0 | 0 | ✅ | ⚫ |
 | Old School Runescape | ✅ Passed | 0 | ✅ | 76 | 76 | ✅ | 76 | 76 | ✅ | ✅ |
 | Overcooked! 2 | ❌ Failed | 0 | ❌ | 9 | 43 | ❌ | 0 | 215 | ✅ | ✅ |
 | Paint | ✅ Passed | 0 | ✅ | 130 | 130 | ✅ | 130 | 130 | ✅ | ✅ |
@@ -66,7 +65,7 @@
 | Pokemon Red and Blue | ❌ Failed | 0 | ❌ | 209 | 161 | ❌ | 0 | 1010 | ✅ | ✅ |
 | Raft | ✅ Passed | 0 | ✅ | 155 | 154 | ✅ | 155 | 155 | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | ✅ | 223 | 221 | ✅ | 223 | 223 | ⚫ | ⚫ |
-| SMZ3 | ❌ Failed | 0 | ❌ | 234 | 316 | ❌ | 0 | 316 | ✅ | ✅ |
+| SMZ3 | ❌ Failed | 0 | ❌ | 238 | 316 | ❌ | 0 | 316 | ✅ | ✅ |
 | Saving Princess | ✅ Passed | 0 | ✅ | 37 | 36 | ✅ | 37 | 37 | ✅ | ⚫ |
 | Secret of Evermore | ✅ Passed | 0 | ✅ | 340 | 339 | ✅ | 340 | 340 | ✅ | ✅ |
 | Shivers | ❌ Failed | 0 | ❌ | 112 | 76 | ❌ | 0 | 114 | ✅ | ✅ |
@@ -77,7 +76,7 @@
 | Super Mario 64 | ✅ Passed | 0 | ✅ | 149 | 149 | ✅ | 149 | 149 | ✅ | ✅ |
 | Super Mario Land 2 | ❌ Failed | 0 | ❌ | 53 | 59 | ❌ | 0 | 60 | ✅ | ✅ |
 | Super Mario World | ✅ Passed | 0 | ✅ | 108 | 108 | ✅ | 108 | 108 | ✅ | ⚫ |
-| Super Metroid | ❌ Failed | 0 | ❌ | 1 | 101 | ❌ | 0 | 109 | ✅ | ✅ |
+| Super Metroid | ❌ Failed | 0 | ❌ | 8 | 101 | ❌ | 0 | 109 | ✅ | ✅ |
 | TUNIC | ✅ Passed | 0 | ✅ | 303 | 302 | ✅ | 303 | 303 | ✅ | ⚫ |
 | Terraria | ✅ Passed | 0 | ✅ | 244 | 63 | ✅ | 244 | 244 | ✅ | ✅ |
 | The Legend of Zelda | ✅ Passed | 0 | ✅ | 165 | 155 | ✅ | 165 | 165 | ✅ | ✅ |
@@ -92,7 +91,6 @@
 | Yacht Dice | ✅ Passed | 0 | ✅ | 90 | 90 | ✅ | 90 | 90 | ✅ | ✅ |
 | Yoshi's Island | ❌ Failed | 0 | ❌ | 187 | 191 | ❌ | 0 | 207 | ✅ | ✅ |
 | Yu-Gi-Oh! 2006 | ❌ Failed | 0 | ❌ | 446 | 84 | ❌ | 0 | 978 | ✅ | ✅ |
-| Zillion | ✅ Passed | 0 | ✅ | 147 | 147 | ✅ | 147 | 147 | ✅ | ⚫ |
 | shapez | ✅ Passed | 0 | ✅ | 140 | 139 | ✅ | 140 | 140 | ✅ | ✅ |
 
 ## Notes
