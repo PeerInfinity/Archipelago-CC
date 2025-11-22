@@ -333,18 +333,17 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "A Short Hike"
+            "game": "A Hat in Time"
           },
           {
             "player": 2,
             "name": "Player2",
-            "game": "Adventure"
+            "game": "A Link to the Past"
           }
         ],
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_P1_rules.json",
-          "AP_14089154938208861744_P2_Player2.apadvn",
           "AP_14089154938208861744_P2_rules.json",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",

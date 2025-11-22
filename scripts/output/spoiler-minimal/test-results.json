@@ -246,7 +246,7 @@
       ],
       "last_updated": "2025-11-22T02:41:45.756289"
     },
-    "last_updated": "2025-11-22T02:41:45.756287",
+    "last_updated": "2025-11-22T18:22:00.028405",
     "script_version": "1.0.0"
   },
   "results": {
@@ -790,7 +790,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 8.1,
+            "processing_time_seconds": 10.63,
             "return_code": 0,
             "success": true,
             "warning_count": 2
@@ -805,7 +805,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 15.94,
+            "processing_time_seconds": 19.88,
             "return_code": 0,
             "sphere_reached": 22.1,
             "success": true,
@@ -813,7 +813,7 @@
             "warning_count": 0
           },
           "template_filename": "A Link to the Past.yaml",
-          "timestamp": "2025-11-22T02:00:41.439211",
+          "timestamp": "2025-11-22T18:21:29.066321",
           "world_info": {
             "exporter_path": "exporter/games/alttp.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1256,7 +1256,7 @@
         "failure_rate": 0.0
       },
       "template_filename": "A Link to the Past.yaml",
-      "timestamp": "2025-11-22T02:00:41.439211",
+      "timestamp": "2025-11-22T18:21:29.066321",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/alttp.py",

@@ -636,10 +636,13 @@ export function getAllPaths(sm) {
  * @param {number} player - Player number (must match sm.playerSlot)
  * @returns {boolean} True if target can be reached
  */
-export function can_reach(sm, target, type = 'Region', player = 1) {
+export function can_reach(sm, target, type = 'Region', player = null) {
+  // Use the current player slot if player is not specified (multiworld compatibility)
+  const targetPlayer = player !== null ? player : sm.playerSlot;
+
   // The context-aware state manager handles position-specific constraints correctly
-  if (player !== sm.playerSlot) {
-    sm._logDebug(`[ReachabilityEngine] can_reach check for wrong player (${player})`);
+  if (targetPlayer !== sm.playerSlot) {
+    sm._logDebug(`[ReachabilityEngine] can_reach check for wrong player (${targetPlayer})`);
     return false;
   }
 
