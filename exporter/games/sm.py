@@ -220,6 +220,9 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         A simple accessFrom is: any(state.can_reach(region) and evalSMBool(SMBool(True), ...))
         This means the location is accessible from the region with no item requirements.
+
+        NOTE: Due to analyzer recursion limits, this check almost never succeeds.
+        Most accessFrom patterns become corrupted nested structures even if they're simple.
         """
         if not rule or rule.get('type') != 'any_of':
             return False
@@ -240,6 +243,7 @@ class SMGameExportHandler(GenericGameExportHandler):
         # Second condition should be evalSMBool(SMBool(True), ...)
         second = conditions[1]
         if self._is_always_true_smbool(second):
+            logger.info("SM: _is_simple_accessFrom: DETECTED SIMPLE PATTERN (rare!)")
             return True
 
         return False
@@ -289,6 +293,18 @@ class SMGameExportHandler(GenericGameExportHandler):
                     return True
 
         if rule_type == 'function_call':
+            # Check if the function being called is a VARIA logic method (sm.method_name)
+            function = rule.get('function', {})
+            if function.get('type') == 'attribute':
+                obj = function.get('object', {})
+                attr = function.get('attr', '')
+                # If calling sm.method_name, this is complex VARIA logic
+                if obj.get('type') == 'name' and obj.get('name') == 'sm':
+                    # Any sm.method_name is complex (wor, wand, canPass*, haveItem, etc.)
+                    logger.debug(f"SM: Found complex function_call: sm.{attr}")
+                    return True
+
+            # Also check args recursively
             for arg in rule.get('args', []):
                 if self._contains_complex_helpers(arg):
                     return True
@@ -344,7 +360,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                         # corrupt the structure.
                         #
                         # Conservative approach: Export as False to prevent incorrect accessibility.
-                        # TODO: Improve accessFrom detection to handle more cases
+                        # TODO: Need a different approach - see CC/scripts/logs/sm/remaining-exporter-issues.md
                         logger.info("SM: Complex accessFrom with SMBool(True) Available - exporting as False (conservative)")
                         return {'type': 'constant', 'value': False}
 

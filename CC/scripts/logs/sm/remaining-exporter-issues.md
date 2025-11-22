@@ -1,8 +1,8 @@
 # Super Metroid - Remaining Exporter Issues
 
-## Issue 1: Over-conservative `accessFrom` + `SMBool(True)` handling
+## Issue 1: Cannot properly export AccessFrom patterns due to analyzer recursion limits
 
-**Status:** Identified
+**Status:** Investigated - Solution Attempt 1 Failed
 **Priority:** High
 **Sphere:** 0
 **Locations affected:** Morphing Ball (and likely many others)
@@ -84,14 +84,65 @@ From rules.json:
 }
 ```
 
-### Proposed Fix
+### Root Cause Analysis
 
-1. Improve the `_is_simple_accessFrom()` method to detect more cases where the `accessFrom` comprehension returns `SMBool(True)` for all regions
-2. Alternatively, export the `accessFrom` pattern as `true` when the `Available` part is `SMBool(True)`, since this means "accessible from region with no items required"
-3. Consider analyzing the actual regions in the `accessFrom` comprehension to determine if any are already accessible
+The core issue is that Super Metroid's `AccessFrom` pattern creates deeply nested comprehensions that trigger the analyzer's recursion limits. When this happens:
+
+1. The analyzer creates corrupted nested `any_of` structures
+2. Complex helper calls (like `canPassTerminatorBombWall()`) are lost in the corruption
+3. The exporter cannot distinguish simple patterns (SMBool(True)) from complex patterns (actual item requirements)
+
+### Failed Solution Attempt 1: Detect Complex Helpers
+
+**Approach:** Use `_contains_complex_helpers()` to scan the accessFrom structure for VARIA logic methods
+
+**Why it failed:**
+- The recursion corruption hides complex helpers so deep in nested structures that they're undetectable
+- Both simple and complex patterns look identical after corruption
+- All patterns appear to have no complex helpers, leading to false positives
+
+**Evidence:**
+- 60 locations marked as "simple" (has_complex_helpers=False)
+- 0 locations marked as "complex"
+- But locations like "Energy Tank, Terminator" ARE complex (require canPassTerminatorBombWall)
+- These were incorrectly exported as `access_rule: true`, causing spoiler test failures
+
+### Alternative Approaches to Consider
+
+1. **Use Python Source Introspection**
+   - Parse the actual Python source code for AccessFrom definitions
+   - Extract requirements directly from lambda expressions
+   - Pro: Gets ground truth without analyzer corruption
+   - Con: Requires Python AST parsing, fragile to code changes
+
+2. **Export AccessFrom to Region Connections**
+   - Instead of location access rules, put AccessFrom requirements in region connections
+   - Each AccessFrom entry becomes a region connection with proper requirements
+   - Pro: Matches the Super Metroid architecture better
+   - Con: Requires significant exporter refactoring
+
+3. **Pre-Process AccessFrom Before Analysis**
+   - Detect AccessFrom patterns early and convert them to a different structure
+   - Avoid the comprehension that triggers recursion limits
+   - Pro: Prevents corruption at the source
+   - Con: Requires understanding analyzer internals
+
+4. **Conservative Fallback with Whitelist**
+   - Maintain a whitelist of known-simple locations (like Morphing Ball)
+   - Export whitelisted locations as `true`, all others as `false`
+   - Pro: Safe and simple
+   - Con: Requires manual maintenance, doesn't scale
+
+5. **Hybrid: Analyze Region Graph**
+   - Look at which regions the location is placed in
+   - Check if those regions have complex access requirements
+   - If Available is SMBool(True) AND all parent regions are simple, export as `true`
+   - Pro: Uses region topology information
+   - Con: Complex logic, may still miss cases
 
 ### Related Code
 
-- `exporter/games/sm.py:_is_simple_accessFrom()` (lines ~218-245)
-- `exporter/games/sm.py:_check_accessFrom_pattern()` (lines ~154-181)
-- `exporter/games/sm.py:expand_rule()` (lines ~302-459)
+- `exporter/games/sm.py:_is_simple_accessFrom()` (lines ~218-250)
+- `exporter/games/sm.py:_contains_complex_helpers()` (lines ~252-315)
+- `exporter/games/sm.py:expand_rule()` (lines ~318-459)
+- `worlds/sm/variaRandomizer/graph/vanilla/graph_locations.py` (Python source definitions)
