@@ -241,21 +241,18 @@ set.mm
 !scripts/build/
 !scripts/lib/
 
-# Ignore everything in output directories
-scripts/output/spoiler-minimal/*
-scripts/output/spoiler-full/*
-scripts/output/multiclient/*
-scripts/output/multiworld/*
-scripts/output/multitemplate-minimal/*
-scripts/output/multitemplate-full/*
-
-# But keep test-results.json files
-!scripts/output/spoiler-minimal/test-results.json
-!scripts/output/spoiler-full/test-results.json
-!scripts/output/multiclient/test-results.json
-!scripts/output/multiworld/test-results.json
-!scripts/output/multitemplate-minimal/test-results.json
-!scripts/output/multitemplate-full/test-results.json
+scripts/output/spoiler-minimal/test-results-*
+scripts/output/spoiler-minimal/test-results_*
+scripts/output/spoiler-full/test-results-*
+scripts/output/spoiler-full/test-results_*
+scripts/output/multiclient/test-results-*
+scripts/output/multiclient/test-results_*
+scripts/output/multiworld/test-results-*
+scripts/output/multiworld/test-results_*
+scripts/output/multitemplate-minimal/test-results-*
+scripts/output/multitemplate-minimal/test-results_*
+scripts/output/multitemplate-full/test-results-*
+scripts/output/multitemplate-full/test-results_*
 
 test1/
 test2/

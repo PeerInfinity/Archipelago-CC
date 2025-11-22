@@ -24,6 +24,75 @@ class SMGameExportHandler(GenericGameExportHandler):
         super().__init__()  # Base class doesn't take arguments
         self.world = world
         self._simple_accessfrom_locations: Optional[Set[str]] = None
+        self._varia_item_types: Optional[Dict[str, str]] = None
+
+    def _get_varia_item_types(self) -> Dict[str, str]:
+        """Get mapping of item names to their VARIA types.
+
+        Returns:
+            Dict mapping Archipelago item names to VARIA type names
+        """
+        if self._varia_item_types is None:
+            self._varia_item_types = {}
+            try:
+                from worlds.sm.variaRandomizer.rando.Items import ItemManager
+                # ItemManager.Items is a dict of Type -> Item objects
+                for item_type, item_obj in ItemManager.Items.items():
+                    # item_obj.Name is the Archipelago name, item_obj.Type is the VARIA type
+                    if hasattr(item_obj, 'Name') and hasattr(item_obj, 'Type'):
+                        self._varia_item_types[item_obj.Name] = item_obj.Type
+                logger.info(f"SM: Loaded {len(self._varia_item_types)} VARIA item type mappings")
+            except Exception as e:
+                logger.error(f"SM: Failed to load VARIA item types: {e}", exc_info=True)
+
+        return self._varia_item_types
+
+    def get_item_type_for_name(self, item_name: str, world) -> Optional[str]:
+        """Get VARIA type for an item name.
+
+        Args:
+            item_name: The name of the item
+            world: The world instance
+
+        Returns:
+            The VARIA type name, or None if not found
+        """
+        varia_types = self._get_varia_item_types()
+        varia_type = varia_types.get(item_name)
+
+        if varia_type:
+            logger.debug(f"SM: Item '{item_name}' has VARIA type '{varia_type}'")
+
+        return varia_type
+
+    def get_item_data(self, world):
+        """Get item data from world, adding VARIA type information.
+
+        Overrides the base class to add VARIA Type field to items.
+        Follows the same pattern as ALTTP exporter.
+        """
+        logger.info("SM: get_item_data called")
+        # Get base item data from parent class
+        item_data = super().get_item_data(world)
+        logger.info(f"SM: Got {len(item_data)} items from parent")
+
+        # Add VARIA type information
+        try:
+            varia_types = self._get_varia_item_types()
+            logger.info(f"SM: Retrieved {len(varia_types)} VARIA type mappings")
+
+            type_count = 0
+            for item_name, item_info in item_data.items():
+                if item_name in varia_types:
+                    item_info['type'] = varia_types[item_name]
+                    type_count += 1
+                    logger.debug(f"SM: Set type='{varia_types[item_name]}' for item '{item_name}'")
+
+            logger.info(f"SM: Added VARIA types to {type_count} items out of {len(item_data)} total")
+        except Exception as e:
+            logger.error(f"SM: Error adding VARIA types: {e}", exc_info=True)
+
+        return item_data
 
     def _get_simple_accessfrom_locations(self) -> Set[str]:
         """Get the set of location names with simple AccessFrom (all regions use SMBool(True)).
@@ -352,6 +421,33 @@ class SMGameExportHandler(GenericGameExportHandler):
             return rule
 
         rule_type = rule.get('type')
+
+        # Handle RomPatches.has() calls - resolve to constants since patches are fixed at generation time
+        if rule_type == 'function_call':
+            function = rule.get('function', {})
+            if (function.get('type') == 'attribute' and
+                function.get('attr') == 'has' and
+                function.get('object', {}).get('type') == 'name' and
+                function.get('object', {}).get('name') == 'RomPatches'):
+                # This is a RomPatches.has(patch_id) call
+                args = rule.get('args', [])
+                if len(args) >= 1:
+                    # The first arg should be the patch ID (constant)
+                    patch_arg = args[0]
+                    if patch_arg.get('type') == 'constant':
+                        patch_id = patch_arg.get('value')
+                        # Check if this patch is active
+                        # Import RomPatches to check active patches
+                        try:
+                            from worlds.sm.variaRandomizer.rom.rom_patches import RomPatches
+                            player_id = self.world.player if self.world else 1
+                            is_active = patch_id in RomPatches.ActivePatches.get(player_id, [])
+                            logger.info(f"SM: Resolved RomPatches.has({patch_id}) to {is_active}")
+                            return {'type': 'constant', 'value': is_active}
+                        except Exception as e:
+                            logger.error(f"SM: Failed to resolve RomPatches.has({patch_id}): {e}")
+                            # Conservative fallback: assume patch is not active
+                            return {'type': 'constant', 'value': False}
 
         # Check for AND rules that combine accessFrom and Available
         # The accessFrom comprehension can't be properly exported, so we skip it

@@ -141,6 +141,111 @@ export function smz3_CanBeatBoss(snapshot, staticData) {
          hasItem(snapshot, staticData, 'Somaria');
 }
 
+/**
+ * Check if player can beat Armos Knights (Eastern Palace boss).
+ * Python (from EasternPalace): def CanBeatBoss(self, items: Progression):
+ *     return items.Sword or items.Hammer or items.Bow or \
+ *            items.Firerod or items.Icerod or \
+ *            items.Byrna or items.Somaria
+ * Same as generic CanBeatBoss.
+ */
+export function smz3_CanBeatArmos(snapshot, staticData) {
+  return smz3_CanBeatBoss(snapshot, staticData);
+}
+
+/**
+ * Check if player can beat Moldorm (Tower of Hera boss).
+ * Python (from TowerOfHera): def CanBeatBoss(self, items: Progression):
+ *     return items.Sword or items.Hammer
+ * Requires either Sword or Hammer (more restrictive than generic).
+ */
+export function smz3_CanBeatMoldorm(snapshot, staticData) {
+  return hasItem(snapshot, staticData, 'ProgressiveSword') ||
+         hasItem(snapshot, staticData, 'Hammer');
+}
+
+// ====================
+// Ganon's Tower Navigation Helpers
+// ====================
+
+/**
+ * Check if player can access the left side of Ganon's Tower.
+ * Python (from GanonsTower):
+ * def LeftSide(self, items: Progression, locations: List[Location]):
+ *     return items.Hammer and items.Hookshot and items.KeyGT >= (3 if any(l.ItemIs(ItemType.BigKeyGT, self.world) for l in locations) else 4)
+ *
+ * Requires:
+ * - Hammer AND Hookshot
+ * - 3 KeyGT if any location in the list contains BigKeyGT, otherwise 4 KeyGT
+ *
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static data
+ * @param {Array} locations - List of location objects to check
+ */
+export function smz3_LeftSide(snapshot, staticData, locations) {
+  const hasHammer = hasItem(snapshot, staticData, 'Hammer');
+  const hasHookshot = hasItem(snapshot, staticData, 'Hookshot');
+
+  if (!hasHammer || !hasHookshot) {
+    return false;
+  }
+
+  // Check if any location in the list contains BigKeyGT
+  let anyContainsBigKeyGT = false;
+  if (locations && Array.isArray(locations)) {
+    for (const loc of locations) {
+      if (loc && loc.ItemIs && loc.ItemIs('BigKeyGT')) {
+        anyContainsBigKeyGT = true;
+        break;
+      }
+    }
+  }
+
+  const requiredKeys = anyContainsBigKeyGT ? 3 : 4;
+  const keyCount = getItemCount(snapshot, staticData, 'KeyGT');
+
+  return keyCount >= requiredKeys;
+}
+
+/**
+ * Check if player can access the right side of Ganon's Tower.
+ * Python (from GanonsTower):
+ * def RightSide(self, items: Progression, locations: List[Location]):
+ *     return items.Somaria and items.Firerod and items.KeyGT >= (3 if any(l.ItemIs(ItemType.BigKeyGT, self.world) for l in locations) else 4)
+ *
+ * Requires:
+ * - Somaria AND Firerod
+ * - 3 KeyGT if any location in the list contains BigKeyGT, otherwise 4 KeyGT
+ *
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static data
+ * @param {Array} locations - List of location objects to check
+ */
+export function smz3_RightSide(snapshot, staticData, locations) {
+  const hasSomaria = hasItem(snapshot, staticData, 'Somaria');
+  const hasFirerod = hasItem(snapshot, staticData, 'Firerod');
+
+  if (!hasSomaria || !hasFirerod) {
+    return false;
+  }
+
+  // Check if any location in the list contains BigKeyGT
+  let anyContainsBigKeyGT = false;
+  if (locations && Array.isArray(locations)) {
+    for (const loc of locations) {
+      if (loc && loc.ItemIs && loc.ItemIs('BigKeyGT')) {
+        anyContainsBigKeyGT = true;
+        break;
+      }
+    }
+  }
+
+  const requiredKeys = anyContainsBigKeyGT ? 3 : 4;
+  const keyCount = getItemCount(snapshot, staticData, 'KeyGT');
+
+  return keyCount >= requiredKeys;
+}
+
 // ====================
 // Super Metroid Helper Functions
 // ====================
@@ -966,15 +1071,19 @@ function evaluateSimpleRule(rule, snapshot, staticData) {
           return smz3_CanExit(snapshot, staticData, ...evaluatedArgs);
         case 'smz3_GetLocation':
           return smz3_GetLocation(snapshot, staticData, ...evaluatedArgs);
-        // Boss-specific helpers that are just aliases for CanBeatBoss
+        // Boss-specific helpers
         case 'smz3_CanBeatArmos':
+          return smz3_CanBeatArmos(snapshot, staticData, ...evaluatedArgs);
         case 'smz3_CanBeatMoldorm':
-          return smz3_CanBeatBoss(snapshot, staticData, ...evaluatedArgs);
+          return smz3_CanBeatMoldorm(snapshot, staticData, ...evaluatedArgs);
+        // Ganon's Tower navigation helpers
+        case 'smz3_LeftSide':
+          return smz3_LeftSide(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_RightSide':
+          return smz3_RightSide(snapshot, staticData, ...evaluatedArgs);
         // Helper stubs for functions that need implementation
         case 'smz3_CanNotWasteKeysBeforeAccessible':
-        case 'smz3_LeftSide':
-        case 'smz3_RightSide':
-          // These need proper implementation - for now return true to avoid blocking
+          // This needs proper implementation - for now return true to avoid blocking
           console.warn(`[evaluateSimpleRule] Helper '${helperName}' not fully implemented, returning true`);
           return true;
         default:
