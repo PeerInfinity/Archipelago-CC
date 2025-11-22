@@ -1,49 +1,27 @@
 # SMZ3 Helper Function Issues - Remaining
 
-## Issue: CanAcquire/CanAcquireAll cannot evaluate complex boss location rules
+## Issue: Master Sword Pedestal and Skull Woods - Mothula not accessible in sphere 9.10
 
-**Status**: In Progress
+**Status**: Investigating
 
 **Description**:
-The `smz3_CanAcquire` and `smz3_CanAcquireAll` helper functions fail to evaluate boss location access rules that contain nested OR conditions. These functions try to manually evaluate simple rules but fall back to `snapshot.evaluateRule()` for complex rules, which is not available in the helper function context.
+After fixing the Pyramid Fairy issue, the test now progresses to sphere 9.10 where two locations fail to become accessible:
+- Master Sword Pedestal
+- Skull Woods - Mothula
 
 **Error Seen**:
 ```
-[checkRegionCompletion] Cannot evaluate complex rule for Tower of Hera - Moldorm, snapshot.evaluateRule not available
+STATE MISMATCH found for: {"type":"state_update","sphere_number":"9.10","player_id":1}
+> Locations accessible in LOG but NOT in STATE (or checked): Master Sword Pedestal, Skull Woods - Mothula
+    ISSUE: Access rule evaluation failed
 ```
 
-**Locations Affected**:
-- Pyramid Fairy - Left (requires CanAcquireAll for CrystalRed)
-- Pyramid Fairy - Right (requires CanAcquireAll for CrystalRed)
+**Next Steps**:
+1. Check the access rules for these locations in the rules.json
+2. Verify what items/regions the player has at sphere 9.10
+3. Identify which rule condition is failing
+4. Implement any missing rule types or helper functions
 
-**Root Cause**:
-Boss locations like "Tower of Hera - Moldorm" have access rules with nested structures:
-```json
-{
-  "type": "and",
-  "conditions": [
-    {"type": "item_check", "item": "BigKeyTH"},
-    {
-      "type": "or",
-      "conditions": [
-        {"type": "item_check", "item": "ProgressiveSword"},
-        {"type": "item_check", "item": "Hammer"}
-      ]
-    }
-  ]
-}
-```
-
-The `checkRegionCompletion` function only handles simple AND rules where all conditions are item_checks. When it encounters a nested OR, it tries to use `snapshot.evaluateRule()`, which doesn't exist.
-
-**Solution**:
-Implement a manual rule evaluator in the helper functions that can handle:
-1. item_check rules
-2. AND rules (all conditions must be true)
-3. OR rules (at least one condition must be true)
-4. Nested combinations of the above
-
-This will allow the helpers to evaluate boss location rules without needing `snapshot.evaluateRule()`.
-
-**Files to Modify**:
+**Files to Investigate**:
 - frontend/modules/shared/gameLogic/smz3/smz3Logic.js
+- frontend/presets/smz3/AP_14089154938208861744/AP_14089154938208861744_rules.json

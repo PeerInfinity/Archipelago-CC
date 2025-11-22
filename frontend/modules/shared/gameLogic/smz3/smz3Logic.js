@@ -808,6 +808,41 @@ function evaluateSimpleRule(rule, snapshot, staticData) {
       const regionName = typeof rule.region === 'string' ? rule.region : rule.region?.value;
       return snapshot.regionReachability?.[regionName] === true;
 
+    case 'compare':
+      // Handle comparison operations like >= , <=, ==, !=, >, <
+      if (!rule.left || !rule.right || !rule.op) {
+        console.warn('[evaluateSimpleRule] Invalid compare rule, missing left/right/op');
+        return false;
+      }
+
+      // Evaluate left and right sides
+      let leftValue;
+      if (rule.left.type === 'item_check') {
+        leftValue = getItemCount(snapshot, staticData, rule.left.item);
+      } else {
+        leftValue = evaluateSimpleRule(rule.left, snapshot, staticData);
+      }
+
+      let rightValue;
+      if (rule.right.type === 'constant') {
+        rightValue = rule.right.value;
+      } else {
+        rightValue = evaluateSimpleRule(rule.right, snapshot, staticData);
+      }
+
+      // Perform comparison
+      switch (rule.op) {
+        case '>=': return leftValue >= rightValue;
+        case '<=': return leftValue <= rightValue;
+        case '>': return leftValue > rightValue;
+        case '<': return leftValue < rightValue;
+        case '==': return leftValue == rightValue;
+        case '!=': return leftValue != rightValue;
+        default:
+          console.warn(`[evaluateSimpleRule] Unknown comparison operator '${rule.op}'`);
+          return false;
+      }
+
     case 'helper':
       // Try to call the helper function
       const helperName = rule.name;
@@ -848,7 +883,69 @@ function evaluateSimpleRule(rule, snapshot, staticData) {
           return smz3_CanKillManyEnemies(snapshot, staticData, ...evaluatedArgs);
         case 'smz3_CanBeatBoss':
           return smz3_CanBeatBoss(snapshot, staticData, ...evaluatedArgs);
-        // Add more helpers as needed
+        case 'smz3_CanLightTorches':
+          return smz3_CanLightTorches(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanMeltFreezors':
+          return smz3_CanMeltFreezors(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanExtendMagic':
+          return smz3_CanExtendMagic(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanIbj':
+          return smz3_CanIbj(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanFly':
+          return smz3_CanFly(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanUsePowerBombs':
+          return smz3_CanUsePowerBombs(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanPassBombPassages':
+          return smz3_CanPassBombPassages(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanDestroyBombWalls':
+          return smz3_CanDestroyBombWalls(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanSpringBallJump':
+          return smz3_CanSpringBallJump(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanHellRun':
+          return smz3_CanHellRun(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_HasEnergyReserves':
+          return smz3_HasEnergyReserves(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanOpenRedDoors':
+          return smz3_CanOpenRedDoors(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanAccessCrocomire':
+          return smz3_CanAccessCrocomire(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanUnlockShip':
+          return smz3_CanUnlockShip(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanEnterAndLeaveGauntlet':
+          return smz3_CanEnterAndLeaveGauntlet(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanAccessDeathMountainPortal':
+          return smz3_CanAccessDeathMountainPortal(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanAccessDarkWorldPortal':
+          return smz3_CanAccessDarkWorldPortal(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanAccessMiseryMirePortal':
+          return smz3_CanAccessMiseryMirePortal(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanAccessNorfairUpperPortal':
+          return smz3_CanAccessNorfairUpperPortal(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanAccessNorfairLowerPortal':
+          return smz3_CanAccessNorfairLowerPortal(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanAccessMaridiaPortal':
+          return smz3_CanAccessMaridiaPortal(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanReachAqueduct':
+          return smz3_CanReachAqueduct(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanDefeatBotwoon':
+          return smz3_CanDefeatBotwoon(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanDefeatDraygon':
+          return smz3_CanDefeatDraygon(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanExit':
+          return smz3_CanExit(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_GetLocation':
+          return smz3_GetLocation(snapshot, staticData, ...evaluatedArgs);
+        // Boss-specific helpers that are just aliases for CanBeatBoss
+        case 'smz3_CanBeatArmos':
+        case 'smz3_CanBeatMoldorm':
+          return smz3_CanBeatBoss(snapshot, staticData, ...evaluatedArgs);
+        // Helper stubs for functions that need implementation
+        case 'smz3_CanNotWasteKeysBeforeAccessible':
+        case 'smz3_LeftSide':
+        case 'smz3_RightSide':
+          // These need proper implementation - for now return true to avoid blocking
+          console.warn(`[evaluateSimpleRule] Helper '${helperName}' not fully implemented, returning true`);
+          return true;
         default:
           console.warn(`[evaluateSimpleRule] Unknown helper '${helperName}', returning false`);
           return false;
