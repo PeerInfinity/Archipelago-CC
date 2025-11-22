@@ -4,23 +4,23 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-21 09:58:49
+**Generated:** 2025-11-21 17:34:38
 
-**Source Data Created:** 2025-11-21T08:30:47.765010
+**Source Data Created:** 2025-11-21T21:08:37.193107
 
-**Source Data Last Updated:** 2025-11-21T08:30:47.765015
+**Source Data Last Updated:** 2025-11-21T21:08:37.193112
 
 ## Summary
 
 - **Total Games:** 1
 - **Total Template Configurations:** 174
-- **Passed Configurations:** 136 (78.2%)
-- **Failed Configurations:** 34 (19.5%)
+- **Passed Configurations:** 135 (77.6%)
+- **Failed Configurations:** 35 (20.1%)
 - **Invalid Configurations:** 4 (2.3%)
 
 ## A Link to the Past
 
-**Results:** 136/174 passed (78.2%)  
+**Results:** 135/174 passed (77.6%)  
 **Custom Exporter:** ✅ Yes | **Custom GameLogic:** ✅ Yes
 
 | Template | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress |
@@ -145,7 +145,7 @@
 | progressive_off | ✅ Passed | 0 | 28.1 | 28.1 | 100.0% |
 | progressive_on | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | randomize_cost_types_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| randomize_cost_types_true | ✅ Passed | 0 | 18.1 | 18.1 | 100.0% |
+| randomize_cost_types_true | ❌ Failed | 0 | 0 | 18.1 | 0.0% |
 | randomize_shop_inventories_default | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | randomize_shop_inventories_randomize_by_shop_type | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | randomize_shop_inventories_randomize_each | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |

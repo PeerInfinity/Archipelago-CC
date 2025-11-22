@@ -4,7 +4,7 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-21 09:58:49
+**Generated:** 2025-11-21 17:34:38
 
 ## Summary
 
@@ -63,7 +63,7 @@
 | Overcooked! 2 | ❌ Failed | 0 | ❌ | 9 | 43 | ❌ | 0 | 215 | ✅ | ✅ |
 | Paint | ✅ Passed | 0 | ✅ | 130 | 130 | ✅ | 130 | 130 | ✅ | ✅ |
 | Pokemon Emerald | ❌ Failed | 0 | ❌ | 359 | 203 | ❌ | 0 | 1061 | ✅ | ✅ |
-| Pokemon Red and Blue | ❌ Failed | 0 | ❌ | 209 | 161 | ❌ | 0 | 1010 | ✅ | ✅ |
+| Pokemon Red and Blue | ❌ Failed | 0 | ❌ | 210 | 161 | ❌ | 0 | 1010 | ✅ | ✅ |
 | Raft | ✅ Passed | 0 | ✅ | 155 | 154 | ✅ | 155 | 155 | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | ✅ | 223 | 221 | ✅ | 223 | 223 | ⚫ | ⚫ |
 | SMZ3 | ❌ Failed | 0 | ❌ | 204 | 316 | ❌ | 0 | 316 | ✅ | ✅ |

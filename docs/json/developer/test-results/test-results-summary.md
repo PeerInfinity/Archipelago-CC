@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-21 09:58:49
+**Generated:** 2025-11-21 17:34:38
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -12,23 +12,23 @@ This summary combines results from four types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 70/78 passed (89.7%)
-- **Full Test:** 71/78 passed (91.0%)
+- **Minimal Test:** 69/78 passed (88.5%)
+- **Full Test:** 70/78 passed (89.7%)
 - **Multiplayer Test:** 56/78 passed (71.8%)
 - **Multiworld Test:** 42/78 passed (53.8%)
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 7 game(s), 23 total failure(s)
-- **Full Spoilers Test:** 17 game(s), 41 total failure(s)
+- **Minimal Spoilers Test:** 6 game(s), 22 total failure(s)
+- **Full Spoilers Test:** 20 game(s), 36 total failure(s)
 
 ### Combined Test Results
 
 - **Templates passing all 4 tests:** 42/78 (53.8%)
 - **Templates passing 3 tests:** 13/78 (16.7%)
-- **Templates passing 2 tests:** 15/78 (19.2%)
+- **Templates passing 2 tests:** 14/78 (17.9%)
 - **Templates passing 1 test:** 2/78 (2.6%)
-- **Templates passing 0 tests:** 6/78 (7.7%)
+- **Templates passing 0 tests:** 7/78 (9.0%)
 
 ## Test Results
 
@@ -41,7 +41,7 @@ This summary combines results from four types of tests:
 | Aquaria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | ArchipIDLE | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | Blasphemous | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
-| Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ⚫ |
+| Bomb Rush Cyberfunk | ❌ Failed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ⚫ |
 | Bumper Stickers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ |
 | Castlevania 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
@@ -62,7 +62,7 @@ This summary combines results from four types of tests:
 | Inscryption | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
-| Kingdom Hearts 2 | ❌ Failed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
+| Kingdom Hearts 2 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
 | Lingo | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
@@ -119,7 +119,7 @@ These tests check multiple template configurations for the same game.
 
 | Game Name | Minimal Link (Templates Passed) | Full Link (Templates Passed) |
 |-----------|----------------------------------|-------------------------------|
-| A Link to the Past | [136/174 passed](./test-results-multitemplate-minimal.md#a-link-to-the-past) | [132/174 passed](./test-results-multitemplate-full.md#a-link-to-the-past) |
+| A Link to the Past | [135/174 passed](./test-results-multitemplate-minimal.md#a-link-to-the-past) | [131/174 passed](./test-results-multitemplate-full.md#a-link-to-the-past) |
 
 ## Excluded Games
 
