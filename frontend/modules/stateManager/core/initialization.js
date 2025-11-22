@@ -194,6 +194,31 @@ function loadPlayerData(sm, jsonData, selectedPlayerId) {
   sm.mode = jsonData.mode?.[selectedPlayerId] || null;
   sm.itempoolCounts = jsonData.itempool_counts?.[selectedPlayerId] || {};
   sm.progressionMapping = jsonData.progression_mapping?.[selectedPlayerId] || {};
+
+  console.log(`[INIT] Loading for player ${selectedPlayerId} (slot ${sm.playerSlot}), progression_mapping exists: ${!!jsonData.progression_mapping}`);
+
+  // Debug logging for multiworld progression mapping
+  if (jsonData.progression_mapping && selectedPlayerId == '2') {
+    const msg1 = `Player ${selectedPlayerId} (slot ${sm.playerSlot}) progressionMapping loaded`;
+    const msg2 = `  progression_mapping keys in JSON: ${Object.keys(jsonData.progression_mapping).join(', ')}`;
+    const msg3 = `  selectedPlayerId type: ${typeof selectedPlayerId} = ${selectedPlayerId}`;
+    const msg4 = `  lookup result keys: ${Object.keys(sm.progressionMapping).join(', ')}`;
+    const msg5 = `  Progressive Glove in mapping: ${JSON.stringify(sm.progressionMapping['Progressive Glove'])}`;
+
+    if (sm.logger) {
+      sm.logger.info('Initialization', msg1);
+      sm.logger.info('Initialization', msg2);
+      sm.logger.info('Initialization', msg3);
+      sm.logger.info('Initialization', msg4);
+      sm.logger.info('Initialization', msg5);
+    } else {
+      console.log('[INIT DEBUG]', msg1);
+      console.log('[INIT DEBUG]', msg2);
+      console.log('[INIT DEBUG]', msg3);
+      console.log('[INIT DEBUG]', msg4);
+      console.log('[INIT DEBUG]', msg5);
+    }
+  }
   sm.gameInfo = jsonData.game_info || {};
 
   // Initialize prog_items for games that use accumulated/progressive items

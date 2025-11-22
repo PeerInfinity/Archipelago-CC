@@ -119,6 +119,16 @@ export function has(snapshot, staticData, itemName) {
     const playerSlotKey = String(playerSlot);
     const playerProgressionMapping = staticData.progressionMapping[playerSlotKey] || staticData.progressionMapping;
 
+    // Debug logging for Titans Mitts checks in multiworld
+    if (itemName === 'Titans Mitts' && playerSlot !== '1' && playerSlot !== 1) {
+      console.log(`[ALTTP has()] Checking Titans Mitts for player ${playerSlot} (key: ${playerSlotKey})`);
+      console.log(`  Inventory:`, snapshot.inventory);
+      console.log(`  Progressive Glove count:`, snapshot.inventory['Progressive Glove'] || 0);
+      console.log(`  progressionMapping keys:`, Object.keys(staticData.progressionMapping));
+      console.log(`  playerProgressionMapping keys:`, Object.keys(playerProgressionMapping));
+      console.log(`  Progressive Glove mapping:`, playerProgressionMapping['Progressive Glove']);
+    }
+
     // Check if this item is provided by any progressive item
     for (const [progressiveBase, progression] of Object.entries(playerProgressionMapping)) {
       let baseCount = snapshot.inventory[progressiveBase] || 0;
