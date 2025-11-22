@@ -35,15 +35,15 @@ class SMGameExportHandler(GenericGameExportHandler):
         if self._varia_item_types is None:
             self._varia_item_types = {}
             try:
-                from worlds.sm.variaRandomizer.rando.Items import Items
-                # Items is a dict of Type -> Item objects
-                for item_type, item_obj in Items.items():
+                from worlds.sm.variaRandomizer.rando.Items import ItemManager
+                # ItemManager.Items is a dict of Type -> Item objects
+                for item_type, item_obj in ItemManager.Items.items():
                     # item_obj.Name is the Archipelago name, item_obj.Type is the VARIA type
                     if hasattr(item_obj, 'Name') and hasattr(item_obj, 'Type'):
                         self._varia_item_types[item_obj.Name] = item_obj.Type
                 logger.info(f"SM: Loaded {len(self._varia_item_types)} VARIA item type mappings")
             except Exception as e:
-                logger.error(f"SM: Failed to load VARIA item types: {e}")
+                logger.error(f"SM: Failed to load VARIA item types: {e}", exc_info=True)
 
         return self._varia_item_types
 
@@ -65,24 +65,33 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         return varia_type
 
-    def collect_item_data(self, world):
-        """Collect item data from world, adding VARIA type information.
+    def get_item_data(self, world):
+        """Get item data from world, adding VARIA type information.
 
         Overrides the base class to add VARIA Type field to items.
+        Follows the same pattern as ALTTP exporter.
         """
-        logger.info("SM: collect_item_data called")
-        # Call parent to get base item data
-        item_data = super().collect_item_data(world)
+        logger.info("SM: get_item_data called")
+        # Get base item data from parent class
+        item_data = super().get_item_data(world)
         logger.info(f"SM: Got {len(item_data)} items from parent")
 
         # Add VARIA type information
-        varia_types = self._get_varia_item_types()
-        for item_name, item_info in item_data.items():
-            if item_name in varia_types:
-                item_info['type'] = varia_types[item_name]
-                logger.debug(f"SM: Set type='{varia_types[item_name]}' for item '{item_name}'")
+        try:
+            varia_types = self._get_varia_item_types()
+            logger.info(f"SM: Retrieved {len(varia_types)} VARIA type mappings")
 
-        logger.info(f"SM: Added VARIA types to {sum(1 for item in item_data.values() if item.get('type'))} items")
+            type_count = 0
+            for item_name, item_info in item_data.items():
+                if item_name in varia_types:
+                    item_info['type'] = varia_types[item_name]
+                    type_count += 1
+                    logger.debug(f"SM: Set type='{varia_types[item_name]}' for item '{item_name}'")
+
+            logger.info(f"SM: Added VARIA types to {type_count} items out of {len(item_data)} total")
+        except Exception as e:
+            logger.error(f"SM: Error adding VARIA types: {e}", exc_info=True)
+
         return item_data
 
     def _get_simple_accessfrom_locations(self) -> Set[str]:

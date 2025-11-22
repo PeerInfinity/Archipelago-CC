@@ -20,7 +20,16 @@
  */
 export function has(snapshot, staticData, itemName) {
   if (!snapshot.inventory) return false;
-  return (snapshot.inventory[itemName] || 0) > 0;
+  const result = (snapshot.inventory[itemName] || 0) > 0;
+
+  if (typeof console !== 'undefined' && console.log && itemName === 'Morph Ball') {
+    const keys = Object.keys(snapshot.inventory);
+    console.log(`[has] Morph Ball check: count=${snapshot.inventory[itemName]}, result=${result}, totalItems=${keys.length}`);
+    console.log(`[has] Sample inventory keys: ${keys.slice(0, 10).join(', ')}`);
+    console.log(`[has] Morphing Ball? ${snapshot.inventory['Morphing Ball']}`);
+  }
+
+  return result;
 }
 
 /**
@@ -175,6 +184,17 @@ export function haveItem(snapshot, staticData, itemName) {
   // First, try direct name match
   let hasIt = has(snapshot, staticData, itemName);
 
+  if (typeof console !== 'undefined' && console.log && itemName === 'Morph') {
+    console.log('[haveItem] Checking for Morph:', {
+      itemName,
+      hasDirectMatch: hasIt,
+      hasStaticData: !!staticData,
+      hasItems: !!staticData?.items,
+      itemsIsMap: staticData?.items instanceof Map,
+      itemsKeys: staticData?.items ? (staticData.items instanceof Map ? Array.from(staticData.items.keys()).slice(0,5) : Object.keys(staticData.items).slice(0,5)) : []
+    });
+  }
+
   // If not found by name, check if any item has this type
   if (!hasIt && staticData && staticData.items) {
     // Check player 1's items (assuming single player for now)
@@ -186,14 +206,36 @@ export function haveItem(snapshot, staticData, itemName) {
       playerItems = staticData.items['1'] || staticData.items[1];
     }
 
+    // If playerItems is undefined/null, try using staticData.items directly (flat structure)
+    if (!playerItems) {
+      playerItems = staticData.items;
+    }
+
+    if (itemName === 'Morph' && typeof console !== 'undefined' && console.log) {
+      console.log('[haveItem] Player items:', {
+        isMap: playerItems instanceof Map,
+        itemCount: playerItems ? (playerItems instanceof Map ? playerItems.size : Object.keys(playerItems).length) : 0
+      });
+    }
+
     if (playerItems) {
       // playerItems might also be a Map or object
       const itemEntries = playerItems instanceof Map ? playerItems.entries() : Object.entries(playerItems);
 
       for (const [fullItemName, itemData] of itemEntries) {
         if (itemData && itemData.type === itemName) {
+          if (itemName === 'Morph' && typeof console !== 'undefined' && console.log) {
+            console.log('[haveItem] Found item with matching type:', {
+              fullItemName,
+              type: itemData.type,
+              checkingInventory: true
+            });
+          }
           // Found an item with matching type, check if we have it
           hasIt = has(snapshot, staticData, fullItemName);
+          if (itemName === 'Morph' && typeof console !== 'undefined' && console.log) {
+            console.log('[haveItem] Inventory check result:', hasIt);
+          }
           if (hasIt) break;
         }
       }

@@ -15634,7 +15634,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "ETank",
         "max_count": 28
       },
       "Missile": {
@@ -15647,7 +15647,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Missile",
         "max_count": 60
       },
       "Super Missile": {
@@ -15660,7 +15660,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Super",
         "max_count": 50
       },
       "Power Bomb": {
@@ -15673,7 +15673,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "PowerBomb",
         "max_count": 22
       },
       "Bomb": {
@@ -15686,7 +15686,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Bomb",
         "max_count": 2
       },
       "Charge Beam": {
@@ -15699,7 +15699,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Charge",
         "max_count": 2
       },
       "Ice Beam": {
@@ -15712,7 +15712,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Ice",
         "max_count": 2
       },
       "Hi-Jump Boots": {
@@ -15725,7 +15725,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "HiJump",
         "max_count": 2
       },
       "Speed Booster": {
@@ -15738,7 +15738,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "SpeedBooster",
         "max_count": 2
       },
       "Wave Beam": {
@@ -15751,7 +15751,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Wave",
         "max_count": 2
       },
       "Spazer": {
@@ -15764,7 +15764,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Spazer",
         "max_count": 2
       },
       "Spring Ball": {
@@ -15777,7 +15777,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "SpringBall",
         "max_count": 2
       },
       "Varia Suit": {
@@ -15790,7 +15790,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Varia",
         "max_count": 2
       },
       "Gravity Suit": {
@@ -15803,7 +15803,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Gravity",
         "max_count": 2
       },
       "X-Ray Scope": {
@@ -15816,7 +15816,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "XRayScope",
         "max_count": 2
       },
       "Plasma Beam": {
@@ -15829,7 +15829,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Plasma",
         "max_count": 2
       },
       "Grappling Beam": {
@@ -15842,7 +15842,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Grapple",
         "max_count": 2
       },
       "Space Jump": {
@@ -15855,7 +15855,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "SpaceJump",
         "max_count": 2
       },
       "Screw Attack": {
@@ -15868,7 +15868,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "ScrewAttack",
         "max_count": 2
       },
       "Morph Ball": {
@@ -15881,7 +15881,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Morph",
         "max_count": 2
       },
       "Reserve Tank": {
@@ -15894,7 +15894,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Reserve",
         "max_count": 8
       },
       "Generic": {
@@ -15907,7 +15907,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "ArchipelagoItem",
         "max_count": 1
       },
       "Nothing": {
@@ -15920,7 +15920,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "Nothing",
         "max_count": 1
       },
       "No Energy": {
@@ -15933,7 +15933,7 @@
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "NoEnergy",
         "max_count": 1
       },
       "Kraid": {
@@ -15946,7 +15946,7 @@
         "useful": false,
         "trap": false,
         "event": true,
-        "type": "Event",
+        "type": "Kraid",
         "max_count": 1
       },
       "Ridley": {
@@ -15959,7 +15959,7 @@
         "useful": false,
         "trap": false,
         "event": true,
-        "type": "Event",
+        "type": "Ridley",
         "max_count": 1
       },
       "Phantoon": {
@@ -15972,7 +15972,7 @@
         "useful": false,
         "trap": false,
         "event": true,
-        "type": "Event",
+        "type": "Phantoon",
         "max_count": 1
       },
       "Draygon": {
@@ -15985,7 +15985,7 @@
         "useful": false,
         "trap": false,
         "event": true,
-        "type": "Event",
+        "type": "Draygon",
         "max_count": 1
       },
       "Mother Brain": {
@@ -15998,7 +15998,7 @@
         "useful": false,
         "trap": false,
         "event": true,
-        "type": "Event",
+        "type": "MotherBrain",
         "max_count": 1
       },
       "Spore Spawn": {
@@ -16011,7 +16011,7 @@
         "useful": false,
         "trap": false,
         "event": true,
-        "type": "Event",
+        "type": "SporeSpawn",
         "max_count": 1
       },
       "Botwoon": {
@@ -16024,7 +16024,7 @@
         "useful": false,
         "trap": false,
         "event": true,
-        "type": "Event",
+        "type": "Botwoon",
         "max_count": 1
       },
       "Crocomire": {
@@ -16037,7 +16037,7 @@
         "useful": false,
         "trap": false,
         "event": true,
-        "type": "Event",
+        "type": "Crocomire",
         "max_count": 1
       },
       "Golden Torizo": {
@@ -16050,7 +16050,7 @@
         "useful": false,
         "trap": false,
         "event": true,
-        "type": "Event",
+        "type": "GoldenTorizo",
         "max_count": 1
       }
     }
