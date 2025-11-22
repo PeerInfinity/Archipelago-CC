@@ -65,6 +65,32 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         return varia_type
 
+    def get_door_data(self, world) -> Dict[str, str]:
+        """Get door color data for all doors in the game.
+
+        Returns:
+            Dict mapping door names to their colors
+        """
+        door_data = {}
+        try:
+            from worlds.sm.variaRandomizer.utils.doorsmanager import DoorsManager
+            player_id = world.player if world else 1
+
+            # Get the doors dictionary for this player
+            if hasattr(DoorsManager, 'doorsDict') and player_id in DoorsManager.doorsDict:
+                doors_dict = DoorsManager.doorsDict[player_id]
+                for door_name, door_obj in doors_dict.items():
+                    # Get the actual door color (considering hidden status)
+                    door_data[door_name] = door_obj.getColor()
+                logger.info(f"SM: Exported {len(door_data)} door colors")
+            else:
+                logger.warning(f"SM: DoorsManager.doorsDict not found or player {player_id} not in doorsDict")
+
+        except Exception as e:
+            logger.error(f"SM: Failed to export door data: {e}", exc_info=True)
+
+        return door_data
+
     def get_item_data(self, world):
         """Get item data from world, adding VARIA type information.
 

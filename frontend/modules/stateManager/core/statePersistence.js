@@ -676,6 +676,7 @@ export function getStaticGameData(sm) {
     // Game-specific information
     game_info: sm.gameInfo,
     settings: sm.rules?.settings,
+    doors: sm.rules?.doors,  // Game-specific door color data (e.g., Super Metroid)
     // ID mappings
     locationNameToId: sm.locationNameToId,
     itemNameToId: sm.itemNameToId,

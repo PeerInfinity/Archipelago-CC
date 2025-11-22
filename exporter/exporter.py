@@ -564,6 +564,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         'itempool_counts': {},  # Complete itempool counts by player
         'game_info': {},  # Game-specific information for frontend
         'starting_items': {}, # Starting items by player
+        'doors': {},  # Door color data by player (game-specific)
     }
     
     # Dungeons will only be added if there's data to include
@@ -633,6 +634,17 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
                     "version": "1.0"
                 }
             }
+
+        # Get door data if the handler supports it (game-specific)
+        try:
+            if hasattr(game_handler, 'get_door_data'):
+                door_data = game_handler.get_door_data(world)
+                if door_data:  # Only add if there's actual door data
+                    export_data['doors'][player_str] = door_data
+                    logger.debug(f"Exported {len(door_data)} doors for player {player}")
+        except Exception as e:
+            error_msg = f"Error getting door data from handler for player {player}: {str(e)}"
+            logger.error(error_msg)
 
         # Store the pre-calculated itempool counts
         export_data['itempool_counts'][player_str] = itempool_counts
@@ -1552,6 +1564,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         'progression_mapping',
         'starting_items',
         'settings',
+        'doors',
         'game_info',
         'metamath_data'
     ]
@@ -1560,7 +1573,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     player_specific_keys = [
         'regions', 'dungeons', 'items', 'item_groups', 'progression_mapping',
         'settings', 'start_regions', 'itempool_counts', 'game_info',
-        'starting_items', 'metamath_data'
+        'starting_items', 'doors', 'metamath_data'
     ]
 
     # Prepare the combined export data for all players using the helper
