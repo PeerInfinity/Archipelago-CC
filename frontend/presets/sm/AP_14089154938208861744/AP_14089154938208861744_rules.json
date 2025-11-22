@@ -8392,22 +8392,7 @@
       "Energy Tank, Terminator": {
         "name": "Energy Tank, Terminator",
         "exits": [],
-        "locations": [
-          {
-            "name": "Energy Tank, Terminator",
-            "id": 82008,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Reserve Tank",
-              "player": 1,
-              "advancement": true,
-              "type": "Reserve"
-            }
-          }
-        ]
+        "locations": []
       },
       "Reserve Tank, Brinstar": {
         "name": "Reserve Tank, Brinstar",
@@ -8559,22 +8544,7 @@
       "Morphing Ball": {
         "name": "Morphing Ball",
         "exits": [],
-        "locations": [
-          {
-            "name": "Morphing Ball",
-            "id": 82026,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Morph Ball",
-              "player": 1,
-              "advancement": true,
-              "type": "Morph"
-            }
-          }
-        ]
+        "locations": []
       },
       "Energy Tank, Brinstar Ceiling": {
         "name": "Energy Tank, Brinstar Ceiling",
@@ -8688,22 +8658,7 @@
       "Energy Tank, Etecoons": {
         "name": "Energy Tank, Etecoons",
         "exits": [],
-        "locations": [
-          {
-            "name": "Energy Tank, Etecoons",
-            "id": 82030,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Energy Tank",
-              "player": 1,
-              "advancement": true,
-              "type": "ETank"
-            }
-          }
-        ]
+        "locations": []
       },
       "Energy Tank, Waterway": {
         "name": "Energy Tank, Waterway",
@@ -10422,7 +10377,7 @@
                 },
                 {
                   "type": "constant",
-                  "value": true
+                  "value": false
                 }
               ]
             },
@@ -10900,22 +10855,7 @@
       "Energy Tank, Mama turtle": {
         "name": "Energy Tank, Mama turtle",
         "exits": [],
-        "locations": [
-          {
-            "name": "Energy Tank, Mama turtle",
-            "id": 82138,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Gravity Suit",
-              "player": 1,
-              "advancement": true,
-              "type": "Gravity"
-            }
-          }
-        ]
+        "locations": []
       },
       "Plasma Beam": {
         "name": "Plasma Beam",
@@ -11440,22 +11380,7 @@
       "Draygon": {
         "name": "Draygon",
         "exits": [],
-        "locations": [
-          {
-            "name": "Draygon",
-            "id": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Draygon",
-              "player": 1,
-              "advancement": true,
-              "type": "Draygon"
-            }
-          }
-        ]
+        "locations": []
       },
       "Space Jump": {
         "name": "Space Jump",
@@ -11515,7 +11440,7 @@
                 },
                 {
                   "type": "constant",
-                  "value": true
+                  "value": false
                 }
               ]
             },
@@ -12114,22 +12039,7 @@
       "Missile (Crateria moat)": {
         "name": "Missile (Crateria moat)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Missile (Crateria moat)",
-            "id": 82004,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Power Bomb",
-              "player": 1,
-              "advancement": false,
-              "type": "PowerBomb"
-            }
-          }
-        ]
+        "locations": []
       },
       "Missile (Crateria bottom)": {
         "name": "Missile (Crateria bottom)",
@@ -12207,42 +12117,12 @@
       "Missile (Crateria gauntlet right)": {
         "name": "Missile (Crateria gauntlet right)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Missile (Crateria gauntlet right)",
-            "id": 82009,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Wave Beam",
-              "player": 1,
-              "advancement": true,
-              "type": "Wave"
-            }
-          }
-        ]
+        "locations": []
       },
       "Missile (Crateria gauntlet left)": {
         "name": "Missile (Crateria gauntlet left)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Missile (Crateria gauntlet left)",
-            "id": 82010,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Power Bomb",
-              "player": 1,
-              "advancement": true,
-              "type": "PowerBomb"
-            }
-          }
-        ]
+        "locations": []
       },
       "Super Missile (Crateria)": {
         "name": "Super Missile (Crateria)",
@@ -12743,7 +12623,7 @@
                 },
                 {
                   "type": "constant",
-                  "value": true
+                  "value": false
                 }
               ]
             },
@@ -13029,42 +12909,12 @@
       "Missile (pink Brinstar top)": {
         "name": "Missile (pink Brinstar top)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Missile (pink Brinstar top)",
-            "id": 82021,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Super Missile",
-              "player": 1,
-              "advancement": false,
-              "type": "Super"
-            }
-          }
-        ]
+        "locations": []
       },
       "Missile (pink Brinstar bottom)": {
         "name": "Missile (pink Brinstar bottom)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Missile (pink Brinstar bottom)",
-            "id": 82022,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Missile",
-              "player": 1,
-              "advancement": false,
-              "type": "Missile"
-            }
-          }
-        ]
+        "locations": []
       },
       "Power Bomb (pink Brinstar)": {
         "name": "Power Bomb (pink Brinstar)",
@@ -13182,22 +13032,7 @@
       "Power Bomb (blue Brinstar)": {
         "name": "Power Bomb (blue Brinstar)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Power Bomb (blue Brinstar)",
-            "id": 82027,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Power Bomb",
-              "player": 1,
-              "advancement": false,
-              "type": "PowerBomb"
-            }
-          }
-        ]
+        "locations": []
       },
       "Missile (blue Brinstar middle)": {
         "name": "Missile (blue Brinstar middle)",
@@ -13315,22 +13150,7 @@
       "Super Missile (green Brinstar bottom)": {
         "name": "Super Missile (green Brinstar bottom)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Super Missile (green Brinstar bottom)",
-            "id": 82031,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Super Missile",
-              "player": 1,
-              "advancement": false,
-              "type": "Super"
-            }
-          }
-        ]
+        "locations": []
       },
       "Missile (blue Brinstar bottom)": {
         "name": "Missile (blue Brinstar bottom)",
@@ -13750,42 +13570,12 @@
       "Missile (below Ice Beam)": {
         "name": "Missile (below Ice Beam)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Missile (below Ice Beam)",
-            "id": 82051,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Power Bomb",
-              "player": 1,
-              "advancement": false,
-              "type": "PowerBomb"
-            }
-          }
-        ]
+        "locations": []
       },
       "Missile (above Crocomire)": {
         "name": "Missile (above Crocomire)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Missile (above Crocomire)",
-            "id": 82054,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Super Missile",
-              "player": 1,
-              "advancement": false,
-              "type": "Super"
-            }
-          }
-        ]
+        "locations": []
       },
       "Missile (Hi-Jump Boots)": {
         "name": "Missile (Hi-Jump Boots)",
@@ -13915,22 +13705,7 @@
       "Energy Tank (Hi-Jump Boots)": {
         "name": "Energy Tank (Hi-Jump Boots)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Energy Tank (Hi-Jump Boots)",
-            "id": 82056,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Missile",
-              "player": 1,
-              "advancement": false,
-              "type": "Missile"
-            }
-          }
-        ]
+        "locations": []
       },
       "Power Bomb (Crocomire)": {
         "name": "Power Bomb (Crocomire)",
@@ -14535,22 +14310,7 @@
       "Missile (bubble Norfair)": {
         "name": "Missile (bubble Norfair)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Missile (bubble Norfair)",
-            "id": 82064,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Super Missile",
-              "player": 1,
-              "advancement": false,
-              "type": "Super"
-            }
-          }
-        ]
+        "locations": []
       },
       "Missile (Speed Booster)": {
         "name": "Missile (Speed Booster)",
@@ -14636,22 +14396,7 @@
       "Missile (Wave Beam)": {
         "name": "Missile (Wave Beam)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Missile (Wave Beam)",
-            "id": 82067,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Reserve Tank",
-              "player": 1,
-              "advancement": true,
-              "type": "Reserve"
-            }
-          }
-        ]
+        "locations": []
       },
       "Missile (Gold Torizo)": {
         "name": "Missile (Gold Torizo)",
@@ -14864,62 +14609,17 @@
       "Missile (lower Norfair above fire flea room)": {
         "name": "Missile (lower Norfair above fire flea room)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Missile (lower Norfair above fire flea room)",
-            "id": 82074,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Missile",
-              "player": 1,
-              "advancement": false,
-              "type": "Missile"
-            }
-          }
-        ]
+        "locations": []
       },
       "Power Bomb (lower Norfair above fire flea room)": {
         "name": "Power Bomb (lower Norfair above fire flea room)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Power Bomb (lower Norfair above fire flea room)",
-            "id": 82075,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Missile",
-              "player": 1,
-              "advancement": true,
-              "type": "Missile"
-            }
-          }
-        ]
+        "locations": []
       },
       "Power Bomb (Power Bombs of shame)": {
         "name": "Power Bomb (Power Bombs of shame)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Power Bomb (Power Bombs of shame)",
-            "id": 82076,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Power Bomb",
-              "player": 1,
-              "advancement": true,
-              "type": "PowerBomb"
-            }
-          }
-        ]
+        "locations": []
       },
       "Missile (lower Norfair near Wave Beam)": {
         "name": "Missile (lower Norfair near Wave Beam)",
@@ -15410,82 +15110,22 @@
       "Missile (green Maridia tatori)": {
         "name": "Missile (green Maridia tatori)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Missile (green Maridia tatori)",
-            "id": 82139,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Plasma Beam",
-              "player": 1,
-              "advancement": true,
-              "type": "Plasma"
-            }
-          }
-        ]
+        "locations": []
       },
       "Super Missile (yellow Maridia)": {
         "name": "Super Missile (yellow Maridia)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Super Missile (yellow Maridia)",
-            "id": 82140,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Missile",
-              "player": 1,
-              "advancement": false,
-              "type": "Missile"
-            }
-          }
-        ]
+        "locations": []
       },
       "Missile (yellow Maridia super missile)": {
         "name": "Missile (yellow Maridia super missile)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Missile (yellow Maridia super missile)",
-            "id": 82141,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Energy Tank",
-              "player": 1,
-              "advancement": true,
-              "type": "ETank"
-            }
-          }
-        ]
+        "locations": []
       },
       "Missile (yellow Maridia false wall)": {
         "name": "Missile (yellow Maridia false wall)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Missile (yellow Maridia false wall)",
-            "id": 82142,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Power Bomb",
-              "player": 1,
-              "advancement": false,
-              "type": "PowerBomb"
-            }
-          }
-        ]
+        "locations": []
       },
       "Missile (left Maridia sand pit room)": {
         "name": "Missile (left Maridia sand pit room)",
@@ -15697,62 +15337,17 @@
       "Missile (pink Maridia)": {
         "name": "Missile (pink Maridia)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Missile (pink Maridia)",
-            "id": 82148,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Missile",
-              "player": 1,
-              "advancement": false,
-              "type": "Missile"
-            }
-          }
-        ]
+        "locations": []
       },
       "Super Missile (pink Maridia)": {
         "name": "Super Missile (pink Maridia)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Super Missile (pink Maridia)",
-            "id": 82149,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Super Missile",
-              "player": 1,
-              "advancement": false,
-              "type": "Super"
-            }
-          }
-        ]
+        "locations": []
       },
       "Missile (Draygon)": {
         "name": "Missile (Draygon)",
         "exits": [],
-        "locations": [
-          {
-            "name": "Missile (Draygon)",
-            "id": 82151,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Missile",
-              "player": 1,
-              "advancement": false,
-              "type": "Missile"
-            }
-          }
-        ]
+        "locations": []
       },
       "Menu": {
         "name": "Menu",

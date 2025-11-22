@@ -1,0 +1,1391 @@
+Archipelago (0.6.4) logging initialized on Linux-4.4.0-x86_64-with-glibc2.39 process 4253 running Python 3.11.14
+Weights: /home/user/Archipelago-CC/Players/Templates/Super Metroid.yaml >> Default Super Metroid Template
+Generating for 1 player, 14089154938208861744 Seed 1 with plando: connections, texts, bosses
+[SM MODULE] Loading Super Metroid exporter handler
+OOT: Successfully patched RuleParser.create_delayed_rules to capture AST nodes
+Archipelago Version 0.6.4  -  Seed: 1
+
+Found 82 World Types:
+ Adventure                               : Items:   15 | Locations:    24
+ A Hat in Time                           : Items:   58 | Locations:   455
+ A Link to the Past                      : Items:  146 | Locations:   286
+ Aquaria                                 : Items:  134 | Locations:   218
+ ChocolateChipCookies                    : Items:   15 | Locations:    15
+ Blasphemous                             : Items:  204 | Locations:   306
+ Bomb Rush Cyberfunk                     : Items:  165 | Locations:   247
+ Bumper Stickers                         : Items:   12 | Locations:   100
+ Celeste 64                              : Items:   24 | Locations:    56
+ ChecksFinder                            : Items:    3 | Locations:    25
+ Civilization VI                         : Items:  167 | Locations:   278
+ WebDevJourney                           : Items:   51 | Locations:    61
+ Castlevania 64                          : Items:   36 | Locations:   352
+ Castlevania - Circle of the Moon        : Items:   31 | Locations:   125
+ Dark Souls III                          : Items: 1204 | Locations:  1506
+ Donkey Kong Country 3                   : Items:    8 | Locations:   230
+ DLCQuest                                : Items:   51 | Locations: 18913
+ DOOM 1993                               : Items:  195 | Locations:   474
+ DOOM II                                 : Items:  178 | Locations:   479
+ Factorio                                : Items:  233 | Locations:  6993
+ Faxanadu                                : Items:   30 | Locations:   110
+ Final Fantasy                           : Items:  194 | Locations:   255
+ Final Fantasy Mystic Quest              : Items:   67 | Locations:   266
+ Heretic                                 : Items:  269 | Locations:  1014
+ Hollow Knight                           : Items:  249 | Locations:   740
+ Hylics 2                                : Items:   70 | Locations:   166
+ Inscryption                             : Items:   42 | Locations:   100
+ Jak and Daxter: The Precursor Legacy    : Items:   75 | Locations:  4239
+ Kirby's Dream Land 3                    : Items:   24 | Locations:   876
+ Kingdom Hearts                          : Items:  361 | Locations:   520
+ Kingdom Hearts 2                        : Items:  293 | Locations:   724
+ Links Awakening DX                      : Items:  118 | Locations:   255
+ Landstalker - The Treasures of King Nole: Items:   62 | Locations:   292
+ Lingo                                   : Items:  276 | Locations:   872
+ Lufia II Ancient Cave                   : Items:  415 | Locations:   123
+ Super Mario Land 2                      : Items: 2727 | Locations:  2659
+ MathProof2p2e4                          : Items:   10 | Locations:    10
+ Meritous                                : Items:   23 | Locations:   104
+ The Messenger                           : Items:   64 | Locations:   136
+ Metamath                                : Items:  108 | Locations:   100
+ Mario & Luigi Superstar Saga            : Items:  146 | Locations:   600
+ Mega Man 2                              : Items:   23 | Locations:    71
+ MegaMan Battle Network 3                : Items:  224 | Locations:   263
+ Muse Dash                               : Items:  672 | Locations:  1314
+ Noita                                   : Items:   32 | Locations:   672
+ Ocarina of Time                         : Items:  143 | Locations:  1623
+ Old School Runescape                    : Items:   86 | Locations:   169
+ Overcooked! 2                           : Items:   45 | Locations:    43
+ Paint                                   : Items:   27 | Locations:   380
+ Pokemon Emerald                         : Items:  291 | Locations:  1338
+ Pokemon Red and Blue                    : Items:  207 | Locations:   709
+ Raft                                    : Items:  325 | Locations:   154
+ Risk of Rain 2                          : Items:   51 | Locations:   954
+ Sonic Adventure 2 Battle                : Items:  182 | Locations:  2555
+ Saving Princess                         : Items:   20 | Locations:    36
+ Starcraft 2                             : Items:  595 | Locations:   663
+ shapez                                  : Items:   67 | Locations:  3543
+ Shivers                                 : Items:   76 | Locations:   117
+ A Short Hike                            : Items:   37 | Locations:   131
+ Super Metroid                           : Items:   24 | Locations:   101
+ Super Mario 64                          : Items:   29 | Locations:   164
+ Super Mario World                       : Items:   29 | Locations:   765
+ SMZ3                                    : Items:  151 | Locations:   316
+ Secret of Evermore                      : Items:  165 | Locations:   913
+ Stardew Valley                          : Items:  964 | Locations:  3291
+ Subnautica                              : Items:  104 | Locations:   181
+ Terraria                                : Items:  188 | Locations:   159
+ Timespinner                             : Items:  198 | Locations:   215
+ The Legend of Zelda                     : Items:   33 | Locations:   155
+ TUNIC                                   : Items:  157 | Locations:  6835
+ The Wind Waker                          : Items:  152 | Locations:   313
+ Undertale                               : Items:   85 | Locations:   122
+ VVVVVV                                  : Items:   20 | Locations:    20
+ Wargroove                               : Items:   31 | Locations:    38
+ The Witness                             : Items:  267 | Locations:  1004
+ Yacht Dice                              : Items:   47 | Locations:  1000
+ Yoshi's Island                          : Items:   69 | Locations:   235
+ Yu-Gi-Oh! 2006                          : Items:  172 | Locations:   165
+ Zillion                                 : Items:   12 | Locations:  1555
+
+Creating MultiWorld.
+Creating Items.
+Calculating Access Rules.
+Running Item Plando.
+Running Pre Main Fill.
+Filling the multiworld with 100 items.
+Progression balancing skipped.
+Beginning output...
+Generating output files (3/3).
+Calculating playthrough.
+Attempting to open spoiler log file for sphere data at: /tmp/tmp5ci0w_q8/AP_14089154938208861744_spheres_log.jsonl
+Spoiler sphere log will be written to: /tmp/tmp5ci0w_q8/AP_14089154938208861744_spheres_log.jsonl
+[SM] SMGameExportHandler initialized for Super Metroid
+Closed spoiler log file: /tmp/tmp5ci0w_q8/AP_14089154938208861744_spheres_log.jsonl
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canUsePowerBombs(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canUsePowerBombs(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canPassMoatFromMoat(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canPassMoatReverse(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canPassDachoraRoom(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canUsePowerBombs(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canAccessEtecoons(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canPassBombPassages(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canOpenEyeDoors(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canPassLavaPitReverse(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canPassLavaPit(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canPassLowerNorfairChozo(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canPassBombPassages(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canPassBombPassages(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canOpenEyeDoors(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canAccessKraidsLair(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canExitCathedral(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canPassFrogSpeedwayRightToLeft(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canHellRunBackFromGrappleEscape(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canGrappleEscape(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canPassBombPassages(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canPassBombPassages(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canClimbBubbleMountain(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canJumpUnderwater(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canPassMtEverest(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canGoUpMtEverest(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canJumpUnderwater(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canDoOuterMaridia(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canJumpUnderwater(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canDestroyBombWallsUnderwater(...) to helper call
+[SM] Converting sm.canUsePowerBombs(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canAccessSandPits(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canAccessSandPits(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canColosseumToBotwoonExit(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canBotwoonExitToColosseum(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canAccessSandPits(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canAccessSandPits(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canAccessSandPits(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canAccessSandPits(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canClimbColosseum(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canExitPreciousRoom(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canOpenEyeDoors(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canClimbBottomRedTower(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canClimbRedTower(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canPassRedTowerToMaridiaNode(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canPassMaridiaToRedTowerNode(...) to helper call
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f05e0> (id=139303827998176) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f05e0> (id=139303827998176) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.canEnterAndLeaveGauntlet(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canShortCharge(...) to helper call
+[SM] Converting sm.canEnterAndLeaveGauntletQty(...) to helper call
+[SM] Converting sm.canDoLowGauntlet(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f07c0> (id=139303827998656) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f07c0> (id=139303827998656) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.knowsAlcatrazEscape(...) to helper call
+[SM] Converting sm.canPassBombPassages(...) to helper call
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.traverse(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f0ae0> (id=139303827999456) seen 11 times, stopping recursion.
+Location 'Energy Tank, Gauntlet' has complex AccessFrom in regions: ['Landing Site']
+Location 'Bomb' has complex AccessFrom in regions: ['Landing Site']
+Location 'Energy Tank, Terminator' has complex AccessFrom in regions: ['Landing Site', 'Lower Mushrooms Left', 'Gauntlet Top']
+Location 'Reserve Tank, Brinstar' has complex AccessFrom in regions: ['Green Brinstar Elevator']
+Location 'Charge Beam' has complex AccessFrom in regions: ['Big Pink']
+Location 'Morphing Ball' has complex AccessFrom in regions: ['Blue Brinstar Elevator Bottom']
+Location 'Energy Tank, Brinstar Ceiling' has complex AccessFrom in regions: ['Blue Brinstar Elevator Bottom']
+Location 'Energy Tank, Etecoons' has complex AccessFrom in regions: ['Etecoons Bottom']
+Location 'Energy Tank, Waterway' has complex AccessFrom in regions: ['Big Pink']
+Location 'Energy Tank, Brinstar Gate' has complex AccessFrom in regions: ['Big Pink']
+Location 'X-Ray Scope' has complex AccessFrom in regions: ['Red Tower Top Left']
+Location 'Spazer' has complex AccessFrom in regions: ['East Tunnel Right']
+Location 'Energy Tank, Kraid' has complex AccessFrom in regions: ['Warehouse Zeela Room Left']
+Location 'Kraid' has complex AccessFrom in regions: ['KraidRoomIn']
+Location 'Varia Suit' has complex AccessFrom in regions: ['KraidRoomIn']
+Location 'Ice Beam' has complex AccessFrom in regions: ['Business Center']
+Location 'Energy Tank, Crocomire' has complex AccessFrom in regions: ['Crocomire Room Top']
+Location 'Hi-Jump Boots' has complex AccessFrom in regions: ['Business Center']
+Location 'Grapple Beam' has complex AccessFrom in regions: ['Crocomire Room Top']
+Location 'Reserve Tank, Norfair' has complex AccessFrom in regions: ['Bubble Mountain', 'Bubble Mountain Top']
+Location 'Speed Booster' has complex AccessFrom in regions: ['Bubble Mountain Top']
+Location 'Wave Beam' has complex AccessFrom in regions: ['Bubble Mountain Top']
+Location 'Ridley' has complex AccessFrom in regions: ['RidleyRoomIn']
+Location 'Energy Tank, Ridley' has complex AccessFrom in regions: ['RidleyRoomIn']
+Location 'Screw Attack' has complex AccessFrom in regions: ['Screw Attack Bottom']
+Location 'Energy Tank, Firefleas' has complex AccessFrom in regions: ['Firefleas']
+Location 'Reserve Tank, Wrecked Ship' has complex AccessFrom in regions: ['Wrecked Ship Main']
+Location 'Energy Tank, Wrecked Ship' has complex AccessFrom in regions: ['Wrecked Ship Back']
+Location 'Phantoon' has complex AccessFrom in regions: ['PhantoonRoomIn']
+Location 'Right Super, Wrecked Ship' has complex AccessFrom in regions: ['Wrecked Ship Main']
+Location 'Gravity Suit' has complex AccessFrom in regions: ['Wrecked Ship Main']
+Location 'Energy Tank, Mama turtle' has complex AccessFrom in regions: ['Main Street Bottom', 'Mama Turtle']
+Location 'Plasma Beam' has complex AccessFrom in regions: ['Toilet Top']
+Location 'Reserve Tank, Maridia' has complex AccessFrom in regions: ['Left Sandpit']
+Location 'Spring Ball' has complex AccessFrom in regions: ['Oasis Bottom']
+Location 'Energy Tank, Botwoon' has complex AccessFrom in regions: ['Post Botwoon']
+Location 'Draygon' has complex AccessFrom in regions: ['Draygon Room Bottom']
+Location 'Space Jump' has complex AccessFrom in regions: ['Draygon Room Bottom']
+Location 'Mother Brain' has complex AccessFrom in regions: ['Golden Four']
+Location 'Spore Spawn' has complex AccessFrom in regions: ['Big Pink']
+Location 'Botwoon' has complex AccessFrom in regions: ['Aqueduct Bottom']
+Location 'Crocomire' has complex AccessFrom in regions: ['Crocomire Room Top']
+Location 'Golden Torizo' has complex AccessFrom in regions: ['Screw Attack Bottom']
+Location 'Power Bomb (Crateria surface)' has complex AccessFrom in regions: ['Landing Site']
+Location 'Missile (outside Wrecked Ship bottom)' has complex AccessFrom in regions: ['West Ocean Left']
+Location 'Missile (outside Wrecked Ship top)' has complex AccessFrom in regions: ['Wrecked Ship Main']
+Location 'Missile (outside Wrecked Ship middle)' has complex AccessFrom in regions: ['Wrecked Ship Main']
+Location 'Missile (Crateria moat)' has complex AccessFrom in regions: ['Moat Left']
+Location 'Missile (Crateria bottom)' has complex AccessFrom in regions: ['Landing Site']
+Location 'Missile (Crateria gauntlet right)' has complex AccessFrom in regions: ['Landing Site', 'Gauntlet Top']
+Location 'Missile (Crateria gauntlet left)' has complex AccessFrom in regions: ['Landing Site', 'Gauntlet Top']
+Location 'Super Missile (Crateria)' has complex AccessFrom in regions: ['Landing Site']
+Location 'Missile (Crateria middle)' has complex AccessFrom in regions: ['Landing Site']
+Location 'Power Bomb (green Brinstar bottom)' has complex AccessFrom in regions: ['Etecoons Bottom']
+Location 'Super Missile (pink Brinstar)' has complex AccessFrom in regions: ['Big Pink']
+Location 'Missile (green Brinstar below super missile)' has complex AccessFrom in regions: ['Green Brinstar Elevator']
+Location 'Super Missile (green Brinstar top)' has complex AccessFrom in regions: ['Green Brinstar Elevator']
+Location 'Missile (green Brinstar behind missile)' has complex AccessFrom in regions: ['Green Brinstar Elevator']
+Location 'Missile (green Brinstar behind reserve tank)' has complex AccessFrom in regions: ['Green Brinstar Elevator']
+Location 'Missile (pink Brinstar top)' has complex AccessFrom in regions: ['Big Pink']
+Location 'Missile (pink Brinstar bottom)' has complex AccessFrom in regions: ['Big Pink']
+Location 'Power Bomb (pink Brinstar)' has complex AccessFrom in regions: ['Big Pink']
+Location 'Missile (green Brinstar pipe)' has complex AccessFrom in regions: ['Green Hill Zone Top Right']
+Location 'Power Bomb (blue Brinstar)' has complex AccessFrom in regions: ['Blue Brinstar Elevator Bottom', 'Morph Ball Room Left']
+Location 'Missile (blue Brinstar middle)' has complex AccessFrom in regions: ['Blue Brinstar Elevator Bottom']
+Location 'Super Missile (green Brinstar bottom)' has complex AccessFrom in regions: ['Etecoons Supers']
+Location 'Missile (blue Brinstar bottom)' has complex AccessFrom in regions: ['Blue Brinstar Elevator Bottom']
+Location 'Missile (blue Brinstar top)' has complex AccessFrom in regions: ['Blue Brinstar Elevator Bottom']
+Location 'Missile (blue Brinstar behind missile)' has complex AccessFrom in regions: ['Blue Brinstar Elevator Bottom']
+Location 'Power Bomb (red Brinstar sidehopper room)' has complex AccessFrom in regions: ['Red Brinstar Elevator']
+Location 'Power Bomb (red Brinstar spike room)' has complex AccessFrom in regions: ['Red Brinstar Elevator']
+Location 'Missile (red Brinstar spike room)' has complex AccessFrom in regions: ['Red Brinstar Elevator']
+Location 'Missile (Kraid)' has complex AccessFrom in regions: ['Warehouse Zeela Room Left']
+Location 'Missile (lava room)' has complex AccessFrom in regions: ['Cathedral']
+Location 'Missile (below Ice Beam)' has complex AccessFrom in regions: ['Business Center', 'Crocomire Speedway Bottom']
+Location 'Missile (above Crocomire)' has complex AccessFrom in regions: ['Grapple Escape']
+Location 'Missile (Hi-Jump Boots)' has complex AccessFrom in regions: ['Business Center']
+Location 'Energy Tank (Hi-Jump Boots)' has complex AccessFrom in regions: ['Business Center']
+Location 'Power Bomb (Crocomire)' has complex AccessFrom in regions: ['Crocomire Room Top']
+Location 'Missile (below Crocomire)' has complex AccessFrom in regions: ['Crocomire Room Top']
+Location 'Missile (Grapple Beam)' has complex AccessFrom in regions: ['Crocomire Room Top']
+Location 'Missile (Norfair Reserve Tank)' has complex AccessFrom in regions: ['Bubble Mountain', 'Bubble Mountain Top']
+Location 'Missile (bubble Norfair green door)' has complex AccessFrom in regions: ['Bubble Mountain', 'Bubble Mountain Top']
+Location 'Missile (bubble Norfair)' has complex AccessFrom in regions: ['Bubble Mountain']
+Location 'Missile (Speed Booster)' has complex AccessFrom in regions: ['Bubble Mountain Top']
+Location 'Missile (Wave Beam)' has complex AccessFrom in regions: ['Bubble Mountain Top']
+Location 'Missile (Gold Torizo)' has complex AccessFrom in regions: ['LN Above GT']
+Location 'Super Missile (Gold Torizo)' has complex AccessFrom in regions: ['Screw Attack Bottom']
+Location 'Missile (Mickey Mouse room)' has complex AccessFrom in regions: ['LN Entrance']
+Location 'Missile (lower Norfair above fire flea room)' has complex AccessFrom in regions: ['Firefleas']
+Location 'Power Bomb (lower Norfair above fire flea room)' has complex AccessFrom in regions: ['Firefleas Top']
+Location 'Power Bomb (Power Bombs of shame)' has complex AccessFrom in regions: ['Wasteland']
+Location 'Missile (lower Norfair near Wave Beam)' has complex AccessFrom in regions: ['Firefleas']
+Location 'Missile (Wrecked Ship middle)' has complex AccessFrom in regions: ['Wrecked Ship Main']
+Location 'Missile (Gravity Suit)' has complex AccessFrom in regions: ['Wrecked Ship Main']
+Location 'Missile (Wrecked Ship top)' has complex AccessFrom in regions: ['Wrecked Ship Main']
+Location 'Super Missile (Wrecked Ship left)' has complex AccessFrom in regions: ['Wrecked Ship Main']
+Location 'Missile (green Maridia shinespark)' has complex AccessFrom in regions: ['Main Street Bottom']
+Location 'Super Missile (green Maridia)' has complex AccessFrom in regions: ['Main Street Bottom']
+Location 'Missile (green Maridia tatori)' has complex AccessFrom in regions: ['Main Street Bottom', 'Mama Turtle']
+Location 'Super Missile (yellow Maridia)' has complex AccessFrom in regions: ['Watering Hole Bottom']
+Location 'Missile (yellow Maridia super missile)' has complex AccessFrom in regions: ['Watering Hole Bottom']
+Location 'Missile (yellow Maridia false wall)' has complex AccessFrom in regions: ['Beach']
+Location 'Missile (left Maridia sand pit room)' has complex AccessFrom in regions: ['Left Sandpit']
+Location 'Missile (right Maridia sand pit room)' has complex AccessFrom in regions: ['Right Sandpit']
+Location 'Power Bomb (right Maridia sand pit room)' has complex AccessFrom in regions: ['Right Sandpit']
+Location 'Missile (pink Maridia)' has complex AccessFrom in regions: ['Aqueduct']
+Location 'Super Missile (pink Maridia)' has complex AccessFrom in regions: ['Aqueduct']
+Location 'Missile (Draygon)' has complex AccessFrom in regions: ['Precious Room Top']
+Found 0 locations with simple AccessFrom out of 109 total
+SM: Loaded 0 locations with simple AccessFrom
+SM: Location 'Energy Tank, Terminator' has complex AccessFrom - exporting as False
+[SM] Energy Tank, Terminator: Complex AccessFrom (item requirements) - exporting as False
+Error processing location Energy Tank, Terminator: 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f0cc0> (id=139303827999936) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f0cc0> (id=139303827999936) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.canMockball(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.traverse(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f0ea0> (id=139303828000416) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f0ea0> (id=139303828000416) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canPassBombPassages(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f1080> (id=139303828000896) seen 11 times, stopping recursion.
+SM: Location 'Morphing Ball' has complex AccessFrom - exporting as False
+[SM] Morphing Ball: Complex AccessFrom (item requirements) - exporting as False
+Error processing location Morphing Ball: 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f1260> (id=139303828001376) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f1260> (id=139303828001376) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.knowsCeilingDBoost(...) to helper call
+[SM] Converting sm.canFly(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canUsePowerBombs(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.canSimpleShortCharge(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f1440> (id=139303828001856) seen 11 times, stopping recursion.
+SM: Location 'Energy Tank, Etecoons' has complex AccessFrom - exporting as False
+[SM] Energy Tank, Etecoons: Complex AccessFrom (item requirements) - exporting as False
+Error processing location Energy Tank, Etecoons: 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f1620> (id=139303828002336) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f1620> (id=139303828002336) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canUsePowerBombs(...) to helper call
+[SM] Converting sm.traverse(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.canSimpleShortCharge(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f1800> (id=139303828002816) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f1800> (id=139303828002816) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.traverse(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.knowsReverseGateGlitch(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.knowsReverseGateGlitchHiJumpLess(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f19e0> (id=139303828003296) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f19e0> (id=139303828003296) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canUsePowerBombs(...) to helper call
+[SM] Converting sm.traverse(...) to helper call
+[SM] Converting sm.traverse(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.energyReserveCountOkHardRoom(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.knowsXrayDboost(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.knowsXrayIce(...) to helper call
+[SM] Converting sm.canInfiniteBombJump(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.canSpringBallJump(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f1bc0> (id=139303828003776) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f1bc0> (id=139303828003776) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.traverse(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.canPassBombPassages(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332c2340> (id=139303827809088) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332c2340> (id=139303827809088) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canKillBeetoms(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f1ee0> (id=139303828004576) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f1ee0> (id=139303828004576) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.enoughStuffsKraid(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f20c0> (id=139303828005056) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f20c0> (id=139303828005056) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f22a0> (id=139303828005536) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f22a0> (id=139303828005536) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canHellRun(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.canPassBombPassages(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.knowsIceEscape(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.knowsMockball(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f2480> (id=139303828006016) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f2480> (id=139303828006016) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.energyReserveCountOk(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f2660> (id=139303828006496) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f2660> (id=139303828006496) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.canPassBombPassages(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.haveItem(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f2980> (id=139303828007296) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f2980> (id=139303828007296) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.canFly(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.canFly(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.knowsShortCharge(...) to helper call
+[SM] Converting sm.canUsePowerBombs(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.canSpringBallJump(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.canGreenGateGlitch(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f2ca0> (id=139303828008096) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f2ca0> (id=139303828008096) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.canHellRun(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f2e80> (id=139303828008576) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f2e80> (id=139303828008576) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canHellRunToSpeedBooster(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f3060> (id=139303828009056) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f3060> (id=139303828009056) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canExitWaveBeam(...) to helper call
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.traverse(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f3380> (id=139303828009856) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f3380> (id=139303828009856) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canHellRun(...) to helper call
+[SM] Converting sm.enoughStuffsRidley(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f3560> (id=139303828010336) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f3560> (id=139303828010336) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.haveItem(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f3740> (id=139303828010816) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f3740> (id=139303828010816) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canExitScrewAttackArea(...) to helper call
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+SM: Complex accessFrom with SMBool(True) Available - exporting as False (conservative)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f3a60> (id=139303828011616) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f3a60> (id=139303828011616) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.knowsFirefleasWalljump(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.canFly(...) to helper call
+[SM] Converting sm.canSpringBallJump(...) to helper call
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.canPassBombPassages(...) to helper call
+[SM] Converting sm.canUseSpringBall(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f3d80> (id=139303828012416) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f3d80> (id=139303828012416) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canUsePowerBombs(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.canPassBowling(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f3f60> (id=139303828012896) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332f3f60> (id=139303828012896) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wor(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323c180> (id=139303827259776) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323c180> (id=139303827259776) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.enoughStuffsPhantoon(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323c360> (id=139303827260256) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323c360> (id=139303827260256) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canPassBombPassages(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323c540> (id=139303827260736) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323c540> (id=139303827260736) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canPassBombPassages(...) to helper call
+[SM] Converting sm.canPassBowling(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323c720> (id=139303827261216) seen 11 times, stopping recursion.
+SM: Location 'Energy Tank, Mama turtle' has complex AccessFrom - exporting as False
+[SM] Energy Tank, Mama turtle: Complex AccessFrom (item requirements) - exporting as False
+Error processing location Energy Tank, Mama turtle: 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323c900> (id=139303827261696) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323c900> (id=139303827261696) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canShortCharge(...) to helper call
+[SM] Converting sm.knowsKillPlasmaPiratesWithSpark(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canFireChargedShots(...) to helper call
+[SM] Converting sm.knowsKillPlasmaPiratesWithCharge(...) to helper call
+[SM] Converting sm.energyReserveCountOk(...) to helper call
+[SM] Converting sm.getPiratesPseudoScrewCoeff(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.canFly(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.knowsGetAroundWallJump(...) to helper call
+[SM] Converting sm.canShortCharge(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canSpringBallJump(...) to helper call
+[SM] Converting sm.knowsSpringBallJumpFromWall(...) to helper call
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323cc20> (id=139303827262496) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323cc20> (id=139303827262496) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canAccessItemsInWestSandHole(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323ce00> (id=139303827262976) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323ce00> (id=139303827262976) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.canFly(...) to helper call
+[SM] Converting sm.knowsMaridiaWallJumps(...) to helper call
+[SM] Converting sm.canSpringBallJump(...) to helper call
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canAccessShaktoolFromPantsRoom(...) to helper call
+[SM] Converting sm.canUsePowerBombs(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.canUseSpringBall(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323d120> (id=139303827263776) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323d120> (id=139303827263776) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.haveItem(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323d300> (id=139303827264256) seen 11 times, stopping recursion.
+SM: Location 'Draygon' has complex AccessFrom - exporting as False
+[SM] Draygon: Complex AccessFrom (item requirements) - exporting as False
+Error processing location Draygon: 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323d4e0> (id=139303827264736) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323d4e0> (id=139303827264736) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+SM: Complex accessFrom with SMBool(True) Available - exporting as False (conservative)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323d800> (id=139303827265536) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323d800> (id=139303827265536) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.enoughStuffTourian(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323d9e0> (id=139303827266016) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323d9e0> (id=139303827266016) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.traverse(...) to helper call
+[SM] Converting sm.enoughStuffSporeSpawn(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323dbc0> (id=139303827266496) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323dbc0> (id=139303827266496) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canDefeatBotwoon(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323dda0> (id=139303827266976) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323dda0> (id=139303827266976) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.enoughStuffCroc(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323df80> (id=139303827267456) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323df80> (id=139303827267456) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.enoughStuffGT(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323e160> (id=139303827267936) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323e160> (id=139303827267936) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.traverse(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.canFly(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323e340> (id=139303827268416) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323e340> (id=139303827268416) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canPassBombPassages(...) to helper call
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.haveItem(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323e660> (id=139303827269216) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323e660> (id=139303827269216) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323e840> (id=139303827269696) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323e840> (id=139303827269696) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323ea20> (id=139303827270176) seen 11 times, stopping recursion.
+SM: Location 'Missile (Crateria moat)' has complex AccessFrom - exporting as False
+[SM] Missile (Crateria moat): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Missile (Crateria moat): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323ec00> (id=139303827270656) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323ec00> (id=139303827270656) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.canDestroyBombWalls(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.knowsOldMBWithSpeed(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323ede0> (id=139303827271136) seen 11 times, stopping recursion.
+SM: Location 'Missile (Crateria gauntlet right)' has complex AccessFrom - exporting as False
+[SM] Missile (Crateria gauntlet right): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Missile (Crateria gauntlet right): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323efc0> (id=139303827271616) seen 11 times, stopping recursion.
+SM: Location 'Missile (Crateria gauntlet left)' has complex AccessFrom - exporting as False
+[SM] Missile (Crateria gauntlet left): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Missile (Crateria gauntlet left): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323f1a0> (id=139303827272096) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323f1a0> (id=139303827272096) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canPassBombPassages(...) to helper call
+[SM] Converting sm.traverse(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.energyReserveCountOk(...) to helper call
+[SM] Converting sm.itemCountOk(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.itemCountOk(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.heatProof(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canSimpleShortCharge(...) to helper call
+[SM] Converting sm.canUsePowerBombs(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323f380> (id=139303827272576) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323f380> (id=139303827272576) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canPassBombPassages(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323f560> (id=139303827273056) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323f560> (id=139303827273056) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.canKillBeetoms(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323f740> (id=139303827273536) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323f740> (id=139303827273536) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canOpenGreenDoors(...) to helper call
+[SM] Converting sm.canPassBombPassages(...) to helper call
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.traverse(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canOpenGreenDoors(...) to helper call
+[SM] Converting sm.canPassBombPassages(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323fa60> (id=139303827274336) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323fa60> (id=139303827274336) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.canPassBombPassages(...) to helper call
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+SM: Complex accessFrom with SMBool(True) Available - exporting as False (conservative)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323fd80> (id=139303827275136) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323fd80> (id=139303827275136) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.canMockball(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323ff60> (id=139303827275616) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23323ff60> (id=139303827275616) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.canMockball(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.traverse(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.canPassBombPassages(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.knowsRonPopeilScrew(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326c180> (id=139303827456384) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326c180> (id=139303827456384) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.traverse(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.canMockball(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326c360> (id=139303827456864) seen 11 times, stopping recursion.
+SM: Location 'Missile (pink Brinstar top)' has complex AccessFrom - exporting as False
+[SM] Missile (pink Brinstar top): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Missile (pink Brinstar top): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326c540> (id=139303827457344) seen 11 times, stopping recursion.
+SM: Location 'Missile (pink Brinstar bottom)' has complex AccessFrom - exporting as False
+[SM] Missile (pink Brinstar bottom): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Missile (pink Brinstar bottom): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326c720> (id=139303827457824) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326c720> (id=139303827457824) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canUsePowerBombs(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326c900> (id=139303827458304) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326c900> (id=139303827458304) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.haveItem(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326cae0> (id=139303827458784) seen 11 times, stopping recursion.
+SM: Location 'Power Bomb (blue Brinstar)' has complex AccessFrom - exporting as False
+[SM] Power Bomb (blue Brinstar): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Power Bomb (blue Brinstar): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326ccc0> (id=139303827459264) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326ccc0> (id=139303827459264) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.traverse(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326cea0> (id=139303827459744) seen 11 times, stopping recursion.
+SM: Location 'Super Missile (green Brinstar bottom)' has complex AccessFrom - exporting as False
+[SM] Super Missile (green Brinstar bottom): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Super Missile (green Brinstar bottom): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326d080> (id=139303827460224) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326d080> (id=139303827460224) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.haveItem(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326d260> (id=139303827460704) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326d260> (id=139303827460704) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canAccessBillyMays(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326d440> (id=139303827461184) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326d440> (id=139303827461184) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canAccessBillyMays(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326d620> (id=139303827461664) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326d620> (id=139303827461664) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.traverse(...) to helper call
+[SM] Converting sm.canUsePowerBombs(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326d800> (id=139303827462144) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326d800> (id=139303827462144) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.traverse(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326d9e0> (id=139303827462624) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326d9e0> (id=139303827462624) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.traverse(...) to helper call
+[SM] Converting sm.canUsePowerBombs(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326dbc0> (id=139303827463104) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326dbc0> (id=139303827463104) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canUsePowerBombs(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326dda0> (id=139303827463584) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326dda0> (id=139303827463584) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.haveItem(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326df80> (id=139303827464064) seen 11 times, stopping recursion.
+SM: Location 'Missile (below Ice Beam)' has complex AccessFrom - exporting as False
+[SM] Missile (below Ice Beam): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Missile (below Ice Beam): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326e160> (id=139303827464544) seen 11 times, stopping recursion.
+SM: Location 'Missile (above Crocomire)' has complex AccessFrom - exporting as False
+[SM] Missile (above Crocomire): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Missile (above Crocomire): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326e340> (id=139303827465024) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326e340> (id=139303827465024) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.canPassBombPassages(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.haveItem(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326e660> (id=139303827465824) seen 11 times, stopping recursion.
+SM: Location 'Energy Tank (Hi-Jump Boots)' has complex AccessFrom - exporting as False
+[SM] Energy Tank (Hi-Jump Boots): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Energy Tank (Hi-Jump Boots): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326e840> (id=139303827466304) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326e840> (id=139303827466304) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.traverse(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.canFly(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.heatProof(...) to helper call
+[SM] Converting sm.energyReserveCountOk(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.knowsCrocPBsIce(...) to helper call
+[SM] Converting sm.knowsCrocPBsDBoost(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326ea20> (id=139303827466784) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326ea20> (id=139303827466784) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.traverse(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326ec00> (id=139303827467264) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326ec00> (id=139303827467264) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.canFly(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.knowsShortCharge(...) to helper call
+[SM] Converting sm.canUsePowerBombs(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canGreenGateGlitch(...) to helper call
+[SM] Converting sm.canFly(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326ef20> (id=139303827468064) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326ef20> (id=139303827468064) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.canHellRun(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326f100> (id=139303827468544) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326f100> (id=139303827468544) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canHellRun(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326f2e0> (id=139303827469024) seen 11 times, stopping recursion.
+SM: Location 'Missile (bubble Norfair)' has complex AccessFrom - exporting as False
+[SM] Missile (bubble Norfair): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Missile (bubble Norfair): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326f4c0> (id=139303827469504) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326f4c0> (id=139303827469504) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canHellRunBackFromSpeedBoosterMissile(...) to helper call
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canHellRunToSpeedBooster(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326f7e0> (id=139303827470304) seen 11 times, stopping recursion.
+SM: Location 'Missile (Wave Beam)' has complex AccessFrom - exporting as False
+[SM] Missile (Wave Beam): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Missile (Wave Beam): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326f9c0> (id=139303827470784) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326f9c0> (id=139303827470784) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.enoughStuffGT(...) to helper call
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canHellRun(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326fce0> (id=139303827471584) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb23326fce0> (id=139303827471584) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.enoughStuffGT(...) to helper call
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canDestroyBombWalls(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233234040> (id=139303827226688) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233234040> (id=139303827226688) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canHellRun(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233234220> (id=139303827227168) seen 11 times, stopping recursion.
+SM: Location 'Missile (lower Norfair above fire flea room)' has complex AccessFrom - exporting as False
+[SM] Missile (lower Norfair above fire flea room): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Missile (lower Norfair above fire flea room): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233234400> (id=139303827227648) seen 11 times, stopping recursion.
+SM: Location 'Power Bomb (lower Norfair above fire flea room)' has complex AccessFrom - exporting as False
+[SM] Power Bomb (lower Norfair above fire flea room): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Power Bomb (lower Norfair above fire flea room): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332345e0> (id=139303827228128) seen 11 times, stopping recursion.
+SM: Location 'Power Bomb (Power Bombs of shame)' has complex AccessFrom - exporting as False
+[SM] Power Bomb (Power Bombs of shame): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Power Bomb (Power Bombs of shame): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332347c0> (id=139303827228608) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332347c0> (id=139303827228608) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canHellRun(...) to helper call
+[SM] Converting sm.canDestroyBombWalls(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332349a0> (id=139303827229088) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332349a0> (id=139303827229088) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canPassBombPassages(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233234b80> (id=139303827229568) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233234b80> (id=139303827229568) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.canPassBowling(...) to helper call
+[SM] Converting sm.canPassBombPassages(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233234d60> (id=139303827230048) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233234d60> (id=139303827230048) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233234f40> (id=139303827230528) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233234f40> (id=139303827230528) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233235120> (id=139303827231008) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233235120> (id=139303827231008) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.traverse(...) to helper call
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.itemCountOk(...) to helper call
+[SM] Converting sm.canSimpleShortCharge(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233235300> (id=139303827231488) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233235300> (id=139303827231488) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.haveItem(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332354e0> (id=139303827231968) seen 11 times, stopping recursion.
+SM: Location 'Missile (green Maridia tatori)' has complex AccessFrom - exporting as False
+[SM] Missile (green Maridia tatori): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Missile (green Maridia tatori): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332356c0> (id=139303827232448) seen 11 times, stopping recursion.
+SM: Location 'Super Missile (yellow Maridia)' has complex AccessFrom - exporting as False
+[SM] Super Missile (yellow Maridia): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Super Missile (yellow Maridia): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332358a0> (id=139303827232928) seen 11 times, stopping recursion.
+SM: Location 'Missile (yellow Maridia super missile)' has complex AccessFrom - exporting as False
+[SM] Missile (yellow Maridia super missile): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Missile (yellow Maridia super missile): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233235a80> (id=139303827233408) seen 11 times, stopping recursion.
+SM: Location 'Missile (yellow Maridia false wall)' has complex AccessFrom - exporting as False
+[SM] Missile (yellow Maridia false wall): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Missile (yellow Maridia false wall): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233235c60> (id=139303827233888) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233235c60> (id=139303827233888) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.canAccessItemsInWestSandHole(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233235e40> (id=139303827234368) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233235e40> (id=139303827234368) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.knowsGravLessLevel3(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233236020> (id=139303827234848) seen 11 times, stopping recursion.
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233236020> (id=139303827234848) seen 11 times, stopping recursion.
+SM: Found AND rule with accessFrom, checking Available part
+[SM] Preserving evalSMBool helper (will be evaluated by frontend)
+[SM] Converting sm.wor(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.wand(...) to helper call
+[SM] Converting sm.knowsGravLessLevel3(...) to helper call
+[SM] Converting sm.haveItem(...) to helper call
+[SM] Converting sm.canSpringBallJump(...) to helper call
+SM: Using Available part with actual requirements
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb233236200> (id=139303827235328) seen 11 times, stopping recursion.
+SM: Location 'Missile (pink Maridia)' has complex AccessFrom - exporting as False
+[SM] Missile (pink Maridia): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Missile (pink Maridia): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332363e0> (id=139303827235808) seen 11 times, stopping recursion.
+SM: Location 'Super Missile (pink Maridia)' has complex AccessFrom - exporting as False
+[SM] Super Missile (pink Maridia): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Super Missile (pink Maridia): 'function' object has no attribute 'get'
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7eb2332365c0> (id=139303827236288) seen 11 times, stopping recursion.
+SM: Location 'Missile (Draygon)' has complex AccessFrom - exporting as False
+[SM] Missile (Draygon): Complex AccessFrom (item requirements) - exporting as False
+Error processing location Missile (Draygon): 'function' object has no attribute 'get'
+[SM] SMGameExportHandler initialized for Super Metroid
+Successfully wrote rules to /tmp/tmp5ci0w_q8/AP_14089154938208861744_rules.json
+Detected single game world (Super Metroid), using 'sm' preset folder.
+Updating preset directory: /home/user/Archipelago-CC/exporter/../frontend/presets/sm/AP_14089154938208861744
+Copied 5 files to preset directory /home/user/Archipelago-CC/exporter/../frontend/presets/sm/AP_14089154938208861744
+Updated preset_files.json with 5 files for sm/AP_14089154938208861744
+Creating final archive at /home/user/Archipelago-CC/output/AP_14089154938208861744.zip
+Done. Enjoy. Total Time: 17.497954854

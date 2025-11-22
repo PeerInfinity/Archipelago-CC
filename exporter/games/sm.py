@@ -1,6 +1,6 @@
 """Super Metroid game-specific export handler."""
 
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Set
 from .generic import GenericGameExportHandler
 import logging
 
@@ -23,13 +23,30 @@ class SMGameExportHandler(GenericGameExportHandler):
         print(f"[SM] SMGameExportHandler initialized for {self.GAME_NAME}")
         super().__init__()  # Base class doesn't take arguments
         self.world = world
+        self._simple_accessfrom_locations: Optional[Set[str]] = None
+
+    def _get_simple_accessfrom_locations(self) -> Set[str]:
+        """Get the set of location names with simple AccessFrom (all regions use SMBool(True)).
+
+        This is cached after first call for performance.
+        """
+        if self._simple_accessfrom_locations is None:
+            try:
+                from .sm_accessfrom_extractor import get_simple_accessfrom_locations
+                self._simple_accessfrom_locations = get_simple_accessfrom_locations(self.world)
+                logger.info(f"SM: Loaded {len(self._simple_accessfrom_locations)} locations with simple AccessFrom")
+            except Exception as e:
+                logger.error(f"SM: Failed to extract simple AccessFrom locations: {e}")
+                self._simple_accessfrom_locations = set()
+
+        return self._simple_accessfrom_locations
 
     def get_custom_location_access_rule(self, location, world):
         """Custom handling for Super Metroid location access rules.
 
-        Super Metroid locations have complex accessFrom comprehensions that
-        hit recursion limits. These are combined with Available rules in an AND.
-        For now, we skip the accessFrom part and only export the Available rule.
+        Uses AST parsing to determine if the location has simple AccessFrom (SMBool(True))
+        or complex AccessFrom (item requirements). For simple AccessFrom with Available=SMBool(True),
+        exports as constant True. For complex AccessFrom, exports as constant False.
 
         Returns:
             The custom rule to export, or None to use default handling
@@ -37,32 +54,44 @@ class SMGameExportHandler(GenericGameExportHandler):
         if not hasattr(location, 'access_rule') or not location.access_rule:
             return None
 
-        # Try to analyze the rule to see if it's an AND with accessFrom
+        location_name = location.name
+
+        # Try to analyze the rule to see if it's an AND with accessFrom + Available
         try:
             from ..analyzer import analyze_rule
             analyzed = analyze_rule(location.access_rule)
 
-            # Check if it's an AND rule with two conditions
+            # Check if it's an AND rule with two conditions (accessFrom + Available pattern)
             if analyzed and analyzed.get('type') == 'and':
                 conditions = analyzed.get('conditions', [])
                 if len(conditions) == 2:
-                    # Check if first condition is accessFrom (any_of pattern)
-                    first = conditions[0]
-                    second = conditions[1]
+                    first = conditions[0]  # accessFrom
+                    second = conditions[1]  # Available
 
-                    # If first is any_of (likely accessFrom), use only the second (Available)
+                    # Check if first condition is accessFrom (any_of pattern)
                     if first.get('type') == 'any_of':
-                        logger.info(f"SM: Extracting Available rule for location (skipping accessFrom)")
-                        print(f"[SM] Using only Available rule for location (skipping accessFrom comprehension)")
-                        # Return the second condition (the Available rule)
-                        # But we need to return the original lambda, not the analyzed form
-                        # So return None to skip custom handling for now
-                        # Instead, we'll handle this in expand_rule
-                        return None
+                        # This is an accessFrom + Available pattern
+                        # Check if Available is SMBool(True)
+                        if self._is_always_true_smbool(second):
+                            # Available is SMBool(True), check if AccessFrom is simple
+                            simple_locations = self._get_simple_accessfrom_locations()
+
+                            if location_name in simple_locations:
+                                # Simple AccessFrom (all regions use SMBool(True))
+                                logger.info(f"SM: Location '{location_name}' has simple AccessFrom - exporting as True")
+                                print(f"[SM] {location_name}: Simple AccessFrom (SMBool(True)) - exporting as True")
+                                # Return a lambda that always returns True
+                                return lambda state: True
+                            else:
+                                # Complex AccessFrom (has item requirements)
+                                logger.info(f"SM: Location '{location_name}' has complex AccessFrom - exporting as False")
+                                print(f"[SM] {location_name}: Complex AccessFrom (item requirements) - exporting as False")
+                                # Return a lambda that always returns False
+                                return lambda state: False
 
             return None
         except Exception as e:
-            logger.debug(f"SM: Error analyzing location rule: {e}")
+            logger.debug(f"SM: Error analyzing location rule for {location_name}: {e}")
             return None
 
     def _check_smbool_true_pattern(self, rule: Dict[str, Any]) -> bool:
