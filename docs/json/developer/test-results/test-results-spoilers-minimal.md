@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-22 22:57:38
+**Generated:** 2025-11-22 23:50:31
 
 **Source Data Created:** 2025-11-22T18:37:53.156644
 
-**Source Data Last Updated:** 2025-11-22T18:37:53.156651
+**Source Data Last Updated:** 2025-11-22T23:50:31.293647
 
 ## Summary
 
 - **Total Games:** 76
-- **Passed:** 74 (97.4%)
-- **Failed:** 2 (2.6%)
+- **Passed:** 73 (96.1%)
+- **Failed:** 3 (3.9%)
 - **Games with Intermittent Failures:** 14
 - **Total Intermittent Failures:** 38
 
@@ -67,7 +67,7 @@
 | Old School Runescape | ✅ Passed seeds 1-10 | 0 | 7.5 | 7.5 | 🟢 Complete | ✅ | ✅ |
 | Overcooked! 2 | ✅ Passed seeds 1-10 | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ✅ |
 | Paint | ✅ Passed seeds 1-10 | 0 | 12.1 | 12.1 | 🟢 Complete | ✅ | ✅ |
-| Pokemon Emerald | ✅ Passed seeds 1-9 | 0 | 19.2 | 19.2 | 🟢 Complete | ✅ | ✅ |
+| Pokemon Emerald | ❌ Failed seed 10 | 0 | 0 | 14.1 | 🔴 0.0% | ✅ | ✅ |
 | Pokemon Red and Blue | ✅ Passed seeds 1-10 | 0 | 10.2 | 10.2 | 🟢 Complete | ✅ | ✅ |
 | Raft | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed seeds 1-10 | 0 | 8.3 | 8.3 | 🟢 Complete | ⚫ | ⚫ |

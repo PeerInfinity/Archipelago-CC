@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-22 22:57:38
+**Generated:** 2025-11-22 23:50:31
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -12,7 +12,7 @@ This summary combines results from four types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 74/76 passed (97.4%)
+- **Minimal Test:** 73/76 passed (96.1%)
 - **Full Test:** 70/76 passed (92.1%)
 - **Multiclient Test:** 57/76 passed (75.0%)
 - **Multiworld Test:** 0/76 passed (0.0%)
@@ -26,8 +26,8 @@ This summary combines results from four types of tests:
 
 - **Templates passing all 4 tests:** 0/76 (0.0%)
 - **Templates passing 3 tests:** 56/76 (73.7%)
-- **Templates passing 2 tests:** 15/76 (19.7%)
-- **Templates passing 1 test:** 3/76 (3.9%)
+- **Templates passing 2 tests:** 14/76 (18.4%)
+- **Templates passing 1 test:** 4/76 (5.3%)
 - **Templates passing 0 tests:** 2/76 (2.6%)
 
 ## Test Results
@@ -79,7 +79,7 @@ This summary combines results from four types of tests:
 | Old School Runescape | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
 | Overcooked! 2 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Paint | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
-| Pokemon Emerald | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
+| Pokemon Emerald | ❌ Failed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Pokemon Red and Blue | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Raft | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |

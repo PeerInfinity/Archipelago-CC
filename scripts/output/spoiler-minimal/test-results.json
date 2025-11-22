@@ -272,9 +272,9 @@
           "timestamp": "2025-11-22T18:36:37.063616"
         }
       ],
-      "last_updated": "2025-11-22T18:37:53.156653"
+      "last_updated": "2025-11-22T23:50:31.293588"
     },
-    "last_updated": "2025-11-22T18:37:53.156651",
+    "last_updated": "2025-11-22T23:50:31.293647",
     "script_version": "1.0.0"
   },
   "results": {
@@ -22739,9 +22739,9 @@
         "success": true,
         "warning_count": 0
       },
-      "consecutive_passes_before_failure": 10,
-      "first_failure_reason": null,
-      "first_failure_seed": null,
+      "consecutive_passes_before_failure": 9,
+      "first_failure_reason": "Test failed at sphere 0",
+      "first_failure_seed": 10,
       "game_name_from_filename": "pokemon_emerald",
       "game_name_from_yaml": "Pokemon Emerald",
       "generation": {
@@ -22788,6 +22788,51 @@
           },
           "template_filename": "Pokemon Emerald.yaml",
           "timestamp": "2025-11-22T18:24:30.243498",
+          "world_info": {
+            "exporter_path": "exporter/games/pokemon_emerald.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/pokemon_emerald/pokemon_emeraldLogic.js",
+            "game_name_from_filename": "pokemon_emerald",
+            "game_name_from_yaml": "Pokemon Emerald",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "world_directory": "pokemon_emerald"
+          }
+        },
+        "10": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "pokemon_emerald",
+          "game_name_from_yaml": "Pokemon Emerald",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.65,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/pokemon_emerald/AP_55941320597534372051/AP_55941320597534372051_rules.json",
+            "size_bytes": 1388426,
+            "size_mb": 1.32
+          },
+          "seed": "10",
+          "seed_id": "AP_55941320597534372051",
+          "spoiler_test": {
+            "error_count": 4,
+            "pass_fail": "failed",
+            "processing_time_seconds": 155.26,
+            "return_code": 1,
+            "sphere_reached": 0,
+            "success": false,
+            "total_spheres": 14.1,
+            "warning_count": 0
+          },
+          "template_filename": "Pokemon Emerald.yaml",
+          "timestamp": "2025-11-22T23:47:48.984676",
           "world_info": {
             "exporter_path": "exporter/games/pokemon_emerald.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/pokemon_emerald/pokemon_emeraldLogic.js",
@@ -23166,9 +23211,9 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "seed_range": "1-9",
-      "seeds_failed": 0,
-      "seeds_passed": 10,
+      "seed_range": "1-10",
+      "seeds_failed": 1,
+      "seeds_passed": 9,
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
@@ -23180,12 +23225,12 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": true,
-        "any_failed": false,
-        "failure_rate": 0.0
+        "all_passed": false,
+        "any_failed": true,
+        "failure_rate": 0.1
       },
       "template_filename": "Pokemon Emerald.yaml",
-      "timestamp": "2025-11-22T18:32:53.761977",
+      "timestamp": "2025-11-22T23:47:48.943908",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/pokemon_emerald.py",
