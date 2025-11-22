@@ -4,23 +4,23 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-21 17:34:38
+**Generated:** 2025-11-22 05:01:36
 
-**Source Data Created:** 2025-11-21T21:08:37.193107
+**Source Data Created:** 2025-11-22T05:01:36.347759
 
-**Source Data Last Updated:** 2025-11-21T21:08:37.193112
+**Source Data Last Updated:** 2025-11-22T05:01:36.347765
 
 ## Summary
 
 - **Total Games:** 1
 - **Total Template Configurations:** 174
-- **Passed Configurations:** 135 (77.6%)
-- **Failed Configurations:** 35 (20.1%)
+- **Passed Configurations:** 128 (73.6%)
+- **Failed Configurations:** 42 (24.1%)
 - **Invalid Configurations:** 4 (2.3%)
 
 ## A Link to the Past
 
-**Results:** 135/174 passed (77.6%)  
+**Results:** 128/174 passed (73.6%)  
 **Custom Exporter:** ✅ Yes | **Custom GameLogic:** ✅ Yes
 
 | Template | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress |
@@ -43,7 +43,7 @@
 | boss_shuffle_basic | ✅ Passed | 0 | 23.1 | 23.1 | 100.0% |
 | boss_shuffle_chaos | ✅ Passed | 0 | 19.1 | 19.1 | 100.0% |
 | boss_shuffle_full | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| boss_shuffle_none | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| boss_shuffle_none | ❌ Failed | 0 | 0 | 22.1 | 0.0% |
 | boss_shuffle_singularity | ✅ Passed | 0 | 27.1 | 27.1 | 100.0% |
 | bush_shuffle_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | bush_shuffle_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
@@ -54,17 +54,17 @@
 | compass_shuffle_own_world | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | compass_shuffle_start_with | ✅ Passed | 0 | 20.1 | 20.1 | 100.0% |
 | dark_room_logic_lamp | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| dark_room_logic_none | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| dark_room_logic_none | ❌ Failed | 0 | 0 | 22.1 | 0.0% |
 | dark_room_logic_torches | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | death_link_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | death_link_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | dungeon_counters_default | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| dungeon_counters_off | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| dungeon_counters_off | ❌ Failed | 0 | 0 | 22.1 | 0.0% |
 | dungeon_counters_on | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | dungeon_counters_pickup | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | enemy_damage_chaos | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | enemy_damage_default | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| enemy_damage_shuffled | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| enemy_damage_shuffled | ❌ Failed | 0 | 0 | 22.1 | 0.0% |
 | enemy_health_default | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | enemy_health_easy | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | enemy_health_expert | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
@@ -115,7 +115,7 @@
 | item_pool_normal | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | key_drop_shuffle_false | ✅ Passed | 0 | 26.1 | 26.1 | 100.0% |
 | key_drop_shuffle_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| key_shuffle_extreme | ✅ Passed | 0 | 21.3 | 21.3 | 100.0% |
+| key_shuffle_extreme | ❌ Failed | 0 | 0 | 21.3 | 0.0% |
 | killable_thieves_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | killable_thieves_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | map_shuffle_any_world | ✅ Passed | 0 | 17.1 | 17.1 | 100.0% |
@@ -145,10 +145,10 @@
 | progressive_off | ✅ Passed | 0 | 28.1 | 28.1 | 100.0% |
 | progressive_on | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | randomize_cost_types_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| randomize_cost_types_true | ❌ Failed | 0 | 0 | 18.1 | 0.0% |
+| randomize_cost_types_true | ✅ Passed | 0 | 18.1 | 18.1 | 100.0% |
 | randomize_shop_inventories_default | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | randomize_shop_inventories_randomize_by_shop_type | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| randomize_shop_inventories_randomize_each | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| randomize_shop_inventories_randomize_each | ❌ Failed | 0 | 0 | 22.1 | 0.0% |
 | randomize_shop_prices_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | randomize_shop_prices_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | restrict_dungeon_item_on_boss_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
@@ -187,8 +187,8 @@
 | tile_shuffle_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | timer_challenge | ❌ Generation Failed | 7 | 0 | 0 | N/A |
 | timer_display | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| timer_none | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| timer_ohko | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| timer_none | ❌ Failed | 0 | 0 | 22.1 | 0.0% |
+| timer_ohko | ❌ Failed | 0 | 0 | 22.1 | 0.0% |
 | timer_timed | ✅ Passed | 0 | 34.1 | 34.1 | 100.0% |
 | timer_timed_countdown | ✅ Passed | 0 | 34.1 | 34.1 | 100.0% |
 | timer_timed_ohko | ✅ Passed | 0 | 33.1 | 33.1 | 100.0% |
