@@ -1,6 +1,6 @@
 """Super Metroid game-specific export handler."""
 
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Set
 from .generic import GenericGameExportHandler
 import logging
 
@@ -23,13 +23,30 @@ class SMGameExportHandler(GenericGameExportHandler):
         print(f"[SM] SMGameExportHandler initialized for {self.GAME_NAME}")
         super().__init__()  # Base class doesn't take arguments
         self.world = world
+        self._simple_accessfrom_locations: Optional[Set[str]] = None
+
+    def _get_simple_accessfrom_locations(self) -> Set[str]:
+        """Get the set of location names with simple AccessFrom (all regions use SMBool(True)).
+
+        This is cached after first call for performance.
+        """
+        if self._simple_accessfrom_locations is None:
+            try:
+                from .sm_accessfrom_extractor import get_simple_accessfrom_locations
+                self._simple_accessfrom_locations = get_simple_accessfrom_locations(self.world)
+                logger.info(f"SM: Loaded {len(self._simple_accessfrom_locations)} locations with simple AccessFrom")
+            except Exception as e:
+                logger.error(f"SM: Failed to extract simple AccessFrom locations: {e}")
+                self._simple_accessfrom_locations = set()
+
+        return self._simple_accessfrom_locations
 
     def get_custom_location_access_rule(self, location, world):
         """Custom handling for Super Metroid location access rules.
 
-        Super Metroid locations have complex accessFrom comprehensions that
-        hit recursion limits. These are combined with Available rules in an AND.
-        For now, we skip the accessFrom part and only export the Available rule.
+        Uses AST parsing to determine if the location has simple AccessFrom (SMBool(True))
+        or complex AccessFrom (item requirements). For simple AccessFrom with Available=SMBool(True),
+        exports as constant True. For complex AccessFrom, exports as constant False.
 
         Returns:
             The custom rule to export, or None to use default handling
@@ -37,32 +54,42 @@ class SMGameExportHandler(GenericGameExportHandler):
         if not hasattr(location, 'access_rule') or not location.access_rule:
             return None
 
-        # Try to analyze the rule to see if it's an AND with accessFrom
+        location_name = location.name
+
+        # Try to analyze the rule to see if it's an AND with accessFrom + Available
         try:
             from ..analyzer import analyze_rule
             analyzed = analyze_rule(location.access_rule)
 
-            # Check if it's an AND rule with two conditions
+            # Check if it's an AND rule with two conditions (accessFrom + Available pattern)
             if analyzed and analyzed.get('type') == 'and':
                 conditions = analyzed.get('conditions', [])
                 if len(conditions) == 2:
-                    # Check if first condition is accessFrom (any_of pattern)
-                    first = conditions[0]
-                    second = conditions[1]
+                    first = conditions[0]  # accessFrom
+                    second = conditions[1]  # Available
 
-                    # If first is any_of (likely accessFrom), use only the second (Available)
+                    # Check if first condition is accessFrom (any_of pattern)
                     if first.get('type') == 'any_of':
-                        logger.info(f"SM: Extracting Available rule for location (skipping accessFrom)")
-                        print(f"[SM] Using only Available rule for location (skipping accessFrom comprehension)")
-                        # Return the second condition (the Available rule)
-                        # But we need to return the original lambda, not the analyzed form
-                        # So return None to skip custom handling for now
-                        # Instead, we'll handle this in expand_rule
-                        return None
+                        # This is an accessFrom + Available pattern
+                        # Check if Available is SMBool(True)
+                        if self._is_always_true_smbool(second):
+                            # Available is SMBool(True), check if AccessFrom is simple
+                            simple_locations = self._get_simple_accessfrom_locations()
+
+                            if location_name in simple_locations:
+                                # Simple AccessFrom (all regions use SMBool(True))
+                                logger.info(f"SM: Location '{location_name}' has simple AccessFrom - exporting as True")
+                                # Return analyzed rule dict for constant True
+                                return {'type': 'constant', 'value': True}
+                            else:
+                                # Complex AccessFrom (has item requirements)
+                                logger.info(f"SM: Location '{location_name}' has complex AccessFrom - exporting as False")
+                                # Return analyzed rule dict for constant False
+                                return {'type': 'constant', 'value': False}
 
             return None
         except Exception as e:
-            logger.debug(f"SM: Error analyzing location rule: {e}")
+            logger.debug(f"SM: Error analyzing location rule for {location_name}: {e}")
             return None
 
     def _check_smbool_true_pattern(self, rule: Dict[str, Any]) -> bool:
@@ -220,6 +247,9 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         A simple accessFrom is: any(state.can_reach(region) and evalSMBool(SMBool(True), ...))
         This means the location is accessible from the region with no item requirements.
+
+        NOTE: Due to analyzer recursion limits, this check almost never succeeds.
+        Most accessFrom patterns become corrupted nested structures even if they're simple.
         """
         if not rule or rule.get('type') != 'any_of':
             return False
@@ -240,6 +270,7 @@ class SMGameExportHandler(GenericGameExportHandler):
         # Second condition should be evalSMBool(SMBool(True), ...)
         second = conditions[1]
         if self._is_always_true_smbool(second):
+            logger.info("SM: _is_simple_accessFrom: DETECTED SIMPLE PATTERN (rare!)")
             return True
 
         return False
@@ -289,6 +320,18 @@ class SMGameExportHandler(GenericGameExportHandler):
                     return True
 
         if rule_type == 'function_call':
+            # Check if the function being called is a VARIA logic method (sm.method_name)
+            function = rule.get('function', {})
+            if function.get('type') == 'attribute':
+                obj = function.get('object', {})
+                attr = function.get('attr', '')
+                # If calling sm.method_name, this is complex VARIA logic
+                if obj.get('type') == 'name' and obj.get('name') == 'sm':
+                    # Any sm.method_name is complex (wor, wand, canPass*, haveItem, etc.)
+                    logger.debug(f"SM: Found complex function_call: sm.{attr}")
+                    return True
+
+            # Also check args recursively
             for arg in rule.get('args', []):
                 if self._contains_complex_helpers(arg):
                     return True
@@ -344,6 +387,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                         # corrupt the structure.
                         #
                         # Conservative approach: Export as False to prevent incorrect accessibility.
+                        # TODO: Need a different approach - see CC/scripts/logs/sm/remaining-exporter-issues.md
                         logger.info("SM: Complex accessFrom with SMBool(True) Available - exporting as False (conservative)")
                         return {'type': 'constant', 'value': False}
 
@@ -353,18 +397,16 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         # Check for accessFrom patterns that hit recursion limits
         # These create infinitely nested structures that can't be properly evaluated
-        # CHANGED: Export as False instead of True to prevent incorrect accessibility
-        # until VARIA logic helpers are properly implemented
+        # Conservative: Export as False to prevent incorrect accessibility
+        # TODO: Improve detection to distinguish simple vs complex patterns
         if self._check_accessFrom_pattern(rule):
-            logger.info("SM: Found accessFrom comprehension pattern, exporting as constant False (VARIA logic not yet implemented)")
-            print("[SM] Exporting accessFrom pattern as constant False (needs VARIA logic implementation)")
+            logger.info("SM: Found accessFrom comprehension pattern, exporting as constant False")
             return {'type': 'constant', 'value': False}
 
         # Also check for deeply nested any_of structures (result of recursion limits)
-        # CHANGED: Export as False instead of True
+        # Conservative: Export as False
         if self._check_deeply_nested_any_of(rule):
             logger.info("SM: Found deeply nested any_of pattern (recursion artifact), exporting as constant False")
-            print("[SM] Exporting deeply nested any_of pattern as constant False")
             return {'type': 'constant', 'value': False}
 
         # Handle helper nodes with name='evalSMBool' (analyzer converts self.evalSMBool to helper)

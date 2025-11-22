@@ -657,7 +657,7 @@ export function getStaticGameData(sm) {
   return {
     game_name: sm.rules?.game_name,
     game_directory: sm.rules?.game_directory,
-    playerId: String(sm.playerSlot),
+    playerId: sm.playerSlot, // Numeric player ID for consistency
     locations: sm.locations || new Map(),  // Return Map directly
     regions: sm.regions || new Map(),      // Return Map directly
     exits: sm.exits,

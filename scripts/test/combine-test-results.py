@@ -49,7 +49,7 @@ def is_multitemplate_structure(results: Dict[str, Any]) -> bool:
     if isinstance(first_value, dict):
         # Check if it looks like a template result (has 'generation' or 'spoiler_test')
         # or a game container (has template names as keys)
-        if 'generation' in first_value or 'spoiler_test' in first_value or 'multiplayer_test' in first_value or 'multiworld_test' in first_value:
+        if 'generation' in first_value or 'spoiler_test' in first_value or 'multiclient_test' in first_value or 'multiworld_test' in first_value:
             return False
         # If values are dicts with these fields, it's multitemplate
         for value in first_value.values():
@@ -277,8 +277,8 @@ def _process_template_results(template_results: Dict[str, List], combined_result
                 seed_passed = False
                 if 'spoiler_test' in result:
                     seed_passed = result['spoiler_test'].get('pass_fail') == 'passed'
-                elif 'multiplayer_test' in result:
-                    seed_passed = result['multiplayer_test'].get('success', False)
+                elif 'multiclient_test' in result:
+                    seed_passed = result['multiclient_test'].get('success', False)
                 elif 'multiworld_test' in result:
                     seed_passed = result['multiworld_test'].get('success', False)
                 else:
@@ -449,8 +449,8 @@ def _print_template_summary(template_name: str, result: Dict[str, Any], indent: 
         seed = result.get('seed', '1')
         if 'spoiler_test' in result:
             passed = result['spoiler_test'].get('pass_fail') == 'passed'
-        elif 'multiplayer_test' in result:
-            passed = result['multiplayer_test'].get('success', False)
+        elif 'multiclient_test' in result:
+            passed = result['multiclient_test'].get('success', False)
         elif 'multiworld_test' in result:
             passed = result['multiworld_test'].get('success', False)
         else:

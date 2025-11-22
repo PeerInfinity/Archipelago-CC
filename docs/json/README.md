@@ -35,7 +35,7 @@ This section is for developers who want to understand, modify, or contribute to 
   - [Test Results Summary](./developer/test-results/test-results-summary.md): Combined overview of all test types
   - [Minimal Spoiler Test Results](./developer/test-results/test-results-spoilers-minimal.md): Tests with advancement items only
   - [Full Spoiler Test Results](./developer/test-results/test-results-spoilers-full.md): Tests with all locations
-  - [Multiplayer Test Results](./developer/test-results/test-results-multiplayer.md): Tests in multiplayer mode
+  - [Multiclient Test Results](./developer/test-results/test-results-multiclient.md): Tests in multiclient mode
 
 ### 3. Module Reference
 

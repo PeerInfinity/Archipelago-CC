@@ -85,7 +85,8 @@ export class EventProcessor {
   setContext(currentLogIndex, spoilerLogData, playerId) {
     this.currentLogIndex = currentLogIndex;
     this.spoilerLogData = spoilerLogData;
-    this.playerId = playerId;
+    this.playerId = Number(playerId); // Ensure numeric type for consistency
+    this.playerIdKey = String(this.playerId); // String version for accessing JSON objects with string keys
   }
 
   /**
@@ -165,7 +166,7 @@ export class EventProcessor {
         // Use accumulated data from sphereState
         // Check game settings to determine which items to use
         const staticData = stateManager.getStaticData();
-        const useResolvedItems = staticData?.settings?.[this.playerId]?.use_resolved_items || false;
+        const useResolvedItems = staticData?.settings?.[this.playerIdKey]?.use_resolved_items || false;
 
         const base_items = sphereData.inventoryDetails?.base_items || {};
         const resolved_items = sphereData.inventoryDetails?.resolved_items || {};
@@ -234,7 +235,7 @@ export class EventProcessor {
           // Add newly discovered items from the sphere log to the state manager
           // This is only done for games that set add_sphere_items_upfront flag (like Blasphemous)
           // Most games get items naturally from checking locations
-          const addItemsUpfront = staticData?.settings?.[this.playerId]?.add_sphere_items_upfront || false;
+          const addItemsUpfront = staticData?.settings?.[this.playerIdKey]?.add_sphere_items_upfront || false;
 
           if (addItemsUpfront && newlyAddedItems.length > 0) {
             this.logCallback('info', `Adding ${newlyAddedItems.length} items from sphere log to inventory...`);
@@ -702,7 +703,7 @@ export class EventProcessor {
       const sphereData = this._getSphereDataFromSphereState(this.currentLogIndex);
       if (sphereData) {
         const staticData = stateManager.getStaticData();
-        const useResolvedItems = staticData?.settings?.[String(this.playerId)]?.use_resolved_items || false;
+        const useResolvedItems = staticData?.settings?.[this.playerIdKey]?.use_resolved_items || false;
 
         if (useResolvedItems) {
           this.previousInventory = JSON.parse(JSON.stringify(sphereData.inventoryDetails?.resolved_items || {}));
@@ -874,10 +875,11 @@ export class EventProcessor {
    */
   async _processMultiworldLocations(event, context, stateManager) {
     const staticData = stateManager.getStaticData();
-    const currentPlayerIdStr = String(this.playerId);
 
     // Get current player's data from the event
-    const currentPlayerData = event.player_data[currentPlayerIdStr];
+    // Note: player_data has string keys in JSON, so convert numeric playerId to string
+    const playerIdKey = String(this.playerId);
+    const currentPlayerData = event.player_data[playerIdKey];
 
     if (!currentPlayerData) {
       this.logCallback('warn', `No player_data found for player ${this.playerId} in sphere ${context.sphere_number}`);
@@ -961,7 +963,7 @@ export class EventProcessor {
 
     // Step 3: Process resolved_items (behavior depends on game settings)
     // Check if this game wants to use resolved_items
-    const useResolvedItems = staticData.settings?.[this.playerId]?.use_resolved_items ?? false;
+    const useResolvedItems = staticData.settings?.[this.playerIdKey]?.use_resolved_items ?? false;
 
     if (useResolvedItems) {
       // Old logic: Process resolved_items for games that need them (e.g., Blasphemous)
@@ -976,7 +978,7 @@ export class EventProcessor {
 
           // Check if this is an event item (virtual item computed by hooks)
           // In multiworld, staticData.items is keyed by player, so use itemsByPlayer if available
-          const playerItems = staticData.itemsByPlayer?.[this.playerId] || staticData.items;
+          const playerItems = staticData.itemsByPlayer?.[this.playerIdKey] || staticData.items;
           const itemDef = playerItems.get?.(itemName) || playerItems[itemName];
           if (itemDef && itemDef.event) {
             // Skip event items - they should be computed by game-specific hooks

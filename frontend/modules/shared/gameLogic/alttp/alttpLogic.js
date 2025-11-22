@@ -106,6 +106,12 @@ export function has(snapshot, staticData, itemName) {
   // Check inventory
   if (!snapshot.inventory) return false;
 
+  // Special handling for generic item aliases that mean "any level"
+  // "Sword" means "any sword level" (ProgressiveSword > 0)
+  if (itemName === 'Sword') {
+    return (snapshot.inventory['ProgressiveSword'] || 0) > 0;
+  }
+
   // Direct item check
   if ((snapshot.inventory[itemName] || 0) > 0) {
     return true;
@@ -115,7 +121,9 @@ export function has(snapshot, staticData, itemName) {
   if (staticData && staticData.progressionMapping) {
     // Get player-specific progression mapping (progression_mapping is organized by player slot)
     const playerSlot = snapshot?.player?.slot || '1';
-    const playerProgressionMapping = staticData.progressionMapping[playerSlot] || staticData.progressionMapping;
+    // Convert playerSlot to string for reliable object key access (handles both numeric and string slots)
+    const playerSlotKey = String(playerSlot);
+    const playerProgressionMapping = staticData.progressionMapping[playerSlotKey] || staticData.progressionMapping;
 
     // Check if this item is provided by any progressive item
     for (const [progressiveBase, progression] of Object.entries(playerProgressionMapping)) {
@@ -168,7 +176,9 @@ export function count(snapshot, staticData, itemName) {
 
   // Get player-specific progression mapping (progression_mapping is organized by player slot)
   const playerSlot = snapshot?.player?.slot || '1';
-  const playerProgressionMapping = staticData?.progressionMapping?.[playerSlot] || staticData?.progressionMapping;
+  // Convert playerSlot to string for reliable object key access (handles both numeric and string slots)
+  const playerSlotKey = String(playerSlot);
+  const playerProgressionMapping = staticData?.progressionMapping?.[playerSlotKey] || staticData?.progressionMapping;
 
   // If the item itself is a base progressive item, return its direct count
   if (playerProgressionMapping && playerProgressionMapping[itemName]) {

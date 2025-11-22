@@ -1,10 +1,10 @@
 # Archipelago Template Test Results Chart
 
-## Multiplayer Test
+## Multiclient Test
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-22 17:47:55
+**Generated:** 2025-11-22 08:49:34
 
 ## Summary
 

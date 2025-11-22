@@ -10,36 +10,124 @@ on:
         options:
           - 'seed-1'
           - 'seeds-1-10'
-        default: 'seed-1'
-
-      include_multitemplate:
-        description: 'Include multitemplate tests'
-        type: boolean
-        default: false
+        default: 'seeds-1-10'
 
       delete_existing_results:
         description: 'Delete existing test-results.json files before testing'
         type: boolean
-        default: false
+        default: true
 
-      enable_retest:
-        description: 'Enable retesting of failed tests'
+      retest_failures:
+        description: 'Retest failed tests'
+        type: choice
+        options:
+          - 'disabled'
+          - '1-time'
+          - '2-times'
+          - '3-times'
+        default: '2-times'
+
+      enable_minimal_spoiler:
+        description: 'Run minimal spoiler tests'
         type: boolean
-        default: false
+        default: true
 
-      retest_iterations:
-        description: 'Number of times to retest failed tests'
-        type: number
-        default: 1
+      enable_full_spoiler:
+        description: 'Run full spoiler tests'
+        type: boolean
+        default: true
+
+      enable_multiclient:
+        description: 'Run multiclient tests'
+        type: boolean
+        default: true
+
+      enable_multiworld:
+        description: 'Run multiworld tests'
+        type: boolean
+        default: true
+
+      multiworld_parallelization:
+        description: 'Multiworld test parallelization'
+        type: choice
+        options:
+          - 'single-job'
+          - 'parallel-10-jobs'
+        default: 'single-job'
+
+      multitemplate_tests:
+        description: 'Multitemplate tests'
+        type: choice
+        options:
+          - 'skip'
+          - 'minimal-only'
+          - 'full-only'
+          - 'both'
+        default: 'both'
 
 permissions:
   contents: write  # Allow pushing commits and creating branches
 
 jobs:
+  # Initial setup job - creates/updates branch and optionally deletes existing results
+  setup-branch:
+    name: Setup Test Results Branch
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Create or switch to test-results-update branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin
+
+          if git ls-remote --exit-code --heads origin test-results-update; then
+            git checkout test-results-update
+            git pull origin test-results-update
+            git rm -rf .
+            git checkout origin/main -- .
+            if ! git diff --staged --quiet; then
+              git commit -m "Sync test-results-update with main"
+            fi
+          else
+            git checkout -b test-results-update origin/main
+          fi
+
+      - name: Delete existing test results
+        if: inputs.delete_existing_results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Delete all test-results.json files
+          git rm -f scripts/output/spoiler-minimal/test-results.json || true
+          git rm -f scripts/output/spoiler-full/test-results.json || true
+          git rm -f scripts/output/multiclient/test-results.json || true
+          git rm -f scripts/output/multiworld/test-results.json || true
+          git rm -f scripts/output/multitemplate-minimal/test-results.json || true
+          git rm -f scripts/output/multitemplate-full/test-results.json || true
+
+          # Commit if there are changes
+          if ! git diff --staged --quiet; then
+            git commit -m "Delete existing test results before new test run"
+            git push origin test-results-update
+          fi
+
   # Minimal Spoiler Tests (10 parallel jobs)
   test-minimal-spoiler:
     name: Test Minimal Spoiler Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
+    needs: setup-branch
+    if: inputs.enable_minimal_spoiler
     timeout-minutes: 180
 
     strategy:
@@ -108,11 +196,12 @@ jobs:
             -p
 
       - name: Retest minimal spoiler failures (seed-1 mode)
-        if: inputs.spoiler_mode == 'seed-1' && inputs.enable_retest
+        if: inputs.spoiler_mode == 'seed-1' && inputs.retest_failures != 'disabled'
         run: |
           source .venv/bin/activate
-          for i in $(seq 1 ${{ inputs.retest_iterations }}); do
-            echo "Retest iteration $i of ${{ inputs.retest_iterations }}"
+          ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
+          for i in $(seq 1 $ITERATIONS); do
+            echo "Retest iteration $i of $ITERATIONS"
             python scripts/test/test-all-templates.py \
               --retest \
               --retest-seed-specific \
@@ -137,11 +226,12 @@ jobs:
             -p
 
       - name: Retest minimal spoiler failures (seeds-1-10 mode)
-        if: inputs.spoiler_mode == 'seeds-1-10' && inputs.enable_retest
+        if: inputs.spoiler_mode == 'seeds-1-10' && inputs.retest_failures != 'disabled'
         run: |
           source .venv/bin/activate
-          for i in $(seq 1 ${{ inputs.retest_iterations }}); do
-            echo "Retest iteration $i of ${{ inputs.retest_iterations }}"
+          ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
+          for i in $(seq 1 $ITERATIONS); do
+            echo "Retest iteration $i of $ITERATIONS"
             python scripts/test/test-all-templates.py \
               --retest \
               --retest-seed-specific \
@@ -166,11 +256,13 @@ jobs:
     name: Combine Minimal Spoiler Results
     runs-on: ubuntu-latest
     needs: test-minimal-spoiler
-    if: always()
+    if: always() && inputs.enable_minimal_spoiler
 
     steps:
-      - name: Checkout repository
+      - name: Checkout test-results-update branch
         uses: actions/checkout@v4
+        with:
+          ref: test-results-update
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -194,44 +286,6 @@ jobs:
           python scripts/test/combine-test-results.py \
             --input-files artifacts/test-results-minimal-spoiler-split-*/test-results-split-*.json \
             --output-file /tmp/merged-results/scripts/output/spoiler-minimal/test-results.json
-
-      - name: Create or switch to test-results-update branch
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git fetch origin
-
-          if git ls-remote --exit-code --heads origin test-results-update; then
-            git checkout test-results-update
-            git pull origin test-results-update
-            git rm -rf .
-            git checkout origin/main -- .
-            if ! git diff --staged --quiet; then
-              git commit -m "Sync test-results-update with main"
-            fi
-          else
-            git checkout -b test-results-update origin/main
-          fi
-
-      - name: Delete existing test results
-        if: inputs.delete_existing_results
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          # Delete all test-results.json files
-          git rm -f scripts/output/spoiler-minimal/test-results.json || true
-          git rm -f scripts/output/spoiler-full/test-results.json || true
-          git rm -f scripts/output/multiplayer/test-results.json || true
-          git rm -f scripts/output/multiworld/test-results.json || true
-          git rm -f scripts/output/multitemplate-minimal/test-results.json || true
-          git rm -f scripts/output/multitemplate-full/test-results.json || true
-
-          # Commit if there are changes
-          if ! git diff --staged --quiet; then
-            git commit -m "Delete existing test results before new test run"
-            git push origin test-results-update
-          fi
 
       - name: Copy results and generate documentation
         run: |
@@ -260,7 +314,8 @@ jobs:
   test-full-spoiler:
     name: Test Full Spoiler Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
-    needs: combine-minimal-spoiler
+    needs: [setup-branch, combine-minimal-spoiler]
+    if: always() && inputs.enable_full_spoiler && (needs.setup-branch.result == 'success')
     timeout-minutes: 180
 
     strategy:
@@ -331,11 +386,12 @@ jobs:
             -p
 
       - name: Retest full spoiler failures (seed-1 mode)
-        if: inputs.spoiler_mode == 'seed-1' && inputs.enable_retest
+        if: inputs.spoiler_mode == 'seed-1' && inputs.retest_failures != 'disabled'
         run: |
           source .venv/bin/activate
-          for i in $(seq 1 ${{ inputs.retest_iterations }}); do
-            echo "Retest iteration $i of ${{ inputs.retest_iterations }}"
+          ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
+          for i in $(seq 1 $ITERATIONS); do
+            echo "Retest iteration $i of $ITERATIONS"
             python scripts/test/test-all-templates.py \
               --retest \
               --retest-seed-specific \
@@ -360,11 +416,12 @@ jobs:
             -p
 
       - name: Retest full spoiler failures (seeds-1-10 mode)
-        if: inputs.spoiler_mode == 'seeds-1-10' && inputs.enable_retest
+        if: inputs.spoiler_mode == 'seeds-1-10' && inputs.retest_failures != 'disabled'
         run: |
           source .venv/bin/activate
-          for i in $(seq 1 ${{ inputs.retest_iterations }}); do
-            echo "Retest iteration $i of ${{ inputs.retest_iterations }}"
+          ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
+          for i in $(seq 1 $ITERATIONS); do
+            echo "Retest iteration $i of $ITERATIONS"
             python scripts/test/test-all-templates.py \
               --retest \
               --retest-seed-specific \
@@ -389,7 +446,7 @@ jobs:
     name: Combine Full Spoiler Results
     runs-on: ubuntu-latest
     needs: test-full-spoiler
-    if: always()
+    if: always() && inputs.enable_full_spoiler
 
     steps:
       - name: Checkout test-results-update branch
@@ -443,11 +500,12 @@ jobs:
             git push origin test-results-update
           fi
 
-  # Multiplayer Tests (10 parallel jobs)
-  test-multiplayer:
-    name: Test Multiplayer Split ${{ matrix.split_num }}
+  # Multiclient Tests (10 parallel jobs)
+  test-multiclient:
+    name: Test Multiclient Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
-    needs: combine-full-spoiler
+    needs: [setup-branch, combine-full-spoiler]
+    if: always() && inputs.enable_multiclient && (needs.setup-branch.result == 'success')
     timeout-minutes: 180
 
     strategy:
@@ -505,14 +563,14 @@ jobs:
           python -m http.server 8000 &
           sleep 2
 
-      - name: Run multiplayer test
+      - name: Run multiclient test
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
-            --multiplayer \
+            --multiclient \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --output-file scripts/output/multiplayer/test-results-split-${{ matrix.split_num }}.json \
+            --output-file scripts/output/multiclient/test-results-split-${{ matrix.split_num }}.json \
             --no-backup \
             -p
 
@@ -520,16 +578,16 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-multiplayer-split-${{ matrix.split_num }}
-          path: scripts/output/multiplayer/test-results-split-${{ matrix.split_num }}.json
+          name: test-results-multiclient-split-${{ matrix.split_num }}
+          path: scripts/output/multiclient/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
-  # Combine multiplayer results
-  combine-multiplayer:
-    name: Combine Multiplayer Results
+  # Combine multiclient results
+  combine-multiclient:
+    name: Combine Multiclient Results
     runs-on: ubuntu-latest
-    needs: test-multiplayer
-    if: always()
+    needs: test-multiclient
+    if: always() && inputs.enable_multiclient
 
     steps:
       - name: Checkout test-results-update branch
@@ -555,27 +613,152 @@ jobs:
 
       - name: Combine test results
         run: |
-          mkdir -p /tmp/merged-results/scripts/output/multiplayer
+          mkdir -p /tmp/merged-results/scripts/output/multiclient
           python scripts/test/combine-test-results.py \
-            --input-files artifacts/test-results-multiplayer-split-*/test-results-split-*.json \
-            --output-file /tmp/merged-results/scripts/output/multiplayer/test-results.json
+            --input-files artifacts/test-results-multiclient-split-*/test-results-split-*.json \
+            --output-file /tmp/merged-results/scripts/output/multiclient/test-results.json
 
       - name: Copy results and generate documentation
         run: |
-          mkdir -p scripts/output/multiplayer
-          cp /tmp/merged-results/scripts/output/multiplayer/test-results.json \
-             scripts/output/multiplayer/test-results.json
+          mkdir -p scripts/output/multiclient
+          cp /tmp/merged-results/scripts/output/multiclient/test-results.json \
+             scripts/output/multiclient/test-results.json
           python scripts/docs/generate-test-chart.py
 
       - name: Commit and push results
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f scripts/output/multiplayer/test-results.json
+          git add -f scripts/output/multiclient/test-results.json
           git add docs/json/developer/test-results/*.md || true
 
           if ! git diff --staged --quiet; then
-            git commit -m "Update multiplayer test results (sequential workflow)
+            git commit -m "Update multiclient test results (sequential workflow)
+
+            Generated by workflow run: ${{ github.run_id }}
+            "
+            git push origin test-results-update
+          fi
+
+  # Multiworld Test (single job version)
+  test-multiworld-single:
+    name: Test Multiworld (Single Job)
+    runs-on: ubuntu-latest
+    needs: [setup-branch, combine-multiclient]
+    if: always() && inputs.enable_multiworld && inputs.multiworld_parallelization == 'single-job' && (needs.setup-branch.result == 'success')
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout test-results-update branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-results-update
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Create virtual environment and install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python ModuleUpdate.py --yes
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py minimal-spoilers
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: |
+          source .venv/bin/activate
+          npx playwright install chromium
+
+      - name: Start HTTP server
+        run: |
+          python -m http.server 8000 &
+          sleep 2
+
+      - name: Run multiworld test
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-all-templates.py \
+            --multiworld \
+            --output-file scripts/output/multiworld/test-results.json \
+            --no-backup \
+            -p
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-multiworld-single
+          path: scripts/output/multiworld/test-results.json
+          retention-days: 7
+
+  # Combine multiworld results (single job version)
+  combine-multiworld-single:
+    name: Combine Multiworld Results (Single Job)
+    runs-on: ubuntu-latest
+    needs: test-multiworld-single
+    if: always() && inputs.enable_multiworld && inputs.multiworld_parallelization == 'single-job'
+
+    steps:
+      - name: Checkout test-results-update branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-results-update
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Download test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: test-results-multiworld-single
+          path: artifacts
+
+      - name: Copy results and generate documentation
+        run: |
+          mkdir -p scripts/output/multiworld
+          cp artifacts/test-results.json scripts/output/multiworld/test-results.json
+          python scripts/docs/generate-test-chart.py
+
+      - name: Commit and push results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f scripts/output/multiworld/test-results.json
+          git add docs/json/developer/test-results/*.md || true
+
+          if ! git diff --staged --quiet; then
+            git commit -m "Update multiworld test results (sequential workflow - single job)
 
             Generated by workflow run: ${{ github.run_id }}
             "
@@ -586,7 +769,8 @@ jobs:
   test-multiworld:
     name: Test Multiworld Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
-    needs: combine-multiplayer
+    needs: [setup-branch, combine-multiclient]
+    if: always() && inputs.enable_multiworld && inputs.multiworld_parallelization == 'parallel-10-jobs' && (needs.setup-branch.result == 'success')
     timeout-minutes: 180
 
     strategy:
@@ -668,7 +852,7 @@ jobs:
     name: Combine Multiworld Results
     runs-on: ubuntu-latest
     needs: test-multiworld
-    if: always()
+    if: always() && inputs.enable_multiworld && inputs.multiworld_parallelization == 'parallel-10-jobs'
 
     steps:
       - name: Checkout test-results-update branch
@@ -725,8 +909,8 @@ jobs:
   test-minimal-multitemplate:
     name: Test Minimal Multitemplate Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
-    needs: combine-multiworld
-    if: inputs.include_multitemplate
+    needs: [setup-branch, combine-multiworld, combine-multiworld-single]
+    if: always() && (inputs.multitemplate_tests == 'minimal-only' || inputs.multitemplate_tests == 'both') && (needs.setup-branch.result == 'success')
     timeout-minutes: 180
 
     strategy:
@@ -814,7 +998,7 @@ jobs:
     name: Combine Minimal Multitemplate Results
     runs-on: ubuntu-latest
     needs: test-minimal-multitemplate
-    if: always() && inputs.include_multitemplate
+    if: always() && (inputs.multitemplate_tests == 'minimal-only' || inputs.multitemplate_tests == 'both')
 
     steps:
       - name: Checkout test-results-update branch
@@ -871,8 +1055,8 @@ jobs:
   test-full-multitemplate:
     name: Test Full Multitemplate Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
-    needs: combine-minimal-multitemplate
-    if: inputs.include_multitemplate
+    needs: [setup-branch, combine-minimal-multitemplate]
+    if: always() && (inputs.multitemplate_tests == 'full-only' || inputs.multitemplate_tests == 'both') && (needs.setup-branch.result == 'success')
     timeout-minutes: 180
 
     strategy:
@@ -960,7 +1144,7 @@ jobs:
     name: Combine Full Multitemplate Results
     runs-on: ubuntu-latest
     needs: test-full-multitemplate
-    if: always() && inputs.include_multitemplate
+    if: always() && (inputs.multitemplate_tests == 'full-only' || inputs.multitemplate_tests == 'both')
 
     steps:
       - name: Checkout test-results-update branch

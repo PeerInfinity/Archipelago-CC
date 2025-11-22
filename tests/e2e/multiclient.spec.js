@@ -11,7 +11,7 @@ test.describe('Multiplayer Client Interaction Tests', () => {
 
   const testGame = process.env.TEST_GAME || 'adventure';
   const testSeed = process.env.TEST_SEED || '1';
-  const outputDir = process.env.TEST_OUTPUT_DIR || 'test_results/multiplayer';
+  const outputDir = process.env.TEST_OUTPUT_DIR || 'test_results/multiclient';
   const serverPort = 38281;
   const enableSingleClient = process.env.ENABLE_SINGLE_CLIENT === 'true';
 
@@ -116,7 +116,7 @@ test.describe('Multiplayer Client Interaction Tests', () => {
 
     // Build URL with autoConnect, game, and seed parameters
     // Add runningSingleClientTest=true for single client mode
-    const url1 = `http://localhost:8000/frontend/?mode=test-multiplayer-client1&autoConnect=true&server=ws://localhost:38281&playerName=Player1&game=${testGame}&seed=${testSeed}&runningSingleClientTest=true`;
+    const url1 = `http://localhost:8000/frontend/?mode=test-multiclient-client1&autoConnect=true&server=ws://localhost:38281&playerName=Player1&game=${testGame}&seed=${testSeed}&runningSingleClientTest=true`;
 
     console.log('='.repeat(60));
     console.log('Starting single client timer test...');
@@ -203,7 +203,7 @@ test.describe('Multiplayer Client Interaction Tests', () => {
     }
   });
 
-  (!enableSingleClient ? test : test.skip)('multiplayer timer test - client 1: send checks, client 2: receive checks', async ({ browser }) => {
+  (!enableSingleClient ? test : test.skip)('multiclient timer test - client 1: send checks, client 2: receive checks', async ({ browser }) => {
     let serverProc = null;
 
     try {
@@ -236,15 +236,15 @@ test.describe('Multiplayer Client Interaction Tests', () => {
       console.log(`CLIENT2 (${msg.type()}): ${msg.text()}`);
     });
 
-    // Build URLs for both clients using the new multiplayer test modes
+    // Build URLs for both clients using the new multiclient test modes
     // Add autoConnect, server, playerName, game, and seed parameters
     // NOTE: Both clients use the same playerName because the seed only has one slot
     // The server treats the second connection as a reconnection to the same slot
-    const url1 = `http://localhost:8000/frontend/?mode=test-multiplayer-client1&autoConnect=true&server=ws://localhost:38281&playerName=Player1&game=${testGame}&seed=${testSeed}`;
-    const url2 = `http://localhost:8000/frontend/?mode=test-multiplayer-client2&autoConnect=true&server=ws://localhost:38281&playerName=Player1&game=${testGame}&seed=${testSeed}`;
+    const url1 = `http://localhost:8000/frontend/?mode=test-multiclient-client1&autoConnect=true&server=ws://localhost:38281&playerName=Player1&game=${testGame}&seed=${testSeed}`;
+    const url2 = `http://localhost:8000/frontend/?mode=test-multiclient-client2&autoConnect=true&server=ws://localhost:38281&playerName=Player1&game=${testGame}&seed=${testSeed}`;
 
     console.log('='.repeat(60));
-    console.log('Starting multiplayer timer test...');
+    console.log('Starting multiclient timer test...');
     console.log(`Client 1 (timer send): ${url1}`);
     console.log(`Client 2 (timer receive): ${url2}`);
     console.log('='.repeat(60));
@@ -361,7 +361,7 @@ test.describe('Multiplayer Client Interaction Tests', () => {
     expect(results2.summary.passedCount).toBeGreaterThan(0);
 
       console.log('='.repeat(60));
-      console.log('All Playwright assertions passed for multiplayer timer test.');
+      console.log('All Playwright assertions passed for multiclient timer test.');
       console.log('='.repeat(60));
 
       await context1.close();
