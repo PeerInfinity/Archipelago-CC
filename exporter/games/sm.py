@@ -569,6 +569,16 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         rule_type = rule.get('type')
 
+        # Handle unresolved 'ret' variable from Cache.ldeco decorator
+        # The Cache.ldeco decorator creates a wrapper function with a local variable 'ret'
+        # that stores the result of the wrapped function. When parsing entrance rules,
+        # the analyzer sometimes captures this 'ret' variable instead of inlining it.
+        # For now, we replace it with SMBool(False) as a conservative default.
+        # TODO: Properly extract and inline the traverse lambda from AccessPoint objects
+        if rule_type == 'name' and rule.get('name') == 'ret':
+            logger.warning("SM: Found unresolved 'ret' variable, replacing with SMBool(False)")
+            return {'type': 'constant', 'value': {'bool': False, 'difficulty': 0}}
+
         # Handle RomPatches.has() calls - resolve to constants since patches are fixed at generation time
         if rule_type == 'function_call':
             function = rule.get('function', {})
@@ -579,12 +589,29 @@ class SMGameExportHandler(GenericGameExportHandler):
                 # This is a RomPatches.has(patch_id) call
                 args = rule.get('args', [])
                 if len(args) >= 1:
-                    # The first arg should be the patch ID (constant)
+                    # The first arg can be a constant or an attribute reference (RomPatches.PatchName)
                     patch_arg = args[0]
+                    patch_id = None
+
                     if patch_arg.get('type') == 'constant':
                         patch_id = patch_arg.get('value')
+                    elif patch_arg.get('type') == 'attribute':
+                        # Handle RomPatches.PatchName references
+                        if (patch_arg.get('object', {}).get('type') == 'name' and
+                            patch_arg.get('object', {}).get('name') == 'RomPatches'):
+                            # Get the patch name and resolve it to its ID
+                            patch_name = patch_arg.get('attr')
+                            try:
+                                from worlds.sm.variaRandomizer.rom.rom_patches import RomPatches
+                                # Get the patch ID by accessing the class attribute
+                                patch_id = getattr(RomPatches, patch_name, None)
+                                if patch_id is not None:
+                                    logger.info(f"SM: Resolved RomPatches.{patch_name} to {patch_id}")
+                            except Exception as e:
+                                logger.error(f"SM: Failed to resolve RomPatches.{patch_name}: {e}")
+
+                    if patch_id is not None:
                         # Check if this patch is active
-                        # Import RomPatches to check active patches
                         try:
                             from worlds.sm.variaRandomizer.rom.rom_patches import RomPatches
                             player_id = self.world.player if self.world else 1
