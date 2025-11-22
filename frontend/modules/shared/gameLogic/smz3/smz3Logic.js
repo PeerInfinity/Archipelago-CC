@@ -766,6 +766,51 @@ export function smz3_CanAcquireAll(snapshot, staticData, rewardType) {
 }
 
 /**
+ * Check if player can acquire AT LEAST a certain number of rewards of a specific type(s).
+ * Python: def CanAcquireAtLeast(self, amount, items, rewardsMask):
+ *     return len([region for region in self.rewardLookup[rewardsMask.value] if region.CanComplete(items)]) >= amount
+ *
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static data (contains settings with reward_regions)
+ * @param {number} amount - Minimum number of regions to complete
+ * @param {number} rewardType - The reward type mask to check for
+ */
+export function smz3_CanAcquireAtLeast(snapshot, staticData, amount, rewardType) {
+  console.log(`[smz3_CanAcquireAtLeast] Called with amount=${amount}, rewardType=${rewardType}`);
+
+  // Get player slot
+  const playerSlot = String(typeof snapshot.player === 'object' ? snapshot.player.slot : snapshot.player);
+
+  // Get the reward_regions mapping from settings
+  const settings = staticData.settings?.[playerSlot] || {};
+  const rewardRegions = settings.reward_regions || {};
+
+  // Find all regions that have rewards matching ANY bit in the mask
+  const matchingRegions = [];
+  for (const [regionName, rewardInfo] of Object.entries(rewardRegions)) {
+    // Check if this region's reward type matches any bit in the mask
+    if ((rewardInfo.reward_type & rewardType) !== 0) {
+      matchingRegions.push({ name: regionName, rewardType: rewardInfo.reward_type });
+    }
+  }
+
+  console.log(`[smz3_CanAcquireAtLeast] Found ${matchingRegions.length} regions matching mask ${rewardType}`);
+
+  // Count how many of these regions can be completed
+  let completableCount = 0;
+  for (const region of matchingRegions) {
+    const canCompleteRegion = checkRegionCompletion(snapshot, staticData, region.name);
+    if (canCompleteRegion) {
+      completableCount++;
+    }
+  }
+
+  console.log(`[smz3_CanAcquireAtLeast] ${completableCount} of ${matchingRegions.length} regions can be completed (need ${amount})`);
+
+  return completableCount >= amount;
+}
+
+/**
  * Simple rule evaluator for use within helper functions.
  * Handles basic rule types without needing snapshot.evaluateRule().
  * @param {Object} rule - The rule to evaluate
@@ -807,6 +852,29 @@ function evaluateSimpleRule(rule, snapshot, staticData) {
       // Check if region is reachable
       const regionName = typeof rule.region === 'string' ? rule.region : rule.region?.value;
       return snapshot.regionReachability?.[regionName] === true;
+
+    case 'binary_op':
+      // Handle arithmetic operations like +, -, *, /, %
+      if (!rule.left || !rule.right || !rule.op) {
+        console.warn('[evaluateSimpleRule] Invalid binary_op rule, missing left/right/op');
+        return 0;
+      }
+
+      // Evaluate left and right sides
+      const leftVal = evaluateSimpleRule(rule.left, snapshot, staticData);
+      const rightVal = evaluateSimpleRule(rule.right, snapshot, staticData);
+
+      // Perform the operation
+      switch (rule.op) {
+        case '+': return leftVal + rightVal;
+        case '-': return leftVal - rightVal;
+        case '*': return leftVal * rightVal;
+        case '/': return rightVal !== 0 ? Math.floor(leftVal / rightVal) : 0;
+        case '%': return rightVal !== 0 ? leftVal % rightVal : 0;
+        default:
+          console.warn(`[evaluateSimpleRule] Unknown binary operator '${rule.op}'`);
+          return 0;
+      }
 
     case 'compare':
       // Handle comparison operations like >= , <=, ==, !=, >, <
@@ -875,6 +943,8 @@ function evaluateSimpleRule(rule, snapshot, staticData) {
           return smz3_CanAcquire(snapshot, staticData, ...evaluatedArgs);
         case 'smz3_CanAcquireAll':
           return smz3_CanAcquireAll(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanAcquireAtLeast':
+          return smz3_CanAcquireAtLeast(snapshot, staticData, ...evaluatedArgs);
         case 'smz3_CanLiftLight':
           return smz3_CanLiftLight(snapshot, staticData, ...evaluatedArgs);
         case 'smz3_CanLiftHeavy':
@@ -949,6 +1019,46 @@ function evaluateSimpleRule(rule, snapshot, staticData) {
         default:
           console.warn(`[evaluateSimpleRule] Unknown helper '${helperName}', returning false`);
           return false;
+      }
+
+    case 'function_call':
+      // Handle function calls, which can be attribute access (e.g., state.CanAcquireAtLeast)
+      if (!rule.function) {
+        console.warn('[evaluateSimpleRule] function_call rule missing function property');
+        return false;
+      }
+
+      // Check if it's an attribute access
+      if (rule.function.type === 'attribute') {
+        const attrName = rule.function.attr;
+        const args = rule.args || [];
+
+        // Evaluate arguments
+        const evaluatedArgs = args.map(arg => {
+          if (arg && typeof arg === 'object' && arg.type) {
+            return evaluateSimpleRule(arg, snapshot, staticData);
+          }
+          return arg;
+        });
+
+        // Map attribute names to helper function names
+        const functionName = `smz3_${attrName}`;
+
+        // Call the helper function
+        switch (functionName) {
+          case 'smz3_CanAcquireAtLeast':
+            return smz3_CanAcquireAtLeast(snapshot, staticData, ...evaluatedArgs);
+          case 'smz3_CanAcquireAll':
+            return smz3_CanAcquireAll(snapshot, staticData, ...evaluatedArgs);
+          case 'smz3_CanAcquire':
+            return smz3_CanAcquire(snapshot, staticData, ...evaluatedArgs);
+          default:
+            console.warn(`[evaluateSimpleRule] Unknown function_call attribute '${attrName}', returning false`);
+            return false;
+        }
+      } else {
+        console.warn(`[evaluateSimpleRule] function_call with unsupported function type '${rule.function.type}'`);
+        return false;
       }
 
     default:

@@ -43,3 +43,34 @@ The evaluator handles nested rule structures and can call helper functions recur
 
 **Files Modified**:
 - frontend/modules/shared/gameLogic/smz3/smz3Logic.js (lines 805-960)
+
+## Issue: Generic item alias "Sword" not mapped to ProgressiveSword
+
+**Status**: SOLVED
+
+**Description**:
+The access rules for some locations (Master Sword Pedestal, Skull Woods - Mothula) required the generic item name "Sword" but the player had "ProgressiveSword". The has() function in alttpLogic.js didn't recognize "Sword" as an alias for "any level of ProgressiveSword".
+
+**Locations Affected**:
+- Master Sword Pedestal - FIXED
+- Skull Woods - Mothula (required Sword + Firerod + KeySW >= 3) - FIXED
+
+**Root Cause**:
+Access rules used the generic name "Sword" to mean "any sword level", but the JavaScript logic only checked for exact item matches or progressive item progressions, not generic aliases.
+
+**Solution Implemented**:
+Added special handling in alttpLogic.js has() function to map "Sword" to ProgressiveSword:
+```javascript
+// Special handling for generic item aliases that mean "any level"
+// "Sword" means "any sword level" (ProgressiveSword > 0)
+if (itemName === 'Sword') {
+  return (snapshot.inventory['ProgressiveSword'] || 0) > 0;
+}
+```
+
+**Test Results**:
+- Master Sword Pedestal and Skull Woods - Mothula now properly become accessible in sphere 9.10 ✓
+- Test progressed from sphere 9.10 to 12.4 (significant progress) ✓
+
+**Files Modified**:
+- frontend/modules/shared/gameLogic/alttp/alttpLogic.js (lines 109-113)

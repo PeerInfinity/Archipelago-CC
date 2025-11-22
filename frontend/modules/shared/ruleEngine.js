@@ -761,9 +761,55 @@ export const evaluateRule = (rule, context, depth = 0) => {
       }
 
       case 'function_call': {
+        // Special handling for state method calls like state.CanAcquireAtLeast()
+        // In the exported rules, these appear as: {type: 'function_call', function: {type: 'attribute', object: {type: 'constant', value: true}, attr: 'MethodName'}}
+        // The constant 'true' is a placeholder for the state/world object
+        if (rule.function?.type === 'attribute' &&
+            rule.function.object?.type === 'constant' &&
+            rule.function.object.value === true) {
+
+          const methodName = rule.function.attr;
+          const args = (rule.args || []).map(
+            (arg) => evaluateRule(arg, context, depth + 1)
+          );
+
+          // If any argument evaluation results in undefined, return undefined
+          if (args.some((arg) => arg === undefined)) {
+            result = undefined;
+            break;
+          }
+
+          // For SMZ3, prepend 'smz3_' to the method name to get the helper function name
+          // This handles methods like CanAcquireAtLeast, CanAcquireAll, etc.
+          const helperName = `smz3_${methodName}`;
+
+          // Call the helper function through context.executeHelper
+          if (context.executeHelper) {
+            try {
+              result = context.executeHelper(helperName, ...args);
+              break;
+            } catch (error) {
+              logError(
+                LOG_LEVEL.ERROR,
+                `[ruleEngine] [evaluateRule] Failed to execute state method helper '${helperName}':`,
+                error
+              );
+              result = undefined;
+              break;
+            }
+          } else {
+            logError(
+              LOG_LEVEL.ERROR,
+              `[ruleEngine] [evaluateRule] No executeHelper method in context for state method '${helperName}'`
+            );
+            result = undefined;
+            break;
+          }
+        }
+
         // Special handling for state.multiworld.get_location() calls
         // These are used in location access rules to reference the location's parent_region
-        if (rule.function?.type === 'attribute' && 
+        if (rule.function?.type === 'attribute' &&
             rule.function.attr === 'get_location' &&
             rule.function.object?.type === 'attribute' &&
             rule.function.object.attr === 'multiworld') {
