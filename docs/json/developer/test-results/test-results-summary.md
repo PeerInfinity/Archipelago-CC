@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-22 08:35:17
+**Generated:** 2025-11-22 08:49:34
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -117,7 +117,7 @@ This summary combines results from four types of tests:
 
 These tests check multiple template configurations for the same game.
 
-| Game Name | Minimal Link (Templates Passed) | Full Link (Templates Passed) |
+| Game Name | Minimal (Advancement Items Only) | Full (All Locations) |
 |-----------|----------------------------------|-------------------------------|
 | A Link to the Past | [128/174 passed](./test-results-multitemplate-minimal.md#a-link-to-the-past) | [133/174 passed](./test-results-multitemplate-full.md#a-link-to-the-past) |
 
@@ -130,6 +130,8 @@ The following games are excluded from automated testing:
 | Archipelago | Not a game |
 | Final Fantasy | Requires manual configuration and is not compatible with automated testing |
 | Hollow Knight | The spoiler test currently freezes |
+| Ocarina of Time | The default yaml file fails to generate |
 | Sudoku | Cannot be used for generating worlds |
 | Universal Tracker | Not a game |
+| Zillion | Uses the external zilliandomizer tool for its logic, which is not compatible with this system |
 

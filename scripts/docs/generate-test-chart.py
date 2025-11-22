@@ -817,7 +817,7 @@ def generate_summary_chart(minimal_data, full_data, multiplayer_data, multiworld
         if multitemplate_full_data:
             mt_games.update(multitemplate_full_data.keys())
 
-        md_content += "| Game Name | Minimal Link (Templates Passed) | Full Link (Templates Passed) |\n"
+        md_content += "| Game Name | Minimal (Advancement Items Only) | Full (All Locations) |\n"
         md_content += "|-----------|----------------------------------|-------------------------------|\n"
 
         for game in sorted(mt_games):
