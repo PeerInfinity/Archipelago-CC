@@ -75,6 +75,16 @@ export function SMBool(snapshot, staticData, value, difficulty = 0) {
  * @returns {boolean} True if smbool passes the difficulty check
  */
 export function evalSMBool(snapshot, staticData, smbool, maxDiff) {
+  // Debug logging
+  if (typeof console !== 'undefined' && console.log) {
+    console.log('[evalSMBool] Called with:', {
+      smbool,
+      maxDiff,
+      hasSmbm: !!snapshot?.smbm,
+      smbm: snapshot?.smbm
+    });
+  }
+
   // If smbool is a plain boolean, return it
   if (typeof smbool === 'boolean') {
     return smbool;
@@ -82,7 +92,17 @@ export function evalSMBool(snapshot, staticData, smbool, maxDiff) {
 
   // If smbool is an SMBool object, check difficulty
   if (smbool && typeof smbool === 'object' && 'bool' in smbool && 'difficulty' in smbool) {
-    return smbool.bool === true && smbool.difficulty <= maxDiff;
+    const result = smbool.bool === true && smbool.difficulty <= maxDiff;
+    if (typeof console !== 'undefined' && console.log) {
+      console.log('[evalSMBool] SMBool check:', {
+        bool: smbool.bool,
+        difficulty: smbool.difficulty,
+        maxDiff,
+        comparison: smbool.difficulty <= maxDiff,
+        result
+      });
+    }
+    return result;
   }
 
   // Default: assume it's truthy
