@@ -262,6 +262,14 @@ export class TestSpoilerUI {
 
     this.log('info', 'Test Spoiler UI Initializing...');
 
+    // Read player ID from URL parameter early (for multiworld tests)
+    const urlParams = new URLSearchParams(window.location.search);
+    const playerParam = urlParams.get('player');
+    if (playerParam) {
+      this.playerId = parseInt(playerParam, 10);
+      this.log('info', `Player ID set from URL parameter: ${this.playerId}`);
+    }
+
     // Clear container and set up basic structure initially
     this.testSpoilersContainer.innerHTML = '';
     this.ensureLogContainerReady();
@@ -412,6 +420,15 @@ export class TestSpoilerUI {
       this.clearTestState(); // Clear previous test state
       this.spoilerLogData = result.logData;
       this.currentSpoilerLogPath = result.logPath;
+
+      // Extract playerId from multiworld rules filename (e.g., "AP_xxx_P2_rules.json")
+      if (rulesetPath && this.playerId === null) {
+        const playerIdMatch = rulesetPath.match(/_P(\d+)_rules\.json$/);
+        if (playerIdMatch) {
+          this.playerId = parseInt(playerIdMatch[1], 10);
+          this.log('info', `Extracted playerId ${this.playerId} from multiworld rules filename: ${rulesetPath}`);
+        }
+      }
 
       // Infer playerId from spoiler log if not already set
       // NOTE: In multiworld mode, playerId should already be set from the rules file (P{N}_rules.json)
