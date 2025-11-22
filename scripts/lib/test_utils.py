@@ -8,7 +8,7 @@ This module provides common utility functions used across testing scripts includ
 - World/game name mapping and normalization
 - Error/warning parsing
 - Command execution
-- Test result parsing (multiplayer and spoiler tests)
+- Test result parsing (multiclient and spoiler tests)
 """
 
 import json
@@ -471,8 +471,8 @@ def count_total_spheres(spheres_log_path: str, player_num: int = None) -> float:
         return 0
 
 
-def parse_multiplayer_test_results(test_results_dir: str) -> Dict:
-    """Parse multiplayer test results from JSON files for both clients."""
+def parse_multiclient_test_results(test_results_dir: str) -> Dict:
+    """Parse multiclient test results from JSON files for both clients."""
     result = {
         'success': False,
         'client1_passed': False,

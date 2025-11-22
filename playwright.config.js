@@ -51,7 +51,7 @@ export default defineConfig({
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-gpu',
-        // Only use --single-process for non-multiplayer tests (it's incompatible with multi-context tests)
+        // Only use --single-process for non-multiclient tests (it's incompatible with multi-context tests)
         ...(process.env.TEST_GAME && !process.env.DISABLE_SINGLE_PROCESS ? ['--single-process'] : []),
       ],
     },

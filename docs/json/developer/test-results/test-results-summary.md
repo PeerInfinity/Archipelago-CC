@@ -5,7 +5,7 @@
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
 - **Full Spoiler Test:** Tests with all locations - [View Details](./test-results-spoilers-full.md)
-- **Multiplayer Test:** Tests in multiplayer mode - [View Details](./test-results-multiplayer.md)
+- **Multiclient Test:** Tests in multiclient mode - [View Details](./test-results-multiclient.md)
 - **Multiworld Test:** Tests in multiworld mode with multiple games - [View Details](./test-results-multiworld.md)
 
 ## Summary Statistics
@@ -14,7 +14,7 @@ This summary combines results from four types of tests:
 
 - **Minimal Test:** 74/78 passed (94.9%)
 - **Full Test:** 71/78 passed (91.0%)
-- **Multiplayer Test:** 58/78 passed (74.4%)
+- **Multiclient Test:** 58/78 passed (74.4%)
 - **Multiworld Test:** 42/78 passed (53.8%)
 
 ### Intermittent Failures
@@ -32,7 +32,7 @@ This summary combines results from four types of tests:
 
 ## Test Results
 
-| Game Name | Minimal Test | Full Test | Multiplayer Test | Multiworld Test | Custom Exporter | Custom GameLogic |
+| Game Name | Minimal Test | Full Test | Multiclient Test | Multiworld Test | Custom Exporter | Custom GameLogic |
 |-----------|--------------|-----------|------------------|-----------------|-----------------|------------------|
 | A Hat in Time | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ |

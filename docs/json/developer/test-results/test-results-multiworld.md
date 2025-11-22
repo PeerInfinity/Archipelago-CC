@@ -105,6 +105,6 @@
 - **Custom Exporter:** ✅ Has custom Python exporter script, ⚫ Uses generic exporter
 - **Custom GameLogic:** ✅ Has custom JavaScript game logic, ⚫ Uses generic logic
 
-**Pass Criteria:** All prerequisite tests (Spoiler Minimal, Spoiler Full, Multiplayer) must pass, and all players in the multiworld must pass their spoiler tests
+**Pass Criteria:** All prerequisite tests (Spoiler Minimal, Spoiler Full, Multiclient) must pass, and all players in the multiworld must pass their spoiler tests
 
 **Skipped:** Templates that did not meet prerequisite requirements

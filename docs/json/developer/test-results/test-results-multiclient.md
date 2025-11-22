@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Chart
 
-## Multiplayer Test
+## Multiclient Test
 
 [← Back to Test Results Summary](./test-results-summary.md)
 

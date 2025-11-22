@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Script to generate charts from template test results showing test results
-for all game templates. Supports spoiler tests (minimal and full) and multiplayer tests.
+for all game templates. Supports spoiler tests (minimal and full) and multiclient tests.
 Can generate individual charts for each test type and a combined summary chart.
 """
 
@@ -101,9 +101,9 @@ def extract_spoiler_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, 
     return chart_data
 
 
-def extract_multiplayer_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, int, int, int, int, int, int, int, bool, bool, bool]]:
+def extract_multiclient_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, int, int, int, int, int, int, int, bool, bool, bool]]:
     """
-    Extract multiplayer test chart data from results.
+    Extract multiclient test chart data from results.
     Returns list of tuples: (game_name, pass_fail, gen_error_count,
                             client1_checked, client1_manually_checkable, client1_passed,
                             client2_received, client2_total, client2_passed,
@@ -131,17 +131,17 @@ def extract_multiplayer_chart_data(results: Dict[str, Any]) -> List[Tuple[str, s
             has_custom_game_logic = world_info.get('has_custom_game_logic', False)
             gen_error_count = template_data.get('generation', {}).get('error_count', 0)
 
-            multiplayer_test = template_data.get('multiplayer_test', {})
-            success = multiplayer_test.get('success', False)
+            multiclient_test = template_data.get('multiclient_test', {})
+            success = multiclient_test.get('success', False)
 
             # Extract new client-specific fields
-            client1_checked = multiplayer_test.get('client1_locations_checked', 0)
-            client1_manually_checkable = multiplayer_test.get('client1_manually_checkable', 0)
-            client1_passed = multiplayer_test.get('client1_passed', False)
+            client1_checked = multiclient_test.get('client1_locations_checked', 0)
+            client1_manually_checkable = multiclient_test.get('client1_manually_checkable', 0)
+            client1_passed = multiclient_test.get('client1_passed', False)
 
-            client2_received = multiplayer_test.get('client2_locations_received', 0)
-            client2_total = multiplayer_test.get('client2_total_locations', 0)
-            client2_passed = multiplayer_test.get('client2_passed', False)
+            client2_received = multiclient_test.get('client2_locations_received', 0)
+            client2_total = multiclient_test.get('client2_total_locations', 0)
+            client2_passed = multiclient_test.get('client2_passed', False)
 
             if success and gen_error_count == 0:
                 pass_fail = 'Passed'
@@ -162,19 +162,19 @@ def extract_multiplayer_chart_data(results: Dict[str, Any]) -> List[Tuple[str, s
             has_custom_game_logic = world_info.get('has_custom_game_logic', False)
             gen_error_count = template_data.get('generation', {}).get('error_count', 0)
 
-            multiplayer_test = template_data.get('multiplayer_test', {})
-            success = multiplayer_test.get('success', False)
+            multiclient_test = template_data.get('multiclient_test', {})
+            success = multiclient_test.get('success', False)
 
             # Extract new client-specific fields (with fallback to legacy fields)
-            client1_checked = multiplayer_test.get('client1_locations_checked', 0)
-            client1_manually_checkable = multiplayer_test.get('client1_manually_checkable', 0)
-            client1_passed = multiplayer_test.get('client1_passed', False)
+            client1_checked = multiclient_test.get('client1_locations_checked', 0)
+            client1_manually_checkable = multiclient_test.get('client1_manually_checkable', 0)
+            client1_passed = multiclient_test.get('client1_passed', False)
 
-            client2_received = multiplayer_test.get('client2_locations_received',
-                                                   multiplayer_test.get('locations_checked', 0))
-            client2_total = multiplayer_test.get('client2_total_locations',
-                                                multiplayer_test.get('total_locations', 0))
-            client2_passed = multiplayer_test.get('client2_passed', False)
+            client2_received = multiclient_test.get('client2_locations_received',
+                                                   multiclient_test.get('locations_checked', 0))
+            client2_total = multiclient_test.get('client2_total_locations',
+                                                multiclient_test.get('total_locations', 0))
+            client2_passed = multiclient_test.get('client2_passed', False)
 
             if success and gen_error_count == 0:
                 pass_fail = 'Passed'
@@ -309,11 +309,11 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
     return md_content
 
 
-def generate_multiplayer_markdown(chart_data: List[Tuple[str, str, int, int, int, bool, int, int, bool, bool, bool]],
+def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int, bool, int, int, bool, bool, bool]],
                                  metadata: Dict[str, Any], top_level_metadata: Optional[Dict[str, Any]] = None) -> str:
-    """Generate a markdown table for multiplayer test data."""
+    """Generate a markdown table for multiclient test data."""
     md_content = "# Archipelago Template Test Results Chart\n\n"
-    md_content += "## Multiplayer Test\n\n"
+    md_content += "## Multiclient Test\n\n"
 
     # Add link to summary document
     md_content += "[← Back to Test Results Summary](./test-results-summary.md)\n\n"
@@ -321,7 +321,7 @@ def generate_multiplayer_markdown(chart_data: List[Tuple[str, str, int, int, int
     # Add generated timestamp
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
 
-    # Add top-level metadata if available (from multiplayer test results)
+    # Add top-level metadata if available (from multiclient test results)
     if top_level_metadata:
         if 'timestamp' in top_level_metadata and top_level_metadata['timestamp']:
             md_content += f"**Test Timestamp:** {top_level_metadata.get('timestamp')}\n\n"
@@ -502,7 +502,7 @@ def generate_multiworld_markdown(chart_data: List[Tuple[str, str, int, int, int,
     md_content += "- **Players Failed:** Number of players that failed the spoiler test\n"
     md_content += "- **Custom Exporter:** ✅ Has custom Python exporter script, ⚫ Uses generic exporter\n"
     md_content += "- **Custom GameLogic:** ✅ Has custom JavaScript game logic, ⚫ Uses generic logic\n\n"
-    md_content += "**Pass Criteria:** All prerequisite tests (Spoiler Minimal, Spoiler Full, Multiplayer) must pass, and all players in the multiworld must pass their spoiler tests\n\n"
+    md_content += "**Pass Criteria:** All prerequisite tests (Spoiler Minimal, Spoiler Full, Multiclient) must pass, and all players in the multiworld must pass their spoiler tests\n\n"
     md_content += "**Skipped:** Templates that did not meet prerequisite requirements\n"
 
     return md_content
@@ -658,7 +658,7 @@ def generate_multitemplate_markdown(chart_data: Dict[str, List[Tuple[str, str, i
     return md_content
 
 
-def generate_summary_chart(minimal_data, full_data, multiplayer_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None) -> str:
+def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None) -> str:
     """Generate a combined summary chart with all test results."""
     md_content = "# Archipelago Template Test Results Summary\n\n"
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
@@ -667,18 +667,18 @@ def generate_summary_chart(minimal_data, full_data, multiplayer_data, multiworld
         md_content += "This summary combines results from four types of tests:\n"
         md_content += "- **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)\n"
         md_content += "- **Full Spoiler Test:** Tests with all locations - [View Details](./test-results-spoilers-full.md)\n"
-        md_content += "- **Multiplayer Test:** Tests in multiplayer mode - [View Details](./test-results-multiplayer.md)\n"
+        md_content += "- **Multiclient Test:** Tests in multiclient mode - [View Details](./test-results-multiclient.md)\n"
         md_content += "- **Multiworld Test:** Tests in multiworld mode with multiple games - [View Details](./test-results-multiworld.md)\n\n"
     else:
         md_content += "This summary combines results from three types of tests:\n"
         md_content += "- **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)\n"
         md_content += "- **Full Spoiler Test:** Tests with all locations - [View Details](./test-results-spoilers-full.md)\n"
-        md_content += "- **Multiplayer Test:** Tests in multiplayer mode - [View Details](./test-results-multiplayer.md)\n\n"
+        md_content += "- **Multiclient Test:** Tests in multiclient mode - [View Details](./test-results-multiclient.md)\n\n"
 
     # Create a unified game list with exporter/logic info
     games_minimal = {name: result for name, result, *_ in minimal_data}
     games_full = {name: result for name, result, *_ in full_data}
-    games_multiplayer = {name: result for name, result, *_ in multiplayer_data}
+    games_multiclient = {name: result for name, result, *_ in multiclient_data}
     games_multiworld = {name: result for name, result, *_ in multiworld_data} if multiworld_data else {}
 
     # Extract custom exporter/logic info (from minimal_data as it has all games)
@@ -686,7 +686,7 @@ def generate_summary_chart(minimal_data, full_data, multiplayer_data, multiworld
     for name, result, gen_errors, sphere, max_sphere, has_exporter, has_logic in minimal_data:
         games_exporter_logic[name] = (has_exporter, has_logic)
 
-    all_games = sorted(set(list(games_minimal.keys()) + list(games_full.keys()) + list(games_multiplayer.keys()) + list(games_multiworld.keys())))
+    all_games = sorted(set(list(games_minimal.keys()) + list(games_full.keys()) + list(games_multiclient.keys()) + list(games_multiworld.keys())))
 
     # Calculate statistics first
     def calc_stats(data_dict):
@@ -698,7 +698,7 @@ def generate_summary_chart(minimal_data, full_data, multiplayer_data, multiworld
 
     min_total, min_passed, min_pct = calc_stats(games_minimal)
     full_total, full_passed, full_pct = calc_stats(games_full)
-    mp_total, mp_passed, mp_pct = calc_stats(games_multiplayer)
+    mp_total, mp_passed, mp_pct = calc_stats(games_multiclient)
 
     # Calculate templates by number of tests passed
     tests_passed_count = {}
@@ -710,7 +710,7 @@ def generate_summary_chart(minimal_data, full_data, multiplayer_data, multiworld
             passed_count += 1
         if game in games_full and 'passed' in games_full[game].lower():
             passed_count += 1
-        if game in games_multiplayer and 'passed' in games_multiplayer[game].lower():
+        if game in games_multiclient and 'passed' in games_multiclient[game].lower():
             passed_count += 1
         if multiworld_data is not None and game in games_multiworld and 'passed' in games_multiworld[game].lower():
             passed_count += 1
@@ -728,7 +728,7 @@ def generate_summary_chart(minimal_data, full_data, multiplayer_data, multiworld
     md_content += "### Individual Test Results\n\n"
     md_content += f"- **Minimal Test:** {min_passed}/{min_total} passed ({min_pct:.1f}%)\n"
     md_content += f"- **Full Test:** {full_passed}/{full_total} passed ({full_pct:.1f}%)\n"
-    md_content += f"- **Multiplayer Test:** {mp_passed}/{mp_total} passed ({mp_pct:.1f}%)\n"
+    md_content += f"- **Multiclient Test:** {mp_passed}/{mp_total} passed ({mp_pct:.1f}%)\n"
 
     if multiworld_data is not None:
         mw_total, mw_passed, mw_pct = calc_stats(games_multiworld)
@@ -773,16 +773,16 @@ def generate_summary_chart(minimal_data, full_data, multiplayer_data, multiworld
     # Add Test Results table
     md_content += "\n## Test Results\n\n"
     if multiworld_data is not None:
-        md_content += "| Game Name | Minimal Test | Full Test | Multiplayer Test | Multiworld Test | Custom Exporter | Custom GameLogic |\n"
+        md_content += "| Game Name | Minimal Test | Full Test | Multiclient Test | Multiworld Test | Custom Exporter | Custom GameLogic |\n"
         md_content += "|-----------|--------------|-----------|------------------|-----------------|-----------------|------------------|\n"
     else:
-        md_content += "| Game Name | Minimal Test | Full Test | Multiplayer Test | Custom Exporter | Custom GameLogic |\n"
+        md_content += "| Game Name | Minimal Test | Full Test | Multiclient Test | Custom Exporter | Custom GameLogic |\n"
         md_content += "|-----------|--------------|-----------|------------------|-----------------|------------------|\n"
 
     for game in all_games:
         minimal_result = games_minimal.get(game, "N/A")
         full_result = games_full.get(game, "N/A")
-        multiplayer_result = games_multiplayer.get(game, "N/A")
+        multiclient_result = games_multiclient.get(game, "N/A")
         multiworld_result = games_multiworld.get(game, "N/A") if multiworld_data is not None else None
 
         # Get exporter/logic info
@@ -801,9 +801,9 @@ def generate_summary_chart(minimal_data, full_data, multiplayer_data, multiworld
                 return "❌ Failed"
 
         if multiworld_data is not None:
-            md_content += f"| {game} | {format_result(minimal_result)} | {format_result(full_result)} | {format_result(multiplayer_result)} | {format_result(multiworld_result)} | {exporter_indicator} | {logic_indicator} |\n"
+            md_content += f"| {game} | {format_result(minimal_result)} | {format_result(full_result)} | {format_result(multiclient_result)} | {format_result(multiworld_result)} | {exporter_indicator} | {logic_indicator} |\n"
         else:
-            md_content += f"| {game} | {format_result(minimal_result)} | {format_result(full_result)} | {format_result(multiplayer_result)} | {exporter_indicator} | {logic_indicator} |\n"
+            md_content += f"| {game} | {format_result(minimal_result)} | {format_result(full_result)} | {format_result(multiclient_result)} | {exporter_indicator} | {logic_indicator} |\n"
 
     # Add Multi-Template Results section if data exists
     if multitemplate_minimal_data or multitemplate_full_data:
@@ -867,7 +867,7 @@ def main():
     parser = argparse.ArgumentParser(description='Generate test results charts from template test results')
     parser.add_argument('--input-file', type=str, help='Input JSON file path (processes only this file)')
     parser.add_argument('--output-file', type=str, help='Output markdown file path')
-    parser.add_argument('--test-type', type=str, choices=['minimal', 'full', 'multiplayer', 'multiworld', 'multitemplate-minimal', 'multitemplate-full'],
+    parser.add_argument('--test-type', type=str, choices=['minimal', 'full', 'multiclient', 'multiworld', 'multitemplate-minimal', 'multitemplate-full'],
                        help='Test type when using --input-file')
 
     args = parser.parse_args()
@@ -898,16 +898,16 @@ def main():
             chart_data = extract_spoiler_chart_data(results)
             subtitle = "Spoiler Test - Advancement Items Only" if args.test_type == 'minimal' else "Spoiler Test - All Locations"
             md_content = generate_spoiler_markdown(chart_data, metadata, subtitle)
-        elif args.test_type == 'multiplayer':
-            chart_data = extract_multiplayer_chart_data(results)
-            # Extract top-level metadata for multiplayer
+        elif args.test_type == 'multiclient':
+            chart_data = extract_multiclient_chart_data(results)
+            # Extract top-level metadata for multiclient
             top_level = {
                 'timestamp': results.get('timestamp'),
                 'test_type': results.get('test_type'),
                 'test_mode': results.get('test_mode'),
                 'seed': results.get('seed')
             }
-            md_content = generate_multiplayer_markdown(chart_data, metadata, top_level)
+            md_content = generate_multiclient_markdown(chart_data, metadata, top_level)
         elif args.test_type in ['multitemplate-minimal', 'multitemplate-full']:
             chart_data = extract_multitemplate_chart_data(results)
             subtitle = "Multi-Template Test - Advancement Items Only" if args.test_type == 'multitemplate-minimal' else "Multi-Template Test - All Locations"
@@ -966,28 +966,28 @@ def main():
         print(f"Warning: Full spoiler test results not found: {full_input}")
         full_data = []
 
-    # Load multiplayer test results
-    mp_input = os.path.join(project_root, 'scripts/output/multiplayer/test-results.json')
-    mp_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-multiplayer.md')
+    # Load multiclient test results
+    mp_input = os.path.join(project_root, 'scripts/output/multiclient/test-results.json')
+    mp_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-multiclient.md')
 
     if os.path.exists(mp_input):
-        print(f"Processing multiplayer test results...")
+        print(f"Processing multiclient test results...")
         mp_results = load_test_results(mp_input)
-        mp_data = extract_multiplayer_chart_data(mp_results)
-        # Extract top-level metadata for multiplayer
+        mp_data = extract_multiclient_chart_data(mp_results)
+        # Extract top-level metadata for multiclient
         top_level_mp = {
             'timestamp': mp_results.get('timestamp'),
             'test_type': mp_results.get('test_type'),
             'test_mode': mp_results.get('test_mode'),
             'seed': mp_results.get('seed')
         }
-        mp_md = generate_multiplayer_markdown(mp_data, mp_results.get('metadata', {}), top_level_mp)
+        mp_md = generate_multiclient_markdown(mp_data, mp_results.get('metadata', {}), top_level_mp)
         os.makedirs(os.path.dirname(mp_output), exist_ok=True)
         with open(mp_output, 'w') as f:
             f.write(mp_md)
-        print(f"✓ Multiplayer chart saved to: {mp_output}")
+        print(f"✓ Multiclient chart saved to: {mp_output}")
     else:
-        print(f"Warning: Multiplayer test results not found: {mp_input}")
+        print(f"Warning: Multiclient test results not found: {mp_input}")
         mp_data = []
 
     # Load multiworld test results

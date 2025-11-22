@@ -1,15 +1,15 @@
-// frontend/modules/tests/testCases/multiplayerTests.js
+// frontend/modules/tests/testCases/multiclientTests.js
 
 import { registerTest } from '../testRegistry.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
-    window.logger[level]('multiplayerTests', message, ...data);
+    window.logger[level]('multiclientTests', message, ...data);
   } else {
     const consoleMethod =
       console[level === 'info' ? 'log' : level] || console.log;
-    consoleMethod(`[multiplayerTests] ${message}`, ...data);
+    consoleMethod(`[multiclientTests] ${message}`, ...data);
   }
 }
 

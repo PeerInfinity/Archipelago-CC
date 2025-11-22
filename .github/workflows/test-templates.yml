@@ -140,12 +140,12 @@ jobs:
             output_dir: "spoiler-full"
             output_md_file: "test-results-spoilers-full.md"
 
-          # Multiplayer test for all templates
-          - test_name: "Multiplayer"
+          # Multiclient test for all templates
+          - test_name: "Multiclient"
             host_config: "minimal-spoilers"
-            test_command: "python scripts/test/test-all-templates.py --multiplayer -p"
-            output_dir: "multiplayer"
-            output_md_file: "test-results-multiplayer.md"
+            test_command: "python scripts/test/test-all-templates.py --multiclient -p"
+            output_dir: "multiclient"
+            output_md_file: "test-results-multiclient.md"
 
           # Multiworld test for all templates
           - test_name: "Multiworld"
@@ -266,10 +266,10 @@ jobs:
                                       print(f'❌ {template} failed spoiler test')
                                       failed = True
 
-                              # Check multiplayer test (only if it exists)
-                              if 'multiplayer_test' in result:
-                                  if not result['multiplayer_test'].get('success', False):
-                                      print(f'❌ {template} failed multiplayer test')
+                              # Check multiclient test (only if it exists)
+                              if 'multiclient_test' in result:
+                                  if not result['multiclient_test'].get('success', False):
+                                      print(f'❌ {template} failed multiclient test')
                                       failed = True
 
                               # Check multiworld test (only if it exists)
@@ -381,7 +381,7 @@ jobs:
           # Use -f because scripts/output is in .gitignore (even though specific files are excepted)
           git add -f scripts/output/spoiler-minimal/test-results.json
           git add -f scripts/output/spoiler-full/test-results.json
-          git add -f scripts/output/multiplayer/test-results.json
+          git add -f scripts/output/multiclient/test-results.json
           git add -f scripts/output/multiworld/test-results.json
           git add -f scripts/output/multitemplate-minimal/test-results.json
           git add -f scripts/output/multitemplate-full/test-results.json
@@ -399,7 +399,7 @@ jobs:
             Test results include:
             - Minimal spoiler tests (seed 1 only)
             - Full spoiler tests (seed 1 only)
-            - Multiplayer tests
+            - Multiclient tests
             - Multiworld tests
             - Multitemplate ALTTP tests (minimal and full)
             "

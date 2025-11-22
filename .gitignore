@@ -244,7 +244,7 @@ set.mm
 # Ignore everything in output directories
 scripts/output/spoiler-minimal/*
 scripts/output/spoiler-full/*
-scripts/output/multiplayer/*
+scripts/output/multiclient/*
 scripts/output/multiworld/*
 scripts/output/multitemplate-minimal/*
 scripts/output/multitemplate-full/*
@@ -252,7 +252,7 @@ scripts/output/multitemplate-full/*
 # But keep test-results.json files
 !scripts/output/spoiler-minimal/test-results.json
 !scripts/output/spoiler-full/test-results.json
-!scripts/output/multiplayer/test-results.json
+!scripts/output/multiclient/test-results.json
 !scripts/output/multiworld/test-results.json
 !scripts/output/multitemplate-minimal/test-results.json
 !scripts/output/multitemplate-full/test-results.json

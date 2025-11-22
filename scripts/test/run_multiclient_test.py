@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Automated Multiplayer Test Orchestration Script
+Automated Multiclient Test Orchestration Script
 
 This script orchestrates a full integration test with two simultaneous clients:
 1. Generates a multiworld using Generate.py
@@ -11,8 +11,8 @@ This script orchestrates a full integration test with two simultaneous clients:
 6. Stops the server and cleans up
 
 Usage:
-    python3 scripts/test/run_multiplayer_test.py --game alttp --seed 14089154938208861744
-    python3 scripts/test/run_multiplayer_test.py --player-file path/to/player.yaml
+    python3 scripts/test/run_multiclient_test.py --game alttp --seed 14089154938208861744
+    python3 scripts/test/run_multiclient_test.py --player-file path/to/player.yaml
 """
 
 import subprocess
@@ -23,7 +23,7 @@ import argparse
 import signal
 
 
-def run_multiplayer_integration_test(game, seed, player_file, output_dir="test_results/multiplayer", server_port=38281):
+def run_multiclient_integration_test(game, seed, player_file, output_dir="test_results/multiclient", server_port=38281):
     """
     Run full integration test with dual clients connecting to the same Archipelago server.
 
@@ -117,7 +117,7 @@ def run_multiplayer_integration_test(game, seed, player_file, output_dir="test_r
 
         print(f"✓ Server started successfully on port {server_port}")
 
-        # Step 4: Run multiplayer Playwright tests
+        # Step 4: Run multiclient Playwright tests
         print(f"\n{'='*60}")
         print("STEP 4: Running dual-client Playwright tests")
         print(f"{'='*60}")
@@ -132,7 +132,7 @@ def run_multiplayer_integration_test(game, seed, player_file, output_dir="test_r
         })
 
         test_result = subprocess.run(
-            ["npm", "run", "test:multiplayer"],
+            ["npm", "run", "test:multiclient"],
             env=env
         )
 
@@ -184,13 +184,13 @@ def run_multiplayer_integration_test(game, seed, player_file, output_dir="test_r
 def main():
     """Main entry point for the script."""
     parser = argparse.ArgumentParser(
-        description="Run automated multiplayer integration test",
+        description="Run automated multiclient integration test",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python3 scripts/test/run_multiplayer_test.py --game alttp --seed 14089154938208861744
-  python3 scripts/test/run_multiplayer_test.py --game sm --seed 12345 --player-file custom/players
-  python3 scripts/test/run_multiplayer_test.py --output-dir custom_results
+  python3 scripts/test/run_multiclient_test.py --game alttp --seed 14089154938208861744
+  python3 scripts/test/run_multiclient_test.py --game sm --seed 12345 --player-file custom/players
+  python3 scripts/test/run_multiclient_test.py --output-dir custom_results
         """
     )
 
@@ -213,8 +213,8 @@ Examples:
     parser.add_argument(
         "--output-dir",
         dest="output_dir",
-        default="test_results/multiplayer",
-        help="Output directory for test results (default: test_results/multiplayer)"
+        default="test_results/multiclient",
+        help="Output directory for test results (default: test_results/multiclient)"
     )
     parser.add_argument(
         "--port",
@@ -236,7 +236,7 @@ Examples:
     print(f"  Server port:  {args.port}")
     print("="*60)
 
-    success = run_multiplayer_integration_test(
+    success = run_multiclient_integration_test(
         args.game,
         args.seed,
         args.player_file,

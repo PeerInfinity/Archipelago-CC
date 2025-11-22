@@ -46,7 +46,7 @@ from lib.test_runner import (
 from lib.seed_utils import get_seed_id as compute_seed_id
 
 
-def run_post_processing_scripts(project_root: str, results_file: str, multiplayer: bool = False, multiworld: bool = False, multitemplate: bool = False):
+def run_post_processing_scripts(project_root: str, results_file: str, multiclient: bool = False, multiworld: bool = False, multitemplate: bool = False):
     """Run post-processing scripts to update documentation and preset files."""
     print("\n=== Running Post-Processing Scripts ===")
 
@@ -79,8 +79,8 @@ def run_post_processing_scripts(project_root: str, results_file: str, multiplaye
     except Exception as e:
         print(f"✗ Error running generate-test-chart.py: {e}")
 
-    # Only update preset files if extend_sphere_log_to_all_locations is true and not in multiplayer mode
-    if not multiplayer and extend_sphere_log:
+    # Only update preset files if extend_sphere_log_to_all_locations is true and not in multiclient mode
+    if not multiclient and extend_sphere_log:
         print("\nUpdating preset files with test data...")
         preset_script = os.path.join(project_root, 'scripts', 'docs', 'update-preset-files.py')
         try:
@@ -107,7 +107,7 @@ def run_post_processing_scripts(project_root: str, results_file: str, multiplaye
             print("✗ Preset files update timed out")
         except Exception as e:
             print(f"✗ Error running update-preset-files.py: {e}")
-    elif not multiplayer and not extend_sphere_log:
+    elif not multiclient and not extend_sphere_log:
         print("\nSkipping preset files update (extend_sphere_log_to_all_locations is false)")
 
     print("\n=== Post-Processing Complete ===")
@@ -150,7 +150,7 @@ def main():
     parser.add_argument(
         '--test-only',
         action='store_true',
-        help='Only run the test step (spoiler or multiplayer), skip generation (requires existing rules files)'
+        help='Only run the test step (spoiler or multiclient), skip generation (requires existing rules files)'
     )
     parser.add_argument(
         '--start-from',
@@ -179,9 +179,9 @@ def main():
         help='Run post-processing scripts after testing (docs/generate-test-chart.py and docs/update-preset-files.py)'
     )
     parser.add_argument(
-        '--multiplayer',
+        '--multiclient',
         action='store_true',
-        help='Run multiplayer timer tests instead of spoiler tests'
+        help='Run multiclient timer tests instead of spoiler tests'
     )
     parser.add_argument(
         '--multiworld',
@@ -222,7 +222,7 @@ def main():
     parser.add_argument(
         '--single-client',
         action='store_true',
-        help='Use single-client mode for multiplayer tests (only valid with --multiplayer)'
+        help='Use single-client mode for multiclient tests (only valid with --multiclient)'
     )
     parser.add_argument(
         '--headed',
@@ -310,12 +310,12 @@ def main():
         print("Error: --minimal-spoilers and --full-spoilers are mutually exclusive")
         sys.exit(1)
 
-    if args.single_client and not args.multiplayer:
-        print("Error: --single-client can only be used with --multiplayer")
+    if args.single_client and not args.multiclient:
+        print("Error: --single-client can only be used with --multiclient")
         sys.exit(1)
 
-    if args.multiplayer and args.multiworld:
-        print("Error: --multiplayer and --multiworld are mutually exclusive")
+    if args.multiclient and args.multiworld:
+        print("Error: --multiclient and --multiworld are mutually exclusive")
         sys.exit(1)
 
     if args.multiworld_keep_templates and not args.multiworld:
@@ -330,8 +330,8 @@ def main():
         print("Error: --multitemplate requires --templates-dir to be specified")
         sys.exit(1)
 
-    if args.multitemplate and (args.multiplayer or args.multiworld):
-        print("Error: --multitemplate cannot be used with --multiplayer or --multiworld")
+    if args.multitemplate and (args.multiclient or args.multiworld):
+        print("Error: --multitemplate cannot be used with --multiclient or --multiworld")
         sys.exit(1)
 
     if args.retest and args.include_list is not None:
@@ -563,8 +563,8 @@ def main():
                 retest_results_file = os.path.join(project_root, retest_results_file)
         elif args.multiworld:
             retest_results_file = os.path.join(project_root, 'scripts/output/multiworld/test-results.json')
-        elif args.multiplayer:
-            retest_results_file = os.path.join(project_root, 'scripts/output/multiplayer/test-results.json')
+        elif args.multiclient:
+            retest_results_file = os.path.join(project_root, 'scripts/output/multiclient/test-results.json')
         else:
             # Read host.yaml to determine spoiler output directory
             host_config = read_host_yaml_config(project_root)
@@ -609,7 +609,7 @@ def main():
                 print("Error: --retest-seed-specific requires a valid seed number")
                 sys.exit(1)
 
-        failed_templates = get_failed_templates(existing_results['results'], args.multiplayer, specific_seed)
+        failed_templates = get_failed_templates(existing_results['results'], args.multiclient, specific_seed)
 
         # If --retest-continue is specified, also include templates that haven't been tested up to that threshold
         templates_to_test = set(failed_templates)
@@ -649,7 +649,7 @@ def main():
         # Build a dictionary mapping template to seed info for retest
         retest_seed_info = {}
         for template in templates_to_test:
-            seed_info = get_failing_seed_info(template, existing_results['results'], args.multiplayer)
+            seed_info = get_failing_seed_info(template, existing_results['results'], args.multiclient)
             retest_seed_info[template] = seed_info
 
         # Filter to only include templates that exist in the templates directory
@@ -792,9 +792,9 @@ def main():
         if args.multiworld:
             # Use multiworld-specific output directory and file name
             args.output_file = 'scripts/output/multiworld/test-results.json'
-        elif args.multiplayer:
-            # Use multiplayer-specific output directory and file name
-            args.output_file = 'scripts/output/multiplayer/test-results.json'
+        elif args.multiclient:
+            # Use multiclient-specific output directory and file name
+            args.output_file = 'scripts/output/multiclient/test-results.json'
         elif args.multitemplate:
             # Multitemplate mode - check extend_sphere_log_to_all_locations setting
             host_config = read_host_yaml_config(project_root)
@@ -955,7 +955,7 @@ def main():
                             yaml_file, templates_dir, project_root, world_mapping,
                             retest_seed_list, export_only=args.export_only, test_only=args.test_only,
                             stop_on_failure=True,  # Stop on first failure in retest mode
-                            multiplayer=args.multiplayer, single_client=args.single_client,
+                            multiclient=args.multiclient, single_client=args.single_client,
                             headed=args.headed, include_error_details=args.include_error_details,
                             dry_run=args.dry_run, player=args.player
                         )
@@ -965,7 +965,7 @@ def main():
                         template_result = test_template_single_seed(
                             yaml_file, templates_dir, project_root, world_mapping,
                             str(failing_seed), export_only=args.export_only, test_only=args.test_only,
-                            multiplayer=args.multiplayer, single_client=args.single_client,
+                            multiclient=args.multiclient, single_client=args.single_client,
                             headed=args.headed, include_error_details=args.include_error_details,
                             dry_run=args.dry_run, player=args.player
                         )
@@ -975,7 +975,7 @@ def main():
                     template_result = test_template_single_seed(
                         yaml_file, templates_dir, project_root, world_mapping,
                         str(failing_seed), export_only=args.export_only, test_only=args.test_only,
-                        multiplayer=args.multiplayer, single_client=args.single_client,
+                        multiclient=args.multiclient, single_client=args.single_client,
                         headed=args.headed, include_error_details=args.include_error_details,
                         dry_run=args.dry_run, player=args.player
                     )
@@ -997,7 +997,7 @@ def main():
                                 yaml_file, templates_dir, project_root, world_mapping,
                                 retest_seed_list, export_only=args.export_only, test_only=args.test_only,
                                 stop_on_failure=True,  # Stop on first failure in retest mode
-                                multiplayer=args.multiplayer, single_client=args.single_client,
+                                multiclient=args.multiclient, single_client=args.single_client,
                                 headed=args.headed, include_error_details=args.include_error_details,
                                 dry_run=args.dry_run, player=args.player
                             )
@@ -1011,7 +1011,7 @@ def main():
                         template_result = test_template_single_seed(
                             yaml_file, templates_dir, project_root, world_mapping,
                             "1", export_only=args.export_only, test_only=args.test_only,
-                            multiplayer=args.multiplayer, single_client=args.single_client,
+                            multiclient=args.multiclient, single_client=args.single_client,
                             headed=args.headed, include_error_details=args.include_error_details,
                             dry_run=args.dry_run, player=args.player
                         )
@@ -1021,7 +1021,7 @@ def main():
                     template_result = test_template_single_seed(
                         yaml_file, templates_dir, project_root, world_mapping,
                         "1", export_only=args.export_only, test_only=args.test_only,
-                        multiplayer=args.multiplayer, single_client=args.single_client,
+                        multiclient=args.multiclient, single_client=args.single_client,
                         headed=args.headed, include_error_details=args.include_error_details,
                         dry_run=args.dry_run, player=args.player
                     )
@@ -1068,7 +1068,7 @@ def main():
                     yaml_file, templates_dir, project_root, world_mapping,
                     seed_list, export_only=args.export_only, test_only=args.test_only,
                     stop_on_failure=not args.seed_range_continue_on_failure,
-                    multiplayer=args.multiplayer, single_client=args.single_client,
+                    multiclient=args.multiclient, single_client=args.single_client,
                     headed=args.headed, include_error_details=args.include_error_details,
                     dry_run=args.dry_run, player=args.player
                 )
@@ -1077,7 +1077,7 @@ def main():
                 template_result = test_template_single_seed(
                     yaml_file, templates_dir, project_root, world_mapping,
                     str(seed_list[0]), export_only=args.export_only, test_only=args.test_only,
-                    multiplayer=args.multiplayer, single_client=args.single_client,
+                    multiclient=args.multiclient, single_client=args.single_client,
                     headed=args.headed, include_error_details=args.include_error_details,
                     dry_run=args.dry_run, player=args.player
                 )
@@ -1101,10 +1101,10 @@ def main():
 
             # In retest mode, check if this test is now passing and record intermittent failures
             if args.retest:
-                test_passed = is_test_passing(yaml_file, results['results'], args.multiplayer)
+                test_passed = is_test_passing(yaml_file, results['results'], args.multiclient)
 
                 # Check if this was previously failing and is now passing (intermittent failure)
-                was_failing = not is_test_passing(yaml_file, existing_results.get('results', {}), args.multiplayer)
+                was_failing = not is_test_passing(yaml_file, existing_results.get('results', {}), args.multiclient)
 
                 if test_passed and was_failing:
                     # Record intermittent failure with detailed information
@@ -1154,14 +1154,14 @@ def main():
 
             # Run post-processing after each test if requested (do this BEFORE checking retest status)
             if args.post_process:
-                run_post_processing_scripts(project_root, results_file, args.multiplayer, args.multiworld, args.multitemplate)
+                run_post_processing_scripts(project_root, results_file, args.multiclient, args.multiworld, args.multitemplate)
 
             # In retest mode, check if we should stop
             if args.retest:
-                test_passed = is_test_passing(yaml_file, results['results'], args.multiplayer)
+                test_passed = is_test_passing(yaml_file, results['results'], args.multiclient)
 
                 if test_passed:
-                    was_failing = not is_test_passing(yaml_file, existing_results.get('results', {}), args.multiplayer)
+                    was_failing = not is_test_passing(yaml_file, existing_results.get('results', {}), args.multiclient)
                     if not was_failing:
                         print(f"✅ {yaml_file} is now passing! Continuing to next failed test...")
                 else:
@@ -1309,12 +1309,12 @@ def main():
                             if not r.get('prerequisite_check', {}).get('all_prerequisites_passed', False))
                 failed = len(yaml_files) - passed - skipped
                 print(f"Multiworld Test Summary: {passed} passed, {failed} failed, {skipped} skipped (prerequisites not met)")
-            elif args.multiplayer:
-                # Multiplayer test summary
+            elif args.multiclient:
+                # Multiclient test summary
                 passed = sum(1 for r in results['results'].values()
-                            if r.get('multiplayer_test', {}).get('success', False))
+                            if r.get('multiclient_test', {}).get('success', False))
                 failed = len(yaml_files) - passed
-                print(f"Multiplayer Test Summary: {passed} passed, {failed} failed")
+                print(f"Multiclient Test Summary: {passed} passed, {failed} failed")
             else:
                 # Spoiler test summary
                 passed = sum(1 for r in results['results'].values()
@@ -1335,10 +1335,10 @@ def main():
                 print(f"Single Seed Test Summary: {passed} passed, {failed} failed, {skipped} skipped")
                 print(f"\nMultiworld Details:")
                 print(f"  Total players in final multiworld: {multiworld_player_count}")
-            elif args.multiplayer:
-                # Multiplayer test summary
+            elif args.multiclient:
+                # Multiclient test summary
                 passed = sum(1 for r in results['results'].values()
-                            if r.get('multiplayer_test', {}).get('success', False))
+                            if r.get('multiclient_test', {}).get('success', False))
                 failed = len(yaml_files) - passed
                 print(f"Single Seed Test Summary: {passed} passed, {failed} failed, 0 errors")
             else:
@@ -1370,7 +1370,7 @@ def main():
     # Run post-processing scripts if requested (only if not already run after each test)
     # This ensures post-processing runs at least once, even if no tests were run
     if args.post_process and len(yaml_files) == 0:
-        run_post_processing_scripts(project_root, results_file, args.multiplayer, args.multiworld)
+        run_post_processing_scripts(project_root, results_file, args.multiclient, args.multiworld)
 
 
 if __name__ == '__main__':

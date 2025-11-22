@@ -7,7 +7,7 @@ This module contains the main test execution logic for:
 - Testing seed ranges
 - Running generation (Generate.py)
 - Running spoiler tests
-- Running multiplayer tests
+- Running multiclient tests
 - Running multiworld tests
 """
 
@@ -27,12 +27,12 @@ from .test_utils import (
     classify_generation_error,
     run_command,
     count_total_spheres,
-    parse_multiplayer_test_results,
+    parse_multiclient_test_results,
     parse_playwright_analysis
 )
 
 
-def test_template_single_seed(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed: str = "1", export_only: bool = False, test_only: bool = False, multiplayer: bool = False, single_client: bool = False, headed: bool = False, include_error_details: bool = False, dry_run: bool = False, player: int = None) -> Dict:
+def test_template_single_seed(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed: str = "1", export_only: bool = False, test_only: bool = False, multiclient: bool = False, single_client: bool = False, headed: bool = False, include_error_details: bool = False, dry_run: bool = False, player: int = None) -> Dict:
     """Test a single template file and return results."""
     template_filename = os.path.basename(template_file)
     game_name_from_filename = normalize_game_name(template_filename)
@@ -79,8 +79,8 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         result['generation']['first_warning_line'] = None
 
     # Add appropriate test structure based on test type
-    if multiplayer:
-        result['multiplayer_test'] = {
+    if multiclient:
+        result['multiclient_test'] = {
             'success': False,
             'client1_passed': False,
             'locations_checked': 0,
@@ -93,8 +93,8 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
             'processing_time_seconds': 0
         }
         if include_error_details:
-            result['multiplayer_test']['first_error_line'] = None
-            result['multiplayer_test']['first_warning_line'] = None
+            result['multiclient_test']['first_error_line'] = None
+            result['multiclient_test']['first_warning_line'] = None
     else:
         result['spoiler_test'] = {
             'success': False,
@@ -230,76 +230,76 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
 
     if not os.path.exists(full_rules_path):
         print(f"Rules file not found: {full_rules_path}")
-        test_key = 'multiplayer_test' if multiplayer else 'spoiler_test'
+        test_key = 'multiclient_test' if multiclient else 'spoiler_test'
         result[test_key]['error_count'] = 1
         if include_error_details:
             result[test_key]['first_error_line'] = f"Rules file not found: {rules_path}"
         return result
 
-    # Step 2: Run test (multiplayer or spoiler based on mode)
-    if multiplayer:
-        # Multiplayer test
+    # Step 2: Run test (multiclient or spoiler based on mode)
+    if multiclient:
+        # Multiclient test
         test_mode = "single-client" if single_client else "dual-client"
-        print(f"Running multiplayer timer test ({test_mode} mode)...")
+        print(f"Running multiclient timer test ({test_mode} mode)...")
 
-        # Run the multiplayer test
+        # Run the multiclient test
         if single_client:
             # Single-client mode
-            multiplayer_cmd = [
+            multiclient_cmd = [
                 "npx", "playwright", "test",
-                "tests/e2e/multiplayer.spec.js",
+                "tests/e2e/multiclient.spec.js",
                 "-g", "single client timer test"
             ]
-            multiplayer_env = os.environ.copy()
-            multiplayer_env['ENABLE_SINGLE_CLIENT'] = 'true'
+            multiclient_env = os.environ.copy()
+            multiclient_env['ENABLE_SINGLE_CLIENT'] = 'true'
         else:
             # Dual-client mode (default)
-            multiplayer_cmd = [
+            multiclient_cmd = [
                 "npx", "playwright", "test",
-                "tests/e2e/multiplayer.spec.js",
-                "-g", "multiplayer timer test"
+                "tests/e2e/multiclient.spec.js",
+                "-g", "multiclient timer test"
             ]
-            multiplayer_env = os.environ.copy()
+            multiclient_env = os.environ.copy()
 
         # Add --headed flag if requested
         if headed:
-            multiplayer_cmd.append("--headed")
+            multiclient_cmd.append("--headed")
 
         # Use world_directory for the test game parameter (same as rules file lookup)
         test_game = preset_dir
 
-        multiplayer_env['TEST_GAME'] = test_game
-        multiplayer_env['TEST_SEED'] = seed
-        # Disable --single-process flag for multiplayer tests (incompatible with multi-context tests)
-        multiplayer_env['DISABLE_SINGLE_PROCESS'] = 'true'
+        multiclient_env['TEST_GAME'] = test_game
+        multiclient_env['TEST_SEED'] = seed
+        # Disable --single-process flag for multiclient tests (incompatible with multi-context tests)
+        multiclient_env['DISABLE_SINGLE_PROCESS'] = 'true'
 
         # Show the command being run
-        print(f"  Command: {' '.join(multiplayer_cmd)}")
+        print(f"  Command: {' '.join(multiclient_cmd)}")
         print(f"  Environment: TEST_GAME={test_game} TEST_SEED={seed}")
 
-        # Time the multiplayer test process
+        # Time the multiclient test process
         test_start_time = time.time()
         test_return_code, test_stdout, test_stderr = run_command(
-            multiplayer_cmd, cwd=project_root, timeout=180, env=multiplayer_env
+            multiclient_cmd, cwd=project_root, timeout=180, env=multiclient_env
         )
         test_end_time = time.time()
         test_processing_time = round(test_end_time - test_start_time, 2)
 
-        result['multiplayer_test']['return_code'] = test_return_code
-        result['multiplayer_test']['processing_time_seconds'] = test_processing_time
+        result['multiclient_test']['return_code'] = test_return_code
+        result['multiclient_test']['processing_time_seconds'] = test_processing_time
 
         # Analyze test output
         full_output = test_stdout + "\n" + test_stderr
         test_error_count, test_warning_count, test_first_error, test_first_warning = count_errors_and_warnings(full_output)
 
-        result['multiplayer_test']['error_count'] = test_error_count
-        result['multiplayer_test']['warning_count'] = test_warning_count
+        result['multiclient_test']['error_count'] = test_error_count
+        result['multiclient_test']['warning_count'] = test_warning_count
         if include_error_details:
-            result['multiplayer_test']['first_error_line'] = test_first_error
-            result['multiplayer_test']['first_warning_line'] = test_first_warning
+            result['multiclient_test']['first_error_line'] = test_first_error
+            result['multiclient_test']['first_warning_line'] = test_first_warning
 
         # Parse test results
-        test_results_dir = os.path.join(project_root, 'test_results', 'multiplayer')
+        test_results_dir = os.path.join(project_root, 'test_results', 'multiclient')
         print(f"Looking for test results in: {test_results_dir}")
 
         # Check if directory exists
@@ -313,9 +313,9 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
             except Exception as e:
                 print(f"ERROR: Could not list test results directory: {e}")
 
-        test_results = parse_multiplayer_test_results(test_results_dir)
+        test_results = parse_multiclient_test_results(test_results_dir)
 
-        result['multiplayer_test'].update({
+        result['multiclient_test'].update({
             'success': test_results['success'],
             'client1_passed': test_results['client1_passed'],
             'client2_passed': test_results['client2_passed'],
@@ -329,12 +329,12 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         })
 
         if include_error_details and test_results.get('error_message'):
-            result['multiplayer_test']['first_error_line'] = test_results['error_message']
+            result['multiclient_test']['first_error_line'] = test_results['error_message']
 
         # Always log if test failed
         if not test_results['success']:
             error_msg = test_results.get('error_message', 'Unknown error')
-            print(f"Multiplayer test failed: {error_msg}")
+            print(f"Multiclient test failed: {error_msg}")
             print(f"Test return code: {test_return_code}")
             if test_error_count > 0:
                 print(f"Errors in output: {test_error_count}")
@@ -443,11 +443,11 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
             'note': 'Error reading file size'
         }
 
-    if multiplayer:
+    if multiclient:
         print(f"Completed {template_filename}: Generation={'[PASS]' if result['generation']['success'] else '[FAIL]'}, "
-              f"Test={'[PASS]' if result['multiplayer_test']['success'] else '[FAIL]'}, "
+              f"Test={'[PASS]' if result['multiclient_test']['success'] else '[FAIL]'}, "
               f"Gen Errors={result['generation']['error_count']}, "
-              f"Locations Checked={result['multiplayer_test']['locations_checked']}/{result['multiplayer_test']['total_locations']}")
+              f"Locations Checked={result['multiclient_test']['locations_checked']}/{result['multiclient_test']['total_locations']}")
     else:
         print(f"Completed {template_filename}: Generation={'[PASS]' if result['generation']['success'] else '[FAIL]'}, "
               f"Test={'[PASS]' if result['spoiler_test']['pass_fail'] == 'passed' else '[FAIL]'}, "
@@ -458,7 +458,7 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
     return result
 
 
-def test_template_seed_range(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed_list: List[int], export_only: bool = False, test_only: bool = False, stop_on_failure: bool = False, multiplayer: bool = False, single_client: bool = False, headed: bool = False, include_error_details: bool = False, dry_run: bool = False, player: int = None) -> Dict:
+def test_template_seed_range(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed_list: List[int], export_only: bool = False, test_only: bool = False, stop_on_failure: bool = False, multiclient: bool = False, single_client: bool = False, headed: bool = False, include_error_details: bool = False, dry_run: bool = False, player: int = None) -> Dict:
     """Test a template file with multiple seeds and return aggregated results."""
     template_filename = os.path.basename(template_file)
 
@@ -501,7 +501,7 @@ def test_template_seed_range(template_file: str, templates_dir: str, project_roo
             # Test this specific seed
             result = test_template_single_seed(
                 template_file, templates_dir, project_root, world_mapping,
-                str(seed), export_only, test_only, multiplayer, single_client, headed,
+                str(seed), export_only, test_only, multiclient, single_client, headed,
                 include_error_details, dry_run, player
             )
 
@@ -511,8 +511,8 @@ def test_template_seed_range(template_file: str, templates_dir: str, project_roo
             # Check if this seed passed
             if export_only:
                 passed = result.get('generation', {}).get('success', False)
-            elif multiplayer:
-                passed = result.get('multiplayer_test', {}).get('success', False)
+            elif multiclient:
+                passed = result.get('multiclient_test', {}).get('success', False)
             else:
                 passed = result.get('spoiler_test', {}).get('pass_fail') == 'passed'
 
@@ -536,14 +536,14 @@ def test_template_seed_range(template_file: str, templates_dir: str, project_roo
                             seed_range_result['first_failure_reason'] = f"Generation error: {gen_result['first_error_line']}"
                         else:
                             seed_range_result['first_failure_reason'] = f"Generation failed with return code {gen_result.get('return_code')}"
-                    elif multiplayer:
-                        mp_result = result.get('multiplayer_test', {})
+                    elif multiclient:
+                        mp_result = result.get('multiclient_test', {})
                         if mp_result.get('first_error_line'):
-                            seed_range_result['first_failure_reason'] = f"Multiplayer test error: {mp_result['first_error_line']}"
+                            seed_range_result['first_failure_reason'] = f"Multiclient test error: {mp_result['first_error_line']}"
                         else:
                             locations_checked = mp_result.get('locations_checked', 0)
                             total_locations = mp_result.get('total_locations', 0)
-                            seed_range_result['first_failure_reason'] = f"Multiplayer test failed: {locations_checked}/{total_locations} locations checked"
+                            seed_range_result['first_failure_reason'] = f"Multiclient test failed: {locations_checked}/{total_locations} locations checked"
                     else:
                         spoiler_result = result.get('spoiler_test', {})
                         if spoiler_result.get('first_error_line'):
@@ -615,7 +615,7 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     Test a single template in multiworld mode.
 
     By default (require_prerequisites=True), only tests templates that have passed
-    spoiler minimal, spoiler full, and multiplayer tests. If require_prerequisites
+    spoiler minimal, spoiler full, and multiclient tests. If require_prerequisites
     is False, tests all templates regardless of other test results.
     Copies template to the multiworld directory, runs generation with all accumulated
     templates, and tests each player.
@@ -627,7 +627,7 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
         world_mapping: World mapping dictionary
         seed: Seed number to use
         multiworld_dir: Path to Players/presets/Multiworld directory
-        existing_results: Dictionary containing all test results (spoiler-minimal, spoiler-full, multiplayer)
+        existing_results: Dictionary containing all test results (spoiler-minimal, spoiler-full, multiclient)
         current_player_count: Number of players currently in the multiworld directory (before adding this one)
         export_only: If True, only run generation
         test_only: If True, skip generation
@@ -668,7 +668,7 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
         'prerequisite_check': {
             'spoiler_minimal_passed': False,
             'spoiler_full_passed': False,
-            'multiplayer_passed': False,
+            'multiclient_passed': False,
             'all_prerequisites_passed': False
         },
         'multiworld_test': {
@@ -689,11 +689,11 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     # Load the three test results files
     spoiler_minimal_file = os.path.join(project_root, 'scripts/output/spoiler-minimal/test-results.json')
     spoiler_full_file = os.path.join(project_root, 'scripts/output/spoiler-full/test-results.json')
-    multiplayer_file = os.path.join(project_root, 'scripts/output/multiplayer/test-results.json')
+    multiclient_file = os.path.join(project_root, 'scripts/output/multiclient/test-results.json')
 
     spoiler_minimal_passed = False
     spoiler_full_passed = False
-    multiplayer_passed = False
+    multiclient_passed = False
 
     # Check spoiler minimal
     if os.path.exists(spoiler_minimal_file):
@@ -743,31 +743,31 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
                             spoiler_test.get('total_spheres', 0) > 0
                         )
 
-    # Check multiplayer
-    if os.path.exists(multiplayer_file):
-        with open(multiplayer_file, 'r') as f:
-            multiplayer_results = json.load(f)
-            if template_filename in multiplayer_results.get('results', {}):
-                template_result = multiplayer_results['results'][template_filename]
+    # Check multiclient
+    if os.path.exists(multiclient_file):
+        with open(multiclient_file, 'r') as f:
+            multiclient_results = json.load(f)
+            if template_filename in multiclient_results.get('results', {}):
+                template_result = multiclient_results['results'][template_filename]
                 if isinstance(template_result, dict):
-                    multiplayer_test = template_result.get('multiplayer_test', {})
+                    multiclient_test = template_result.get('multiclient_test', {})
                     generation = template_result.get('generation', {})
                     # Apply same criteria as postprocessing script
-                    multiplayer_passed = (
-                        multiplayer_test.get('success', False) and
+                    multiclient_passed = (
+                        multiclient_test.get('success', False) and
                         generation.get('error_count', 0) == 0
                     )
 
     result['prerequisite_check']['spoiler_minimal_passed'] = spoiler_minimal_passed
     result['prerequisite_check']['spoiler_full_passed'] = spoiler_full_passed
-    result['prerequisite_check']['multiplayer_passed'] = multiplayer_passed
+    result['prerequisite_check']['multiclient_passed'] = multiclient_passed
     result['prerequisite_check']['all_prerequisites_passed'] = (
-        spoiler_minimal_passed and spoiler_full_passed and multiplayer_passed
+        spoiler_minimal_passed and spoiler_full_passed and multiclient_passed
     )
 
     print(f"  Spoiler Minimal: {'PASS' if spoiler_minimal_passed else 'FAIL'}")
     print(f"  Spoiler Full: {'PASS' if spoiler_full_passed else 'FAIL'}")
-    print(f"  Multiplayer: {'PASS' if multiplayer_passed else 'FAIL'}")
+    print(f"  Multiclient: {'PASS' if multiclient_passed else 'FAIL'}")
 
     if require_prerequisites and not result['prerequisite_check']['all_prerequisites_passed']:
         print(f"Skipping {template_filename} - not all prerequisites passed")

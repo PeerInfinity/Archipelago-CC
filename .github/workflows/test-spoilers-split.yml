@@ -14,7 +14,7 @@ on:
           - seeds-full
           - templates-minimal
           - templates-full
-          - multiplayer
+          - multiclient
           - multitemplate-minimal
           - multitemplate-full
           - multiworld
@@ -669,12 +669,12 @@ jobs:
             echo "View the branch at: ${{ github.server_url }}/${{ github.repository }}/tree/test-results-update"
           fi
 
-  # Parallel test jobs for multiplayer - one for each template subset
-  test-multiplayer-split:
-    name: Test Multiplayer Split ${{ matrix.split_num }}
+  # Parallel test jobs for multiclient - one for each template subset
+  test-multiclient-split:
+    name: Test Multiclient Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     timeout-minutes: 180
-    if: github.event.inputs.test_type == 'multiplayer'
+    if: github.event.inputs.test_type == 'multiclient'
 
     strategy:
       fail-fast: false
@@ -729,14 +729,14 @@ jobs:
           python -m http.server 8000 &
           sleep 2
 
-      - name: Run multiplayer test for split ${{ matrix.split_num }}
+      - name: Run multiclient test for split ${{ matrix.split_num }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
-            --multiplayer \
+            --multiclient \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --output-file scripts/output/multiplayer/test-results-split-${{ matrix.split_num }}.json \
+            --output-file scripts/output/multiclient/test-results-split-${{ matrix.split_num }}.json \
             --no-backup \
             -p
 
@@ -744,16 +744,16 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-multiplayer-split-${{ matrix.split_num }}
-          path: scripts/output/multiplayer/test-results-split-${{ matrix.split_num }}.json
+          name: test-results-multiclient-split-${{ matrix.split_num }}
+          path: scripts/output/multiclient/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
-  # Combine multiplayer results job - runs after all split tests complete
-  combine-multiplayer-results:
-    name: Combine Multiplayer Test Results
+  # Combine multiclient results job - runs after all split tests complete
+  combine-multiclient-results:
+    name: Combine Multiclient Test Results
     runs-on: ubuntu-latest
-    needs: test-multiplayer-split
-    if: always() && github.event.inputs.test_type == 'multiplayer'
+    needs: test-multiclient-split
+    if: always() && github.event.inputs.test_type == 'multiclient'
 
     steps:
       - name: Checkout repository
@@ -785,17 +785,17 @@ jobs:
       - name: Combine test results
         run: |
           # Create temporary directory for merged results
-          mkdir -p /tmp/merged-results/scripts/output/multiplayer
+          mkdir -p /tmp/merged-results/scripts/output/multiclient
           mkdir -p /tmp/merged-results/docs/json/developer/test-results
 
           # Combine all per-split test results into one file
           python scripts/test/combine-test-results.py \
-            --input-files artifacts/test-results-multiplayer-split-*/test-results-split-*.json \
-            --output-file /tmp/merged-results/scripts/output/multiplayer/test-results.json
+            --input-files artifacts/test-results-multiclient-split-*/test-results-split-*.json \
+            --output-file /tmp/merged-results/scripts/output/multiclient/test-results.json
 
           # List what was created
           echo "=== Combined Results ==="
-          ls -lh /tmp/merged-results/scripts/output/multiplayer/test-results.json
+          ls -lh /tmp/merged-results/scripts/output/multiclient/test-results.json
 
       - name: Create or switch to test-results-update branch
         run: |
@@ -834,9 +834,9 @@ jobs:
       - name: Generate test charts and copy results
         run: |
           # Copy combined results to repository location so generate-test-chart.py can find them
-          mkdir -p scripts/output/multiplayer
-          cp /tmp/merged-results/scripts/output/multiplayer/test-results.json \
-             scripts/output/multiplayer/test-results.json
+          mkdir -p scripts/output/multiclient
+          cp /tmp/merged-results/scripts/output/multiclient/test-results.json \
+             scripts/output/multiclient/test-results.json
 
           # Generate test charts and documentation
           python scripts/docs/generate-test-chart.py
@@ -845,7 +845,7 @@ jobs:
           ls -lh docs/json/developer/test-results/
 
           echo "=== Files ready for commit ==="
-          ls -lh scripts/output/multiplayer/test-results.json
+          ls -lh scripts/output/multiclient/test-results.json
           ls -lh docs/json/developer/test-results/*.md 2>/dev/null || echo "No markdown files"
 
       - name: Commit and push results
@@ -855,14 +855,14 @@ jobs:
 
           # Add the specific files we want to commit
           # Use -f because scripts/output is in .gitignore (even though specific files are excepted)
-          git add -f scripts/output/multiplayer/test-results.json
+          git add -f scripts/output/multiclient/test-results.json
           git add docs/json/developer/test-results/*.md || true
 
           # Check if there are changes to commit
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update multiplayer test results (split by templates)
+            git commit -m "Update multiclient test results (split by templates)
 
             Generated by workflow run: ${{ github.run_id }}
             Triggered by: ${{ github.actor }}
