@@ -80,14 +80,14 @@ class SMGameExportHandler(GenericGameExportHandler):
                                 # Simple AccessFrom (all regions use SMBool(True))
                                 logger.info(f"SM: Location '{location_name}' has simple AccessFrom - exporting as True")
                                 print(f"[SM] {location_name}: Simple AccessFrom (SMBool(True)) - exporting as True")
-                                # Return a lambda that always returns True
-                                return lambda state: True
+                                # Return analyzed rule dict for constant True
+                                return {'type': 'constant', 'value': True}
                             else:
                                 # Complex AccessFrom (has item requirements)
                                 logger.info(f"SM: Location '{location_name}' has complex AccessFrom - exporting as False")
                                 print(f"[SM] {location_name}: Complex AccessFrom (item requirements) - exporting as False")
-                                # Return a lambda that always returns False
-                                return lambda state: False
+                                # Return analyzed rule dict for constant False
+                                return {'type': 'constant', 'value': False}
 
             return None
         except Exception as e:
