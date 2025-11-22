@@ -4,14 +4,23 @@
 
 **Symptom**: Test successfully processes events but times out around event 78, with worker ping timeout warnings
 
-**Location**: Unknown - possibly complex rules or helper functions causing slow evaluation
+**Location**: Reachability calculation after Gravity Suit acquisition (event 79/sphere 8.16)
 
 **Impact**: Full test cannot complete within 150-second timeout
 
-**Status**: Needs investigation - identify which rules/helpers are slow
+**Root Cause**: Event 79 adds Gravity Suit, which opens 17 new Maridia locations simultaneously, causing a large spike in rule evaluations
+
+**Status**: Likely requires performance optimization of rule evaluation
 
 **Notes**:
 - Test successfully processes 78 out of 120 events before timing out
-- Worker ping is timing out, suggesting long-running rule evaluation
+- Event 79 opens: Maridia Inner, Maridia Outer regions + 17 locations
+- Worker ping is timing out during the reachability recalculation
 - No more "any_of iterator" errors (that issue is fixed)
+
+**Potential Solutions**:
+1. Optimize rule evaluation caching
+2. Optimize helper function performance
+3. Increase test timeout (temporary workaround)
+4. Profile the rule evaluator to find bottlenecks
 
