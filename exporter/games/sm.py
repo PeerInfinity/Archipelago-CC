@@ -344,6 +344,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                         # corrupt the structure.
                         #
                         # Conservative approach: Export as False to prevent incorrect accessibility.
+                        # TODO: Improve accessFrom detection to handle more cases
                         logger.info("SM: Complex accessFrom with SMBool(True) Available - exporting as False (conservative)")
                         return {'type': 'constant', 'value': False}
 
@@ -353,15 +354,15 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         # Check for accessFrom patterns that hit recursion limits
         # These create infinitely nested structures that can't be properly evaluated
-        # CHANGED: Export as False instead of True to prevent incorrect accessibility
-        # until VARIA logic helpers are properly implemented
+        # Conservative: Export as False to prevent incorrect accessibility
+        # TODO: Improve detection to distinguish simple vs complex patterns
         if self._check_accessFrom_pattern(rule):
-            logger.info("SM: Found accessFrom comprehension pattern, exporting as constant False (VARIA logic not yet implemented)")
-            print("[SM] Exporting accessFrom pattern as constant False (needs VARIA logic implementation)")
+            logger.info("SM: Found accessFrom comprehension pattern, exporting as constant False")
+            print("[SM] Exporting accessFrom pattern as constant False")
             return {'type': 'constant', 'value': False}
 
         # Also check for deeply nested any_of structures (result of recursion limits)
-        # CHANGED: Export as False instead of True
+        # Conservative: Export as False
         if self._check_deeply_nested_any_of(rule):
             logger.info("SM: Found deeply nested any_of pattern (recursion artifact), exporting as constant False")
             print("[SM] Exporting deeply nested any_of pattern as constant False")
