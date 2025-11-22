@@ -85,7 +85,7 @@ export class EventProcessor {
   setContext(currentLogIndex, spoilerLogData, playerId) {
     this.currentLogIndex = currentLogIndex;
     this.spoilerLogData = spoilerLogData;
-    this.playerId = playerId;
+    this.playerId = Number(playerId); // Ensure numeric type for consistency
   }
 
   /**
@@ -702,7 +702,7 @@ export class EventProcessor {
       const sphereData = this._getSphereDataFromSphereState(this.currentLogIndex);
       if (sphereData) {
         const staticData = stateManager.getStaticData();
-        const useResolvedItems = staticData?.settings?.[String(this.playerId)]?.use_resolved_items || false;
+        const useResolvedItems = staticData?.settings?.[this.playerId]?.use_resolved_items || false;
 
         if (useResolvedItems) {
           this.previousInventory = JSON.parse(JSON.stringify(sphereData.inventoryDetails?.resolved_items || {}));
@@ -874,10 +874,10 @@ export class EventProcessor {
    */
   async _processMultiworldLocations(event, context, stateManager) {
     const staticData = stateManager.getStaticData();
-    const currentPlayerIdStr = String(this.playerId);
 
     // Get current player's data from the event
-    const currentPlayerData = event.player_data[currentPlayerIdStr];
+    // Note: player_data has string keys in JSON, but object key coercion handles numeric access
+    const currentPlayerData = event.player_data[this.playerId];
 
     if (!currentPlayerData) {
       this.logCallback('warn', `No player_data found for player ${this.playerId} in sphere ${context.sphere_number}`);
