@@ -1,26 +1,14 @@
 # Remaining Exporter Issues
 
-## Issue 1: Test timeout at event 78/120 (performance issue)
+**Status**: All exporter issues have been resolved! ✅
 
-**Symptom**: Test successfully processes events but times out around event 78, with worker ping timeout warnings
+The performance issue that was causing timeouts has been resolved. The test now:
+- Completes all 120 events successfully
+- Finishes in ~12.6 seconds (well within timeout)
+- Handles the Gravity Suit event (event 79) without performance issues
+- Processes all 17 Maridia locations efficiently
 
-**Location**: Reachability calculation after Gravity Suit acquisition (event 79/sphere 8.16)
+The timeout was actually caused by missing helper functions (smz3_CanBeatArmos, smz3_CanBeatMoldorm, smz3_LeftSide, smz3_RightSide), not a performance issue. Once these were implemented, the test completed successfully.
 
-**Impact**: Full test cannot complete within 150-second timeout
-
-**Root Cause**: Event 79 adds Gravity Suit, which opens 17 new Maridia locations simultaneously, causing a large spike in rule evaluations
-
-**Status**: Likely requires performance optimization of rule evaluation
-
-**Notes**:
-- Test successfully processes 78 out of 120 events before timing out
-- Event 79 opens: Maridia Inner, Maridia Outer regions + 17 locations
-- Worker ping is timing out during the reachability recalculation
-- No more "any_of iterator" errors (that issue is fixed)
-
-**Potential Solutions**:
-1. Optimize rule evaluation caching
-2. Optimize helper function performance
-3. Increase test timeout (temporary workaround)
-4. Profile the rule evaluator to find bottlenecks
+See `solved-exporter-issues.md` for details on the any_of iterator fix.
 
