@@ -24,6 +24,7 @@ class SMGameExportHandler(GenericGameExportHandler):
         super().__init__()  # Base class doesn't take arguments
         self.world = world
         self._simple_accessfrom_locations: Optional[Set[str]] = None
+        self._all_accessfrom_info: Optional[Dict[str, Dict[str, str]]] = None
         self._varia_item_types: Optional[Dict[str, str]] = None
 
     def _get_varia_item_types(self) -> Dict[str, str]:
@@ -144,12 +145,39 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         return self._simple_accessfrom_locations
 
+    def _get_all_accessfrom_info(self) -> Dict[str, Dict[str, str]]:
+        """Get ALL AccessFrom information for all locations.
+
+        Returns:
+            Dict mapping location_name -> {region_name -> lambda_source}
+        """
+        if self._all_accessfrom_info is None:
+            try:
+                from .sm_accessfrom_extractor import extract_all_accessfrom_info
+                import worlds.sm
+                import os
+                world_module_path = os.path.dirname(worlds.sm.__file__)
+                self._all_accessfrom_info = extract_all_accessfrom_info(world_module_path)
+                logger.info(f"SM: Loaded AccessFrom data for {len(self._all_accessfrom_info)} locations")
+            except Exception as e:
+                logger.error(f"SM: Failed to extract all AccessFrom info: {e}", exc_info=True)
+                self._all_accessfrom_info = {}
+
+        return self._all_accessfrom_info
+
     def get_custom_location_access_rule(self, location, world):
         """Custom handling for Super Metroid location access rules.
 
-        Uses AST parsing to determine if the location has simple AccessFrom (SMBool(True))
-        or complex AccessFrom (item requirements). For simple AccessFrom with Available=SMBool(True),
-        exports as constant True. For complex AccessFrom, exports as constant False.
+        Super Metroid locations use an AccessFrom + Available pattern:
+        - AccessFrom: Dict[region_name -> lambda] defining requirements from each region
+        - Available: lambda defining requirements once in the region
+
+        The Python rule is: any(can_reach(region) AND AccessFrom[region](sm) for each region) AND Available(sm)
+
+        We build this by:
+        1. Extracting AccessFrom lambdas from source code
+        2. Parsing each lambda individually
+        3. Building: OR(can_reach(region1) AND lambda1, can_reach(region2) AND lambda2, ...) AND Available
 
         Returns:
             The custom rule to export, or None to use default handling
@@ -174,25 +202,110 @@ class SMGameExportHandler(GenericGameExportHandler):
                     # Check if first condition is accessFrom (any_of pattern)
                     if first.get('type') == 'any_of':
                         # This is an accessFrom + Available pattern
-                        # Check if Available is SMBool(True)
-                        if self._is_always_true_smbool(second):
-                            # Available is SMBool(True), check if AccessFrom is simple
-                            simple_locations = self._get_simple_accessfrom_locations()
+                        # We need to build the full rule from source data
 
-                            if location_name in simple_locations:
-                                # Simple AccessFrom (all regions use SMBool(True))
-                                logger.info(f"SM: Location '{location_name}' has simple AccessFrom - exporting as True")
-                                # Return analyzed rule dict for constant True
-                                return {'type': 'constant', 'value': True}
-                            else:
-                                # Complex AccessFrom (has item requirements)
-                                logger.info(f"SM: Location '{location_name}' has complex AccessFrom - exporting as False")
-                                # Return analyzed rule dict for constant False
-                                return {'type': 'constant', 'value': False}
+                        # Get AccessFrom data from source
+                        all_accessfrom = self._get_all_accessfrom_info()
+                        if location_name not in all_accessfrom:
+                            logger.warning(f"SM: Location '{location_name}' not found in AccessFrom data")
+                            return None
+
+                        accessfrom_dict = all_accessfrom[location_name]
+                        logger.info(f"SM: Building AccessFrom rule for '{location_name}' with {len(accessfrom_dict)} regions")
+
+                        # Parse each AccessFrom lambda and build the OR structure
+                        accessfrom_conditions = []
+                        for region_name, lambda_source in accessfrom_dict.items():
+                            # Parse the lambda to get its body
+                            parsed_lambda = self._parse_accessfrom_lambda(lambda_source, region_name, location_name)
+                            if parsed_lambda:
+                                # Build: can_reach(region) AND parsed_lambda
+                                accessfrom_conditions.append({
+                                    'type': 'and',
+                                    'conditions': [
+                                        {'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'constant', 'value': region_name}]},
+                                        parsed_lambda
+                                    ]
+                                })
+
+                        if not accessfrom_conditions:
+                            logger.warning(f"SM: Failed to parse any AccessFrom lambdas for '{location_name}'")
+                            return None
+
+                        # Build the OR of all AccessFrom conditions
+                        if len(accessfrom_conditions) == 1:
+                            accessfrom_rule = accessfrom_conditions[0]
+                        else:
+                            accessfrom_rule = {
+                                'type': 'or',
+                                'conditions': accessfrom_conditions
+                            }
+
+                        # Get the Available rule (already analyzed)
+                        available_rule = second
+
+                        # Build the final rule: AccessFrom AND Available
+                        # If Available is SMBool(True), just use AccessFrom
+                        if self._is_always_true_smbool(available_rule):
+                            logger.info(f"SM: Location '{location_name}' has Available=SMBool(True), using only AccessFrom")
+                            return accessfrom_rule
+                        else:
+                            logger.info(f"SM: Location '{location_name}' has both AccessFrom and Available requirements")
+                            return {
+                                'type': 'and',
+                                'conditions': [accessfrom_rule, available_rule]
+                            }
 
             return None
         except Exception as e:
-            logger.debug(f"SM: Error analyzing location rule for {location_name}: {e}")
+            logger.error(f"SM: Error building location rule for {location_name}: {e}", exc_info=True)
+            return None
+
+    def _parse_accessfrom_lambda(self, lambda_source: str, region_name: str, location_name: str) -> Optional[Dict[str, Any]]:
+        """Parse an AccessFrom lambda and return its rule structure.
+
+        Args:
+            lambda_source: The lambda source code (e.g., "(lambda sm: sm.canPassTerminatorBombWall())")
+            region_name: The region name (for logging)
+            location_name: The location name (for logging)
+
+        Returns:
+            Parsed rule dict, or None if parsing failed
+        """
+        try:
+            import ast
+            from ..analyzer import analyze_rule
+
+            # Remove outer parentheses if present
+            lambda_source = lambda_source.strip()
+            if lambda_source.startswith('(') and lambda_source.endswith(')'):
+                lambda_source = lambda_source[1:-1].strip()
+
+            # Parse the lambda
+            lambda_ast = ast.parse(lambda_source, mode='eval').body
+            if not isinstance(lambda_ast, ast.Lambda):
+                logger.warning(f"SM: AccessFrom for '{location_name}' from '{region_name}' is not a lambda: {lambda_source}")
+                return None
+
+            # Analyze the lambda body using analyze_rule with ast_node parameter
+            analyzed = analyze_rule(
+                ast_node=lambda_ast.body,
+                closure_vars={},
+                game_handler=self,
+                player_context=None,
+                context_info=f"AccessFrom {region_name}->{location_name}"
+            )
+            if not analyzed:
+                logger.warning(f"SM: Failed to analyze AccessFrom lambda for '{location_name}' from '{region_name}'")
+                return None
+
+            # Expand the analyzed rule
+            expanded = self.expand_rule(analyzed)
+            logger.debug(f"SM: Parsed AccessFrom lambda for '{location_name}' from '{region_name}': {type(expanded)}")
+            return expanded
+
+        except Exception as e:
+            logger.error(f"SM: Error parsing AccessFrom lambda for '{location_name}' from '{region_name}': {e}", exc_info=True)
             return None
 
     def _check_smbool_true_pattern(self, rule: Dict[str, Any]) -> bool:

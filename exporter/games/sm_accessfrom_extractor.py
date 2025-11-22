@@ -162,6 +162,48 @@ def extract_accessfrom_info(world_module_path: str) -> Dict[str, Set[str]]:
         return {}
 
 
+def extract_all_accessfrom_info(world_module_path: str) -> Dict[str, Dict[str, str]]:
+    """
+    Extract ALL AccessFrom information from Super Metroid's graph_locations.py file.
+
+    Args:
+        world_module_path: Path to the worlds/sm module
+
+    Returns:
+        Dict mapping location_name -> {region_name -> lambda_source_code}
+        Returns ALL locations with their AccessFrom data, not just simple ones.
+    """
+    graph_locations_path = os.path.join(
+        world_module_path,
+        'variaRandomizer',
+        'graph',
+        'vanilla',
+        'graph_locations.py'
+    )
+
+    if not os.path.exists(graph_locations_path):
+        logger.warning(f"graph_locations.py not found at {graph_locations_path}")
+        return {}
+
+    try:
+        # Parse the file
+        with open(graph_locations_path, 'r', encoding='utf-8') as f:
+            source = f.read()
+
+        tree = ast.parse(source, filename=graph_locations_path)
+
+        # Extract AccessFrom info
+        extractor = AccessFromExtractor()
+        extractor.visit(tree)
+
+        logger.info(f"Extracted AccessFrom data for {len(extractor.location_access_info)} locations")
+        return extractor.location_access_info
+
+    except Exception as e:
+        logger.error(f"Failed to extract AccessFrom info: {e}", exc_info=True)
+        return {}
+
+
 def get_simple_accessfrom_locations(world) -> Set[str]:
     """
     Get the set of location names that have simple AccessFrom (all regions use SMBool(True)).
