@@ -312,15 +312,28 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
             # Handle Count rule (requires N of M conditions to be true)
             elif rule_type == 'Count':
                 conditions = []
-                if hasattr(rule_obj, 'rules'):
+
+                # IMPORTANT: Count uses a Counter to track duplicate rules!
+                # rule_obj.rules contains only UNIQUE rules
+                # rule_obj.counter contains the multiplicity of each rule
+                # We need to expand duplicates to preserve the correct count
+                if hasattr(rule_obj, 'counter') and hasattr(rule_obj, 'rules'):
+                    # Use counter to expand duplicate rules
+                    for sub_rule in rule_obj.rules:
+                        serialized = self._serialize_stardew_rule(sub_rule)
+                        if serialized:
+                            # Add this condition multiple times based on its count
+                            multiplicity = rule_obj.counter.get(sub_rule, 1)
+                            for _ in range(multiplicity):
+                                conditions.append(serialized)
+                elif hasattr(rule_obj, 'rules'):
+                    # Fallback: just use rules directly (older code path)
                     for sub_rule in rule_obj.rules:
                         serialized = self._serialize_stardew_rule(sub_rule)
                         if serialized:
                             conditions.append(serialized)
 
                 # Count rule is "at least N of these conditions must be true"
-                # The frontend doesn't have a native count type, so we need to expand it
-                # For now, use a helper
                 count_required = rule_obj.count if hasattr(rule_obj, 'count') else len(conditions)
 
                 if count_required == len(conditions):
