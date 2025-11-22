@@ -4,31 +4,31 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-21 17:34:38
+**Generated:** 2025-11-21 20:21:09
 
-**Source Data Created:** 2025-11-21T20:15:57.304387
+**Source Data Created:** 2025-11-22T04:16:13.791064
 
-**Source Data Last Updated:** 2025-11-21T20:15:57.304401
+**Source Data Last Updated:** 2025-11-22T04:16:13.791071
 
 ## Summary
 
 - **Total Games:** 78
-- **Passed:** 70 (89.7%)
-- **Failed:** 8 (10.3%)
-- **Games with Intermittent Failures:** 20
-- **Total Intermittent Failures:** 36
+- **Passed:** 71 (91.0%)
+- **Failed:** 7 (9.0%)
+- **Games with Intermittent Failures:** 25
+- **Total Intermittent Failures:** 50
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Custom Exporter | Custom GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|-----------------|------------------|
-| A Hat in Time | ✅ Passed seeds 1-9 | 0 | 5.21 | 5.21 | 🟢 Complete | ✅ | ✅ |
+| A Hat in Time | ✅ Passed seeds 1-10 | 0 | 5.21 | 5.21 | 🟢 Complete | ✅ | ✅ |
 | A Link to the Past | ✅ Passed seeds 1-10 | 0 | 22.1 | 22.1 | 🟢 Complete | ✅ | ✅ |
 | A Short Hike | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ⚫ |
 | Adventure | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ⚫ |
 | Aquaria | ✅ Passed seeds 1-10 | 0 | 5.19 | 5.19 | 🟢 Complete | ✅ | ✅ |
-| ArchipIDLE | ✅ Passed seeds 1-10 | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ✅ |
-| Blasphemous | ❌ Failed seed 1 | 0 | 0 | 13.1 | 🔴 0.0% | ✅ | ✅ |
+| ArchipIDLE | ✅ Passed seeds 1-9 | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ✅ |
+| Blasphemous | ❌ Failed seed 1 | 0 | 0.1 | 13.1 | 🟠 0.8% | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed seeds 1-10 | 0 | 10.18 | 10.18 | 🟢 Complete | ✅ | ⚫ |
 | Bumper Stickers | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed seeds 1-10 | 0 | 4.41 | 4.41 | 🟢 Complete | ✅ | ✅ |
@@ -36,13 +36,13 @@
 | Celeste 64 | ✅ Passed seeds 1-10 | 0 | 5.2 | 5.2 | 🟢 Complete | ✅ | ✅ |
 | ChecksFinder | ✅ Passed seeds 1-10 | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ⚫ |
 | ChocolateChipCookies | ✅ Passed seeds 1-10 | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ⚫ |
-| Civilization VI | ✅ Passed seeds 1-10 | 0 | 8.15 | 8.15 | 🟢 Complete | ✅ | ⚫ |
+| Civilization VI | ✅ Passed seeds 1-9 | 0 | 8.15 | 8.15 | 🟢 Complete | ✅ | ⚫ |
 | DLCQuest | ✅ Passed seeds 1-10 | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | DOOM 1993 | ✅ Passed seeds 1-10 | 0 | 18.5 | 18.5 | 🟢 Complete | ✅ | ⚫ |
 | DOOM II | ✅ Passed seeds 1-10 | 0 | 21.4 | 21.4 | 🟢 Complete | ✅ | ⚫ |
 | Dark Souls III | ✅ Passed seeds 1-10 | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ⚫ |
-| Donkey Kong Country 3 | ✅ Passed seeds 1-9 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ⚫ |
-| Factorio | ❌ Failed seed 1 | 0 | 2.1 | 12.1 | 🟡 17.4% | ✅ | ✅ |
+| Donkey Kong Country 3 | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ⚫ |
+| Factorio | ✅ Passed seeds 1-10 | 0 | 12.1 | 12.1 | 🟢 Complete | ✅ | ✅ |
 | Faxanadu | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ⚫ |
 | Final Fantasy Mystic Quest | ✅ Passed seeds 1-10 | 0 | 19.6 | 19.6 | 🟢 Complete | ✅ | ⚫ |
 | Heretic | ✅ Passed seeds 1-10 | 0 | 24.4 | 24.4 | 🟢 Complete | ⚫ | ⚫ |
@@ -50,35 +50,35 @@
 | Inscryption | ✅ Passed seeds 1-10 | 0 | 10.2 | 10.2 | 🟢 Complete | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed seeds 1-10 | 0 | 14.1 | 14.1 | 🟢 Complete | ✅ | ✅ |
 | Kingdom Hearts | ✅ Passed seeds 1-10 | 0 | 18.6 | 18.6 | 🟢 Complete | ✅ | ✅ |
-| Kingdom Hearts 2 | ❌ Failed seed 1 | 0 | 2.1 | 15.2 | 🟡 13.8% | ✅ | ✅ |
+| Kingdom Hearts 2 | ✅ Passed seeds 1-10 | 0 | 15.2 | 15.2 | 🟢 Complete | ✅ | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed seeds 1-10 | 0 | 11.3 | 11.3 | 🟢 Complete | ✅ | ✅ |
-| Landstalker - The Treasures of King Nole | ✅ Passed seeds 1-9 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
-| Lingo | ✅ Passed seeds 1-10 | 0 | 6.12 | 6.12 | 🟢 Complete | ✅ | ✅ |
+| Landstalker - The Treasures of King Nole | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
+| Lingo | ✅ Passed seeds 1-9 | 0 | 6.12 | 6.12 | 🟢 Complete | ✅ | ✅ |
 | Links Awakening DX | ✅ Passed seeds 1-10 | 0 | 15.1 | 15.1 | 🟢 Complete | ✅ | ✅ |
 | Lufia II Ancient Cave | ✅ Passed seeds 1-10 | 0 | 4.16 | 4.16 | 🟢 Complete | ⚫ | ⚫ |
 | Mario & Luigi Superstar Saga | ✅ Passed seeds 1-10 | 0 | 8.8 | 8.8 | 🟢 Complete | ✅ | ✅ |
 | MathProof2p2e4 | ✅ Passed seeds 1-10 | 0 | 4.1 | 4.1 | 🟢 Complete | ⚫ | ⚫ |
 | Mega Man 2 | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
-| MegaMan Battle Network 3 | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
+| MegaMan Battle Network 3 | ❌ Failed seed 1 | 0 | 4.51 | 6.1 | 🟡 73.9% | ✅ | ✅ |
 | Meritous | ✅ Passed seeds 1-10 | 0 | 7.2 | 7.2 | 🟢 Complete | ⚫ | ⚫ |
 | Metamath | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ⚫ |
 | Muse Dash | ✅ Passed seeds 1-10 | 0 | 8.6 | 8.6 | 🟢 Complete | ⚫ | ⚫ |
 | Noita | ✅ Passed seeds 1-10 | 0 | 0.117 | 0.117 | 🟢 Complete | ⚫ | ⚫ |
 | Ocarina of Time | ❌ Failed seed 1 | 3 | 0 | 0 | 🔴 0.0% | ✅ | ⚫ |
 | Old School Runescape | ✅ Passed seeds 1-10 | 0 | 7.6 | 7.6 | 🟢 Complete | ✅ | ✅ |
-| Overcooked! 2 | ✅ Passed seeds 1-9 | 0 | 18.3 | 18.3 | 🟢 Complete | ✅ | ✅ |
-| Paint | ✅ Passed seeds 1-10 | 0 | 13.2 | 13.2 | 🟢 Complete | ✅ | ✅ |
-| Pokemon Emerald | ✅ Passed seeds 1-10 | 0 | 19.4 | 19.4 | 🟢 Complete | ✅ | ✅ |
-| Pokemon Red and Blue | ✅ Passed seeds 1-10 | 0 | 10.9 | 10.9 | 🟢 Complete | ✅ | ✅ |
+| Overcooked! 2 | ✅ Passed seeds 1-10 | 0 | 18.3 | 18.3 | 🟢 Complete | ✅ | ✅ |
+| Paint | ✅ Passed seeds 1-9 | 0 | 13.2 | 13.2 | 🟢 Complete | ✅ | ✅ |
+| Pokemon Emerald | ✅ Passed seeds 1-9 | 0 | 19.4 | 19.4 | 🟢 Complete | ✅ | ✅ |
+| Pokemon Red and Blue | ✅ Passed seeds 1-9 | 0 | 10.9 | 10.9 | 🟢 Complete | ✅ | ✅ |
 | Raft | ✅ Passed seeds 1-10 | 0 | 11.6 | 11.6 | 🟢 Complete | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed seeds 1-10 | 0 | 8.35 | 8.35 | 🟢 Complete | ⚫ | ⚫ |
 | SMZ3 | ❌ Failed seed 1 | 3 | 0 | 0 | 🔴 0.0% | ✅ | ✅ |
 | Saving Princess | ✅ Passed seeds 1-10 | 0 | 5.3 | 5.3 | 🟢 Complete | ✅ | ⚫ |
-| Secret of Evermore | ✅ Passed seeds 1-8 | 0 | 5.19 | 5.19 | 🟢 Complete | ✅ | ✅ |
+| Secret of Evermore | ✅ Passed seeds 1-10 | 0 | 5.19 | 5.19 | 🟢 Complete | ✅ | ✅ |
 | Shivers | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
-| Sonic Adventure 2 Battle | ✅ Passed seeds 1-10 | 0 | 7.18 | 7.18 | 🟢 Complete | ✅ | ⚫ |
+| Sonic Adventure 2 Battle | ❌ Failed seed 1 | 0 | 0 | 7.18 | 🔴 0.0% | ✅ | ⚫ |
 | Starcraft 2 | ✅ Passed seeds 1 | 0 | 32.2 | 32.2 | 🟢 Complete | ✅ | ✅ |
-| Stardew Valley | ❌ Failed seed 1 | 0 | 2.2 | 44.2 | 🟡 5.0% | ✅ | ⚫ |
+| Stardew Valley | ✅ Passed seeds 1-7 | 0 | 44.2 | 44.2 | 🟢 Complete | ✅ | ⚫ |
 | Subnautica | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed seeds 1-10 | 0 | 5.5 | 5.5 | 🟢 Complete | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
@@ -99,7 +99,7 @@
 | Yoshi's Island | ✅ Passed seeds 1-10 | 0 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
 | Yu-Gi-Oh! 2006 | ✅ Passed seeds 1-10 | 0 | 21.23 | 21.23 | 🟢 Complete | ✅ | ✅ |
 | Zillion | ❌ Failed seed 1 | 0 | 0 | 4.1 | 🔴 0.0% | ✅ | ⚫ |
-| shapez | ✅ Passed seeds 1-10 | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ✅ |
+| shapez | ✅ Passed seeds 1-9 | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ✅ |
 
 ## Intermittent Failures
 
@@ -107,42 +107,56 @@ These seeds were previously failing but passed during a retest run:
 
 | Template | Seed | Timestamp | Notes |
 |----------|------|-----------|-------|
-| A Hat in Time | 10 | 2025-11-21 20:03 | Previously failed, now passing |
-| ArchipIDLE | 5 | 2025-11-21 19:50 | Previously failed, now passing |
-| Castlevania 64 | 5 | 2025-11-21 19:53 | Previously failed, now passing |
-| Donkey Kong Country 3 | 10 | 2025-11-21 20:06 | Previously failed, now passing |
-| Jak and Daxter The Precursor Legacy | 8 | 2025-11-21 19:44 | Previously failed, now passing |
-| Kirby's Dream Land 3 | 4 | 2025-11-21 19:47 | Previously failed, now passing |
-| Landstalker - The Treasures of King Nole | 10 | 2025-11-21 20:07 | Previously failed, now passing |
-| Links Awakening DX | 7 | 2025-11-21 19:54 | Previously failed, now passing |
-| Mario & Luigi Superstar Saga | 8 | 2025-11-21 19:50 | Previously failed, now passing |
-| MegaMan Battle Network 3 | 5 | 2025-11-21 19:58 | Previously failed, now passing |
-| MegaMan Battle Network 3 | 9 | 2025-11-21 19:56 | Previously failed, now passing |
-| Overcooked! 2 | 10 | 2025-11-21 20:08 | Previously failed, now passing |
-| Raft | 5 | 2025-11-21 19:59 | Previously failed, now passing |
-| Risk of Rain 2 | 7 | 2025-11-21 19:54 | Previously failed, now passing |
-| Secret of Evermore | 9 | 2025-11-21 19:57 | Previously failed, now passing |
-| Secret of Evermore | 10 | 2025-11-21 20:08 | Previously failed, now passing |
-| Sonic Adventure 2 Battle | 7 | 2025-11-21 19:54 | Previously failed, now passing |
-| Starcraft 2 | 2 | 2025-11-21 19:49 | Previously failed, now passing |
-| Starcraft 2 | 3 | 2025-11-21 19:55 | Previously failed, now passing |
-| Starcraft 2 | 4 | 2025-11-21 19:49 | Previously failed, now passing |
-| Starcraft 2 | 5 | 2025-11-21 20:01 | Previously failed, now passing |
-| Starcraft 2 | 6 | 2025-11-21 19:51 | Previously failed, now passing |
-| Starcraft 2 | 7 | 2025-11-21 19:57 | Previously failed, now passing |
-| Starcraft 2 | 8 | 2025-11-21 19:52 | Previously failed, now passing |
-| Starcraft 2 | 9 | 2025-11-21 19:59 | Previously failed, now passing |
-| Starcraft 2 | 10 | 2025-11-21 20:14 | Previously failed, now passing |
-| Terraria | 5 | 2025-11-21 20:02 | Previously failed, now passing |
-| The Witness | 2 | 2025-11-21 19:50 | Previously failed, now passing |
-| The Witness | 3 | 2025-11-21 19:56 | Previously failed, now passing |
-| The Witness | 5 | 2025-11-21 20:03 | Previously failed, now passing |
-| The Witness | 6 | 2025-11-21 19:52 | Previously failed, now passing |
-| The Witness | 8 | 2025-11-21 19:53 | Previously failed, now passing |
-| The Witness | 9 | 2025-11-21 20:00 | Previously failed, now passing |
-| The Witness | 10 | 2025-11-21 20:15 | Previously failed, now passing |
-| Timespinner | 9 | 2025-11-21 20:00 | Previously failed, now passing |
-| Yu-Gi-Oh! 2006 | 8 | 2025-11-21 19:58 | Previously failed, now passing |
+| ArchipIDLE | 10 | 2025-11-22 03:55 | Previously failed, now passing |
+| Civilization VI | 5 | 2025-11-22 03:55 | Previously failed, now passing |
+| Civilization VI | 10 | 2025-11-22 03:58 | Previously failed, now passing |
+| DOOM II | 7 | 2025-11-22 03:44 | Previously failed, now passing |
+| Dark Souls III | 7 | 2025-11-22 03:49 | Previously failed, now passing |
+| Donkey Kong Country 3 | 2 | 2025-11-22 03:48 | Previously failed, now passing |
+| Factorio | 4 | 2025-11-22 03:41 | Previously failed, now passing |
+| Final Fantasy Mystic Quest | 5 | 2025-11-22 03:55 | Previously failed, now passing |
+| Hylics 2 | 2 | 2025-11-22 03:48 | Previously failed, now passing |
+| Hylics 2 | 5 | 2025-11-22 03:56 | Previously failed, now passing |
+| Jak and Daxter The Precursor Legacy | 8 | 2025-11-22 03:47 | Previously failed, now passing |
+| Kingdom Hearts 2 | 4 | 2025-11-22 03:42 | Previously failed, now passing |
+| Kingdom Hearts 2 | 8 | 2025-11-22 03:49 | Previously failed, now passing |
+| Kingdom Hearts 2 | 9 | 2025-11-22 03:42 | Previously failed, now passing |
+| Kirby's Dream Land 3 | 8 | 2025-11-22 03:50 | Previously failed, now passing |
+| Lingo | 10 | 2025-11-22 03:58 | Previously failed, now passing |
+| Meritous | 8 | 2025-11-22 03:51 | Previously failed, now passing |
+| Paint | 10 | 2025-11-22 04:00 | Previously failed, now passing |
+| Pokemon Emerald | 10 | 2025-11-22 04:05 | Previously failed, now passing |
+| Pokemon Red and Blue | 10 | 2025-11-22 04:10 | Previously failed, now passing |
+| Shivers | 1 | 2025-11-22 03:42 | Previously failed, now passing |
+| Shivers | 6 | 2025-11-22 03:49 | Previously failed, now passing |
+| Sonic Adventure 2 Battle | 6 | 2025-11-22 03:49 | Previously failed, now passing |
+| Starcraft 2 | 2 | 2025-11-22 03:54 | Previously failed, now passing |
+| Starcraft 2 | 3 | 2025-11-22 03:45 | Previously failed, now passing |
+| Starcraft 2 | 4 | 2025-11-22 03:45 | Previously failed, now passing |
+| Starcraft 2 | 5 | 2025-11-22 03:59 | Previously failed, now passing |
+| Starcraft 2 | 6 | 2025-11-22 03:51 | Previously failed, now passing |
+| Starcraft 2 | 7 | 2025-11-22 03:52 | Previously failed, now passing |
+| Starcraft 2 | 8 | 2025-11-22 03:56 | Previously failed, now passing |
+| Starcraft 2 | 9 | 2025-11-22 03:46 | Previously failed, now passing |
+| Starcraft 2 | 10 | 2025-11-22 04:13 | Previously failed, now passing |
+| Stardew Valley | 2 | 2025-11-22 03:55 | Previously failed, now passing |
+| Stardew Valley | 3 | 2025-11-22 03:46 | Previously failed, now passing |
+| Stardew Valley | 4 | 2025-11-22 03:46 | Previously failed, now passing |
+| Stardew Valley | 5 | 2025-11-22 04:00 | Previously failed, now passing |
+| Stardew Valley | 8 | 2025-11-22 03:57 | Previously failed, now passing |
+| Stardew Valley | 9 | 2025-11-22 03:47 | Previously failed, now passing |
+| Stardew Valley | 10 | 2025-11-22 04:14 | Previously failed, now passing |
+| Super Mario 64 | 8 | 2025-11-22 03:57 | Previously failed, now passing |
+| The Messenger | 2 | 2025-11-22 03:55 | Previously failed, now passing |
+| The Witness | 2 | 2025-11-22 03:56 | Previously failed, now passing |
+| The Witness | 3 | 2025-11-22 03:47 | Previously failed, now passing |
+| The Witness | 6 | 2025-11-22 03:52 | Previously failed, now passing |
+| The Witness | 8 | 2025-11-22 03:58 | Previously failed, now passing |
+| The Witness | 9 | 2025-11-22 03:48 | Previously failed, now passing |
+| The Witness | 10 | 2025-11-22 04:15 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | 8 | 2025-11-22 04:03 | Previously failed, now passing |
+| shapez | 3 | 2025-11-22 03:48 | Previously failed, now passing |
+| shapez | 10 | 2025-11-22 04:15 | Previously failed, now passing |
 
 
 ## Notes
