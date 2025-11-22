@@ -785,12 +785,15 @@ export function smz3_CanAcquireAtLeast(snapshot, staticData, amount, rewardType)
   const settings = staticData.settings?.[playerSlot] || {};
   const rewardRegions = settings.reward_regions || {};
 
+  console.log(`[smz3_CanAcquireAtLeast] reward_regions exists: ${!!rewardRegions}, count: ${Object.keys(rewardRegions).length}`);
+
   // Find all regions that have rewards matching ANY bit in the mask
   const matchingRegions = [];
   for (const [regionName, rewardInfo] of Object.entries(rewardRegions)) {
     // Check if this region's reward type matches any bit in the mask
     if ((rewardInfo.reward_type & rewardType) !== 0) {
       matchingRegions.push({ name: regionName, rewardType: rewardInfo.reward_type });
+      console.log(`[smz3_CanAcquireAtLeast]   Matching region: ${regionName} (type=${rewardInfo.reward_type})`);
     }
   }
 
@@ -800,12 +803,13 @@ export function smz3_CanAcquireAtLeast(snapshot, staticData, amount, rewardType)
   let completableCount = 0;
   for (const region of matchingRegions) {
     const canCompleteRegion = checkRegionCompletion(snapshot, staticData, region.name);
+    console.log(`[smz3_CanAcquireAtLeast]   Region ${region.name}: canComplete=${canCompleteRegion}`);
     if (canCompleteRegion) {
       completableCount++;
     }
   }
 
-  console.log(`[smz3_CanAcquireAtLeast] ${completableCount} of ${matchingRegions.length} regions can be completed (need ${amount})`);
+  console.log(`[smz3_CanAcquireAtLeast] Result: ${completableCount} of ${matchingRegions.length} regions can be completed (need ${amount}) => ${completableCount >= amount}`);
 
   return completableCount >= amount;
 }
@@ -824,6 +828,19 @@ function evaluateSimpleRule(rule, snapshot, staticData) {
   switch (rule.type) {
     case 'constant':
       return !!rule.value;
+
+    case 'conditional':
+      // Handle conditional (ternary) expressions: test ? if_true : if_false
+      if (!rule.test) {
+        console.warn('[evaluateSimpleRule] conditional rule missing test');
+        return false;
+      }
+      const testResult = evaluateSimpleRule(rule.test, snapshot, staticData);
+      if (testResult) {
+        return rule.if_true ? evaluateSimpleRule(rule.if_true, snapshot, staticData) : true;
+      } else {
+        return rule.if_false ? evaluateSimpleRule(rule.if_false, snapshot, staticData) : false;
+      }
 
     case 'item_check':
       return hasItem(snapshot, staticData, rule.item);
@@ -1069,7 +1086,9 @@ function evaluateSimpleRule(rule, snapshot, staticData) {
 
 /**
  * Internal helper to check if a specific region can be completed.
- * This is similar to CanAcquire but checks a specific region by name instead of finding by reward type.
+ * A region can be completed if its boss location is accessible.
+ * We check the snapshot's locationAccessibility to avoid circular dependencies
+ * during reachability calculation.
  */
 function checkRegionCompletion(snapshot, staticData, regionName) {
   console.log(`[checkRegionCompletion] Checking region '${regionName}'`);
@@ -1173,15 +1192,22 @@ function checkRegionCompletion(snapshot, staticData, regionName) {
     return false;
   }
 
-  // Check if the location is accessible
-  if (bossLocation.access_rule) {
-    // Use the simple rule evaluator to handle common rule types
-    const result = evaluateSimpleRule(bossLocation.access_rule, snapshot, staticData);
-    console.log(`[checkRegionCompletion] Evaluated boss location (${bossLocationName}) via evaluateSimpleRule:`, result);
-    return result;
-  } else {
-    // No access rule means always accessible
-    console.log(`[checkRegionCompletion] No access rule for boss location, returning true for region '${regionName}'`);
-    return true;
+  // Check if the boss location is accessible using the precomputed locationAccessibility
+  // This avoids circular dependencies during reachability calculation
+  if (snapshot.locationAccessibility) {
+    const isAccessible = snapshot.locationAccessibility[bossLocationName] === true;
+    console.log(`[checkRegionCompletion] Boss location '${bossLocationName}' accessible (from snapshot): ${isAccessible}`);
+    return isAccessible;
   }
+
+  // Fallback: if locationAccessibility isn't available, evaluate the access rule
+  if (bossLocation.access_rule) {
+    const result = evaluateSimpleRule(bossLocation.access_rule, snapshot, staticData);
+    console.log(`[checkRegionCompletion] Evaluated boss location (${bossLocationName}) via evaluateSimpleRule: ${result}`);
+    return result;
+  }
+
+  // No access rule means always accessible
+  console.log(`[checkRegionCompletion] No access rule for boss location, returning true for region '${regionName}'`);
+  return true;
 }
