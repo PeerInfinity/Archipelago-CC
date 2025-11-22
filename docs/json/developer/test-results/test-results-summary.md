@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-22 05:34:12
+**Generated:** 2025-11-22 17:47:55
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -12,14 +12,14 @@ This summary combines results from four types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 74/78 passed (94.9%)
+- **Minimal Test:** 73/76 passed (96.1%)
 - **Full Test:** 71/78 passed (91.0%)
 - **Multiplayer Test:** 58/78 passed (74.4%)
 - **Multiworld Test:** 45/78 passed (57.7%)
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 11 game(s), 34 total failure(s)
+- **Minimal Spoilers Test:** 0 game(s), 0 total failure(s)
 - **Full Spoilers Test:** 25 game(s), 50 total failure(s)
 
 ### Combined Test Results
@@ -27,8 +27,8 @@ This summary combines results from four types of tests:
 - **Templates passing all 4 tests:** 45/78 (57.7%)
 - **Templates passing 3 tests:** 11/78 (14.1%)
 - **Templates passing 2 tests:** 16/78 (20.5%)
-- **Templates passing 1 test:** 3/78 (3.8%)
-- **Templates passing 0 tests:** 3/78 (3.8%)
+- **Templates passing 1 test:** 2/78 (2.6%)
+- **Templates passing 0 tests:** 4/78 (5.1%)
 
 ## Test Results
 
@@ -40,7 +40,7 @@ This summary combines results from four types of tests:
 | Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
 | Aquaria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | ArchipIDLE | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
-| Blasphemous | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
+| Blasphemous | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ⚫ |
 | Bumper Stickers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
@@ -76,7 +76,7 @@ This summary combines results from four types of tests:
 | Metamath | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ⚫ |
 | Muse Dash | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
 | Noita | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
-| Ocarina of Time | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ⚫ |
+| Ocarina of Time | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Old School Runescape | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ |
 | Overcooked! 2 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Paint | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
@@ -110,7 +110,7 @@ This summary combines results from four types of tests:
 | Yacht Dice | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Yu-Gi-Oh! 2006 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
-| Zillion | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ⚫ |
+| Zillion | ❓ N/A | ❌ Failed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | shapez | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 
 ## Multi-Template Test Results
