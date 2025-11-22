@@ -17,15 +17,15 @@ on:
         type: boolean
         default: true
 
-      enable_retest:
-        description: 'Enable retesting of failed tests'
-        type: boolean
-        default: true
-
-      retest_iterations:
-        description: 'Number of times to retest failed tests'
-        type: number
-        default: 2
+      retest_failures:
+        description: 'Retest failed tests'
+        type: choice
+        options:
+          - 'disabled'
+          - '1-time'
+          - '2-times'
+          - '3-times'
+        default: '2-times'
 
       enable_minimal_spoiler:
         description: 'Run minimal spoiler tests'
@@ -55,15 +55,15 @@ on:
           - 'parallel-10-jobs'
         default: 'single-job'
 
-      enable_minimal_multitemplate:
-        description: 'Run minimal multitemplate tests'
-        type: boolean
-        default: false
-
-      enable_full_multitemplate:
-        description: 'Run full multitemplate tests'
-        type: boolean
-        default: false
+      multitemplate_tests:
+        description: 'Multitemplate tests'
+        type: choice
+        options:
+          - 'skip'
+          - 'minimal-only'
+          - 'full-only'
+          - 'both'
+        default: 'both'
 
 permissions:
   contents: write  # Allow pushing commits and creating branches
@@ -196,11 +196,12 @@ jobs:
             -p
 
       - name: Retest minimal spoiler failures (seed-1 mode)
-        if: inputs.spoiler_mode == 'seed-1' && inputs.enable_retest
+        if: inputs.spoiler_mode == 'seed-1' && inputs.retest_failures != 'disabled'
         run: |
           source .venv/bin/activate
-          for i in $(seq 1 ${{ inputs.retest_iterations }}); do
-            echo "Retest iteration $i of ${{ inputs.retest_iterations }}"
+          ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
+          for i in $(seq 1 $ITERATIONS); do
+            echo "Retest iteration $i of $ITERATIONS"
             python scripts/test/test-all-templates.py \
               --retest \
               --retest-seed-specific \
@@ -225,11 +226,12 @@ jobs:
             -p
 
       - name: Retest minimal spoiler failures (seeds-1-10 mode)
-        if: inputs.spoiler_mode == 'seeds-1-10' && inputs.enable_retest
+        if: inputs.spoiler_mode == 'seeds-1-10' && inputs.retest_failures != 'disabled'
         run: |
           source .venv/bin/activate
-          for i in $(seq 1 ${{ inputs.retest_iterations }}); do
-            echo "Retest iteration $i of ${{ inputs.retest_iterations }}"
+          ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
+          for i in $(seq 1 $ITERATIONS); do
+            echo "Retest iteration $i of $ITERATIONS"
             python scripts/test/test-all-templates.py \
               --retest \
               --retest-seed-specific \
@@ -384,11 +386,12 @@ jobs:
             -p
 
       - name: Retest full spoiler failures (seed-1 mode)
-        if: inputs.spoiler_mode == 'seed-1' && inputs.enable_retest
+        if: inputs.spoiler_mode == 'seed-1' && inputs.retest_failures != 'disabled'
         run: |
           source .venv/bin/activate
-          for i in $(seq 1 ${{ inputs.retest_iterations }}); do
-            echo "Retest iteration $i of ${{ inputs.retest_iterations }}"
+          ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
+          for i in $(seq 1 $ITERATIONS); do
+            echo "Retest iteration $i of $ITERATIONS"
             python scripts/test/test-all-templates.py \
               --retest \
               --retest-seed-specific \
@@ -413,11 +416,12 @@ jobs:
             -p
 
       - name: Retest full spoiler failures (seeds-1-10 mode)
-        if: inputs.spoiler_mode == 'seeds-1-10' && inputs.enable_retest
+        if: inputs.spoiler_mode == 'seeds-1-10' && inputs.retest_failures != 'disabled'
         run: |
           source .venv/bin/activate
-          for i in $(seq 1 ${{ inputs.retest_iterations }}); do
-            echo "Retest iteration $i of ${{ inputs.retest_iterations }}"
+          ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
+          for i in $(seq 1 $ITERATIONS); do
+            echo "Retest iteration $i of $ITERATIONS"
             python scripts/test/test-all-templates.py \
               --retest \
               --retest-seed-specific \
@@ -906,7 +910,7 @@ jobs:
     name: Test Minimal Multitemplate Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     needs: [setup-branch, combine-multiworld, combine-multiworld-single]
-    if: always() && inputs.enable_minimal_multitemplate && (needs.setup-branch.result == 'success')
+    if: always() && (inputs.multitemplate_tests == 'minimal-only' || inputs.multitemplate_tests == 'both') && (needs.setup-branch.result == 'success')
     timeout-minutes: 180
 
     strategy:
@@ -994,7 +998,7 @@ jobs:
     name: Combine Minimal Multitemplate Results
     runs-on: ubuntu-latest
     needs: test-minimal-multitemplate
-    if: always() && inputs.enable_minimal_multitemplate
+    if: always() && (inputs.multitemplate_tests == 'minimal-only' || inputs.multitemplate_tests == 'both')
 
     steps:
       - name: Checkout test-results-update branch
@@ -1052,7 +1056,7 @@ jobs:
     name: Test Full Multitemplate Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     needs: [setup-branch, combine-minimal-multitemplate]
-    if: always() && inputs.enable_full_multitemplate && (needs.setup-branch.result == 'success')
+    if: always() && (inputs.multitemplate_tests == 'full-only' || inputs.multitemplate_tests == 'both') && (needs.setup-branch.result == 'success')
     timeout-minutes: 180
 
     strategy:
@@ -1140,7 +1144,7 @@ jobs:
     name: Combine Full Multitemplate Results
     runs-on: ubuntu-latest
     needs: test-full-multitemplate
-    if: always() && inputs.enable_full_multitemplate
+    if: always() && (inputs.multitemplate_tests == 'full-only' || inputs.multitemplate_tests == 'both')
 
     steps:
       - name: Checkout test-results-update branch
