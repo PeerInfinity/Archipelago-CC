@@ -688,48 +688,11 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
 
       // Check if the location is accessible
       if (bossLocation.access_rule) {
-        // For simple rules (AND with item_check), evaluate manually to avoid recursive evaluateRule calls
-        // which can cause issues with the snapshot interface
-        const rule = bossLocation.access_rule;
-
-        // Handle simple AND rules with item_check conditions
-        if (rule.type === 'and' && rule.conditions) {
-          const allItemChecks = rule.conditions.every(cond => cond.type === 'item_check');
-          if (allItemChecks) {
-            // Log what items are being checked and what the player has
-            const itemChecks = rule.conditions.map(cond => ({
-              item: cond.item,
-              required: true,
-              has: hasItem(snapshot, staticData, cond.item),
-              count: getItemCount(snapshot, staticData, cond.item)
-            }));
-            console.log(`[smz3_CanAcquire] Checking items for ${bossLocationName}:`, JSON.stringify(itemChecks));
-
-            // Manually check all items
-            const result = rule.conditions.every(cond => hasItem(snapshot, staticData, cond.item));
-            console.log(`[smz3_CanAcquire] Manually evaluated boss location (${bossLocationName}):`, result);
-            console.log(`[smz3_CanAcquire] Returning ${result} for region '${regionName}'`);
-            return result;
-          }
-        }
-
-        // For other rule types, try using evaluateRule if available
-        if (snapshot.evaluateRule) {
-          try {
-            const result = snapshot.evaluateRule(bossLocation.access_rule);
-            console.log(`[smz3_CanAcquire] Evaluated boss location (${bossLocationName}) via evaluateRule:`, result);
-            console.log(`[smz3_CanAcquire] Returning ${result} for region '${regionName}'`);
-            return result;
-          } catch (error) {
-            console.error(`[smz3_CanAcquire] Error evaluating boss location (${bossLocationName}):`, error);
-            console.log(`[smz3_CanAcquire] Returning false for region '${regionName}' due to error`);
-            return false;
-          }
-        } else {
-          // snapshot.evaluateRule not available and rule is complex
-          console.warn(`[smz3_CanAcquire] Cannot evaluate complex rule for ${bossLocationName}, snapshot.evaluateRule not available`);
-          return false;
-        }
+        // Use the simple rule evaluator to handle common rule types
+        const result = evaluateSimpleRule(bossLocation.access_rule, snapshot, staticData);
+        console.log(`[smz3_CanAcquire] Evaluated boss location (${bossLocationName}) via evaluateSimpleRule:`, result);
+        console.log(`[smz3_CanAcquire] Returning ${result} for region '${regionName}'`);
+        return result;
       } else {
         // No access rule means always accessible
         console.log(`[smz3_CanAcquire] No access rule for boss location, returning true for region '${regionName}'`);
@@ -800,6 +763,101 @@ export function smz3_CanAcquireAll(snapshot, staticData, rewardType) {
 
   console.log(`[smz3_CanAcquireAll] All ${matchingRegions.length} regions can be completed, returning true`);
   return true;
+}
+
+/**
+ * Simple rule evaluator for use within helper functions.
+ * Handles basic rule types without needing snapshot.evaluateRule().
+ * @param {Object} rule - The rule to evaluate
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static data
+ * @returns {boolean} Result of rule evaluation
+ */
+function evaluateSimpleRule(rule, snapshot, staticData) {
+  if (!rule) return true; // null/undefined rules are always true
+
+  switch (rule.type) {
+    case 'constant':
+      return !!rule.value;
+
+    case 'item_check':
+      return hasItem(snapshot, staticData, rule.item);
+
+    case 'and':
+      if (!rule.conditions || !Array.isArray(rule.conditions)) {
+        return true;
+      }
+      // All conditions must be true
+      return rule.conditions.every(cond => evaluateSimpleRule(cond, snapshot, staticData));
+
+    case 'or':
+      if (!rule.conditions || !Array.isArray(rule.conditions)) {
+        return false;
+      }
+      // At least one condition must be true
+      return rule.conditions.some(cond => evaluateSimpleRule(cond, snapshot, staticData));
+
+    case 'not':
+      if (!rule.condition) {
+        return true;
+      }
+      return !evaluateSimpleRule(rule.condition, snapshot, staticData);
+
+    case 'region_check':
+      // Check if region is reachable
+      const regionName = typeof rule.region === 'string' ? rule.region : rule.region?.value;
+      return snapshot.regionReachability?.[regionName] === true;
+
+    case 'helper':
+      // Try to call the helper function
+      const helperName = rule.name;
+      const args = rule.args || [];
+
+      // Evaluate arguments recursively
+      const evaluatedArgs = args.map(arg => {
+        if (arg && typeof arg === 'object' && arg.type) {
+          // If it's a rule, evaluate it
+          return evaluateSimpleRule(arg, snapshot, staticData);
+        }
+        return arg;
+      });
+
+      // Call the helper function by name
+      // Check if the helper exists in the global scope (it's exported from this module)
+      if (typeof global !== 'undefined' && typeof global[helperName] === 'function') {
+        return global[helperName](snapshot, staticData, ...evaluatedArgs);
+      }
+
+      // Try window scope (browser)
+      if (typeof window !== 'undefined' && typeof window[helperName] === 'function') {
+        return window[helperName](snapshot, staticData, ...evaluatedArgs);
+      }
+
+      // Try calling it directly if it's defined in this module
+      // We need to handle special cases for the helpers defined in this file
+      switch (helperName) {
+        case 'smz3_CanAcquire':
+          return smz3_CanAcquire(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanAcquireAll':
+          return smz3_CanAcquireAll(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanLiftLight':
+          return smz3_CanLiftLight(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanLiftHeavy':
+          return smz3_CanLiftHeavy(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanKillManyEnemies':
+          return smz3_CanKillManyEnemies(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanBeatBoss':
+          return smz3_CanBeatBoss(snapshot, staticData, ...evaluatedArgs);
+        // Add more helpers as needed
+        default:
+          console.warn(`[evaluateSimpleRule] Unknown helper '${helperName}', returning false`);
+          return false;
+      }
+
+    default:
+      console.warn(`[evaluateSimpleRule] Unknown rule type '${rule.type}', returning false`);
+      return false;
+  }
 }
 
 /**
@@ -910,36 +968,10 @@ function checkRegionCompletion(snapshot, staticData, regionName) {
 
   // Check if the location is accessible
   if (bossLocation.access_rule) {
-    // For simple rules (AND with item_check), evaluate manually to avoid recursive evaluateRule calls
-    // which can cause issues with the snapshot interface
-    const rule = bossLocation.access_rule;
-
-    // Handle simple AND rules with item_check conditions
-    if (rule.type === 'and' && rule.conditions) {
-      const allItemChecks = rule.conditions.every(cond => cond.type === 'item_check');
-      if (allItemChecks) {
-        // Manually check all items
-        const result = rule.conditions.every(cond => hasItem(snapshot, staticData, cond.item));
-        console.log(`[checkRegionCompletion] Manually evaluated boss location (${bossLocationName}):`, result);
-        return result;
-      }
-    }
-
-    // For other rule types, try using evaluateRule if available
-    if (snapshot.evaluateRule) {
-      try {
-        const result = snapshot.evaluateRule(bossLocation.access_rule);
-        console.log(`[checkRegionCompletion] Evaluated boss location (${bossLocationName}) via evaluateRule:`, result);
-        return result;
-      } catch (error) {
-        console.error(`[checkRegionCompletion] Error evaluating boss location (${bossLocationName}):`, error);
-        return false;
-      }
-    } else {
-      // snapshot.evaluateRule not available and rule is complex
-      console.warn(`[checkRegionCompletion] Cannot evaluate complex rule for ${bossLocationName}, snapshot.evaluateRule not available`);
-      return false;
-    }
+    // Use the simple rule evaluator to handle common rule types
+    const result = evaluateSimpleRule(bossLocation.access_rule, snapshot, staticData);
+    console.log(`[checkRegionCompletion] Evaluated boss location (${bossLocationName}) via evaluateSimpleRule:`, result);
+    return result;
   } else {
     // No access rule means always accessible
     console.log(`[checkRegionCompletion] No access rule for boss location, returning true for region '${regionName}'`);
