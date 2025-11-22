@@ -22,6 +22,66 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         with open('/tmp/smz3_debug.log', 'a') as f:
             f.write("SMZ3 exporter __init__ called\n")
 
+    def get_progression_mapping(self, world) -> Dict[str, Any]:
+        """
+        Export progressive item mappings for SMZ3.
+
+        SMZ3 includes ALTTP content, so we export the ALTTP progressive item mappings.
+        This allows the frontend to properly handle items like:
+        - Progressive Sword -> Fighter Sword, Master Sword, Tempered Sword, Golden Sword
+        - Progressive Glove -> Power Glove, Titan's Mitt
+        - Progressive Shield -> Fighter Shield, Fire Shield, Mirror Shield
+        - Progressive Bow -> Bow, Silver Bow
+        - Progressive Mail -> Blue Mail, Red Mail
+        """
+        # Define the progressive item mappings based on ALTTP
+        # Format: { base_item: { items: [ { name, level }, ... ] } }
+        mapping_data = {
+            'ProgressiveSword': {
+                'base_item': 'ProgressiveSword',
+                'items': [
+                    {'name': 'Fighter Sword', 'level': 1, 'provides': ['Fighter Sword']},
+                    {'name': 'Master Sword', 'level': 2, 'provides': ['Master Sword', 'MasterSword']},
+                    {'name': 'Tempered Sword', 'level': 3, 'provides': ['Tempered Sword', 'TemperedSword']},
+                    {'name': 'Golden Sword', 'level': 4, 'provides': ['Golden Sword', 'GoldenSword']}
+                ]
+            },
+            'ProgressiveGlove': {
+                'base_item': 'ProgressiveGlove',
+                'items': [
+                    {'name': 'Power Glove', 'level': 1, 'provides': ['Power Glove', 'PowerGlove']},
+                    {'name': 'Titan\'s Mitt', 'level': 2, 'provides': ['Titan\'s Mitt', 'TitansMitt']}
+                ]
+            },
+            'ProgressiveShield': {
+                'base_item': 'ProgressiveShield',
+                'items': [
+                    {'name': 'Fighter Shield', 'level': 1, 'provides': ['Fighter Shield']},
+                    {'name': 'Fire Shield', 'level': 2, 'provides': ['Fire Shield']},
+                    {'name': 'Mirror Shield', 'level': 3, 'provides': ['Mirror Shield']}
+                ]
+            },
+            'ProgressiveBow': {
+                'base_item': 'ProgressiveBow',
+                'items': [
+                    {'name': 'Bow', 'level': 1, 'provides': ['Bow']},
+                    {'name': 'Silver Bow', 'level': 2, 'provides': ['Silver Bow', 'Silver Arrows']}
+                ]
+            },
+            'ProgressiveTunic': {
+                'base_item': 'ProgressiveTunic',
+                'items': [
+                    {'name': 'Blue Mail', 'level': 1, 'provides': ['Blue Mail', 'BlueMail']},
+                    {'name': 'Red Mail', 'level': 2, 'provides': ['Red Mail', 'RedMail']}
+                ]
+            }
+        }
+
+        # Note: Progressive Bow (Alt) not needed for SMZ3
+
+        logger.info(f"Exported {len(mapping_data)} progressive item types for SMZ3")
+        return mapping_data
+
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """
         Override to fix Card item classifications.
@@ -350,9 +410,11 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
             logger.info(f"Analyzing canAccess function for '{rule_target_name}'")
 
-            # Store the region name in the rule target so postprocess_rule can use it
-            # to inline region-specific methods like CanBeatBoss
+            # Store the region name and location object so postprocess_rule can use them
+            # to inline region-specific methods like CanBeatBoss and resolve GetLocation().ItemIs()
             self._current_location_region = loc_object.Region.Name if hasattr(loc_object, 'Region') else None
+            self._current_location_object = loc_object
+            self._current_location_name = rule_target_name
 
             # Analyze the canAccess function
             # This function has signature: lambda items: <requirements>
@@ -378,6 +440,8 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             return None
         finally:
             self._current_location_region = None
+            self._current_location_object = None
+            self._current_location_name = None
 
     def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -533,6 +597,58 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 obj = func.get('object')
                 method_name = func.get('attr')
 
+                # Handle GetLocation().ItemIs() pattern - convert to runtime helper call
+                # Pattern: GetLocation("location_name").ItemIs(ItemType.KeyPD, world)
+                # This checks if the item placed at a specific location matches a given type
+                # We can't resolve this at export time because items aren't placed yet,
+                # so we convert it to a helper call that will be evaluated at runtime
+                if (isinstance(obj, dict) and obj.get('type') == 'helper' and
+                    (obj.get('name') == 'GetLocation' or obj.get('name') == 'smz3_GetLocation') and
+                    method_name == 'ItemIs'):
+
+                    logger.debug("Converting GetLocation().ItemIs() to runtime helper call")
+
+                    # Extract the location name and item type being checked
+                    get_location_args = obj.get('args', [])
+                    location_name_rule = None
+                    if get_location_args and len(get_location_args) > 0:
+                        location_name_rule = self.postprocess_rule(get_location_args[0])
+
+                    # Process the ItemType argument
+                    item_type_rule = None
+                    if filtered_args and len(filtered_args) > 0:
+                        item_type_arg = filtered_args[0]
+                        # Handle ItemType.KeyPD pattern (attribute access) - extract just the attribute name
+                        if item_type_arg.get('type') == 'attribute':
+                            item_type_name = item_type_arg.get('attr')
+                            item_type_rule = {'type': 'constant', 'value': item_type_name}
+                        else:
+                            item_type_rule = self.postprocess_rule(item_type_arg)
+
+                    if location_name_rule and item_type_rule:
+                        # Convert to a helper call pattern that evaluates:
+                        # smz3_GetLocation(location_name).ItemIs(item_type)
+                        # We need to restructure this as a function call that can be evaluated
+                        return {
+                            'type': 'function_call',
+                            'function': {
+                                'type': 'attribute',
+                                'object': {
+                                    'type': 'helper',
+                                    'name': 'smz3_GetLocation',
+                                    'args': [location_name_rule]
+                                },
+                                'attr': 'ItemIs'
+                            },
+                            'args': [item_type_rule]
+                        }
+
+                    logger.warning("Could not fully process GetLocation().ItemIs() pattern")
+                    return {
+                        'type': 'constant',
+                        'value': False
+                    }
+
                 # Handle items.MethodName() - convert to helper call
                 if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'items':
                     logger.debug(f"Converting items.{method_name}() to helper call")
@@ -614,6 +730,26 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                         return {
                             'type': 'helper',
                             'name': 'smz3_CanAcquire',
+                            'args': [reward_type_arg]
+                        }
+
+                # Handle self.world.CanAcquireAll(reward_type) - convert to helper
+                # or world.CanAcquireAll(reward_type) where world was converted to constant
+                if (method_name == 'CanAcquireAll' and
+                    (isinstance(obj, dict) and obj.get('type') == 'attribute' and
+                     obj.get('attr') == 'world' and
+                     isinstance(obj.get('object'), dict) and
+                     obj['object'].get('type') == 'name' and
+                     obj['object'].get('name') == 'self' or
+                     # Handle case where world became a constant
+                     isinstance(obj, dict) and obj.get('type') == 'constant')):
+
+                    if filtered_args and len(filtered_args) > 0:
+                        reward_type_arg = self.postprocess_rule(filtered_args[0])
+                        logger.debug(f"Converting world.CanAcquireAll() to helper")
+                        return {
+                            'type': 'helper',
+                            'name': 'smz3_CanAcquireAll',
                             'args': [reward_type_arg]
                         }
 
