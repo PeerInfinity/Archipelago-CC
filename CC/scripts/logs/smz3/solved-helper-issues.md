@@ -74,3 +74,64 @@ if (itemName === 'Sword') {
 
 **Files Modified**:
 - frontend/modules/shared/gameLogic/alttp/alttpLogic.js (lines 109-113)
+
+## Issue: Ganon's Tower region not reachable in sphere 12.4
+
+**Status**: SOLVED
+
+**Description**:
+After fixing the Sword alias issue, the test progressed to sphere 12.4 where Ganon's Tower region failed to become reachable. The entrance requires:
+- MoonPearl ✓
+- Dark World Death Mountain East region ✓
+- `CanAcquireAtLeast(7, 24)` - at least 7 crystal dungeons completable
+- `CanAcquireAtLeast(4, 480)` - at least 4 boss token regions completable
+
+**Root Causes**:
+1. **Missing conditional rule type**: Missile (Draygon) boss location used `conditional` rule type which wasn't implemented in `evaluateSimpleRule()`, causing Maridia Inner (boss token region) to incorrectly return false
+2. **Incorrect region completion check**: `checkRegionCompletion()` was re-evaluating access rules instead of checking precomputed accessibility, causing inconsistent results during reachability calculation
+
+**Solution Implemented**:
+1. **Added conditional rule type support** in `evaluateSimpleRule()`:
+   ```javascript
+   case 'conditional':
+     const testResult = evaluateSimpleRule(rule.test, snapshot, staticData);
+     if (testResult) {
+       return rule.if_true ? evaluateSimpleRule(rule.if_true, snapshot, staticData) : true;
+     } else {
+       return rule.if_false ? evaluateSimpleRule(rule.if_false, snapshot, staticData) : false;
+     }
+   ```
+
+2. **Improved checkRegionCompletion()** to use locationAccessibility:
+   ```javascript
+   // Check precomputed accessibility first (avoids circular dependencies)
+   if (snapshot.locationAccessibility) {
+     const isAccessible = snapshot.locationAccessibility[bossLocationName] === true;
+     return isAccessible;
+   }
+   // Fallback to evaluateSimpleRule if not available
+   ```
+
+**Test Results**:
+- `CanAcquireAtLeast(7, 24)` now correctly returns true (7 of 7 crystal regions) ✓
+- `CanAcquireAtLeast(4, 480)` now correctly returns true (4 of 4 boss token regions) ✓
+- Ganon's Tower entrance rule satisfied ✓
+- Test progressed from sphere 12.4 to 13.3 (major progress) ✓
+
+**Crystal Regions Checked** (all 7 accessible):
+1. Tower of Hera (CrystalRed)
+2. Palace of Darkness (CrystalRed)
+3. Desert Palace (CrystalBlue)
+4. Turtle Rock (CrystalBlue)
+5. Norfair Lower East (CrystalBlue)
+6. Ice Palace (CrystalBlue)
+7. Wrecked Ship (CrystalBlue)
+
+**Boss Token Regions Checked** (all 4 accessible):
+1. Brinstar Kraid (BossTokenKraid)
+2. Maridia Inner (BossTokenPhantoon) - Fixed by conditional support
+3. Thieves' Town (BossTokenRidley)
+4. Misery Mire (BossTokenDraygon)
+
+**Files Modified**:
+- frontend/modules/shared/gameLogic/smz3/smz3Logic.js (conditional rule type, checkRegionCompletion improvements)
