@@ -262,6 +262,14 @@ export class TestSpoilerUI {
 
     this.log('info', 'Test Spoiler UI Initializing...');
 
+    // Read player ID from URL parameter early (for multiworld tests)
+    const urlParams = new URLSearchParams(window.location.search);
+    const playerParam = urlParams.get('player');
+    if (playerParam) {
+      this.playerId = parseInt(playerParam, 10);
+      this.log('info', `Player ID set from URL parameter: ${this.playerId}`);
+    }
+
     // Clear container and set up basic structure initially
     this.testSpoilersContainer.innerHTML = '';
     this.ensureLogContainerReady();
