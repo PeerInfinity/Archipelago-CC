@@ -106,6 +106,12 @@ export function has(snapshot, staticData, itemName) {
   // Check inventory
   if (!snapshot.inventory) return false;
 
+  // Special handling for generic item aliases that mean "any level"
+  // "Sword" means "any sword level" (ProgressiveSword > 0)
+  if (itemName === 'Sword') {
+    return (snapshot.inventory['ProgressiveSword'] || 0) > 0;
+  }
+
   // Direct item check
   if ((snapshot.inventory[itemName] || 0) > 0) {
     return true;
