@@ -4,13 +4,13 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-21 17:34:38
+**Generated:** 2025-11-22 04:28:13
 
 ## Summary
 
 - **Total Games:** 78
-- **Passed:** 56 (71.8%)
-- **Failed:** 22 (28.2%)
+- **Passed:** 58 (74.4%)
+- **Failed:** 20 (25.6%)
 
 ## Test Results
 
@@ -36,7 +36,7 @@
 | DOOM II | ✅ Passed | 0 | ✅ | 453 | 453 | ✅ | 453 | 453 | ✅ | ⚫ |
 | Dark Souls III | ✅ Passed | 0 | ✅ | 100 | 100 | ✅ | 100 | 100 | ✅ | ⚫ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | ✅ | 180 | 180 | ✅ | 180 | 180 | ✅ | ⚫ |
-| Factorio | ❌ Failed | 0 | ❌ | 33 | 179 | ❌ | 0 | 186 | ✅ | ✅ |
+| Factorio | ✅ Passed | 0 | ✅ | 186 | 179 | ✅ | 186 | 186 | ✅ | ✅ |
 | Faxanadu | ✅ Passed | 0 | ✅ | 114 | 110 | ✅ | 114 | 114 | ✅ | ⚫ |
 | Final Fantasy Mystic Quest | ❌ Failed | 0 | ❌ | 13 | 251 | ❌ | 0 | 299 | ✅ | ⚫ |
 | Heretic | ✅ Passed | 0 | ✅ | 502 | 502 | ✅ | 502 | 502 | ⚫ | ⚫ |
@@ -44,7 +44,7 @@
 | Inscryption | ✅ Passed | 0 | ✅ | 100 | 100 | ✅ | 100 | 100 | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | ✅ | 239 | 239 | ✅ | 239 | 239 | ✅ | ✅ |
 | Kingdom Hearts | ✅ Passed | 0 | ✅ | 440 | 440 | ✅ | 440 | 440 | ✅ | ✅ |
-| Kingdom Hearts 2 | ❌ Failed | 0 | ❌ | 701 | 643 | ❌ | 0 | 705 | ✅ | ✅ |
+| Kingdom Hearts 2 | ✅ Passed | 0 | ✅ | 705 | 643 | ✅ | 705 | 705 | ✅ | ✅ |
 | Kirby's Dream Land 3 | ❌ Failed | 0 | ❌ | 27 | 65 | ❌ | 0 | 567 | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | ✅ | 298 | 291 | ✅ | 298 | 298 | ✅ | ✅ |
 | Lingo | ✅ Passed | 0 | ✅ | 156 | 155 | ✅ | 156 | 156 | ✅ | ✅ |
@@ -63,21 +63,21 @@
 | Overcooked! 2 | ❌ Failed | 0 | ❌ | 9 | 43 | ❌ | 0 | 215 | ✅ | ✅ |
 | Paint | ✅ Passed | 0 | ✅ | 130 | 130 | ✅ | 130 | 130 | ✅ | ✅ |
 | Pokemon Emerald | ❌ Failed | 0 | ❌ | 359 | 203 | ❌ | 0 | 1061 | ✅ | ✅ |
-| Pokemon Red and Blue | ❌ Failed | 0 | ❌ | 210 | 161 | ❌ | 0 | 1010 | ✅ | ✅ |
+| Pokemon Red and Blue | ❌ Failed | 0 | ❌ | 209 | 161 | ❌ | 0 | 1010 | ✅ | ✅ |
 | Raft | ✅ Passed | 0 | ✅ | 155 | 154 | ✅ | 155 | 155 | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | ✅ | 223 | 221 | ✅ | 223 | 223 | ⚫ | ⚫ |
-| SMZ3 | ❌ Failed | 0 | ❌ | 204 | 316 | ❌ | 0 | 316 | ✅ | ✅ |
+| SMZ3 | ❌ Failed | 0 | ❌ | 234 | 316 | ❌ | 0 | 316 | ✅ | ✅ |
 | Saving Princess | ✅ Passed | 0 | ✅ | 37 | 36 | ✅ | 37 | 37 | ✅ | ⚫ |
 | Secret of Evermore | ✅ Passed | 0 | ✅ | 340 | 339 | ✅ | 340 | 340 | ✅ | ✅ |
 | Shivers | ❌ Failed | 0 | ❌ | 112 | 76 | ❌ | 0 | 114 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | ✅ | 207 | 206 | ✅ | 207 | 207 | ✅ | ⚫ |
 | Starcraft 2 | ✅ Passed | 0 | ✅ | 130 | 130 | ✅ | 130 | 130 | ✅ | ✅ |
-| Stardew Valley | ❌ Failed | 0 | ❌ | 67 | 491 | ❌ | 0 | 500 | ✅ | ⚫ |
+| Stardew Valley | ❌ Failed | 0 | ❌ | 359 | 203 | ❌ | 0 | 1061 | ✅ | ⚫ |
 | Subnautica | ❌ Failed | 0 | ❌ | 0 | 0 | ❌ | 0 | 135 | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | ✅ | 149 | 149 | ✅ | 149 | 149 | ✅ | ✅ |
 | Super Mario Land 2 | ❌ Failed | 0 | ❌ | 53 | 59 | ❌ | 0 | 60 | ✅ | ✅ |
 | Super Mario World | ✅ Passed | 0 | ✅ | 108 | 108 | ✅ | 108 | 108 | ✅ | ⚫ |
-| Super Metroid | ❌ Failed | 0 | ❌ | 6 | 101 | ❌ | 0 | 109 | ✅ | ✅ |
+| Super Metroid | ❌ Failed | 0 | ❌ | 1 | 101 | ❌ | 0 | 109 | ✅ | ✅ |
 | TUNIC | ✅ Passed | 0 | ✅ | 303 | 302 | ✅ | 303 | 303 | ✅ | ⚫ |
 | Terraria | ✅ Passed | 0 | ✅ | 244 | 63 | ✅ | 244 | 244 | ✅ | ✅ |
 | The Legend of Zelda | ✅ Passed | 0 | ✅ | 165 | 155 | ✅ | 165 | 165 | ✅ | ✅ |
