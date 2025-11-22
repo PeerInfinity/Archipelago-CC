@@ -550,7 +550,7 @@ export class StateManager {
    * @param {boolean} addItems - Whether to add the location's item to inventory (default: true)
    */
   checkLocation(locationName, addItems = true) {
-    LocationCheckingModule.checkLocation(this, locationName, addItems);
+    return LocationCheckingModule.checkLocation(this, locationName, addItems);
   }
 
   /**

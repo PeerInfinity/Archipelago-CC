@@ -1069,8 +1069,42 @@ export const evaluateRule = (rule, context, depth = 0) => {
       }
 
       case 'compare': {
-        const left = evaluateRule(rule.left, context, depth + 1);
-        const right = evaluateRule(rule.right, context, depth + 1);
+        // Special handling for item_check in comparisons
+        // When item_check (without a count field) is used as an operand in a comparison,
+        // we need the item COUNT, not a boolean. This handles cases like KeyPD >= 4.
+        let left = rule.left;
+        let right = rule.right;
+
+        // If left is an item_check without a count field, get the item count directly
+        if (left && left.type === 'item_check' && left.count === undefined) {
+          const itemName = evaluateRule(left.item, context, depth + 1);
+          if (itemName === undefined) {
+            left = undefined;
+          } else if (typeof context.countItem === 'function') {
+            left = context.countItem(itemName) || 0;
+          } else {
+            log('warn', '[evaluateRule] context.countItem not available for item_check in compare');
+            left = undefined;
+          }
+        } else {
+          left = evaluateRule(left, context, depth + 1);
+        }
+
+        // If right is an item_check without a count field, get the item count directly
+        if (right && right.type === 'item_check' && right.count === undefined) {
+          const itemName = evaluateRule(right.item, context, depth + 1);
+          if (itemName === undefined) {
+            right = undefined;
+          } else if (typeof context.countItem === 'function') {
+            right = context.countItem(itemName) || 0;
+          } else {
+            log('warn', '[evaluateRule] context.countItem not available for item_check in compare');
+            right = undefined;
+          }
+        } else {
+          right = evaluateRule(right, context, depth + 1);
+        }
+
         const op = rule.op;
 
         // If either operand is undefined, the comparison result is undefined

@@ -19,6 +19,16 @@ class FactorioGameExportHandler(BaseGameExportHandler):
         """Expand Factorio-specific helper functions."""
         return None  # Will implement specific helpers as we discover them
 
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Get Factorio-specific settings."""
+        # Get base settings
+        settings = super().get_settings_data(world, multiworld, player)
+
+        # Factorio uses base settings, no special overrides needed
+        # Event items should be added naturally when checking locations
+
+        return settings
+
     def get_game_info(self, world) -> Dict[str, Any]:
         """Get Factorio game information including required variables."""
         from worlds.factorio.Technologies import required_technologies

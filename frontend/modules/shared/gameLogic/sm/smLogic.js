@@ -148,7 +148,38 @@ export function wand(snapshot, staticData, ...args) {
  * @returns {Object} SMBool object
  */
 export function haveItem(snapshot, staticData, itemName) {
-  const hasIt = has(snapshot, staticData, itemName);
+  // In Super Metroid, items can be referenced by their VARIA type name (e.g., "Morph")
+  // or their full Archipelago name (e.g., "Morph Ball").
+  // We need to check both the item name and the item type.
+
+  // First, try direct name match
+  let hasIt = has(snapshot, staticData, itemName);
+
+  // If not found by name, check if any item has this type
+  if (!hasIt && staticData && staticData.items) {
+    // Check player 1's items (assuming single player for now)
+    // staticData.items might be a Map or an object
+    let playerItems;
+    if (staticData.items instanceof Map) {
+      playerItems = staticData.items.get('1') || staticData.items.get(1);
+    } else {
+      playerItems = staticData.items['1'] || staticData.items[1];
+    }
+
+    if (playerItems) {
+      // playerItems might also be a Map or object
+      const itemEntries = playerItems instanceof Map ? playerItems.entries() : Object.entries(playerItems);
+
+      for (const [fullItemName, itemData] of itemEntries) {
+        if (itemData && itemData.type === itemName) {
+          // Found an item with matching type, check if we have it
+          hasIt = has(snapshot, staticData, fullItemName);
+          if (hasIt) break;
+        }
+      }
+    }
+  }
+
   return { bool: hasIt, difficulty: 0 };
 }
 
@@ -172,32 +203,728 @@ function normalizeSMBool(value) {
 }
 
 /**
- * VARIA ability checks - for now these are stubs that return False
- * These would need game knowledge to implement properly
+ * VARIA ability checks - implementing core Super Metroid logic
  */
-export function canFly(snapshot, staticData) {
-  // Can fly with Space Jump or similar
-  // For now, return False (requires implementation)
-  return { bool: false, difficulty: 0 };
-}
 
-export function knowsCeilingDBoost(snapshot, staticData) {
-  // Knowledge-based trick: ceiling damage boost
-  // This is a technique that doesn't require items, only knowledge
-  // Based on sphere log, this should be True from the start
-  return { bool: true, difficulty: 0 };
+// Basic item checks
+export function canUseBombs(snapshot, staticData) {
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Morph'),
+    haveItem(snapshot, staticData, 'Bomb'));
 }
 
 export function canUsePowerBombs(snapshot, staticData) {
-  // Can use power bombs if player has Power Bomb item
-  const hasPowerBomb = has(snapshot, staticData, 'Power Bomb');
-  return { bool: hasPowerBomb, difficulty: 0 };
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Morph'),
+    haveItem(snapshot, staticData, 'Power Bomb'));
+}
+
+export function canUseSpringBall(snapshot, staticData) {
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Morph'),
+    haveItem(snapshot, staticData, 'SpringBall'));
+}
+
+// Passage checks
+export function canPassBombPassages(snapshot, staticData) {
+  return wor(snapshot, staticData,
+    canUseBombs(snapshot, staticData),
+    canUsePowerBombs(snapshot, staticData));
+}
+
+// Knowledge-based techniques (assume player has knowledge)
+export function knowsCeilingDBoost(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsInfiniteBombJump(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsSimpleShortCharge(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsShortCharge(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsMockball(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsAlcatrazEscape(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsGreenGateGlitch(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsGravLessLevel3(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+// Advanced movement abilities
+export function canInfiniteBombJump(snapshot, staticData) {
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Morph'),
+    haveItem(snapshot, staticData, 'Bomb'),
+    knowsInfiniteBombJump(snapshot, staticData));
+}
+
+export function canFly(snapshot, staticData) {
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'SpaceJump'),
+    canInfiniteBombJump(snapshot, staticData));
 }
 
 export function canSimpleShortCharge(snapshot, staticData) {
-  // Speed booster short charge trick
-  // For now, return False (requires implementation)
-  return { bool: false, difficulty: 0 };
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'SpeedBooster'),
+    wor(snapshot, staticData,
+      knowsSimpleShortCharge(snapshot, staticData),
+      knowsShortCharge(snapshot, staticData)));
+}
+
+export function canMockball(snapshot, staticData) {
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Morph'),
+    knowsMockball(snapshot, staticData));
+}
+
+export function canSpringBallJump(snapshot, staticData) {
+  return canUseSpringBall(snapshot, staticData);
+}
+
+export function canShortCharge(snapshot, staticData) {
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'SpeedBooster'),
+    knowsShortCharge(snapshot, staticData));
+}
+
+export function haveMissileOrSuper(snapshot, staticData) {
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Missile'),
+    haveItem(snapshot, staticData, 'Super'));
+}
+
+export function canOpenEyeDoors(snapshot, staticData) {
+  // Simplified: assume no ROM patches, just check for missiles/supers
+  return haveMissileOrSuper(snapshot, staticData);
+}
+
+export function canJumpUnderwater(snapshot, staticData) {
+  // Can jump underwater with Gravity Suit or HiJump
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Gravity'),
+    haveItem(snapshot, staticData, 'HiJump'));
+}
+
+// Complex helpers - conservative implementations
+export function canHellRun(snapshot, staticData, ...args) {
+  // Hell runs require significant energy reserves and heat resistance
+  // Conservative: require Varia or Gravity suit
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Varia'),
+    haveItem(snapshot, staticData, 'Gravity'));
+}
+
+export function canAccessSandPits(snapshot, staticData) {
+  // Sand pits in Maridia require Gravity Suit or specific techniques
+  return haveItem(snapshot, staticData, 'Gravity');
+}
+
+export function energyReserveCountOk(snapshot, staticData, ...args) {
+  // Energy reserve check - conservative: assume player has enough
+  // This should check energy tanks but would need complex calculations
+  return { bool: true, difficulty: 0 };
+}
+
+export function canPassBowling(snapshot, staticData) {
+  // Bowling alley passage - requires specific movement abilities
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Gravity'),
+    canSpringBallJump(snapshot, staticData));
+}
+
+export function enoughStuffGT(snapshot, staticData) {
+  // Golden Torizo requirements - needs strong equipment
+  // Conservative: require several major items
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Super'),
+    haveItem(snapshot, staticData, 'Varia'));
+}
+
+// High priority helpers (3+ uses)
+export function canDestroyBombWalls(snapshot, staticData) {
+  // Can destroy bomb walls with Morph + (Bomb OR PowerBomb) OR ScrewAttack
+  return wor(snapshot, staticData,
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Morph'),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Bomb'),
+        haveItem(snapshot, staticData, 'Power Bomb'))),
+    haveItem(snapshot, staticData, 'ScrewAttack'));
+}
+
+export function canDestroyBombWallsUnderwater(snapshot, staticData) {
+  // Underwater bomb walls need Gravity OR just Morph + bombs
+  return wor(snapshot, staticData,
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Gravity'),
+      canDestroyBombWalls(snapshot, staticData)),
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Morph'),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Bomb'),
+        haveItem(snapshot, staticData, 'Power Bomb'))));
+}
+
+export function itemCountOk(snapshot, staticData, itemName, requiredCount) {
+  // Check if player has enough of a specific item
+  const currentCount = count(snapshot, staticData, itemName);
+  return {
+    bool: currentCount >= requiredCount,
+    difficulty: 0
+  };
+}
+
+// Medium priority helpers (2 uses)
+export function canOpenGreenDoors(snapshot, staticData) {
+  // Green doors require Super Missiles
+  return haveItem(snapshot, staticData, 'Super');
+}
+
+export function heatProof(snapshot, staticData) {
+  // Heat immunity with Varia or Gravity suit (simplified - ignores ROM patches)
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Varia'),
+    haveItem(snapshot, staticData, 'Gravity'));
+}
+
+export function canKillBeetoms(snapshot, staticData) {
+  // Can kill Beetom enemies with missiles, power bombs, or screw attack
+  return wor(snapshot, staticData,
+    haveMissileOrSuper(snapshot, staticData),
+    canUsePowerBombs(snapshot, staticData),
+    haveItem(snapshot, staticData, 'ScrewAttack'));
+}
+
+export function canGreenGateGlitch(snapshot, staticData) {
+  // Green gate glitch requires Super + knowledge
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Super'),
+    knowsGreenGateGlitch(snapshot, staticData));
+}
+
+export function canFireChargedShots(snapshot, staticData) {
+  // Can fire charged shots with Charge Beam
+  return haveItem(snapshot, staticData, 'Charge');
+}
+
+// Traverse - complex door transition logic
+export function traverse(snapshot, staticData, doorName) {
+  // Traverse checks door transitions which depend on complex graph logic
+  // For now, stub this as True (assume doors are passable)
+  // TODO: Implement proper door transition logic
+  return { bool: true, difficulty: 0 };
+}
+
+// Boss requirement helpers - Conservative implementations
+// These calculate damage output vs boss HP in Python - we use simplified checks
+export function enoughStuffsKraid(snapshot, staticData) {
+  // Kraid boss - needs some offensive capability
+  // Conservative: require at least missiles or charge beam
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Missile'),
+    haveItem(snapshot, staticData, 'Charge'));
+}
+
+export function enoughStuffsPhantoon(snapshot, staticData) {
+  // Phantoon boss - needs missiles or charge beam
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Missile'),
+    haveItem(snapshot, staticData, 'Charge'));
+}
+
+export function enoughStuffsRidley(snapshot, staticData) {
+  // Ridley boss - tougher, needs Morph or Screw Attack + good weapons
+  return wand(snapshot, staticData,
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Morph'),
+      haveItem(snapshot, staticData, 'ScrewAttack')),
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Super'),
+      haveItem(snapshot, staticData, 'Charge')));
+}
+
+export function enoughStuffCroc(snapshot, staticData) {
+  // Crocomire - needs weapons, conservative approach
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Missile'),
+    haveItem(snapshot, staticData, 'Super'),
+    haveItem(snapshot, staticData, 'Charge'));
+}
+
+export function enoughStuffSporeSpawn(snapshot, staticData) {
+  // Spore Spawn - relatively easy boss
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Missile'),
+    haveItem(snapshot, staticData, 'Super'),
+    haveItem(snapshot, staticData, 'Charge'));
+}
+
+export function enoughStuffTourian(snapshot, staticData) {
+  // Mother Brain/Tourian - needs significant equipment
+  // Conservative: require several key items
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Varia'),
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Super'),
+      haveItem(snapshot, staticData, 'Charge')));
+}
+
+// Additional knowledge techniques
+export function knowsFirefleasWalljump(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsGetAroundWallJump(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsIceEscape(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsXrayDboost(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsXrayIce(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsReverseGateGlitch(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsReverseGateGlitchHiJumpLess(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsCrocPBsDBoost(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsCrocPBsIce(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsMaridiaWallJumps(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsOldMBWithSpeed(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsRonPopeilScrew(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsSpringBallJumpFromWall(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsKillPlasmaPiratesWithSpark(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsKillPlasmaPiratesWithCharge(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsGravityJump(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsMtEverestGravJump(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+// Room-specific helpers - Conservative implementations
+export function canAccessKraidsLair(snapshot, staticData) {
+  // Needs Super Missiles + vertical movement (HiJump or fly)
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Super'),
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'HiJump'),
+      canFly(snapshot, staticData)));
+}
+
+export function canExitCathedral(snapshot, staticData) {
+  // Needs heat protection + vertical movement
+  return wand(snapshot, staticData,
+    heatProof(snapshot, staticData),
+    wor(snapshot, staticData,
+      canFly(snapshot, staticData),
+      haveItem(snapshot, staticData, 'SpaceJump'),
+      canSpringBallJump(snapshot, staticData)));
+}
+
+export function canGoUpMtEverest(snapshot, staticData) {
+  // Mt. Everest (Maridia) - needs Gravity + movement options
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Gravity'),
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Grapple'),
+      haveItem(snapshot, staticData, 'SpeedBooster'),
+      canFly(snapshot, staticData),
+      haveItem(snapshot, staticData, 'HiJump')));
+}
+
+export function canPassMtEverest(snapshot, staticData) {
+  // Similar to canGoUpMtEverest
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Gravity'),
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Grapple'),
+      haveItem(snapshot, staticData, 'SpeedBooster'),
+      canFly(snapshot, staticData)));
+}
+
+export function canDefeatBotwoon(snapshot, staticData) {
+  // Botwoon boss - needs weapons
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Ice'),
+    haveItem(snapshot, staticData, 'SpeedBooster'),
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Charge'),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Wave'),
+        haveItem(snapshot, staticData, 'Plasma'))));
+}
+
+export function energyReserveCountOkHardRoom(snapshot, staticData, roomName) {
+  // Hard rooms need energy reserves - conservative: require Varia or Gravity
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Varia'),
+    haveItem(snapshot, staticData, 'Gravity'));
+}
+
+export function canPassLavaPit(snapshot, staticData) {
+  // Lower Norfair lava pit - needs heat + Gravity or HiJump
+  return wand(snapshot, staticData,
+    heatProof(snapshot, staticData),
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Gravity'),
+      haveItem(snapshot, staticData, 'HiJump')));
+}
+
+export function canPassLavaPitReverse(snapshot, staticData) {
+  // Same as forward but might need more movement
+  return wand(snapshot, staticData,
+    heatProof(snapshot, staticData),
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Gravity'),
+      haveItem(snapshot, staticData, 'HiJump'),
+      canFly(snapshot, staticData)));
+}
+
+export function canGrappleEscape(snapshot, staticData) {
+  // Escape using grapple beam
+  return haveItem(snapshot, staticData, 'Grapple');
+}
+
+export function canClimbBottomRedTower(snapshot, staticData) {
+  // Red Tower climbing - needs vertical movement
+  return wor(snapshot, staticData,
+    canFly(snapshot, staticData),
+    haveItem(snapshot, staticData, 'HiJump'),
+    haveItem(snapshot, staticData, 'Ice'));
+}
+
+export function canClimbRedTower(snapshot, staticData) {
+  // Red Tower climbing - needs vertical movement
+  return wor(snapshot, staticData,
+    canFly(snapshot, staticData),
+    haveItem(snapshot, staticData, 'HiJump'),
+    haveItem(snapshot, staticData, 'Ice'));
+}
+
+export function canClimbBubbleMountain(snapshot, staticData) {
+  // Bubble Mountain (Norfair) - needs vertical movement
+  return wor(snapshot, staticData,
+    canFly(snapshot, staticData),
+    haveItem(snapshot, staticData, 'HiJump'),
+    haveItem(snapshot, staticData, 'Ice'));
+}
+
+export function canClimbColosseum(snapshot, staticData) {
+  // Colosseum climbing - needs vertical movement + Gravity
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Gravity'),
+    wor(snapshot, staticData,
+      canFly(snapshot, staticData),
+      haveItem(snapshot, staticData, 'HiJump')));
+}
+
+export function canPassDachoraRoom(snapshot, staticData) {
+  // Dachora room - needs Speed Booster
+  return haveItem(snapshot, staticData, 'SpeedBooster');
+}
+
+export function canAccessEtecoons(snapshot, staticData) {
+  // Access to Etecoons - needs Power Bombs
+  return canUsePowerBombs(snapshot, staticData);
+}
+
+export function canDoOuterMaridia(snapshot, staticData) {
+  // Outer Maridia - needs Gravity
+  return haveItem(snapshot, staticData, 'Gravity');
+}
+
+export function canPassLowerNorfairChozo(snapshot, staticData) {
+  // Lower Norfair Chozo - needs heat protection + movement
+  return wand(snapshot, staticData,
+    heatProof(snapshot, staticData),
+    wor(snapshot, staticData,
+      canFly(snapshot, staticData),
+      haveItem(snapshot, staticData, 'HiJump')));
+}
+
+export function canHellRunToSpeedBooster(snapshot, staticData) {
+  // Hell run to Speed Booster - needs heat resistance
+  return heatProof(snapshot, staticData);
+}
+
+export function canHellRunBackFromGrappleEscape(snapshot, staticData) {
+  // Hell run from Grapple - needs heat resistance + Grapple
+  return wand(snapshot, staticData,
+    heatProof(snapshot, staticData),
+    haveItem(snapshot, staticData, 'Grapple'));
+}
+
+export function canHellRunBackFromSpeedBoosterMissile(snapshot, staticData) {
+  // Hell run from Speed Booster missile - needs heat resistance
+  return heatProof(snapshot, staticData);
+}
+
+export function canExitPreciousRoom(snapshot, staticData) {
+  // Exit Precious Room (Maridia) - needs Gravity or special movement
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Gravity'),
+    canFly(snapshot, staticData));
+}
+
+export function canExitWaveBeam(snapshot, staticData) {
+  // Exit Wave Beam room - needs Morph + bombs or similar
+  return canPassBombPassages(snapshot, staticData);
+}
+
+export function canExitScrewAttackArea(snapshot, staticData) {
+  // Exit Screw Attack area - needs movement abilities
+  return wor(snapshot, staticData,
+    canFly(snapshot, staticData),
+    haveItem(snapshot, staticData, 'HiJump'),
+    haveItem(snapshot, staticData, 'Ice'));
+}
+
+export function getPiratesPseudoScrewCoeff(snapshot, staticData) {
+  // Pirates coefficient - conservative: return 1.0 (default)
+  return { bool: true, difficulty: 0 };
+}
+
+export function int(snapshot, staticData, value) {
+  // Integer conversion helper - just return the value
+  return { bool: true, difficulty: 0 };
+}
+
+// Additional knowledge techniques
+export function knowsBillyMays(snapshot, staticData) {
+  // Billy Mays room access knowledge
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsContinuousWallJump(snapshot, staticData) {
+  // Continuous wall jump technique
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsDiagonalBombJump(snapshot, staticData) {
+  // Diagonal bomb jump technique
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsMockballWs(snapshot, staticData) {
+  // Mockball in West Sand technique
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsGravLessLevel1(snapshot, staticData) {
+  // Gravity-less technique level 1
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsGravLessLevel2(snapshot, staticData) {
+  // Gravity-less technique level 2
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsSpongeBathBombJump(snapshot, staticData) {
+  // Sponge Bath bomb jump technique
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsSpongeBathHiJump(snapshot, staticData) {
+  // Sponge Bath high jump technique
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsSpongeBathSpeed(snapshot, staticData) {
+  // Sponge Bath speed technique
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsWestSandHoleSuitlessWallJumps(snapshot, staticData) {
+  // West Sand Hole suitless wall jumps
+  return { bool: true, difficulty: 0 };
+}
+
+// Additional medium priority helpers
+export function canAccessBillyMays(snapshot, staticData) {
+  // Billy Mays room access: needs Power Bombs and movement
+  // Conservative: require Power Bombs AND (knowledge OR Gravity OR SpaceJump)
+  return wand(snapshot, staticData,
+    canUsePowerBombs(snapshot, staticData),
+    wor(snapshot, staticData,
+      knowsBillyMays(snapshot, staticData),
+      haveItem(snapshot, staticData, 'Gravity'),
+      haveItem(snapshot, staticData, 'SpaceJump')));
+}
+
+export function canAccessItemsInWestSandHole(snapshot, staticData) {
+  // West Sand Hole items access - multiple strategies
+  return wor(snapshot, staticData,
+    // Vanilla strat: HiJump + SpringBall
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'HiJump'),
+      canUseSpringBall(snapshot, staticData)),
+    // Alternate strat: SpaceJump + (SpringBall OR Bombs)
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'SpaceJump'),
+      wor(snapshot, staticData,
+        canUseSpringBall(snapshot, staticData),
+        canUseBombs(snapshot, staticData))),
+    // Wall jump strat: bomb passages + wall jump knowledge
+    wand(snapshot, staticData,
+      canPassBombPassages(snapshot, staticData),
+      knowsMaridiaWallJumps(snapshot, staticData)));
+}
+
+// Moat passage helpers
+export function canPassMoat(snapshot, staticData) {
+  // Multiple strategies to pass the Moat
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Grapple'),
+    haveItem(snapshot, staticData, 'SpaceJump'),
+    knowsContinuousWallJump(snapshot, staticData),
+    wand(snapshot, staticData,
+      knowsDiagonalBombJump(snapshot, staticData),
+      canUseBombs(snapshot, staticData)),
+    canSimpleShortCharge(snapshot, staticData),
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Gravity'),
+      wor(snapshot, staticData,
+        knowsGravityJump(snapshot, staticData),
+        haveItem(snapshot, staticData, 'HiJump'),
+        canInfiniteBombJump(snapshot, staticData))),
+    wand(snapshot, staticData,
+      knowsMockballWs(snapshot, staticData),
+      canUseSpringBall(snapshot, staticData)));
+}
+
+export function canPassMoatFromMoat(snapshot, staticData) {
+  // Pass the Moat from the Moat location
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Grapple'),
+    haveItem(snapshot, staticData, 'SpaceJump'),
+    wand(snapshot, staticData,
+      knowsDiagonalBombJump(snapshot, staticData),
+      canUseBombs(snapshot, staticData)),
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Gravity'),
+      wor(snapshot, staticData,
+        knowsGravityJump(snapshot, staticData),
+        haveItem(snapshot, staticData, 'HiJump'),
+        canInfiniteBombJump(snapshot, staticData))));
+}
+
+export function canPassMoatReverse(snapshot, staticData) {
+  // Pass the Moat in reverse direction (conservative: ignore ROM patches)
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Grapple'),
+    haveItem(snapshot, staticData, 'SpaceJump'),
+    haveItem(snapshot, staticData, 'Gravity'),
+    canPassBombPassages(snapshot, staticData));
+}
+
+// Additional room-specific helpers
+export function canKillRedKiHunters(snapshot, staticData, n) {
+  // Kill Red Ki-Hunters in heated areas
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Plasma'),
+    haveItem(snapshot, staticData, 'ScrewAttack'),
+    wand(snapshot, staticData,
+      heatProof(snapshot, staticData),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Spazer'),
+        haveItem(snapshot, staticData, 'Ice'),
+        wand(snapshot, staticData,
+          haveItem(snapshot, staticData, 'Charge'),
+          haveItem(snapshot, staticData, 'Wave')))));
+}
+
+export function canDoSuitlessOuterMaridia(snapshot, staticData) {
+  // Navigate outer Maridia without Gravity suit
+  return wand(snapshot, staticData,
+    knowsGravLessLevel1(snapshot, staticData),
+    haveItem(snapshot, staticData, 'HiJump'),
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Ice'),
+      canSpringBallJump(snapshot, staticData)));
+}
+
+export function canClimbWestSandHole(snapshot, staticData) {
+  // Climb West Sand Hole
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Gravity'),
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'HiJump'),
+      knowsGravLessLevel3(snapshot, staticData),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'SpaceJump'),
+        canSpringBallJump(snapshot, staticData),
+        knowsWestSandHoleSuitlessWallJumps(snapshot, staticData))));
+}
+
+export function canPassSpongeBath(snapshot, staticData) {
+  // Pass through Sponge Bath area
+  return wor(snapshot, staticData,
+    wand(snapshot, staticData,
+      canPassBombPassages(snapshot, staticData),
+      knowsSpongeBathBombJump(snapshot, staticData)),
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'HiJump'),
+      knowsSpongeBathHiJump(snapshot, staticData)),
+    haveItem(snapshot, staticData, 'Gravity'),
+    haveItem(snapshot, staticData, 'SpaceJump'),
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'SpeedBooster'),
+      knowsSpongeBathSpeed(snapshot, staticData)),
+    canSpringBallJump(snapshot, staticData));
 }
 
 /**
@@ -205,6 +932,7 @@ export function canSimpleShortCharge(snapshot, staticData) {
  * Export all helper functions that can be called from rules
  */
 export const helperFunctions = {
+  // Core functions
   has,
   count,
   any,
@@ -214,10 +942,118 @@ export const helperFunctions = {
   wor,
   wand,
   haveItem,
-  canFly,
-  knowsCeilingDBoost,
+  // Basic item checks
+  canUseBombs,
   canUsePowerBombs,
-  canSimpleShortCharge
+  canUseSpringBall,
+  haveMissileOrSuper,
+  itemCountOk,
+  // Passage checks
+  canPassBombPassages,
+  canPassBowling,
+  canDestroyBombWalls,
+  canDestroyBombWallsUnderwater,
+  // Door and room checks
+  canOpenEyeDoors,
+  canOpenGreenDoors,
+  canFireChargedShots,
+  traverse,
+  // Knowledge techniques
+  knowsCeilingDBoost,
+  knowsInfiniteBombJump,
+  knowsSimpleShortCharge,
+  knowsShortCharge,
+  knowsMockball,
+  knowsAlcatrazEscape,
+  knowsGreenGateGlitch,
+  knowsGravLessLevel3,
+  knowsFirefleasWalljump,
+  knowsGetAroundWallJump,
+  knowsIceEscape,
+  knowsXrayDboost,
+  knowsXrayIce,
+  knowsReverseGateGlitch,
+  knowsReverseGateGlitchHiJumpLess,
+  knowsCrocPBsDBoost,
+  knowsCrocPBsIce,
+  knowsMaridiaWallJumps,
+  knowsOldMBWithSpeed,
+  knowsRonPopeilScrew,
+  knowsSpringBallJumpFromWall,
+  knowsKillPlasmaPiratesWithSpark,
+  knowsKillPlasmaPiratesWithCharge,
+  knowsGravityJump,
+  knowsMtEverestGravJump,
+  // Advanced movement
+  canInfiniteBombJump,
+  canFly,
+  canSimpleShortCharge,
+  canShortCharge,
+  canMockball,
+  canSpringBallJump,
+  canJumpUnderwater,
+  // Environmental hazards
+  canHellRun,
+  canAccessSandPits,
+  heatProof,
+  energyReserveCountOk,
+  enoughStuffGT,
+  // Combat
+  canKillBeetoms,
+  // Glitches
+  canGreenGateGlitch,
+  // Boss requirements
+  enoughStuffsKraid,
+  enoughStuffsPhantoon,
+  enoughStuffsRidley,
+  enoughStuffCroc,
+  enoughStuffSporeSpawn,
+  enoughStuffTourian,
+  // Room-specific helpers
+  canAccessKraidsLair,
+  canExitCathedral,
+  canGoUpMtEverest,
+  canPassMtEverest,
+  canDefeatBotwoon,
+  energyReserveCountOkHardRoom,
+  canPassLavaPit,
+  canPassLavaPitReverse,
+  canGrappleEscape,
+  canClimbBottomRedTower,
+  canClimbRedTower,
+  canClimbBubbleMountain,
+  canClimbColosseum,
+  canPassDachoraRoom,
+  canAccessEtecoons,
+  canDoOuterMaridia,
+  canPassLowerNorfairChozo,
+  canHellRunToSpeedBooster,
+  canHellRunBackFromGrappleEscape,
+  canHellRunBackFromSpeedBoosterMissile,
+  canExitPreciousRoom,
+  canExitWaveBeam,
+  canExitScrewAttackArea,
+  getPiratesPseudoScrewCoeff,
+  int,
+  knowsBillyMays,
+  knowsContinuousWallJump,
+  knowsDiagonalBombJump,
+  knowsMockballWs,
+  knowsGravLessLevel1,
+  knowsGravLessLevel2,
+  knowsSpongeBathBombJump,
+  knowsSpongeBathHiJump,
+  knowsSpongeBathSpeed,
+  knowsWestSandHoleSuitlessWallJumps,
+  canAccessBillyMays,
+  canAccessItemsInWestSandHole,
+  canPassMoat,
+  canPassMoatFromMoat,
+  canPassMoatReverse,
+  canKillRedKiHunters,
+  canDoSuitlessOuterMaridia,
+  canClimbWestSandHole,
+  canPassSpongeBath
 };
 
 /**

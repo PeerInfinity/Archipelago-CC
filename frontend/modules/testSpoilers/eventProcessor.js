@@ -165,16 +165,10 @@ export class EventProcessor {
         // Use accumulated data from sphereState
         // Check game settings to determine which items to use
         const staticData = stateManager.getStaticData();
-        const useResolvedItems = staticData?.settings?.use_resolved_items || false;
+        const useResolvedItems = staticData?.settings?.[this.playerId]?.use_resolved_items || false;
 
         const base_items = sphereData.inventoryDetails?.base_items || {};
         const resolved_items = sphereData.inventoryDetails?.resolved_items || {};
-
-        // DEBUG: Log what we got from sphere data (use event.sphere_index since context isn't defined yet)
-        this.logCallback('info', `[Sphere ${event.sphere_index}] base_items: ${JSON.stringify(base_items)}`);
-        this.logCallback('info', `[Sphere ${event.sphere_index}] resolved_items: ${JSON.stringify(resolved_items)}`);
-        this.logCallback('info', `[Sphere ${event.sphere_index}] previousInventory: ${JSON.stringify(this.previousInventory)}`);
-        this.logCallback('info', `[Sphere ${event.sphere_index}] use_resolved_items: ${useResolvedItems}`);
 
         let inventory_from_log;
 
@@ -240,7 +234,7 @@ export class EventProcessor {
           // Add newly discovered items from the sphere log to the state manager
           // This is only done for games that set add_sphere_items_upfront flag (like Blasphemous)
           // Most games get items naturally from checking locations
-          const addItemsUpfront = staticData?.settings?.add_sphere_items_upfront || false;
+          const addItemsUpfront = staticData?.settings?.[this.playerId]?.add_sphere_items_upfront || false;
 
           if (addItemsUpfront && newlyAddedItems.length > 0) {
             this.logCallback('info', `Adding ${newlyAddedItems.length} items from sphere log to inventory...`);
@@ -252,6 +246,111 @@ export class EventProcessor {
             }
             // Wait for state to stabilize after adding items
             await stateManager.pingWorker(`sphere_${context.sphere_number}_items_added`, 10000);
+
+            // CRITICAL: Trigger reachability update after adding items
+            // The items were added but reachability hasn't been recalculated yet
+            await stateManager.recalculateAccessibility();
+
+            // Wait for reachability update to complete
+            await stateManager.pingWorker(`sphere_${context.sphere_number}_reachability_updated`, 10000);
+
+            // Get fresh snapshot after reachability update
+            const snapshot = await stateManager.getFullSnapshot();
+
+            // CRITICAL: For add_sphere_items_upfront mode, do the comparison NOW,
+            // before checking any locations, because the sphere log shows what's
+            // accessible with just the items added upfront
+
+            // Compare using the snapshot we just got
+            const locationComparisonResult = await this.comparisonEngine.compareAccessibleLocations(
+              accessible_from_log,
+              snapshot,
+              this.playerId,
+              context
+            );
+
+            // Compare regions too
+            const regionComparisonResult = await this.comparisonEngine.compareAccessibleRegions(
+              accessible_regions_from_log,
+              snapshot,
+              this.playerId,
+              context
+            );
+
+            // Store comparison results
+            comparisonResult = locationComparisonResult && regionComparisonResult;
+
+            // If there was a mismatch, trigger analysis
+            if (!locationComparisonResult) {
+              const mismatchDetails = this.comparisonEngine.getMismatchDetails();
+              if (mismatchDetails && mismatchDetails.type === 'locations') {
+                this.currentEventMismatchDetails.push({
+                  type: mismatchDetails.type,
+                  context: mismatchDetails.context,
+                  missingFromState: mismatchDetails.missingFromState,
+                  extraInState: mismatchDetails.extraInState,
+                  logAccessibleCount: mismatchDetails.logAccessibleCount,
+                  stateAccessibleCount: mismatchDetails.stateAccessibleCount,
+                  inventoryUsed: mismatchDetails.inventoryUsed
+                });
+
+                if (mismatchDetails.missingFromState && mismatchDetails.missingFromState.length > 0) {
+                  this.analysisReporter.analyzeFailingLocations(
+                    mismatchDetails.missingFromState,
+                    mismatchDetails.staticData,
+                    mismatchDetails.currentWorkerSnapshot,
+                    mismatchDetails.snapshotInterface,
+                    'MISSING_FROM_STATE',
+                    this.playerId
+                  );
+                }
+                if (mismatchDetails.extraInState && mismatchDetails.extraInState.length > 0) {
+                  this.analysisReporter.analyzeFailingLocations(
+                    mismatchDetails.extraInState,
+                    mismatchDetails.staticData,
+                    mismatchDetails.currentWorkerSnapshot,
+                    mismatchDetails.snapshotInterface,
+                    'EXTRA_IN_STATE',
+                    this.playerId
+                  );
+                }
+              }
+            }
+
+            if (!regionComparisonResult) {
+              const mismatchDetails = this.comparisonEngine.getMismatchDetails();
+              if (mismatchDetails && mismatchDetails.type === 'regions') {
+                this.currentEventMismatchDetails.push({
+                  type: mismatchDetails.type,
+                  context: mismatchDetails.context,
+                  missingFromState: mismatchDetails.missingFromState,
+                  extraInState: mismatchDetails.extraInState,
+                  logAccessibleCount: mismatchDetails.logAccessibleCount,
+                  stateAccessibleCount: mismatchDetails.stateAccessibleCount
+                });
+
+                if (mismatchDetails.missingFromState && mismatchDetails.missingFromState.length > 0) {
+                  this.analysisReporter.analyzeFailingRegions(
+                    mismatchDetails.missingFromState,
+                    mismatchDetails.staticData,
+                    mismatchDetails.currentWorkerSnapshot,
+                    'MISSING_FROM_STATE'
+                  );
+                }
+                if (mismatchDetails.extraInState && mismatchDetails.extraInState.length > 0) {
+                  this.analysisReporter.analyzeFailingRegions(
+                    mismatchDetails.extraInState,
+                    mismatchDetails.staticData,
+                    mismatchDetails.currentWorkerSnapshot,
+                    'EXTRA_IN_STATE'
+                  );
+                }
+              }
+            }
+
+            // For add_sphere_items_upfront mode, we're done - don't check individual locations
+            // because the items are already added and we've done the comparison
+            break; // Exit the state_update case
           }
 
           // Check locations from current sphere one-by-one, allowing natural item acquisition
@@ -603,7 +702,7 @@ export class EventProcessor {
       const sphereData = this._getSphereDataFromSphereState(this.currentLogIndex);
       if (sphereData) {
         const staticData = stateManager.getStaticData();
-        const useResolvedItems = staticData?.settings?.use_resolved_items || false;
+        const useResolvedItems = staticData?.settings?.[String(this.playerId)]?.use_resolved_items || false;
 
         if (useResolvedItems) {
           this.previousInventory = JSON.parse(JSON.stringify(sphereData.inventoryDetails?.resolved_items || {}));
@@ -652,42 +751,27 @@ export class EventProcessor {
    * @param {boolean} addItems - Whether to add the item to inventory (defaults to true)
    */
   async checkLocationViaEvent(locationName, regionName = null, addItems = true) {
-    // Publish user:locationCheck event through the dispatcher
-    // This will be handled by stateManager's handleUserLocationCheckForStateManager
-    // Use window.eventDispatcher instance created in init.js
-    if (!window.eventDispatcher) {
-      this.logCallback('error', 'eventDispatcher not available on window');
-      return;
+    // Directly call stateManager's checkLocation method instead of using events
+    // This ensures we properly wait for the command to complete and get any errors
+    // Note: stateManager is imported at the top of this file as stateManagerProxySingleton
+    if (!stateManager) {
+      this.logCallback('error', 'stateManager not available');
+      throw new Error('stateManager not available');
     }
 
-    window.eventDispatcher.publish(
-      'testSpoilers', // originModuleId
-      'user:locationCheck', // eventName
-      {
-        locationName: locationName,
-        regionName: regionName,
-        addItems: addItems, // Pass through addItems parameter
-        originator: 'TestSpoilersModule',
-        originalDOMEvent: false,
-      },
-      { initialTarget: 'bottom' }
-    );
+    try {
+      // Call checkLocation and wait for it to complete
+      // This will throw an error if the location check is rejected
+      const result = await stateManager.checkLocation(locationName, addItems);
 
-    // Wait for the state to update by listening for the snapshot update event
-    // This ensures we don't proceed until the location check is processed
-    await new Promise((resolve) => {
-      const handler = () => {
-        this.eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
-        resolve();
-      };
-      this.eventBus.subscribe('stateManager:snapshotUpdated', handler, 'testSpoilers');
+      // Wait a brief moment for the snapshot to stabilize
+      await new Promise(resolve => setTimeout(resolve, 50));
 
-      // Add a safety timeout in case the snapshot update never comes
-      setTimeout(() => {
-        this.eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
-        resolve();
-      }, 5000); // 5 second timeout
-    });
+      return result;
+    } catch (error) {
+      this.logCallback('error', `Failed to check location "${locationName}": ${error.message}`);
+      throw error;
+    }
   }
 
   /**
@@ -877,7 +961,7 @@ export class EventProcessor {
 
     // Step 3: Process resolved_items (behavior depends on game settings)
     // Check if this game wants to use resolved_items
-    const useResolvedItems = staticData.settings?.use_resolved_items ?? false;
+    const useResolvedItems = staticData.settings?.[this.playerId]?.use_resolved_items ?? false;
 
     if (useResolvedItems) {
       // Old logic: Process resolved_items for games that need them (e.g., Blasphemous)

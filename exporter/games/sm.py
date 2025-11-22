@@ -244,17 +244,67 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         return False
 
+    def _contains_complex_helpers(self, rule: Dict[str, Any]) -> bool:
+        """Recursively check if a rule contains complex helper calls.
+
+        Simple helpers: SMBool, evalSMBool
+        Complex helpers: any VARIA logic methods like canPassTerminatorBombWall, haveItem, etc.
+
+        Returns True if any complex helpers are found.
+        """
+        if not rule or not isinstance(rule, dict):
+            return False
+
+        rule_type = rule.get('type')
+
+        # Check if this is a complex helper call
+        if rule_type == 'helper':
+            helper_name = rule.get('name', '')
+            # These are simple helpers that don't indicate item requirements
+            # 'rule' is an artifact from analyzer recursion limits
+            simple_helpers = {'SMBool', 'evalSMBool', 'rule'}
+            if helper_name not in simple_helpers:
+                # Any other helper is complex (haveItem, canPass*, traverse, etc.)
+                return True
+
+        # Check if this is a state_method call (also indicates requirements)
+        if rule_type == 'state_method':
+            method_name = rule.get('method', '')
+            # can_reach is fine, but other state methods indicate requirements
+            if method_name not in {'can_reach'}:
+                return True
+
+        # Recursively check nested structures
+        if rule_type in ['and', 'or']:
+            for cond in rule.get('conditions', []):
+                if self._contains_complex_helpers(cond):
+                    return True
+
+        if rule_type == 'not':
+            return self._contains_complex_helpers(rule.get('condition'))
+
+        if rule_type == 'helper':
+            for arg in rule.get('args', []):
+                if self._contains_complex_helpers(arg):
+                    return True
+
+        if rule_type == 'function_call':
+            for arg in rule.get('args', []):
+                if self._contains_complex_helpers(arg):
+                    return True
+
+        if rule_type == 'any_of' or rule_type == 'all_of':
+            if self._contains_complex_helpers(rule.get('element_rule')):
+                return True
+
+        return False
+
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Recursively expand and transform Super Metroid rules.
 
         Transforms self.evalSMBool() function calls into direct helper calls
         that the JavaScript frontend can execute. Also simplifies common patterns.
         """
-        # Debug: Print first few calls to understand what's coming in
-        SMGameExportHandler._expand_call_count += 1
-        if SMGameExportHandler._expand_call_count <= 5:
-            print(f"[SM expand_rule #{SMGameExportHandler._expand_call_count}] Called with rule type: {rule.get('type') if rule else 'None'}")
-
         if not rule:
             return rule
 
@@ -272,29 +322,33 @@ class SMGameExportHandler(GenericGameExportHandler):
                 # If first condition is accessFrom pattern, skip it and use only second
                 if self._check_accessFrom_pattern(first) or self._check_deeply_nested_any_of(first):
                     logger.info("SM: Found AND rule with accessFrom, checking Available part")
-                    print("[SM] Found AND rule with accessFrom pattern")
-
-                    # Check if this is a simple accessFrom (no item requirements)
-                    # Note: Currently all accessFrom patterns appear complex due to recursion
-                    # so this check always returns False. Kept for future improvement.
-                    is_simple = self._is_simple_accessFrom(first)
 
                     # Recursively expand the second condition (the Available part)
                     expanded = self.expand_rule(second)
 
                     # Check if the Available part is just evalSMBool(SMBool(True), ...)
                     if self._is_always_true_smbool(expanded):
-                        # For now, we need to determine if this location is accessible from the starting region
-                        # or if it requires items through accessFrom
-                        # Since we can't analyze accessFrom properly, we'll export the Available rule as-is
-                        # and let it evaluate (evalSMBool(SMBool(True), ...) should return True)
-                        logger.info("SM: Available is evalSMBool(SMBool(True), ...), preserving as-is")
-                        print("[SM] Preserving evalSMBool(SMBool(True), ...) for frontend evaluation")
-                        return expanded
+                        # The Available part has no requirements, so the actual requirements
+                        # are in the accessFrom comprehension.
+
+                        # Check if this is a simple accessFrom (just SMBool(True))
+                        if self._is_simple_accessFrom(first):
+                            # Simple case: accessFrom returns SMBool(True) for all regions
+                            # This means the location is accessible from the region with no item requirements
+                            logger.info("SM: Simple accessFrom detected (SMBool(True)) - exporting as True")
+                            return {'type': 'constant', 'value': True}
+
+                        # Complex accessFrom that we can't properly export
+                        # LIMITATION: We cannot reliably distinguish complex accessFrom requirements
+                        # (e.g., lambda sm: sm.canPassBombWall()) when analyzer recursion limits
+                        # corrupt the structure.
+                        #
+                        # Conservative approach: Export as False to prevent incorrect accessibility.
+                        logger.info("SM: Complex accessFrom with SMBool(True) Available - exporting as False (conservative)")
+                        return {'type': 'constant', 'value': False}
 
                     # If Available has actual requirements, use it
                     logger.info("SM: Using Available part with actual requirements")
-                    print("[SM] Using Available rule with requirements")
                     return expanded
 
         # Check for accessFrom patterns that hit recursion limits

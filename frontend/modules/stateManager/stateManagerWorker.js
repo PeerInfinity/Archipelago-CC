@@ -771,28 +771,41 @@ async function handleMessage(message) {
                 'info',
                 `[SMW] checkLocation: About to call stateManagerInstance.checkLocation("${locationName}", ${addItems})`
               );
-              stateManagerInstance.checkLocation(locationName, addItems);
+              const result = stateManagerInstance.checkLocation(locationName, addItems);
               // LOG 6: After calling instance.checkLocation
               log(
                 'info',
-                `[SMW] checkLocation: stateManagerInstance.checkLocation completed for "${locationName}".`
+                `[SMW] checkLocation: stateManagerInstance.checkLocation completed for "${locationName}". Result:`,
+                JSON.stringify(result)
               );
 
               // Only send query response if expectResponse is explicitly true
               if (message.expectResponse === true) {
-                log(
-                  'info',
-                  `[SMW] checkLocation: Sending success queryResponse for queryId ${message.queryId}`
-                );
-                self.postMessage({
-                  type: 'queryResponse',
-                  queryId: message.queryId,
-                  result: {
-                    success: true,
-                    locationName: locationName,
-                    status: 'processed_by_state_manager',
-                  },
-                });
+                if (result && result.success) {
+                  log(
+                    'info',
+                    `[SMW] checkLocation: Sending success queryResponse for queryId ${message.queryId}`
+                  );
+                  self.postMessage({
+                    type: 'queryResponse',
+                    queryId: message.queryId,
+                    result: {
+                      success: true,
+                      locationName: locationName,
+                      status: 'processed_by_state_manager',
+                    },
+                  });
+                } else {
+                  log(
+                    'warn',
+                    `[SMW] checkLocation: Location check was rejected. Reason: ${result?.reason || 'unknown'}`
+                  );
+                  self.postMessage({
+                    type: 'queryResponse',
+                    queryId: message.queryId,
+                    error: `Location check rejected: ${result?.reason || 'unknown'}. Location was not checked.`,
+                  });
+                }
               }
             } catch (error) {
               // LOG 7: In catch block for checkLocation
