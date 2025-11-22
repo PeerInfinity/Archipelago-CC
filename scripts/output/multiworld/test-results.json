@@ -6,7 +6,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-19T06:44:12.687371",
-    "last_updated": "2025-11-22T05:09:15.628328",
+    "last_updated": "2025-11-22T05:53:50.434661",
     "script_version": "1.0.0"
   },
   "results": {
@@ -16,7 +16,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 6.51,
+        "processing_time_seconds": 6.34,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -38,7 +38,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 19.85,
+        "processing_time_seconds": 19.69,
         "success": true,
         "total_players_tested": 1
       },
@@ -51,7 +51,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "A Hat in Time.yaml",
-      "timestamp": "2025-11-22T05:08:14.702588",
+      "timestamp": "2025-11-22T05:52:49.647268",
       "world_info": {
         "exporter_path": "exporter/games/ahit.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/ahit/ahitLogic.js",
@@ -68,7 +68,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 12.53,
+        "processing_time_seconds": 12.69,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -90,7 +90,7 @@
         },
         "players_failed": 1,
         "players_passed": 0,
-        "processing_time_seconds": 21.88,
+        "processing_time_seconds": 21.9,
         "success": false,
         "total_players_tested": 2
       },
@@ -103,7 +103,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "A Link to the Past.yaml",
-      "timestamp": "2025-11-22T05:08:41.189401",
+      "timestamp": "2025-11-22T05:53:15.816669",
       "world_info": {
         "exporter_path": "exporter/games/alttp.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
