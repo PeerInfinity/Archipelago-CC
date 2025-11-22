@@ -347,6 +347,11 @@ export function runBFSPass(sm) {
 
       const canTraverse = !exit.access_rule || ruleEvaluationResult;
 
+      // Debug logging for Turtle Rock issue (multiworld)
+      if (targetRegion && (targetRegion.includes('Turtle Rock') || fromRegion.includes('Turtle Rock'))) {
+        sm._logDebug(`[BFS] ${fromRegion} -> ${targetRegion}: canTraverse=${canTraverse}, ruleResult=${ruleEvaluationResult}, hasRule=${!!exit.access_rule}`);
+      }
+
       if (canTraverse) {
         // Region is now reachable
         sm.knownReachableRegions.add(targetRegion);

@@ -1091,8 +1091,8 @@ Act Completion (The Subcon Well) (Player1)
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
    =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
-   =>   Alpine Free Roam -> Battle of the Birds - Finale A: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 5: Connection 1
+   =>   Heating Up Mafia Town -> Battle of the Birds - Finale A: Connection 2
    =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
    =>   The Subcon Well
 Act Completion (The Twilight Bell) (Player1)
@@ -1132,9 +1132,10 @@ Act Completion (Time Rift - Gallery) (Player1)
    =>   Time Rift - Gallery
 Act Completion (Time Rift - Pipe) (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 3
-   =>   Queen Vanessa's Manor -> Time Rift - Village Portal - Entrance 4
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Time Rift - Village Portal - Entrance 5
    =>   Time Rift - Pipe
 Act Completion (Time Rift - The Lab) (Player1)
         Menu -> Save File -> Spaceship
@@ -2596,8 +2597,8 @@ Subcon Well - Above Chest (Player1)
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
    =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
-   =>   Alpine Free Roam -> Battle of the Birds - Finale A: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 5: Connection 1
+   =>   Heating Up Mafia Town -> Battle of the Birds - Finale A: Connection 2
    =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
    =>   The Subcon Well
 Subcon Well - Mushroom (Player1)
@@ -2605,8 +2606,8 @@ Subcon Well - Mushroom (Player1)
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
    =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
-   =>   Alpine Free Roam -> Battle of the Birds - Finale A: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 5: Connection 1
+   =>   Heating Up Mafia Town -> Battle of the Birds - Finale A: Connection 2
    =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
    =>   The Subcon Well
 Subcon Well - On Pipe (Player1)
@@ -2614,8 +2615,8 @@ Subcon Well - On Pipe (Player1)
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
    =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
-   =>   Alpine Free Roam -> Battle of the Birds - Finale A: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 5: Connection 1
+   =>   Heating Up Mafia Town -> Battle of the Birds - Finale A: Connection 2
    =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
    =>   The Subcon Well
 Swamp Palace - Big Chest (Player2)
