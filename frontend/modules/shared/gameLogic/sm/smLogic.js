@@ -453,9 +453,19 @@ export function itemCountOk(snapshot, staticData, itemName, requiredCount) {
 }
 
 // Medium priority helpers (2 uses)
+export function canOpenRedDoors(snapshot, staticData) {
+  // Red doors require Missiles or Super Missiles
+  return haveMissileOrSuper(snapshot, staticData);
+}
+
 export function canOpenGreenDoors(snapshot, staticData) {
   // Green doors require Super Missiles
   return haveItem(snapshot, staticData, 'Super');
+}
+
+export function canOpenYellowDoors(snapshot, staticData) {
+  // Yellow doors require Power Bombs
+  return canUsePowerBombs(snapshot, staticData);
 }
 
 export function heatProof(snapshot, staticData) {
@@ -485,12 +495,60 @@ export function canFireChargedShots(snapshot, staticData) {
   return haveItem(snapshot, staticData, 'Charge');
 }
 
-// Traverse - complex door transition logic
+// Traverse - door transition logic based on door colors
 export function traverse(snapshot, staticData, doorName) {
-  // Traverse checks door transitions which depend on complex graph logic
-  // For now, stub this as True (assume doors are passable)
-  // TODO: Implement proper door transition logic
-  return { bool: true, difficulty: 0 };
+  // Check if game_info data is available
+  if (!staticData?.game_info) {
+    console.warn(`[traverse] No game_info available in staticData for door: ${doorName}`);
+    return { bool: true, difficulty: 0 };  // Default to passable if no data
+  }
+
+  // Get player 1's game info (assuming single player for now)
+  const playerGameInfo = staticData.game_info['1'] || staticData.game_info[1];
+  const playerDoors = playerGameInfo?.doors;
+
+  if (!playerDoors) {
+    console.warn(`[traverse] No door data for player 1`);
+    return { bool: true, difficulty: 0 };
+  }
+
+  // Get the color of this specific door
+  const doorColor = playerDoors[doorName];
+  if (!doorColor) {
+    console.warn(`[traverse] Door '${doorName}' not found in door data`);
+    return { bool: true, difficulty: 0 };  // Default to passable if door not found
+  }
+
+  // Check door accessibility based on color
+  // Based on Python Door.traverse() implementation
+  if (doorColor === 'grey') {
+    // Grey doors (hidden) cannot be passed
+    return { bool: false, difficulty: 0 };
+  } else if (doorColor === 'red') {
+    // Red doors require missiles or supers
+    return canOpenRedDoors(snapshot, staticData);
+  } else if (doorColor === 'green') {
+    // Green doors require super missiles
+    return canOpenGreenDoors(snapshot, staticData);
+  } else if (doorColor === 'yellow') {
+    // Yellow doors require power bombs
+    return canOpenYellowDoors(snapshot, staticData);
+  } else if (doorColor === 'wave') {
+    // Wave beam doors
+    return haveItem(snapshot, staticData, 'Wave');
+  } else if (doorColor === 'spazer') {
+    // Spazer beam doors
+    return haveItem(snapshot, staticData, 'Spazer');
+  } else if (doorColor === 'plasma') {
+    // Plasma beam doors
+    return haveItem(snapshot, staticData, 'Plasma');
+  } else if (doorColor === 'ice') {
+    // Ice beam doors
+    return haveItem(snapshot, staticData, 'Ice');
+  } else {
+    // Blue doors (or any other color) - always passable
+    return { bool: true, difficulty: 0 };
+  }
 }
 
 // Boss requirement helpers - Conservative implementations
@@ -1017,7 +1075,9 @@ export const helperFunctions = {
   canDestroyBombWallsUnderwater,
   // Door and room checks
   canOpenEyeDoors,
+  canOpenRedDoors,
   canOpenGreenDoors,
+  canOpenYellowDoors,
   canFireChargedShots,
   traverse,
   // Knowledge techniques
