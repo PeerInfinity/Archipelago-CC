@@ -484,7 +484,7 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 return {
                     'type': 'constant',
                     'value': True
-                }
+                    }
 
             # Handle SMLogic.AttributeName - convert enum values to constants
             if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'SMLogic':
@@ -539,6 +539,15 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                         'type': 'constant',
                         'value': 0
                     }
+
+            # Handle ItemType.AttributeName - convert to constant with the attribute name as value
+            # This is used in GetLocation().ItemIs(ItemType.X) patterns
+            if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'ItemType':
+                logger.debug(f"Converting ItemType.{attr} to constant value '{attr}'")
+                return {
+                    'type': 'constant',
+                    'value': attr
+                }
 
             # Recursively process the object part of attribute access
             rule['object'] = self.postprocess_rule(obj)
@@ -857,5 +866,21 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 rule['function'] = self.postprocess_rule(rule['function'])
             if rule.get('args'):
                 rule['args'] = [self.postprocess_rule(arg) for arg in rule['args']]
+        elif rule.get('type') == 'any_of':
+            # Process any_of rules (all_of in Python) - recursively process element_rule and iterator_info
+            if rule.get('element_rule'):
+                rule['element_rule'] = self.postprocess_rule(rule['element_rule'])
+            if rule.get('iterator_info'):
+                iterator_info = rule['iterator_info']
+                # Process the iterator (list of values to iterate over)
+                if iterator_info.get('iterator'):
+                    iterator_info['iterator'] = self.postprocess_rule(iterator_info['iterator'])
+                # Process the target (variable name being iterated)
+                if iterator_info.get('target'):
+                    iterator_info['target'] = self.postprocess_rule(iterator_info['target'])
+        elif rule.get('type') == 'list':
+            # Process list rules - recursively process each element in the list
+            if rule.get('value') and isinstance(rule['value'], list):
+                rule['value'] = [self.postprocess_rule(elem) for elem in rule['value']]
 
         return rule
