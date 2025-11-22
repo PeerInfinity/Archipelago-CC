@@ -4,29 +4,29 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-21 20:21:09
+**Generated:** 2025-11-22 08:35:17
 
-**Source Data Created:** 2025-11-21T21:39:25.111132
+**Source Data Created:** 2025-11-22T05:34:12.594025
 
-**Source Data Last Updated:** 2025-11-21T21:39:25.111138
+**Source Data Last Updated:** 2025-11-22T05:34:12.594030
 
 ## Summary
 
 - **Total Games:** 1
 - **Total Template Configurations:** 174
-- **Passed Configurations:** 131 (75.3%)
-- **Failed Configurations:** 39 (22.4%)
+- **Passed Configurations:** 133 (76.4%)
+- **Failed Configurations:** 37 (21.3%)
 - **Invalid Configurations:** 4 (2.3%)
 
 ## A Link to the Past
 
-**Results:** 131/174 passed (75.3%)  
+**Results:** 133/174 passed (76.4%)  
 **Custom Exporter:** ✅ Yes | **Custom GameLogic:** ✅ Yes
 
 | Template | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress |
 |----------|-------------|------------|----------------|-------------|----------|
-| accessibility_full | ❌ Unknown | 0 | 0 | 22.1 | 0.0% |
-| accessibility_items | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| accessibility_full | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| accessibility_items | ❌ Failed | 0 | 0 | 22.1 | 0.0% |
 | accessibility_minimal | ⚫ Invalid | 3 | 0 | 0 | N/A |
 | allow_collect_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | allow_collect_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
@@ -99,7 +99,7 @@
 | goal_local_triforce_hunt | ❌ Failed | 0 | 4.19 | 18.1 | 23.1% |
 | goal_pedestal | ✅ Passed | 0 | 26.1 | 26.1 | 100.0% |
 | goal_triforce_hunt | ❌ Failed | 0 | 4.19 | 18.1 | 23.1% |
-| hard_mode | ❌ Failed | 0 | 0 | 22.1 | 0.0% |
+| hard_mode | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | hints_full | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | hints_off | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | hints_on | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
@@ -112,7 +112,7 @@
 | item_pool_easy | ✅ Passed | 0 | 20.3 | 20.3 | 100.0% |
 | item_pool_expert | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | item_pool_hard | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| item_pool_normal | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| item_pool_normal | ❌ Failed | 0 | 0 | 22.1 | 0.0% |
 | key_drop_shuffle_false | ✅ Passed | 0 | 26.1 | 26.1 | 100.0% |
 | key_drop_shuffle_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | key_shuffle_extreme | ✅ Passed | 0 | 21.4 | 21.4 | 100.0% |
@@ -122,7 +122,7 @@
 | map_shuffle_different_world | ✅ Passed | 0 | 17.1 | 17.1 | 100.0% |
 | map_shuffle_original_dungeon | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | map_shuffle_own_dungeons | ✅ Passed | 0 | 18.1 | 18.1 | 100.0% |
-| map_shuffle_own_world | ❌ Failed | 0 | 0 | 17.1 | 0.0% |
+| map_shuffle_own_world | ✅ Passed | 0 | 17.1 | 17.1 | 100.0% |
 | map_shuffle_start_with | ✅ Passed | 0 | 18.1 | 18.1 | 100.0% |
 | minimal_access | ⚫ Invalid | 3 | 0 | 0 | N/A |
 | misery_mire_medallion_bombos | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
@@ -156,7 +156,7 @@
 | retro_bow_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | retro_bow_true | ❌ Failed | 0 | 0 | 16.1 | 0.0% |
 | retro_caves_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| retro_caves_true | ❌ Failed | 0 | 0 | 28.1 | 0.0% |
+| retro_caves_true | ✅ Passed | 0 | 28.1 | 28.1 | 100.0% |
 | retro_mode | ❌ Failed | 0 | 0 | 26.2 | 0.0% |
 | scams_all | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | scams_bottle_merchant | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
@@ -170,7 +170,7 @@
 | shuffle_prizes_both | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | shuffle_prizes_general | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | shuffle_prizes_off | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| shuffle_shop_inventories_false | ❌ Failed | 0 | 0 | 22.1 | 0.0% |
+| shuffle_shop_inventories_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | shuffle_shop_inventories_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | shuffled_everything | ❌ No Spheres | 0 | 0 | 0 | N/A |
 | small_key_shuffle_any_world | ✅ Passed | 0 | 19.2 | 19.2 | 100.0% |
@@ -189,7 +189,7 @@
 | timer_display | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | timer_none | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | timer_ohko | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| timer_timed | ✅ Passed | 0 | 34.2 | 34.2 | 100.0% |
+| timer_timed | ❌ Failed | 0 | 0 | 34.2 | 0.0% |
 | timer_timed_countdown | ✅ Passed | 0 | 34.2 | 34.2 | 100.0% |
 | timer_timed_ohko | ✅ Passed | 0 | 33.1 | 33.1 | 100.0% |
 | triforce_hunt_easy | ❌ Generation Failed | 7 | 0 | 0 | N/A |

@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-21 20:21:09
+**Generated:** 2025-11-22 08:35:17
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -14,7 +14,7 @@ This summary combines results from four types of tests:
 
 - **Minimal Test:** 74/78 passed (94.9%)
 - **Full Test:** 71/78 passed (91.0%)
-- **Multiplayer Test:** 56/78 passed (71.8%)
+- **Multiplayer Test:** 58/78 passed (74.4%)
 - **Multiworld Test:** 42/78 passed (53.8%)
 
 ### Intermittent Failures
@@ -25,8 +25,8 @@ This summary combines results from four types of tests:
 ### Combined Test Results
 
 - **Templates passing all 4 tests:** 41/78 (52.6%)
-- **Templates passing 3 tests:** 14/78 (17.9%)
-- **Templates passing 2 tests:** 17/78 (21.8%)
+- **Templates passing 3 tests:** 16/78 (20.5%)
+- **Templates passing 2 tests:** 15/78 (19.2%)
 - **Templates passing 1 test:** 3/78 (3.8%)
 - **Templates passing 0 tests:** 3/78 (3.8%)
 
@@ -54,7 +54,7 @@ This summary combines results from four types of tests:
 | DOOM II | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
 | Dark Souls III | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
-| Factorio | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
+| Factorio | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
 | Faxanadu | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
 | Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ⚫ |
 | Heretic | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
@@ -62,7 +62,7 @@ This summary combines results from four types of tests:
 | Inscryption | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
-| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
+| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
 | Lingo | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
@@ -119,7 +119,7 @@ These tests check multiple template configurations for the same game.
 
 | Game Name | Minimal Link (Templates Passed) | Full Link (Templates Passed) |
 |-----------|----------------------------------|-------------------------------|
-| A Link to the Past | [135/174 passed](./test-results-multitemplate-minimal.md#a-link-to-the-past) | [131/174 passed](./test-results-multitemplate-full.md#a-link-to-the-past) |
+| A Link to the Past | [128/174 passed](./test-results-multitemplate-minimal.md#a-link-to-the-past) | [133/174 passed](./test-results-multitemplate-full.md#a-link-to-the-past) |
 
 ## Excluded Games
 
