@@ -165,7 +165,7 @@ export class EventProcessor {
         // Use accumulated data from sphereState
         // Check game settings to determine which items to use
         const staticData = stateManager.getStaticData();
-        const useResolvedItems = staticData?.settings?.[String(this.playerId)]?.use_resolved_items || false;
+        const useResolvedItems = staticData?.settings?.[this.playerId]?.use_resolved_items || false;
 
         const base_items = sphereData.inventoryDetails?.base_items || {};
         const resolved_items = sphereData.inventoryDetails?.resolved_items || {};
@@ -234,7 +234,7 @@ export class EventProcessor {
           // Add newly discovered items from the sphere log to the state manager
           // This is only done for games that set add_sphere_items_upfront flag (like Blasphemous)
           // Most games get items naturally from checking locations
-          const addItemsUpfront = staticData?.settings?.[String(this.playerId)]?.add_sphere_items_upfront || false;
+          const addItemsUpfront = staticData?.settings?.[this.playerId]?.add_sphere_items_upfront || false;
 
           if (addItemsUpfront && newlyAddedItems.length > 0) {
             this.logCallback('info', `Adding ${newlyAddedItems.length} items from sphere log to inventory...`);
@@ -751,42 +751,27 @@ export class EventProcessor {
    * @param {boolean} addItems - Whether to add the item to inventory (defaults to true)
    */
   async checkLocationViaEvent(locationName, regionName = null, addItems = true) {
-    // Publish user:locationCheck event through the dispatcher
-    // This will be handled by stateManager's handleUserLocationCheckForStateManager
-    // Use window.eventDispatcher instance created in init.js
-    if (!window.eventDispatcher) {
-      this.logCallback('error', 'eventDispatcher not available on window');
-      return;
+    // Directly call stateManager's checkLocation method instead of using events
+    // This ensures we properly wait for the command to complete and get any errors
+    // Note: stateManager is imported at the top of this file as stateManagerProxySingleton
+    if (!stateManager) {
+      this.logCallback('error', 'stateManager not available');
+      throw new Error('stateManager not available');
     }
 
-    window.eventDispatcher.publish(
-      'testSpoilers', // originModuleId
-      'user:locationCheck', // eventName
-      {
-        locationName: locationName,
-        regionName: regionName,
-        addItems: addItems, // Pass through addItems parameter
-        originator: 'TestSpoilersModule',
-        originalDOMEvent: false,
-      },
-      { initialTarget: 'bottom' }
-    );
+    try {
+      // Call checkLocation and wait for it to complete
+      // This will throw an error if the location check is rejected
+      const result = await stateManager.checkLocation(locationName, addItems);
 
-    // Wait for the state to update by listening for the snapshot update event
-    // This ensures we don't proceed until the location check is processed
-    await new Promise((resolve) => {
-      const handler = () => {
-        this.eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
-        resolve();
-      };
-      this.eventBus.subscribe('stateManager:snapshotUpdated', handler, 'testSpoilers');
+      // Wait a brief moment for the snapshot to stabilize
+      await new Promise(resolve => setTimeout(resolve, 50));
 
-      // Add a safety timeout in case the snapshot update never comes
-      setTimeout(() => {
-        this.eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
-        resolve();
-      }, 5000); // 5 second timeout
-    });
+      return result;
+    } catch (error) {
+      this.logCallback('error', `Failed to check location "${locationName}": ${error.message}`);
+      throw error;
+    }
   }
 
   /**
@@ -976,7 +961,7 @@ export class EventProcessor {
 
     // Step 3: Process resolved_items (behavior depends on game settings)
     // Check if this game wants to use resolved_items
-    const useResolvedItems = staticData.settings?.use_resolved_items ?? false;
+    const useResolvedItems = staticData.settings?.[this.playerId]?.use_resolved_items ?? false;
 
     if (useResolvedItems) {
       // Old logic: Process resolved_items for games that need them (e.g., Blasphemous)
