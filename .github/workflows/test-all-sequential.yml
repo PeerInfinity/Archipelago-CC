@@ -97,6 +97,7 @@ jobs:
             git checkout origin/main -- .
             if ! git diff --staged --quiet; then
               git commit -m "Sync test-results-update with main"
+              git push origin test-results-update
             fi
           else
             git checkout -b test-results-update origin/main
