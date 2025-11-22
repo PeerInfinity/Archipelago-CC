@@ -193,6 +193,15 @@ function loadPlayerData(sm, jsonData, selectedPlayerId) {
   sm.startRegions = jsonData.start_regions?.[selectedPlayerId] || [];
   sm.mode = jsonData.mode?.[selectedPlayerId] || null;
   sm.itempoolCounts = jsonData.itempool_counts?.[selectedPlayerId] || {};
+
+  // Debug logging for progression_mapping lookup
+  console.log('[Initialization] selectedPlayerId:', selectedPlayerId, 'type:', typeof selectedPlayerId);
+  const pmKeys = jsonData.progression_mapping ? Object.keys(jsonData.progression_mapping) : [];
+  console.log('[Initialization] progression_mapping keys:', pmKeys, 'key types:', pmKeys.map(k => typeof k));
+  console.log('[Initialization] progression_mapping[selectedPlayerId]:', jsonData.progression_mapping?.[selectedPlayerId] ? 'found' : 'NOT FOUND');
+  console.log('[Initialization] progression_mapping["2"]:', jsonData.progression_mapping?.['2'] ? 'found' : 'NOT FOUND');
+  console.log('[Initialization] progression_mapping[2]:', jsonData.progression_mapping?.[2] ? 'found' : 'NOT FOUND');
+
   sm.progressionMapping = jsonData.progression_mapping?.[selectedPlayerId] || {};
   sm.gameInfo = jsonData.game_info || {};
 

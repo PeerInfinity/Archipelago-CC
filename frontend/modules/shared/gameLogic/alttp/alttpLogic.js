@@ -115,6 +115,12 @@ export function has(snapshot, staticData, itemName) {
   if (staticData && staticData.progressionMapping) {
     // Get player-specific progression mapping (progression_mapping is organized by player slot)
     const playerSlot = snapshot?.player?.slot || '1';
+    // Debug logging to check player slot
+    if (playerSlot !== 1 && playerSlot !== '1') {
+      console.log('[ALTTP has] playerSlot:', playerSlot, 'type:', typeof playerSlot, 'snapshot.player:', snapshot?.player);
+      console.log('[ALTTP has] staticData.progressionMapping keys:', Object.keys(staticData.progressionMapping || {}));
+      console.log('[ALTTP has] staticData.progressionMapping[playerSlot]:', staticData.progressionMapping[playerSlot] ? 'found' : 'NOT FOUND');
+    }
     const playerProgressionMapping = staticData.progressionMapping[playerSlot] || staticData.progressionMapping;
 
     // Check if this item is provided by any progressive item
@@ -747,6 +753,12 @@ export function has_misery_mire_medallion(snapshot, staticData) {
 export function has_turtle_rock_medallion(snapshot, staticData) {
   const playerSlot = snapshot?.player?.slot || '1';
   const medallion = staticData.settings?.[playerSlot]?.turtle_rock_medallion || 'Quake';
+  // Debug logging
+  if (playerSlot !== 1 && playerSlot !== '1') {
+    const hasIt = has(snapshot, staticData, medallion);
+    console.log('[has_turtle_rock_medallion] playerSlot:', playerSlot, 'medallion:', medallion, 'hasIt:', hasIt);
+    console.log('[has_turtle_rock_medallion] inventory:', snapshot?.inventory);
+  }
   return has(snapshot, staticData, medallion);
 }
 
