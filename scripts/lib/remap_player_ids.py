@@ -25,16 +25,22 @@ def _remap_rule_player_ids(rule: dict, target_player_id: int) -> None:
     # Handle list type - may contain [item_name, player_id] tuples
     if rule.get('type') == 'list' and 'value' in rule:
         value = rule['value']
-        if isinstance(value, list) and len(value) == 2:
-            # Check if this is [item_name, player_id] format
-            if isinstance(value[0], dict) and value[0].get('type') == 'constant':
-                if isinstance(value[1], dict) and value[1].get('type') == 'constant':
-                    # Check if second value is player ID 1
-                    if value[1].get('value') == 1:
-                        value[1]['value'] = target_player_id
-                elif isinstance(value[1], int) and value[1] == 1:
-                    # Direct integer value
-                    rule['value'][1] = target_player_id
+        if isinstance(value, list):
+            # Check if this is a 2-element list that might be [item_name, player_id] format
+            if len(value) == 2:
+                if isinstance(value[0], dict) and value[0].get('type') == 'constant':
+                    if isinstance(value[1], dict) and value[1].get('type') == 'constant':
+                        # Check if second value is player ID 1
+                        if value[1].get('value') == 1:
+                            value[1]['value'] = target_player_id
+                    elif isinstance(value[1], int) and value[1] == 1:
+                        # Direct integer value
+                        rule['value'][1] = target_player_id
+
+            # Also recursively process all list items (handles nested lists)
+            for item in value:
+                if isinstance(item, dict):
+                    _remap_rule_player_ids(item, target_player_id)
 
     # Recursively process nested structures
     for key, val in rule.items():
@@ -211,10 +217,18 @@ def remap_player_ids(rules_file: str, target_player_id: int = 2) -> bool:
                                     _remap_rule_player_ids(location['access_rule'], target_player_id)
 
                         # Also remap player IDs in exit access rules
-                        if 'exits' in region_data and isinstance(region_data['exits'], dict):
-                            for exit_name, exit_data in region_data['exits'].items():
-                                if 'access_rule' in exit_data:
-                                    _remap_rule_player_ids(exit_data['access_rule'], target_player_id)
+                        if 'exits' in region_data:
+                            exits = region_data['exits']
+                            if isinstance(exits, dict):
+                                # Exits as dictionary (exit_name -> exit_data)
+                                for exit_name, exit_data in exits.items():
+                                    if 'access_rule' in exit_data:
+                                        _remap_rule_player_ids(exit_data['access_rule'], target_player_id)
+                            elif isinstance(exits, list):
+                                # Exits as list of exit objects
+                                for exit_data in exits:
+                                    if isinstance(exit_data, dict) and 'access_rule' in exit_data:
+                                        _remap_rule_player_ids(exit_data['access_rule'], target_player_id)
 
         # Write the updated file
         with open(rules_file, 'w') as f:
