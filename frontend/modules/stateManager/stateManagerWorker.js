@@ -323,17 +323,36 @@ async function processQueue() {
       // Mark as failed
       commandQueue.markFailed(cmd.queueId, error);
 
-      // Send error response
+      // Extract correlation ID from payload if available
+      const correlationId = cmd.payload?.correlationId;
+
+      // Get current queue status for context
+      const queueStatus = commandQueue.getSnapshot();
+
+      // Send enhanced error response with full context
       self.postMessage({
         type: 'commandFailed',
         queryId: cmd.queryId,
         queueId: cmd.queueId,
         command: cmd.command,
+        correlationId: correlationId,
         error: error.message,
-        timestamp: Date.now()
+        stack: error.stack,
+        timestamp: Date.now(),
+        queueStatus: {
+          pending: queueStatus.pending,
+          completed: queueStatus.completed,
+          failed: queueStatus.failed,
+          processing: queueStatus.processing,
+          currentCommand: cmd.command
+        },
+        context: {
+          workerInitialized: workerInitialized,
+          stateManagerExists: !!stateManagerInstance
+        }
       });
 
-      log('error', `[CommandQueue] Command failed: ${cmd.command}`, error);
+      log('error', `[CommandQueue] Command failed: ${cmd.command}, queryId: ${cmd.queryId}, correlationId: ${correlationId}`, error);
     }
 
     // Yield point: Allow new messages to be received
@@ -580,12 +599,14 @@ async function handleMessage(message) {
         if (!workerInitialized || !stateManagerInstance) {
           throw new Error('Worker not initialized. Cannot process ping.');
         }
+        log('warn', `[Worker] Processing PING command for queryId ${message.queryId}`);
         // Construct the object that StateManager.ping expects
         stateManagerInstance.ping({
           queryId: message.queryId, // Pass the queryId from the incoming message
           payload: message.payload, // Pass the actual dataToEcho (e.g., 'uiSimSyncAfterClick')
         });
         // The ping method itself will post the 'pingResponse' message
+        log('warn', `[Worker] PING command completed for queryId ${message.queryId}`);
         break;
 
       case STATE_MANAGER_COMMANDS.GET_WORKER_QUEUE_STATUS_QUERY:
@@ -1358,12 +1379,34 @@ async function handleMessage(message) {
       message.command,
       error
     );
+
+    // Get queue status for enhanced diagnostics
+    const queueStatus = commandQueue ? commandQueue.getSnapshot() : {
+      pending: 0,
+      processing: false,
+      currentCommand: 'unknown'
+    };
+
     self.postMessage({
       type: 'workerError',
       command: message.command,
+      correlationId: message.correlationId || (message.payload && message.payload.correlationId),
       errorMessage: error.message,
       errorStack: error.stack,
       queryId: message.queryId,
+      timestamp: Date.now(),
+      queueStatus: {
+        pending: queueStatus.pending,
+        completed: queueStatus.completed,
+        failed: queueStatus.failed,
+        processing: queueStatus.processing,
+        currentCommand: message.command
+      },
+      context: {
+        workerInitialized: workerInitialized,
+        stateManagerExists: !!stateManagerInstance,
+        expectResponse: message.expectResponse
+      }
     });
   }
 }
@@ -1376,22 +1419,24 @@ async function handleMessage(message) {
  */
 self.onmessage = async function (e) {
   const message = e.data;
-  const { command, queryId, payload, config, expectResponse } = message; // Extract all fields
+  const { command, queryId, payload, config, expectResponse, correlationId } = message; // Extract all fields including correlationId
 
-  log('info', '[stateManagerWorker onmessage] Received command:', command);
+  log('info', '[stateManagerWorker onmessage] Received command:', command, 'queryId:', queryId, 'correlationId:', correlationId);
 
   // Check if queue is enabled (for testing/comparison)
   if (!QUEUE_ENABLED || !commandQueue.enabled) {
     log('info', '[stateManagerWorker] Queue disabled, executing directly');
     // For direct execution, pass the entire message to preserve all properties
-    const directMessage = { command, queryId, payload, config, expectResponse };
+    const directMessage = { command, queryId, payload, config, expectResponse, correlationId };
     await handleMessage(directMessage);
     return;
   }
 
   // Enqueue command with full message data
-  // Store the entire message in payload to preserve all properties including expectResponse
-  const fullPayload = config ? { ...payload, config, expectResponse } : { ...payload, expectResponse };
+  // Store the entire message in payload to preserve all properties including expectResponse and correlationId
+  const fullPayload = config
+    ? { ...payload, config, expectResponse, correlationId }
+    : { ...payload, expectResponse, correlationId };
   const entry = commandQueue.enqueue(command, queryId, fullPayload);
 
   // NOTE: We don't send commandEnqueued acknowledgments anymore.

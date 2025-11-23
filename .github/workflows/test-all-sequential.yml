@@ -188,7 +188,7 @@ jobs:
         if: inputs.spoiler_mode == 'seed-1'
         run: |
           source .venv/bin/activate
-          DISABLE_SINGLE_PROCESS=1 python scripts/test/test-all-templates.py \
+          python scripts/test/test-all-templates.py \
             --seed 1 \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
@@ -203,7 +203,7 @@ jobs:
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
           for i in $(seq 1 $ITERATIONS); do
             echo "Retest iteration $i of $ITERATIONS"
-            DISABLE_SINGLE_PROCESS=1 python scripts/test/test-all-templates.py \
+            python scripts/test/test-all-templates.py \
               --retest \
               --retest-seed-specific \
               --retest-from-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
@@ -220,7 +220,7 @@ jobs:
         if: inputs.spoiler_mode == 'seeds-1-10'
         run: |
           source .venv/bin/activate
-          DISABLE_SINGLE_PROCESS=1 python scripts/test/test-all-templates.py \
+          python scripts/test/test-all-templates.py \
             --seed ${{ matrix.split_num }} \
             --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
             --no-backup \
@@ -233,7 +233,7 @@ jobs:
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
           for i in $(seq 1 $ITERATIONS); do
             echo "Retest iteration $i of $ITERATIONS"
-            DISABLE_SINGLE_PROCESS=1 python scripts/test/test-all-templates.py \
+            python scripts/test/test-all-templates.py \
               --retest \
               --retest-seed-specific \
               --retest-from-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
@@ -378,7 +378,7 @@ jobs:
         if: inputs.spoiler_mode == 'seed-1'
         run: |
           source .venv/bin/activate
-          DISABLE_SINGLE_PROCESS=1 python scripts/test/test-all-templates.py \
+          python scripts/test/test-all-templates.py \
             --seed 1 \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
@@ -393,7 +393,7 @@ jobs:
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
           for i in $(seq 1 $ITERATIONS); do
             echo "Retest iteration $i of $ITERATIONS"
-            DISABLE_SINGLE_PROCESS=1 python scripts/test/test-all-templates.py \
+            python scripts/test/test-all-templates.py \
               --retest \
               --retest-seed-specific \
               --retest-from-file scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json \
@@ -410,7 +410,7 @@ jobs:
         if: inputs.spoiler_mode == 'seeds-1-10'
         run: |
           source .venv/bin/activate
-          DISABLE_SINGLE_PROCESS=1 python scripts/test/test-all-templates.py \
+          python scripts/test/test-all-templates.py \
             --seed ${{ matrix.split_num }} \
             --output-file scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json \
             --no-backup \
@@ -423,7 +423,7 @@ jobs:
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
           for i in $(seq 1 $ITERATIONS); do
             echo "Retest iteration $i of $ITERATIONS"
-            DISABLE_SINGLE_PROCESS=1 python scripts/test/test-all-templates.py \
+            python scripts/test/test-all-templates.py \
               --retest \
               --retest-seed-specific \
               --retest-from-file scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json \
@@ -567,7 +567,7 @@ jobs:
       - name: Run multiclient test
         run: |
           source .venv/bin/activate
-          DISABLE_SINGLE_PROCESS=1 python scripts/test/test-all-templates.py \
+          python scripts/test/test-all-templates.py \
             --multiclient \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
@@ -701,7 +701,7 @@ jobs:
       - name: Run multiworld test
         run: |
           source .venv/bin/activate
-          DISABLE_SINGLE_PROCESS=1 python scripts/test/test-all-templates.py \
+          python scripts/test/test-all-templates.py \
             --multiworld \
             --output-file scripts/output/multiworld/test-results.json \
             --no-backup \
@@ -832,7 +832,7 @@ jobs:
       - name: Run multiworld test
         run: |
           source .venv/bin/activate
-          DISABLE_SINGLE_PROCESS=1 python scripts/test/test-all-templates.py \
+          python scripts/test/test-all-templates.py \
             --multiworld \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
@@ -977,7 +977,7 @@ jobs:
       - name: Run minimal multitemplate test
         run: |
           source .venv/bin/activate
-          DISABLE_SINGLE_PROCESS=1 python scripts/test/test-all-templates.py \
+          python scripts/test/test-all-templates.py \
             --templates-dir Players/presets/multitemplate/alttp \
             --multitemplate \
             --every-nth ${{ matrix.split_total }} \
@@ -1123,7 +1123,7 @@ jobs:
       - name: Run full multitemplate test
         run: |
           source .venv/bin/activate
-          DISABLE_SINGLE_PROCESS=1 python scripts/test/test-all-templates.py \
+          python scripts/test/test-all-templates.py \
             --templates-dir Players/presets/multitemplate/alttp \
             --multitemplate \
             --every-nth ${{ matrix.split_total }} \

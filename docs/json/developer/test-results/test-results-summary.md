@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-23 20:56:57
+**Generated:** 2025-11-23 07:12:22
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -19,14 +19,14 @@ This summary combines results from four types of tests:
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 11 game(s), 38 total failure(s)
-- **Full Spoilers Test:** 27 game(s), 52 total failure(s)
+- **Minimal Spoilers Test:** 10 game(s), 36 total failure(s)
+- **Full Spoilers Test:** 19 game(s), 42 total failure(s)
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 51/76 (67.1%)
-- **Templates passing 3 tests:** 5/76 (6.6%)
-- **Templates passing 2 tests:** 16/76 (21.1%)
+- **Templates passing all 4 tests:** 52/76 (68.4%)
+- **Templates passing 3 tests:** 3/76 (3.9%)
+- **Templates passing 2 tests:** 17/76 (22.4%)
 - **Templates passing 1 test:** 3/76 (3.9%)
 - **Templates passing 0 tests:** 1/76 (1.3%)
 
@@ -54,7 +54,7 @@ This summary combines results from four types of tests:
 | DOOM II | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
 | Dark Souls III | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
-| Factorio | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
+| Factorio | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
 | Faxanadu | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
 | Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ⚫ |
 | Heretic | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
@@ -82,7 +82,7 @@ This summary combines results from four types of tests:
 | Pokemon Emerald | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Pokemon Red and Blue | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Raft | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
-| Risk of Rain 2 | ✅ Passed | ❌ Failed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Risk of Rain 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
 | SMZ3 | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Saving Princess | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
 | Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
