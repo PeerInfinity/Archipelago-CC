@@ -460,7 +460,16 @@ export function createStateSnapshotInterface(
       // check the LIVE knownReachableRegions being built, not the frozen snapshot.
       // This allows circular dependencies to resolve as BFS progresses.
       if (stateManager && stateManager._computing && stateManager.knownReachableRegions) {
-        return stateManager.knownReachableRegions.has(regionName);
+        const result = stateManager.knownReachableRegions.has(regionName);
+
+        // Debug logging for Turtle Rock related regions
+        if (regionName && (regionName.includes('Turtle Rock') || regionName.includes('Dark Death Mountain'))) {
+          if (stateManager.logStateManager) {
+            stateManager.logStateManager('warn', `[can_reach] Checking "${regionName}" during BFS: ${result ? 'REACHABLE' : 'NOT REACHABLE'}`);
+          }
+        }
+
+        return result;
       }
 
       // Otherwise, use the frozen snapshot data

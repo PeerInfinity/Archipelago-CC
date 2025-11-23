@@ -72,8 +72,8 @@ export function buildIndirectConnections(sm) {
       const rule = exit.access_rule || exit.rule;
       if (rule) {
         const dependencies = findRegionDependencies(sm, rule);
-        if (dependencies.size > 0) {
-          sm._logDebug(`[buildIndirectConnections] Exit "${exit.name}" from "${region.name}" depends on regions: ${Array.from(dependencies).join(', ')}`);
+        if (dependencies.size > 0 && (region.name.includes('Turtle Rock') || region.name.includes('Dark Death Mountain'))) {
+          sm.logStateManager('warn', `[buildIndirectConnections] Exit "${exit.name}" from "${region.name}" depends on regions: ${Array.from(dependencies).join(', ')}`);
         }
         dependencies.forEach((depRegionName) => {
           if (!sm.indirectConnections.has(depRegionName)) {
@@ -87,11 +87,13 @@ export function buildIndirectConnections(sm) {
     });
   }
 
-  // Log summary of indirect connections
+  // Log summary of indirect connections (filtered for Turtle Rock related)
   if (sm.indirectConnections.size > 0) {
-    sm._logDebug(`[buildIndirectConnections] Built ${sm.indirectConnections.size} indirect connection mappings`);
+    sm.logStateManager('warn', `[buildIndirectConnections] Built ${sm.indirectConnections.size} indirect connection mappings`);
     for (const [regionName, exitNames] of sm.indirectConnections.entries()) {
-      sm._logDebug(`  Region "${regionName}" affects exits: ${Array.from(exitNames).join(', ')}`);
+      if (regionName.includes('Turtle Rock') || regionName.includes('Dark Death Mountain')) {
+        sm.logStateManager('warn', `  Region "${regionName}" affects exits: ${Array.from(exitNames).join(', ')}`);
+      }
     }
   }
 }
@@ -388,11 +390,26 @@ export function runBFSPass(sm) {
 
       const canTraverse = !exit.access_rule || ruleEvaluationResult;
 
+      // Debug logging for Turtle Rock related exits
+      if ((exit.name && exit.name.includes('Turtle Rock')) ||
+          (targetRegion && (targetRegion.includes('Turtle Rock') || targetRegion.includes('Dark Death Mountain')))) {
+        if (canTraverse) {
+          sm.logStateManager('warn', `[BFS] Evaluating exit "${exit.name}" from "${fromRegion}" → "${targetRegion}": CAN TRAVERSE`);
+        } else {
+          sm.logStateManager('warn', `[BFS] Evaluating exit "${exit.name}" from "${fromRegion}" → "${targetRegion}": BLOCKED (rule failed)`);
+        }
+      }
+
       if (canTraverse) {
         // Region is now reachable
         sm.knownReachableRegions.add(targetRegion);
         newRegionsFound = true;
         newConnection = true; // Signal that we found a new connection
+
+        // Debug logging for Turtle Rock related regions
+        if (targetRegion.includes('Turtle Rock') || targetRegion.includes('Dark Death Mountain')) {
+          sm.logStateManager('warn', `[BFS] ✓ Region "${targetRegion}" became reachable via exit "${exit.name}" from "${fromRegion}"`);
+        }
 
         // Remove from blocked connections
         sm.blockedConnections.delete(connection);
@@ -448,6 +465,12 @@ export function runBFSPass(sm) {
           // Use the indirect connections structure which maps region -> set of EXIT NAMES
           const affectedExitNames =
             sm.indirectConnections.get(targetRegion);
+
+          // Debug logging for Turtle Rock related regions
+          if (targetRegion.includes('Turtle Rock') || targetRegion.includes('Dark Death Mountain')) {
+            sm.logStateManager('warn', `[BFS] 🔄 Region "${targetRegion}" has indirect connections, re-evaluating ${affectedExitNames.size} exit(s): ${Array.from(affectedExitNames).join(', ')}`);
+          }
+
           affectedExitNames.forEach((exitName) => {
             // Find the actual connection object in blockedConnections using the exit name
             for (const blockedConn of sm.blockedConnections) {
@@ -455,7 +478,14 @@ export function runBFSPass(sm) {
                 // Re-add this connection to the queue to re-evaluate it,
                 // but only if its source region is reachable.
                 if (sm.knownReachableRegions.has(blockedConn.fromRegion)) {
+                  if (targetRegion.includes('Turtle Rock') || targetRegion.includes('Dark Death Mountain')) {
+                    sm.logStateManager('warn', `[BFS]   → Re-queuing exit "${exitName}" from "${blockedConn.fromRegion}" → "${blockedConn.exit.connected_region}"`);
+                  }
                   queue.push(blockedConn);
+                } else {
+                  if (targetRegion.includes('Turtle Rock') || targetRegion.includes('Dark Death Mountain')) {
+                    sm.logStateManager('warn', `[BFS]   ✗ Cannot re-queue exit "${exitName}" - source region "${blockedConn.fromRegion}" not reachable`);
+                  }
                 }
                 break; // Found the connection, move to next affected exit name
               }
