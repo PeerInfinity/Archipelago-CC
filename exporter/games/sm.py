@@ -24,7 +24,46 @@ class SMGameExportHandler(GenericGameExportHandler):
         super().__init__()  # Base class doesn't take arguments
         self.world = world
         self._simple_accessfrom_locations: Optional[Set[str]] = None
+        self._all_accessfrom_info: Optional[Dict[str, Dict[str, str]]] = None
         self._varia_item_types: Optional[Dict[str, str]] = None
+        self._accesspoint_traverse_funcs: Optional[Dict[str, Any]] = None
+        self._current_exit_context: Optional[str] = None  # Track current exit being processed
+        self._accessfrom_data: Optional[Dict[str, Dict[str, Any]]] = None  # Cache for AccessFrom data
+        self._current_location_context: Optional[str] = None  # Track current location being processed
+
+    def _get_accesspoint_traverse_funcs(self) -> Dict[str, Any]:
+        """Get traverse functions for all AccessPoints (cached).
+
+        Returns:
+            Dict mapping AccessPoint name to traverse function
+        """
+        if self._accesspoint_traverse_funcs is None:
+            try:
+                from .sm_traverse_extractor import get_accesspoint_traverse_funcs
+                self._accesspoint_traverse_funcs = get_accesspoint_traverse_funcs(self.world)
+                logger.info(f"SM: Loaded traverse functions for {len(self._accesspoint_traverse_funcs)} AccessPoints")
+            except Exception as e:
+                logger.error(f"SM: Failed to extract AccessPoint traverse functions: {e}", exc_info=True)
+                self._accesspoint_traverse_funcs = {}
+
+        return self._accesspoint_traverse_funcs
+
+    def _get_accessfrom_data(self) -> Dict[str, Dict[str, Any]]:
+        """Get AccessFrom data for all VARIA locations (cached).
+
+        Returns:
+            Dict mapping location names to their AccessFrom info
+        """
+        if self._accessfrom_data is None:
+            try:
+                from .sm_accessfrom_extractor import get_location_accessfrom_data
+                self._accessfrom_data = get_location_accessfrom_data(self.world)
+                logger.info(f"SM: Loaded AccessFrom data for {len(self._accessfrom_data)} locations")
+            except Exception as e:
+                logger.error(f"SM: Failed to extract AccessFrom data: {e}", exc_info=True)
+                self._accessfrom_data = {}
+
+        return self._accessfrom_data
 
     def _get_varia_item_types(self) -> Dict[str, str]:
         """Get mapping of item names to their VARIA types.
@@ -64,6 +103,40 @@ class SMGameExportHandler(GenericGameExportHandler):
             logger.debug(f"SM: Item '{item_name}' has VARIA type '{varia_type}'")
 
         return varia_type
+
+    def get_game_info(self, world) -> Dict[str, Any]:
+        """Get game-specific information including door color data.
+
+        Returns:
+            Dict with game info including door colors for the frontend
+        """
+        # Start with base game info
+        game_info = super().get_game_info(world)
+
+        # Add door color data
+        door_data = {}
+        try:
+            from worlds.sm.variaRandomizer.utils.doorsmanager import DoorsManager
+            player_id = world.player if world else 1
+
+            # Get the doors dictionary for this player
+            if hasattr(DoorsManager, 'doorsDict') and player_id in DoorsManager.doorsDict:
+                doors_dict = DoorsManager.doorsDict[player_id]
+                for door_name, door_obj in doors_dict.items():
+                    # Get the actual door color (considering hidden status)
+                    door_data[door_name] = door_obj.getColor()
+                logger.info(f"SM: Exported {len(door_data)} door colors")
+            else:
+                logger.warning(f"SM: DoorsManager.doorsDict not found or player {player_id} not in doorsDict")
+
+        except Exception as e:
+            logger.error(f"SM: Failed to export door data: {e}", exc_info=True)
+
+        # Add doors to game_info if we have any
+        if door_data:
+            game_info['doors'] = door_data
+
+        return game_info
 
     def get_item_data(self, world):
         """Get item data from world, adding VARIA type information.
@@ -110,12 +183,39 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         return self._simple_accessfrom_locations
 
+    def _get_all_accessfrom_info(self) -> Dict[str, Dict[str, str]]:
+        """Get ALL AccessFrom information for all locations.
+
+        Returns:
+            Dict mapping location_name -> {region_name -> lambda_source}
+        """
+        if self._all_accessfrom_info is None:
+            try:
+                from .sm_accessfrom_extractor import extract_all_accessfrom_info
+                import worlds.sm
+                import os
+                world_module_path = os.path.dirname(worlds.sm.__file__)
+                self._all_accessfrom_info = extract_all_accessfrom_info(world_module_path)
+                logger.info(f"SM: Loaded AccessFrom data for {len(self._all_accessfrom_info)} locations")
+            except Exception as e:
+                logger.error(f"SM: Failed to extract all AccessFrom info: {e}", exc_info=True)
+                self._all_accessfrom_info = {}
+
+        return self._all_accessfrom_info
+
     def get_custom_location_access_rule(self, location, world):
         """Custom handling for Super Metroid location access rules.
 
-        Uses AST parsing to determine if the location has simple AccessFrom (SMBool(True))
-        or complex AccessFrom (item requirements). For simple AccessFrom with Available=SMBool(True),
-        exports as constant True. For complex AccessFrom, exports as constant False.
+        Super Metroid locations use an AccessFrom + Available pattern:
+        - AccessFrom: Dict[region_name -> lambda] defining requirements from each region
+        - Available: lambda defining requirements once in the region
+
+        The Python rule is: any(can_reach(region) AND AccessFrom[region](sm) for each region) AND Available(sm)
+
+        We build this by:
+        1. Extracting AccessFrom lambdas from source code
+        2. Parsing each lambda individually
+        3. Building: OR(can_reach(region1) AND lambda1, can_reach(region2) AND lambda2, ...) AND Available
 
         Returns:
             The custom rule to export, or None to use default handling
@@ -140,25 +240,110 @@ class SMGameExportHandler(GenericGameExportHandler):
                     # Check if first condition is accessFrom (any_of pattern)
                     if first.get('type') == 'any_of':
                         # This is an accessFrom + Available pattern
-                        # Check if Available is SMBool(True)
-                        if self._is_always_true_smbool(second):
-                            # Available is SMBool(True), check if AccessFrom is simple
-                            simple_locations = self._get_simple_accessfrom_locations()
+                        # We need to build the full rule from source data
 
-                            if location_name in simple_locations:
-                                # Simple AccessFrom (all regions use SMBool(True))
-                                logger.info(f"SM: Location '{location_name}' has simple AccessFrom - exporting as True")
-                                # Return analyzed rule dict for constant True
-                                return {'type': 'constant', 'value': True}
-                            else:
-                                # Complex AccessFrom (has item requirements)
-                                logger.info(f"SM: Location '{location_name}' has complex AccessFrom - exporting as False")
-                                # Return analyzed rule dict for constant False
-                                return {'type': 'constant', 'value': False}
+                        # Get AccessFrom data from source
+                        all_accessfrom = self._get_all_accessfrom_info()
+                        if location_name not in all_accessfrom:
+                            logger.warning(f"SM: Location '{location_name}' not found in AccessFrom data")
+                            return None
+
+                        accessfrom_dict = all_accessfrom[location_name]
+                        logger.info(f"SM: Building AccessFrom rule for '{location_name}' with {len(accessfrom_dict)} regions")
+
+                        # Parse each AccessFrom lambda and build the OR structure
+                        accessfrom_conditions = []
+                        for region_name, lambda_source in accessfrom_dict.items():
+                            # Parse the lambda to get its body
+                            parsed_lambda = self._parse_accessfrom_lambda(lambda_source, region_name, location_name)
+                            if parsed_lambda:
+                                # Build: can_reach(region) AND parsed_lambda
+                                accessfrom_conditions.append({
+                                    'type': 'and',
+                                    'conditions': [
+                                        {'type': 'state_method', 'method': 'can_reach', 'args': [{'type': 'constant', 'value': region_name}]},
+                                        parsed_lambda
+                                    ]
+                                })
+
+                        if not accessfrom_conditions:
+                            logger.warning(f"SM: Failed to parse any AccessFrom lambdas for '{location_name}'")
+                            return None
+
+                        # Build the OR of all AccessFrom conditions
+                        if len(accessfrom_conditions) == 1:
+                            accessfrom_rule = accessfrom_conditions[0]
+                        else:
+                            accessfrom_rule = {
+                                'type': 'or',
+                                'conditions': accessfrom_conditions
+                            }
+
+                        # Get the Available rule (already analyzed)
+                        available_rule = second
+
+                        # Build the final rule: AccessFrom AND Available
+                        # If Available is SMBool(True), just use AccessFrom
+                        if self._is_always_true_smbool(available_rule):
+                            logger.info(f"SM: Location '{location_name}' has Available=SMBool(True), using only AccessFrom")
+                            return accessfrom_rule
+                        else:
+                            logger.info(f"SM: Location '{location_name}' has both AccessFrom and Available requirements")
+                            return {
+                                'type': 'and',
+                                'conditions': [accessfrom_rule, available_rule]
+                            }
 
             return None
         except Exception as e:
-            logger.debug(f"SM: Error analyzing location rule for {location_name}: {e}")
+            logger.error(f"SM: Error building location rule for {location_name}: {e}", exc_info=True)
+            return None
+
+    def _parse_accessfrom_lambda(self, lambda_source: str, region_name: str, location_name: str) -> Optional[Dict[str, Any]]:
+        """Parse an AccessFrom lambda and return its rule structure.
+
+        Args:
+            lambda_source: The lambda source code (e.g., "(lambda sm: sm.canPassTerminatorBombWall())")
+            region_name: The region name (for logging)
+            location_name: The location name (for logging)
+
+        Returns:
+            Parsed rule dict, or None if parsing failed
+        """
+        try:
+            import ast
+            from ..analyzer import analyze_rule
+
+            # Remove outer parentheses if present
+            lambda_source = lambda_source.strip()
+            if lambda_source.startswith('(') and lambda_source.endswith(')'):
+                lambda_source = lambda_source[1:-1].strip()
+
+            # Parse the lambda
+            lambda_ast = ast.parse(lambda_source, mode='eval').body
+            if not isinstance(lambda_ast, ast.Lambda):
+                logger.warning(f"SM: AccessFrom for '{location_name}' from '{region_name}' is not a lambda: {lambda_source}")
+                return None
+
+            # Analyze the lambda body using analyze_rule with ast_node parameter
+            analyzed = analyze_rule(
+                ast_node=lambda_ast.body,
+                closure_vars={},
+                game_handler=self,
+                player_context=None,
+                context_info=f"AccessFrom {region_name}->{location_name}"
+            )
+            if not analyzed:
+                logger.warning(f"SM: Failed to analyze AccessFrom lambda for '{location_name}' from '{region_name}'")
+                return None
+
+            # Expand the analyzed rule
+            expanded = self.expand_rule(analyzed)
+            logger.debug(f"SM: Parsed AccessFrom lambda for '{location_name}' from '{region_name}': {type(expanded)}")
+            return expanded
+
+        except Exception as e:
+            logger.error(f"SM: Error parsing AccessFrom lambda for '{location_name}' from '{region_name}': {e}", exc_info=True)
             return None
 
     def _check_smbool_true_pattern(self, rule: Dict[str, Any]) -> bool:
@@ -411,6 +596,209 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         return False
 
+    def set_exit_context(self, exit_name: Optional[str]):
+        """Set the current exit being processed for ret variable resolution.
+
+        Args:
+            exit_name: The exit name in format "Source->Destination"
+        """
+        self._current_exit_context = exit_name
+
+    def set_location_context(self, location_name: Optional[str]):
+        """Set the current location being processed for AccessFrom extraction.
+
+        Args:
+            location_name: The location name
+        """
+        self._current_location_context = location_name
+
+    def _extract_accessfrom_requirements(self, location_name: str) -> Optional[Dict[str, Any]]:
+        """Extract and export AccessFrom requirements for a location.
+
+        For a location with complex AccessFrom requirements, this creates an OR rule
+        that checks if any of the AccessFrom regions can provide access.
+
+        Args:
+            location_name: The name of the location
+
+        Returns:
+            Exported rule or None if extraction fails
+        """
+        try:
+            accessfrom_data = self._get_accessfrom_data()
+            if location_name not in accessfrom_data:
+                logger.warning(f"SM: No AccessFrom data for location '{location_name}'")
+                return None
+
+            loc_data = accessfrom_data[location_name]
+            regions_dict = loc_data.get('regions', {})
+
+            if not regions_dict:
+                logger.warning(f"SM: Empty AccessFrom regions for location '{location_name}'")
+                return None
+
+            # Parse each region's lambda and create a rule
+            from ..analyzer import analyze_rule
+
+            region_rules = []
+            for region_name, region_lambda in regions_dict.items():
+                try:
+                    # Analyze the lambda
+                    parsed = analyze_rule(region_lambda, {}, game_handler=self, player_context={'player': self.world.player if self.world else 1})
+                    if parsed:
+                        # Expand using our expand_rule logic
+                        expanded = self.expand_rule(parsed)
+
+                        # Combine with region reachability check
+                        # The location is accessible from this region IF:
+                        # 1. The region is reachable (state.can_reach)
+                        # 2. The region's lambda requirements are met
+                        combined_rule = {
+                            'type': 'and',
+                            'conditions': [
+                                {
+                                    'type': 'state_method',
+                                    'method': 'can_reach',
+                                    'args': [{'type': 'constant', 'value': region_name}]
+                                },
+                                expanded
+                            ]
+                        }
+                        region_rules.append(combined_rule)
+                        logger.debug(f"SM: Extracted rule for region '{region_name}' -> location '{location_name}'")
+                except Exception as e:
+                    logger.warning(f"SM: Failed to parse AccessFrom lambda for region '{region_name}': {e}")
+                    continue
+
+            if not region_rules:
+                logger.warning(f"SM: No valid region rules extracted for location '{location_name}'")
+                return None
+
+            # If only one region, return that rule directly
+            if len(region_rules) == 1:
+                logger.info(f"SM: Single AccessFrom region for '{location_name}'")
+                return region_rules[0]
+
+            # Multiple regions: create OR rule
+            result = {
+                'type': 'or',
+                'conditions': region_rules
+            }
+            logger.info(f"SM: Created OR rule with {len(region_rules)} AccessFrom regions for '{location_name}'")
+            return result
+
+        except Exception as e:
+            logger.error(f"SM: Failed to extract AccessFrom requirements for '{location_name}': {e}", exc_info=True)
+            return None
+
+    def get_unwrapped_exit_lambda(self, exit_name: str, original_lambda: Any) -> Optional[Any]:
+        """Get the unwrapped transition/traverse lambda for an exit, if it's wrapped in Cache.ldeco.
+
+        This method is called BEFORE the analyzer processes the exit rule, allowing us to
+        provide the unwrapped lambda directly so the analyzer never encounters the 'ret' variable.
+
+        Note: The original_lambda here is Archipelago's wrapper (lambda state: ...), not the
+        raw transition lambda. We need to get the transition lambda directly from AccessPoint.
+
+        For inter-area connections, the traverse lambda is used instead of a transition lambda.
+
+        Args:
+            exit_name: The exit name in format "Source->Destination"
+            original_lambda: The Archipelago exit access_rule wrapper (not used)
+
+        Returns:
+            The unwrapped transition/traverse lambda if it was Cache.ldeco wrapped, otherwise None
+        """
+        if not exit_name or '->' not in exit_name:
+            return None
+
+        try:
+            from .sm_traverse_extractor import get_transition_lambda, unwrap_cache_ldeco
+
+            # Parse exit name
+            parts = exit_name.split('->')
+            if len(parts) != 2:
+                return None
+
+            source_ap_name = parts[0]
+            dest_ap_name = parts[1]
+
+            # Try to get the unwrapped transition lambda directly from AccessPoint
+            # This will return None if the transition doesn't exist or isn't wrapped
+            unwrapped = get_transition_lambda(source_ap_name, dest_ap_name, unwrap=True)
+
+            if unwrapped:
+                logger.info(f"SM: Providing unwrapped transition lambda for exit '{exit_name}'")
+                return unwrapped
+
+            # If no transition found, this might be an inter-area connection
+            # Inter-area connections use the traverse lambda from the source AccessPoint
+            # Try to get and unwrap the traverse lambda
+            traverse_funcs = self._get_accesspoint_traverse_funcs()
+            traverse_func = traverse_funcs.get(source_ap_name)
+
+            if traverse_func:
+                # Try to unwrap it if it's wrapped
+                unwrapped_traverse = unwrap_cache_ldeco(traverse_func)
+                if unwrapped_traverse:
+                    logger.info(f"SM: Providing unwrapped traverse lambda for inter-area exit '{exit_name}'")
+                    return unwrapped_traverse
+                else:
+                    # Not wrapped, return as-is
+                    logger.info(f"SM: Providing traverse lambda (not wrapped) for inter-area exit '{exit_name}'")
+                    return traverse_func
+
+            return None
+
+        except Exception as e:
+            logger.error(f"SM: Error getting unwrapped exit lambda for '{exit_name}': {e}", exc_info=True)
+            return None
+
+    def _parse_traverse_lambda(self, traverse_func, source_ap_name: str) -> Optional[Dict[str, Any]]:
+        """Parse a traverse lambda function and return its rule structure.
+
+        Args:
+            traverse_func: The traverse lambda function from AccessPoint
+            source_ap_name: The source AccessPoint name (for logging)
+
+        Returns:
+            Parsed rule dict, or None if parsing failed
+        """
+        try:
+            from ..analyzer import analyze_rule
+
+            # Save the current exit context and clear it temporarily
+            # to avoid infinite recursion when the traverse lambda itself has 'ret' variables
+            saved_context = self._current_exit_context
+            self._current_exit_context = None
+
+            try:
+                # Analyze the traverse lambda
+                analyzed = analyze_rule(
+                    rule_func=traverse_func,
+                    closure_vars={},
+                    game_handler=self,
+                    player_context=None,
+                    context_info=f"Traverse lambda for {source_ap_name}"
+                )
+
+                if not analyzed:
+                    logger.warning(f"SM: Failed to analyze traverse lambda for '{source_ap_name}'")
+                    return None
+
+                # Expand the analyzed rule
+                expanded = self.expand_rule(analyzed)
+                logger.debug(f"SM: Parsed traverse lambda for '{source_ap_name}'")
+                return expanded
+
+            finally:
+                # Restore the exit context
+                self._current_exit_context = saved_context
+
+        except Exception as e:
+            logger.error(f"SM: Error parsing traverse lambda for '{source_ap_name}': {e}", exc_info=True)
+            return None
+
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Recursively expand and transform Super Metroid rules.
 
@@ -422,6 +810,42 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         rule_type = rule.get('type')
 
+        # Handle unresolved 'ret' variable from Cache.ldeco decorator
+        # The Cache.ldeco decorator creates a wrapper function with a local variable 'ret'
+        # that stores the result of the wrapped function. When parsing entrance rules,
+        # the analyzer sometimes captures this 'ret' variable instead of inlining it.
+        # We need to extract and parse the actual traverse lambda from the AccessPoint.
+        if rule_type == 'name' and rule.get('name') == 'ret':
+            # Check if we have exit context
+            if self._current_exit_context:
+                # Parse exit name: "Source->Destination"
+                if '->' in self._current_exit_context:
+                    source_ap_name = self._current_exit_context.split('->')[0]
+                    logger.info(f"SM: Found 'ret' variable in exit '{self._current_exit_context}', extracting traverse lambda")
+
+                    # Get traverse function for this AccessPoint
+                    traverse_funcs = self._get_accesspoint_traverse_funcs()
+                    traverse_func = traverse_funcs.get(source_ap_name)
+
+                    if traverse_func:
+                        # Parse the traverse lambda
+                        parsed_traverse = self._parse_traverse_lambda(traverse_func, source_ap_name)
+                        if parsed_traverse:
+                            logger.info(f"SM: Successfully replaced 'ret' with parsed traverse lambda for '{source_ap_name}'")
+                            return parsed_traverse
+                        else:
+                            logger.warning(f"SM: Failed to parse traverse lambda for '{source_ap_name}', using conservative False")
+                    else:
+                        logger.warning(f"SM: No traverse function found for AccessPoint '{source_ap_name}'")
+                else:
+                    logger.warning(f"SM: Exit context '{self._current_exit_context}' does not contain '->'")
+            else:
+                logger.warning("SM: Found 'ret' variable but no exit context set")
+
+            # Conservative fallback
+            logger.warning("SM: Found unresolved 'ret' variable, replacing with SMBool(False)")
+            return {'type': 'constant', 'value': {'bool': False, 'difficulty': 0}}
+
         # Handle RomPatches.has() calls - resolve to constants since patches are fixed at generation time
         if rule_type == 'function_call':
             function = rule.get('function', {})
@@ -432,12 +856,29 @@ class SMGameExportHandler(GenericGameExportHandler):
                 # This is a RomPatches.has(patch_id) call
                 args = rule.get('args', [])
                 if len(args) >= 1:
-                    # The first arg should be the patch ID (constant)
+                    # The first arg can be a constant or an attribute reference (RomPatches.PatchName)
                     patch_arg = args[0]
+                    patch_id = None
+
                     if patch_arg.get('type') == 'constant':
                         patch_id = patch_arg.get('value')
+                    elif patch_arg.get('type') == 'attribute':
+                        # Handle RomPatches.PatchName references
+                        if (patch_arg.get('object', {}).get('type') == 'name' and
+                            patch_arg.get('object', {}).get('name') == 'RomPatches'):
+                            # Get the patch name and resolve it to its ID
+                            patch_name = patch_arg.get('attr')
+                            try:
+                                from worlds.sm.variaRandomizer.rom.rom_patches import RomPatches
+                                # Get the patch ID by accessing the class attribute
+                                patch_id = getattr(RomPatches, patch_name, None)
+                                if patch_id is not None:
+                                    logger.info(f"SM: Resolved RomPatches.{patch_name} to {patch_id}")
+                            except Exception as e:
+                                logger.error(f"SM: Failed to resolve RomPatches.{patch_name}: {e}")
+
+                    if patch_id is not None:
                         # Check if this patch is active
-                        # Import RomPatches to check active patches
                         try:
                             from worlds.sm.variaRandomizer.rom.rom_patches import RomPatches
                             player_id = self.world.player if self.world else 1
@@ -477,19 +918,37 @@ class SMGameExportHandler(GenericGameExportHandler):
                             logger.info("SM: Simple accessFrom detected (SMBool(True)) - exporting as True")
                             return {'type': 'constant', 'value': True}
 
-                        # Complex accessFrom that we can't properly export
-                        # LIMITATION: We cannot reliably distinguish complex accessFrom requirements
-                        # (e.g., lambda sm: sm.canPassBombWall()) when analyzer recursion limits
-                        # corrupt the structure.
-                        #
-                        # Conservative approach: Export as False to prevent incorrect accessibility.
-                        # TODO: Need a different approach - see CC/scripts/logs/sm/remaining-exporter-issues.md
+                        # Complex accessFrom - try to extract the actual requirements
+                        # Get the location name from context
+                        if self._current_location_context:
+                            extracted_rule = self._extract_accessfrom_requirements(self._current_location_context)
+                            if extracted_rule:
+                                logger.info(f"SM: Extracted AccessFrom requirements for {self._current_location_context}")
+                                return extracted_rule
+
+                        # Fallback: Conservative approach
                         logger.info("SM: Complex accessFrom with SMBool(True) Available - exporting as False (conservative)")
                         return {'type': 'constant', 'value': False}
 
-                    # If Available has actual requirements, use it
-                    logger.info("SM: Using Available part with actual requirements")
-                    return expanded
+                    # If Available has actual requirements, combine with AccessFrom
+                    logger.info("SM: Available part has actual requirements, checking for AccessFrom")
+
+                    # Try to extract AccessFrom requirements
+                    accessfrom_rule = None
+                    if self._current_location_context:
+                        accessfrom_rule = self._extract_accessfrom_requirements(self._current_location_context)
+
+                    if accessfrom_rule:
+                        # Combine Available AND AccessFrom
+                        logger.info(f"SM: Combining Available AND AccessFrom for {self._current_location_context}")
+                        return {
+                            'type': 'and',
+                            'conditions': [expanded, accessfrom_rule]
+                        }
+                    else:
+                        # No AccessFrom or extraction failed, just use Available
+                        logger.info("SM: Using Available part only (no AccessFrom extracted)")
+                        return expanded
 
         # Check for accessFrom patterns that hit recursion limits
         # These create infinitely nested structures that can't be properly evaluated
@@ -595,3 +1054,59 @@ class SMGameExportHandler(GenericGameExportHandler):
                     iterator_info['target'] = self.expand_rule(iterator_info['target'])
 
         return rule
+
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Export Super Metroid specific settings including hardRooms and ROM patches.
+
+        Args:
+            world: The world instance
+            multiworld: The multiworld instance
+            player: The player ID
+
+        Returns:
+            Dict containing game settings
+        """
+        # Get base settings
+        settings = super().get_settings_data(world, multiworld, player)
+
+        # Super Metroid uses base_items (default), not resolved_items
+        # All SM items appear in both base_items and resolved_items with identical values
+        # Using the default (False) allows items to be added via location checks
+
+        # Add hardRooms settings
+        try:
+            from worlds.sm.variaRandomizer.utils.parameters import Settings as SMSettings
+            settings['hardRooms'] = SMSettings.hardRooms
+            logger.info(f"SM: Exported hardRooms settings: {settings['hardRooms']}")
+        except Exception as e:
+            logger.error(f"SM: Failed to export hardRooms settings: {e}", exc_info=True)
+            settings['hardRooms'] = {}
+
+        # Add ROM patch settings (these affect logic)
+        rom_patches = {}
+        try:
+            from worlds.sm.variaRandomizer.rom.rompatches import RomPatches
+
+            # Check which ROM patches are active for this player
+            # These patches affect logic evaluation
+            patch_names = [
+                'NoGravityEnvProtection',
+                'ProgressiveSuits',
+                'AreaRandoBlueDoors',
+                'AreaRandoGreenDoors',
+                'AreaRandoYellowDoors'
+            ]
+
+            for patch_name in patch_names:
+                # RomPatches.has(player, patch) checks if patch is active
+                # For now, we'll export False for all since we don't have player-specific data
+                # The actual evaluation happens in helper functions
+                rom_patches[patch_name] = False
+
+            settings['romPatches'] = rom_patches
+            logger.info(f"SM: Exported ROM patches: {rom_patches}")
+        except Exception as e:
+            logger.error(f"SM: Failed to export ROM patches: {e}", exc_info=True)
+            settings['romPatches'] = {}
+
+        return settings

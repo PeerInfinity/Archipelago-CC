@@ -1072,10 +1072,26 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                         try:
                             expanded_rule = None
                             exit_name = getattr(exit, 'name', None)
+
+                            # Set exit context for game handlers that need it (e.g., SM for 'ret' variable resolution)
+                            if game_handler and hasattr(game_handler, 'set_exit_context'):
+                                game_handler.set_exit_context(exit_name)
+
                             if hasattr(exit, 'access_rule') and exit.access_rule:
+                                # Check if the game handler can provide an unwrapped version of the lambda
+                                # (e.g., SM unwraps Cache.ldeco decorators to avoid 'ret' variables)
+                                rule_to_analyze = exit.access_rule
+                                if game_handler:
+                                    if hasattr(game_handler, 'get_unwrapped_exit_lambda'):
+                                        unwrapped = game_handler.get_unwrapped_exit_lambda(exit_name, exit.access_rule)
+                                        if unwrapped:
+                                            rule_to_analyze = unwrapped
+                                    elif game_name == "Super Metroid":
+                                        logger.warning(f"SM: game_handler exists but doesn't have get_unwrapped_exit_lambda method! Handler type: {type(game_handler)}")
+
                                 # Try special handling first for complex exit rules
                                 if game_handler and hasattr(game_handler, 'handle_complex_exit_rule'):
-                                    special_rule = game_handler.handle_complex_exit_rule(exit_name, exit.access_rule)
+                                    special_rule = game_handler.handle_complex_exit_rule(exit_name, rule_to_analyze)
                                     if special_rule:
                                         expanded_rule = game_handler.expand_rule(special_rule)
                                         # Resolve any attribute nodes in item_check rules
@@ -1085,7 +1101,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                 if expanded_rule is None:
                                     expanded_rule = safe_expand_rule(
                                         game_handler,
-                                        exit.access_rule,
+                                        rule_to_analyze,
                                         exit_name,
                                         target_type='Exit',
                                         world=world
@@ -1117,6 +1133,10 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                             region_data['exits'].append(exit_data)
                         except Exception as e:
                             logger.error(f"Error processing exit {getattr(exit, 'name', 'Unknown')}: {str(e)}")
+                        finally:
+                            # Clear exit context after processing
+                            if game_handler and hasattr(game_handler, 'set_exit_context'):
+                                game_handler.set_exit_context(None)
 
                 # Process locations
                 if hasattr(region, 'locations'):
@@ -1130,9 +1150,11 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                             
                             # First check if game handler has special handling for this location
                             if hasattr(location, 'access_rule') and location.access_rule:
-                                # Set context for game handlers that need it (e.g., Bomb Rush Cyberfunk)
+                                # Set context for game handlers that need it (e.g., Bomb Rush Cyberfunk, Super Metroid)
                                 if hasattr(game_handler, 'set_context'):
                                     game_handler.set_context(location_name)
+                                if hasattr(game_handler, 'set_location_context'):
+                                    game_handler.set_location_context(location_name)
                                 # Check if game handler can extract custom access rule (e.g., Zillion)
                                 if game_handler and hasattr(game_handler, 'get_custom_location_access_rule'):
                                     custom_rule = game_handler.get_custom_location_access_rule(location, world)
