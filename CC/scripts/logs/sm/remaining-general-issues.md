@@ -44,21 +44,40 @@ The door "LandingSiteRight" is a **green door**, which requires Super Missiles t
 - ✅ `canOpenGreenDoors()` exists and calls `haveItem(snapshot, staticData, 'Super')`
 - ✅ `haveItem()` function exists and should find items by type
 
-**Investigation Needed:**
-1. Verify `traverse()` correctly calls `canOpenGreenDoors()` for green doors and returns SMBool
-2. Verify `haveItem('Super')` is finding "Super Missile" by its type and returns SMBool
-3. Debug actual inventory state during Sphere 3.1 update to see if "Super Missile" is present
-4. Check if SMBool return values are being properly handled by rule evaluation
+**ROOT CAUSE - INVENTORY NOT UPDATING:**
+
+Added debug logging to helper functions and discovered:
+- ✅ `traverse()` correctly calls `canOpenGreenDoors()` for green doors
+- ✅ `canOpenGreenDoors()` correctly calls `haveItem('Super')`
+- ✅ `haveItem('Super')` correctly finds "Super Missile" by type
+- ✅ `has('Super Missile')` correctly checks the inventory
+- ❌ **The inventory has ALL items at count 0!**
+
+**Debug Output:**
+```
+[has] Inventory keys: [Energy Tank, Missile, Super Missile, Power Bomb, Bomb, ...]
+[has] Sample inventory values: {Morph Ball: 0, Super Missile: 0, Bomb: 0, Energy Tank: 0}
+```
+
+The inventory structure exists and contains all item names, but **every item has count 0** - even items that should have been collected earlier like "Morph Ball" (collected in Sphere 0.1).
+
+This is a **StateManager** bug. The inventory is being initialized with all items at count 0, but when the player collects items from locations, the inventory counts are NOT being incremented.
+
+**Impact:**
+Since all items have count 0, the player effectively has an empty inventory. This causes:
+- All item checks to fail (has() returns false for everything)
+- No access rules are satisfied
+- No new regions become accessible
+- Test fails at Sphere 3.1 (first sphere that requires collected items)
 
 **Related Files:**
-- `frontend/modules/shared/gameLogic/sm/smLogic.js` - Helper functions (traverse, canOpenGreenDoors, haveItem)
-- `frontend/modules/shared/ruleEngine.js` - Rule evaluation
-- `frontend/modules/stateManager/` - State management
-- `frontend/presets/sm/AP_14089154938208861744/AP_14089154938208861744_rules.json` - Rules data (door colors, item types)
-- `frontend/presets/sm/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl` - Expected behavior
+- `frontend/modules/stateManager/` - **PRIMARY: Inventory update logic**
+- `frontend/modules/shared/gameLogic/sm/smLogic.js` - Helper functions (working correctly)
+- `frontend/modules/shared/ruleEngine.js` - Rule evaluation (working correctly)
 
 **Next Steps:**
-1. Add console.log debugging to haveItem, canOpenGreenDoors, and traverse functions
-2. Re-run spoiler test and examine browser console output
-3. Verify that SMBool objects are being correctly evaluated
-4. If needed, fix any issues with SMBool handling or item type lookups
+1. Investigate StateManager inventory update mechanism
+2. Find where items should be added to inventory when locations are collected
+3. Check if this is Super Metroid-specific or affects all games
+4. Implement fix to properly increment inventory counts
+5. Verify fix with spoiler test
