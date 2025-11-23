@@ -14,37 +14,48 @@ Expected at Sphere 3.1 (per sphere log):
 
 Actual: These regions remain inaccessible
 
-### Root Cause
-**FOUND**: The inventory is not being updated when items are collected during spoiler test playback.
+### Root Cause Analysis - EXTENSIVE INVESTIGATION COMPLETE
 
-### Detailed Analysis
-1. **SMBool unwrapping**: ✓ FIXED - Added SMBool unwrapping in `executeHelper()` in `frontend/modules/stateManager/core/ruleEvaluator.js:114-120`
-2. **Helper exports**: ✓ FIXED - Removed incorrect `helpers.js` file, using `smLogic.js` exports directly
-3. **Helper logic**: ✓ WORKING - `haveItem('Super')` correctly finds 'Super Missile' by checking type field
-4. **Inventory update**: ✗ BROKEN - Inventory shows `{'Super Missile': 0}` when it should be `{'Super Missile': 1}`
+**VERIFIED SYSTEMS**:
+1. ✓ **SMBool unwrapping**: Added in `ruleEvaluator.js:114-120`
+2. ✓ **Helper functions**: All working correctly, `haveItem('Super')` finds 'Super Missile' by type
+3. ✓ **Inventory UI**: Items DO appear in Inventory panel during tests (user confirmed)
+4. ✓ **Inventory update flow**: `checkLocation()` → `_addItemToInventory()` → `invalidateCache()` → `_sendSnapshotUpdate()` → `getSnapshot()` → `computeReachableRegions()`
 
-### Evidence
-From browser debug logs:
+**THE MYSTERY**: Inventory count shows 0 in helpers but items appear in UI panel!
+
+### How Inventory/Reachability Systems Work
+
+**Inventory Panel** (WORKING):
+- Uses `stateManager.getLatestStateSnapshot()` returning cached `uiCache`
+- Cache updates when worker posts `stateSnapshot` messages
+- **Confirmed: Items appear correctly in UI during tests**
+
+**Spoiler Test Without `add_sphere_items_upfront`** (SM's mode):
+- Super Metroid has `add_sphere_items_upfront: None` (defaults to False)
+- Items obtained by checking locations sequentially
+- Each `checkLocation()` invalidates cache and should trigger recomputation
+- Test calls `pingWorker()` then `getFullSnapshot()` after all locations checked
+- `getFullSnapshot()` should call `getSnapshot()` which recomputes if cache invalid
+
+**The `getSnapshot()` Guard**:
+```javascript
+if (!sm.cacheValid && !sm._inHelperExecution) {
+  sm.computeReachableRegions();
+}
 ```
-[haveItem] Checking for Super - inventory has 33 items
-[haveItem] Keys containing Super/Missile: [Missile, Super Missile]
-[haveItem] Super Missile count: 0  ← Should be 1!
-[haveItem] Found item with matching type for Super: {fullItemName: Super Missile, type: Super}
-[haveItem] Inventory check result for Super Missile: false
+If `_inHelperExecution` is true, reachability won't recompute even if cache is invalid!
+
+### Evidence of Timing/State Issue
+Browser logs show inconsistent inventory state:
+```
+[haveItem] Super Missile count: 0  ← During reachability check
+...later...
+[haveItem] Morph Ball: true  ← After test completes
 ```
 
-From sphere log (Sphere 3.1):
-```json
-"new_inventory_details": {"base_items": {"Super Missile": 1}}
-```
-
-### Files Involved
-- `frontend/modules/testSpoilers/eventProcessor.js` - Processes sphere events, should add items to inventory
-- `frontend/modules/stateManager/core/inventoryManager.js` - Handles `addItemToInventory()`
-- `frontend/modules/shared/gameLogic/sm/smLogic.js` - Helper functions (confirmed working)
-
-### Next Steps
-1. Check if `add_sphere_items_upfront` setting is true for SM
-2. Add logging to `eventProcessor.js` to see if `addItemToInventory()` is called
-3. Check if there's a timing issue between adding items and computing reachability
-4. Verify the spoiler test is using the correct mode for SM items
+### Investigation Needed
+1. Is `_inHelperExecution` true during the comparison's reachability check?
+2. Is there a race condition between cache invalidation and snapshot retrieval?
+3. Does the comparison use a stale snapshot captured before recomputation?
+4. Should `add_sphere_items_upfront` be enabled for SM (like it is for Blasphemous)?
