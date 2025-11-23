@@ -68,8 +68,10 @@ export function buildIndirectConnections(sm) {
   for (const region of sm.regions.values()) {
     if (!region.exits) continue;
     region.exits.forEach((exit) => {
-      if (exit.rule) {
-        const dependencies = findRegionDependencies(sm, exit.rule);
+      // Check for access_rule (JSON format) or rule (legacy format)
+      const rule = exit.access_rule || exit.rule;
+      if (rule) {
+        const dependencies = findRegionDependencies(sm, rule);
         dependencies.forEach((depRegionName) => {
           if (!sm.indirectConnections.has(depRegionName)) {
             sm.indirectConnections.set(depRegionName, new Set());
@@ -122,12 +124,40 @@ export function findRegionDependencies(sm, rule) {
         dependencies.add(dep)
       );
     });
-  } else if (typeof rule === 'object') {
-    // Recursively process object rules
-    Object.values(rule).forEach((subRule) => {
-      findRegionDependencies(sm, subRule).forEach((dep) =>
-        dependencies.add(dep)
-      );
+  } else if (typeof rule === 'object' && rule !== null) {
+    // Special handling for state_method with can_reach
+    if (rule.type === 'state_method' &&
+        (rule.method === 'can_reach' || rule.method === 'can_reach_region') &&
+        rule.args && Array.isArray(rule.args) && rule.args.length > 0) {
+      // Extract region name from first argument
+      const firstArg = rule.args[0];
+      if (firstArg && typeof firstArg === 'object' && firstArg.type === 'constant') {
+        const regionName = firstArg.value;
+        if (regionName && sm.regions && sm.regions.has(regionName)) {
+          dependencies.add(regionName);
+        }
+      }
+      // Don't recursively process args - we handled them above
+      return dependencies;
+    }
+
+    // Also check conditions array for 'and' and 'or' types
+    if (rule.conditions && Array.isArray(rule.conditions)) {
+      rule.conditions.forEach((cond) => {
+        findRegionDependencies(sm, cond).forEach((dep) =>
+          dependencies.add(dep)
+        );
+      });
+    }
+
+    // Recursively process object rules (for other nested structures)
+    // Skip conditions (already processed above) and args (handled by state_method)
+    Object.entries(rule).forEach(([key, subRule]) => {
+      if (key !== 'conditions' && key !== 'args') {
+        findRegionDependencies(sm, subRule).forEach((dep) =>
+          dependencies.add(dep)
+        );
+      }
     });
   }
 
@@ -407,6 +437,7 @@ export function runBFSPass(sm) {
           // Use the indirect connections structure which maps region -> set of EXIT NAMES
           const affectedExitNames =
             sm.indirectConnections.get(targetRegion);
+
           affectedExitNames.forEach((exitName) => {
             // Find the actual connection object in blockedConnections using the exit name
             for (const blockedConn of sm.blockedConnections) {

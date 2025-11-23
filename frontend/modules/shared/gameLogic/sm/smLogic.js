@@ -97,16 +97,6 @@ export function SMBool(snapshot, staticData, value, difficulty = 0) {
  * @returns {boolean} True if smbool passes the difficulty check
  */
 export function evalSMBool(snapshot, staticData, smbool, maxDiff) {
-  // Debug logging
-  if (typeof console !== 'undefined' && console.log) {
-    console.log('[evalSMBool] Called with:', {
-      smbool,
-      maxDiff,
-      hasSmbm: !!snapshot?.smbm,
-      smbm: snapshot?.smbm
-    });
-  }
-
   // If smbool is a plain boolean, return it
   if (typeof smbool === 'boolean') {
     return smbool;
@@ -114,17 +104,7 @@ export function evalSMBool(snapshot, staticData, smbool, maxDiff) {
 
   // If smbool is an SMBool object, check difficulty
   if (smbool && typeof smbool === 'object' && 'bool' in smbool && 'difficulty' in smbool) {
-    const result = smbool.bool === true && smbool.difficulty <= maxDiff;
-    if (typeof console !== 'undefined' && console.log) {
-      console.log('[evalSMBool] SMBool check:', {
-        bool: smbool.bool,
-        difficulty: smbool.difficulty,
-        maxDiff,
-        comparison: smbool.difficulty <= maxDiff,
-        result
-      });
-    }
-    return result;
+    return smbool.bool === true && smbool.difficulty <= maxDiff;
   }
 
   // Default: assume it's truthy
@@ -197,17 +177,6 @@ export function haveItem(snapshot, staticData, itemName) {
   // First, try direct name match
   let hasIt = has(snapshot, staticData, itemName);
 
-  if (typeof console !== 'undefined' && console.log && itemName === 'Morph') {
-    console.log('[haveItem] Checking for Morph:', {
-      itemName,
-      hasDirectMatch: hasIt,
-      hasStaticData: !!staticData,
-      hasItems: !!staticData?.items,
-      itemsIsMap: staticData?.items instanceof Map,
-      itemsKeys: staticData?.items ? (staticData.items instanceof Map ? Array.from(staticData.items.keys()).slice(0,5) : Object.keys(staticData.items).slice(0,5)) : []
-    });
-  }
-
   // If not found by name, check if any item has this type
   if (!hasIt && staticData && staticData.items) {
     // Check player 1's items (assuming single player for now)
@@ -224,31 +193,14 @@ export function haveItem(snapshot, staticData, itemName) {
       playerItems = staticData.items;
     }
 
-    if (itemName === 'Morph' && typeof console !== 'undefined' && console.log) {
-      console.log('[haveItem] Player items:', {
-        isMap: playerItems instanceof Map,
-        itemCount: playerItems ? (playerItems instanceof Map ? playerItems.size : Object.keys(playerItems).length) : 0
-      });
-    }
-
     if (playerItems) {
       // playerItems might also be a Map or object
       const itemEntries = playerItems instanceof Map ? playerItems.entries() : Object.entries(playerItems);
 
       for (const [fullItemName, itemData] of itemEntries) {
         if (itemData && itemData.type === itemName) {
-          if (itemName === 'Morph' && typeof console !== 'undefined' && console.log) {
-            console.log('[haveItem] Found item with matching type:', {
-              fullItemName,
-              type: itemData.type,
-              checkingInventory: true
-            });
-          }
           // Found an item with matching type, check if we have it
           hasIt = has(snapshot, staticData, fullItemName);
-          if (itemName === 'Morph' && typeof console !== 'undefined' && console.log) {
-            console.log('[haveItem] Inventory check result:', hasIt);
-          }
           if (hasIt) break;
         }
       }
@@ -285,17 +237,7 @@ function normalizeSMBool(value) {
 export function canUseBombs(snapshot, staticData) {
   const hasMorph = haveItem(snapshot, staticData, 'Morph');
   const hasBomb = haveItem(snapshot, staticData, 'Bomb');
-  const result = wand(snapshot, staticData, hasMorph, hasBomb);
-
-  if (typeof console !== 'undefined' && console.log) {
-    console.log('[canUseBombs] Check:', {
-      hasMorph: hasMorph.bool,
-      hasBomb: hasBomb.bool,
-      result: result.bool
-    });
-  }
-
-  return result;
+  return wand(snapshot, staticData, hasMorph, hasBomb);
 }
 
 export function canUsePowerBombs(snapshot, staticData) {
@@ -832,17 +774,6 @@ export function energyReserveCountOkHardRoom(snapshot, staticData, roomName, mul
   const hardRooms = playerSettings.hardRooms || {};
   const difficulties = hardRooms[roomName];
 
-  if (typeof console !== 'undefined' && console.log) {
-    console.log('[energyReserveCountOkHardRoom] Called:', {
-      roomName,
-      mult,
-      playerId,
-      hasSettings: !!playerSettings,
-      hasHardRooms: !!hardRooms,
-      hasDifficulties: !!difficulties
-    });
-  }
-
   if (!difficulties || difficulties.length === 0) {
     return { bool: false, difficulty: 0 };
   }
@@ -851,14 +782,6 @@ export function energyReserveCountOkHardRoom(snapshot, staticData, roomName, mul
   const dmgRed = getDmgReduction(snapshot, staticData, true);
   const totalMult = mult * dmgRed;
   const totalReserves = energyReserveCount(snapshot, staticData);
-
-  if (typeof console !== 'undefined' && console.log) {
-    console.log('[energyReserveCountOkHardRoom] Calculations:', {
-      dmgRed,
-      totalMult,
-      totalReserves
-    });
-  }
 
   // Check each difficulty level - if ANY pass, return true
   // difficulties is an array of [requiredCount, difficultyLevel] pairs
@@ -869,21 +792,8 @@ export function energyReserveCountOkHardRoom(snapshot, staticData, roomName, mul
     const adjustedCount = Math.round(baseCount / totalMult);
     const checkResult = energyReserveCountOk(snapshot, staticData, adjustedCount, difficultyLevel);
 
-    if (typeof console !== 'undefined' && console.log) {
-      console.log('[energyReserveCountOkHardRoom] Tier check:', {
-        baseCount,
-        difficultyLevel,
-        adjustedCount,
-        passes: checkResult.bool
-      });
-    }
-
     // Use wor to combine results
     result = wor(snapshot, staticData, result, checkResult);
-  }
-
-  if (typeof console !== 'undefined' && console.log) {
-    console.log('[energyReserveCountOkHardRoom] Final result:', result);
   }
 
   return result;
