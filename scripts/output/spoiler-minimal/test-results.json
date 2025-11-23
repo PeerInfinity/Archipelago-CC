@@ -260,7 +260,7 @@
       ],
       "last_updated": "2025-11-23T04:17:56.344323"
     },
-    "last_updated": "2025-11-23T04:17:56.344321",
+    "last_updated": "2025-11-23T22:02:47.004960",
     "script_version": "1.0.0"
   },
   "results": {
@@ -13968,9 +13968,9 @@
         "success": true,
         "warning_count": 0
       },
-      "consecutive_passes_before_failure": 0,
-      "first_failure_reason": "Test failed at sphere 0",
-      "first_failure_seed": 1,
+      "consecutive_passes_before_failure": 7,
+      "first_failure_reason": null,
+      "first_failure_seed": null,
       "game_name_from_filename": "kh2",
       "game_name_from_yaml": "Kingdom Hearts 2",
       "generation": {
@@ -13993,7 +13993,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 4.06,
+            "processing_time_seconds": 5.7,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -14006,17 +14006,17 @@
           "seed": "1",
           "seed_id": "AP_14089154938208861744",
           "spoiler_test": {
-            "error_count": 4,
-            "pass_fail": "failed",
-            "processing_time_seconds": 186.6,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 36.11,
             "return_code": 0,
-            "sphere_reached": 0,
+            "sphere_reached": 15.1,
             "success": true,
             "total_spheres": 15.1,
             "warning_count": 0
           },
           "template_filename": "Kingdom Hearts 2.yaml",
-          "timestamp": "2025-11-23T04:09:54.833756",
+          "timestamp": "2025-11-23T22:02:04.723512",
           "world_info": {
             "exporter_path": "exporter/games/kh2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
@@ -14306,8 +14306,8 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 4,
-      "seeds_passed": 6,
+      "seeds_failed": 0,
+      "seeds_passed": 7,
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
@@ -14319,13 +14319,13 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": false,
-        "any_failed": true,
-        "failure_rate": 0.4
+        "all_passed": true,
+        "any_failed": false,
+        "failure_rate": 0.0
       },
       "template_filename": "Kingdom Hearts 2.yaml",
-      "timestamp": "2025-11-23T03:46:03.033827",
-      "total_seeds_tested": 10,
+      "timestamp": "2025-11-23T22:02:04.723512",
+      "total_seeds_tested": 7,
       "world_info": {
         "exporter_path": "exporter/games/kh2.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
