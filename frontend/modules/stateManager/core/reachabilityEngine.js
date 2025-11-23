@@ -72,6 +72,9 @@ export function buildIndirectConnections(sm) {
       const rule = exit.access_rule || exit.rule;
       if (rule) {
         const dependencies = findRegionDependencies(sm, rule);
+        if (dependencies.size > 0) {
+          sm._logDebug(`[buildIndirectConnections] Exit "${exit.name}" from "${region.name}" depends on regions: ${Array.from(dependencies).join(', ')}`);
+        }
         dependencies.forEach((depRegionName) => {
           if (!sm.indirectConnections.has(depRegionName)) {
             sm.indirectConnections.set(depRegionName, new Set());
@@ -82,6 +85,14 @@ export function buildIndirectConnections(sm) {
         });
       }
     });
+  }
+
+  // Log summary of indirect connections
+  if (sm.indirectConnections.size > 0) {
+    sm._logDebug(`[buildIndirectConnections] Built ${sm.indirectConnections.size} indirect connection mappings`);
+    for (const [regionName, exitNames] of sm.indirectConnections.entries()) {
+      sm._logDebug(`  Region "${regionName}" affects exits: ${Array.from(exitNames).join(', ')}`);
+    }
   }
 }
 
@@ -137,6 +148,8 @@ export function findRegionDependencies(sm, rule) {
           dependencies.add(regionName);
         }
       }
+      // Don't recursively process args - we handled them above
+      return dependencies;
     }
 
     // Also check conditions array for 'and' and 'or' types
@@ -149,8 +162,9 @@ export function findRegionDependencies(sm, rule) {
     }
 
     // Recursively process object rules (for other nested structures)
-    Object.values(rule).forEach((subRule) => {
-      if (subRule !== rule.conditions) { // Avoid double-processing conditions
+    // Skip conditions (already processed above) and args (handled by state_method)
+    Object.entries(rule).forEach(([key, subRule]) => {
+      if (key !== 'conditions' && key !== 'args') {
         findRegionDependencies(sm, subRule).forEach((dep) =>
           dependencies.add(dep)
         );

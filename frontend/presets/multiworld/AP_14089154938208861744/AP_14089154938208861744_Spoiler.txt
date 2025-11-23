@@ -1045,8 +1045,8 @@ AFR Access (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam
 Act Completion (Cheating the Race) (Player1)
         Menu -> Save File -> Spaceship
@@ -1091,16 +1091,16 @@ Act Completion (The Subcon Well) (Player1)
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
    =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
-   =>   Alpine Free Roam -> Battle of the Birds - Finale A: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 5: Connection 1
+   =>   Heating Up Mafia Town -> Battle of the Birds - Finale A: Connection 2
    =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
    =>   The Subcon Well
 Act Completion (The Twilight Bell) (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Twilight Bell
    =>   The Twilight Bell
@@ -1108,8 +1108,8 @@ Act Completion (The Windmill) (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Windmill
    =>   The Windmill
@@ -1126,8 +1126,8 @@ Act Completion (Time Rift - Gallery) (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> Time Rift - Curly Tail Trail Portal - Entrance 1
    =>   Time Rift - Gallery
 Act Completion (Time Rift - Pipe) (Player1)
@@ -1141,8 +1141,8 @@ Act Completion (Time Rift - The Lab) (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> Time Rift - The Twilight Bell Portal - Entrance 1
    =>   Time Rift - The Lab
 Act Completion (Time Rift - The Moon) (Player1)
@@ -1209,8 +1209,8 @@ Alpine Skyline - Bird Pass Fork (Player1)
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
+   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
+   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
    =>   The Illness has Spread -> TIHS -> Alpine Skyline Area (TIHS)
    =>   Alpine Skyline Area (TIHS)
 Alpine Skyline - Ember Summit (Player1)
@@ -1219,8 +1219,8 @@ Alpine Skyline - Ember Summit (Player1)
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
+   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
+   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
    =>   The Illness has Spread -> TIHS -> Alpine Skyline Area (TIHS)
    =>   Alpine Skyline Area (TIHS)
 Alpine Skyline - Goat Village: Below Hookpoint (Player1)
@@ -1229,24 +1229,24 @@ Alpine Skyline - Goat Village: Below Hookpoint (Player1)
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
+   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
+   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
    =>   The Illness has Spread -> TIHS -> Alpine Skyline Area (TIHS)
    =>   Alpine Skyline Area (TIHS)
 Alpine Skyline - Mystifying Time Mesa: Gate Puzzle (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area
 Alpine Skyline - The Birdhouse: Alpine Crow Mini-Gauntlet (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Birdhouse
    =>   The Birdhouse
@@ -1254,8 +1254,8 @@ Alpine Skyline - The Birdhouse: Brewing Crate House (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Birdhouse
    =>   The Birdhouse
@@ -1263,16 +1263,16 @@ Alpine Skyline - The Purrloined Village: Horned Stone (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area
 Alpine Skyline - The Twilight Bell: Ice Platform (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Twilight Bell
    =>   The Twilight Bell
@@ -1280,8 +1280,8 @@ Alpine Skyline - The Windmill: Inside Pon Cluster (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Windmill
    =>   The Windmill
@@ -1291,8 +1291,8 @@ Alpine Skyline - Windy Passage (Player1)
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
+   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
+   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
    =>   The Illness has Spread -> TIHS -> Alpine Skyline Area (TIHS)
    =>   Alpine Skyline Area (TIHS)
 Alpine Skyline - Yellow Band Hills (Player1)
@@ -1301,8 +1301,8 @@ Alpine Skyline - Yellow Band Hills (Player1)
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
+   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
+   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
    =>   The Illness has Spread -> TIHS -> Alpine Skyline Area (TIHS)
    =>   Alpine Skyline Area (TIHS)
 Badge Seller - Item 1 (Player1)
@@ -1328,8 +1328,8 @@ Birdhouse Cleared (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Birdhouse
    =>   The Birdhouse
@@ -1395,33 +1395,27 @@ Dark Blacksmith Ruins (Player2)
    =>   Hammer Peg Area
 Dead Bird Studio (Rift) - Page: Above TV Room (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
-   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
-   =>   The Illness has Spread -> Time Rift - Alpine Skyline Portal - Entrance 2
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
+   =>   Alpine Free Roam -> Time Rift - Alpine Skyline Portal - Entrance 1
    =>   Time Rift - Dead Bird Studio
 Dead Bird Studio (Rift) - Page: In The Corner (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
-   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
-   =>   The Illness has Spread -> Time Rift - Alpine Skyline Portal - Entrance 2
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
+   =>   Alpine Free Roam -> Time Rift - Alpine Skyline Portal - Entrance 1
    =>   Time Rift - Dead Bird Studio
 Dead Bird Studio (Rift) - Page: Near Time Rift Gate (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
-   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
-   =>   The Illness has Spread -> Time Rift - Alpine Skyline Portal - Entrance 2
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
+   =>   Alpine Free Roam -> Time Rift - Alpine Skyline Portal - Entrance 1
    =>   Time Rift - Dead Bird Studio
 Dead Bird Studio - Conductor Chest (Player1)
         Menu -> Save File -> Spaceship
@@ -1990,8 +1984,8 @@ Lava Cake Cleared (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Lava Cake
    =>   The Lava Cake
@@ -2142,27 +2136,24 @@ Mafia Town - Yellow Sphere Building Chest (Player1)
    =>   Mafia Town Area (HUMT)
 Mafia of Cooks - Page: Below Dock (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
-   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Time Rift - Mafia of Cooks Portal - Entrance 6
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 1
+   =>   Your Contract has Expired -> Subcon Forest - Finale: Connection 1
+   =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Mafia of Cooks - Page: Beside Red Building (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
-   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Time Rift - Mafia of Cooks Portal - Entrance 6
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 1
+   =>   Your Contract has Expired -> Subcon Forest - Finale: Connection 1
+   =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Mafia of Cooks - Page: Trash Mound (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
-   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Time Rift - Mafia of Cooks Portal - Entrance 6
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 1
+   =>   Your Contract has Expired -> Subcon Forest - Finale: Connection 1
+   =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Maze Race (Player2)
         Links House -> Links House Exit
@@ -2606,8 +2597,8 @@ Subcon Well - Above Chest (Player1)
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
    =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
-   =>   Alpine Free Roam -> Battle of the Birds - Finale A: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 5: Connection 1
+   =>   Heating Up Mafia Town -> Battle of the Birds - Finale A: Connection 2
    =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
    =>   The Subcon Well
 Subcon Well - Mushroom (Player1)
@@ -2615,8 +2606,8 @@ Subcon Well - Mushroom (Player1)
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
    =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
-   =>   Alpine Free Roam -> Battle of the Birds - Finale A: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 5: Connection 1
+   =>   Heating Up Mafia Town -> Battle of the Birds - Finale A: Connection 2
    =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
    =>   The Subcon Well
 Subcon Well - On Pipe (Player1)
@@ -2624,8 +2615,8 @@ Subcon Well - On Pipe (Player1)
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
    =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
-   =>   Alpine Free Roam -> Battle of the Birds - Finale A: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 5: Connection 1
+   =>   Heating Up Mafia Town -> Battle of the Birds - Finale A: Connection 2
    =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
    =>   The Subcon Well
 Swamp Palace - Big Chest (Player2)
@@ -2729,8 +2720,8 @@ TIHS Access (Player1)
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
    =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
+   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
+   =>   Dead Bird Studio -> Mafia Town - Act 5: Connection 2
    =>   The Illness has Spread
 TOD Access (Player1)
         Menu -> Save File -> Spaceship
@@ -2977,8 +2968,8 @@ Twilight Bell Cleared (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Twilight Bell
    =>   The Twilight Bell
@@ -2990,8 +2981,8 @@ Windmill Cleared (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Windmill
    =>   The Windmill
