@@ -1,34 +1,52 @@
 {
   "metadata": {
     "created": "2025-11-22T20:17:43.271159",
-    "last_updated": "2025-11-22T20:17:55.894765",
+    "last_updated": "2025-11-23T07:03:59.196756",
     "script_version": "1.0.0"
   },
   "results": {
     "A Hat in Time.yaml": {
       "game_name_from_filename": "ahit",
       "game_name_from_yaml": "A Hat in Time",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 6.3,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
       "multiworld_test": {
         "first_failure_player": null,
         "player_number": 1,
-        "player_results": {},
+        "player_results": {
+          "player_1": {
+            "error_count": 3,
+            "pass_fail": "passed",
+            "passed": true,
+            "player_number": 1,
+            "return_code": 0,
+            "sphere_reached": 17.2,
+            "total_spheres": 17.2,
+            "warning_count": 0
+          }
+        },
         "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
+        "players_passed": 1,
+        "processing_time_seconds": 19.78,
+        "success": true,
+        "total_players_tested": 1
       },
       "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiclient_passed": false,
+        "all_prerequisites_passed": true,
+        "multiclient_passed": true,
         "spoiler_full_passed": true,
         "spoiler_minimal_passed": true
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "A Hat in Time.yaml",
-      "timestamp": "2025-11-22T20:17:43.623422",
+      "timestamp": "2025-11-23T07:03:01.332221",
       "world_info": {
         "exporter_path": "exporter/games/ahit.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/ahit/ahitLogic.js",
@@ -42,27 +60,45 @@
     "A Link to the Past.yaml": {
       "game_name_from_filename": "alttp",
       "game_name_from_yaml": "A Link to the Past",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 13.01,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 2
+      },
       "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 1,
-        "player_results": {},
-        "players_failed": 0,
+        "first_failure_player": 2,
+        "player_number": 2,
+        "player_results": {
+          "player_2": {
+            "error_count": 41,
+            "pass_fail": "failed",
+            "passed": false,
+            "player_number": 2,
+            "return_code": 1,
+            "sphere_reached": 6.5,
+            "total_spheres": 19.1,
+            "warning_count": 2
+          }
+        },
+        "players_failed": 1,
         "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
+        "processing_time_seconds": 18.68,
         "success": false,
-        "total_players_tested": 0
+        "total_players_tested": 2
       },
       "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiclient_passed": false,
+        "all_prerequisites_passed": true,
+        "multiclient_passed": true,
         "spoiler_full_passed": true,
         "spoiler_minimal_passed": true
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "A Link to the Past.yaml",
-      "timestamp": "2025-11-22T20:17:43.805606",
+      "timestamp": "2025-11-23T07:03:27.478971",
       "world_info": {
         "exporter_path": "exporter/games/alttp.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
