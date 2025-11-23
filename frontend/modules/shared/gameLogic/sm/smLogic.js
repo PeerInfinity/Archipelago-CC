@@ -1238,3 +1238,484 @@ export const smStateModule = {
     };
   }
 };
+
+// ============================================================================
+// Additional Helper Functions
+// ============================================================================
+
+/**
+ * Can pass the bomb wall at Terminator (Energy Tank, Terminator location)
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static game data
+ * @param {boolean} fromLandingSite - Whether approaching from Landing Site
+ * @returns {Object} SMBool
+ */
+export function canPassTerminatorBombWall(snapshot, staticData, fromLandingSite = true) {
+  return wor(snapshot, staticData,
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'SpeedBooster'),
+      wor(snapshot, staticData,
+        { bool: !fromLandingSite, difficulty: 0 },
+        knowsSimpleShortCharge(snapshot, staticData),
+        knowsShortCharge(snapshot, staticData)
+      )
+    ),
+    canDestroyBombWalls(snapshot, staticData)
+  );
+}
+
+/**
+ * Can pass through the green pirates in Crateria
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static game data
+ * @returns {Object} SMBool
+ */
+export function canPassCrateriaGreenPirates(snapshot, staticData) {
+  return wor(snapshot, staticData,
+    canPassBombPassages(snapshot, staticData),
+    haveMissileOrSuper(snapshot, staticData),
+    energyReserveCountOk(snapshot, staticData, 1),
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Charge'),
+      haveItem(snapshot, staticData, 'Ice'),
+      haveItem(snapshot, staticData, 'Wave'),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Spazer'),
+        haveItem(snapshot, staticData, 'Plasma'),
+        haveItem(snapshot, staticData, 'ScrewAttack')
+      )
+    )
+  );
+}
+
+/**
+ * Can enter and leave the gauntlet with specific quantities
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static game data
+ * @param {number} nPB - Number of power bombs required
+ * @param {number} nTanksSpark - Number of tanks for spark
+ * @returns {Object} SMBool
+ */
+export function canEnterAndLeaveGauntletQty(snapshot, staticData, nPB, nTanksSpark) {
+  return wand(snapshot, staticData,
+    wor(snapshot, staticData,
+      canFly(snapshot, staticData),
+      haveItem(snapshot, staticData, 'SpeedBooster'),
+      wand(snapshot, staticData,
+        knowsHiJumpGauntletAccess(snapshot, staticData),
+        haveItem(snapshot, staticData, 'HiJump')
+      ),
+      knowsHiJumpLessGauntletAccess(snapshot, staticData)
+    ),
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'ScrewAttack'),
+      wor(snapshot, staticData,
+        wand(snapshot, staticData,
+          energyReserveCountOkHardRoom(snapshot, staticData, 'Gauntlet'),
+          wand(snapshot, staticData,
+            canUsePowerBombs(snapshot, staticData),
+            wor(snapshot, staticData,
+              itemCountOk(snapshot, staticData, 'PowerBomb', nPB),
+              wand(snapshot, staticData,
+                haveItem(snapshot, staticData, 'SpeedBooster'),
+                energyReserveCountOk(snapshot, staticData, nTanksSpark)
+              )
+            )
+          )
+        ),
+        wand(snapshot, staticData,
+          energyReserveCountOkHardRoom(snapshot, staticData, 'Gauntlet', 0.51),
+          canUseBombs(snapshot, staticData)
+        )
+      )
+    )
+  );
+}
+
+/**
+ * Can enter and leave the gauntlet
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static game data
+ * @returns {Object} SMBool
+ */
+export function canEnterAndLeaveGauntlet(snapshot, staticData) {
+  return wor(snapshot, staticData,
+    wand(snapshot, staticData,
+      canShortCharge(snapshot, staticData),
+      canEnterAndLeaveGauntletQty(snapshot, staticData, 2, 2)
+    ),
+    canEnterAndLeaveGauntletQty(snapshot, staticData, 2, 3)
+  );
+}
+
+/**
+ * Can do the low gauntlet route
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static game data
+ * @returns {Object} SMBool
+ */
+export function canDoLowGauntlet(snapshot, staticData) {
+  return wand(snapshot, staticData,
+    canShortCharge(snapshot, staticData),
+    canUsePowerBombs(snapshot, staticData),
+    itemCountOk(snapshot, staticData, 'ETank', 1),
+    knowsLowGauntlet(snapshot, staticData)
+  );
+}
+
+/**
+ * Can pass the worst room (in Norfair)
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static game data
+ * @returns {Object} SMBool
+ */
+export function canPassWorstRoom(snapshot, staticData) {
+  return wand(snapshot, staticData,
+    canDestroyBombWalls(snapshot, staticData),
+    canPassWorstRoomPirates(snapshot, staticData),
+    wor(snapshot, staticData,
+      canFly(snapshot, staticData),
+      wand(snapshot, staticData,
+        knowsWorstRoomIceCharge(snapshot, staticData),
+        haveItem(snapshot, staticData, 'Ice'),
+        canFireChargedShots(snapshot, staticData)
+      ),
+      wor(snapshot, staticData,
+        wand(snapshot, staticData,
+          knowsGetAroundWallJump(snapshot, staticData),
+          haveItem(snapshot, staticData, 'HiJump')
+        ),
+        knowsWorstRoomWallJump(snapshot, staticData)
+      ),
+      wand(snapshot, staticData,
+        knowsSpringBallJumpFromWall(snapshot, staticData),
+        canUseSpringBall(snapshot, staticData)
+      )
+    )
+  );
+}
+
+/**
+ * Can pass the pirates in the worst room
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static game data
+ * @returns {Object} SMBool
+ */
+export function canPassWorstRoomPirates(snapshot, staticData) {
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'ScrewAttack'),
+    itemCountOk(snapshot, staticData, 'Missile', 6),
+    itemCountOk(snapshot, staticData, 'Super', 3),
+    wand(snapshot, staticData,
+      canFireChargedShots(snapshot, staticData),
+      haveItem(snapshot, staticData, 'Plasma')
+    ),
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Charge'),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Spazer'),
+        haveItem(snapshot, staticData, 'Wave'),
+        haveItem(snapshot, staticData, 'Ice')
+      )
+    ),
+    knowsDodgeLowerNorfairEnemies(snapshot, staticData)
+  );
+}
+
+/**
+ * Can pass from Maridia to Red Tower node
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static game data
+ * @returns {Object} SMBool
+ */
+export function canPassMaridiaToRedTowerNode(snapshot, staticData) {
+  // Note: RomPatches.has() calls are already resolved to constants by the exporter
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Morph'),
+    haveItem(snapshot, staticData, 'Super')  // Assuming AreaRandoGatesBase patch is not active
+  );
+}
+
+/**
+ * Can pass from Red Tower to Maridia node
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static game data
+ * @returns {Object} SMBool
+ */
+export function canPassRedTowerToMaridiaNode(snapshot, staticData) {
+  // Note: RomPatches.has() calls are already resolved to constants by the exporter
+  // This route is only available with the AreaRandoGatesBase patch, which is typically false
+  return { bool: false, difficulty: 0 };
+}
+
+/**
+ * Can pass Frog Speedway from right to left
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static game data
+ * @returns {Object} SMBool
+ */
+export function canPassFrogSpeedwayRightToLeft(snapshot, staticData) {
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'SpeedBooster'),
+    wand(snapshot, staticData,
+      knowsFrogSpeedwayWithoutSpeed(snapshot, staticData),
+      haveItem(snapshot, staticData, 'Wave'),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Spazer'),
+        haveItem(snapshot, staticData, 'Plasma')
+      )
+    )
+  );
+}
+
+/**
+ * Can enter Norfair Reserve area from Bubble Mountain
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static game data
+ * @returns {Object} SMBool
+ */
+export function canEnterNorfairReserveAreaFromBubbleMoutain(snapshot, staticData) {
+  return wand(snapshot, staticData,
+    traverse(snapshot, staticData, 'BubbleMountainTopLeft'),
+    wor(snapshot, staticData,
+      canFly(snapshot, staticData),
+      haveItem(snapshot, staticData, 'Ice'),
+      wand(snapshot, staticData,
+        haveItem(snapshot, staticData, 'HiJump'),
+        knowsGetAroundWallJump(snapshot, staticData)
+      ),
+      wand(snapshot, staticData,
+        canUseSpringBall(snapshot, staticData),
+        knowsSpringBallJumpFromWall(snapshot, staticData)
+      )
+    )
+  );
+}
+
+/**
+ * Can enter Norfair Reserve area from Bubble Mountain Top
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static game data
+ * @returns {Object} SMBool
+ */
+export function canEnterNorfairReserveAreaFromBubbleMoutainTop(snapshot, staticData) {
+  return wand(snapshot, staticData,
+    traverse(snapshot, staticData, 'BubbleMountainTopLeft'),
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Grapple'),
+      haveItem(snapshot, staticData, 'SpaceJump'),
+      knowsNorfairReserveDBoost(snapshot, staticData)
+    )
+  );
+}
+
+/**
+ * Can access items in Double Chamber
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static game data
+ * @returns {Object} SMBool
+ */
+export function canAccessDoubleChamberItems(snapshot, staticData) {
+  // Simplified - needs hellRun implementation
+  return wor(snapshot, staticData,
+    wand(snapshot, staticData,
+      traverse(snapshot, staticData, 'SingleChamberRight'),
+      canHellRun(snapshot, staticData, 'MainUpperNorfair', 1.0)
+    ),
+    wand(snapshot, staticData,
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'HiJump'),
+        canSimpleShortCharge(snapshot, staticData),
+        canFly(snapshot, staticData),
+        knowsDoubleChamberWallJump(snapshot, staticData)
+      ),
+      canHellRun(snapshot, staticData, 'MainUpperNorfair', 0.8)
+    )
+  );
+}
+
+/**
+ * Can exit from Botwoon room to Colosseum
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static game data
+ * @returns {Object} SMBool
+ */
+export function canBotwoonExitToColosseum(snapshot, staticData) {
+  return wand(snapshot, staticData,
+    wor(snapshot, staticData,
+      wand(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Gravity'),
+        haveItem(snapshot, staticData, 'SpeedBooster')
+      ),
+      wand(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Morph'),
+        canJumpUnderwater(snapshot, staticData)
+      )
+    ),
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Gravity'),
+      wand(snapshot, staticData,
+        knowsGravLessLevel2(snapshot, staticData),
+        haveItem(snapshot, staticData, 'HiJump'),
+        wor(snapshot, staticData,
+          haveItem(snapshot, staticData, 'Grapple'),
+          haveItem(snapshot, staticData, 'Ice'),
+          wand(snapshot, staticData,
+            canDoubleSpringBallJump(snapshot, staticData),
+            haveItem(snapshot, staticData, 'SpaceJump')
+          )
+        ),
+        canGoThroughColosseumSuitless(snapshot, staticData)
+      )
+    )
+  );
+}
+
+/**
+ * Can exit from Colosseum to Botwoon
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static game data
+ * @returns {Object} SMBool
+ */
+export function canColosseumToBotwoonExit(snapshot, staticData) {
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Gravity'),
+    wand(snapshot, staticData,
+      knowsGravLessLevel2(snapshot, staticData),
+      haveItem(snapshot, staticData, 'HiJump'),
+      canGoThroughColosseumSuitless(snapshot, staticData)
+    )
+  );
+}
+
+/**
+ * Can use Croc Room to charge speed
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static game data
+ * @returns {Object} SMBool
+ */
+export function canUseCrocRoomToChargeSpeed(snapshot, staticData) {
+  // This checks if specific access points are connected in area rando
+  // For now, return false as this is area rando specific
+  return { bool: false, difficulty: 0 };
+}
+
+/**
+ * Can access Shaktool from Pants Room
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static game data
+ * @returns {Object} SMBool
+ */
+export function canAccessShaktoolFromPantsRoom(snapshot, staticData) {
+  // Simplified version - full implementation requires many tech checks
+  return wor(snapshot, staticData,
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Ice'),
+      haveItem(snapshot, staticData, 'Gravity'),
+      knowsPuyoClip(snapshot, staticData)
+    ),
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Grapple'),
+      haveItem(snapshot, staticData, 'Gravity'),
+      wor(snapshot, staticData,
+        wand(snapshot, staticData,
+          haveItem(snapshot, staticData, 'HiJump'),
+          knowsAccessSpringBallWithHiJump(snapshot, staticData)
+        ),
+        haveItem(snapshot, staticData, 'SpaceJump')
+      )
+    )
+  );
+}
+
+/**
+ * Can pass G4 (Golden Four bosses requirement)
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static game data
+ * @returns {Object} SMBool
+ */
+export function canPassG4(snapshot, staticData) {
+  // For now, assume all 4 bosses must be defeated
+  // This should check objectives/boss completion
+  return { bool: false, difficulty: 0 };  // Placeholder
+}
+
+// ============================================================================
+// "Knows" functions - These check player knowledge/difficulty settings
+// For now, these are simplified stubs that return appropriate difficulty values
+// ============================================================================
+
+export function knowsSpringBallJump(snapshot, staticData) {
+  // Spring ball jump is a medium difficulty tech
+  return { bool: true, difficulty: 3 };
+}
+
+export function knowsHiJumpMamaTurtle(snapshot, staticData) {
+  // Hi-jump mama turtle is a medium difficulty tech
+  return { bool: true, difficulty: 3 };
+}
+
+export function knowsIceMissileFromCroc(snapshot, staticData) {
+  // Ice missile from Crocomire is a medium difficulty tech
+  return { bool: true, difficulty: 3 };
+}
+
+// Additional knows functions referenced by other helpers
+export function knowsHiJumpGauntletAccess(snapshot, staticData) {
+  return { bool: true, difficulty: 2 };
+}
+
+export function knowsHiJumpLessGauntletAccess(snapshot, staticData) {
+  return { bool: true, difficulty: 4 };
+}
+
+export function knowsLowGauntlet(snapshot, staticData) {
+  return { bool: true, difficulty: 3 };
+}
+
+export function knowsWorstRoomIceCharge(snapshot, staticData) {
+  return { bool: true, difficulty: 4 };
+}
+
+export function knowsWorstRoomWallJump(snapshot, staticData) {
+  return { bool: true, difficulty: 4 };
+}
+
+export function knowsDodgeLowerNorfairEnemies(snapshot, staticData) {
+  return { bool: true, difficulty: 5 };
+}
+
+export function knowsFrogSpeedwayWithoutSpeed(snapshot, staticData) {
+  return { bool: true, difficulty: 4 };
+}
+
+export function knowsNorfairReserveDBoost(snapshot, staticData) {
+  return { bool: true, difficulty: 3 };
+}
+
+export function knowsDoubleChamberWallJump(snapshot, staticData) {
+  return { bool: true, difficulty: 3 };
+}
+
+export function canDoubleSpringBallJump(snapshot, staticData) {
+  return wand(snapshot, staticData,
+    canUseSpringBall(snapshot, staticData),
+    { bool: true, difficulty: 4 }
+  );
+}
+
+export function canGoThroughColosseumSuitless(snapshot, staticData) {
+  // Requires gravity-less Maridia techniques
+  return wand(snapshot, staticData,
+    knowsGravLessLevel2(snapshot, staticData),
+    haveItem(snapshot, staticData, 'HiJump')
+  );
+}
+
+export function knowsPuyoClip(snapshot, staticData) {
+  return { bool: true, difficulty: 5 };
+}
+
+export function knowsAccessSpringBallWithHiJump(snapshot, staticData) {
+  return { bool: true, difficulty: 3 };
+}
