@@ -197,6 +197,15 @@ export function haveItem(snapshot, staticData, itemName) {
   // First, try direct name match
   let hasIt = has(snapshot, staticData, itemName);
 
+  // Debug logging for Super item
+  if (itemName === 'Super' && typeof console !== 'undefined' && console.log) {
+    const invKeys = snapshot?.inventory ? Object.keys(snapshot.inventory) : [];
+    const superKeys = invKeys.filter(k => k.includes('Super') || k.includes('Missile'));
+    console.log('[haveItem] Checking for Super - inventory has', invKeys.length, 'items');
+    console.log('[haveItem] Keys containing Super/Missile:', superKeys);
+    console.log('[haveItem] Super Missile count:', snapshot?.inventory?.['Super Missile']);
+  }
+
   if (typeof console !== 'undefined' && console.log && itemName === 'Morph') {
     console.log('[haveItem] Checking for Morph:', {
       itemName,
@@ -237,8 +246,8 @@ export function haveItem(snapshot, staticData, itemName) {
 
       for (const [fullItemName, itemData] of itemEntries) {
         if (itemData && itemData.type === itemName) {
-          if (itemName === 'Morph' && typeof console !== 'undefined' && console.log) {
-            console.log('[haveItem] Found item with matching type:', {
+          if ((itemName === 'Morph' || itemName === 'Super') && typeof console !== 'undefined' && console.log) {
+            console.log(`[haveItem] Found item with matching type for ${itemName}:`, {
               fullItemName,
               type: itemData.type,
               checkingInventory: true
@@ -246,8 +255,8 @@ export function haveItem(snapshot, staticData, itemName) {
           }
           // Found an item with matching type, check if we have it
           hasIt = has(snapshot, staticData, fullItemName);
-          if (itemName === 'Morph' && typeof console !== 'undefined' && console.log) {
-            console.log('[haveItem] Inventory check result:', hasIt);
+          if ((itemName === 'Morph' || itemName === 'Super') && typeof console !== 'undefined' && console.log) {
+            console.log(`[haveItem] Inventory check result for ${fullItemName}:`, hasIt);
           }
           if (hasIt) break;
         }

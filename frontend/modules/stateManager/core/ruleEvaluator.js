@@ -111,7 +111,15 @@ export function executeHelper(manager, name, ...args) {
       };
 
       // New helper signature: (snapshot, staticData, ...args)
-      return manager.helperFunctions[name](snapshot, staticData, ...args);
+      const result = manager.helperFunctions[name](snapshot, staticData, ...args);
+
+      // Unwrap SMBool objects (used by Super Metroid)
+      // SMBool objects have the structure: {bool: boolean, difficulty: number}
+      if (result && typeof result === 'object' && 'bool' in result && 'difficulty' in result) {
+        return result.bool;
+      }
+
+      return result;
     }
     return false; // Default return if no helper is found
   } finally {

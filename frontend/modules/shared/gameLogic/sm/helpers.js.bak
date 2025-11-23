@@ -1,0 +1,290 @@
+/**
+ * Super Metroid helper functions for rule evaluation.
+ *
+ * Super Metroid uses a custom SMBoolManager system with evalSMBool patterns.
+ * These helpers implement the JavaScript equivalents of the Python logic.
+ */
+
+// Import all helper functions from smLogic
+import * as smLogic from './smLogic.js';
+
+/**
+ * Evaluate an SMBool result against a difficulty threshold.
+ *
+ * In Python: evalSMBool(smbool, maxDiff) returns smbool.bool == True and smbool.difficulty <= maxDiff
+ *
+ * Since the frontend doesn't have the full SMBool system, we simplify:
+ * - If the first arg (smbool) evaluates to a helper call to 'func', we assume it returns true
+ * - Otherwise we evaluate the rule normally
+ *
+ * @param {Object} state - The game state
+ * @param {Array} args - Arguments: [smbool_result, maxDiff]
+ * @param {Object} ruleEngine - The rule engine instance
+ * @returns {boolean} Whether the SMBool passes the difficulty check
+ */
+export function evalSMBool(state, args, ruleEngine) {
+    if (!args || args.length < 2) {
+        console.warn('[SM helpers] evalSMBool called with insufficient args:', args);
+        return false;
+    }
+
+    const [smboolArg, maxDiffArg] = args;
+
+    // Most traverse functions in SM return SMBool(True) with difficulty 0
+    // For now, we simplify by treating evalSMBool(func(...), maxDiff) as always true
+    // This handles the common case where traverse functions are lambda sm: SMBool(True)
+
+    // If the smbool arg is a helper call to 'func', treat it as SMBool(True)
+    if (smboolArg && smboolArg.type === 'helper' && smboolArg.name === 'func') {
+        // func(...) is a traverse function, typically returns SMBool(True) for basic access
+        return true;
+    }
+
+    // If it's a direct SMBool construction (either as helper or function_call), evaluate it
+    const isSMBool = (smboolArg.type === 'helper' && smboolArg.name === 'SMBool') ||
+                     (smboolArg.type === 'function_call' && smboolArg.function && smboolArg.function.name === 'SMBool');
+
+    if (smboolArg && isSMBool) {
+        const args = smboolArg.args || [];
+        if (args.length > 0) {
+            // First arg is the boolean value
+            const boolValue = ruleEngine.evaluateRule(args[0], state);
+            if (!boolValue) {
+                return false;
+            }
+
+            // Second arg (if present) is difficulty - default to 0
+            const difficulty = args.length > 1 ? ruleEngine.evaluateRule(args[1], state) : 0;
+
+            // Evaluate maxDiff
+            const maxDiff = ruleEngine.evaluateRule(maxDiffArg, state);
+
+            return difficulty <= maxDiff;
+        }
+    }
+
+    // For other cases, try to evaluate the smbool arg directly as a boolean
+    try {
+        const result = ruleEngine.evaluateRule(smboolArg, state);
+        return Boolean(result);
+    } catch (e) {
+        console.warn('[SM helpers] Failed to evaluate smbool arg:', e);
+        return false;
+    }
+}
+
+/**
+ * Placeholder for 'func' helper calls.
+ * These represent traverse functions from the VARIA randomizer.
+ * Most return SMBool(True), so we default to true.
+ *
+ * @param {Object} state - The game state
+ * @param {Array} args - Arguments to the function
+ * @param {Object} ruleEngine - The rule engine instance
+ * @returns {Object} SMBool-like result
+ */
+export function func(state, args, ruleEngine) {
+    // Default traverse function behavior: always accessible (SMBool(True))
+    return { bool: true, difficulty: 0 };
+}
+
+/**
+ * SMBool constructor - creates a boolean with difficulty.
+ *
+ * @param {Object} state - The game state
+ * @param {Array} args - Arguments: [boolean_value, difficulty (optional)]
+ * @param {Object} ruleEngine - The rule engine instance
+ * @returns {boolean} The boolean value
+ */
+export function SMBool(state, args, ruleEngine) {
+    if (!args || args.length === 0) {
+        return false;
+    }
+
+    // First arg is the boolean value
+    const boolValue = ruleEngine.evaluateRule(args[0], state);
+    return Boolean(boolValue);
+}
+
+// Re-export all helper functions from smLogic
+// These are the actual game logic helpers that implement Super Metroid rules
+export const {
+    helperFunctions,
+    smStateModule,
+    // Export individual helpers for direct access
+    has,
+    count,
+    any,
+    wor,
+    wand,
+    haveItem,
+    canUseBombs,
+    canUsePowerBombs,
+    canUseSpringBall,
+    canPassBombPassages,
+    canPassBowling,
+    canDestroyBombWalls,
+    canDestroyBombWallsUnderwater,
+    itemCountOk,
+    canOpenEyeDoors,
+    canOpenRedDoors,
+    canOpenGreenDoors,
+    canOpenYellowDoors,
+    haveMissileOrSuper,
+    canFireChargedShots,
+    traverse,
+    knowsCeilingDBoost,
+    knowsInfiniteBombJump,
+    knowsSimpleShortCharge,
+    knowsShortCharge,
+    knowsMockball,
+    knowsAlcatrazEscape,
+    knowsGreenGateGlitch,
+    knowsGravLessLevel3,
+    canInfiniteBombJump,
+    canFly,
+    canSimpleShortCharge,
+    canShortCharge,
+    canMockball,
+    canSpringBallJump,
+    canJumpUnderwater,
+    canHellRun,
+    canAccessSandPits,
+    heatProof,
+    energyReserveCountOk,
+    canKillBeetoms,
+    canGreenGateGlitch,
+    enoughStuffGT,
+    enoughStuffsKraid,
+    enoughStuffsPhantoon,
+    enoughStuffsRidley,
+    enoughStuffCroc,
+    enoughStuffSporeSpawn,
+    enoughStuffTourian,
+    knowsFirefleasWalljump,
+    knowsGetAroundWallJump,
+    knowsIceEscape,
+    knowsXrayDboost,
+    knowsXrayIce,
+    knowsReverseGateGlitch,
+    knowsReverseGateGlitchHiJumpLess,
+    knowsCrocPBsDBoost,
+    knowsCrocPBsIce,
+    knowsMaridiaWallJumps,
+    knowsOldMBWithSpeed,
+    knowsRonPopeilScrew,
+    knowsSpringBallJumpFromWall,
+    knowsKillPlasmaPiratesWithSpark,
+    knowsKillPlasmaPiratesWithCharge,
+    knowsGravityJump,
+    knowsMtEverestGravJump,
+    canAccessKraidsLair,
+    canExitCathedral,
+    canGoUpMtEverest,
+    canPassMtEverest,
+    canDefeatBotwoon,
+    energyReserveCount,
+    energyReserveCountOkHardRoom,
+    getDmgReduction,
+    canPassLavaPit,
+    canPassLavaPitReverse,
+    canGrappleEscape,
+    canClimbBottomRedTower,
+    canClimbRedTower,
+    canClimbBubbleMountain,
+    canClimbColosseum,
+    canPassDachoraRoom,
+    canAccessEtecoons,
+    canDoOuterMaridia,
+    canPassLowerNorfairChozo,
+    canHellRunToSpeedBooster,
+    canHellRunBackFromGrappleEscape,
+    canHellRunBackFromSpeedBoosterMissile,
+    canExitPreciousRoom,
+    canExitWaveBeam,
+    canExitScrewAttackArea,
+    getPiratesPseudoScrewCoeff,
+    int,
+    canPassTerminatorBombWall,
+    canPassCrateriaGreenPirates,
+    canEnterAndLeaveGauntletQty,
+    canEnterAndLeaveGauntlet,
+    canDoLowGauntlet,
+    canPassWorstRoom,
+    canPassWorstRoomPirates,
+    canPassMaridiaToRedTowerNode,
+    canPassRedTowerToMaridiaNode,
+    canPassFrogSpeedwayRightToLeft,
+    canEnterNorfairReserveAreaFromBubbleMoutain,
+    canEnterNorfairReserveAreaFromBubbleMoutainTop,
+    canAccessDoubleChamberItems,
+    canBotwoonExitToColosseum,
+    canColosseumToBotwoonExit,
+    canUseCrocRoomToChargeSpeed,
+    canAccessShaktoolFromPantsRoom,
+    canPassG4,
+    knowsBillyMays,
+    knowsContinuousWallJump,
+    knowsDiagonalBombJump,
+    knowsMockballWs,
+    knowsGravLessLevel1,
+    knowsGravLessLevel2,
+    knowsSpongeBathBombJump,
+    knowsSpongeBathHiJump,
+    knowsSpongeBathSpeed,
+    knowsWestSandHoleSuitlessWallJumps,
+    canAccessBillyMays,
+    canAccessItemsInWestSandHole,
+    canPassMoat,
+    canPassMoatFromMoat,
+    canPassMoatReverse,
+    canKillRedKiHunters,
+    canDoSuitlessOuterMaridia,
+    canClimbWestSandHole,
+    canPassSpongeBath,
+    canBlueGateGlitch,
+    canMorphJump,
+    canEnterCathedral,
+    canExitCrabHole,
+    canPassAmphitheaterReverse,
+    canPassBotwoonHallway,
+    canPassCacatacAlley,
+    canPassForgottenHighway,
+    canPassNinjaPirates,
+    canPassRedKiHunters,
+    canPassThreeMuskateers,
+    canPassWastelandDessgeegas,
+    canTraverseCrabTunnelLeftToRight,
+    canTraverseWestSandHallLeftToRight,
+    canFightDraygon,
+    enoughStuffsDraygon,
+    canExitDraygon,
+    canGetBackFromRidleyZone,
+    canReachCacatacAlleyFromBotowoon,
+    wnot,
+    knowsSnailClip,
+    knowsSpringBallJump,
+    knowsHiJumpMamaTurtle,
+    knowsIceMissileFromCroc,
+    knowsHiJumpGauntletAccess,
+    knowsHiJumpLessGauntletAccess,
+    knowsLowGauntlet,
+    knowsWorstRoomIceCharge,
+    knowsWorstRoomWallJump,
+    knowsDodgeLowerNorfairEnemies,
+    knowsFrogSpeedwayWithoutSpeed,
+    knowsNorfairReserveDBoost,
+    knowsDoubleChamberWallJump,
+    canDoubleSpringBallJump,
+    canGoThroughColosseumSuitless,
+    knowsPuyoClip,
+    knowsAccessSpringBallWithHiJump
+} = smLogic;
+
+export default {
+    evalSMBool,
+    func,
+    SMBool,
+    // Include all smLogic helpers
+    ...smLogic.helperFunctions
+};
