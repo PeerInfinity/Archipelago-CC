@@ -585,6 +585,50 @@ class SMGameExportHandler(GenericGameExportHandler):
         """
         self._current_exit_context = exit_name
 
+    def get_unwrapped_exit_lambda(self, exit_name: str, original_lambda: Any) -> Optional[Any]:
+        """Get the unwrapped transition lambda for an exit, if it's wrapped in Cache.ldeco.
+
+        This method is called BEFORE the analyzer processes the exit rule, allowing us to
+        provide the unwrapped lambda directly so the analyzer never encounters the 'ret' variable.
+
+        Note: The original_lambda here is Archipelago's wrapper (lambda state: ...), not the
+        raw transition lambda. We need to get the transition lambda directly from AccessPoint.
+
+        Args:
+            exit_name: The exit name in format "Source->Destination"
+            original_lambda: The Archipelago exit access_rule wrapper (not used)
+
+        Returns:
+            The unwrapped transition lambda if it was Cache.ldeco wrapped, otherwise None
+        """
+        if not exit_name or '->' not in exit_name:
+            return None
+
+        try:
+            from .sm_traverse_extractor import get_transition_lambda
+
+            # Parse exit name
+            parts = exit_name.split('->')
+            if len(parts) != 2:
+                return None
+
+            source_ap_name = parts[0]
+            dest_ap_name = parts[1]
+
+            # Try to get the unwrapped transition lambda directly from AccessPoint
+            # This will return None if the transition doesn't exist or isn't wrapped
+            unwrapped = get_transition_lambda(source_ap_name, dest_ap_name, unwrap=True)
+
+            if unwrapped:
+                logger.info(f"SM: Providing unwrapped lambda for exit '{exit_name}'")
+                return unwrapped
+            else:
+                return None
+
+        except Exception as e:
+            logger.error(f"SM: Error getting unwrapped exit lambda for '{exit_name}': {e}", exc_info=True)
+            return None
+
     def _parse_traverse_lambda(self, traverse_func, source_ap_name: str) -> Optional[Dict[str, Any]]:
         """Parse a traverse lambda function and return its rule structure.
 

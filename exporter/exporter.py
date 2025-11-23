@@ -1078,9 +1078,20 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                 game_handler.set_exit_context(exit_name)
 
                             if hasattr(exit, 'access_rule') and exit.access_rule:
+                                # Check if the game handler can provide an unwrapped version of the lambda
+                                # (e.g., SM unwraps Cache.ldeco decorators to avoid 'ret' variables)
+                                rule_to_analyze = exit.access_rule
+                                if game_handler:
+                                    if hasattr(game_handler, 'get_unwrapped_exit_lambda'):
+                                        unwrapped = game_handler.get_unwrapped_exit_lambda(exit_name, exit.access_rule)
+                                        if unwrapped:
+                                            rule_to_analyze = unwrapped
+                                    elif game_name == "Super Metroid":
+                                        logger.warning(f"SM: game_handler exists but doesn't have get_unwrapped_exit_lambda method! Handler type: {type(game_handler)}")
+
                                 # Try special handling first for complex exit rules
                                 if game_handler and hasattr(game_handler, 'handle_complex_exit_rule'):
-                                    special_rule = game_handler.handle_complex_exit_rule(exit_name, exit.access_rule)
+                                    special_rule = game_handler.handle_complex_exit_rule(exit_name, rule_to_analyze)
                                     if special_rule:
                                         expanded_rule = game_handler.expand_rule(special_rule)
                                         # Resolve any attribute nodes in item_check rules
@@ -1090,7 +1101,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                 if expanded_rule is None:
                                     expanded_rule = safe_expand_rule(
                                         game_handler,
-                                        exit.access_rule,
+                                        rule_to_analyze,
                                         exit_name,
                                         target_type='Exit',
                                         world=world
