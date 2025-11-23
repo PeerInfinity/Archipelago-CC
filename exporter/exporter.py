@@ -1150,9 +1150,11 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                             
                             # First check if game handler has special handling for this location
                             if hasattr(location, 'access_rule') and location.access_rule:
-                                # Set context for game handlers that need it (e.g., Bomb Rush Cyberfunk)
+                                # Set context for game handlers that need it (e.g., Bomb Rush Cyberfunk, Super Metroid)
                                 if hasattr(game_handler, 'set_context'):
                                     game_handler.set_context(location_name)
+                                if hasattr(game_handler, 'set_location_context'):
+                                    game_handler.set_location_context(location_name)
                                 # Check if game handler can extract custom access rule (e.g., Zillion)
                                 if game_handler and hasattr(game_handler, 'get_custom_location_access_rule'):
                                     custom_rule = game_handler.get_custom_location_access_rule(location, world)

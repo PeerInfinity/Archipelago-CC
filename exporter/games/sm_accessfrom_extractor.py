@@ -1,232 +1,53 @@
-"""
-Extract AccessFrom information from Super Metroid location definitions using AST parsing.
+"""Extract AccessFrom data from VARIA locations."""
 
-This module parses the graph_locations.py file to extract AccessFrom dictionaries
-and determine which locations have simple (SMBool(True)) vs complex (item requirements)
-access patterns.
-"""
-
-import ast
 import logging
-import os
-from typing import Dict, Set, Optional
-from ..analyzer.source_extraction import get_multiline_lambda_source
+from typing import Dict, Any
 
 logger = logging.getLogger(__name__)
 
+def get_location_accessfrom_data(world) -> Dict[str, Dict[str, Any]]:
+    """Extract AccessFrom data for all VARIA locations.
 
-class AccessFromExtractor(ast.NodeVisitor):
-    """AST visitor to extract AccessFrom assignments from Super Metroid location files."""
-
-    def __init__(self):
-        """Initialize the extractor."""
-        self.location_access_info: Dict[str, Dict[str, str]] = {}
-        # Maps location_name -> {region_name -> lambda_source}
-
-    def visit_Assign(self, node: ast.Assign):
-        """Visit assignment nodes looking for locationsDict[location].AccessFrom = {...}"""
-        try:
-            # Check if this is an assignment to locationsDict[...].AccessFrom
-            if (len(node.targets) == 1 and
-                isinstance(node.targets[0], ast.Attribute) and
-                node.targets[0].attr == 'AccessFrom' and
-                isinstance(node.targets[0].value, ast.Subscript)):
-
-                # Extract location name from locationsDict[location_name]
-                subscript = node.targets[0].value
-                if (isinstance(subscript.value, ast.Name) and
-                    subscript.value.id == 'locationsDict' and
-                    isinstance(subscript.slice, ast.Constant)):
-
-                    location_name = subscript.slice.value
-
-                    # Check if the value is a dictionary
-                    if isinstance(node.value, ast.Dict):
-                        access_from_dict = {}
-
-                        # Extract each region -> lambda mapping
-                        for key, value in zip(node.value.keys, node.value.values):
-                            if isinstance(key, ast.Constant) and isinstance(key.value, str):
-                                region_name = key.value
-
-                                # Get the lambda source
-                                if isinstance(value, ast.Lambda):
-                                    # Use astunparse to get clean lambda source
-                                    try:
-                                        import astunparse
-                                        lambda_source = astunparse.unparse(value).strip()
-                                        access_from_dict[region_name] = lambda_source
-                                    except Exception as e:
-                                        logger.warning(f"Failed to unparse lambda for {location_name}/{region_name}: {e}")
-                                        access_from_dict[region_name] = "<parse_error>"
-
-                        if access_from_dict:
-                            self.location_access_info[location_name] = access_from_dict
-
-        except Exception as e:
-            logger.debug(f"Error in visit_Assign: {e}")
-
-        # Continue visiting
-        self.generic_visit(node)
-
-
-def is_simple_smbool_lambda(lambda_source: str) -> bool:
-    """
-    Determine if a lambda source is a simple SMBool(True) pattern.
-
-    Args:
-        lambda_source: The lambda source code (e.g., "(lambda sm: SMBool(True))")
-                      Note: astunparse wraps lambdas in parentheses
-
-    Returns:
-        True if the lambda is just SMBool(True), False otherwise
-    """
-    # Normalize whitespace
-    normalized = ' '.join(lambda_source.split())
-
-    # Remove outer parentheses if present
-    if normalized.startswith('(') and normalized.endswith(')'):
-        normalized = normalized[1:-1].strip()
-
-    # Check for the pattern: lambda <param>: SMBool(True)
-    # astunparse may produce "(lambda sm: SMBool(True))" with parens
-    patterns = [
-        'lambda sm: SMBool(True)',
-        'lambda state: SMBool(True)',
-    ]
-
-    return normalized in patterns
-
-
-def extract_accessfrom_info(world_module_path: str) -> Dict[str, Set[str]]:
-    """
-    Extract AccessFrom information from Super Metroid's graph_locations.py file.
-
-    Args:
-        world_module_path: Path to the worlds/sm module
-
-    Returns:
-        Dict mapping location_name -> set of region names with simple (SMBool(True)) access
-        Only includes locations where ALL AccessFrom entries are simple.
-    """
-    graph_locations_path = os.path.join(
-        world_module_path,
-        'variaRandomizer',
-        'graph',
-        'vanilla',
-        'graph_locations.py'
-    )
-
-    if not os.path.exists(graph_locations_path):
-        logger.warning(f"graph_locations.py not found at {graph_locations_path}")
-        return {}
-
-    try:
-        # Parse the file
-        with open(graph_locations_path, 'r', encoding='utf-8') as f:
-            source = f.read()
-
-        tree = ast.parse(source, filename=graph_locations_path)
-
-        # Extract AccessFrom info
-        extractor = AccessFromExtractor()
-        extractor.visit(tree)
-
-        # Analyze which locations have ALL simple AccessFrom entries
-        simple_locations = {}
-
-        for location_name, access_from_dict in extractor.location_access_info.items():
-            # Check if ALL entries are simple
-            all_simple = all(
-                is_simple_smbool_lambda(lambda_src)
-                for lambda_src in access_from_dict.values()
-            )
-
-            if all_simple:
-                # Store the region names for this location
-                simple_locations[location_name] = set(access_from_dict.keys())
-                logger.debug(f"Location '{location_name}' has simple AccessFrom (SMBool(True) only)")
-            else:
-                # Log which regions are complex
-                complex_regions = [
-                    region for region, lambda_src in access_from_dict.items()
-                    if not is_simple_smbool_lambda(lambda_src)
-                ]
-                logger.debug(f"Location '{location_name}' has complex AccessFrom in regions: {complex_regions}")
-
-        logger.info(f"Found {len(simple_locations)} locations with simple AccessFrom out of {len(extractor.location_access_info)} total")
-        return simple_locations
-
-    except Exception as e:
-        logger.error(f"Failed to extract AccessFrom info: {e}", exc_info=True)
-        return {}
-
-
-def extract_all_accessfrom_info(world_module_path: str) -> Dict[str, Dict[str, str]]:
-    """
-    Extract ALL AccessFrom information from Super Metroid's graph_locations.py file.
-
-    Args:
-        world_module_path: Path to the worlds/sm module
-
-    Returns:
-        Dict mapping location_name -> {region_name -> lambda_source_code}
-        Returns ALL locations with their AccessFrom data, not just simple ones.
-    """
-    graph_locations_path = os.path.join(
-        world_module_path,
-        'variaRandomizer',
-        'graph',
-        'vanilla',
-        'graph_locations.py'
-    )
-
-    if not os.path.exists(graph_locations_path):
-        logger.warning(f"graph_locations.py not found at {graph_locations_path}")
-        return {}
-
-    try:
-        # Parse the file
-        with open(graph_locations_path, 'r', encoding='utf-8') as f:
-            source = f.read()
-
-        tree = ast.parse(source, filename=graph_locations_path)
-
-        # Extract AccessFrom info
-        extractor = AccessFromExtractor()
-        extractor.visit(tree)
-
-        logger.info(f"Extracted AccessFrom data for {len(extractor.location_access_info)} locations")
-        return extractor.location_access_info
-
-    except Exception as e:
-        logger.error(f"Failed to extract AccessFrom info: {e}", exc_info=True)
-        return {}
-
-
-def get_simple_accessfrom_locations(world) -> Set[str]:
-    """
-    Get the set of location names that have simple AccessFrom (all regions use SMBool(True)).
-
-    This is the main entry point for the SM exporter to use.
-
-    Args:
-        world: The Super Metroid world instance
-
-    Returns:
-        Set of location names with simple AccessFrom
+    Returns a dictionary mapping location names to their AccessFrom information:
+    {
+        "Location Name": {
+            "regions": {
+                "Region Name": <lambda function>,
+                ...
+            },
+            "available": <lambda function>,
+            "post_available": <lambda function>
+        }
+    }
     """
     try:
-        # Get the world module path
-        import worlds.sm
-        world_module_path = os.path.dirname(worlds.sm.__file__)
+        from worlds.sm.variaRandomizer.graph.vanilla.graph_locations import locationsDict
 
-        # Extract and analyze
-        simple_locations_dict = extract_accessfrom_info(world_module_path)
+        accessfrom_data = {}
 
-        # Return just the location names
-        return set(simple_locations_dict.keys())
+        for loc_name, loc_obj in locationsDict.items():
+            # Extract AccessFrom dictionary (maps region name -> lambda)
+            access_from = getattr(loc_obj, 'AccessFrom', None)
+            available = getattr(loc_obj, 'Available', None)
+            post_available = getattr(loc_obj, 'PostAvailable', None)
+
+            if access_from is not None or available is not None or post_available is not None:
+                accessfrom_data[loc_name] = {
+                    'regions': access_from if access_from is not None else {},
+                    'available': available,
+                    'post_available': post_available
+                }
+
+        logger.info(f"SM: Extracted AccessFrom data for {len(accessfrom_data)} locations")
+
+        # Log the 3 problematic locations specifically
+        for loc_name in ["Screw Attack", "Space Jump", "Missile (green Brinstar below super missile)"]:
+            if loc_name in accessfrom_data:
+                regions = list(accessfrom_data[loc_name]['regions'].keys())
+                logger.info(f"SM: Location '{loc_name}' AccessFrom regions: {regions}")
+
+        return accessfrom_data
 
     except Exception as e:
-        logger.error(f"Failed to get simple AccessFrom locations: {e}")
-        return set()
+        logger.error(f"SM: Failed to extract AccessFrom data: {e}", exc_info=True)
+        return {}

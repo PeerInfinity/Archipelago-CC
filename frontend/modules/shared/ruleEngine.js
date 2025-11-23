@@ -415,6 +415,14 @@ export const evaluateRule = (rule, context, depth = 0) => {
         } else if (isValidContext) {
           if (typeof context.executeHelper === 'function') {
             result = context.executeHelper(rule.name, ...args);
+
+            // Auto-convert SMBool objects to booleans
+            // evalSMBool is the only helper that explicitly handles SMBool conversion,
+            // so it returns a boolean already and doesn't need this
+            if (result && typeof result === 'object' && 'bool' in result && 'difficulty' in result) {
+              // Convert to boolean with high difficulty threshold
+              result = result.bool === true && result.difficulty <= 999;
+            }
           } else {
             log(
               'warn',
@@ -437,6 +445,11 @@ export const evaluateRule = (rule, context, depth = 0) => {
         } else if (isValidContext) {
           if (typeof context.executeHelper === 'function') {
             result = context.executeHelper(rule.name, ...args);
+
+            // Auto-convert SMBool objects to booleans
+            if (result && typeof result === 'object' && 'bool' in result && 'difficulty' in result) {
+              result = result.bool === true && result.difficulty <= 999;
+            }
           } else {
             log(
               'warn',
@@ -482,13 +495,21 @@ export const evaluateRule = (rule, context, depth = 0) => {
         let hasUndefined = false;
         for (const condition of rule.conditions || []) {
           const conditionResult = evaluateRule(condition, context, depth + 1);
+
+          // Handle SMBool objects from Super Metroid
+          let boolValue = conditionResult;
+          if (conditionResult && typeof conditionResult === 'object' && 'bool' in conditionResult) {
+            // SMBool object - extract the boolean value (ignore difficulty for and/or)
+            boolValue = conditionResult.bool === true;
+          }
+
           // Check for falsiness (but not undefined, which is handled separately)
-          if (!conditionResult && conditionResult !== undefined) {
+          if (!boolValue && boolValue !== undefined) {
             result = false;
             hasUndefined = false; // Definitively false
             break;
           }
-          if (conditionResult === undefined) {
+          if (boolValue === undefined) {
             hasUndefined = true; // Potential undefined result
           }
         }
@@ -504,8 +525,16 @@ export const evaluateRule = (rule, context, depth = 0) => {
         let hasUndefined = false;
         for (const condition of rule.conditions || []) {
           const conditionResult = evaluateRule(condition, context, depth + 1);
+
+          // Handle SMBool objects from Super Metroid
+          let boolValue = conditionResult;
+          if (conditionResult && typeof conditionResult === 'object' && 'bool' in conditionResult) {
+            // SMBool object - extract the boolean value (ignore difficulty for and/or)
+            boolValue = conditionResult.bool === true;
+          }
+
           // Check for truthiness (but not undefined, which is handled separately)
-          if (conditionResult && conditionResult !== undefined) {
+          if (boolValue && boolValue !== undefined) {
             result = true;
             hasUndefined = false; // Definitively true
             break;
