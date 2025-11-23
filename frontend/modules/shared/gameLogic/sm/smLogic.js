@@ -573,6 +573,14 @@ export function traverse(snapshot, staticData, doorName) {
     return { bool: true, difficulty: 0 };  // Default to passable if door not found
   }
 
+  // Debug logging for green and red doors
+  if (doorColor === 'green' || doorColor === 'red') {
+    if (typeof console !== 'undefined' && console.log) {
+      const superCount = snapshot?.inventory?.['Super Missile'] || 0;
+      console.log(`[traverse] Checking ${doorColor} door: ${doorName}, Super Missiles: ${superCount}`);
+    }
+  }
+
   // Check door accessibility based on color
   // Based on Python Door.traverse() implementation
   if (doorColor === 'grey') {
@@ -580,10 +588,18 @@ export function traverse(snapshot, staticData, doorName) {
     return { bool: false, difficulty: 0 };
   } else if (doorColor === 'red') {
     // Red doors require missiles or supers
-    return canOpenRedDoors(snapshot, staticData);
+    const result = canOpenRedDoors(snapshot, staticData);
+    if (typeof console !== 'undefined' && console.log && doorName.includes('NoobBridge')) {
+      console.log(`[traverse] Red door ${doorName} result:`, result);
+    }
+    return result;
   } else if (doorColor === 'green') {
     // Green doors require super missiles
-    return canOpenGreenDoors(snapshot, staticData);
+    const result = canOpenGreenDoors(snapshot, staticData);
+    if (typeof console !== 'undefined' && console.log) {
+      console.log(`[traverse] Green door ${doorName} result:`, result);
+    }
+    return result;
   } else if (doorColor === 'yellow') {
     // Yellow doors require power bombs
     return canOpenYellowDoors(snapshot, staticData);

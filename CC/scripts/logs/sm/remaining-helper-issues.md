@@ -54,8 +54,32 @@ Browser logs show inconsistent inventory state:
 [haveItem] Morph Ball: true  ← After test completes
 ```
 
-### Investigation Needed
-1. Is `_inHelperExecution` true during the comparison's reachability check?
-2. Is there a race condition between cache invalidation and snapshot retrieval?
-3. Does the comparison use a stale snapshot captured before recomputation?
-4. Should `add_sphere_items_upfront` be enabled for SM (like it is for Blasphemous)?
+### CRITICAL FINDING - Locations Not Being Checked!
+
+**Root Cause Identified**: The spoiler test is NOT checking the location "Energy Tank, Gauntlet" before doing the comparison. This means the Super Missile is never added to inventory before the reachability check runs.
+
+**Evidence**:
+1. `traverse` debug logs show "Super Missiles: 0" during Sphere 3.1 comparison
+2. No "Checking X locations from sphere" messages in test output
+3. Location checking code in eventProcessor.js (lines 369-414) is not being executed
+4. Later in the test, traverse logs DO show "Super Missiles: 1" (after the failed comparison)
+
+**Sphere Log Structure**:
+Event 6 (Sphere 3.1) contains:
+```json
+{
+  "player_data": {
+    "1": {
+      "sphere_locations": ["Energy Tank, Gauntlet"],
+      "new_accessible_regions": [39 regions],
+      "new_inventory_details": {"base_items": {"Super Missile": 1}}
+    }
+  }
+}
+```
+
+**Next Steps**:
+1. Investigate why eventProcessor is not extracting `sphere_locations` from player_data
+2. Check `_getSphereDataFromSphereState()` to see how it extracts locations
+3. Verify sphereState is correctly storing the sphere_locations field
+4. Fix the extraction so locations are checked before comparison
