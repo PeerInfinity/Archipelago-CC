@@ -586,7 +586,7 @@ class SMGameExportHandler(GenericGameExportHandler):
         self._current_exit_context = exit_name
 
     def get_unwrapped_exit_lambda(self, exit_name: str, original_lambda: Any) -> Optional[Any]:
-        """Get the unwrapped transition lambda for an exit, if it's wrapped in Cache.ldeco.
+        """Get the unwrapped transition/traverse lambda for an exit, if it's wrapped in Cache.ldeco.
 
         This method is called BEFORE the analyzer processes the exit rule, allowing us to
         provide the unwrapped lambda directly so the analyzer never encounters the 'ret' variable.
@@ -594,18 +594,20 @@ class SMGameExportHandler(GenericGameExportHandler):
         Note: The original_lambda here is Archipelago's wrapper (lambda state: ...), not the
         raw transition lambda. We need to get the transition lambda directly from AccessPoint.
 
+        For inter-area connections, the traverse lambda is used instead of a transition lambda.
+
         Args:
             exit_name: The exit name in format "Source->Destination"
             original_lambda: The Archipelago exit access_rule wrapper (not used)
 
         Returns:
-            The unwrapped transition lambda if it was Cache.ldeco wrapped, otherwise None
+            The unwrapped transition/traverse lambda if it was Cache.ldeco wrapped, otherwise None
         """
         if not exit_name or '->' not in exit_name:
             return None
 
         try:
-            from .sm_traverse_extractor import get_transition_lambda
+            from .sm_traverse_extractor import get_transition_lambda, unwrap_cache_ldeco
 
             # Parse exit name
             parts = exit_name.split('->')
@@ -620,10 +622,27 @@ class SMGameExportHandler(GenericGameExportHandler):
             unwrapped = get_transition_lambda(source_ap_name, dest_ap_name, unwrap=True)
 
             if unwrapped:
-                logger.info(f"SM: Providing unwrapped lambda for exit '{exit_name}'")
+                logger.info(f"SM: Providing unwrapped transition lambda for exit '{exit_name}'")
                 return unwrapped
-            else:
-                return None
+
+            # If no transition found, this might be an inter-area connection
+            # Inter-area connections use the traverse lambda from the source AccessPoint
+            # Try to get and unwrap the traverse lambda
+            traverse_funcs = self._get_accesspoint_traverse_funcs()
+            traverse_func = traverse_funcs.get(source_ap_name)
+
+            if traverse_func:
+                # Try to unwrap it if it's wrapped
+                unwrapped_traverse = unwrap_cache_ldeco(traverse_func)
+                if unwrapped_traverse:
+                    logger.info(f"SM: Providing unwrapped traverse lambda for inter-area exit '{exit_name}'")
+                    return unwrapped_traverse
+                else:
+                    # Not wrapped, return as-is
+                    logger.info(f"SM: Providing traverse lambda (not wrapped) for inter-area exit '{exit_name}'")
+                    return traverse_func
+
+            return None
 
         except Exception as e:
             logger.error(f"SM: Error getting unwrapped exit lambda for '{exit_name}': {e}", exc_info=True)
