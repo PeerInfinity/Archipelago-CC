@@ -1072,6 +1072,11 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                         try:
                             expanded_rule = None
                             exit_name = getattr(exit, 'name', None)
+
+                            # Set exit context for game handlers that need it (e.g., SM for 'ret' variable resolution)
+                            if game_handler and hasattr(game_handler, 'set_exit_context'):
+                                game_handler.set_exit_context(exit_name)
+
                             if hasattr(exit, 'access_rule') and exit.access_rule:
                                 # Try special handling first for complex exit rules
                                 if game_handler and hasattr(game_handler, 'handle_complex_exit_rule'):
@@ -1117,6 +1122,10 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                             region_data['exits'].append(exit_data)
                         except Exception as e:
                             logger.error(f"Error processing exit {getattr(exit, 'name', 'Unknown')}: {str(e)}")
+                        finally:
+                            # Clear exit context after processing
+                            if game_handler and hasattr(game_handler, 'set_exit_context'):
+                                game_handler.set_exit_context(None)
 
                 # Process locations
                 if hasattr(region, 'locations'):

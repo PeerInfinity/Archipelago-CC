@@ -26,6 +26,25 @@ class SMGameExportHandler(GenericGameExportHandler):
         self._simple_accessfrom_locations: Optional[Set[str]] = None
         self._all_accessfrom_info: Optional[Dict[str, Dict[str, str]]] = None
         self._varia_item_types: Optional[Dict[str, str]] = None
+        self._accesspoint_traverse_funcs: Optional[Dict[str, Any]] = None
+        self._current_exit_context: Optional[str] = None  # Track current exit being processed
+
+    def _get_accesspoint_traverse_funcs(self) -> Dict[str, Any]:
+        """Get traverse functions for all AccessPoints (cached).
+
+        Returns:
+            Dict mapping AccessPoint name to traverse function
+        """
+        if self._accesspoint_traverse_funcs is None:
+            try:
+                from .sm_traverse_extractor import get_accesspoint_traverse_funcs
+                self._accesspoint_traverse_funcs = get_accesspoint_traverse_funcs(self.world)
+                logger.info(f"SM: Loaded traverse functions for {len(self._accesspoint_traverse_funcs)} AccessPoints")
+            except Exception as e:
+                logger.error(f"SM: Failed to extract AccessPoint traverse functions: {e}", exc_info=True)
+                self._accesspoint_traverse_funcs = {}
+
+        return self._accesspoint_traverse_funcs
 
     def _get_varia_item_types(self) -> Dict[str, str]:
         """Get mapping of item names to their VARIA types.
@@ -558,6 +577,59 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         return False
 
+    def set_exit_context(self, exit_name: Optional[str]):
+        """Set the current exit being processed for ret variable resolution.
+
+        Args:
+            exit_name: The exit name in format "Source->Destination"
+        """
+        self._current_exit_context = exit_name
+
+    def _parse_traverse_lambda(self, traverse_func, source_ap_name: str) -> Optional[Dict[str, Any]]:
+        """Parse a traverse lambda function and return its rule structure.
+
+        Args:
+            traverse_func: The traverse lambda function from AccessPoint
+            source_ap_name: The source AccessPoint name (for logging)
+
+        Returns:
+            Parsed rule dict, or None if parsing failed
+        """
+        try:
+            from ..analyzer import analyze_rule
+
+            # Save the current exit context and clear it temporarily
+            # to avoid infinite recursion when the traverse lambda itself has 'ret' variables
+            saved_context = self._current_exit_context
+            self._current_exit_context = None
+
+            try:
+                # Analyze the traverse lambda
+                analyzed = analyze_rule(
+                    rule_func=traverse_func,
+                    closure_vars={},
+                    game_handler=self,
+                    player_context=None,
+                    context_info=f"Traverse lambda for {source_ap_name}"
+                )
+
+                if not analyzed:
+                    logger.warning(f"SM: Failed to analyze traverse lambda for '{source_ap_name}'")
+                    return None
+
+                # Expand the analyzed rule
+                expanded = self.expand_rule(analyzed)
+                logger.debug(f"SM: Parsed traverse lambda for '{source_ap_name}'")
+                return expanded
+
+            finally:
+                # Restore the exit context
+                self._current_exit_context = saved_context
+
+        except Exception as e:
+            logger.error(f"SM: Error parsing traverse lambda for '{source_ap_name}': {e}", exc_info=True)
+            return None
+
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Recursively expand and transform Super Metroid rules.
 
@@ -573,9 +645,35 @@ class SMGameExportHandler(GenericGameExportHandler):
         # The Cache.ldeco decorator creates a wrapper function with a local variable 'ret'
         # that stores the result of the wrapped function. When parsing entrance rules,
         # the analyzer sometimes captures this 'ret' variable instead of inlining it.
-        # For now, we replace it with SMBool(False) as a conservative default.
-        # TODO: Properly extract and inline the traverse lambda from AccessPoint objects
+        # We need to extract and parse the actual traverse lambda from the AccessPoint.
         if rule_type == 'name' and rule.get('name') == 'ret':
+            # Check if we have exit context
+            if self._current_exit_context:
+                # Parse exit name: "Source->Destination"
+                if '->' in self._current_exit_context:
+                    source_ap_name = self._current_exit_context.split('->')[0]
+                    logger.info(f"SM: Found 'ret' variable in exit '{self._current_exit_context}', extracting traverse lambda")
+
+                    # Get traverse function for this AccessPoint
+                    traverse_funcs = self._get_accesspoint_traverse_funcs()
+                    traverse_func = traverse_funcs.get(source_ap_name)
+
+                    if traverse_func:
+                        # Parse the traverse lambda
+                        parsed_traverse = self._parse_traverse_lambda(traverse_func, source_ap_name)
+                        if parsed_traverse:
+                            logger.info(f"SM: Successfully replaced 'ret' with parsed traverse lambda for '{source_ap_name}'")
+                            return parsed_traverse
+                        else:
+                            logger.warning(f"SM: Failed to parse traverse lambda for '{source_ap_name}', using conservative False")
+                    else:
+                        logger.warning(f"SM: No traverse function found for AccessPoint '{source_ap_name}'")
+                else:
+                    logger.warning(f"SM: Exit context '{self._current_exit_context}' does not contain '->'")
+            else:
+                logger.warning("SM: Found 'ret' variable but no exit context set")
+
+            # Conservative fallback
             logger.warning("SM: Found unresolved 'ret' variable, replacing with SMBool(False)")
             return {'type': 'constant', 'value': {'bool': False, 'difficulty': 0}}
 
