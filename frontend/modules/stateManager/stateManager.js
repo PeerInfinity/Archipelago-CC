@@ -205,10 +205,23 @@ export class StateManager {
         '[StateManager] Received ping, sending pong with data:',
         data
       );
+
+      // Get queue status if available
+      let queueStatus = null;
+      if (this.commandQueue) {
+        const snapshot = this.commandQueue.getSnapshot();
+        queueStatus = {
+          pending: snapshot.queueLength,
+          processing: snapshot.processing,
+          currentCommand: snapshot.currentCommand?.command || null
+        };
+      }
+
       this.postMessageCallback({
         type: 'pingResponse',
         queryId: data.queryId, // queryId at the top level
         payload: data.payload, // The actual echoed payload at the top level
+        queueStatus: queueStatus // Include queue status for debugging
       });
     } else {
       log(

@@ -61,6 +61,7 @@ export class StateManagerProxy {
     this.staticDataCache = {}; // Initialize staticDataCache to an empty object
     this.nextQueryId = 1;
     this.pendingQueries = new Map(); // Map<queryId, { resolve, reject, timeoutId? }>
+    this.timedOutPings = new Map(); // Map<queryId, { payload, timeoutMs, timedOutAt }>
     this.initialLoadPromise = null;
     this.initialLoadResolver = null;
     this.staticDataIsSet = false; // Flag for static data readiness
@@ -497,6 +498,7 @@ export class StateManagerProxy {
           const pending = this.pendingQueries.get(message.queryId);
           if (pending) {
             if (pending.timeoutId) clearTimeout(pending.timeoutId);
+            log('warn', `[StateManagerProxy] Clearing queryId ${message.queryId} due to worker error: ${message.errorMessage}`);
             pending.reject(
               new Error(
                 message.errorMessage ||
@@ -527,6 +529,7 @@ export class StateManagerProxy {
         break;
       case 'commandFailed': // Phase 8: Command failed during processing
         // Command encountered an error during execution
+        log('warn', `[StateManagerProxy] Command failed - command: ${message.command}, queryId: ${message.queryId}, error: ${message.error}`);
         this._handleQueryResponse({
           queryId: message.queryId,
           error: message.error
@@ -573,19 +576,39 @@ export class StateManagerProxy {
         if (pending.timeoutId) clearTimeout(pending.timeoutId);
         pending.resolve(message.payload); // Resolve with the echoed payload
         this.pendingQueries.delete(message.queryId);
-        this._logDebug(
-          '[StateManagerProxy] Ping response processed for queryId:',
-          message.queryId
-        );
+        this._logDebug(`[StateManagerProxy] Ping response SUCCESS for queryId: ${message.queryId}`);
       } else {
-        // This is a real problem - the ping timed out, meaning the worker is slow
-        // or overloaded. The test is proceeding with a potentially stale snapshot.
-        log(
-          'warn',
-          '[StateManagerProxy] Ping timed out - received response for unknown queryId:',
-          message.queryId,
-          'This means the worker response is arriving late and the snapshot may be stale!'
-        );
+        // Check if we have timeout metadata for this ping
+        // Ping response for unknown queryId - check if we have timeout metadata
+        const timeoutInfo = this.timedOutPings.get(message.queryId);
+        if (timeoutInfo) {
+          const delayMs = Date.now() - timeoutInfo.timedOutAt;
+          const queueInfo = message.queueStatus || {};
+
+          log(
+            'warn',
+            `[StateManagerProxy] Ping timed out - received response for unknown queryId: ${message.queryId}`,
+            `\n  Payload: ${JSON.stringify(timeoutInfo.payload)}`,
+            `\n  Configured timeout: ${timeoutInfo.timeoutMs}ms`,
+            `\n  Response delay after timeout: ${delayMs}ms`,
+            `\n  Worker queue status: ${queueInfo.pending || '?'} pending, ${queueInfo.processing ? 'processing' : 'idle'}`,
+            `\n  Current command: ${queueInfo.currentCommand || 'none'}`,
+            '\n  This means the worker response is arriving late and the snapshot may be stale!'
+          );
+          this.timedOutPings.delete(message.queryId);
+        } else {
+          // Fallback if no timeout info found - this suggests queryId was cleared due to error, not timeout
+          const queueInfo = message.queueStatus || {};
+          log(
+            'warn',
+            `[StateManagerProxy] Ping response for unknown queryId: ${message.queryId}`,
+            `\n  Possible cause: QueryId was cleared (likely due to worker error) before ping response arrived`,
+            `\n  Timeout metadata map size: ${this.timedOutPings.size} (would be >0 if actual timeout occurred)`,
+            `\n  Worker queue status: ${queueInfo.pending || '?'} pending, ${queueInfo.processing ? 'processing' : 'idle'}`,
+            `\n  Current command: ${queueInfo.currentCommand || 'none'}`,
+            '\n  Check logs above for worker errors related to this queryId.'
+          );
+        }
       }
     } else {
       // Handle non-query pings if any (currently not used by pingWorker)
@@ -1519,12 +1542,20 @@ export class StateManagerProxy {
     const queryId = this.nextQueryId++;
     this._logDebug(
       `[StateManagerProxy] Pinging worker with queryId ${queryId}, payload:`,
-      dataToEcho
+      dataToEcho,
+      `timeout: ${timeoutMs}ms`
     );
 
     const promise = new Promise((resolve, reject) => {
       const timeoutId = setTimeout(() => {
         this.pendingQueries.delete(queryId);
+        // Store timeout metadata for later analysis
+        this.timedOutPings.set(queryId, {
+          payload: dataToEcho,
+          timeoutMs: timeoutMs,
+          timedOutAt: Date.now()
+        });
+        this._logDebug(`[StateManagerProxy] Ping timeout fired for queryId ${queryId}, stored metadata`);
         reject(
           new Error(`Timeout waiting for ping response (queryId: ${queryId})`)
         );
