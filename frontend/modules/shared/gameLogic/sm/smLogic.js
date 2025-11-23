@@ -28,6 +28,25 @@ export function has(snapshot, staticData, itemName) {
       count = snapshot.inventory[itemName] || 0;
     }
 
+    if (typeof console !== 'undefined' && console.log && (itemName === 'Super Missile' || itemName === 'Morph Ball')) {
+      const keys = snapshot.inventory instanceof Map ? Array.from(snapshot.inventory.keys()).slice(0, 10) : Object.keys(snapshot.inventory).slice(0, 10);
+      console.log(`[has] Checking inventory for ${itemName}:`, {
+        itemName,
+        count,
+        hasInventory: !!snapshot.inventory,
+        inventoryIsMap: snapshot.inventory instanceof Map
+      });
+      console.log(`[has] Inventory keys:`, keys);
+      if (!(snapshot.inventory instanceof Map)) {
+        console.log(`[has] Sample inventory values:`, {
+          'Morph Ball': snapshot.inventory['Morph Ball'],
+          'Super Missile': snapshot.inventory['Super Missile'],
+          'Bomb': snapshot.inventory['Bomb'],
+          'Energy Tank': snapshot.inventory['Energy Tank']
+        });
+      }
+    }
+
     if (count > 0) {
       return true;
     }
@@ -197,8 +216,8 @@ export function haveItem(snapshot, staticData, itemName) {
   // First, try direct name match
   let hasIt = has(snapshot, staticData, itemName);
 
-  if (typeof console !== 'undefined' && console.log && itemName === 'Morph') {
-    console.log('[haveItem] Checking for Morph:', {
+  if (typeof console !== 'undefined' && console.log && (itemName === 'Morph' || itemName === 'Super')) {
+    console.log(`[haveItem] Checking for ${itemName}:`, {
       itemName,
       hasDirectMatch: hasIt,
       hasStaticData: !!staticData,
@@ -224,8 +243,8 @@ export function haveItem(snapshot, staticData, itemName) {
       playerItems = staticData.items;
     }
 
-    if (itemName === 'Morph' && typeof console !== 'undefined' && console.log) {
-      console.log('[haveItem] Player items:', {
+    if ((itemName === 'Morph' || itemName === 'Super') && typeof console !== 'undefined' && console.log) {
+      console.log(`[haveItem] Player items for ${itemName}:`, {
         isMap: playerItems instanceof Map,
         itemCount: playerItems ? (playerItems instanceof Map ? playerItems.size : Object.keys(playerItems).length) : 0
       });
@@ -237,8 +256,8 @@ export function haveItem(snapshot, staticData, itemName) {
 
       for (const [fullItemName, itemData] of itemEntries) {
         if (itemData && itemData.type === itemName) {
-          if (itemName === 'Morph' && typeof console !== 'undefined' && console.log) {
-            console.log('[haveItem] Found item with matching type:', {
+          if ((itemName === 'Morph' || itemName === 'Super') && typeof console !== 'undefined' && console.log) {
+            console.log(`[haveItem] Found item with matching type ${itemName}:`, {
               fullItemName,
               type: itemData.type,
               checkingInventory: true
@@ -246,8 +265,8 @@ export function haveItem(snapshot, staticData, itemName) {
           }
           // Found an item with matching type, check if we have it
           hasIt = has(snapshot, staticData, fullItemName);
-          if (itemName === 'Morph' && typeof console !== 'undefined' && console.log) {
-            console.log('[haveItem] Inventory check result:', hasIt);
+          if ((itemName === 'Morph' || itemName === 'Super') && typeof console !== 'undefined' && console.log) {
+            console.log(`[haveItem] Inventory check result for ${fullItemName}:`, hasIt);
           }
           if (hasIt) break;
         }
@@ -505,7 +524,14 @@ export function canOpenRedDoors(snapshot, staticData) {
 
 export function canOpenGreenDoors(snapshot, staticData) {
   // Green doors require Super Missiles
-  return haveItem(snapshot, staticData, 'Super');
+  const result = haveItem(snapshot, staticData, 'Super');
+  if (typeof console !== 'undefined' && console.log) {
+    console.log('[canOpenGreenDoors] Result:', {
+      bool: result.bool,
+      difficulty: result.difficulty
+    });
+  }
+  return result;
 }
 
 export function canOpenYellowDoors(snapshot, staticData) {
@@ -564,6 +590,13 @@ export function traverse(snapshot, staticData, doorName) {
     return { bool: true, difficulty: 0 };  // Default to passable if door not found
   }
 
+  if (typeof console !== 'undefined' && console.log && doorName === 'LandingSiteRight') {
+    console.log(`[traverse] Checking door ${doorName}:`, {
+      doorColor,
+      doorName
+    });
+  }
+
   // Check door accessibility based on color
   // Based on Python Door.traverse() implementation
   if (doorColor === 'grey') {
@@ -574,7 +607,17 @@ export function traverse(snapshot, staticData, doorName) {
     return canOpenRedDoors(snapshot, staticData);
   } else if (doorColor === 'green') {
     // Green doors require super missiles
-    return canOpenGreenDoors(snapshot, staticData);
+    if (typeof console !== 'undefined' && console.log && doorName === 'LandingSiteRight') {
+      console.log(`[traverse] ${doorName} is GREEN, calling canOpenGreenDoors`);
+    }
+    const result = canOpenGreenDoors(snapshot, staticData);
+    if (typeof console !== 'undefined' && console.log && doorName === 'LandingSiteRight') {
+      console.log(`[traverse] ${doorName} result:`, {
+        bool: result.bool,
+        difficulty: result.difficulty
+      });
+    }
+    return result;
   } else if (doorColor === 'yellow') {
     // Yellow doors require power bombs
     return canOpenYellowDoors(snapshot, staticData);
