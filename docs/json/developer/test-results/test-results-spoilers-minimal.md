@@ -4,19 +4,19 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-24 01:19:14
+**Generated:** 2025-11-23 07:12:22
 
-**Source Data Created:** 2025-11-24T00:14:35.838904
+**Source Data Created:** 2025-11-23T04:17:56.344316
 
-**Source Data Last Updated:** 2025-11-24T00:14:35.838911
+**Source Data Last Updated:** 2025-11-23T04:17:56.344321
 
 ## Summary
 
 - **Total Games:** 76
-- **Passed:** 75 (98.7%)
-- **Failed:** 1 (1.3%)
-- **Games with Intermittent Failures:** 7
-- **Total Intermittent Failures:** 35
+- **Passed:** 74 (97.4%)
+- **Failed:** 2 (2.6%)
+- **Games with Intermittent Failures:** 10
+- **Total Intermittent Failures:** 36
 
 ## Test Results
 
@@ -50,7 +50,7 @@
 | Inscryption | ✅ Passed seeds 1-10 | 0 | 9.2 | 9.2 | 🟢 Complete | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed seeds 1-10 | 0 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
 | Kingdom Hearts | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
-| Kingdom Hearts 2 | ✅ Passed seeds 1-10 | 0 | 15.1 | 15.1 | 🟢 Complete | ✅ | ✅ |
+| Kingdom Hearts 2 | ❌ Failed seed 1 | 0 | 0 | 15.1 | 🔴 0.0% | ✅ | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Lingo | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
@@ -105,41 +105,42 @@ These seeds were previously failing but passed during a retest run:
 
 | Template | Seed | Timestamp | Notes |
 |----------|------|-----------|-------|
-| Kingdom Hearts 2 | 4 | 2025-11-24 00:10 | Previously failed, now passing |
-| Kingdom Hearts 2 | 8 | 2025-11-24 00:06 | Previously failed, now passing |
-| Kingdom Hearts 2 | 9 | 2025-11-24 00:10 | Previously failed, now passing |
-| MegaMan Battle Network 3 | 5 | 2025-11-24 00:10 | Previously failed, now passing |
-| MegaMan Battle Network 3 | 9 | 2025-11-24 00:10 | Previously failed, now passing |
-| SMZ3 | 2 | 2025-11-24 00:09 | Previously failed, now passing |
-| SMZ3 | 3 | 2025-11-24 00:09 | Previously failed, now passing |
-| SMZ3 | 5 | 2025-11-24 00:10 | Previously failed, now passing |
-| SMZ3 | 6 | 2025-11-24 00:10 | Previously failed, now passing |
-| SMZ3 | 8 | 2025-11-24 00:06 | Previously failed, now passing |
-| SMZ3 | 10 | 2025-11-24 00:10 | Previously failed, now passing |
-| Starcraft 2 | 2 | 2025-11-24 00:10 | Previously failed, now passing |
-| Starcraft 2 | 3 | 2025-11-24 00:10 | Previously failed, now passing |
-| Starcraft 2 | 4 | 2025-11-24 00:11 | Previously failed, now passing |
-| Starcraft 2 | 5 | 2025-11-24 00:11 | Previously failed, now passing |
-| Starcraft 2 | 6 | 2025-11-24 00:11 | Previously failed, now passing |
-| Starcraft 2 | 7 | 2025-11-24 00:11 | Previously failed, now passing |
-| Starcraft 2 | 8 | 2025-11-24 00:07 | Previously failed, now passing |
-| Starcraft 2 | 9 | 2025-11-24 00:11 | Previously failed, now passing |
-| Starcraft 2 | 10 | 2025-11-24 00:11 | Previously failed, now passing |
-| Stardew Valley | 2 | 2025-11-24 00:11 | Previously failed, now passing |
-| Stardew Valley | 3 | 2025-11-24 00:11 | Previously failed, now passing |
-| Stardew Valley | 4 | 2025-11-24 00:11 | Previously failed, now passing |
-| Stardew Valley | 5 | 2025-11-24 00:12 | Previously failed, now passing |
-| Stardew Valley | 8 | 2025-11-24 00:08 | Previously failed, now passing |
-| Stardew Valley | 9 | 2025-11-24 00:12 | Previously failed, now passing |
-| Stardew Valley | 10 | 2025-11-24 00:11 | Previously failed, now passing |
-| The Witness | 2 | 2025-11-24 00:11 | Previously failed, now passing |
-| The Witness | 3 | 2025-11-24 00:11 | Previously failed, now passing |
-| The Witness | 5 | 2025-11-24 00:13 | Previously failed, now passing |
-| The Witness | 6 | 2025-11-24 00:11 | Previously failed, now passing |
-| The Witness | 8 | 2025-11-24 00:09 | Previously failed, now passing |
-| The Witness | 9 | 2025-11-24 00:13 | Previously failed, now passing |
-| The Witness | 10 | 2025-11-24 00:12 | Previously failed, now passing |
-| Yu-Gi-Oh! 2006 | 8 | 2025-11-24 00:14 | Previously failed, now passing |
+| DOOM II | 8 | 2025-11-23 04:08 | Previously failed, now passing |
+| Kingdom Hearts 2 | 4 | 2025-11-23 04:06 | Previously failed, now passing |
+| Kingdom Hearts 2 | 8 | 2025-11-23 04:08 | Previously failed, now passing |
+| MegaMan Battle Network 3 | 5 | 2025-11-23 04:06 | Previously failed, now passing |
+| MegaMan Battle Network 3 | 9 | 2025-11-23 04:13 | Previously failed, now passing |
+| Pokemon Red and Blue | 8 | 2025-11-23 04:09 | Previously failed, now passing |
+| SMZ3 | 2 | 2025-11-23 04:06 | Previously failed, now passing |
+| SMZ3 | 5 | 2025-11-23 04:06 | Previously failed, now passing |
+| SMZ3 | 6 | 2025-11-23 04:07 | Previously failed, now passing |
+| SMZ3 | 8 | 2025-11-23 04:10 | Previously failed, now passing |
+| SMZ3 | 10 | 2025-11-23 04:04 | Previously failed, now passing |
+| Starcraft 2 | 2 | 2025-11-23 04:07 | Previously failed, now passing |
+| Starcraft 2 | 3 | 2025-11-23 04:10 | Previously failed, now passing |
+| Starcraft 2 | 4 | 2025-11-23 04:07 | Previously failed, now passing |
+| Starcraft 2 | 5 | 2025-11-23 04:07 | Previously failed, now passing |
+| Starcraft 2 | 6 | 2025-11-23 04:08 | Previously failed, now passing |
+| Starcraft 2 | 7 | 2025-11-23 04:07 | Previously failed, now passing |
+| Starcraft 2 | 8 | 2025-11-23 04:11 | Previously failed, now passing |
+| Starcraft 2 | 9 | 2025-11-23 04:14 | Previously failed, now passing |
+| Starcraft 2 | 10 | 2025-11-23 04:05 | Previously failed, now passing |
+| Stardew Valley | 1 | 2025-11-23 04:13 | Previously failed, now passing |
+| Stardew Valley | 3 | 2025-11-23 04:10 | Previously failed, now passing |
+| Stardew Valley | 4 | 2025-11-23 04:08 | Previously failed, now passing |
+| Stardew Valley | 5 | 2025-11-23 04:08 | Previously failed, now passing |
+| Stardew Valley | 8 | 2025-11-23 04:11 | Previously failed, now passing |
+| Stardew Valley | 9 | 2025-11-23 04:14 | Previously failed, now passing |
+| Stardew Valley | 10 | 2025-11-23 04:05 | Previously failed, now passing |
+| Super Mario 64 | 9 | 2025-11-23 04:15 | Previously failed, now passing |
+| The Witness | 2 | 2025-11-23 04:11 | Previously failed, now passing |
+| The Witness | 3 | 2025-11-23 04:11 | Previously failed, now passing |
+| The Witness | 5 | 2025-11-23 04:09 | Previously failed, now passing |
+| The Witness | 6 | 2025-11-23 04:08 | Previously failed, now passing |
+| The Witness | 8 | 2025-11-23 04:12 | Previously failed, now passing |
+| The Witness | 9 | 2025-11-23 04:16 | Previously failed, now passing |
+| The Witness | 10 | 2025-11-23 04:06 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | 8 | 2025-11-23 04:17 | Previously failed, now passing |
 
 
 ## Notes
