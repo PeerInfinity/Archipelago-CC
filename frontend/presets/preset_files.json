@@ -3944,5 +3944,24 @@
         ]
       }
     }
+  },
+  "test-minimal": {
+    "name": "Minimal Test Case",
+    "folders": {
+      "minimal": {
+        "seed": 999,
+        "games": [
+          {
+            "player": 1,
+            "name": "TestPlayer",
+            "game": "Test Game"
+          }
+        ],
+        "files": [
+          "minimal_rules.json",
+          "minimal_spheres_log.jsonl"
+        ]
+      }
+    }
   }
 }

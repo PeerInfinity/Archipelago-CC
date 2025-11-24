@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multiworld can_reach Debug Test</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1e1e1e; color: #d4d4d4; }
+        .pass { color: #4ec9b0; }
+        .fail { color: #f48771; }
+        .section { margin: 20px 0; padding: 15px; background: #2d2d30; border-left: 3px solid #007acc; }
+        button { padding: 10px 20px; margin: 10px 5px; background: #0e639c; color: white; border: none; cursor: pointer; }
+        button:hover { background: #1177bb; }
+        pre { background: #1e1e1e; padding: 10px; overflow-x: auto; border: 1px solid #3e3e42; }
+    </style>
+</head>
+<body>
+    <h1>Multiworld can_reach Debug Test</h1>
+    <div id="status">Loading...</div>
+
+    <div class="section">
+        <h2>Test Plan</h2>
+        <p>This test loads the multiworld P2 rules (A Hat in Time as Player 2) and debugs why can_reach("The Golden Vault", "Region") returns false when it should return true.</p>
+        <ol>
+            <li>Load P2 rules: presets/multiworld/AP_14089154938208861744/AP_14089154938208861744_P2_rules.json</li>
+            <li>Initialize StateManager with player ID = 2</li>
+            <li>Run initial BFS to compute reachable regions at sphere 0</li>
+            <li>Check if "The Golden Vault" is in knownReachableRegions</li>
+            <li>Test can_reach("The Golden Vault", "Region")</li>
+            <li>Display debugging information</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <button onclick="runTest()">Run Test</button>
+        <button onclick="inspectStateManager()">Inspect StateManager</button>
+        <button onclick="testCanReachDirect()">Test can_reach Directly</button>
+    </div>
+
+    <div id="results"></div>
+
+    <script type="module">
+        import { StateManager } from '../modules/stateManager/stateManagerProxy.js';
+
+        let stateManager = null;
+
+        window.runTest = async function() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<h3>Test Results:</h3>';
+
+            try {
+                // Step 1: Initialize StateManager
+                log('Initializing StateManager with player ID 2...', 'info');
+                stateManager = new StateManager();
+                await stateManager.initialize({
+                    sourceName: './presets/multiworld/AP_14089154938208861744/AP_14089154938208861744_P2_rules.json',
+                    playerId: 2
+                });
+                log('StateManager initialized successfully', 'pass');
+
+                // Step 2: Get initial state info
+                const playerSlot = stateManager.playerSlot;
+                log(`Player slot: ${playerSlot}`, 'info');
+
+                // Step 3: Check if regions were computed
+                if (stateManager.knownReachableRegions) {
+                    log(`knownReachableRegions size: ${stateManager.knownReachableRegions.size}`, 'info');
+                    const regions = Array.from(stateManager.knownReachableRegions).slice(0, 20);
+                    log(`First 20 reachable regions: ${regions.join(', ')}`, 'info');
+
+                    if (stateManager.knownReachableRegions.has('The Golden Vault')) {
+                        log('✓ "The Golden Vault" IS in knownReachableRegions', 'pass');
+                    } else {
+                        log('✗ "The Golden Vault" is NOT in knownReachableRegions', 'fail');
+                    }
+                } else {
+                    log('knownReachableRegions is null/undefined', 'fail');
+                }
+
+                // Step 4: Test can_reach
+                log('Testing can_reach("The Golden Vault", "Region")...', 'info');
+                const snapshot = stateManager.getSnapshot();
+                const result = snapshot.executeStateManagerMethod('can_reach', 'The Golden Vault', 'Region');
+                log(`can_reach result: ${result}`, result ? 'pass' : 'fail');
+
+                // Step 5: Check regionReachability in snapshot
+                if (snapshot.regionReachability) {
+                    const status = snapshot.regionReachability['The Golden Vault'];
+                    log(`regionReachability['The Golden Vault'] = ${status}`, 'info');
+
+                    // Show first 20 region statuses
+                    const statuses = Object.entries(snapshot.regionReachability).slice(0, 20);
+                    log('First 20 region statuses:', 'info');
+                    statuses.forEach(([name, status]) => {
+                        log(`  ${name}: ${status}`, 'info');
+                    });
+                } else {
+                    log('snapshot.regionReachability is null/undefined', 'fail');
+                }
+
+                // Step 6: Check _computing flag
+                log(`stateManager._computing: ${stateManager._computing}`, 'info');
+
+                // Step 7: Try to check the location
+                log('Testing location "Mafia Town - Old Man (Seaside Spaghetti)"...', 'info');
+                const canCheck = snapshot.canCheckLocation('Mafia Town - Old Man (Seaside Spaghetti)');
+                log(`canCheckLocation result: ${canCheck}`, canCheck ? 'pass' : 'fail');
+
+            } catch (error) {
+                log(`Error: ${error.message}`, 'fail');
+                console.error(error);
+            }
+        };
+
+        window.inspectStateManager = function() {
+            if (!stateManager) {
+                log('StateManager not initialized yet', 'fail');
+                return;
+            }
+
+            log('StateManager inspection:', 'info');
+            log(`  playerSlot: ${stateManager.playerSlot}`, 'info');
+            log(`  _computing: ${stateManager._computing}`, 'info');
+            log(`  knownReachableRegions size: ${stateManager.knownReachableRegions?.size || 0}`, 'info');
+
+            const snapshot = stateManager.getSnapshot();
+            log(`  snapshot.player.slot: ${snapshot.player?.slot}`, 'info');
+            log(`  snapshot.regionReachability keys: ${Object.keys(snapshot.regionReachability || {}).length}`, 'info');
+
+            // Check specific region
+            const vaultInKnown = stateManager.knownReachableRegions?.has('The Golden Vault');
+            const vaultInSnapshot = snapshot.regionReachability?.['The Golden Vault'];
+            log(`  The Golden Vault in knownReachableRegions: ${vaultInKnown}`, 'info');
+            log(`  The Golden Vault in regionReachability: ${vaultInSnapshot}`, 'info');
+        };
+
+        window.testCanReachDirect = function() {
+            if (!stateManager) {
+                log('StateManager not initialized yet', 'fail');
+                return;
+            }
+
+            const snapshot = stateManager.getSnapshot();
+
+            // Test multiple regions
+            const testRegions = [
+                'Menu',
+                'Spaceship',
+                'Mafia Town',
+                'The Golden Vault',
+                'Mafia Town Area',
+                'Down with the Mafia!',
+                'Badge Seller'
+            ];
+
+            log('Testing can_reach for multiple regions:', 'info');
+            testRegions.forEach(region => {
+                const result = snapshot.executeStateManagerMethod('can_reach', region, 'Region');
+                const status = snapshot.regionReachability?.[region];
+                log(`  ${region}: can_reach=${result}, status=${status}`, result ? 'pass' : 'fail');
+            });
+        };
+
+        function log(message, type = 'info') {
+            const resultsDiv = document.getElementById('results');
+            const p = document.createElement('p');
+            p.className = type;
+            p.textContent = message;
+            resultsDiv.appendChild(p);
+            console.log(`[${type}] ${message}`);
+        }
+
+        document.getElementById('status').innerHTML = 'Ready. Click "Run Test" to begin.';
+    </script>
+</body>
+</html>
