@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
-  "game_name": "Adventure",
-  "game_directory": "adventure",
+  "game_name": "Celeste 64",
+  "game_directory": "celeste64",
   "archipelago_version": "0.6.4",
   "generation_seed": 1,
   "player_names": {
@@ -9,8 +9,8 @@
     "2": "Player2"
   },
   "world_classes": {
-    "1": "ShortHikeWorld",
-    "2": "AdventureWorld"
+    "1": "ALTTPWorld",
+    "2": "Celeste64World"
   },
   "regions": {
     "2": {
@@ -18,299 +18,207 @@
         "name": "Menu",
         "exits": [
           {
-            "name": "GameStart",
-            "connected_region": "Overworld",
+            "name": "Menu -> Forsaken City",
+            "connected_region": "Forsaken City",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Menu",
+                    "Forsaken City"
+                  ]
+                }
+              ]
             }
           }
         ],
         "locations": []
       },
-      "Overworld": {
-        "name": "Overworld",
+      "Forsaken City": {
+        "name": "Forsaken City",
         "exits": [
           {
-            "name": "YellowCastlePort",
-            "connected_region": "YellowCastle",
+            "name": "Forsaken City -> Intro Islands",
+            "connected_region": "Intro Islands",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Yellow Key"
-              }
-            }
-          },
-          {
-            "name": "WhiteCastlePort",
-            "connected_region": "WhiteCastle",
-            "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "White Key"
-              }
-            }
-          },
-          {
-            "name": "BlackCastlePort",
-            "connected_region": "BlackCastle",
-            "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Black Key"
-              }
-            }
-          },
-          {
-            "name": "CreditsWall",
-            "connected_region": "CreditsRoom",
-            "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
                 {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Bridge"
-                  }
-                },
+                  "type": "constant",
+                  "value": [
+                    "Forsaken City",
+                    "Intro Islands"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Forsaken City -> Granny Island",
+            "connected_region": "Granny Island",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
                 {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Black Key"
-                  }
+                  "type": "constant",
+                  "value": [
+                    "Forsaken City",
+                    "Granny Island"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Forsaken City -> Freeway Island",
+            "connected_region": "Freeway Island",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Forsaken City",
+                    "Freeway Island"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Forsaken City -> North-East Feathers Island",
+            "connected_region": "North-East Feathers Island",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Forsaken City",
+                    "North-East Feathers Island"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Forsaken City -> South-East House Island",
+            "connected_region": "South-East House Island",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Forsaken City",
+                    "South-East House Island"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Forsaken City -> Badeline Tower Upper",
+            "connected_region": "Badeline Tower Upper",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Forsaken City",
+                    "Badeline Tower Upper"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Forsaken City -> Badeline Island",
+            "connected_region": "Badeline Island",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Forsaken City",
+                    "Badeline Island"
+                  ]
                 }
               ]
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Blue Labyrinth 0",
-            "id": 118000004,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "13 Coins",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Blue Labyrinth 1",
-            "id": 118000006,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Golden Feather",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Catacombs",
-            "id": 118000009,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Toy Shovel",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Adjacent to Catacombs",
-            "id": 118000012,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Golden Feather",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Southwest of Catacombs",
-            "id": 118000014,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Seashell",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "White Castle Gate",
-            "id": 118000015,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "13 Coins",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Black Castle Gate",
-            "id": 118000016,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "13 Coins",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Yellow Castle Gate",
-            "id": 118000017,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Seashell",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Northeast of Catacombs",
-            "id": 118000028,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Toy Shovel",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Southeast of Catacombs",
-            "id": 118000029,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Bucket",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Slay Yorgle",
-            "id": 118000209,
-            "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Sword"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Right Difficulty Switch"
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "25 Coins",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            }
-          }
-        ]
+        "locations": []
       },
-      "YellowCastle": {
-        "name": "YellowCastle",
+      "Intro Islands": {
+        "name": "Intro Islands",
         "exits": [
           {
-            "name": "YellowCastleExit",
-            "connected_region": "Overworld",
+            "name": "Intro Islands -> Granny Island",
+            "connected_region": "Granny Island",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Intro Islands",
+                    "Granny Island"
+                  ]
+                }
+              ]
             }
           }
         ],
         "locations": [
           {
-            "name": "Inside Yellow Castle",
-            "id": 118000018,
+            "name": "First Strawberry",
+            "id": 13238272,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Bucket",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Chalice Home",
-            "id": null,
-            "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
                 {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Chalice"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Yellow Key"
-                  }
+                  "type": "constant",
+                  "value": "First Strawberry"
                 }
               ]
             },
             "item": {
-              "name": "Victory",
+              "name": "Progressive Sword",
+              "player": 1,
+              "advancement": true,
+              "type": "Sword"
+            }
+          },
+          {
+            "name": "Intro Checkpoint",
+            "id": 13239296,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Intro Checkpoint"
+                }
+              ]
+            },
+            "item": {
+              "name": "Intro Checkpoint",
               "player": 2,
               "advancement": true,
               "type": "None"
@@ -318,47 +226,73 @@
           }
         ]
       },
-      "WhiteCastle": {
-        "name": "WhiteCastle",
+      "Granny Island": {
+        "name": "Granny Island",
         "exits": [
           {
-            "name": "WhiteCastleExit",
-            "connected_region": "Overworld",
+            "name": "Granny Island -> Freeway Island",
+            "connected_region": "Freeway Island",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Granny Island",
+                    "Freeway Island"
+                  ]
+                }
+              ]
             }
           },
           {
-            "name": "WhiteCastleSecretPassage",
-            "connected_region": "WhiteCastleVault",
+            "name": "Granny Island -> North-West Girders Island",
+            "connected_region": "North-West Girders Island",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Bridge"
-              }
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Granny Island",
+                    "North-West Girders Island"
+                  ]
+                }
+              ]
             }
           },
           {
-            "name": "WhiteCastlePeekPassage",
-            "connected_region": "WhiteCastlePreVaultPeek",
+            "name": "Granny Island -> Badeline Tower Lower",
+            "connected_region": "Badeline Tower Lower",
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
                 {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Bridge"
-                  }
-                },
+                  "type": "constant",
+                  "value": [
+                    "Granny Island",
+                    "Badeline Tower Lower"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Granny Island -> South-East House Island",
+            "connected_region": "South-East House Island",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
                 {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Magnet"
-                  }
+                  "type": "constant",
+                  "value": [
+                    "Granny Island",
+                    "South-East House Island"
+                  ]
                 }
               ]
             }
@@ -366,293 +300,502 @@
         ],
         "locations": [
           {
-            "name": "RedMaze0",
-            "id": 118000023,
+            "name": "Floating Blocks Strawberry",
+            "id": 13238273,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Floating Blocks Strawberry"
+                }
+              ]
             },
             "item": {
-              "name": "Bait",
+              "name": "Progressive Sword",
+              "player": 1,
+              "advancement": true,
+              "type": "Sword"
+            }
+          },
+          {
+            "name": "South-East Tower Top Strawberry",
+            "id": 13238274,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "South-East Tower Top Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Rupees (20)",
               "player": 1,
               "advancement": false,
               "type": "None"
             }
           },
           {
-            "name": "RedMaze1",
-            "id": 118000026,
+            "name": "Theo Strawberry",
+            "id": 13238275,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Theo Strawberry"
+                }
+              ]
             },
             "item": {
-              "name": "Progressive Fishing Rod",
+              "name": "Lamp",
               "player": 1,
               "advancement": true,
               "type": "None"
             }
-          }
-        ]
-      },
-      "WhiteCastlePreVaultPeek": {
-        "name": "WhiteCastlePreVaultPeek",
-        "exits": [
-          {
-            "name": "WhiteCastleFromPeek",
-            "connected_region": "WhiteCastle",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Red Maze Vault Entrance",
-            "id": 118000183,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "33 Coins",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            }
-          }
-        ]
-      },
-      "WhiteCastleVault": {
-        "name": "WhiteCastleVault",
-        "exits": [
-          {
-            "name": "WhiteCastleReturnPassage",
-            "connected_region": "WhiteCastle",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Red Maze Vault",
-            "id": 118000025,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Motorboat Key",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
           },
           {
-            "name": "Slay Grundle",
-            "id": 118000210,
+            "name": "Fall Through Spike Floor Strawberry",
+            "id": 13238276,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
                 {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Sword"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Right Difficulty Switch"
-                  }
+                  "type": "constant",
+                  "value": "Fall Through Spike Floor Strawberry"
                 }
               ]
             },
             "item": {
-              "name": "Bait",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            }
-          }
-        ]
-      },
-      "BlackCastle": {
-        "name": "BlackCastle",
-        "exits": [
-          {
-            "name": "BlackCastleExit",
-            "connected_region": "Overworld",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "BlackCastleVaultEntrance",
-            "connected_region": "BlackCastleVault",
-            "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Bridge"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Magnet"
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Dungeon0",
-            "id": 118000019,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Freeincarnate",
-              "player": 2,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Dungeon1",
-            "id": 118000021,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Chalice",
+              "name": "Dash Refills",
               "player": 2,
               "advancement": true,
               "type": "None"
             }
           },
           {
-            "name": "Black Castle Foyer",
-            "id": 118000027,
+            "name": "South-West Dash Refills Strawberry",
+            "id": 13238280,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Seashell",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Slay Rhindle",
-            "id": 118000208,
-            "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
                 {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Sword"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Right Difficulty Switch"
-                  }
+                  "type": "constant",
+                  "value": "South-West Dash Refills Strawberry"
                 }
               ]
             },
             "item": {
-              "name": "Freeincarnate",
-              "player": 2,
+              "name": "Piece of Heart",
+              "player": 1,
               "advancement": false,
               "type": "None"
             }
-          }
-        ]
-      },
-      "BlackCastleVault": {
-        "name": "BlackCastleVault",
-        "exits": [
+          },
           {
-            "name": "BlackCastleReturnPassage",
-            "connected_region": "BlackCastle",
+            "name": "South-East Tower Side Strawberry",
+            "id": 13238281,
             "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Dungeon Vault",
-            "id": 118000181,
-            "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "South-East Tower Side Strawberry"
+                }
+              ]
             },
             "item": {
-              "name": "Seashell",
+              "name": "Rupees (50)",
               "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Girders Strawberry",
+            "id": 13238282,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Girders Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Bombs (3)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Theo Tower Lower Cassette Strawberry",
+            "id": 13238292,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Theo Tower Lower Cassette Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Arrows (10)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Theo Tower Upper Cassette Strawberry",
+            "id": 13238293,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Theo Tower Upper Cassette Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Rupees (20)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "You Are Ready Cassette Strawberry",
+            "id": 13238295,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "You Are Ready Cassette Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Strawberry",
+              "player": 2,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Granny Checkpoint",
+            "id": 13239297,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Granny Checkpoint"
+                }
+              ]
+            },
+            "item": {
+              "name": "Granny Checkpoint",
+              "player": 2,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "South-East Tower Checkpoint",
+            "id": 13239298,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "South-East Tower Checkpoint"
+                }
+              ]
+            },
+            "item": {
+              "name": "South-East Tower Checkpoint",
+              "player": 2,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Climb Sign Checkpoint",
+            "id": 13239299,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Climb Sign Checkpoint"
+                }
+              ]
+            },
+            "item": {
+              "name": "Climb Sign Checkpoint",
+              "player": 2,
               "advancement": true,
               "type": "None"
             }
           }
         ]
       },
-      "CreditsRoom": {
-        "name": "CreditsRoom",
+      "Freeway Island": {
+        "name": "Freeway Island",
         "exits": [
           {
-            "name": "CreditsExit",
-            "connected_region": "Overworld",
+            "name": "Freeway Island -> Granny Island",
+            "connected_region": "Granny Island",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Freeway Island",
+                    "Granny Island"
+                  ]
+                }
+              ]
             }
           },
           {
-            "name": "CreditsToFarSide",
-            "connected_region": "CreditsRoomFarSide",
+            "name": "Freeway Island -> North-East Feathers Island",
+            "connected_region": "North-East Feathers Island",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Magnet"
-              }
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Freeway Island",
+                    "North-East Feathers Island"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Freeway Island -> North-West Girders Island",
+            "connected_region": "North-West Girders Island",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Freeway Island",
+                    "North-West Girders Island"
+                  ]
+                }
+              ]
             }
           }
         ],
         "locations": [
           {
-            "name": "Credits Left Side",
-            "id": 118000030,
+            "name": "Troll Strawberry",
+            "id": 13238277,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Troll Strawberry"
+                }
+              ]
             },
             "item": {
-              "name": "13 Coins",
+              "name": "Strawberry",
+              "player": 2,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Falling Blocks Strawberry",
+            "id": 13238278,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Falling Blocks Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Strawberry",
+              "player": 2,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Breakable Blocks Strawberry",
+            "id": 13238284,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Breakable Blocks Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Bombs (3)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "South End of Bridge Cassette Strawberry",
+            "id": 13238294,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "South End of Bridge Cassette Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Rupees (20)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "North End of Bridge Cassette Strawberry",
+            "id": 13238297,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "North End of Bridge Cassette Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Pegasus Boots",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Freeway Checkpoint",
+            "id": 13239300,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Freeway Checkpoint"
+                }
+              ]
+            },
+            "item": {
+              "name": "Freeway Checkpoint",
+              "player": 2,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Freeway Feather Checkpoint",
+            "id": 13239301,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Freeway Feather Checkpoint"
+                }
+              ]
+            },
+            "item": {
+              "name": "Freeway Feather Checkpoint",
+              "player": 2,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "North-West Girders Island": {
+        "name": "North-West Girders Island",
+        "exits": [
+          {
+            "name": "North-West Girders Island -> Freeway Island",
+            "connected_region": "Freeway Island",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "North-West Girders Island",
+                    "Freeway Island"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Traffic Block Strawberry",
+            "id": 13238279,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Traffic Block Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Rupees (20)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -660,29 +803,698 @@
           }
         ]
       },
-      "CreditsRoomFarSide": {
-        "name": "CreditsRoomFarSide",
+      "North-East Feathers Island": {
+        "name": "North-East Feathers Island",
         "exits": [
           {
-            "name": "CreditsFromFarSide",
-            "connected_region": "CreditsRoom",
+            "name": "North-East Feathers Island -> South-East House Island",
+            "connected_region": "South-East House Island",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "North-East Feathers Island",
+                    "South-East House Island"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "North-East Feathers Island -> Freeway Island",
+            "connected_region": "Freeway Island",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "North-East Feathers Island",
+                    "Freeway Island"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "North-East Feathers Island -> Badeline Tower Lower",
+            "connected_region": "Badeline Tower Lower",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "North-East Feathers Island",
+                    "Badeline Tower Lower"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "North-East Feathers Island -> Badeline Tower Upper",
+            "connected_region": "Badeline Tower Upper",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "North-East Feathers Island",
+                    "Badeline Tower Upper"
+                  ]
+                }
+              ]
             }
           }
         ],
         "locations": [
           {
-            "name": "Credits Right Side",
-            "id": 118000190,
+            "name": "Feather Maze Strawberry",
+            "id": 13238285,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Feather Maze Strawberry"
+                }
+              ]
             },
             "item": {
-              "name": "Golden Feather",
+              "name": "Mushroom",
               "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Feather Chain Strawberry",
+            "id": 13238286,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Feather Chain Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Boss Heart Container",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Feather Hidden Strawberry",
+            "id": 13238287,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Feather Hidden Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Progressive Sword",
+              "player": 1,
+              "advancement": true,
+              "type": "Sword"
+            }
+          },
+          {
+            "name": "Distant Feather Cassette Strawberry",
+            "id": 13238298,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Distant Feather Cassette Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Bombs (3)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Feather Arches Cassette Strawberry",
+            "id": 13238299,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Feather Arches Cassette Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Magic Upgrade (1/2)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Feather Maze Checkpoint",
+            "id": 13239302,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Feather Maze Checkpoint"
+                }
+              ]
+            },
+            "item": {
+              "name": "Feather Maze Checkpoint",
+              "player": 2,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "South-East House Island": {
+        "name": "South-East House Island",
+        "exits": [
+          {
+            "name": "South-East House Island -> North-East Feathers Island",
+            "connected_region": "North-East Feathers Island",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "South-East House Island",
+                    "North-East Feathers Island"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "South-East House Island -> Granny Island",
+            "connected_region": "Granny Island",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "South-East House Island",
+                    "Granny Island"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "South-East House Island -> Badeline Tower Lower",
+            "connected_region": "Badeline Tower Lower",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "South-East House Island",
+                    "Badeline Tower Lower"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Double Dash Puzzle Strawberry",
+            "id": 13238288,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Double Dash Puzzle Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Arrows (10)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Double Dash Spike Climb Strawberry",
+            "id": 13238289,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Double Dash Spike Climb Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Piece of Heart",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Double Dash Spring Strawberry",
+            "id": 13238290,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Double Dash Spring Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Boss Heart Container",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Cassette Hidden in the House Strawberry",
+            "id": 13238296,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Cassette Hidden in the House Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Strawberry",
+              "player": 2,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Double Dash House Checkpoint",
+            "id": 13239303,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Double Dash House Checkpoint"
+                }
+              ]
+            },
+            "item": {
+              "name": "Double Dash House Checkpoint",
+              "player": 2,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Badeline Tower Lower": {
+        "name": "Badeline Tower Lower",
+        "exits": [
+          {
+            "name": "Badeline Tower Lower -> South-East House Island",
+            "connected_region": "South-East House Island",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Badeline Tower Lower",
+                    "South-East House Island"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Badeline Tower Lower -> North-East Feathers Island",
+            "connected_region": "North-East Feathers Island",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Badeline Tower Lower",
+                    "North-East Feathers Island"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Badeline Tower Lower -> Granny Island",
+            "connected_region": "Granny Island",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Badeline Tower Lower",
+                    "Granny Island"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Badeline Tower Lower -> Badeline Tower Upper",
+            "connected_region": "Badeline Tower Upper",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Badeline Tower Lower",
+                    "Badeline Tower Upper"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Badeline Tower Bottom Strawberry",
+            "id": 13238283,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Badeline Tower Bottom Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Magic Mirror",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Badeline Tower Breakable Bottom Strawberry",
+            "id": 13238291,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Badeline Tower Breakable Bottom Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Strawberry",
+              "player": 2,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Badeline Tower Upper": {
+        "name": "Badeline Tower Upper",
+        "exits": [
+          {
+            "name": "Badeline Tower Upper -> Badeline Island",
+            "connected_region": "Badeline Island",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Badeline Tower Upper",
+                    "Badeline Island"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Badeline Tower Upper -> Badeline Tower Lower",
+            "connected_region": "Badeline Tower Lower",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Badeline Tower Upper",
+                    "Badeline Tower Lower"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Badeline Tower Upper -> South-East House Island",
+            "connected_region": "South-East House Island",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Badeline Tower Upper",
+                    "South-East House Island"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Badeline Tower Upper -> North-East Feathers Island",
+            "connected_region": "North-East Feathers Island",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Badeline Tower Upper",
+                    "North-East Feathers Island"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Badeline Tower Upper -> Granny Island",
+            "connected_region": "Granny Island",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Badeline Tower Upper",
+                    "Granny Island"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Badeline Tower Cassette Strawberry",
+            "id": 13238300,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Badeline Tower Cassette Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Piece of Heart",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Badeline Tower Checkpoint",
+            "id": 13239304,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Badeline Tower Checkpoint"
+                }
+              ]
+            },
+            "item": {
+              "name": "Badeline Tower Checkpoint",
+              "player": 2,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Badeline Island": {
+        "name": "Badeline Island",
+        "exits": [
+          {
+            "name": "Badeline Island -> Badeline Tower Upper",
+            "connected_region": "Badeline Tower Upper",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Badeline Island",
+                    "Badeline Tower Upper"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Badeline Island -> Granny Island",
+            "connected_region": "Granny Island",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Badeline Island",
+                    "Granny Island"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Badeline Island -> Freeway Island",
+            "connected_region": "Freeway Island",
+            "access_rule": {
+              "type": "helper",
+              "name": "region_connection_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Badeline Island",
+                    "Freeway Island"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Badeline Island Cassette Strawberry",
+            "id": 13238301,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Badeline Island Cassette Strawberry"
+                }
+              ]
+            },
+            "item": {
+              "name": "Cape",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Badeline Island Checkpoint",
+            "id": 13239305,
+            "access_rule": {
+              "type": "helper",
+              "name": "location_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Badeline Island Checkpoint"
+                }
+              ]
+            },
+            "item": {
+              "name": "Badeline Island Checkpoint",
+              "player": 2,
               "advancement": true,
               "type": "None"
             }
@@ -701,9 +1513,22 @@
   },
   "items": {
     "2": {
-      "Yellow Key": {
-        "name": "Yellow Key",
-        "id": 118000011,
+      "Strawberry": {
+        "name": "Strawberry",
+        "id": 13238272,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 25
+      },
+      "Raspberry": {
+        "name": "Raspberry",
+        "id": 13238281,
         "groups": [
           "Everything"
         ],
@@ -712,76 +1537,11 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
-      "White Key": {
-        "name": "White Key",
-        "id": 118000012,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Black Key": {
-        "name": "Black Key",
-        "id": 118000013,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Bridge": {
-        "name": "Bridge",
-        "id": 118000010,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Magnet": {
-        "name": "Magnet",
-        "id": 118000017,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Sword": {
-        "name": "Sword",
-        "id": 118000009,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Chalice": {
-        "name": "Chalice",
-        "id": 118000016,
+      "Dash Refills": {
+        "name": "Dash Refills",
+        "id": 13238273,
         "groups": [
           "Everything"
         ],
@@ -792,9 +1552,9 @@
         "type": null,
         "max_count": 2
       },
-      "Left Difficulty Switch": {
-        "name": "Left Difficulty Switch",
-        "id": 118000256,
+      "Double Dash Refills": {
+        "name": "Double Dash Refills",
+        "id": 13238274,
         "groups": [
           "Everything"
         ],
@@ -805,9 +1565,87 @@
         "type": null,
         "max_count": 1
       },
-      "Right Difficulty Switch": {
-        "name": "Right Difficulty Switch",
-        "id": 118000257,
+      "Feathers": {
+        "name": "Feathers",
+        "id": 13238275,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Coins": {
+        "name": "Coins",
+        "id": 13238276,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cassettes": {
+        "name": "Cassettes",
+        "id": 13238277,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Traffic Blocks": {
+        "name": "Traffic Blocks",
+        "id": 13238278,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Springs": {
+        "name": "Springs",
+        "id": 13238279,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Breakable Blocks": {
+        "name": "Breakable Blocks",
+        "id": 13238280,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ground Dash": {
+        "name": "Ground Dash",
+        "id": 13238282,
         "groups": [
           "Everything"
         ],
@@ -818,95 +1656,316 @@
         "type": null,
         "max_count": 1
       },
-      "Freeincarnate": {
-        "name": "Freeincarnate",
-        "id": 118000258,
+      "Air Dash": {
+        "name": "Air Dash",
+        "id": 13238283,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 14
-      },
-      "Slow Yorgle": {
-        "name": "Slow Yorgle",
-        "id": 118000259,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Slow Grundle": {
-        "name": "Slow Grundle",
-        "id": 118000260,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Slow Rhindle": {
-        "name": "Slow Rhindle",
-        "id": 118000261,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Revive Dragons": {
-        "name": "Revive Dragons",
-        "id": 118000262,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "nothing": {
-        "name": "nothing",
-        "id": 118000000,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Victory": {
-        "name": "Victory",
-        "id": null,
-        "groups": [
-          "Event"
         ],
         "advancement": true,
         "useful": false,
         "trap": false,
-        "event": true,
-        "type": "Event",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Skid Jump": {
+        "name": "Skid Jump",
+        "id": 13238284,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Climb": {
+        "name": "Climb",
+        "id": 13238285,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Intro Checkpoint": {
+        "name": "Intro Checkpoint",
+        "id": 13238304,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Granny Checkpoint": {
+        "name": "Granny Checkpoint",
+        "id": 13238305,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "South-East Tower Checkpoint": {
+        "name": "South-East Tower Checkpoint",
+        "id": 13238306,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Climb Sign Checkpoint": {
+        "name": "Climb Sign Checkpoint",
+        "id": 13238307,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Freeway Checkpoint": {
+        "name": "Freeway Checkpoint",
+        "id": 13238308,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Freeway Feather Checkpoint": {
+        "name": "Freeway Feather Checkpoint",
+        "id": 13238309,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Feather Maze Checkpoint": {
+        "name": "Feather Maze Checkpoint",
+        "id": 13238310,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Double Dash House Checkpoint": {
+        "name": "Double Dash House Checkpoint",
+        "id": 13238311,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Badeline Tower Checkpoint": {
+        "name": "Badeline Tower Checkpoint",
+        "id": 13238312,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Badeline Island Checkpoint": {
+        "name": "Badeline Island Checkpoint",
+        "id": 13238313,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Sword": {
+        "name": "Progressive Sword",
+        "id": 94,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Sword",
+        "max_count": 1
+      },
+      "Rupees (20)": {
+        "name": "Rupees (20)",
+        "id": 54,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Lamp": {
+        "name": "Lamp",
+        "id": 18,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Piece of Heart": {
+        "name": "Piece of Heart",
+        "id": 23,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rupees (50)": {
+        "name": "Rupees (50)",
+        "id": 65,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Bombs (3)": {
+        "name": "Bombs (3)",
+        "id": 40,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Arrows (10)": {
+        "name": "Arrows (10)",
+        "id": 68,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Pegasus Boots": {
+        "name": "Pegasus Boots",
+        "id": 75,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mushroom": {
+        "name": "Mushroom",
+        "id": 41,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Boss Heart Container": {
+        "name": "Boss Heart Container",
+        "id": 62,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Magic Upgrade (1/2)": {
+        "name": "Magic Upgrade (1/2)",
+        "id": 78,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Magic Mirror": {
+        "name": "Magic Mirror",
+        "id": 26,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cape": {
+        "name": "Cape",
+        "id": 25,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
         "max_count": 1
       }
     }
@@ -918,37 +1977,53 @@
   },
   "itempool_counts": {
     "2": {
-      "Black Key": 1,
-      "Bridge": 1,
-      "Chalice": 2,
-      "Freeincarnate": 14,
-      "Left Difficulty Switch": 1,
-      "Magnet": 1,
-      "Right Difficulty Switch": 1,
-      "Slow Grundle": 1,
-      "Slow Rhindle": 1,
-      "Slow Yorgle": 1,
-      "Sword": 1,
-      "Victory": 1,
-      "White Key": 1,
-      "Yellow Key": 1
+      "Air Dash": 1,
+      "Badeline Island Checkpoint": 1,
+      "Badeline Tower Checkpoint": 1,
+      "Breakable Blocks": 1,
+      "Cassettes": 1,
+      "Climb": 1,
+      "Climb Sign Checkpoint": 1,
+      "Coins": 1,
+      "Dash Refills": 2,
+      "Double Dash House Checkpoint": 1,
+      "Double Dash Refills": 1,
+      "Feather Maze Checkpoint": 1,
+      "Feathers": 1,
+      "Freeway Checkpoint": 1,
+      "Freeway Feather Checkpoint": 1,
+      "Granny Checkpoint": 1,
+      "Ground Dash": 1,
+      "Intro Checkpoint": 1,
+      "Raspberry": 2,
+      "Skid Jump": 1,
+      "South-East Tower Checkpoint": 1,
+      "Springs": 1,
+      "Strawberry": 25,
+      "Traffic Blocks": 1
     }
   },
   "progression_mapping": {
     "2": {}
   },
   "starting_items": {
-    "2": []
+    "2": [
+      "Ground Dash",
+      "Air Dash",
+      "Skid Jump",
+      "Climb"
+    ]
   },
   "settings": {
     "2": {
-      "game": "Adventure",
-      "assume_bidirectional_exits": false
+      "game": "Celeste 64",
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
     }
   },
   "game_info": {
     "2": {
-      "name": "Adventure",
+      "name": "Celeste 64",
       "rule_format": {
         "version": "1.0"
       }
