@@ -257,10 +257,10 @@ class LingoGameExportHandler(GenericGameExportHandler):
                         settings['counting_panel_reqs'][room].append([serialized_req, panel_count])
                 logger.debug(f"Exported counting_panel_reqs with {len(settings['counting_panel_reqs'])} rooms")
 
-        # Export PROGRESSIVE_ITEMS constant
+        # Export PROGRESSIVE_ITEMS constant (sorted for consistency)
         try:
             from worlds.lingo.static_logic import PROGRESSIVE_ITEMS
-            settings['PROGRESSIVE_ITEMS'] = list(PROGRESSIVE_ITEMS)
+            settings['PROGRESSIVE_ITEMS'] = sorted(list(PROGRESSIVE_ITEMS))
             logger.debug(f"Exported PROGRESSIVE_ITEMS: {settings['PROGRESSIVE_ITEMS']}")
         except ImportError:
             logger.warning("Could not import PROGRESSIVE_ITEMS from worlds.lingo.static_logic")

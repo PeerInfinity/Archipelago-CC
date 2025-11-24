@@ -446,13 +446,13 @@ def make_serializable(obj):
     # Handle basic types directly
     if obj is None or isinstance(obj, (bool, int, float, str)):
         return obj
-    
+
     # Handle dictionaries
     if isinstance(obj, dict):
         serialized_dict = {str(k): make_serializable(v) for k, v in obj.items()}
-        
+
         return serialized_dict
-    
+
     # Handle lists, tuples, sets, and frozensets
     if isinstance(obj, (list, tuple, set, frozenset)):
         result = [make_serializable(i) for i in obj]
@@ -460,20 +460,20 @@ def make_serializable(obj):
         if isinstance(obj, (set, frozenset)):
             return sorted(result)
         return result
-    
+
     # Handle objects with __dict__ attribute (custom classes)
     if hasattr(obj, '__dict__'):
         # First check for value attribute (common in enums)
         if hasattr(obj, 'value'):
             return make_serializable(obj.value)
-        
+
         # Try to extract value from string representation like "Type(Value)"
         str_rep = str(obj)
         if '(' in str_rep and ')' in str_rep:
             try:
                 # Extract value inside parentheses
                 extracted = str_rep.split('(', 1)[1].split(')', 1)[0]
-                
+
                 # Try to convert to appropriate type
                 if extracted.lower() in ('yes', 'no', 'true', 'false'):
                     return extracted.lower() == 'yes' or extracted.lower() == 'true'
@@ -484,15 +484,107 @@ def make_serializable(obj):
             except Exception as e:
                 # If extraction fails, log and use string representation
                 return str_rep
-        
+
         # If no special handling applies, use string representation
         return str_rep
-    
+
     # If all else fails, convert to string
     if not is_serializable(obj):
         return str(obj)
-    
+
     return obj
+
+
+def sort_rule_for_consistency(rule):
+    """
+    Recursively sort rule structures for consistent JSON output.
+
+    This function sorts:
+    - 'and'/'or' conditions lists by item names
+    - Dictionary values in 'has_all_counts' and 'has_all' args (for consistent key ordering)
+    - Normalizes lambda function strings to remove memory addresses
+
+    Args:
+        rule: The rule structure to sort
+
+    Returns:
+        The sorted rule structure
+    """
+    if rule is None or isinstance(rule, (bool, int, float)):
+        return rule
+
+    # Normalize lambda function strings by removing memory addresses
+    if isinstance(rule, str):
+        import re
+        # Pattern: <function name at 0xABCD1234> -> <function name>
+        return re.sub(r'(<function .+?) at 0x[0-9a-f]+>', r'\1>', rule)
+
+    if isinstance(rule, dict):
+        # Recursively process all values
+        sorted_rule = {k: sort_rule_for_consistency(v) for k, v in rule.items()}
+
+        # Special handling for 'and'/'or' conditions
+        if sorted_rule.get('type') in ['and', 'or'] and 'conditions' in sorted_rule:
+            conditions = sorted_rule['conditions']
+            if isinstance(conditions, list) and conditions:
+                # Sort conditions by a stable key
+                # Use a tuple of (item value if present, method name, type, full dict as string) for stability
+                def condition_sort_key(cond):
+                    if not isinstance(cond, dict):
+                        return ('', '', str(cond), str(cond))
+
+                    # For item_check conditions, sort by the item value
+                    if cond.get('type') == 'item_check':
+                        item = cond.get('item')
+                        if isinstance(item, dict):
+                            # Handle nested item structures (e.g., {"type": "constant", "value": "..."})
+                            item_value = item.get('value', str(item))
+                        else:
+                            item_value = item
+                        return (str(item_value) if item_value is not None else '', '', 'item_check', str(cond))
+
+                    # For state_method conditions, sort by method name
+                    if cond.get('type') == 'state_method':
+                        method = cond.get('method', '')
+                        return ('', method, 'state_method', str(cond))
+
+                    # For other condition types, sort by type then full representation
+                    return ('', '', cond.get('type', ''), str(cond))
+
+                sorted_rule['conditions'] = sorted(conditions, key=condition_sort_key)
+
+        # Special handling for state_method calls with dict/list args that need sorting
+        if sorted_rule.get('type') == 'state_method':
+            method = sorted_rule.get('method')
+            args = sorted_rule.get('args', [])
+
+            # For has_all_counts, sort the dictionary keys in the argument
+            if method in ['has_all_counts', 'has_all'] and args:
+                sorted_args = []
+                for arg in args:
+                    if isinstance(arg, dict) and arg.get('type') == 'constant':
+                        value = arg.get('value')
+                        # If the value is a dict, sort its keys
+                        if isinstance(value, dict):
+                            sorted_value = {k: value[k] for k in sorted(value.keys())}
+                            sorted_args.append({'type': 'constant', 'value': sorted_value})
+                        # If the value is a list, sort it (for has_all)
+                        elif isinstance(value, list):
+                            sorted_value = sorted(value)
+                            sorted_args.append({'type': 'constant', 'value': sorted_value})
+                        else:
+                            sorted_args.append(arg)
+                    else:
+                        sorted_args.append(sort_rule_for_consistency(arg))
+                sorted_rule['args'] = sorted_args
+
+        return sorted_rule
+
+    if isinstance(rule, list):
+        # Recursively process list items (this will also normalize lambda strings in lists)
+        return [sort_rule_for_consistency(item) for item in rule]
+
+    return rule
 
 
 def write_field_by_field(export_data, filepath):
@@ -1231,6 +1323,10 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                 logger.error(f"Error processing region {getattr(region, 'name', 'Unknown')}: {str(e)}")
                 logger.exception("Full traceback:")
                 continue
+
+        # Sort all rules for consistency
+        regions_data = sort_rule_for_consistency(regions_data)
+        dungeons_data = sort_rule_for_consistency(dungeons_data)
 
         return regions_data, dungeons_data
 
