@@ -260,7 +260,7 @@
       ],
       "last_updated": "2025-11-23T04:17:56.344323"
     },
-    "last_updated": "2025-11-23T04:17:56.344321",
+    "last_updated": "2025-11-24T09:00:13.587226",
     "script_version": "1.0.0"
   },
   "results": {
@@ -10406,6 +10406,18 @@
         "warning_count": 0
       },
       "consecutive_passes_before_failure": 10,
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "61277a9a837ac3766cd56fa5ffef4fbf58cb33d695a1e822a271bd178917c303",
+          "new_spheres_hash": "f89f224a3d9435a2a49d2653aa31b0fa7019e58049bb2c16b6769abf65ae0b57",
+          "original_rules_hash": "dcac83bac721ae46a89957140f72f672ce24d8d2312caac2fec3dbff6083c9b3",
+          "original_spheres_hash": "57b2cbec40ccc859987d932e87589a3d188ad2a4db48df94d01c1e8445f502df",
+          "rules_identical": false,
+          "seed": "1",
+          "spoilers_identical": false,
+          "timestamp": "2025-11-24T08:58:24.692946"
+        }
+      },
       "first_failure_reason": null,
       "first_failure_seed": null,
       "game_name_from_filename": "factorio",
@@ -11424,6 +11436,18 @@
         "warning_count": 0
       },
       "consecutive_passes_before_failure": 10,
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "3ac704779a8ee852d028a50f8b98bd0e8e94c2809c3c74cbe92a1f00c46b7a3e",
+          "new_spheres_hash": "c76171a7870e64bdac1958ed4acda9551a3c91c4f866f7e8a03242884737039c",
+          "original_rules_hash": "1021e68fcfa6435b12938681d7529b864ef802878242b641df46a8d15c364bd1",
+          "original_spheres_hash": "b3a081ff70d6f242960bc48f272f54e583ec06b699e29b063662ad33ea5a690c",
+          "rules_identical": false,
+          "seed": "1",
+          "spoilers_identical": false,
+          "timestamp": "2025-11-24T08:58:30.144860"
+        }
+      },
       "first_failure_reason": null,
       "first_failure_seed": null,
       "game_name_from_filename": "ffmq",
@@ -15870,6 +15894,18 @@
         "warning_count": 0
       },
       "consecutive_passes_before_failure": 10,
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "23d48a894ee253f148df483de13b1bf2dffeda05efce263946732398bc0c525d",
+          "new_spheres_hash": "97a1331098651f3ed05272dcced2e2c866bcea1d894da0febc8b2dda83445091",
+          "original_rules_hash": "45cd1ae17c3528b74cff36cbc190e0d7dbd13b30657398fdc9d00fb949539b4e",
+          "original_spheres_hash": "10c0fea141fa77da609c737043ee18d8911ece2857bd28472d687da112a0f2e2",
+          "rules_identical": false,
+          "seed": "1",
+          "spoilers_identical": false,
+          "timestamp": "2025-11-24T08:58:35.862395"
+        }
+      },
       "first_failure_reason": null,
       "first_failure_seed": null,
       "game_name_from_filename": "lingo",
@@ -32109,7 +32145,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consecutive_passes_before_failure": 10,
+      "consecutive_passes_before_failure": 3,
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "612f2a7bd6f5ad4d5f035864f9308840ba1e89b1bdfc56a98755cb81f045e19f",
+          "new_spheres_hash": "7dd083577b2e57500ad770689a4b898072e7b4b0b6d7b19012a108bacf4c68e3",
+          "original_rules_hash": "612f2a7bd6f5ad4d5f035864f9308840ba1e89b1bdfc56a98755cb81f045e19f",
+          "original_spheres_hash": "7dd083577b2e57500ad770689a4b898072e7b4b0b6d7b19012a108bacf4c68e3",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-11-24T08:58:44.778748"
+        }
+      },
       "first_failure_reason": null,
       "first_failure_seed": null,
       "game_name_from_filename": "witness",
@@ -32134,14 +32182,14 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.66,
+            "processing_time_seconds": 9.14,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/witness/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-            "size_bytes": 275471,
+            "size_bytes": 275435,
             "size_mb": 0.26
           },
           "seed": "1",
@@ -32149,7 +32197,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 7.0,
+            "processing_time_seconds": 14.2,
             "return_code": 0,
             "sphere_reached": 9.1,
             "success": true,
@@ -32157,7 +32205,7 @@
             "warning_count": 0
           },
           "template_filename": "The Witness.yaml",
-          "timestamp": "2025-11-23T04:15:54.826623",
+          "timestamp": "2025-11-24T08:59:49.767994",
           "world_info": {
             "exporter_path": "exporter/games/witness.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/witness/witnessLogic.js",
@@ -32268,7 +32316,7 @@
       "seed_id": "AP_14089154938208861744",
       "seed_range": "1-7",
       "seeds_failed": 0,
-      "seeds_passed": 10,
+      "seeds_passed": 3,
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
@@ -32285,8 +32333,8 @@
         "failure_rate": 0.0
       },
       "template_filename": "The Witness.yaml",
-      "timestamp": "2025-11-23T04:02:33.761420",
-      "total_seeds_tested": 10,
+      "timestamp": "2025-11-24T08:59:49.767994",
+      "total_seeds_tested": 3,
       "world_info": {
         "exporter_path": "exporter/games/witness.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/witness/witnessLogic.js",
