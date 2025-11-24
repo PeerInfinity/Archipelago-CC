@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-24 00:14:36
+**Generated:** 2025-11-24 01:19:14
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -13,20 +13,20 @@ This summary combines results from four types of tests:
 ### Individual Test Results
 
 - **Minimal Test:** 75/76 passed (98.7%)
-- **Full Test:** 71/76 passed (93.4%)
+- **Full Test:** 72/76 passed (94.7%)
 - **Multiclient Test:** 57/76 passed (75.0%)
 - **Multiworld Test:** 52/76 passed (68.4%)
 
 ### Intermittent Failures
 
 - **Minimal Spoilers Test:** 7 game(s), 35 total failure(s)
-- **Full Spoilers Test:** 19 game(s), 42 total failure(s)
+- **Full Spoilers Test:** 5 game(s), 27 total failure(s)
 
 ### Combined Test Results
 
 - **Templates passing all 4 tests:** 52/76 (68.4%)
-- **Templates passing 3 tests:** 4/76 (5.3%)
-- **Templates passing 2 tests:** 16/76 (21.1%)
+- **Templates passing 3 tests:** 5/76 (6.6%)
+- **Templates passing 2 tests:** 15/76 (19.7%)
 - **Templates passing 1 test:** 3/76 (3.9%)
 - **Templates passing 0 tests:** 1/76 (1.3%)
 
@@ -54,7 +54,7 @@ This summary combines results from four types of tests:
 | DOOM II | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
 | Dark Souls III | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
-| Factorio | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
+| Factorio | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
 | Faxanadu | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
 | Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ⚫ |
 | Heretic | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
