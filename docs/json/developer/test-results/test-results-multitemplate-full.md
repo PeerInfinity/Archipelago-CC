@@ -4,23 +4,23 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-23 07:12:22
+**Generated:** 2025-11-24 08:46:38
 
-**Source Data Created:** 2025-11-23T07:12:22.693552
+**Source Data Created:** 2025-11-24T08:46:38.707751
 
-**Source Data Last Updated:** 2025-11-23T07:12:22.693557
+**Source Data Last Updated:** 2025-11-24T08:46:38.707759
 
 ## Summary
 
 - **Total Games:** 1
 - **Total Template Configurations:** 174
-- **Passed Configurations:** 131 (75.3%)
-- **Failed Configurations:** 39 (22.4%)
+- **Passed Configurations:** 136 (78.2%)
+- **Failed Configurations:** 34 (19.5%)
 - **Invalid Configurations:** 4 (2.3%)
 
 ## A Link to the Past
 
-**Results:** 131/174 passed (75.3%)  
+**Results:** 136/174 passed (78.2%)  
 **Custom Exporter:** ✅ Yes | **Custom GameLogic:** ✅ Yes
 
 | Template | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress |
@@ -61,7 +61,7 @@
 | dungeon_counters_default | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | dungeon_counters_off | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | dungeon_counters_on | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| dungeon_counters_pickup | ❌ Failed | 0 | 0 | 22.1 | 0.0% |
+| dungeon_counters_pickup | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | enemy_damage_chaos | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | enemy_damage_default | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | enemy_damage_shuffled | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
@@ -100,12 +100,12 @@
 | goal_pedestal | ✅ Passed | 0 | 26.1 | 26.1 | 100.0% |
 | goal_triforce_hunt | ❌ Failed | 0 | 4.19 | 18.1 | 23.1% |
 | hard_mode | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| hints_full | ❌ Failed | 0 | 0 | 22.1 | 0.0% |
+| hints_full | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | hints_off | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | hints_on | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | include_witch_hut_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | include_witch_hut_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| item_functionality_easy | ❌ Failed | 0 | 0 | 22.1 | 0.0% |
+| item_functionality_easy | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | item_functionality_expert | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | item_functionality_hard | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | item_functionality_normal | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
@@ -153,7 +153,7 @@
 | randomize_shop_prices_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | restrict_dungeon_item_on_boss_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | restrict_dungeon_item_on_boss_true | ✅ Passed | 0 | 30.1 | 30.1 | 100.0% |
-| retro_bow_false | ❌ Failed | 0 | 0 | 22.1 | 0.0% |
+| retro_bow_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | retro_bow_true | ❌ Failed | 0 | 0 | 16.1 | 0.0% |
 | retro_caves_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | retro_caves_true | ✅ Passed | 0 | 28.1 | 28.1 | 100.0% |
@@ -174,7 +174,7 @@
 | shuffle_shop_inventories_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | shuffled_everything | ❌ No Spheres | 0 | 0 | 0 | N/A |
 | small_key_shuffle_any_world | ✅ Passed | 0 | 19.2 | 19.2 | 100.0% |
-| small_key_shuffle_different_world | ❌ Failed | 0 | 0 | 19.2 | 0.0% |
+| small_key_shuffle_different_world | ✅ Passed | 0 | 19.2 | 19.2 | 100.0% |
 | small_key_shuffle_original_dungeon | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | small_key_shuffle_own_dungeons | ⚫ Invalid | 3 | 0 | 0 | N/A |
 | small_key_shuffle_own_world | ✅ Passed | 0 | 19.2 | 19.2 | 100.0% |
