@@ -85,29 +85,11 @@
             "name": "Symmetry Island Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
-                }
+              "type": "item_check",
+              "item": "Progressive Symmetry",
+              "count": {
+                "type": "constant",
+                "value": 2
               }
             },
             "item": {
@@ -121,30 +103,14 @@
             "name": "Desert Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "helper",
+              "name": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Desert Outside"
                 }
-              }
+              ]
             },
             "item": {
               "name": "+1 Laser (Unredirected)",
@@ -157,30 +123,20 @@
             "name": "Quarry Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
+              "type": "state_method",
+              "method": "has_all_counts",
+              "args": [
+                {
+                  "type": "constant",
                   "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
+                    "Colored Squares": 1,
+                    "Eraser": 1,
+                    "Progressive Dots": 1,
+                    "Progressive Stars": 2,
+                    "Shapers": 1
                   }
                 }
-              }
+              ]
             },
             "item": {
               "name": "+1 Laser",
@@ -193,30 +149,14 @@
             "name": "Shadows Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "helper",
+              "name": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Shadows Laser Room"
                 }
-              }
+              ]
             },
             "item": {
               "name": "+1 Laser",
@@ -230,40 +170,11 @@
             "id": null,
             "access_rule": {
               "type": "helper",
-              "name": "any",
+              "name": "can_reach_region",
               "args": [
                 {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "all_of",
-                    "element_rule": {
-                      "type": "helper",
-                      "name": "condition",
-                      "args": []
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "condition"
-                      },
-                      "iterator": {
-                        "type": "name",
-                        "name": "sub_requirement"
-                      }
-                    }
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "sub_requirement"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "fully_converted_rules"
-                    }
-                  }
+                  "type": "constant",
+                  "value": "Keep Tower"
                 }
               ]
             },
@@ -278,29 +189,11 @@
             "name": "Monastery Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
-                }
+              "type": "item_check",
+              "item": "Progressive Dots",
+              "count": {
+                "type": "constant",
+                "value": 1
               }
             },
             "item": {
@@ -314,32 +207,14 @@
             "name": "Town Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
+              "type": "helper",
+              "name": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Town Tower Top"
                 }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": null
+              ]
             },
             "item": {
               "name": "+1 Laser",
@@ -352,29 +227,11 @@
             "name": "Jungle Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
-                }
+              "type": "item_check",
+              "item": "Sound Dots",
+              "count": {
+                "type": "constant",
+                "value": 1
               }
             },
             "item": {
@@ -388,32 +245,14 @@
             "name": "Bunker Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
+              "type": "helper",
+              "name": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Bunker Laser Platform"
                 }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": null
+              ]
             },
             "item": {
               "name": "+1 Laser",
@@ -426,32 +265,14 @@
             "name": "Swamp Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
+              "type": "helper",
+              "name": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Swamp Laser Area"
                 }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": null
+              ]
             },
             "item": {
               "name": "+1 Laser",
@@ -464,32 +285,14 @@
             "name": "Treehouse Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
+              "type": "helper",
+              "name": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Treehouse Laser Room"
                 }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": null
+              ]
             },
             "item": {
               "name": "+1 Laser",
@@ -637,32 +440,8 @@
             "name": "Outside Tutorial to Outside Tutorial Path To Outpost",
             "connected_region": "Outside Tutorial Path To Outpost",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": null
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -680,10 +459,7 @@
             "id": 158017,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Dots"
-              },
+              "item": "Progressive Dots",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -701,10 +477,7 @@
             "id": 158026,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Black/White Squares"
-              },
+              "item": "Black/White Squares",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -727,10 +500,7 @@
             "connected_region": "Outside Tutorial Outpost",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Dots"
-              },
+              "item": "Progressive Dots",
               "count": {
                 "type": "constant",
                 "value": 2
@@ -741,32 +511,8 @@
             "name": "Outside Tutorial Path To Outpost to Outside Tutorial",
             "connected_region": "Outside Tutorial",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": null
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -776,10 +522,7 @@
             "id": 158011,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Dots"
-              },
+              "item": "Progressive Dots",
               "count": {
                 "type": "constant",
                 "value": 2
@@ -871,32 +614,8 @@
             "name": "Orchard Apple Tree 5",
             "id": 158075,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": null
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Sound Dots",
@@ -1065,10 +784,7 @@
             "connected_region": "Inside Glass Factory",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Symmetry"
-              },
+              "item": "Progressive Symmetry",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -1082,10 +798,7 @@
             "id": 158027,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Symmetry"
-              },
+              "item": "Progressive Symmetry",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -1108,10 +821,7 @@
             "connected_region": "Inside Glass Factory Behind Back Wall",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Symmetry"
-              },
+              "item": "Progressive Symmetry",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -1125,10 +835,7 @@
             "id": 158032,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Symmetry"
-              },
+              "item": "Progressive Symmetry",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -1146,10 +853,7 @@
             "id": 158035,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Symmetry"
-              },
+              "item": "Progressive Symmetry",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -1167,10 +871,7 @@
             "id": 158038,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Symmetry"
-              },
+              "item": "Progressive Symmetry",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -1193,10 +894,7 @@
             "connected_region": "The Ocean",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Boat"
-              },
+              "item": "Boat",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -1221,30 +919,17 @@
             "name": "Outside Symmetry Island to Symmetry Island Lower",
             "connected_region": "Symmetry Island Lower",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Progressive Dots",
+                    "Progressive Symmetry"
+                  ]
                 }
-              }
+              ]
             }
           }
         ],
@@ -1253,30 +938,17 @@
             "name": "Symmetry Island Lower Panel",
             "id": 158040,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Progressive Dots",
+                    "Progressive Symmetry"
+                  ]
                 }
-              }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -1383,10 +1055,7 @@
             "id": 158063,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Symmetry"
-              },
+              "item": "Progressive Symmetry",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -1433,10 +1102,7 @@
             "id": 158067,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Symmetry"
-              },
+              "item": "Progressive Symmetry",
               "count": {
                 "type": "constant",
                 "value": 2
@@ -1454,10 +1120,7 @@
             "id": 158070,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Symmetry"
-              },
+              "item": "Progressive Symmetry",
               "count": {
                 "type": "constant",
                 "value": 2
@@ -1475,10 +1138,7 @@
             "id": 158700,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Symmetry"
-              },
+              "item": "Progressive Symmetry",
               "count": {
                 "type": "constant",
                 "value": 2
@@ -1546,32 +1206,8 @@
             "name": "Desert Laser Panel",
             "id": 158701,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": null
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Speed Boost",
@@ -1712,32 +1348,8 @@
             "name": "Desert Elevator Room to Desert Behind Elevator",
             "connected_region": "Desert Behind Elevator",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": null
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -1807,10 +1419,7 @@
             "connected_region": "Quarry Between Entry Doors",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Black/White Squares"
-              },
+              "item": "Black/White Squares",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -1832,10 +1441,7 @@
             "id": 158118,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Black/White Squares"
-              },
+              "item": "Black/White Squares",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -1852,30 +1458,20 @@
             "name": "Quarry Laser Panel",
             "id": 158702,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
+              "type": "state_method",
+              "method": "has_all_counts",
+              "args": [
+                {
+                  "type": "constant",
                   "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
+                    "Colored Squares": 1,
+                    "Eraser": 1,
+                    "Progressive Dots": 1,
+                    "Progressive Stars": 2,
+                    "Shapers": 1
                   }
                 }
-              }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -1893,73 +1489,26 @@
             "name": "Quarry Elevator to Outside Quarry",
             "connected_region": "Outside Quarry",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "all_of",
-                    "element_rule": {
-                      "type": "helper",
-                      "name": "condition",
-                      "args": []
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "condition"
-                      },
-                      "iterator": {
-                        "type": "name",
-                        "name": "sub_requirement"
-                      }
-                    }
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "sub_requirement"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "fully_converted_rules"
-                    }
-                  }
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Quarry Elevator to Quarry",
             "connected_region": "Quarry",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Colored Squares",
+                    "Eraser",
+                    "Progressive Dots"
+                  ]
                 }
-              }
+              ]
             }
           }
         ],
@@ -1973,10 +1522,7 @@
             "connected_region": "Quarry",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Shapers"
-              },
+              "item": "Shapers",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -1990,10 +1536,7 @@
             "id": 158119,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Shapers"
-              },
+              "item": "Shapers",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -2051,10 +1594,7 @@
             "id": 158121,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Black/White Squares"
-              },
+              "item": "Black/White Squares",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -2072,10 +1612,7 @@
             "id": 158122,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Dots"
-              },
+              "item": "Progressive Dots",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -2182,60 +1719,34 @@
             "name": "Quarry Stoneworks Lift to Quarry Stoneworks Ground Floor",
             "connected_region": "Quarry Stoneworks Ground Floor",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Eraser",
+                    "Progressive Dots"
+                  ]
                 }
-              }
+              ]
             }
           },
           {
             "name": "Quarry Stoneworks Lift to Quarry Stoneworks Upper Floor",
             "connected_region": "Quarry Stoneworks Upper Floor",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Eraser",
+                    "Progressive Dots"
+                  ]
                 }
-              }
+              ]
             }
           }
         ],
@@ -2411,10 +1922,7 @@
             "connected_region": "Quarry Boathouse Behind Staircase",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Boat"
-              },
+              "item": "Boat",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -2428,10 +1936,7 @@
             "id": 158146,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Stars"
-              },
+              "item": "Progressive Stars",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -2476,29 +1981,11 @@
             "name": "Quarry Boathouse Behind Staircase to The Ocean",
             "connected_region": "The Ocean",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
-                }
+              "type": "item_check",
+              "item": "Boat",
+              "count": {
+                "type": "constant",
+                "value": 1
               }
             }
           }
@@ -2661,32 +2148,8 @@
             "name": "Shadows to Shadows Laser Room",
             "connected_region": "Shadows Laser Room",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": null
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -2695,32 +2158,8 @@
             "name": "Shadows Intro 8",
             "id": 158173,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": null
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Speed Boost",
@@ -2733,32 +2172,8 @@
             "name": "Shadows Far 8",
             "id": 158181,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": null
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Speed Boost",
@@ -2771,32 +2186,8 @@
             "name": "Shadows Near 5",
             "id": 158186,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": null
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Speed Boost",
@@ -2837,30 +2228,8 @@
             "name": "Shadows Laser Panel",
             "id": 158703,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
-                }
-              }
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Puzzle Skip",
@@ -2917,10 +2286,7 @@
             "connected_region": "Keep 2nd Pressure Plate",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Dots"
-              },
+              "item": "Progressive Dots",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -2931,64 +2297,16 @@
             "name": "Keep to Keep 3rd Maze",
             "connected_region": "Keep 3rd Maze",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": null
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Keep to Keep 4th Maze",
             "connected_region": "Keep 4th Maze",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": null
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -3012,10 +2330,7 @@
             "id": 158198,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Dots"
-              },
+              "item": "Progressive Dots",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -3066,32 +2381,8 @@
             "name": "Keep 3rd Maze to Keep",
             "connected_region": "Keep",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": null
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -3127,32 +2418,8 @@
             "name": "Keep 4th Maze to Keep",
             "connected_region": "Keep",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": null
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -3358,30 +2625,8 @@
             "name": "Keep Laser Panel Hedges",
             "id": 158704,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
-                }
-              }
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Speed Boost",
@@ -3394,30 +2639,21 @@
             "name": "Keep Laser Panel Pressure Plates",
             "id": 158705,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
+              "type": "state_method",
+              "method": "has_all_counts",
+              "args": [
+                {
+                  "type": "constant",
                   "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
+                    "Black/White Squares": 1,
+                    "Colored Squares": 1,
+                    "Progressive Dots": 1,
+                    "Progressive Stars": 2,
+                    "Progressive Symmetry": 1,
+                    "Shapers": 1
                   }
                 }
-              }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -3481,29 +2717,11 @@
             "name": "Monastery Outside 3",
             "id": 158212,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
-                }
+              "type": "item_check",
+              "item": "Progressive Dots",
+              "count": {
+                "type": "constant",
+                "value": 1
               }
             },
             "item": {
@@ -3517,29 +2735,11 @@
             "name": "Monastery Laser Panel",
             "id": 158706,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
-                }
+              "type": "item_check",
+              "item": "Progressive Dots",
+              "count": {
+                "type": "constant",
+                "value": 1
               }
             },
             "item": {
@@ -3559,10 +2759,7 @@
             "connected_region": "Monastery North Shutters",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Dots"
-              },
+              "item": "Progressive Dots",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -3575,29 +2772,11 @@
             "name": "Monastery Inside 4",
             "id": 158217,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
-                }
+              "type": "item_check",
+              "item": "Progressive Dots",
+              "count": {
+                "type": "constant",
+                "value": 1
               }
             },
             "item": {
@@ -3644,10 +2823,7 @@
             "connected_region": "The Ocean",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Boat"
-              },
+              "item": "Boat",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -3811,30 +2987,17 @@
             "name": "Town Church Entry Panel",
             "id": 158226,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Progressive Stars",
+                    "Rotated Shapers"
+                  ]
                 }
-              }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -3881,10 +3044,7 @@
             "connected_region": "Town Red Rooftop",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Shapers"
-              },
+              "item": "Shapers",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -3926,29 +3086,11 @@
             "name": "Town Tall Hexagonal",
             "id": 158224,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
-                }
+              "type": "item_check",
+              "item": "Progressive Symmetry",
+              "count": {
+                "type": "constant",
+                "value": 1
               }
             },
             "item": {
@@ -3968,30 +3110,19 @@
             "name": "Town Wooden Rooftop",
             "id": 158240,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
+              "type": "state_method",
+              "method": "has_all_counts",
+              "args": [
+                {
+                  "type": "constant",
                   "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
+                    "Eraser": 1,
+                    "Progressive Dots": 2,
+                    "Rotated Shapers": 1,
+                    "Shapers": 1
                   }
                 }
-              }
+              ]
             },
             "item": {
               "name": "Boat",
@@ -4019,30 +3150,17 @@
             "name": "Town Church Lattice",
             "id": 158227,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Progressive Stars",
+                    "Rotated Shapers"
+                  ]
                 }
-              }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -4061,10 +3179,7 @@
             "connected_region": "Town RGB House Upstairs",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Sound Dots"
-              },
+              "item": "Sound Dots",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -4078,10 +3193,7 @@
             "id": 158243,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Sound Dots"
-              },
+              "item": "Sound Dots",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -4165,30 +3277,17 @@
             "name": "Town Tower Bottom to Town Tower After First Door",
             "connected_region": "Town Tower After First Door",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Progressive Stars",
+                    "Rotated Shapers"
+                  ]
                 }
-              }
+              ]
             }
           }
         ],
@@ -4201,60 +3300,35 @@
             "name": "Town Tower After First Door to Town Tower After Second Door",
             "connected_region": "Town Tower After Second Door",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Black/White Squares",
+                    "Progressive Dots",
+                    "Progressive Symmetry"
+                  ]
                 }
-              }
+              ]
             }
           },
           {
             "name": "Town Tower After First Door to Town Tower Bottom",
             "connected_region": "Town Tower Bottom",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Progressive Stars",
+                    "Rotated Shapers"
+                  ]
                 }
-              }
+              ]
             }
           }
         ],
@@ -4267,60 +3341,37 @@
             "name": "Town Tower After Second Door to Town Tower After Third Door",
             "connected_region": "Town Tower After Third Door",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
+              "type": "state_method",
+              "method": "has_all_counts",
+              "args": [
+                {
+                  "type": "constant",
                   "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
+                    "Eraser": 1,
+                    "Progressive Dots": 2,
+                    "Rotated Shapers": 1,
+                    "Shapers": 1
                   }
                 }
-              }
+              ]
             }
           },
           {
             "name": "Town Tower After Second Door to Town Tower After First Door",
             "connected_region": "Town Tower After First Door",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Black/White Squares",
+                    "Progressive Dots",
+                    "Progressive Symmetry"
+                  ]
                 }
-              }
+              ]
             }
           }
         ],
@@ -4333,29 +3384,11 @@
             "name": "Town Tower After Third Door to Town Tower Top",
             "connected_region": "Town Tower Top",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
-                }
+              "type": "item_check",
+              "item": "Progressive Symmetry",
+              "count": {
+                "type": "constant",
+                "value": 1
               }
             }
           },
@@ -4363,30 +3396,19 @@
             "name": "Town Tower After Third Door to Town Tower After Second Door",
             "connected_region": "Town Tower After Second Door",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
+              "type": "state_method",
+              "method": "has_all_counts",
+              "args": [
+                {
+                  "type": "constant",
                   "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
+                    "Eraser": 1,
+                    "Progressive Dots": 2,
+                    "Rotated Shapers": 1,
+                    "Shapers": 1
                   }
                 }
-              }
+              ]
             }
           }
         ],
@@ -4399,29 +3421,11 @@
             "name": "Town Tower Top to Town Tower After Third Door",
             "connected_region": "Town Tower After Third Door",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
-                }
+              "type": "item_check",
+              "item": "Progressive Symmetry",
+              "count": {
+                "type": "constant",
+                "value": 1
               }
             }
           }
@@ -4451,10 +3455,7 @@
             "connected_region": "Windmill Interior",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Dots"
-              },
+              "item": "Progressive Dots",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -4476,10 +3477,7 @@
             "id": 158241,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Dots"
-              },
+              "item": "Progressive Dots",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -4502,10 +3500,7 @@
             "connected_region": "Theater",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Black/White Squares"
-              },
+              "item": "Black/White Squares",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -4519,10 +3514,7 @@
             "id": 158248,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Black/White Squares"
-              },
+              "item": "Black/White Squares",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -4544,39 +3536,47 @@
             "name": "Theater to Town",
             "connected_region": "Town",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
+              "type": "or",
+              "conditions": [
                 {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "all_of",
-                    "element_rule": {
-                      "type": "helper",
-                      "name": "condition",
-                      "args": []
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "condition"
-                      },
-                      "iterator": {
-                        "type": "name",
-                        "name": "sub_requirement"
-                      }
-                    }
+                  "type": "all_of",
+                  "element_rule": {
+                    "type": "helper",
+                    "name": "condition",
+                    "args": []
                   },
-                  "comprehension": {
+                  "iterator_info": {
                     "type": "comprehension_details",
                     "target": {
                       "type": "name",
-                      "name": "sub_requirement"
+                      "name": "condition"
                     },
                     "iterator": {
+                      "type": "constant",
+                      "value": [
+                        "<function convert_requirement_option.<locals>.<lambda>>"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "all_of",
+                  "element_rule": {
+                    "type": "helper",
+                    "name": "condition",
+                    "args": []
+                  },
+                  "iterator_info": {
+                    "type": "comprehension_details",
+                    "target": {
                       "type": "name",
-                      "name": "fully_converted_rules"
+                      "name": "condition"
+                    },
+                    "iterator": {
+                      "type": "constant",
+                      "value": [
+                        "<function convert_requirement_option.<locals>.<lambda>>"
+                      ]
                     }
                   }
                 }
@@ -4663,10 +3663,7 @@
             "connected_region": "The Ocean",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Boat"
-              },
+              "item": "Boat",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -4715,29 +3712,11 @@
             "name": "Jungle Popup Wall 6",
             "id": 158265,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
-                }
+              "type": "item_check",
+              "item": "Sound Dots",
+              "count": {
+                "type": "constant",
+                "value": 1
               }
             },
             "item": {
@@ -4751,29 +3730,11 @@
             "name": "Jungle Laser Panel",
             "id": 158709,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
-                }
+              "type": "item_check",
+              "item": "Sound Dots",
+              "count": {
+                "type": "constant",
+                "value": 1
               }
             },
             "item": {
@@ -4835,10 +3796,7 @@
             "connected_region": "Bunker",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Black/White Squares"
-              },
+              "item": "Black/White Squares",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -4852,10 +3810,7 @@
             "id": 158268,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Black/White Squares"
-              },
+              "item": "Black/White Squares",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -4947,30 +3902,17 @@
             "name": "Bunker Glass Room to Bunker Ultraviolet Room",
             "connected_region": "Bunker Ultraviolet Room",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Black/White Squares",
+                    "Colored Squares"
+                  ]
                 }
-              }
+              ]
             }
           }
         ],
@@ -4979,30 +3921,17 @@
             "name": "Bunker Glass Room 3",
             "id": 158281,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Black/White Squares",
+                    "Colored Squares"
+                  ]
                 }
-              }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -5075,43 +4004,8 @@
             "name": "Bunker Elevator Section to Bunker Under Elevator",
             "connected_region": "Bunker Under Elevator",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "all_of",
-                    "element_rule": {
-                      "type": "helper",
-                      "name": "condition",
-                      "args": []
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "condition"
-                      },
-                      "iterator": {
-                        "type": "name",
-                        "name": "sub_requirement"
-                      }
-                    }
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "sub_requirement"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "fully_converted_rules"
-                    }
-                  }
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -5124,43 +4018,8 @@
             "name": "Bunker Under Elevator to Bunker Elevator Section",
             "connected_region": "Bunker Elevator Section",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "all_of",
-                    "element_rule": {
-                      "type": "helper",
-                      "name": "condition",
-                      "args": []
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "condition"
-                      },
-                      "iterator": {
-                        "type": "name",
-                        "name": "sub_requirement"
-                      }
-                    }
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "sub_requirement"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "fully_converted_rules"
-                    }
-                  }
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -5322,10 +4181,7 @@
             "connected_region": "Swamp Entry Area",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Shapers"
-              },
+              "item": "Shapers",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -5347,10 +4203,7 @@
             "id": 158287,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Shapers"
-              },
+              "item": "Shapers",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -5383,10 +4236,7 @@
             "id": 158293,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Shapers"
-              },
+              "item": "Shapers",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -5404,10 +4254,7 @@
             "id": 158301,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Shapers"
-              },
+              "item": "Shapers",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -5430,10 +4277,7 @@
             "connected_region": "Swamp Entry Area",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Shapers"
-              },
+              "item": "Shapers",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -5445,10 +4289,7 @@
             "connected_region": "Swamp Platform",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Shapers"
-              },
+              "item": "Shapers",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -5465,30 +4306,17 @@
             "name": "Swamp Platform to Swamp Cyan Underwater",
             "connected_region": "Swamp Cyan Underwater",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Negative Shapers",
+                    "Shapers"
+                  ]
                 }
-              }
+              ]
             }
           },
           {
@@ -5496,10 +4324,7 @@
             "connected_region": "Swamp Near Boat",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Shapers"
-              },
+              "item": "Shapers",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -5511,10 +4336,7 @@
             "connected_region": "Swamp Between Bridges Near",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Shapers"
-              },
+              "item": "Shapers",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -5536,10 +4358,7 @@
             "id": 158316,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Shapers"
-              },
+              "item": "Shapers",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -5557,10 +4376,7 @@
             "id": 158318,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Shapers"
-              },
+              "item": "Shapers",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -5582,30 +4398,17 @@
             "name": "Swamp Cyan Underwater to Swamp Platform",
             "connected_region": "Swamp Platform",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Negative Shapers",
+                    "Shapers"
+                  ]
                 }
-              }
+              ]
             }
           }
         ],
@@ -5642,29 +4445,11 @@
             "name": "Swamp Between Bridges Near to Swamp Between Bridges Far",
             "connected_region": "Swamp Between Bridges Far",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
-                }
+              "type": "item_check",
+              "item": "Shapers",
+              "count": {
+                "type": "constant",
+                "value": 1
               }
             }
           }
@@ -5674,29 +4459,11 @@
             "name": "Swamp Between Bridges Near Row 4",
             "id": 158306,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
-                }
+              "type": "item_check",
+              "item": "Shapers",
+              "count": {
+                "type": "constant",
+                "value": 1
               }
             },
             "item": {
@@ -5715,30 +4482,17 @@
             "name": "Swamp Between Bridges Far to Swamp Red Underwater",
             "connected_region": "Swamp Red Underwater",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Negative Shapers",
+                    "Shapers"
+                  ]
                 }
-              }
+              ]
             }
           },
           {
@@ -5755,30 +4509,17 @@
             "name": "Swamp Between Bridges Far Row 4",
             "id": 158322,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Rotated Shapers",
+                    "Shapers"
+                  ]
                 }
-              }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -5813,30 +4554,17 @@
             "name": "Swamp Red Underwater to Swamp Between Bridges Far",
             "connected_region": "Swamp Between Bridges Far",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Negative Shapers",
+                    "Shapers"
+                  ]
                 }
-              }
+              ]
             }
           }
         ],
@@ -5938,62 +4666,25 @@
             "name": "Swamp Near Boat to Swamp Blue Underwater",
             "connected_region": "Swamp Blue Underwater",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Rotated Shapers",
+                    "Shapers"
+                  ]
                 }
-              }
+              ]
             }
           },
           {
             "name": "Swamp Near Boat to Swamp Long Bridge",
             "connected_region": "Swamp Long Bridge",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "player"
-                }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": null
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -6001,10 +4692,7 @@
             "connected_region": "The Ocean",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Boat"
-              },
+              "item": "Boat",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -6017,30 +4705,17 @@
             "name": "Swamp Beyond Rotating Bridge 4",
             "id": 158332,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Rotated Shapers",
+                    "Shapers"
+                  ]
                 }
-              }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -6071,30 +4746,17 @@
             "name": "Swamp Purple Area to Swamp Purple Underwater",
             "connected_region": "Swamp Purple Underwater",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Rotated Shapers",
+                    "Shapers"
+                  ]
                 }
-              }
+              ]
             }
           },
           {
@@ -6115,30 +4777,17 @@
             "name": "Swamp Purple Underwater to Swamp Purple Area",
             "connected_region": "Swamp Purple Area",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Rotated Shapers",
+                    "Shapers"
+                  ]
                 }
-              }
+              ]
             }
           }
         ],
@@ -6148,10 +4797,7 @@
             "id": 158333,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Shapers"
-              },
+              "item": "Shapers",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -6318,10 +4964,7 @@
             "connected_region": "Treehouse Between Entry Doors",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Stars"
-              },
+              "item": "Progressive Stars",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -6333,10 +4976,7 @@
             "connected_region": "The Ocean",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Boat"
-              },
+              "item": "Boat",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -6350,10 +4990,7 @@
             "id": 158344,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Stars"
-              },
+              "item": "Progressive Stars",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -6376,10 +5013,7 @@
             "connected_region": "Treehouse Yellow Bridge",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Stars"
-              },
+              "item": "Progressive Stars",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -6393,10 +5027,7 @@
             "id": 158345,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Stars"
-              },
+              "item": "Progressive Stars",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -6419,10 +5050,7 @@
             "connected_region": "Treehouse After Yellow Bridge",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Stars"
-              },
+              "item": "Progressive Stars",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -6436,10 +5064,7 @@
             "id": 158354,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Stars"
-              },
+              "item": "Progressive Stars",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -6462,10 +5087,7 @@
             "connected_region": "Treehouse Junction",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Stars"
-              },
+              "item": "Progressive Stars",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -6479,10 +5101,7 @@
             "id": 158355,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Stars"
-              },
+              "item": "Progressive Stars",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -6590,10 +5209,7 @@
             "connected_region": "Treehouse Drawbridge Platform",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Stars"
-              },
+              "item": "Progressive Stars",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -6615,10 +5231,7 @@
             "id": 158402,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Stars"
-              },
+              "item": "Progressive Stars",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -6641,10 +5254,7 @@
             "connected_region": "Main Island",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Stars"
-              },
+              "item": "Progressive Stars",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -6658,10 +5268,7 @@
             "id": 158404,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Stars"
-              },
+              "item": "Progressive Stars",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -6905,30 +5512,18 @@
             "name": "Treehouse Laser Room Front Platform to Treehouse Laser Room",
             "connected_region": "Treehouse Laser Room",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
+              "type": "state_method",
+              "method": "has_all_counts",
+              "args": [
+                {
+                  "type": "constant",
                   "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
+                    "Black/White Squares": 1,
+                    "Colored Squares": 1,
+                    "Progressive Stars": 2
                   }
                 }
-              }
+              ]
             }
           }
         ],
@@ -7017,10 +5612,7 @@
             "connected_region": "Mountain Floor 1",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Mountain Entry"
-              },
+              "item": "Mountain Entry",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -7055,30 +5647,39 @@
             "name": "Mountaintop Mountain Entry Panel",
             "id": 158407,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "has_all_counts",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": {
+                        "Black/White Squares": 1,
+                        "Progressive Stars": 2
+                      }
+                    }
+                  ]
                 },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+                {
+                  "type": "state_method",
+                  "method": "has_from_list",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "+1 Laser",
+                        "+1 Laser (Redirected)"
+                      ]
+                    },
+                    {
+                      "type": "constant",
+                      "value": 7
+                    }
+                  ]
                 }
-              }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -7091,30 +5692,39 @@
             "name": "Mountaintop Mountain Entry Panel Solved",
             "id": null,
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "has_all_counts",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": {
+                        "Black/White Squares": 1,
+                        "Progressive Stars": 2
+                      }
+                    }
+                  ]
                 },
-                "iterator": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
-                  }
+                {
+                  "type": "state_method",
+                  "method": "has_from_list",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "+1 Laser",
+                        "+1 Laser (Redirected)"
+                      ]
+                    },
+                    {
+                      "type": "constant",
+                      "value": 7
+                    }
+                  ]
                 }
-              }
+              ]
             },
             "item": {
               "name": "Mountain Entry",
@@ -7151,10 +5761,7 @@
             "connected_region": "Mountaintop",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Mountain Entry"
-              },
+              "item": "Mountain Entry",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -7336,30 +5943,21 @@
             "name": "Mountain Floor 1 At Door to Mountain Floor 2",
             "connected_region": "Mountain Floor 2",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
+              "type": "state_method",
+              "method": "has_all_counts",
+              "args": [
+                {
+                  "type": "constant",
                   "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
+                    "Black/White Squares": 1,
+                    "Progressive Dots": 1,
+                    "Progressive Stars": 2,
+                    "Progressive Symmetry": 1,
+                    "Rotated Shapers": 1,
+                    "Shapers": 1
                   }
                 }
-              }
+              ]
             }
           }
         ],
@@ -7391,43 +5989,8 @@
             "name": "Mountain Floor 2 to Mountain Floor 2 Beyond Bridge",
             "connected_region": "Mountain Floor 2 Beyond Bridge",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "all_of",
-                    "element_rule": {
-                      "type": "helper",
-                      "name": "condition",
-                      "args": []
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "condition"
-                      },
-                      "iterator": {
-                        "type": "name",
-                        "name": "sub_requirement"
-                      }
-                    }
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "sub_requirement"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "fully_converted_rules"
-                    }
-                  }
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -7450,30 +6013,21 @@
             "name": "Mountain Floor 2 to Mountain Floor 1 At Door",
             "connected_region": "Mountain Floor 1 At Door",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
+              "type": "state_method",
+              "method": "has_all_counts",
+              "args": [
+                {
+                  "type": "constant",
                   "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
+                    "Black/White Squares": 1,
+                    "Progressive Dots": 1,
+                    "Progressive Stars": 2,
+                    "Progressive Symmetry": 1,
+                    "Rotated Shapers": 1,
+                    "Shapers": 1
                   }
                 }
-              }
+              ]
             }
           }
         ],
@@ -7512,30 +6066,18 @@
             "name": "Mountain Floor 2 Above The Abyss to Mountain Floor 2 Elevator Room",
             "connected_region": "Mountain Floor 2 Elevator Room",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
+              "type": "state_method",
+              "method": "has_all_counts",
+              "args": [
+                {
+                  "type": "constant",
                   "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
+                    "Eraser": 1,
+                    "Progressive Stars": 2,
+                    "Rotated Shapers": 1
                   }
                 }
-              }
+              ]
             }
           },
           {
@@ -7615,43 +6157,8 @@
             "name": "Mountain Floor 2 Beyond Bridge to Mountain Floor 2",
             "connected_region": "Mountain Floor 2",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "all_of",
-                    "element_rule": {
-                      "type": "helper",
-                      "name": "condition",
-                      "args": []
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "condition"
-                      },
-                      "iterator": {
-                        "type": "name",
-                        "name": "sub_requirement"
-                      }
-                    }
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "sub_requirement"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "fully_converted_rules"
-                    }
-                  }
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -7730,30 +6237,18 @@
             "name": "Mountain Floor 2 Elevator Room to Mountain Floor 2 Above The Abyss",
             "connected_region": "Mountain Floor 2 Above The Abyss",
             "access_rule": {
-              "type": "all_of",
-              "element_rule": {
-                "type": "helper",
-                "name": "condition",
-                "args": []
-              },
-              "iterator_info": {
-                "type": "comprehension_details",
-                "target": {
-                  "type": "name",
-                  "name": "condition"
-                },
-                "iterator": {
-                  "type": "subscript",
+              "type": "state_method",
+              "method": "has_all_counts",
+              "args": [
+                {
+                  "type": "constant",
                   "value": {
-                    "type": "name",
-                    "name": "fully_converted_rules"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 0
+                    "Eraser": 1,
+                    "Progressive Stars": 2,
+                    "Rotated Shapers": 1
                   }
                 }
-              }
+              ]
             }
           }
         ],
@@ -7767,10 +6262,7 @@
             "connected_region": "Mountain Floor 2 Elevator Room",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Dots"
-              },
+              "item": "Progressive Dots",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -7782,10 +6274,7 @@
             "connected_region": "Mountain Floor 3",
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Progressive Dots"
-              },
+              "item": "Progressive Dots",
               "count": {
                 "type": "constant",
                 "value": 1
@@ -8114,7 +6603,7 @@
   "start_regions": {
     "1": {
       "default": [
-        "Menu"
+        "Entry"
       ],
       "available": []
     }
@@ -8387,19 +6876,6 @@
         "type": null,
         "max_count": 4
       },
-      "Puzzle Skip": {
-        "name": "Puzzle Skip",
-        "id": 158510,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 21
-      },
       "Speed Boost": {
         "name": "Speed Boost",
         "id": 158500,
@@ -8412,6 +6888,19 @@
         "event": false,
         "type": null,
         "max_count": 168
+      },
+      "Puzzle Skip": {
+        "name": "Puzzle Skip",
+        "id": 158510,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 21
       },
       "Slowness": {
         "name": "Slowness",
@@ -8997,118 +7486,6 @@
         "type": null,
         "max_count": 1
       },
-      "Windmill Turn Control (Panel)": {
-        "name": "Windmill Turn Control (Panel)",
-        "id": 159182,
-        "groups": [
-          "Everything",
-          "Panel Keys"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Theater Entry (Panel)": {
-        "name": "Theater Entry (Panel)",
-        "id": 159184,
-        "groups": [
-          "Everything",
-          "Panel Keys"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Theater Video Input (Panel)": {
-        "name": "Theater Video Input (Panel)",
-        "id": 159185,
-        "groups": [
-          "Everything",
-          "Panel Keys"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Theater Exit (Panel)": {
-        "name": "Theater Exit (Panel)",
-        "id": 159189,
-        "groups": [
-          "Everything",
-          "Panel Keys"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Treehouse First & Second Doors (Panel)": {
-        "name": "Treehouse First & Second Doors (Panel)",
-        "id": 159200,
-        "groups": [
-          "Everything",
-          "Panel Keys"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Treehouse Third Door (Panel)": {
-        "name": "Treehouse Third Door (Panel)",
-        "id": 159202,
-        "groups": [
-          "Everything",
-          "Panel Keys"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Treehouse Laser House Door Timer (Panel)": {
-        "name": "Treehouse Laser House Door Timer (Panel)",
-        "id": 159205,
-        "groups": [
-          "Everything",
-          "Panel Keys"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Treehouse Drawbridge (Panel)": {
-        "name": "Treehouse Drawbridge (Panel)",
-        "id": 159208,
-        "groups": [
-          "Everything",
-          "Panel Keys"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
       "Jungle Popup Wall (Panel)": {
         "name": "Jungle Popup Wall (Panel)",
         "id": 159175,
@@ -9151,9 +7528,51 @@
         "type": null,
         "max_count": 1
       },
+      "Windmill Turn Control (Panel)": {
+        "name": "Windmill Turn Control (Panel)",
+        "id": 159182,
+        "groups": [
+          "Everything",
+          "Panel Keys"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Bunker Tinted Glass Door (Panel)": {
         "name": "Bunker Tinted Glass Door (Panel)",
         "id": 159183,
+        "groups": [
+          "Everything",
+          "Panel Keys"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Theater Entry (Panel)": {
+        "name": "Theater Entry (Panel)",
+        "id": 159184,
+        "groups": [
+          "Everything",
+          "Panel Keys"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Theater Video Input (Panel)": {
+        "name": "Theater Video Input (Panel)",
+        "id": 159185,
         "groups": [
           "Everything",
           "Panel Keys"
@@ -9182,6 +7601,20 @@
       "Bunker Drop-Down Door Controls (Panel)": {
         "name": "Bunker Drop-Down Door Controls (Panel)",
         "id": 159188,
+        "groups": [
+          "Everything",
+          "Panel Keys"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Theater Exit (Panel)": {
+        "name": "Theater Exit (Panel)",
+        "id": 159189,
         "groups": [
           "Everything",
           "Panel Keys"
@@ -9280,6 +7713,62 @@
       "Swamp Laser Shortcut (Panel)": {
         "name": "Swamp Laser Shortcut (Panel)",
         "id": 159199,
+        "groups": [
+          "Everything",
+          "Panel Keys"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Treehouse First & Second Doors (Panel)": {
+        "name": "Treehouse First & Second Doors (Panel)",
+        "id": 159200,
+        "groups": [
+          "Everything",
+          "Panel Keys"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Treehouse Third Door (Panel)": {
+        "name": "Treehouse Third Door (Panel)",
+        "id": 159202,
+        "groups": [
+          "Everything",
+          "Panel Keys"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Treehouse Laser House Door Timer (Panel)": {
+        "name": "Treehouse Laser House Door Timer (Panel)",
+        "id": 159205,
+        "groups": [
+          "Everything",
+          "Panel Keys"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Treehouse Drawbridge (Panel)": {
+        "name": "Treehouse Drawbridge (Panel)",
+        "id": 159208,
         "groups": [
           "Everything",
           "Panel Keys"
@@ -9465,6 +7954,160 @@
         "groups": [
           "Doors",
           "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Symmetry Laser": {
+        "name": "Symmetry Laser",
+        "id": 159500,
+        "groups": [
+          "Everything",
+          "Lasers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Desert Laser": {
+        "name": "Desert Laser",
+        "id": 159501,
+        "groups": [
+          "Everything",
+          "Lasers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Quarry Laser": {
+        "name": "Quarry Laser",
+        "id": 159502,
+        "groups": [
+          "Everything",
+          "Lasers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Shadows Laser": {
+        "name": "Shadows Laser",
+        "id": 159503,
+        "groups": [
+          "Everything",
+          "Lasers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Keep Laser": {
+        "name": "Keep Laser",
+        "id": 159504,
+        "groups": [
+          "Everything",
+          "Lasers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Monastery Laser": {
+        "name": "Monastery Laser",
+        "id": 159505,
+        "groups": [
+          "Everything",
+          "Lasers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Town Laser": {
+        "name": "Town Laser",
+        "id": 159506,
+        "groups": [
+          "Everything",
+          "Lasers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Jungle Laser": {
+        "name": "Jungle Laser",
+        "id": 159507,
+        "groups": [
+          "Everything",
+          "Lasers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Bunker Laser": {
+        "name": "Bunker Laser",
+        "id": 159508,
+        "groups": [
+          "Everything",
+          "Lasers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Swamp Laser": {
+        "name": "Swamp Laser",
+        "id": 159509,
+        "groups": [
+          "Everything",
+          "Lasers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Treehouse Laser": {
+        "name": "Treehouse Laser",
+        "id": 159510,
+        "groups": [
+          "Everything",
+          "Lasers"
         ],
         "advancement": false,
         "useful": false,
@@ -11699,160 +10342,6 @@
         "type": null,
         "max_count": 1
       },
-      "Symmetry Laser": {
-        "name": "Symmetry Laser",
-        "id": 159500,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Desert Laser": {
-        "name": "Desert Laser",
-        "id": 159501,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Quarry Laser": {
-        "name": "Quarry Laser",
-        "id": 159502,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Shadows Laser": {
-        "name": "Shadows Laser",
-        "id": 159503,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Keep Laser": {
-        "name": "Keep Laser",
-        "id": 159504,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Monastery Laser": {
-        "name": "Monastery Laser",
-        "id": 159505,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Town Laser": {
-        "name": "Town Laser",
-        "id": 159506,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Jungle Laser": {
-        "name": "Jungle Laser",
-        "id": 159507,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Bunker Laser": {
-        "name": "Bunker Laser",
-        "id": 159508,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Swamp Laser": {
-        "name": "Swamp Laser",
-        "id": 159509,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Treehouse Laser": {
-        "name": "Treehouse Laser",
-        "id": 159510,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
       "+1 Laser": {
         "name": "+1 Laser",
         "id": null,
@@ -11980,7 +10469,8 @@
   "settings": {
     "1": {
       "game": "The Witness",
-      "assume_bidirectional_exits": false
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
     }
   },
   "game_info": {
