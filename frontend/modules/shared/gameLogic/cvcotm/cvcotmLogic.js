@@ -16,7 +16,7 @@ export const helperFunctions = {
             const hasRocWing = !!(snapshot?.inventory?.['Roc Wing']);
             if (!hasRocWing) return false;
 
-            const playerId = snapshot?.player?.slot || '1';
+            const playerId = snapshot?.player?.slot || staticData?.playerId || '1';
             const nerfRocWing = staticData?.settings?.[playerId]?.nerf_roc_wing || 0;
 
             if (nerfRocWing) {
@@ -30,7 +30,7 @@ export const helperFunctions = {
             const hasRocWing = !!(snapshot?.inventory?.['Roc Wing']);
             if (!hasRocWing) return false;
 
-            const playerId = snapshot?.player?.slot || '1';
+            const playerId = snapshot?.player?.slot || staticData?.playerId || '1';
             const nerfRocWing = staticData?.settings?.[playerId]?.nerf_roc_wing || 0;
 
             if (nerfRocWing) {
@@ -44,7 +44,7 @@ export const helperFunctions = {
             const hasRocWing = !!(snapshot?.inventory?.['Roc Wing']);
             if (!hasRocWing) return false;
 
-            const playerId = snapshot?.player?.slot || '1';
+            const playerId = snapshot?.player?.slot || staticData?.playerId || '1';
             const nerfRocWing = staticData?.settings?.[playerId]?.nerf_roc_wing || 0;
 
             if (nerfRocWing) {

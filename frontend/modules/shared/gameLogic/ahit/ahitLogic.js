@@ -83,7 +83,7 @@ export function has_paintings(snapshot, staticData, countRequired, allowSkip = t
   }
 
   // Check for painting skip options based on difficulty
-  const playerSlot = snapshot?.player?.slot || '1';
+  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
   const settings = staticData?.settings?.[playerSlot];
   const noPaintingSkips = settings?.NoPaintingSkips ?? false;
 
@@ -110,7 +110,7 @@ export function has_paintings(snapshot, staticData, countRequired, allowSkip = t
  */
 export function painting_logic(snapshot, staticData, itemName) {
   // Check world.options.ShuffleSubconPaintings from staticData
-  const playerSlot = snapshot?.player?.slot || '1';
+  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
   const settings = staticData?.settings?.[playerSlot];
   return settings?.ShuffleSubconPaintings ?? false;
 }
@@ -125,7 +125,7 @@ export function painting_logic(snapshot, staticData, itemName) {
  */
 export function get_difficulty(snapshot, staticData, itemName) {
   // Check world.options.LogicDifficulty from staticData
-  const playerSlot = snapshot?.player?.slot || '1';
+  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
   const settings = staticData?.settings?.[playerSlot];
   return settings?.LogicDifficulty ?? -1;
 }
@@ -299,7 +299,7 @@ export function can_clear_required_act(snapshot, staticData, actEntrance) {
  * @returns {number} Total yarn cost
  */
 export function get_hat_cost(snapshot, staticData, hatType) {
-  const playerSlot = snapshot?.player?.slot || '1';
+  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
   if (!staticData || !staticData.game_info || !staticData.game_info[playerSlot] || !staticData.game_info[playerSlot].hat_info) {
     return 0;
   }
@@ -368,7 +368,7 @@ export function can_use_hat(snapshot, staticData, hatType) {
   }
 
   // Check if HatItems option is enabled (hats are separate items)
-  const playerSlot = snapshot?.player?.slot || '1';
+  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
   const hatItemsEnabled = staticData?.settings?.[playerSlot]?.HatItems;
   if (hatItemsEnabled) {
     return has(snapshot, staticData, itemName);
@@ -418,7 +418,7 @@ export function can_use_hookshot(snapshot, staticData, itemName) {
  */
 export function can_hit(snapshot, staticData, umbrellaOnly) {
   // Check if UmbrellaLogic option is enabled
-  const playerSlot = snapshot?.player?.slot || '1';
+  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
   const umbrellaLogic = staticData?.settings?.[playerSlot]?.UmbrellaLogic;
 
   // If UmbrellaLogic is disabled, hitting is always allowed
@@ -479,7 +479,7 @@ export function can_clear_metro(snapshot, staticData, itemName) {
  * @returns {boolean}
  */
 export function zipline_logic(snapshot, staticData, itemName) {
-  const playerSlot = snapshot?.player?.slot || '1';
+  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
   const settings = staticData?.settings?.[playerSlot];
   return settings?.ShuffleAlpineZiplines ?? false;
 }
@@ -516,7 +516,7 @@ export function get_relic_count(snapshot, staticData, relicGroup) {
  */
 export function has_relic_combo(snapshot, staticData, relicGroup) {
   // Get the relic group from staticData
-  const playerSlot = snapshot?.player?.slot || '1';
+  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
   const relicGroups = staticData?.game_info?.[playerSlot]?.relic_groups;
   if (!relicGroups || !relicGroups[relicGroup]) {
     return false;
