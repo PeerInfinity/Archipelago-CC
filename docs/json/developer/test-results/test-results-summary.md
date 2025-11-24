@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-23 07:12:22
+**Generated:** 2025-11-24 00:14:36
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -12,21 +12,21 @@ This summary combines results from four types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 74/76 passed (97.4%)
+- **Minimal Test:** 75/76 passed (98.7%)
 - **Full Test:** 71/76 passed (93.4%)
 - **Multiclient Test:** 57/76 passed (75.0%)
 - **Multiworld Test:** 52/76 passed (68.4%)
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 10 game(s), 36 total failure(s)
+- **Minimal Spoilers Test:** 7 game(s), 35 total failure(s)
 - **Full Spoilers Test:** 19 game(s), 42 total failure(s)
 
 ### Combined Test Results
 
 - **Templates passing all 4 tests:** 52/76 (68.4%)
-- **Templates passing 3 tests:** 3/76 (3.9%)
-- **Templates passing 2 tests:** 17/76 (22.4%)
+- **Templates passing 3 tests:** 4/76 (5.3%)
+- **Templates passing 2 tests:** 16/76 (21.1%)
 - **Templates passing 1 test:** 3/76 (3.9%)
 - **Templates passing 0 tests:** 1/76 (1.3%)
 
@@ -62,7 +62,7 @@ This summary combines results from four types of tests:
 | Inscryption | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
-| Kingdom Hearts 2 | ❌ Failed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
+| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | Lingo | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
