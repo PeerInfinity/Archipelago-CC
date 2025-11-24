@@ -337,6 +337,17 @@ def _process_template_results(template_results: Dict[str, List], combined_result
                 'failure_rate': seeds_failed / len(seed_results) if len(seed_results) > 0 else 0
             }
 
+            # Merge consistency_tests from all seeds
+            consistency_tests = {}
+            for seed, result in seed_results:
+                if 'consistency_tests' in result:
+                    # Merge consistency tests for this seed
+                    consistency_tests.update(result['consistency_tests'])
+
+            # Only add consistency_tests if we have any
+            if consistency_tests:
+                base_result['consistency_tests'] = consistency_tests
+
             combined_results[template_name] = base_result
 
 

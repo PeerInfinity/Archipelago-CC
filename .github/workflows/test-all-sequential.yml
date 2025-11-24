@@ -42,6 +42,11 @@ on:
         type: boolean
         default: true
 
+      test_generation_consistency:
+        description: 'Test generation consistency'
+        type: boolean
+        default: false
+
       enable_multiworld:
         description: 'Run multiworld tests'
         type: boolean
@@ -196,6 +201,19 @@ jobs:
             --no-backup \
             -p
 
+      - name: Run generation consistency test (seed-1 mode)
+        if: inputs.spoiler_mode == 'seed-1' && inputs.test_generation_consistency
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-all-templates.py \
+            --seed 1 \
+            --every-nth ${{ matrix.split_total }} \
+            --skip-first $((${{ matrix.split_num }} - 1)) \
+            --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
+            --no-backup \
+            --test-consistency \
+            -p
+
       - name: Retest minimal spoiler failures (seed-1 mode)
         if: inputs.spoiler_mode == 'seed-1' && inputs.retest_failures != 'disabled'
         run: |
@@ -224,6 +242,17 @@ jobs:
             --seed ${{ matrix.split_num }} \
             --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
             --no-backup \
+            -p
+
+      - name: Run generation consistency test (seeds-1-10 mode)
+        if: inputs.spoiler_mode == 'seeds-1-10' && inputs.test_generation_consistency
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-all-templates.py \
+            --seed ${{ matrix.split_num }} \
+            --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
+            --no-backup \
+            --test-consistency \
             -p
 
       - name: Retest minimal spoiler failures (seeds-1-10 mode)

@@ -1023,3 +1023,134 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
           f"Players Passed={result['multiworld_test']['players_passed']}/{result['multiworld_test']['total_players_tested']}")
 
     return result
+
+
+def test_generation_consistency(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed: str = "1") -> Dict:
+    """
+    Test generation consistency by running generation twice and comparing output files.
+
+    Returns a dict with:
+        - rules_identical: bool (True if rules.json files are identical)
+        - spoilers_identical: bool (True if spheres_log.jsonl files are identical)
+        - seed: str (the seed tested)
+        - timestamp: str (ISO format timestamp)
+    """
+    import hashlib
+
+    template_filename = os.path.basename(template_file)
+    game_name_from_filename = normalize_game_name(template_filename)
+
+    # Compute seed ID
+    try:
+        seed_id = compute_seed_id(int(seed))
+    except (ValueError, TypeError):
+        print(f"Error: Seed '{seed}' is not a valid number")
+        return {
+            'seed': seed,
+            'timestamp': datetime.now().isoformat(),
+            'rules_identical': None,
+            'spoilers_identical': None,
+            'error': f"Invalid seed: {seed}"
+        }
+
+    # Get world info
+    world_info = get_world_info(template_file, templates_dir, world_mapping)
+    preset_dir = world_info.get('world_directory', game_name_from_filename) if world_info else game_name_from_filename
+
+    # Paths to the generated files
+    rules_path = f"./presets/{preset_dir}/{seed_id}/{seed_id}_rules.json"
+    spheres_path = f"./presets/{preset_dir}/{seed_id}/{seed_id}_spheres_log.jsonl"
+    full_rules_path = os.path.join(project_root, 'frontend', rules_path.lstrip('./'))
+    full_spheres_path = os.path.join(project_root, 'frontend', spheres_path.lstrip('./'))
+
+    print(f"\n=== Testing Generation Consistency for {template_filename} (seed {seed}) ===")
+
+    # Check if the original files exist
+    if not os.path.exists(full_rules_path):
+        print(f"Error: Original rules file not found: {full_rules_path}")
+        return {
+            'seed': seed,
+            'timestamp': datetime.now().isoformat(),
+            'rules_identical': None,
+            'spoilers_identical': None,
+            'error': 'Original rules file not found'
+        }
+
+    if not os.path.exists(full_spheres_path):
+        print(f"Error: Original spheres log file not found: {full_spheres_path}")
+        return {
+            'seed': seed,
+            'timestamp': datetime.now().isoformat(),
+            'rules_identical': None,
+            'spoilers_identical': None,
+            'error': 'Original spheres log file not found'
+        }
+
+    # Helper function to compute file hash
+    def compute_file_hash(file_path: str) -> str:
+        """Compute SHA256 hash of a file."""
+        sha256 = hashlib.sha256()
+        with open(file_path, 'rb') as f:
+            for chunk in iter(lambda: f.read(8192), b''):
+                sha256.update(chunk)
+        return sha256.hexdigest()
+
+    # Compute hashes of original files
+    print(f"Computing hash of original rules file...")
+    original_rules_hash = compute_file_hash(full_rules_path)
+    print(f"Computing hash of original spheres log file...")
+    original_spheres_hash = compute_file_hash(full_spheres_path)
+
+    # Run generation again (no need to backup files, we only need the hashes)
+    template_file_with_ext = template_filename if template_filename.endswith(('.yaml', '.yml')) else f"{template_filename}.yaml"
+    template_path = os.path.join(templates_dir, template_file_with_ext)
+    generate_cmd = [
+        "python", "Generate.py",
+        "--weights_file_path", template_path,
+        "--multi", "1",
+        "--seed", seed
+    ]
+
+    print(f"Re-running generation with same seed...")
+    print(f"  Command: {' '.join(generate_cmd)}")
+
+    gen_return_code, gen_stdout, gen_stderr = run_command(generate_cmd, cwd=project_root, timeout=600)
+
+    if gen_return_code != 0:
+        print(f"Error: Re-generation failed with return code {gen_return_code}")
+        return {
+            'seed': seed,
+            'timestamp': datetime.now().isoformat(),
+            'rules_identical': None,
+            'spoilers_identical': None,
+            'error': f'Re-generation failed with return code {gen_return_code}'
+        }
+
+    # Compute hashes of new files
+    print(f"Computing hash of new rules file...")
+    new_rules_hash = compute_file_hash(full_rules_path)
+    print(f"Computing hash of new spheres log file...")
+    new_spheres_hash = compute_file_hash(full_spheres_path)
+
+    # Compare hashes
+    rules_identical = (original_rules_hash == new_rules_hash)
+    spoilers_identical = (original_spheres_hash == new_spheres_hash)
+
+    print(f"\n  Rules files identical: {rules_identical}")
+    print(f"  Spheres log files identical: {spoilers_identical}")
+
+    result = {
+        'seed': seed,
+        'timestamp': datetime.now().isoformat(),
+        'rules_identical': rules_identical,
+        'spoilers_identical': spoilers_identical,
+        'original_rules_hash': original_rules_hash,
+        'new_rules_hash': new_rules_hash,
+        'original_spheres_hash': original_spheres_hash,
+        'new_spheres_hash': new_spheres_hash
+    }
+
+    print(f"\nCompleted consistency test for {template_filename}: Rules={'IDENTICAL' if rules_identical else 'DIFFERENT'}, "
+          f"Spheres={'IDENTICAL' if spoilers_identical else 'DIFFERENT'}")
+
+    return result

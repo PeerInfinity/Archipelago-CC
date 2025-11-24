@@ -29,10 +29,16 @@ def load_test_results(results_file: str) -> Dict[str, Any]:
         return {}
 
 
-def extract_spoiler_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, int, float, float, bool, bool]]:
+def extract_spoiler_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, int, float, float, bool, bool, Optional[bool], Optional[bool]]]:
     """
     Extract spoiler test chart data from results.
-    Returns list of tuples: (game_name, pass_fail, gen_error_count, sphere_reached, max_spheres, has_custom_exporter, has_custom_game_logic)
+    Returns list of tuples: (game_name, pass_fail, gen_error_count, sphere_reached, max_spheres,
+                             has_custom_exporter, has_custom_game_logic, rules_consistent, spoilers_consistent)
+
+    Consistency values:
+    - True: all seeds have identical files
+    - False: at least one seed has different files
+    - None: no consistency data available
     """
     chart_data = []
 
@@ -95,7 +101,25 @@ def extract_spoiler_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, 
             else:
                 pass_fail = 'Failed'
 
-        chart_data.append((game_name, pass_fail, gen_error_count, sphere_reached, max_spheres, has_custom_exporter, has_custom_game_logic))
+        # Extract consistency data
+        consistency_tests = template_data.get('consistency_tests', {})
+        rules_consistent = None
+        spoilers_consistent = None
+
+        if consistency_tests:
+            # Check if all seeds have rules_identical = True
+            rules_values = [ct.get('rules_identical') for ct in consistency_tests.values() if 'rules_identical' in ct]
+            spoilers_values = [ct.get('spoilers_identical') for ct in consistency_tests.values() if 'spoilers_identical' in ct]
+
+            if rules_values:
+                # If any value is False, overall is False; if all True, overall is True
+                rules_consistent = all(v is True for v in rules_values) if rules_values else None
+
+            if spoilers_values:
+                # If any value is False, overall is False; if all True, overall is True
+                spoilers_consistent = all(v is True for v in spoilers_values) if spoilers_values else None
+
+        chart_data.append((game_name, pass_fail, gen_error_count, sphere_reached, max_spheres, has_custom_exporter, has_custom_game_logic, rules_consistent, spoilers_consistent))
 
     chart_data.sort(key=lambda x: x[0])
     return chart_data
@@ -190,7 +214,7 @@ def extract_multiclient_chart_data(results: Dict[str, Any]) -> List[Tuple[str, s
     return chart_data
 
 
-def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float, bool, bool]],
+def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float, bool, bool, Optional[bool], Optional[bool]]],
                               metadata: Dict[str, Any], subtitle: str = "") -> str:
     """Generate a markdown table for spoiler test data."""
     md_content = "# Archipelago Template Test Results Chart\n\n"
@@ -208,8 +232,8 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
 
     if chart_data:
         total_games = len(chart_data)
-        passed = sum(1 for _, pf, _, _, _, _, _ in chart_data if 'passed' in pf.lower())
-        failed = sum(1 for _, pf, _, _, _, _, _ in chart_data if 'failed' in pf.lower())
+        passed = sum(1 for _, pf, _, _, _, _, _, _, _ in chart_data if 'passed' in pf.lower())
+        failed = sum(1 for _, pf, _, _, _, _, _, _, _ in chart_data if 'failed' in pf.lower())
 
         # Get intermittent failures counts
         intermittent_games_count = 0
@@ -230,10 +254,10 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
         md_content += f"- **Total Intermittent Failures:** {intermittent_total_count}\n\n"
 
     md_content += "## Test Results\n\n"
-    md_content += "| Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Custom Exporter | Custom GameLogic |\n"
-    md_content += "|-----------|-------------|------------|----------------|-------------|----------|-----------------|------------------|\n"
+    md_content += "| Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Consistent Rules | Consistent Spoilers | Custom Exporter | Custom GameLogic |\n"
+    md_content += "|-----------|-------------|------------|----------------|-------------|----------|------------------|---------------------|-----------------|------------------|\n"
 
-    for game_name, pass_fail, gen_error_count, sphere_reached, max_spheres, has_custom_exporter, has_custom_game_logic in chart_data:
+    for game_name, pass_fail, gen_error_count, sphere_reached, max_spheres, has_custom_exporter, has_custom_game_logic, rules_consistent, spoilers_consistent in chart_data:
         if 'passed' in pass_fail.lower():
             progress = "🟢 Complete"
         elif sphere_reached >= 1.0:
@@ -257,10 +281,22 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
         exporter_indicator = "✅" if has_custom_exporter else "⚫"
         game_logic_indicator = "✅" if has_custom_game_logic else "⚫"
 
-        md_content += f"| {game_name} | {result_display} | {gen_error_count} | {sphere_reached:g} | {max_spheres:g} | {progress} | {exporter_indicator} | {game_logic_indicator} |\n"
+        # Format consistency indicators
+        def format_consistency(value):
+            if value is None:
+                return "❓ N/A"
+            elif value is False:
+                return "⚫"
+            else:  # True
+                return "✅"
+
+        rules_indicator = format_consistency(rules_consistent)
+        spoilers_indicator = format_consistency(spoilers_consistent)
+
+        md_content += f"| {game_name} | {result_display} | {gen_error_count} | {sphere_reached:g} | {max_spheres:g} | {progress} | {rules_indicator} | {spoilers_indicator} | {exporter_indicator} | {game_logic_indicator} |\n"
 
     if not chart_data:
-        md_content += "| No data available | - | - | - | - | - | - | - |\n"
+        md_content += "| No data available | - | - | - | - | - | - | - | - | - |\n"
 
     # Add Intermittent Failures section if there are any
     if metadata and 'intermittent_tracking' in metadata:
@@ -681,10 +717,12 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
     games_multiclient = {name: result for name, result, *_ in multiclient_data}
     games_multiworld = {name: result for name, result, *_ in multiworld_data} if multiworld_data else {}
 
-    # Extract custom exporter/logic info (from minimal_data as it has all games)
+    # Extract custom exporter/logic info and consistency data (from minimal_data as it has all games)
     games_exporter_logic = {}
-    for name, result, gen_errors, sphere, max_sphere, has_exporter, has_logic in minimal_data:
+    games_consistency = {}
+    for name, result, gen_errors, sphere, max_sphere, has_exporter, has_logic, rules_consistent, spoilers_consistent in minimal_data:
         games_exporter_logic[name] = (has_exporter, has_logic)
+        games_consistency[name] = (rules_consistent, spoilers_consistent)
 
     all_games = sorted(set(list(games_minimal.keys()) + list(games_full.keys()) + list(games_multiclient.keys()) + list(games_multiworld.keys())))
 
@@ -773,11 +811,11 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
     # Add Test Results table
     md_content += "\n## Test Results\n\n"
     if multiworld_data is not None:
-        md_content += "| Game Name | Minimal Test | Full Test | Multiclient Test | Multiworld Test | Custom Exporter | Custom GameLogic |\n"
-        md_content += "|-----------|--------------|-----------|------------------|-----------------|-----------------|------------------|\n"
+        md_content += "| Game Name | Minimal Test | Full Test | Multiclient Test | Multiworld Test | Consistent Rules | Consistent Spoilers | Custom Exporter | Custom GameLogic |\n"
+        md_content += "|-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|-----------------|------------------|\n"
     else:
-        md_content += "| Game Name | Minimal Test | Full Test | Multiclient Test | Custom Exporter | Custom GameLogic |\n"
-        md_content += "|-----------|--------------|-----------|------------------|-----------------|------------------|\n"
+        md_content += "| Game Name | Minimal Test | Full Test | Multiclient Test | Consistent Rules | Consistent Spoilers | Custom Exporter | Custom GameLogic |\n"
+        md_content += "|-----------|--------------|-----------|------------------|------------------|---------------------|-----------------|------------------|\n"
 
     for game in all_games:
         minimal_result = games_minimal.get(game, "N/A")
@@ -790,6 +828,24 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
         exporter_indicator = "✅" if has_exporter else "⚫"
         logic_indicator = "✅" if has_logic else "⚫"
 
+        # Get consistency info
+        rules_consistent, spoilers_consistent = games_consistency.get(game, (None, None))
+
+        # Format consistency indicators according to user requirements:
+        # - None/no data: N/A
+        # - False (any failures): gray dot
+        # - True (all passed): checkmark
+        def format_consistency(value):
+            if value is None:
+                return "❓ N/A"
+            elif value is False:
+                return "⚫"
+            else:  # True
+                return "✅"
+
+        rules_indicator = format_consistency(rules_consistent)
+        spoilers_indicator = format_consistency(spoilers_consistent)
+
         def format_result(result):
             if result == "N/A":
                 return "❓ N/A"
@@ -801,9 +857,9 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
                 return "❌ Failed"
 
         if multiworld_data is not None:
-            md_content += f"| {game} | {format_result(minimal_result)} | {format_result(full_result)} | {format_result(multiclient_result)} | {format_result(multiworld_result)} | {exporter_indicator} | {logic_indicator} |\n"
+            md_content += f"| {game} | {format_result(minimal_result)} | {format_result(full_result)} | {format_result(multiclient_result)} | {format_result(multiworld_result)} | {rules_indicator} | {spoilers_indicator} | {exporter_indicator} | {logic_indicator} |\n"
         else:
-            md_content += f"| {game} | {format_result(minimal_result)} | {format_result(full_result)} | {format_result(multiclient_result)} | {exporter_indicator} | {logic_indicator} |\n"
+            md_content += f"| {game} | {format_result(minimal_result)} | {format_result(full_result)} | {format_result(multiclient_result)} | {rules_indicator} | {spoilers_indicator} | {exporter_indicator} | {logic_indicator} |\n"
 
     # Add Multi-Template Results section if data exists
     if multitemplate_minimal_data or multitemplate_full_data:
@@ -928,14 +984,12 @@ def main():
         return 0
 
     # Process all three test types
-    print("Processing all test types...")
 
     # Load minimal spoiler test results
     minimal_input = os.path.join(project_root, 'scripts/output/spoiler-minimal/test-results.json')
     minimal_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-spoilers-minimal.md')
 
     if os.path.exists(minimal_input):
-        print(f"Processing minimal spoiler test results...")
         minimal_results = load_test_results(minimal_input)
         minimal_data = extract_spoiler_chart_data(minimal_results)
         minimal_md = generate_spoiler_markdown(minimal_data, minimal_results.get('metadata', {}),
@@ -943,7 +997,6 @@ def main():
         os.makedirs(os.path.dirname(minimal_output), exist_ok=True)
         with open(minimal_output, 'w') as f:
             f.write(minimal_md)
-        print(f"✓ Minimal spoiler chart saved to: {minimal_output}")
     else:
         print(f"Warning: Minimal spoiler test results not found: {minimal_input}")
         minimal_data = []
@@ -953,7 +1006,6 @@ def main():
     full_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-spoilers-full.md')
 
     if os.path.exists(full_input):
-        print(f"Processing full spoiler test results...")
         full_results = load_test_results(full_input)
         full_data = extract_spoiler_chart_data(full_results)
         full_md = generate_spoiler_markdown(full_data, full_results.get('metadata', {}),
@@ -961,7 +1013,6 @@ def main():
         os.makedirs(os.path.dirname(full_output), exist_ok=True)
         with open(full_output, 'w') as f:
             f.write(full_md)
-        print(f"✓ Full spoiler chart saved to: {full_output}")
     else:
         print(f"Warning: Full spoiler test results not found: {full_input}")
         full_data = []
@@ -971,7 +1022,6 @@ def main():
     mp_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-multiclient.md')
 
     if os.path.exists(mp_input):
-        print(f"Processing multiclient test results...")
         mp_results = load_test_results(mp_input)
         mp_data = extract_multiclient_chart_data(mp_results)
         # Extract top-level metadata for multiclient
@@ -985,7 +1035,6 @@ def main():
         os.makedirs(os.path.dirname(mp_output), exist_ok=True)
         with open(mp_output, 'w') as f:
             f.write(mp_md)
-        print(f"✓ Multiclient chart saved to: {mp_output}")
     else:
         print(f"Warning: Multiclient test results not found: {mp_input}")
         mp_data = []
@@ -996,7 +1045,6 @@ def main():
 
     mw_data = None
     if os.path.exists(mw_input):
-        print(f"Processing multiworld test results...")
         mw_results = load_test_results(mw_input)
         mw_data = extract_multiworld_chart_data(mw_results)
         # Extract top-level metadata for multiworld
@@ -1008,7 +1056,6 @@ def main():
         os.makedirs(os.path.dirname(mw_output), exist_ok=True)
         with open(mw_output, 'w') as f:
             f.write(mw_md)
-        print(f"✓ Multiworld chart saved to: {mw_output}")
     else:
         print(f"Warning: Multiworld test results not found: {mw_input}")
 
@@ -1018,7 +1065,6 @@ def main():
 
     mtmin_data = None
     if os.path.exists(mtmin_input):
-        print(f"Processing multitemplate minimal test results...")
         mtmin_results = load_test_results(mtmin_input)
         mtmin_data = extract_multitemplate_chart_data(mtmin_results)
         mtmin_md = generate_multitemplate_markdown(mtmin_data, mtmin_results.get('metadata', {}),
@@ -1026,7 +1072,6 @@ def main():
         os.makedirs(os.path.dirname(mtmin_output), exist_ok=True)
         with open(mtmin_output, 'w') as f:
             f.write(mtmin_md)
-        print(f"✓ Multitemplate minimal chart saved to: {mtmin_output}")
     else:
         print(f"Info: Multitemplate minimal test results not found: {mtmin_input}")
 
@@ -1036,7 +1081,6 @@ def main():
 
     mtfull_data = None
     if os.path.exists(mtfull_input):
-        print(f"Processing multitemplate full test results...")
         mtfull_results = load_test_results(mtfull_input)
         mtfull_data = extract_multitemplate_chart_data(mtfull_results)
         mtfull_md = generate_multitemplate_markdown(mtfull_data, mtfull_results.get('metadata', {}),
@@ -1044,13 +1088,11 @@ def main():
         os.makedirs(os.path.dirname(mtfull_output), exist_ok=True)
         with open(mtfull_output, 'w') as f:
             f.write(mtfull_md)
-        print(f"✓ Multitemplate full chart saved to: {mtfull_output}")
     else:
         print(f"Info: Multitemplate full test results not found: {mtfull_input}")
 
     # Generate summary chart
     if minimal_data or full_data or mp_data or mw_data or mtmin_data or mtfull_data:
-        print(f"Generating summary chart...")
         # Load the exclude list with reasons
         excluded_games = load_template_exclude_list(project_root, include_reasons=True)
 
@@ -1062,7 +1104,6 @@ def main():
         summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data, excluded_games, minimal_meta, full_meta)
         with open(summary_output, 'w') as f:
             f.write(summary_md)
-        print(f"✓ Summary chart saved to: {summary_output}")
 
     print("\n=== Chart Generation Complete ===")
     return 0

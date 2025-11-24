@@ -41,7 +41,8 @@ from lib.test_results import (
 from lib.test_runner import (
     test_template_single_seed,
     test_template_seed_range,
-    test_template_multiworld
+    test_template_multiworld,
+    test_generation_consistency
 )
 from lib.seed_utils import get_seed_id as compute_seed_id
 
@@ -67,11 +68,11 @@ def run_post_processing_scripts(project_root: str, results_file: str, multiclien
             timeout=60
         )
         if result.returncode == 0:
-            print("✓ Test charts generated successfully")
             # Show output from the script
             for line in result.stdout.split('\n'):
                 if line.strip() and (line.startswith('✓') or line.startswith('Warning:') or line.startswith('Processing')):
                     print(f"  {line.strip()}")
+            print("✓ Test charts generated successfully")
         else:
             print(f"✗ Failed to generate test charts: {result.stderr}")
     except subprocess.TimeoutExpired:
@@ -298,6 +299,11 @@ def main():
         type=int,
         help='Player ID to use for generation and testing (e.g., 2 for Player 2)'
     )
+    parser.add_argument(
+        '--test-consistency',
+        action='store_true',
+        help='Test generation consistency by comparing rules.json and spheres_log.jsonl files from multiple generation runs'
+    )
 
     args = parser.parse_args()
 
@@ -372,6 +378,14 @@ def main():
 
     if args.skip_first and not args.every_nth:
         print("Error: --skip-first can only be used with --every-nth")
+        sys.exit(1)
+
+    if args.test_consistency and (args.multiclient or args.multiworld or args.multitemplate):
+        print("Error: --test-consistency can only be used with spoiler tests (not multiclient, multiworld, or multitemplate)")
+        sys.exit(1)
+
+    if args.test_consistency and args.export_only:
+        print("Error: --test-consistency cannot be used with --export-only")
         sys.exit(1)
 
     # Determine project root early (needed for setup scripts)
@@ -876,7 +890,7 @@ def main():
     
     # Build world mapping once at startup
     world_mapping = build_and_load_world_mapping(project_root)
-    
+
     # Display seed information
     if len(seed_list) == 1:
         computed_seed_id = compute_seed_id(seed_list[0])
@@ -887,7 +901,84 @@ def main():
             print("Will test all seeds regardless of failures")
         else:
             print("Will stop at first failure (default behavior)")
-    
+
+    # Consistency test mode - run consistency checks and update existing results
+    if args.test_consistency:
+        print("\n=== Consistency Test Mode ===")
+        print(f"Loading existing results from: {results_file}")
+
+        if not os.path.exists(results_file) or not existing_results.get('results'):
+            print("Error: No existing results found. Run a regular test first before testing consistency.")
+            sys.exit(1)
+
+        # Filter to only test templates that were included in this run
+        consistency_tested_count = 0
+
+        # Process each template in the yaml_files list (already filtered by include/skip/every-nth)
+        for yaml_file in yaml_files:
+            if yaml_file not in existing_results['results']:
+                print(f"\nSkipping {yaml_file} (not in existing results)")
+                continue
+
+            template_result = existing_results['results'][yaml_file]
+
+            # Determine which seeds to test consistency for
+            consistency_seeds = []
+
+            if 'seed_range' in template_result:
+                # Multi-seed result - test all seeds in the range
+                individual_results = template_result.get('individual_results', {})
+                consistency_seeds = sorted([int(s) for s in individual_results.keys()])
+            elif 'seed' in template_result:
+                # Single seed result
+                try:
+                    consistency_seeds = [int(template_result['seed'])]
+                except (ValueError, TypeError):
+                    print(f"\nSkipping {yaml_file} (invalid seed in results)")
+                    continue
+            else:
+                print(f"\nSkipping {yaml_file} (no seed information in results)")
+                continue
+
+            # Filter consistency_seeds based on seed_list if specified
+            if seed_list:
+                consistency_seeds = [s for s in consistency_seeds if s in seed_list]
+
+            if not consistency_seeds:
+                print(f"\nSkipping {yaml_file} (no matching seeds to test)")
+                continue
+
+            print(f"\n[{consistency_tested_count + 1}] Testing consistency for {yaml_file} (seeds: {consistency_seeds})")
+
+            # Initialize consistency_tests dict if not exists
+            if 'consistency_tests' not in template_result:
+                template_result['consistency_tests'] = {}
+
+            # Test each seed
+            for seed in consistency_seeds:
+                consistency_result = test_generation_consistency(
+                    yaml_file, templates_dir, project_root, world_mapping, str(seed)
+                )
+
+                # Store the consistency result under this seed
+                template_result['consistency_tests'][str(seed)] = consistency_result
+
+            consistency_tested_count += 1
+
+        # Save the updated results
+        existing_results['metadata']['last_updated'] = datetime.now().isoformat()
+        save_results(existing_results, results_file)
+
+        print(f"\n=== Consistency Testing Complete ===")
+        print(f"Tested {consistency_tested_count} template(s)")
+        print(f"Updated results saved to: {results_file}")
+
+        # Run post-processing if requested
+        if args.post_process:
+            run_post_processing_scripts(project_root, results_file)
+
+        sys.exit(0)
+
     # Multiworld mode setup
     multiworld_dir = None
     multiworld_player_count = 0
