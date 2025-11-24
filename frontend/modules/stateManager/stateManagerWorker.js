@@ -599,14 +599,14 @@ async function handleMessage(message) {
         if (!workerInitialized || !stateManagerInstance) {
           throw new Error('Worker not initialized. Cannot process ping.');
         }
-        log('warn', `[Worker] Processing PING command for queryId ${message.queryId}`);
+        log('debug', `[Worker] Processing PING command for queryId ${message.queryId}`);
         // Construct the object that StateManager.ping expects
         stateManagerInstance.ping({
           queryId: message.queryId, // Pass the queryId from the incoming message
           payload: message.payload, // Pass the actual dataToEcho (e.g., 'uiSimSyncAfterClick')
         });
         // The ping method itself will post the 'pingResponse' message
-        log('warn', `[Worker] PING command completed for queryId ${message.queryId}`);
+        log('debug', `[Worker] PING command completed for queryId ${message.queryId}`);
         break;
 
       case STATE_MANAGER_COMMANDS.GET_WORKER_QUEUE_STATUS_QUERY:

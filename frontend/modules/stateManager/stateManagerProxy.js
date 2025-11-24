@@ -106,7 +106,7 @@ export class StateManagerProxy {
    */
   updateWorkerLoggingConfig(newLoggingConfig) {
     if (!this.worker) {
-      log('warn', '[StateManagerProxy] Cannot update worker logging config - worker not initialized');
+      log('error', '[StateManagerProxy] Cannot update worker logging config - worker not initialized');
       return;
     }
     
@@ -179,7 +179,7 @@ export class StateManagerProxy {
       return this.gameNameFromWorker;
     }
     log(
-      'warn',
+      'debug',
       '[StateManagerProxy getGameName] Game name not found. Sources checked: staticDataCache.game_name, uiCache.game, gameNameFromWorker. staticDataCache available:',
       !!this.staticDataCache,
       'gameNameFromWorker:',
@@ -286,7 +286,7 @@ export class StateManagerProxy {
 
     // Log all ping responses for debugging
     if (message.type === 'pingResponse') {
-      log('warn', `[StateManagerProxy] RECEIVED pingResponse for queryId ${message.queryId}`);
+      log('debug', `[StateManagerProxy] RECEIVED pingResponse for queryId ${message.queryId}`);
     }
 
     // ADDED: Detailed log for all incoming messages from worker
@@ -348,7 +348,7 @@ export class StateManagerProxy {
           } else if (newCache.locations instanceof Map) {
             log('info', `[StateManagerProxy] Received ${newCache.locations.size} locations as Map (no conversion needed)`);
           } else {
-            log('warn', '[StateManagerProxy] newStaticData.locations is neither array nor Map');
+            log('error', '[StateManagerProxy] newStaticData.locations is neither array nor Map');
           }
 
           // Convert regions to Map if needed
@@ -358,7 +358,7 @@ export class StateManagerProxy {
           } else if (newCache.regions instanceof Map) {
             log('info', `[StateManagerProxy] Received ${newCache.regions.size} regions as Map (no conversion needed)`);
           } else {
-            log('warn', '[StateManagerProxy] newStaticData.regions is neither array nor Map');
+            log('error', '[StateManagerProxy] newStaticData.regions is neither array nor Map');
           }
 
           // Convert dungeons to Map if needed
@@ -368,7 +368,7 @@ export class StateManagerProxy {
           } else if (newCache.dungeons instanceof Map) {
             log('info', `[StateManagerProxy] Received ${newCache.dungeons.size} dungeons as Map (no conversion needed)`);
           } else if (newCache.dungeons) {
-            log('warn', '[StateManagerProxy] newStaticData.dungeons is neither array nor Map');
+            log('error', '[StateManagerProxy] newStaticData.dungeons is neither array nor Map');
           }
 
           // Convert locationItems to Map if needed
@@ -378,7 +378,7 @@ export class StateManagerProxy {
           } else if (newCache.locationItems instanceof Map) {
             log('info', `[StateManagerProxy] Received ${newCache.locationItems.size} locationItems as Map (no conversion needed)`);
           } else if (newCache.locationItems) {
-            log('warn', '[StateManagerProxy] newStaticData.locationItems is neither array nor Map');
+            log('error', '[StateManagerProxy] newStaticData.locationItems is neither array nor Map');
           }
 
           // Phase 3: Re-link regions to dungeons after Map conversion
@@ -413,7 +413,7 @@ export class StateManagerProxy {
               if (exit && exit.name) {
                 exitsMap.set(exit.name, exit);
               } else {
-                log('warn', '[StateManagerProxy] Encountered exit without a name during conversion:', exit);
+                log('error', '[StateManagerProxy] Encountered exit without a name during conversion:', exit);
               }
             });
             newCache.exits = exitsMap;
@@ -423,7 +423,7 @@ export class StateManagerProxy {
           this.staticDataCache = newCache;
         } else {
           log(
-            'warn',
+            'error',
             '[StateManagerProxy] rulesLoadedConfirmation received, but newStaticData is missing.'
           );
         }
@@ -436,7 +436,7 @@ export class StateManagerProxy {
           );
         } else {
           log(
-            'warn',
+            'error',
             '[stateManagerProxy] rulesLoadedConfirmation received without initial snapshot.'
           );
         }
@@ -486,7 +486,7 @@ export class StateManagerProxy {
           }, 'stateManager');
         } else {
           log(
-            'warn',
+            'error',
             '[stateManagerProxy] Received stateSnapshot message without snapshot data.'
           );
         }
@@ -595,7 +595,7 @@ export class StateManagerProxy {
               context: { type: 'workerError', source: 'worker' }
             });
 
-            log('warn', `[StateManagerProxy] Clearing queryId ${message.queryId} due to worker error: ${message.errorMessage}`);
+            log('error', `[StateManagerProxy] Clearing queryId ${message.queryId} due to worker error: ${message.errorMessage}`);
 
             pending.reject(
               new Error(
@@ -649,7 +649,7 @@ export class StateManagerProxy {
           }
         }
 
-        log('warn', `[StateManagerProxy] Command failed`, {
+        log('error', `[StateManagerProxy] Command failed`, {
           command: message.command,
           queryId: message.queryId,
           correlationId: message.correlationId,
@@ -678,7 +678,7 @@ export class StateManagerProxy {
 
   _handleQueryResponse(message) {
     const { queryId, result, error } = message;
-    log('warn', `[StateManagerProxy] _handleQueryResponse called for queryId ${queryId}, message type: ${message.type}`);
+    log('debug', `[StateManagerProxy] _handleQueryResponse called for queryId ${queryId}, message type: ${message.type}`);
 
     // Check if there's a buffered request that matches this response
     const bufferedRequest = this._checkBufferedResponse(queryId);
@@ -736,7 +736,7 @@ export class StateManagerProxy {
       const queryId = message.queryId;
       const pending = this.pendingQueries.get(queryId);
 
-      log('warn', `[StateManagerProxy] _handlePingResponse called for queryId ${queryId}, pending exists: ${!!pending}`);
+      log('debug', `[StateManagerProxy] _handlePingResponse called for queryId ${queryId}, pending exists: ${!!pending}`);
 
       if (pending) {
         // Success path - ping response arrived while queryId still pending
@@ -745,7 +745,7 @@ export class StateManagerProxy {
           payload: message.payload,
           messageType: 'pingResponse'
         });
-        log('warn', `[StateManagerProxy] Ping response SUCCESS for queryId: ${queryId}`);
+        log('debug', `[StateManagerProxy] Ping response SUCCESS for queryId: ${queryId}`);
       } else {
         // Ping response for unknown queryId - use enhanced diagnostics
         const diagnostic = this._getDiagnosticInfo(queryId);
@@ -937,7 +937,7 @@ export class StateManagerProxy {
     };
 
     // Log deletion with full context
-    log('warn', `[StateManagerProxy] Deleting queryId ${queryId}`, deletionRecord);
+    log('debug', `[StateManagerProxy] Deleting queryId ${queryId}`, deletionRecord);
 
     // Clear timeout if exists
     if (pending.timeoutId) {
@@ -1036,7 +1036,7 @@ export class StateManagerProxy {
    * @param {string} type - Response type (pingResponse, queryResponse, etc.)
    */
   _bufferUnknownResponse(queryId, response, type) {
-    log('warn', `[StateManagerProxy] Buffering unknown response for queryId ${queryId}`, {
+    log('debug', `[StateManagerProxy] Buffering unknown response for queryId ${queryId}`, {
       type,
       bufferSize: this.unknownResponseBuffer.size
     });
@@ -1071,7 +1071,7 @@ export class StateManagerProxy {
       const now = Date.now();
       for (const [queryId, bufferEntry] of this.unknownResponseBuffer.entries()) {
         if (now - bufferEntry.receivedAt > this.responseBufferGracePeriod) {
-          log('warn', `[StateManagerProxy] Removing expired buffered response for queryId ${queryId}`, {
+          log('debug', `[StateManagerProxy] Removing expired buffered response for queryId ${queryId}`, {
             age: now - bufferEntry.receivedAt,
             type: bufferEntry.type
           });
@@ -1319,7 +1319,7 @@ export class StateManagerProxy {
 
     // If still not ready, it means something is off or it's a genuine timeout from a previous state.
     log(
-      'warn',
+      'error',
       '[StateManagerProxy ensureReady] Fell through all checks, returning current (likely false) ready state.'
     );
     return false; // Or this._isReadyPublished which would be false
@@ -2058,7 +2058,7 @@ export class StateManagerProxy {
     const command = StateManagerProxy.COMMANDS.PING;
     const createdAt = Date.now();
 
-    log('warn', `[StateManagerProxy] SENDING ping with queryId ${queryId}, correlationId ${correlationId}, timeout: ${timeoutMs}ms, payload: ${JSON.stringify(dataToEcho).substring(0, 50)}...`);
+    log('debug', `[StateManagerProxy] SENDING ping with queryId ${queryId}, correlationId ${correlationId}, timeout: ${timeoutMs}ms, payload: ${JSON.stringify(dataToEcho).substring(0, 50)}...`);
 
     // Initialize command state
     this._updateCommandState(correlationId, StateManagerProxy.COMMAND_STATES.PENDING, {
@@ -2102,7 +2102,7 @@ export class StateManagerProxy {
         state: StateManagerProxy.COMMAND_STATES.PENDING
       });
 
-      log('warn', `[StateManagerProxy] Added ping queryId ${queryId}, correlationId ${correlationId} to pendingQueries`);
+      log('debug', `[StateManagerProxy] Added ping queryId ${queryId}, correlationId ${correlationId} to pendingQueries`);
     });
 
     // Update state to QUEUED when sending to worker
