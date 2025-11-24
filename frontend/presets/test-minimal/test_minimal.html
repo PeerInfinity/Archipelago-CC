@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal can_reach Bug Test</title>
+</head>
+<body>
+    <h1>Minimal can_reach Bug Reproduction</h1>
+    <pre id="output"></pre>
+    
+    <script type="module">
+        import { StateManagerProxy } from '../../modules/stateManager/stateManagerProxy.js';
+        import { createSnapshotInterface } from '../../modules/shared/stateInterface.js';
+
+        const output = document.getElementById('output');
+        function log(msg) {
+            output.textContent += msg + '\n';
+            console.log(msg);
+        }
+
+        async function test() {
+            try {
+                log('=== Loading minimal rules ===\n');
+                
+                const response = await fetch('./minimal_rules.json');
+                const rulesData = await response.json();
+                
+                log('Rules loaded. Regions: ' + Object.keys(rulesData.regions['1']).join(', '));
+                
+                log('\n=== Initializing StateManager ===\n');
+                
+                const stateManager = new StateManagerProxy({
+                    loggingConfig: { enabled: true, level: 'debug' }
+                });
+                
+                await stateManager.initialize({
+                    rulesData,
+                    playerId: '1'
+                });
+                
+                await stateManager.loadRules(rulesData, { playerId: '1', playerName: 'TestPlayer' });
+                
+                log('StateManager initialized and rules loaded\n');
+                
+                log('=== Getting Snapshot ===\n');
+                const snapshot = await stateManager.getSnapshot();
+                const staticData = stateManager.getStaticData();
+                
+                log('Snapshot regionReachability:');
+                for (const [region, status] of Object.entries(snapshot.regionReachability || {})) {
+                    log(`  ${region}: ${status}`);
+                }
+                
+                log('\nSnapshot locationReachability:');
+                for (const [location, status] of Object.entries(snapshot.locationReachability || {})) {
+                    log(`  ${location}: ${status}`);
+                }
+                
+                log('\n=== Testing can_reach via executeStateManagerMethod ===\n');
+                
+                const snapshotInterface = createSnapshotInterface(snapshot, staticData, null);
+                
+                const menuReach = snapshotInterface.executeStateManagerMethod('can_reach', 'Menu', 'Region');
+                const hubReach = snapshotInterface.executeStateManagerMethod('can_reach', 'Hub', 'Region');
+                const actRegionReach = snapshotInterface.executeStateManagerMethod('can_reach', 'Act Region', 'Region');
+                
+                log(`can_reach("Menu", "Region"): ${menuReach}`);
+                log(`can_reach("Hub", "Region"): ${hubReach}`);
+                log(`can_reach("Act Region", "Region"): ${actRegionReach}`);
+                
+                log('\n=== Expected vs Actual ===\n');
+                log('Expected: Act Region should be reachable (true)');
+                log(`Actual: ${actRegionReach}`);
+                
+                if (actRegionReach !== true) {
+                    log('\n❌ BUG REPRODUCED!');
+                    log('Act Region should be reachable but can_reach returns: ' + actRegionReach);
+                } else {
+                    log('\n✅ No bug - can_reach works correctly');
+                }
+                
+                log('\n=== Testing Location Accessibility ===\n');
+                const locAccessible = snapshotInterface.isLocationAccessible('Hub - Location With Can Reach Rule');
+                log(`isLocationAccessible("Hub - Location With Can Reach Rule"): ${locAccessible}`);
+                
+                if (locAccessible !== true) {
+                    log('❌ Location not accessible (but should be since Act Region is reachable)');
+                }
+                
+                await stateManager.destroy();
+                log('\n=== Test Complete ===');
+                
+            } catch (error) {
+                log('\n❌ ERROR: ' + error.message);
+                log(error.stack);
+            }
+        }
+        
+        test();
+    </script>
+</body>
+</html>
