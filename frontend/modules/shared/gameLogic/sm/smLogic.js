@@ -71,7 +71,40 @@ export function bossDead(snapshot, staticData, bossName) {
  */
 export function count(snapshot, staticData, itemName) {
   if (!snapshot.inventory) return 0;
-  return snapshot.inventory[itemName] || 0;
+
+  // First, try direct name match
+  let itemCount = snapshot.inventory[itemName] || 0;
+
+  // If not found by name, check if any item has this type
+  // This is needed for VARIA type names like "ETank" -> "Energy Tank"
+  if (itemCount === 0 && staticData && staticData.items) {
+    // Check player 1's items (assuming single player for now)
+    let playerItems;
+    if (staticData.items instanceof Map) {
+      playerItems = staticData.items.get('1') || staticData.items.get(1);
+    } else {
+      playerItems = staticData.items['1'] || staticData.items[1];
+    }
+
+    // If playerItems is undefined/null, try using staticData.items directly (flat structure)
+    if (!playerItems) {
+      playerItems = staticData.items;
+    }
+
+    if (playerItems) {
+      // playerItems might also be a Map or object
+      const itemEntries = playerItems instanceof Map ? playerItems.entries() : Object.entries(playerItems);
+
+      for (const [fullItemName, itemData] of itemEntries) {
+        if (itemData && itemData.type === itemName) {
+          // Found an item with matching type, count how many we have
+          itemCount += snapshot.inventory[fullItemName] || 0;
+        }
+      }
+    }
+  }
+
+  return itemCount;
 }
 
 /**
@@ -372,10 +405,13 @@ export function canOpenEyeDoors(snapshot, staticData) {
 }
 
 export function canJumpUnderwater(snapshot, staticData) {
-  // Can jump underwater with Gravity Suit or HiJump
+  // Can jump underwater with Gravity Suit or suitless with HiJump + knowledge
+  // Python: wor(haveItem('Gravity'), wand(knowsGravLessLevel1(), haveItem('HiJump')))
   return wor(snapshot, staticData,
     haveItem(snapshot, staticData, 'Gravity'),
-    haveItem(snapshot, staticData, 'HiJump'));
+    wand(snapshot, staticData,
+      knowsGravLessLevel1(snapshot, staticData),
+      haveItem(snapshot, staticData, 'HiJump')));
 }
 
 // Hell run presets matching Python Settings.hellRunPresets['Gimme energy'] (used by regular preset)
@@ -452,6 +488,17 @@ export function canAccessSandPits(snapshot, staticData) {
   return haveItem(snapshot, staticData, 'Gravity');
 }
 
+export function canTraverseSandPits(snapshot, staticData) {
+  // Bottom sandpits with the evirs (except west sand hall left to right)
+  // Python: wor(haveItem('Gravity'), wand(knowsGravLessLevel3(), haveItem('HiJump'), haveItem('Ice')))
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Gravity'),
+    wand(snapshot, staticData,
+      knowsGravLessLevel3(snapshot, staticData),
+      haveItem(snapshot, staticData, 'HiJump'),
+      haveItem(snapshot, staticData, 'Ice')));
+}
+
 /**
  * Get the total count of energy reserves (ETanks + Reserve Tanks)
  * @param {Object} snapshot - State snapshot
@@ -481,10 +528,19 @@ export function energyReserveCountOk(snapshot, staticData, requiredCount, diffic
 }
 
 export function canPassBowling(snapshot, staticData) {
-  // Bowling alley passage - requires specific movement abilities
-  return wor(snapshot, staticData,
-    haveItem(snapshot, staticData, 'Gravity'),
-    canSpringBallJump(snapshot, staticData));
+  // Bowling alley passage - requires Phantoon dead AND survival options
+  // Python: Bosses.bossDead('Phantoon') AND (dmgReduction >= 2 OR energyReserveCountOk(1) OR SpaceJump OR Grapple)
+  return wand(snapshot, staticData,
+    bossDead(snapshot, staticData, 'Phantoon'),
+    wor(snapshot, staticData,
+      // Damage reduction >= 2 (Varia or Gravity suit)
+      haveItem(snapshot, staticData, 'Varia'),
+      haveItem(snapshot, staticData, 'Gravity'),
+      // Or have energy reserves
+      energyReserveCountOk(snapshot, staticData, 1),
+      // Or have movement options
+      haveItem(snapshot, staticData, 'SpaceJump'),
+      haveItem(snapshot, staticData, 'Grapple')));
 }
 
 export function enoughStuffGT(snapshot, staticData) {
@@ -662,11 +718,35 @@ export function enoughStuffsRidley(snapshot, staticData) {
 }
 
 export function enoughStuffCroc(snapshot, staticData) {
-  // Crocomire - needs weapons, conservative approach
-  return wor(snapshot, staticData,
-    haveItem(snapshot, staticData, 'Missile'),
-    haveItem(snapshot, staticData, 'Super'),
-    haveItem(snapshot, staticData, 'Charge'));
+  // Crocomire has ~5000 HP and doesn't give drops
+  // Need to inflict enough damage to defeat him
+  // Damage values:
+  // - Charged shot: variable based on beam upgrades, but infinite supply
+  // - Missile: 100 damage each, 5 per pack
+  // - Super Missile: 300 damage each, 5 per pack
+
+  // With Charge Beam, we have infinite damage potential
+  const hasCharge = haveItem(snapshot, staticData, 'Charge');
+  if (hasCharge.bool) {
+    return { bool: true, difficulty: 0 };
+  }
+
+  // Without Charge, calculate ammo damage
+  const missileCount = count(snapshot, staticData, 'Missile');
+  const superCount = count(snapshot, staticData, 'Super');
+
+  // Each pickup gives 5 ammo
+  const missileDamage = missileCount * 5 * 100;  // 500 damage per pack
+  const superDamage = superCount * 5 * 300;      // 1500 damage per pack
+  const totalDamage = missileDamage + superDamage;
+
+  // Need 5000 damage to defeat Crocomire
+  if (totalDamage >= 5000) {
+    return { bool: true, difficulty: 0 };
+  }
+
+  // Not enough damage
+  return { bool: false, difficulty: 0 };
 }
 
 export function enoughStuffSporeSpawn(snapshot, staticData) {
@@ -677,14 +757,70 @@ export function enoughStuffSporeSpawn(snapshot, staticData) {
     haveItem(snapshot, staticData, 'Charge'));
 }
 
+export function canPassMetroids(snapshot, staticData) {
+  // Pass metroids: Ice + ammo OR 3+ Power Bomb packs
+  return wor(snapshot, staticData,
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Ice'),
+      haveMissileOrSuper(snapshot, staticData)),
+    itemCountOk(snapshot, staticData, 'PowerBomb', 3));
+}
+
+export function canPassZebetites(snapshot, staticData) {
+  // Pass zebetites: Ice skip OR Speed skip OR enough missiles for damage
+  // Simplified: need Ice OR SpeedBooster OR 10+ missiles (for ~1100 damage)
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Ice'),
+    haveItem(snapshot, staticData, 'SpeedBooster'),
+    itemCountOk(snapshot, staticData, 'Missile', 10));
+}
+
+export function enoughStuffsMotherbrain(snapshot, staticData) {
+  // Mother Brain fight requirements:
+  // - Need 2+ missile packs AND 2+ super packs (to break the glass)
+  // - Need enough ammo for ~21000 damage total (MB1 3000 + MB2 18000)
+  // Each missile pack = 5 missiles, each does 100 damage = 500 damage/pack
+  // Each super pack = 5 supers, each does 300 damage = 1500 damage/pack
+  // With charge beam, damage is essentially infinite
+  const missileCount = count(snapshot, staticData, 'Missile');
+  const superCount = count(snapshot, staticData, 'Super');
+  const hasCharge = haveItem(snapshot, staticData, 'Charge');
+
+  // Minimum requirement: 2 missile packs and 2 super packs
+  if (missileCount < 2 || superCount < 2) {
+    return { bool: false, difficulty: 0 };
+  }
+
+  // Calculate damage potential
+  const missileDamage = missileCount * 5 * 100;  // 500 per pack
+  const superDamage = superCount * 5 * 300;      // 1500 per pack
+  const totalAmmoDamage = missileDamage + superDamage;
+
+  // With charge beam, damage is unlimited
+  if (hasCharge.bool) {
+    return { bool: true, difficulty: 0 };
+  }
+
+  // Need at least 21000 damage worth of ammo
+  if (totalAmmoDamage >= 21000) {
+    return { bool: true, difficulty: 0 };
+  }
+
+  return { bool: false, difficulty: 0 };
+}
+
 export function enoughStuffTourian(snapshot, staticData) {
-  // Mother Brain/Tourian - needs significant equipment
-  // Conservative: require several key items
+  // Tourian access requires:
+  // 1. Can pass metroids AND zebetites (or have speedup patch - assume no)
+  // 2. Can open red doors
+  // 3. Have enough stuff for Mother Brain
+  // 4. Have Morph (for zebetite tunnel)
   return wand(snapshot, staticData,
-    haveItem(snapshot, staticData, 'Varia'),
-    wor(snapshot, staticData,
-      haveItem(snapshot, staticData, 'Super'),
-      haveItem(snapshot, staticData, 'Charge')));
+    canPassMetroids(snapshot, staticData),
+    canPassZebetites(snapshot, staticData),
+    canOpenRedDoors(snapshot, staticData),
+    enoughStuffsMotherbrain(snapshot, staticData),
+    haveItem(snapshot, staticData, 'Morph'));
 }
 
 // Additional knowledge techniques
@@ -757,6 +893,12 @@ export function knowsMtEverestGravJump(snapshot, staticData) {
   return { bool: true, difficulty: 0 };
 }
 
+export function knowsTediousMountEverest(snapshot, staticData) {
+  // Tedious climb of Mt. Everest suitless with ice and supers
+  // Medium difficulty technique
+  return { bool: true, difficulty: 5 };
+}
+
 export function knowsRedTowerClimb(snapshot, staticData) {
   // Wall jump technique to climb Red Tower
   // Enabled in regular preset with difficulty 25 (harder)
@@ -786,24 +928,49 @@ export function canExitCathedral(snapshot, staticData) {
 }
 
 export function canGoUpMtEverest(snapshot, staticData) {
-  // Mt. Everest (Maridia) - needs Gravity + movement options
-  return wand(snapshot, staticData,
-    haveItem(snapshot, staticData, 'Gravity'),
-    wor(snapshot, staticData,
-      haveItem(snapshot, staticData, 'Grapple'),
-      haveItem(snapshot, staticData, 'SpeedBooster'),
-      canFly(snapshot, staticData),
-      haveItem(snapshot, staticData, 'HiJump')));
+  // Mt. Everest (Maridia) - two paths:
+  // 1. With Gravity: needs movement options (Grapple, Speed, fly, or gravity jump)
+  // 2. Without Gravity: canDoSuitlessOuterMaridia + Grapple
+  return wor(snapshot, staticData,
+    // Path 1: With Gravity suit
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Gravity'),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Grapple'),
+        haveItem(snapshot, staticData, 'SpeedBooster'),
+        canFly(snapshot, staticData),
+        wand(snapshot, staticData,
+          knowsGravityJump(snapshot, staticData),
+          wor(snapshot, staticData,
+            haveItem(snapshot, staticData, 'HiJump'),
+            knowsMtEverestGravJump(snapshot, staticData))))),
+    // Path 2: Suitless with Grapple
+    wand(snapshot, staticData,
+      canDoSuitlessOuterMaridia(snapshot, staticData),
+      haveItem(snapshot, staticData, 'Grapple')));
 }
 
 export function canPassMtEverest(snapshot, staticData) {
-  // Similar to canGoUpMtEverest
-  return wand(snapshot, staticData,
-    haveItem(snapshot, staticData, 'Gravity'),
-    wor(snapshot, staticData,
-      haveItem(snapshot, staticData, 'Grapple'),
-      haveItem(snapshot, staticData, 'SpeedBooster'),
-      canFly(snapshot, staticData)));
+  // Similar to canGoUpMtEverest but different movement options
+  return wor(snapshot, staticData,
+    // Path 1: With Gravity suit
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Gravity'),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Grapple'),
+        haveItem(snapshot, staticData, 'SpeedBooster'),
+        canFly(snapshot, staticData),
+        knowsGravityJump(snapshot, staticData))),
+    // Path 2: Suitless with various movement options
+    wand(snapshot, staticData,
+      canDoSuitlessOuterMaridia(snapshot, staticData),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Grapple'),
+        wand(snapshot, staticData,
+          haveItem(snapshot, staticData, 'Ice'),
+          knowsTediousMountEverest(snapshot, staticData),
+          haveItem(snapshot, staticData, 'Super')),
+        canDoubleSpringBallJump(snapshot, staticData))));
 }
 
 export function canDefeatBotwoon(snapshot, staticData) {
@@ -975,8 +1142,10 @@ export function canAccessEtecoons(snapshot, staticData) {
 }
 
 export function canDoOuterMaridia(snapshot, staticData) {
-  // Outer Maridia - needs Gravity
-  return haveItem(snapshot, staticData, 'Gravity');
+  // Outer Maridia - Gravity OR suitless requirements
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Gravity'),
+    canDoSuitlessOuterMaridia(snapshot, staticData));
 }
 
 export function canPassLowerNorfairChozo(snapshot, staticData) {
@@ -1101,7 +1270,8 @@ export function knowsMockballWs(snapshot, staticData) {
 
 export function knowsGravLessLevel1(snapshot, staticData) {
   // Gravity-less technique level 1
-  return { bool: true, difficulty: 0 };
+  // Regular preset: difficulty 50 (hardcore level)
+  return { bool: true, difficulty: 50 };
 }
 
 export function knowsGravLessLevel2(snapshot, staticData) {
@@ -1324,6 +1494,7 @@ export const helperFunctions = {
   knowsKillPlasmaPiratesWithCharge,
   knowsGravityJump,
   knowsMtEverestGravJump,
+  knowsTediousMountEverest,
   knowsRedTowerClimb,
   // Advanced movement
   canInfiniteBombJump,
@@ -1336,6 +1507,7 @@ export const helperFunctions = {
   // Environmental hazards
   canHellRun,
   canAccessSandPits,
+  canTraverseSandPits,
   heatProof,
   energyReserveCountOk,
   enoughStuffGT,
@@ -1350,6 +1522,9 @@ export const helperFunctions = {
   enoughStuffCroc,
   enoughStuffSporeSpawn,
   enoughStuffTourian,
+  enoughStuffsMotherbrain,
+  canPassMetroids,
+  canPassZebetites,
   // Room-specific helpers
   canAccessKraidsLair,
   canExitCathedral,
@@ -1915,9 +2090,12 @@ export function canAccessShaktoolFromPantsRoom(snapshot, staticData) {
  * @returns {Object} SMBool
  */
 export function canPassG4(snapshot, staticData) {
-  // For now, assume all 4 bosses must be defeated
-  // This should check objectives/boss completion
-  return { bool: false, difficulty: 0 };  // Placeholder
+  // Must defeat all 4 golden bosses: Kraid, Phantoon, Draygon, Ridley
+  return wand(snapshot, staticData,
+    bossDead(snapshot, staticData, 'Kraid'),
+    bossDead(snapshot, staticData, 'Phantoon'),
+    bossDead(snapshot, staticData, 'Draygon'),
+    bossDead(snapshot, staticData, 'Ridley'));
 }
 
 // ============================================================================
