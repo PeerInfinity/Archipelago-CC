@@ -182,12 +182,44 @@ export class ComparisonEngine {
       (name) => !logAccessibleSet.has(name)
     );
 
-    if (missingFromState.length === 0 && extraInState.length === 0) {
-      const successMessage = `✓ Sphere ${context.sphere_number} passed: ${stateAccessibleSet.size} locations match`;
+    // Check if any player has allow_regressive_accessibility_mismatches enabled
+    // This setting handles games like SMZ3 where acquiring items can INCREASE
+    // key requirements (anti-softlock logic), causing a semantic difference between
+    // Python's cumulative sphere calculation and frontend's real-time evaluation.
+    let allowRegressiveMismatches = false;
+    if (staticData?.settings) {
+      for (const playerSettings of Object.values(staticData.settings)) {
+        if (playerSettings?.allow_regressive_accessibility_mismatches) {
+          allowRegressiveMismatches = true;
+          break;
+        }
+      }
+    }
+
+    // If regressive mismatches are allowed, "missing from state" (accessible in log
+    // but not accessible now due to increased requirements) is treated as acceptable.
+    // We only fail if there are "extra in state" mismatches (which indicates a bug).
+    const effectiveMissingFromState = allowRegressiveMismatches ? [] : missingFromState;
+
+    if (effectiveMissingFromState.length === 0 && extraInState.length === 0) {
+      // Build success message, noting if regressive mismatches were allowed
+      let successMessage = `✓ Sphere ${context.sphere_number} passed: ${stateAccessibleSet.size} locations match`;
+      if (allowRegressiveMismatches && missingFromState.length > 0) {
+        successMessage += ` (${missingFromState.length} regressive accessibility mismatches allowed)`;
+      }
 
       // Log to UI panel if callback available
       if (this.logCallback) {
         this.logCallback('success', successMessage);
+      }
+
+      // Log regressive mismatches as info if any were allowed
+      if (allowRegressiveMismatches && missingFromState.length > 0) {
+        const regressiveMessage = ` ℹ Regressive accessibility (allowed): ${missingFromState.join(', ')}`;
+        if (this.logCallback) {
+          this.logCallback('info', regressiveMessage);
+        }
+        logger.info(`[compareAccessibleLocations] Allowed regressive mismatches: ${missingFromState.join(', ')}`);
       }
 
       // Also log to console for debugging
@@ -210,8 +242,8 @@ export class ComparisonEngine {
       // Also log to console for debugging
       logger.error(mismatchMessage);
 
-      if (missingFromState.length > 0) {
-        const missingMessage = ` > Locations accessible in LOG but NOT in STATE (or checked): ${missingFromState.join(', ')}`;
+      if (effectiveMissingFromState.length > 0) {
+        const missingMessage = ` > Locations accessible in LOG but NOT in STATE (or checked): ${effectiveMissingFromState.join(', ')}`;
 
         // Log to UI panel (this will trigger link creation in testSpoilerUI.js)
         if (this.logCallback) {
@@ -220,7 +252,7 @@ export class ComparisonEngine {
 
         // Also log to console
         logger.error(missingMessage);
-        console.error(`[MISMATCH DETAIL] Missing from state (${missingFromState.length}):`, missingFromState);
+        console.error(`[MISMATCH DETAIL] Missing from state (${effectiveMissingFromState.length}):`, effectiveMissingFromState);
       }
       if (extraInState.length > 0) {
         const extraMessage = ` > Locations accessible in STATE (and unchecked) but NOT in LOG: ${extraInState.join(', ')}`;
@@ -248,7 +280,7 @@ export class ComparisonEngine {
       this.currentMismatchDetails = {
         type: 'locations',
         context: typeof context === 'string' ? context : JSON.stringify(context),
-        missingFromState: missingFromState,
+        missingFromState: effectiveMissingFromState,
         extraInState: extraInState,
         logAccessibleCount: logAccessibleSet.size,
         stateAccessibleCount: stateAccessibleSet.size,
