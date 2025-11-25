@@ -99,6 +99,10 @@ export function SMBool(snapshot, staticData, value, difficulty = 0) {
  * @returns {boolean} True if smbool passes the difficulty check
  */
 export function evalSMBool(snapshot, staticData, smbool, maxDiff) {
+  // If maxDiff is undefined, default to 999 (allow all difficulties)
+  // This happens when state.smbm[1].maxDiff can't be evaluated
+  const effectiveMaxDiff = maxDiff !== undefined && maxDiff !== null ? maxDiff : 999;
+
   // If smbool is a plain boolean, return it
   if (typeof smbool === 'boolean') {
     return smbool;
@@ -106,7 +110,7 @@ export function evalSMBool(snapshot, staticData, smbool, maxDiff) {
 
   // If smbool is an SMBool object, check difficulty
   if (smbool && typeof smbool === 'object' && 'bool' in smbool && 'difficulty' in smbool) {
-    return smbool.bool === true && smbool.difficulty <= maxDiff;
+    return smbool.bool === true && smbool.difficulty <= effectiveMaxDiff;
   }
 
   // Default: assume it's truthy
@@ -543,10 +547,12 @@ export function traverse(snapshot, staticData, doorName) {
 // Boss requirement helpers - Conservative implementations
 // These calculate damage output vs boss HP in Python - we use simplified checks
 export function enoughStuffsKraid(snapshot, staticData) {
-  // Kraid boss - needs some offensive capability
-  // Conservative: require at least missiles or charge beam
+  // Kraid boss - needs enough damage output (1000 HP)
+  // Can use Missiles (100 dmg), Super Missiles (300 dmg), or Charge Beam
+  // 5 Supers (1 pack) = 1500 dmg > 1000, so any Super pack works
   return wor(snapshot, staticData,
     haveItem(snapshot, staticData, 'Missile'),
+    haveItem(snapshot, staticData, 'Super'),
     haveItem(snapshot, staticData, 'Charge'));
 }
 
@@ -859,8 +865,11 @@ export function canClimbColosseum(snapshot, staticData) {
 }
 
 export function canPassDachoraRoom(snapshot, staticData) {
-  // Dachora room - needs Speed Booster
-  return haveItem(snapshot, staticData, 'SpeedBooster');
+  // Dachora room - needs Speed Booster OR can destroy bomb walls
+  // Python: sm.wor(sm.haveItem('SpeedBooster'), sm.canDestroyBombWalls())
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'SpeedBooster'),
+    canDestroyBombWalls(snapshot, staticData));
 }
 
 export function canAccessEtecoons(snapshot, staticData) {
@@ -936,13 +945,13 @@ export function knowsBillyMays(snapshot, staticData) {
 }
 
 export function knowsContinuousWallJump(snapshot, staticData) {
-  // Continuous wall jump technique
-  return { bool: true, difficulty: 0 };
+  // Continuous wall jump technique - DISABLED in regular preset
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsDiagonalBombJump(snapshot, staticData) {
-  // Diagonal bomb jump technique
-  return { bool: true, difficulty: 0 };
+  // Diagonal bomb jump technique - DISABLED in regular preset
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsMockballWs(snapshot, staticData) {
