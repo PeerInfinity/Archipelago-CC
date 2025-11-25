@@ -102,7 +102,7 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
                 boss_name = boss_mapping[func_name]
                 # For boss methods, manually construct the rule with the boss name
                 # Most boss methods follow the pattern:
-                # has_boss_strength(state, "boss_name") AND can_reach_region(...)
+                # has_boss_strength(state, "boss_name") AND (region1 OR region2)
                 #
                 # Inspect the function to extract any region requirements
                 import inspect
@@ -121,20 +121,51 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
                     }
                 ]
 
-                # Add region requirements
-                for region in region_matches:
+                # Add region requirements as OR condition (boss fights can be entered from multiple doors)
+                if len(region_matches) > 1:
+                    # Multiple regions are ORed together (can enter boss from either side)
+                    region_conditions = []
+                    for region in region_matches:
+                        region_conditions.append({
+                            'type': 'state_method',
+                            'method': 'can_reach_region',
+                            'args': [{'type': 'constant', 'value': region}]
+                        })
+                    conditions.append({
+                        'type': 'or',
+                        'conditions': region_conditions
+                    })
+                elif len(region_matches) == 1:
+                    # Single region - add directly
                     conditions.append({
                         'type': 'state_method',
                         'method': 'can_reach_region',
-                        'args': [{'type': 'constant', 'value': region}]
+                        'args': [{'type': 'constant', 'value': region_matches[0]}]
                     })
 
-                # Add wall_climb requirement if found in source
-                if 'wall_climb' in source:
-                    conditions.append({
-                        'type': 'helper',
-                        'name': 'wallClimb'
-                    })
+                # Add wall_climb or double_jump requirement if found in source
+                # Note: These are also ORed in the source (wall_climb OR double_jump)
+                if 'wall_climb' in source or 'double_jump' in source:
+                    movement_conditions = []
+                    if 'wall_climb' in source:
+                        movement_conditions.append({
+                            'type': 'helper',
+                            'name': 'wall_climb',
+                            'args': []
+                        })
+                    if 'double_jump' in source:
+                        movement_conditions.append({
+                            'type': 'helper',
+                            'name': 'double_jump',
+                            'args': []
+                        })
+                    if len(movement_conditions) > 1:
+                        conditions.append({
+                            'type': 'or',
+                            'conditions': movement_conditions
+                        })
+                    else:
+                        conditions.append(movement_conditions[0])
 
                 # Return AND of all conditions
                 if len(conditions) == 1:

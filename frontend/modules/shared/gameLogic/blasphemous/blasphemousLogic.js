@@ -261,31 +261,18 @@ export const helperFunctions = {
    * - worldOrBossName will be 'world' (unused)
    * - bossNameOrStaticData will be the actual boss name
    */
-  has_boss_strength(snapshot, worldOrBossName, bossNameOrStaticData, staticData) {
-    // Determine if we were called with or without boss name
-    let bossName = null;
-    let actualStaticData = staticData;
-
-    if (arguments.length === 2) {
-      // Called with just (snapshot, staticData) - no boss name
-      // Use staticData from second argument
-      actualStaticData = worldOrBossName;
-    } else if (arguments.length === 3) {
-      // Called with (snapshot, bossName, staticData) - new calling convention
-      bossName = worldOrBossName;
-      actualStaticData = bossNameOrStaticData;
-    } else {
-      // Called with (snapshot, worldOrBossName, bossName, staticData) - old calling convention
-      bossName = bossNameOrStaticData;
-      actualStaticData = staticData;
-    }
+  has_boss_strength(snapshot, staticData, bossName) {
+    // New unified calling convention: (snapshot, staticData, bossName)
+    // executeHelper always passes (snapshot, staticData, ...evaluatedArgs)
+    // For rules with args: [{"type": "constant", "value": "warden"}]
+    // This becomes: has_boss_strength(snapshot, staticData, "warden")
 
     // Calculate player strength based on current upgrades
     const life = snapshot?.inventory?.["Life Upgrade"] || 0;
     const sword = snapshot?.inventory?.["Mea Culpa Upgrade"] || 0;
     const fervour = snapshot?.inventory?.["Fervour Upgrade"] || 0;
-    const flasks = this.flasks(snapshot, actualStaticData);
-    const quicksilver = this.quicksilver(snapshot, actualStaticData);
+    const flasks = this.flasks(snapshot, staticData);
+    const quicksilver = this.quicksilver(snapshot, staticData);
 
     // Calculate player strength (normalized 0-1 scale)
     const playerStrength = (
@@ -317,7 +304,7 @@ export const helperFunctions = {
 
     // Default difficulty adjustment (assume normal difficulty = 1)
     // Without difficulty setting, use normal: bossStrength + 0 (no adjustment)
-    const difficulty = actualStaticData?.settings?.[snapshot.player]?.difficulty ?? 1;
+    const difficulty = staticData?.settings?.[snapshot.player]?.difficulty ?? 1;
     const adjustment = difficulty >= 2 ? -0.10 : (difficulty >= 1 ? 0 : 0.10);
 
     if (!bossName) {
@@ -376,52 +363,52 @@ export const helperFunctions = {
    * Boss defeat helpers - delegate to has_boss_strength
    */
   can_beat_brotherhood_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, 'world', "warden", staticData);
+    return this.has_boss_strength(snapshot, staticData, "warden");
   },
 
   can_beat_mercy_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, 'world', "ten-piedad", staticData);
+    return this.has_boss_strength(snapshot, staticData, "ten-piedad");
   },
 
   can_beat_convent_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, 'world', "charred-visage", staticData);
+    return this.has_boss_strength(snapshot, staticData, "charred-visage");
   },
 
   can_beat_grievance_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, 'world', "tres-angustias", staticData);
+    return this.has_boss_strength(snapshot, staticData, "tres-angustias");
   },
 
   can_beat_bridge_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, 'world', "esdras", staticData);
+    return this.has_boss_strength(snapshot, staticData, "esdras");
   },
 
   can_beat_mothers_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, 'world', "melquiades", staticData);
+    return this.has_boss_strength(snapshot, staticData, "melquiades");
   },
 
   can_beat_canvases_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, 'world', "exposito", staticData);
+    return this.has_boss_strength(snapshot, staticData, "exposito");
   },
 
   can_beat_prison_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, 'world', "quirce", staticData);
+    return this.has_boss_strength(snapshot, staticData, "quirce");
   },
 
   can_beat_rooftops_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, 'world', "crisanta", staticData);
+    return this.has_boss_strength(snapshot, staticData, "crisanta");
   },
 
   can_beat_ossuary_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, 'world', "isidora", staticData);
+    return this.has_boss_strength(snapshot, staticData, "isidora");
   },
 
   can_beat_mourning_boss(snapshot, staticData) {
-    return this.has_boss_strength(snapshot, 'world', "sierpes", staticData);
+    return this.has_boss_strength(snapshot, staticData, "sierpes");
   },
 
   can_beat_graveyard_boss(snapshot, staticData) {
     return (
-      this.has_boss_strength(snapshot, 'world', "amanecida", staticData) &&
+      this.has_boss_strength(snapshot, staticData, "amanecida") &&
       this.wallClimb(snapshot, staticData) &&
       this.can_reach_region(snapshot, staticData, "D01Z06S01[Santos]") &&
       this.can_reach_region(snapshot, staticData, "D02Z03S18[NW]") &&
@@ -431,7 +418,7 @@ export const helperFunctions = {
 
   can_beat_jondo_boss(snapshot, staticData) {
     return (
-      this.has_boss_strength(snapshot, 'world', "amanecida", staticData) &&
+      this.has_boss_strength(snapshot, staticData, "amanecida") &&
       this.can_reach_region(snapshot, staticData, "D01Z06S01[Santos]") &&
       (
         this.can_reach_region(snapshot, staticData, "D20Z01S06[NE]") ||
@@ -446,7 +433,7 @@ export const helperFunctions = {
 
   can_beat_patio_boss(snapshot, staticData) {
     return (
-      this.has_boss_strength(snapshot, 'world', "amanecida", staticData) &&
+      this.has_boss_strength(snapshot, staticData, "amanecida") &&
       this.can_reach_region(snapshot, staticData, "D01Z06S01[Santos]") &&
       this.can_reach_region(snapshot, staticData, "D06Z01S02[W]") &&
       (
@@ -459,7 +446,7 @@ export const helperFunctions = {
 
   can_beat_wall_boss(snapshot, staticData) {
     return (
-      this.has_boss_strength(snapshot, 'world', "amanecida", staticData) &&
+      this.has_boss_strength(snapshot, staticData, "amanecida") &&
       this.can_reach_region(snapshot, staticData, "D01Z06S01[Santos]") &&
       this.can_reach_region(snapshot, staticData, "D09Z01S09[Cell24]") &&
       (
@@ -471,7 +458,7 @@ export const helperFunctions = {
 
   can_beat_hall_boss(snapshot, staticData) {
     return (
-      this.has_boss_strength(snapshot, 'world', "laudes", staticData) &&
+      this.has_boss_strength(snapshot, staticData, "laudes") &&
       (
         this.can_reach_region(snapshot, staticData, "D08Z01S02[NE]") ||
         this.can_reach_region(snapshot, staticData, "D08Z03S02[NW]")
