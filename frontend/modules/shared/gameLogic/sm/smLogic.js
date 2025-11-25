@@ -1002,32 +1002,40 @@ export function getDmgReduction(snapshot, staticData, envDmg = true) {
   const romPatches = playerSettings.romPatches || {};
 
   let dmgRed = 1.0;
+  let items = [];
 
   if (romPatches.NoGravityEnvProtection) {
     if (hasVaria) {
+      items = ['Varia'];
       dmgRed = envDmg ? 4.0 : 2.0;
     }
     if (hasGravity && !envDmg) {
       dmgRed = 4.0;
+      items = ['Gravity'];
     }
   } else if (romPatches.ProgressiveSuits) {
     if (hasVaria) {
+      items.push('Varia');
       dmgRed *= 2;
     }
     if (hasGravity) {
+      items.push('Gravity');
       dmgRed *= 2;
     }
   } else {
     // Default behavior
     if (hasVaria) {
       dmgRed = 2.0;
+      items = ['Varia'];
     }
     if (hasGravity) {
       dmgRed = 4.0;
+      items = ['Gravity'];
     }
   }
 
-  return dmgRed;
+  // Return tuple format [dmgRed, items] to match Python's (ret, items)
+  return [dmgRed, items];
 }
 
 /**
@@ -1049,8 +1057,8 @@ export function energyReserveCountOkHardRoom(snapshot, staticData, roomName, mul
     return { bool: false, difficulty: 0 };
   }
 
-  // Get damage reduction from suits
-  const dmgRed = getDmgReduction(snapshot, staticData, true);
+  // Get damage reduction from suits - getDmgReduction returns [dmgRed, items]
+  const [dmgRed] = getDmgReduction(snapshot, staticData, true);
   const totalMult = mult * dmgRed;
   const totalReserves = energyReserveCount(snapshot, staticData);
 
@@ -1509,6 +1517,7 @@ export const helperFunctions = {
   canAccessSandPits,
   canTraverseSandPits,
   heatProof,
+  getDmgReduction,
   energyReserveCountOk,
   enoughStuffGT,
   // Combat
