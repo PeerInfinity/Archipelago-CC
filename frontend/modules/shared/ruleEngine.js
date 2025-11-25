@@ -418,21 +418,25 @@ export const evaluateRule = (rule, context, depth = 0) => {
           if (typeof context.executeHelper === 'function') {
             result = context.executeHelper(rule.name, ...args);
 
-            // Auto-convert SMBool objects to booleans
-            // evalSMBool is the only helper that explicitly handles SMBool conversion,
-            // so it returns a boolean already and doesn't need this
+            // Handle SMBool objects from SM helpers
+            // For SM helpers that return SMBool objects {bool, difficulty}:
+            // - At depth 0 (top-level): check difficulty against maxDiff and convert to boolean
+            // - At depth > 0: preserve the SMBool object so parent helpers (wand, wor) can
+            //   work with difficulty values correctly
             if (result && typeof result === 'object' && 'bool' in result && 'difficulty' in result) {
-              // Get maxDiff from game state (SM uses state.smbm[player].maxDiff)
-              // Default to 50 (hardcore) for Super Metroid
-              let maxDiff = 50;
-              if (typeof context.getPlayerId === 'function' && typeof context.resolveName === 'function') {
-                const playerId = context.getPlayerId();
-                const state = context.resolveName('state');
-                if (state?.smbm?.[playerId]?.maxDiff !== undefined) {
-                  maxDiff = state.smbm[playerId].maxDiff;
+              if (depth === 0) {
+                // Top-level: check difficulty against maxDiff
+                let maxDiff = 50; // Default to hardcore for Super Metroid
+                if (typeof context.getPlayerId === 'function' && typeof context.resolveName === 'function') {
+                  const playerId = context.getPlayerId();
+                  const state = context.resolveName('state');
+                  if (state?.smbm?.[playerId]?.maxDiff !== undefined) {
+                    maxDiff = state.smbm[playerId].maxDiff;
+                  }
                 }
+                result = result.bool === true && result.difficulty <= maxDiff;
               }
-              result = result.bool === true && result.difficulty <= maxDiff;
+              // At depth > 0: leave result as SMBool object so parent helpers can use difficulty
             }
           } else {
             log(
@@ -457,19 +461,20 @@ export const evaluateRule = (rule, context, depth = 0) => {
           if (typeof context.executeHelper === 'function') {
             result = context.executeHelper(rule.name, ...args);
 
-            // Auto-convert SMBool objects to booleans
+            // Same SMBool handling as regular helpers - preserve at depth > 0
             if (result && typeof result === 'object' && 'bool' in result && 'difficulty' in result) {
-              // Get maxDiff from game state (SM uses state.smbm[player].maxDiff)
-              // Default to 50 (hardcore) for Super Metroid
-              let maxDiff = 50;
-              if (typeof context.getPlayerId === 'function' && typeof context.resolveName === 'function') {
-                const playerId = context.getPlayerId();
-                const state = context.resolveName('state');
-                if (state?.smbm?.[playerId]?.maxDiff !== undefined) {
-                  maxDiff = state.smbm[playerId].maxDiff;
+              if (depth === 0) {
+                let maxDiff = 50;
+                if (typeof context.getPlayerId === 'function' && typeof context.resolveName === 'function') {
+                  const playerId = context.getPlayerId();
+                  const state = context.resolveName('state');
+                  if (state?.smbm?.[playerId]?.maxDiff !== undefined) {
+                    maxDiff = state.smbm[playerId].maxDiff;
+                  }
                 }
+                result = result.bool === true && result.difficulty <= maxDiff;
               }
-              result = result.bool === true && result.difficulty <= maxDiff;
+              // At depth > 0: leave result as SMBool object
             }
           } else {
             log(
