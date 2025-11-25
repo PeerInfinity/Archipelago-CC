@@ -209,9 +209,9 @@
           "timestamp": "2025-11-25T06:08:40.508260"
         }
       ],
-      "last_updated": "2025-11-25T06:13:39.768290"
+      "last_updated": "2025-11-25T20:10:44.979501"
     },
-    "last_updated": "2025-11-25T06:13:39.768288",
+    "last_updated": "2025-11-25T20:38:23.192730",
     "script_version": "1.0.0"
   },
   "results": {
@@ -35681,7 +35681,7 @@
         "success": true,
         "warning_count": 0
       },
-      "consecutive_passes_before_failure": 0,
+      "consecutive_passes_before_failure": 1,
       "consistency_tests": {
         "1": {
           "new_rules_hash": "a21bb6bb80b1cf706ce80a5af7e963b59fe077713e1f9bcf8ce0ca8e06deae39",
@@ -35724,8 +35724,8 @@
           "timestamp": "2025-11-25T06:08:27.019167"
         }
       },
-      "first_failure_reason": "Test failed at sphere 7.6",
-      "first_failure_seed": 1,
+      "first_failure_reason": "Test failed at sphere 6.13",
+      "first_failure_seed": 2,
       "game_name_from_filename": "smz3",
       "game_name_from_yaml": "SMZ3",
       "generation": {
@@ -35748,30 +35748,30 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 4.09,
+            "processing_time_seconds": 6.78,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/smz3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-            "size_bytes": 511961,
+            "size_bytes": 517516,
             "size_mb": 0.49
           },
           "seed": "1",
           "seed_id": "AP_14089154938208861744",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 27.18,
-            "return_code": 1,
-            "sphere_reached": 7.6,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 18.75,
+            "return_code": 0,
+            "sphere_reached": 16.2,
+            "success": true,
             "total_spheres": 16.2,
             "warning_count": 0
           },
           "template_filename": "SMZ3.yaml",
-          "timestamp": "2025-11-25T06:00:42.934544",
+          "timestamp": "2025-11-25T20:09:58.365225",
           "world_info": {
             "exporter_path": "exporter/games/smz3.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
@@ -35829,6 +35829,51 @@
           },
           "template_filename": "SMZ3.yaml",
           "timestamp": "2025-11-25T05:52:44.353909",
+          "world_info": {
+            "exporter_path": "exporter/games/smz3.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
+            "game_name_from_filename": "smz3",
+            "game_name_from_yaml": "SMZ3",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "world_directory": "smz3"
+          }
+        },
+        "2": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "smz3",
+          "game_name_from_yaml": "SMZ3",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.42,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/smz3/AP_01043188731678011336/AP_01043188731678011336_rules.json",
+            "size_bytes": 517511,
+            "size_mb": 0.49
+          },
+          "seed": "2",
+          "seed_id": "AP_01043188731678011336",
+          "spoiler_test": {
+            "error_count": 9,
+            "pass_fail": "failed",
+            "processing_time_seconds": 13.79,
+            "return_code": 1,
+            "sphere_reached": 6.13,
+            "success": false,
+            "total_spheres": 13.1,
+            "warning_count": 0
+          },
+          "template_filename": "SMZ3.yaml",
+          "timestamp": "2025-11-25T20:10:24.333094",
           "world_info": {
             "exporter_path": "exporter/games/smz3.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
@@ -35962,8 +36007,8 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 7,
-      "seeds_passed": 3,
+      "seeds_failed": 1,
+      "seeds_passed": 4,
       "spoiler_test": {
         "error_count": 8,
         "pass_fail": "failed",
@@ -35977,11 +36022,11 @@
       "summary": {
         "all_passed": false,
         "any_failed": true,
-        "failure_rate": 0.7
+        "failure_rate": 0.2
       },
       "template_filename": "SMZ3.yaml",
-      "timestamp": "2025-11-25T06:06:36.777887",
-      "total_seeds_tested": 10,
+      "timestamp": "2025-11-25T20:09:58.319957",
+      "total_seeds_tested": 5,
       "world_info": {
         "exporter_path": "exporter/games/smz3.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
@@ -42212,7 +42257,7 @@
         "success": true,
         "warning_count": 0
       },
-      "consecutive_passes_before_failure": 0,
+      "consecutive_passes_before_failure": 2,
       "consistency_tests": {
         "1": {
           "new_rules_hash": "dff99c4b7857253993365ecddaf2daefbc11743d523329f1a2ca0c1195e9710e",
@@ -42225,8 +42270,8 @@
           "timestamp": "2025-11-25T06:12:29.108635"
         }
       },
-      "first_failure_reason": "Test failed at sphere 3.1",
-      "first_failure_seed": 1,
+      "first_failure_reason": "Test failed at sphere 1.5",
+      "first_failure_seed": 3,
       "game_name_from_filename": "sm",
       "game_name_from_yaml": "Super Metroid",
       "generation": {
@@ -42249,30 +42294,120 @@
           "generation": {
             "error_count": 2,
             "error_type": null,
-            "processing_time_seconds": 15.3,
+            "processing_time_seconds": 26.75,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/sm/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-            "size_bytes": 554709,
-            "size_mb": 0.53
+            "size_bytes": 666950,
+            "size_mb": 0.64
           },
           "seed": "1",
           "seed_id": "AP_14089154938208861744",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 15.25,
-            "return_code": 1,
-            "sphere_reached": 3.1,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 14.84,
+            "return_code": 0,
+            "sphere_reached": 8.3,
+            "success": true,
             "total_spheres": 8.3,
             "warning_count": 0
           },
           "template_filename": "Super Metroid.yaml",
-          "timestamp": "2025-11-25T06:04:18.101947",
+          "timestamp": "2025-11-25T20:36:24.868561",
+          "world_info": {
+            "exporter_path": "exporter/games/sm.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
+            "game_name_from_filename": "sm",
+            "game_name_from_yaml": "Super Metroid",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "world_directory": "sm"
+          }
+        },
+        "2": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "sm",
+          "game_name_from_yaml": "Super Metroid",
+          "generation": {
+            "error_count": 2,
+            "error_type": null,
+            "processing_time_seconds": 25.8,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/sm/AP_01043188731678011336/AP_01043188731678011336_rules.json",
+            "size_bytes": 666925,
+            "size_mb": 0.64
+          },
+          "seed": "2",
+          "seed_id": "AP_01043188731678011336",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 14.8,
+            "return_code": 0,
+            "sphere_reached": 7.1,
+            "success": true,
+            "total_spheres": 7.1,
+            "warning_count": 0
+          },
+          "template_filename": "Super Metroid.yaml",
+          "timestamp": "2025-11-25T20:37:06.975566",
+          "world_info": {
+            "exporter_path": "exporter/games/sm.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
+            "game_name_from_filename": "sm",
+            "game_name_from_yaml": "Super Metroid",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "world_directory": "sm"
+          }
+        },
+        "3": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "sm",
+          "game_name_from_yaml": "Super Metroid",
+          "generation": {
+            "error_count": 2,
+            "error_type": null,
+            "processing_time_seconds": 25.79,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/sm/AP_84719271504320872445/AP_84719271504320872445_rules.json",
+            "size_bytes": 666935,
+            "size_mb": 0.64
+          },
+          "seed": "3",
+          "seed_id": "AP_84719271504320872445",
+          "spoiler_test": {
+            "error_count": 8,
+            "pass_fail": "failed",
+            "processing_time_seconds": 8.84,
+            "return_code": 1,
+            "sphere_reached": 1.5,
+            "success": false,
+            "total_spheres": 6.3,
+            "warning_count": 0
+          },
+          "template_filename": "Super Metroid.yaml",
+          "timestamp": "2025-11-25T20:37:48.064554",
           "world_info": {
             "exporter_path": "exporter/games/sm.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
@@ -42291,9 +42426,9 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "seed_range": "1",
-      "seeds_failed": 10,
-      "seeds_passed": 0,
+      "seed_range": "1-3",
+      "seeds_failed": 1,
+      "seeds_passed": 2,
       "spoiler_test": {
         "error_count": 8,
         "pass_fail": "failed",
@@ -42307,11 +42442,11 @@
       "summary": {
         "all_passed": false,
         "any_failed": true,
-        "failure_rate": 1.0
+        "failure_rate": 0.3333333333333333
       },
       "template_filename": "Super Metroid.yaml",
-      "timestamp": "2025-11-25T06:07:09.094408",
-      "total_seeds_tested": 10,
+      "timestamp": "2025-11-25T20:36:24.796548",
+      "total_seeds_tested": 3,
       "world_info": {
         "exporter_path": "exporter/games/sm.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",

@@ -330,7 +330,18 @@ export function knowsSimpleShortCharge(snapshot, staticData) {
 }
 
 export function knowsShortCharge(snapshot, staticData) {
-  return { bool: true, difficulty: 0 };
+  // ShortCharge ("Tight Short Charge") is DISABLED by default in VARIA
+  // Different from SimpleShortCharge which IS enabled by default
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('ShortCharge' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.ShortCharge;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+
+  // Default: disabled
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsMockball(snapshot, staticData) {
@@ -1098,8 +1109,29 @@ export function canPassLavaPitReverse(snapshot, staticData) {
 }
 
 export function canGrappleEscape(snapshot, staticData) {
-  // Escape using grapple beam
-  return haveItem(snapshot, staticData, 'Grapple');
+  // Multiple ways to escape:
+  // 1. SpaceJump
+  // 2. InfiniteBombJump + (heatProof OR Gravity OR Ice)
+  // 3. Grapple
+  // 4. SpeedBooster + (HiJump OR knowsShortCharge)
+  return wor(snapshot, staticData,
+    // SpaceJump
+    haveItem(snapshot, staticData, 'SpaceJump'),
+    // IBJ with heat protection or ice for the enemy
+    wand(snapshot, staticData,
+      canInfiniteBombJump(snapshot, staticData),
+      wor(snapshot, staticData,
+        heatProof(snapshot, staticData),
+        haveItem(snapshot, staticData, 'Gravity'),
+        haveItem(snapshot, staticData, 'Ice'))),
+    // Grapple
+    haveItem(snapshot, staticData, 'Grapple'),
+    // SpeedBooster + vertical assist
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'SpeedBooster'),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'HiJump'),
+        knowsShortCharge(snapshot, staticData))));
 }
 
 export function canClimbBottomRedTower(snapshot, staticData) {
@@ -2452,7 +2484,18 @@ export function knowsHiJumpGauntletAccess(snapshot, staticData) {
 }
 
 export function knowsHiJumpLessGauntletAccess(snapshot, staticData) {
-  return { bool: true, difficulty: 4 };
+  // HiJumpLessGauntletAccess is DISABLED by default in VARIA
+  // Requires tricky wall jumps without HiJump
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('HiJumpLessGauntletAccess' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.HiJumpLessGauntletAccess;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+
+  // Default: disabled
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsLowGauntlet(snapshot, staticData) {
@@ -2476,7 +2519,19 @@ export function knowsFrogSpeedwayWithoutSpeed(snapshot, staticData) {
 }
 
 export function knowsNorfairReserveDBoost(snapshot, staticData) {
-  return { bool: true, difficulty: 3 };
+  // NorfairReserveDBoost is DISABLED by default in VARIA
+  // Only enabled in expert, master, veteran, samus presets
+  // Check if knows settings override exists in staticData
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('NorfairReserveDBoost' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.NorfairReserveDBoost;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+
+  // Default: disabled
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsDoubleChamberWallJump(snapshot, staticData) {

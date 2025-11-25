@@ -676,7 +676,31 @@ class SMGameExportHandler(GenericGameExportHandler):
                         # Combine with region reachability check
                         # The location is accessible from this region IF:
                         # 1. The region is reachable (state.can_reach)
-                        # 2. The region's lambda requirements are met
+                        # 2. The region's lambda requirements pass evalSMBool check
+                        #
+                        # In Python: state.can_reach(region) AND self.evalSMBool(rule(smbm), maxDiff)
+                        # The AccessFrom rule returns an SMBool, which must be evaluated against maxDiff
+                        wrapped_expanded = {
+                            'type': 'helper',
+                            'name': 'evalSMBool',
+                            'args': [
+                                expanded,
+                                # maxDiff from state.smbm[player].maxDiff
+                                {
+                                    'type': 'attribute',
+                                    'object': {
+                                        'type': 'subscript',
+                                        'value': {
+                                            'type': 'attribute',
+                                            'object': {'type': 'name', 'name': 'state'},
+                                            'attr': 'smbm'
+                                        },
+                                        'index': {'type': 'constant', 'value': self.world.player if self.world else 1}
+                                    },
+                                    'attr': 'maxDiff'
+                                }
+                            ]
+                        }
                         combined_rule = {
                             'type': 'and',
                             'conditions': [
@@ -685,7 +709,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                                     'method': 'can_reach',
                                     'args': [{'type': 'constant', 'value': region_name}]
                                 },
-                                expanded
+                                wrapped_expanded
                             ]
                         }
                         region_rules.append(combined_rule)
@@ -1054,6 +1078,35 @@ class SMGameExportHandler(GenericGameExportHandler):
                     # Convert to helper call
                     print(f"[SM] Converting sm.{attr}(...) to helper call")
                     expanded_args = [self.expand_rule(arg) for arg in rule.get('args', [])]
+
+                    # Special handling for canHellRun with no args - add default arguments
+                    if attr == 'canHellRun' and not expanded_args:
+                        # Determine hell run type from context
+                        hellrun_type = 'MainUpperNorfair'  # Default
+                        mult = 1.0
+                        minE = 2
+
+                        if self._current_exit_context:
+                            exit_name = self._current_exit_context.lower()
+                            if 'ice' in exit_name or 'cathedral' in exit_name:
+                                hellrun_type = 'Ice'
+                            if 'bubble' in exit_name and 'cathedral' in exit_name:
+                                mult = 0.66
+                            logger.info(f"SM: canHellRun() converted with type={hellrun_type}, mult={mult} for exit '{self._current_exit_context}'")
+                        elif self._current_location_context:
+                            loc_name = self._current_location_context.lower()
+                            if 'ice' in loc_name:
+                                hellrun_type = 'Ice'
+                            logger.info(f"SM: canHellRun() converted with type={hellrun_type} for location '{self._current_location_context}'")
+                        else:
+                            logger.info(f"SM: canHellRun() converted with default type={hellrun_type}")
+
+                        expanded_args = [
+                            {'type': 'constant', 'value': hellrun_type},
+                            {'type': 'constant', 'value': mult},
+                            {'type': 'constant', 'value': minE}
+                        ]
+
                     return {'type': 'helper', 'name': attr, 'args': expanded_args}
 
         # Recursively process nested structures
