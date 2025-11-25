@@ -284,32 +284,40 @@ export function debugRuleEvaluation(manager, rule, depth = 0) {
       break;
 
     case 'helper':
+      // Evaluate args before passing to helper (similar to function call args at line 430)
+      const evaluatedHelperArgs = rule.args
+        ? rule.args.map((arg) => manager.evaluateRuleFromEngine(arg))
+        : [];
       const helperResult = manager.helpers.executeHelper(
         rule.name,
-        ...(rule.args || [])
+        ...evaluatedHelperArgs
       );
       log(
         'info',
-        `${indent}HELPER: ${rule.name}(${JSON.stringify(rule.args)}) - ${helperResult ? 'PASS' : 'FAIL'}`
+        `${indent}HELPER: ${rule.name}(${JSON.stringify(evaluatedHelperArgs)}) - ${helperResult ? 'PASS' : 'FAIL'}`
       );
       break;
 
     case 'state_method':
+      // Evaluate args before passing to state method (similar to function call args)
+      const evaluatedMethodArgs = rule.args
+        ? rule.args.map((arg) => manager.evaluateRuleFromEngine(arg))
+        : [];
       const methodResult = manager.helpers.executeStateMethod(
         rule.method,
-        ...(rule.args || [])
+        ...evaluatedMethodArgs
       );
       log(
         'info',
         `${indent}STATE METHOD: ${rule.method}(${JSON.stringify(
-          rule.args
+          evaluatedMethodArgs
         )}) - ${methodResult ? 'PASS' : 'FAIL'}`
       );
 
       // Special debug for can_reach which is often the source of problems
-      if (rule.method === 'can_reach' && rule.args && rule.args.length > 0) {
-        const targetRegion = rule.args[0];
-        const targetType = rule.args[1] || 'Region';
+      if (rule.method === 'can_reach' && evaluatedMethodArgs.length > 0) {
+        const targetRegion = evaluatedMethodArgs[0];
+        const targetType = evaluatedMethodArgs[1] || 'Region';
 
         if (targetType === 'Region') {
           log(

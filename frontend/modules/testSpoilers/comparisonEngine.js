@@ -83,11 +83,21 @@ export class ComparisonEngine {
     // logAccessibleLocationNames is an array of location names from the Python log.
     const staticData = this.stateManager.getStaticData();
 
+    // Count reachable regions for logging
+    const reachableRegions = Object.entries(currentWorkerSnapshot?.regionReachability || {})
+      .filter(([_, status]) => status === 'reachable')
+      .map(([name, _]) => name);
+
     logger.info(`[compareAccessibleLocations] Comparing for context:`, {
       context,
       workerSnapshotInventory:
         currentWorkerSnapshot?.inventory ? 'available' : 'not available',
       logAccessibleNamesCount: logAccessibleLocationNames.length,
+      reachableRegionsCount: reachableRegions.length,
+      // DEBUG: Show some inventory items
+      inventoryKeys: Object.keys(currentWorkerSnapshot?.inventory || {}).slice(0, 10),
+      // DEBUG: Show some reachable regions
+      sampleReachableRegions: reachableRegions.slice(0, 5),
       // currentWorkerSnapshot, // Avoid logging the whole snapshot unless necessary for deep debug
       // staticData, // Avoid logging whole staticData
     });
