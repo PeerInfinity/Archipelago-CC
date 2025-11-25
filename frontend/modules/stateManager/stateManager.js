@@ -16,6 +16,7 @@ import {
   detectGameFromWorldClass
 } from '../shared/gameLogic/gameLogicRegistry.js';
 import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { DEFAULT_PLAYER_ID, PlayerIdUtils } from '../shared/playerIdUtils.js';
 
 // Import universal logger for consistent logging across contexts
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
@@ -96,7 +97,7 @@ export class StateManager {
     // --- END Check ---
 
     // Player identification
-    this.playerSlot = 1; // Default player slot to 1 for single-player/offline
+    this.playerId = DEFAULT_PLAYER_ID; // Default player ID to '1' for single-player/offline
     this.team = 0; // Default team
 
     // Region and location data (Phase 3: Converted to Maps for O(1) lookups)
@@ -684,12 +685,12 @@ export class StateManager {
   }
 
   // Delegate can_reach methods to ReachabilityModule (Python API compatibility)
-  can_reach(target, type = 'Region', player = 1) {
-    return ReachabilityModule.can_reach(this, target, type, player);
+  can_reach(target, type = 'Region', playerId = null) {
+    return ReachabilityModule.can_reach(this, target, type, playerId);
   }
 
-  can_reach_region(region, player = null) {
-    return ReachabilityModule.can_reach_region(this, region, player);
+  can_reach_region(region, playerId = null) {
+    return ReachabilityModule.can_reach_region(this, region, playerId);
   }
 
   /**

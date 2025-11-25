@@ -3,6 +3,8 @@
  * Translated from worlds/celeste64/Rules.py
  */
 
+import { DEFAULT_PLAYER_ID } from '../../playerIdUtils.js';
+
 /**
  * Celeste 64 state management module
  */
@@ -60,7 +62,7 @@ export const helperFunctions = {
    */
   location_rule(snapshot, staticData, locationName) {
     // Get the appropriate logic mapping based on difficulty
-    const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+    const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
     const settings = staticData?.settings?.[playerSlot];
     const logicDifficulty = settings?.logic_difficulty || 'standard';
     const logicMappingKey = logicDifficulty === 'standard' ?
@@ -105,7 +107,7 @@ export const helperFunctions = {
    */
   region_connection_rule(snapshot, staticData, regionTuple) {
     // Get the appropriate logic mapping based on difficulty
-    const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+    const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
     const settings = staticData?.settings?.[playerSlot];
     const logicDifficulty = settings?.logic_difficulty || 'standard';
     const logicMappingKey = logicDifficulty === 'standard' ?
@@ -159,7 +161,7 @@ export const helperFunctions = {
    * @returns {boolean} True if goal is met
    */
   goal_rule(snapshot, staticData) {
-    const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+    const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
     const settings = staticData?.settings?.[playerSlot];
     const strawberriesRequired = settings?.strawberries_required || 0;
     const strawberryCount = snapshot?.inventory?.['Strawberry'] || 0;

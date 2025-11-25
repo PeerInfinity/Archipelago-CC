@@ -606,38 +606,75 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 obj = func.get('object')
                 method_name = func.get('attr')
 
-                # Handle GetLocation().ItemIs() pattern - convert to runtime helper call
+                # Handle GetLocation().ItemIs() pattern - evaluate at export time
                 # Pattern: GetLocation("location_name").ItemIs(ItemType.KeyPD, world)
                 # This checks if the item placed at a specific location matches a given type
-                # We can't resolve this at export time because items aren't placed yet,
-                # so we convert it to a helper call that will be evaluated at runtime
+                # Since items are already placed by export time, we can evaluate this statically
                 if (isinstance(obj, dict) and obj.get('type') == 'helper' and
                     (obj.get('name') == 'GetLocation' or obj.get('name') == 'smz3_GetLocation') and
                     method_name == 'ItemIs'):
 
-                    logger.debug("Converting GetLocation().ItemIs() to runtime helper call")
+                    logger.debug("Evaluating GetLocation().ItemIs() at export time")
 
-                    # Extract the location name and item type being checked
+                    # Extract the location name
                     get_location_args = obj.get('args', [])
-                    location_name_rule = None
+                    location_name = None
                     if get_location_args and len(get_location_args) > 0:
-                        location_name_rule = self.postprocess_rule(get_location_args[0])
+                        location_name_arg = get_location_args[0]
+                        # Extract the constant value if it's a constant rule
+                        if isinstance(location_name_arg, dict) and location_name_arg.get('type') == 'constant':
+                            location_name = location_name_arg.get('value')
+                        # Also check for string directly (shouldn't happen but be safe)
+                        elif isinstance(location_name_arg, str):
+                            location_name = location_name_arg
 
-                    # Process the ItemType argument
-                    item_type_rule = None
+                    # Extract the item type being checked
+                    item_type_name = None
                     if filtered_args and len(filtered_args) > 0:
                         item_type_arg = filtered_args[0]
                         # Handle ItemType.KeyPD pattern (attribute access) - extract just the attribute name
-                        if item_type_arg.get('type') == 'attribute':
-                            item_type_name = item_type_arg.get('attr')
-                            item_type_rule = {'type': 'constant', 'value': item_type_name}
-                        else:
-                            item_type_rule = self.postprocess_rule(item_type_arg)
+                        if isinstance(item_type_arg, dict):
+                            if item_type_arg.get('type') == 'attribute':
+                                item_type_name = item_type_arg.get('attr')
+                            elif item_type_arg.get('type') == 'constant':
+                                item_type_name = item_type_arg.get('value')
+
+                    # Try to evaluate ItemIs at export time using the location object
+                    if location_name and item_type_name and hasattr(self, '_current_location_object'):
+                        loc_obj = self._current_location_object
+
+                        # Get the region's GetLocation method to find the target location
+                        if hasattr(loc_obj, 'Region') and hasattr(loc_obj.Region, 'GetLocation'):
+                            try:
+                                target_location = loc_obj.Region.GetLocation(location_name)
+                                if target_location:
+                                    # Import ItemType enum to check against
+                                    from worlds.smz3.TotalSMZ3.Item import ItemType
+
+                                    # Get the ItemType enum value
+                                    item_type_enum = getattr(ItemType, item_type_name, None)
+
+                                    if item_type_enum is not None and hasattr(target_location, 'ItemIs'):
+                                        # Get the world object
+                                        world = loc_obj.Region.world if hasattr(loc_obj.Region, 'world') else None
+
+                                        if world:
+                                            # Evaluate ItemIs at export time!
+                                            result = target_location.ItemIs(item_type_enum, world)
+                                            logger.info(f"Evaluated GetLocation('{location_name}').ItemIs({item_type_name}) = {result}")
+                                            return {
+                                                'type': 'constant',
+                                                'value': result
+                                            }
+                            except Exception as e:
+                                logger.warning(f"Could not evaluate ItemIs at export time: {e}")
+
+                    # Fall back to runtime helper if we couldn't evaluate at export time
+                    logger.info(f"Falling back to runtime helper for GetLocation('{location_name}').ItemIs('{item_type_name}')")
+                    location_name_rule = {'type': 'constant', 'value': location_name} if location_name else None
+                    item_type_rule = {'type': 'constant', 'value': item_type_name} if item_type_name else None
 
                     if location_name_rule and item_type_rule:
-                        # Convert to a helper call pattern that evaluates:
-                        # smz3_GetLocation(location_name).ItemIs(item_type)
-                        # We need to restructure this as a function call that can be evaluated
                         return {
                             'type': 'function_call',
                             'function': {
@@ -845,15 +882,71 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             rule['conditions'] = [self.postprocess_rule(cond) for cond in rule['conditions']]
         elif rule.get('type') == 'or' and rule.get('conditions'):
             rule['conditions'] = [self.postprocess_rule(cond) for cond in rule['conditions']]
-        elif rule.get('type') == 'not' and rule.get('condition'):
-            rule['condition'] = self.postprocess_rule(rule['condition'])
-        elif rule.get('type') == 'conditional':
+
+        # Simplify conditional rules with constant false tests to use the if_false branch
+        # This handles the regressive accessibility issue where acquiring boss items
+        # would increase key requirements. We always use the minimum key requirement.
+        if rule.get('type') == 'conditional':
+            # First, recursively process nested rules
             if rule.get('test'):
                 rule['test'] = self.postprocess_rule(rule['test'])
             if rule.get('if_true'):
                 rule['if_true'] = self.postprocess_rule(rule['if_true'])
             if rule.get('if_false'):
                 rule['if_false'] = self.postprocess_rule(rule['if_false'])
+
+            # Now simplify based on the test value
+            test = rule.get('test')
+            if_true = rule.get('if_true')
+            if_false = rule.get('if_false')
+
+            # If test is constant false, use the if_false branch
+            if isinstance(test, dict) and test.get('type') == 'constant' and test.get('value') == False:
+                if if_false:
+                    return if_false  # Already processed
+            # If test is constant true, use the if_true branch
+            elif isinstance(test, dict) and test.get('type') == 'constant' and test.get('value') == True:
+                if if_true:
+                    return if_true  # Already processed
+            # If test is OR with constant false, simplify by removing the constant false
+            elif isinstance(test, dict) and test.get('type') == 'or':
+                conditions = test.get('conditions', [])
+                non_false_conditions = [c for c in conditions if not (isinstance(c, dict) and c.get('type') == 'constant' and c.get('value') == False)]
+                if len(non_false_conditions) == 0:
+                    # All conditions are false, use if_false branch
+                    if if_false:
+                        return if_false  # Already processed
+                elif len(non_false_conditions) == 1:
+                    # Only one non-false condition, simplify the test
+                    rule['test'] = non_false_conditions[0]  # Already processed
+                else:
+                    # Multiple non-false conditions, keep the OR but remove false ones
+                    rule['test'] = {
+                        'type': 'or',
+                        'conditions': non_false_conditions  # Already processed
+                    }
+
+            # Handle regressive accessibility: if both branches are numeric constants
+            # and the if_true value is GREATER than if_false, use the minimum value.
+            # This only applies to cases where acquiring items INCREASES the requirement
+            # (regressive accessibility), NOT cases where acquiring items DECREASES the
+            # requirement (normal gameplay behavior).
+            if (isinstance(if_true, dict) and if_true.get('type') == 'constant' and
+                isinstance(if_false, dict) and if_false.get('type') == 'constant'):
+                true_val = if_true.get('value')
+                false_val = if_false.get('value')
+                # Only apply to numeric values (key counts) where acquiring items
+                # INCREASES the requirement (true_val > false_val = regressive)
+                if isinstance(true_val, (int, float)) and isinstance(false_val, (int, float)):
+                    if true_val > false_val:
+                        # Regressive case: having items requires MORE keys
+                        # Use the minimum (false_val) to prevent locations becoming inaccessible
+                        logger.info(f"Simplified regressive conditional: using minimum value {false_val} instead of ({true_val} if test else {false_val})")
+                        return {'type': 'constant', 'value': false_val}
+                    # If true_val <= false_val, this is normal behavior (having items helps)
+                    # Keep the conditional as-is
+        elif rule.get('type') == 'not' and rule.get('condition'):
+            rule['condition'] = self.postprocess_rule(rule['condition'])
         elif rule.get('type') == 'compare':
             # Process both left and right sides of comparisons
             if rule.get('left'):

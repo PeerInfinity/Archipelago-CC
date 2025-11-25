@@ -1,11 +1,13 @@
 /**
  * Bomb Rush Cyberfunk helper functions
  * Translated from worlds/bomb_rush_cyberfunk/Rules.py
- * 
+ *
  * Note: This is a simplified implementation for initial testing.
  * The actual graffiti counting logic may be more complex and will need
  * refinement based on how items are represented in the game data.
  */
+
+import { DEFAULT_PLAYER_ID } from '../../playerIdUtils.js';
 
 // Basic helper function to count items
 function getItemCount(snapshot, itemName) {
@@ -455,7 +457,7 @@ function mataan_faux(snapshot, staticData, limit, glitched) {
 
 // Helper to get options from static data
 function getOptionsFromStaticData(snapshot, staticData) {
-    const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+    const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
     const settings = staticData?.settings?.[playerSlot];
     if (!settings) {
         return {

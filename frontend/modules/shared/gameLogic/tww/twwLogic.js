@@ -5,6 +5,8 @@
  * and helper functions from Macros.py.
  */
 
+import { DEFAULT_PLAYER_ID } from '../../playerIdUtils.js';
+
 // ============================================================================
 // Core Utility Functions
 // ============================================================================
@@ -34,7 +36,7 @@ export function has(snapshot, staticData, itemName, player, count = 1) {
   if (!snapshot.inventory) return false;
 
   // Get player slot
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   // Direct item check
   const itemCount = snapshot.inventory[itemName] || 0;
@@ -80,7 +82,7 @@ export function has(snapshot, staticData, itemName, player, count = 1) {
 export function count(snapshot, staticData, itemName, player) {
   if (!snapshot.inventory) return 0;
 
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
   const playerProgressionMapping = staticData?.progressionMapping?.[playerSlot] || staticData?.progressionMapping;
 
   // If the item itself is a base progressive item, return its direct count
@@ -149,7 +151,7 @@ export function hasAll(snapshot, staticData, itemNames, player) {
 export function hasGroupUnique(snapshot, staticData, groupName, player, countNeeded) {
   if (!snapshot.inventory) return false;
 
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   // Get the items data - check multiple possible locations
   const items = staticData?.itemsByPlayer?.[playerSlot] || staticData?.itemData || staticData?.items?.[playerSlot];
@@ -201,7 +203,7 @@ export function _tww_has_chart_for_island(snapshot, staticData, player, islandNu
  * Check if in required bosses mode
  */
 export function _tww_in_required_bosses_mode(snapshot, staticData, player) {
-  const playerSlot = player || '1';
+  const playerSlot = player || DEFAULT_PLAYER_ID;
   const settings = staticData?.settings?.[playerSlot];
   return settings?.logic_in_required_bosses_mode ?? false;
 }
@@ -217,7 +219,7 @@ export function _tww_outside_required_bosses_mode(snapshot, staticData, player) 
  * Check if in swordless mode
  */
 export function _tww_in_swordless_mode(snapshot, staticData, player) {
-  const playerSlot = player || '1';
+  const playerSlot = player || DEFAULT_PLAYER_ID;
   const settings = staticData?.settings?.[playerSlot];
   return settings?.logic_in_swordless_mode ?? false;
 }
@@ -233,7 +235,7 @@ export function _tww_outside_swordless_mode(snapshot, staticData, player) {
  * Check if obscure logic level 1 is enabled
  */
 export function _tww_obscure_1(snapshot, staticData, player) {
-  const playerSlot = player || '1';
+  const playerSlot = player || DEFAULT_PLAYER_ID;
   const settings = staticData?.settings?.[playerSlot];
   return settings?.logic_obscure_1 ?? false;
 }
@@ -242,7 +244,7 @@ export function _tww_obscure_1(snapshot, staticData, player) {
  * Check if obscure logic level 2 is enabled
  */
 export function _tww_obscure_2(snapshot, staticData, player) {
-  const playerSlot = player || '1';
+  const playerSlot = player || DEFAULT_PLAYER_ID;
   const settings = staticData?.settings?.[playerSlot];
   return settings?.logic_obscure_2 ?? false;
 }
@@ -251,7 +253,7 @@ export function _tww_obscure_2(snapshot, staticData, player) {
  * Check if obscure logic level 3 is enabled
  */
 export function _tww_obscure_3(snapshot, staticData, player) {
-  const playerSlot = player || '1';
+  const playerSlot = player || DEFAULT_PLAYER_ID;
   const settings = staticData?.settings?.[playerSlot];
   return settings?.logic_obscure_3 ?? false;
 }
@@ -260,7 +262,7 @@ export function _tww_obscure_3(snapshot, staticData, player) {
  * Check if precise logic level 1 is enabled
  */
 export function _tww_precise_1(snapshot, staticData, player) {
-  const playerSlot = player || '1';
+  const playerSlot = player || DEFAULT_PLAYER_ID;
   const settings = staticData?.settings?.[playerSlot];
   return settings?.logic_precise_1 ?? false;
 }
@@ -269,7 +271,7 @@ export function _tww_precise_1(snapshot, staticData, player) {
  * Check if precise logic level 2 is enabled
  */
 export function _tww_precise_2(snapshot, staticData, player) {
-  const playerSlot = player || '1';
+  const playerSlot = player || DEFAULT_PLAYER_ID;
   const settings = staticData?.settings?.[playerSlot];
   return settings?.logic_precise_2 ?? false;
 }
@@ -278,7 +280,7 @@ export function _tww_precise_2(snapshot, staticData, player) {
  * Check if precise logic level 3 is enabled
  */
 export function _tww_precise_3(snapshot, staticData, player) {
-  const playerSlot = player || '1';
+  const playerSlot = player || DEFAULT_PLAYER_ID;
   const settings = staticData?.settings?.[playerSlot];
   return settings?.logic_precise_3 ?? false;
 }
@@ -287,7 +289,7 @@ export function _tww_precise_3(snapshot, staticData, player) {
  * Check if rematch bosses are skipped
  */
 export function _tww_rematch_bosses_skipped(snapshot, staticData, player) {
-  const playerSlot = player || '1';
+  const playerSlot = player || DEFAULT_PLAYER_ID;
   const settings = staticData?.settings?.[playerSlot];
   return settings?.logic_rematch_bosses_skipped ?? false;
 }
@@ -296,7 +298,7 @@ export function _tww_rematch_bosses_skipped(snapshot, staticData, player) {
  * Check if tuner logic is enabled
  */
 export function _tww_tuner_logic_enabled(snapshot, staticData, player) {
-  const playerSlot = player || '1';
+  const playerSlot = player || DEFAULT_PLAYER_ID;
   const settings = staticData?.settings?.[playerSlot];
   return settings?.logic_tuner_logic_enabled ?? false;
 }

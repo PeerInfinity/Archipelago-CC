@@ -11,6 +11,8 @@
  * backend's calculations encoded in the sphere log.
  */
 
+import { DEFAULT_PLAYER_ID } from '../../playerIdUtils.js';
+
 /**
  * Check if player has an item
  * @param {Object} snapshot - Canonical state snapshot
@@ -726,7 +728,7 @@ export function getDmgReduction(snapshot, staticData, envDmg = true) {
   const hasGravity = has(snapshot, staticData, 'Gravity');
 
   // Get player settings - try both snapshot.playerId and default to '1'
-  const playerId = snapshot?.playerId || '1';
+  const playerId = snapshot?.playerId || DEFAULT_PLAYER_ID;
   const playerSettings = staticData?.settings?.[playerId] || {};
   const romPatches = playerSettings.romPatches || {};
 
@@ -769,7 +771,7 @@ export function getDmgReduction(snapshot, staticData, envDmg = true) {
  */
 export function energyReserveCountOkHardRoom(snapshot, staticData, roomName, mult = 1.0) {
   // Get player settings - try both snapshot.playerId and default to '1'
-  const playerId = snapshot?.playerId || '1';
+  const playerId = snapshot?.playerId || DEFAULT_PLAYER_ID;
   const playerSettings = staticData?.settings?.[playerId] || {};
   const hardRooms = playerSettings.hardRooms || {};
   const difficulties = hardRooms[roomName];

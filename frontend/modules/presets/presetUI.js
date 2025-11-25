@@ -1,5 +1,6 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import eventBus from '../../app/core/eventBus.js';
+import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 
 
 // Helper function for logging with fallback
@@ -532,7 +533,7 @@ export class PresetUI {
       )
     ) {
       // This is a rough way to check, ideally jsonData structure would be validated.
-      const playerId = '1'; // Default or determine from JSON if possible (e.g., if not multiworld)
+      const playerId = DEFAULT_PLAYER_ID; // Default or determine from JSON if possible (e.g., if not multiworld)
       // We need a way to call the core logic of loadRulesFile without assuming a preset structure.
       // This might involve refactoring parts of loadRulesFile or creating a new shared method.
       log('info', 
@@ -543,7 +544,7 @@ export class PresetUI {
     }
   }
 
-  async processManuallyLoadedRules(rulesData, fileName, playerId = '1') {
+  async processManuallyLoadedRules(rulesData, fileName, playerId = DEFAULT_PLAYER_ID) {
     log('info', 
       `Processing manually loaded rules: ${fileName} for player ${playerId}`
     );
@@ -763,7 +764,7 @@ export class PresetUI {
     }
   }
 
-  async loadRulesFile(gameDirectory, seedName, rulesFile, playerId = '1') {
+  async loadRulesFile(gameDirectory, seedName, rulesFile, playerId = DEFAULT_PLAYER_ID) {
     const fullPath = `./presets/${gameDirectory}/${seedName}/${rulesFile}`;
     log('info', `Loading rules file: ${fullPath}`);
     try {

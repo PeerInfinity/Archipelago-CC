@@ -3,6 +3,8 @@
  * These pure functions operate on a canonical state object
  */
 
+import { DEFAULT_PLAYER_ID } from '../../playerIdUtils.js';
+
 /**
  * Check if player can use an entrance
  * @param {Object} snapshot - Canonical state snapshot
@@ -31,7 +33,7 @@ export function lingo_can_use_entrance(snapshot, staticData, room, door) {
   const doorName = door[1];
 
   // Get player ID from snapshot (usually 1 for single-player)
-  const playerId = snapshot?.playerId || '1';
+  const playerId = snapshot?.playerId || DEFAULT_PLAYER_ID;
   const settings = staticData?.settings?.[playerId];
 
   // First, check if this door has access requirements
@@ -79,7 +81,7 @@ export function lingo_can_use_location(snapshot, staticData, location) {
  * @returns {boolean} True if player has achieved mastery
  */
 export function lingo_can_use_mastery_location(snapshot, staticData) {
-  const playerId = snapshot?.playerId || '1';
+  const playerId = snapshot?.playerId || DEFAULT_PLAYER_ID;
   const settings = staticData?.settings?.[playerId];
 
   if (!settings) {
@@ -135,7 +137,7 @@ export function _lingo_can_satisfy_requirements(snapshot, staticData, access) {
     return true;
   }
 
-  const playerId = snapshot?.playerId || '1';
+  const playerId = snapshot?.playerId || DEFAULT_PLAYER_ID;
 
   // Check room requirements - all required rooms must be reachable
   if (access.rooms && access.rooms.length > 0) {
@@ -222,7 +224,7 @@ export function _lingo_can_satisfy_requirements(snapshot, staticData, access) {
  * @returns {boolean} True if the door can be opened
  */
 function _lingo_can_open_door(snapshot, staticData, room, door) {
-  const playerId = snapshot?.playerId || '1';
+  const playerId = snapshot?.playerId || DEFAULT_PLAYER_ID;
   const settings = staticData?.settings?.[playerId];
 
   // First, check if this door has access requirements
@@ -256,7 +258,7 @@ function _lingo_can_open_door(snapshot, staticData, room, door) {
  * @returns {boolean} True if LEVEL 2 can be accessed
  */
 export function lingo_can_use_level_2_location(snapshot, staticData) {
-  const playerId = snapshot?.playerId || '1';
+  const playerId = snapshot?.playerId || DEFAULT_PLAYER_ID;
   const settings = staticData?.settings?.[playerId];
 
   if (!settings) {

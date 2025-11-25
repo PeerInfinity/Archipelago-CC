@@ -185,6 +185,7 @@
 import { evaluateRule } from './ruleEngine.js';
 import { getGameLogic } from './gameLogic/gameLogicRegistry.js';
 import { helperFunctions as genericLogic } from './gameLogic/generic/genericLogic.js';
+import { DEFAULT_PLAYER_ID } from './playerIdUtils.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -235,7 +236,8 @@ function getStateMethods(gameName) {
 export function createStateSnapshotInterface(
   snapshot,
   staticData,
-  contextVariables = {}
+  contextVariables = {},
+  stateManager = null
 ) {
   // Legacy snapshotHelpersInstance removed - using agnostic helpers directly
   const gameName = staticData?.game_name || snapshot?.game; // Get game name from static data or snapshot
@@ -302,7 +304,7 @@ export function createStateSnapshotInterface(
           // In Python rules, 'self' refers to the game's rules class instance
           // which has attributes like nerf_roc_wing from the world options
           // We return the settings for the current player from staticData
-          const selfPlayerId = snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || '1';
+          const selfPlayerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
           return staticData?.settings?.[selfPlayerId] || staticData?.settings || {};
         case 'regions':
           return staticData?.regions;
@@ -316,10 +318,10 @@ export function createStateSnapshotInterface(
         case 'dungeons':
           return staticData?.dungeons;
         case 'player':
-          return snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || '1';
+          return snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
         case 'world':
           // Return an object with player and options properties
-          const playerId = snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || '1';
+          const playerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
           return {
             player: playerId,
             options: staticData?.settings?.[playerId] || staticData?.settings || {}
@@ -342,7 +344,7 @@ export function createStateSnapshotInterface(
           return undefined;
         default:
           // Check if this is a game-specific variable (e.g., required_technologies for Factorio)
-          const currentPlayerId = snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || '1';
+          const currentPlayerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
           if (staticData?.game_info?.[currentPlayerId]?.variables && staticData.game_info[currentPlayerId].variables[name]) {
             return staticData.game_info[currentPlayerId].variables[name];
           }
@@ -408,15 +410,15 @@ export function createStateSnapshotInterface(
         return 0;
       }
       let count = 0;
-      const playerSlot = snapshot?.player?.slot || '1'; // Default to '1' if not specified
+      const playerId = snapshot?.player?.id || snapshot?.player?.slot || DEFAULT_PLAYER_ID;
 
       // First check if we have item_groups (ALTTP-style with group names as array)
-      const playerItemGroups = staticData?.item_groups?.[playerSlot] || staticData?.item_groups;
+      const playerItemGroups = staticData?.item_groups?.[playerId] || staticData?.item_groups;
 
       if (Array.isArray(playerItemGroups)) {
         // ALTTP uses array of group names
         // This logic assumes staticData.itemsByPlayer is available and structured per player
-        const playerItemsData = staticData.itemsByPlayer && staticData.itemsByPlayer[playerSlot];
+        const playerItemsData = staticData.itemsByPlayer && staticData.itemsByPlayer[playerId];
         if (playerItemsData) {
           for (const itemName in playerItemsData) {
             if (playerItemsData[itemName]?.groups?.includes(groupName)) {
@@ -425,7 +427,7 @@ export function createStateSnapshotInterface(
             }
           }
         } else {
-          log('error', `[countGroup] playerItemsData not found for player ${playerSlot}. staticData.itemsByPlayer:`, staticData?.itemsByPlayer);
+          log('error', `[countGroup] playerItemsData not found for player ${playerId}. staticData.itemsByPlayer:`, staticData?.itemsByPlayer);
         }
       } else if (
         typeof playerItemGroups === 'object' &&
@@ -438,7 +440,7 @@ export function createStateSnapshotInterface(
         }
       } else if (staticData?.groups) {
         // Fallback to old groups structure if available
-        const playerGroups = staticData.groups[playerSlot] || staticData.groups;
+        const playerGroups = staticData.groups[playerId] || staticData.groups;
         if (
           typeof playerGroups === 'object' &&
           playerGroups[groupName] &&
@@ -455,6 +457,14 @@ export function createStateSnapshotInterface(
       !!(snapshot?.flags && snapshot.flags.includes(flagName)),
     getSetting: (settingName) => snapshot?.settings?.[settingName],
     isRegionReachable: (regionName) => {
+      // During BFS (when stateManager is provided and _computing is true),
+      // check the LIVE knownReachableRegions being built, not the frozen snapshot.
+      // This allows circular dependencies to resolve as BFS progresses.
+      if (stateManager && stateManager._computing && stateManager.knownReachableRegions) {
+        return stateManager.knownReachableRegions.has(regionName);
+      }
+
+      // Otherwise, use the frozen snapshot data
       const status = snapshot?.regionReachability?.[regionName];
       if (status === 'reachable' || status === 'checked') return true;
       if (status === 'unreachable') return false;
@@ -719,14 +729,14 @@ export function createStateSnapshotInterface(
         if (typeof groupName !== 'string') return false;
         if (typeof requiredCount !== 'number' || requiredCount < 0) return false;
 
-        const playerSlot = snapshot?.player?.slot || '1';
-        const playerItemGroups = staticData?.item_groups?.[playerSlot] || staticData?.item_groups;
+        const playerId = snapshot?.player?.id || snapshot?.player?.slot || DEFAULT_PLAYER_ID;
+        const playerItemGroups = staticData?.item_groups?.[playerId] || staticData?.item_groups;
 
         let uniqueItemsFound = 0;
 
         if (Array.isArray(playerItemGroups)) {
           // ALTTP-style with group names as array
-          const playerItemsData = staticData.itemsByPlayer && staticData.itemsByPlayer[playerSlot];
+          const playerItemsData = staticData.itemsByPlayer && staticData.itemsByPlayer[playerId];
           if (playerItemsData) {
             for (const itemName in playerItemsData) {
               if (playerItemsData[itemName]?.groups?.includes(groupName)) {
@@ -757,7 +767,7 @@ export function createStateSnapshotInterface(
           }
         } else if (staticData?.groups) {
           // Fallback to old groups structure if available
-          const playerGroups = staticData.groups[playerSlot] || staticData.groups;
+          const playerGroups = staticData.groups[playerId] || staticData.groups;
           if (
             typeof playerGroups === 'object' &&
             playerGroups[groupName] &&

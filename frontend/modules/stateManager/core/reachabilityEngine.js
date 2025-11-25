@@ -1,3 +1,5 @@
+import { PlayerIdUtils } from '../../shared/playerIdUtils.js';
+
 /**
  * StateManager Reachability Engine Module
  *
@@ -664,34 +666,35 @@ export function getAllPaths(sm) {
  * @param {Object} sm - StateManager instance
  * @param {string} target - Name of the region/location/entrance
  * @param {string} type - Type: 'Region', 'Location', or 'Entrance'
- * @param {number} player - Player number (must match sm.playerSlot)
+ * @param {string|number|null} playerId - Player ID (defaults to sm.playerId if null)
  * @returns {boolean} True if target can be reached
  */
-export function can_reach(sm, target, type = 'Region', player = 1) {
-  // The context-aware state manager handles position-specific constraints correctly
-  if (player !== sm.playerSlot) {
-    sm._logDebug(`[ReachabilityEngine] can_reach check for wrong player (${player})`);
-    return false;
+export function can_reach(sm, target, type = 'Region', playerId = null) {
+  // Normalize player ID for comparison
+  const requestedPlayerId = PlayerIdUtils.normalize(playerId || sm.playerId);
+  const currentPlayerId = PlayerIdUtils.normalize(sm.playerId);
+
+  // Log warning if checking for different player, but continue with reachability check
+  // (Option 4 from investigation: warn but continue instead of failing)
+  if (requestedPlayerId !== currentPlayerId) {
+    sm._logDebug(`[ReachabilityEngine] can_reach check for different player (requested: ${requestedPlayerId}, current: ${currentPlayerId}) - continuing with current player's reachability`);
   }
 
   if (type === 'Region') {
     return isRegionReachable(sm, target);
   } else if (type === 'Location') {
     // Find the location object
-    // TODO PHASE 3: When locations becomes Map, use: sm.locations.get(target)
     const location = sm.locations.get(target);
     return location && isLocationAccessible(sm, location);
   } else if (type === 'Entrance') {
     // Find the entrance across all regions
-    // TODO PHASE 3: When regions becomes Map, use: for (const [regionName, regionData] of sm.regions.entries())
     for (const [regionName, regionData] of sm.regions.entries()) {
-      
+
       if (regionData.exits) {
         const exit = regionData.exits.find((e) => e.name === target);
         if (exit) {
           const snapshotInterface = sm._createSelfSnapshotInterface();
           // Set parent_region context for exit evaluation - needs to be the region object, not just the name
-          // TODO PHASE 3: When regions becomes Map, use: sm.regions.get(regionName)
           snapshotInterface.parent_region = regionData;
           // Set currentExit so get_entrance can detect self-references
           snapshotInterface.currentExit = exit.name;
@@ -717,9 +720,9 @@ export function can_reach(sm, target, type = 'Region', player = 1) {
  *
  * @param {Object} sm - StateManager instance
  * @param {string} region - Region name to check
- * @param {number} player - Player number (defaults to sm.playerSlot)
+ * @param {string|number|null} playerId - Player ID (defaults to sm.playerId if null)
  * @returns {boolean} True if region is reachable
  */
-export function can_reach_region(sm, region, player = null) {
-  return can_reach(sm, region, 'Region', player || sm.playerSlot);
+export function can_reach_region(sm, region, playerId = null) {
+  return can_reach(sm, region, 'Region', playerId || sm.playerId);
 }

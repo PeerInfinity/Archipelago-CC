@@ -32,6 +32,7 @@ import { evaluateRule } from '../shared/ruleEngine.js';
 import { STATE_MANAGER_COMMANDS } from './stateManagerCommands.js'; // Import shared commands
 import { helperFunctions as alttpLogic } from '../shared/gameLogic/alttp/alttpLogic.js';
 import { helperFunctions as genericLogic } from '../shared/gameLogic/generic/genericLogic.js';
+import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -1815,7 +1816,7 @@ export class StateManagerProxy {
     // initialConfig might contain rulesConfig (as data), gameName, etc.
     this.initialConfig = {
       rulesData: initialConfig.rulesConfig, // Expects rulesConfig to be the actual rules JSON object
-      playerId: initialConfig.playerId || '1', // ADDED: Store and use playerId from initialConfig
+      playerId: initialConfig.playerId || DEFAULT_PLAYER_ID, // Store and use playerId from initialConfig
       rulesUrl: null, // Explicitly null if rulesData is provided; worker will prioritize rulesData
       eventsConfig: initialConfig.eventsConfig, // Pass through if provided
       settings: initialConfig.settings, // Pass through if provided

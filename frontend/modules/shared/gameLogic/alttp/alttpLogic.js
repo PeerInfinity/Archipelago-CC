@@ -1,3 +1,5 @@
+import { DEFAULT_PLAYER_ID } from '../../playerIdUtils.js';
+
 /**
  * @module gameLogic/alttp/alttpLogic
  * @description Thread-agnostic ALTTP game logic functions
@@ -120,7 +122,7 @@ export function has(snapshot, staticData, itemName) {
   // Check progressive items
   if (staticData && staticData.progressionMapping) {
     // Get player-specific progression mapping (progression_mapping is organized by player slot)
-    const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+    const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
     // Convert playerSlot to string for reliable object key access (handles both numeric and string slots)
     const playerSlotKey = String(playerSlot);
     const playerProgressionMapping = staticData.progressionMapping[playerSlotKey] || staticData.progressionMapping;
@@ -175,7 +177,7 @@ export function count(snapshot, staticData, itemName) {
   if (!snapshot.inventory) return 0;
 
   // Get player-specific progression mapping (progression_mapping is organized by player slot)
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
   // Convert playerSlot to string for reliable object key access (handles both numeric and string slots)
   const playerSlotKey = String(playerSlot);
   const playerProgressionMapping = staticData?.progressionMapping?.[playerSlotKey] || staticData?.progressionMapping;
@@ -264,7 +266,7 @@ export function can_light_torches(snapshot, staticData) {
 }
 
 export function can_melt_things(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
   return has(snapshot, staticData, 'Fire Rod') ||
     (has(snapshot, staticData, 'Bombos') &&
       (has_sword(snapshot, staticData) || staticData.settings?.[playerSlot]?.swordless));
@@ -279,7 +281,7 @@ export function can_dash(snapshot, staticData) {
 }
 
 export function is_invincible(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
   return has(snapshot, staticData, 'Cape') ||
     has(snapshot, staticData, 'Cane of Byrna') ||
     staticData.settings?.[playerSlot]?.goal === GOAL_TRIFORCE_HUNT;
@@ -324,7 +326,7 @@ export function can_extend_magic(snapshot, staticData, smallmagic, fullrefill) {
   if (can_buy_unlimited(snapshot, staticData, 'Green Potion') ||
     can_buy_unlimited(snapshot, staticData, 'Blue Potion')) {
     const bottles = bottle_count(snapshot, staticData);
-    const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+    const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
     const functionality = staticData.settings?.[playerSlot]?.item_functionality || 'normal';
 
     if (functionality === 'hard' && !needsFullRefill) {
@@ -359,7 +361,7 @@ export function can_extend_magic(snapshot, staticData, smallmagic, fullrefill) {
  */
 export function can_kill_most_things(snapshot, staticData, enemyCount) {
   const enemies = parseInt(enemyCount, 10) || 5;
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   // Check if enemy shuffle is enabled
   const enemyShuffle = staticData.settings?.[playerSlot]?.enemy_shuffle;
@@ -399,7 +401,7 @@ export function can_shoot_silver_arrows(snapshot, staticData) {
 }
 
 export function can_defeat_ganon(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   if (has(snapshot, staticData, 'Triforce')) {
     return true;
@@ -421,7 +423,7 @@ export function can_defeat_boss(snapshot, staticData, locationName, bossType) {
 }
 
 export function can_take_damage(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   // Check if the game settings allow taking damage
   // Default is true unless explicitly set to false in settings
@@ -454,7 +456,7 @@ export function can_take_damage(snapshot, staticData) {
  * can_use_bombs(snapshot, staticData, "20") // Can use 20 bombs (needs upgrades)
  */
 export function can_use_bombs(snapshot, staticData, quantity) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   const bombsNeeded = parseInt(quantity, 10) || 1;
 
@@ -542,7 +544,7 @@ export function can_buy_unlimited(snapshot, staticData, shopItemName) {
  * can_hold_arrows(snapshot, staticData, "40") // Needs arrow upgrades
  */
 export function can_hold_arrows(snapshot, staticData, arrowCount) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   const quantity = parseInt(arrowCount, 10) || 0;
 
@@ -582,7 +584,7 @@ export function can_get_good_bee(snapshot, staticData) {
 }
 
 export function can_retrieve_tablet(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   return has(snapshot, staticData, 'Book of Mudora') &&
     (has_beam_sword(snapshot, staticData) ||
@@ -686,7 +688,7 @@ export function has_rod(snapshot, staticData) {
  * bottle_count(snapshot, staticData) // Returns 0-4 (depending on limit)
  */
 export function bottle_count(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   // Get bottle limit from difficulty requirements in settings
   const diffReqs = staticData.settings?.[playerSlot]?.difficulty_requirements || {};
@@ -710,7 +712,7 @@ export function can_bomb_clip(snapshot, staticData) {
 }
 
 export function can_spin_speed(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   return has(snapshot, staticData, 'Pegasus Boots') &&
     has_sword(snapshot, staticData) &&
@@ -718,14 +720,14 @@ export function can_spin_speed(snapshot, staticData) {
 }
 
 export function can_boots_clip_lw(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   return has(snapshot, staticData, 'Pegasus Boots') &&
     staticData.settings?.[playerSlot]?.mode === 'minor_glitches';
 }
 
 export function can_boots_clip_dw(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   return has(snapshot, staticData, 'Pegasus Boots') &&
     has(snapshot, staticData, 'Moon Pearl') &&
@@ -749,13 +751,13 @@ export function can_complete_gt_climb(snapshot, staticData) {
 // ============================================================================
 
 export function has_misery_mire_medallion(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
   const medallion = staticData.settings?.[playerSlot]?.misery_mire_medallion || 'Ether';
   return has(snapshot, staticData, medallion);
 }
 
 export function has_turtle_rock_medallion(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
   const medallion = staticData.settings?.[playerSlot]?.turtle_rock_medallion || 'Quake';
   return has(snapshot, staticData, medallion);
 }
@@ -782,7 +784,7 @@ export function has_turtle_rock_medallion(snapshot, staticData) {
  * can_shoot_arrows(snapshot, staticData, "40") // Needs bow + 40 arrow capacity
  */
 export function can_shoot_arrows(snapshot, staticData, arrowCount) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   const count_param = parseInt(arrowCount, 10) || 0;
 
@@ -805,7 +807,7 @@ export function can_shoot_arrows(snapshot, staticData, arrowCount) {
 }
 
 export function has_triforce_pieces(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   // Get required count from world settings
   const requiredCount = staticData.settings?.[playerSlot]?.treasure_hunt_required ||
@@ -861,7 +863,7 @@ export function location_item_name(snapshot, staticData, locationName) {
 
   // Search through regions for the location
   if (staticData && staticData.regions) {
-    const playerSlot = snapshot.player?.slot || '1';
+    const playerSlot = snapshot.player?.id || snapshot.player?.slot || DEFAULT_PLAYER_ID;
 
     // staticData.regions is always a Map after initialization
     if (!staticData.regions) return null;
@@ -957,7 +959,7 @@ export function item_name_in_location_names(snapshot, staticData, searchItem, lo
 
 
 export function has_crystals_for_ganon(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   // Check if player has required number of crystals for Ganon
   // The required number comes from settings
@@ -968,7 +970,7 @@ export function has_crystals_for_ganon(snapshot, staticData) {
 }
 
 export function GanonDefeatRule(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   const isSwordless = staticData.settings?.[playerSlot]?.swordless ||
     (snapshot.flags && snapshot.flags.includes('swordless'));
@@ -1010,7 +1012,7 @@ export function GanonDefeatRule(snapshot, staticData) {
 }
 
 export function can_get_glitched_speed_dw(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   if (!has(snapshot, staticData, 'Pegasus Boots')) {
     return false;
@@ -1049,7 +1051,7 @@ export function cross_peg_bridge(snapshot, staticData) {
 
 // Update existing can_extend_magic to match Python implementation
 export function can_extend_magic_complex(snapshot, staticData, magicSpec) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   const smallmagic = parseInt(magicSpec, 10) || 16;
   const fullrefill = magicSpec?.includes('fullrefill') || false;
@@ -1101,7 +1103,7 @@ export function can_extend_magic_complex(snapshot, staticData, magicSpec) {
  * heart_count(snapshot, staticData) // Returns 3-13+ depending on items and limits
  */
 export function heart_count(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   // Get difficulty requirements from settings
   const diffReqs = staticData.settings?.[playerSlot]?.difficulty_requirements || {};
@@ -1128,7 +1130,7 @@ export function enhanceLocationsWithShopData(snapshot, staticData) {
 }
 
 export function can_revival_fairy_shop(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   const hasBottle = count(snapshot, staticData, 'Bottle') > 0;
   const minorGlitches = staticData.settings?.[playerSlot]?.mode === 'minor_glitches' ||
@@ -1142,7 +1144,7 @@ export function countGroup(snapshot, staticData, groupName) {
   if (!snapshot?.inventory) return 0;
 
   // Get player-specific item data
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
   const itemsData = staticData?.itemsByPlayer?.[playerSlot] || staticData?.itemData || staticData?.items?.[playerSlot];
 
   if (!itemsData) return 0;
@@ -1263,7 +1265,7 @@ export function can_waterwalk(snapshot, staticData) {
 }
 
 export function can_reach_light_world(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   // Check if light world is accessible
   const gameMode = staticData.settings?.[playerSlot]?.mode || staticData.settings?.[playerSlot]?.game_mode || 'standard';
@@ -1275,7 +1277,7 @@ export function can_reach_light_world(snapshot, staticData) {
 }
 
 export function can_reach_dark_world(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   // Check if dark world is accessible
   const gameMode = staticData.settings?.[playerSlot]?.mode || staticData.settings?.[playerSlot]?.game_mode || 'standard';
@@ -1290,7 +1292,7 @@ export function can_reach_dark_world(snapshot, staticData) {
 }
 
 export function open_mode(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   // Check if this is open mode (affects certain accessibility rules)
   return staticData.settings?.[playerSlot]?.mode === 'open' ||
@@ -1298,7 +1300,7 @@ export function open_mode(snapshot, staticData) {
 }
 
 export function swordless_mode(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
   // Check if this is swordless mode
   return staticData.settings?.[playerSlot]?.swordless === true ||

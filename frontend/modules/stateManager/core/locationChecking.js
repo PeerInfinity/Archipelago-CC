@@ -125,8 +125,8 @@ export function checkLocation(sm, locationName, addItems = true) {
 
           // Check if item is for a different player (multiworld)
           const itemPlayerId = location.item.player;
-          const currentPlayerId = sm.playerSlot;
-          const isCrossPlayerItem = itemPlayerId !== undefined && itemPlayerId !== currentPlayerId;
+          const currentPlayerId = sm.playerId;
+          const isCrossPlayerItem = itemPlayerId !== undefined && String(itemPlayerId) !== String(currentPlayerId);
 
           if (isCrossPlayerItem) {
             sm._logDebug(
