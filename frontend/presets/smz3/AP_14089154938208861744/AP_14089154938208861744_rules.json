@@ -17590,6 +17590,7 @@
       "game": "SMZ3",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
+      "allow_regressive_accessibility_mismatches": true,
       "reward_regions": {
         "Castle Tower": {
           "reward_type": 1,

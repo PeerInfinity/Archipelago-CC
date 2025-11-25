@@ -117,9 +117,24 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
         This exports which reward (pendant/crystal) is assigned to which dungeon,
         which is necessary for evaluating CanAcquire() rules.
+
+        Also exports allow_regressive_accessibility_mismatches setting to handle
+        the semantic difference between Python's cumulative sphere calculation
+        and the frontend's real-time rule evaluation for anti-softlock key logic.
         """
         # Get base settings from parent class
         settings = super().get_settings_data(world, multiworld, player)
+
+        # SMZ3 has anti-softlock logic where acquiring certain items (Bow+Hammer+Lamp)
+        # INCREASES the key requirements for Palace of Darkness locations. This creates
+        # a semantic mismatch:
+        # - Python sphere calculation: Cumulative (once accessible, always accessible)
+        # - Frontend evaluation: Real-time (current inventory determines accessibility)
+        #
+        # When enabled, the spoiler test will treat "accessible in LOG but not in STATE"
+        # as an acceptable mismatch (warning instead of error) for locations that may
+        # have regressive accessibility due to anti-softlock key requirements.
+        settings['allow_regressive_accessibility_mismatches'] = True
 
         logger.info(f"Getting settings data for SMZ3 world")
         logger.info(f"World type: {type(world)}")
