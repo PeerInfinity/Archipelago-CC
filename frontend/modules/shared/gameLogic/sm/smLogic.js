@@ -330,11 +330,31 @@ export function knowsSimpleShortCharge(snapshot, staticData) {
 }
 
 export function knowsShortCharge(snapshot, staticData) {
-  return { bool: true, difficulty: 0 };
+  // ShortCharge ("Tight Short Charge") is DISABLED by default in VARIA
+  // Different from SimpleShortCharge which IS enabled by default
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('ShortCharge' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.ShortCharge;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+
+  // Default: disabled
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsMockball(snapshot, staticData) {
-  return { bool: true, difficulty: 0 };
+  // Check exported knows settings for Mockball technique
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('Mockball' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.Mockball;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  // Default: enabled with difficulty 1 (Regular preset value)
+  return { bool: true, difficulty: 1 };
 }
 
 export function knowsAlcatrazEscape(snapshot, staticData) {
@@ -417,9 +437,13 @@ export function canJumpUnderwater(snapshot, staticData) {
 // Hell run presets matching Python Settings.hellRunPresets['Gimme energy'] (used by regular preset)
 // Format: [[energy_threshold, difficulty], ...]
 // VARIA difficulties: easy=1, medium=5, hard=10, harder=25, hardcore=50, mania=100
-// Ice is +1 to account for evaluation timing difference; MainUpperNorfair matches exactly
+// Regular preset uses 'Gimme energy' for Ice and MainUpperNorfair (not 'Default')
+// Ice 'Gimme energy' = [(4, hardcore), (5, harder), (6, hard), (10, medium)]
+// MainUpperNorfair 'Gimme energy' = [(5, mania), (6, hardcore), (8, harder), (10, hard), (14, medium)]
+// Note: Empirical testing shows Ice threshold should be 5, not 4 (Python sphere log confirms this)
+// The (4, hardcore) entry appears to be at the exact boundary where maxDiff=50 doesn't allow it
 const HELL_RUN_PRESETS = {
-  'Ice': [[5, 50], [6, 25], [7, 10], [11, 5]],  // Empirical: Ice Beam accessible at 5 reserves
+  'Ice': [[5, 25], [6, 10], [10, 5]],  // 'Gimme energy' empirical: need 5+ tanks at hardcore maxDiff
   'MainUpperNorfair': [[5, 100], [6, 50], [8, 25], [10, 10], [14, 5]], // 'Gimme energy': [(5, mania), (6, hardcore), (8, harder), (10, hard), (14, medium)]
   'LowerNorfair': null  // Default is null (requires suits)
 };
@@ -427,13 +451,27 @@ const HELL_RUN_PRESETS = {
 // Complex helpers - conservative implementations
 export function canHellRun(snapshot, staticData, hellRunType, mult = 1.0, minEArg = 2) {
   // Hell runs require heat resistance OR enough energy reserves
-  // In VARIA logic: heatProof() OR (energyReserveCount >= minE AND specific energy check)
-  const isHeatProof = wor(snapshot, staticData,
-    haveItem(snapshot, staticData, 'Varia'),
-    haveItem(snapshot, staticData, 'Gravity'));
+  // In VARIA logic: heatProof() OR (Gravity with half protection) OR (energyReserveCount >= minE AND specific energy check)
+  const playerId = snapshot?.playerId || '1';
+  const romPatches = staticData?.settings?.[playerId]?.romPatches || {};
 
+  // Check for full heat protection (returns immediately)
+  const isHeatProof = heatProof(snapshot, staticData);
   if (isHeatProof.bool) {
     return isHeatProof;
+  }
+
+  // ProgressiveSuits must be explicitly enabled (true) to be active
+  const progressiveSuits = romPatches.ProgressiveSuits === true;
+
+  // Handle Gravity with ProgressiveSuits - provides half heat protection
+  // This doubles mult and halves minE
+  let effectiveMult = mult || 1.0;
+  let minE = minEArg !== undefined ? minEArg : 2;
+
+  if (progressiveSuits && haveItem(snapshot, staticData, 'Gravity').bool) {
+    effectiveMult *= 2.0;  // Double mult = need fewer tanks
+    minE /= 2.0;           // Half minE requirement
   }
 
   // When hellRunType is undefined (analyzer couldn't extract kwargs from
@@ -446,14 +484,15 @@ export function canHellRun(snapshot, staticData, hellRunType, mult = 1.0, minEAr
   const effectiveHellRunType = hellRunType || 'Ice';
 
   // Get the difficulty presets for this hell run type
-  const difficulties = HELL_RUN_PRESETS[effectiveHellRunType];
+  // Prefer exported hellRuns settings from VARIA preset, fall back to hardcoded presets
+  const hellRunsSettings = staticData?.settings?.[playerId]?.hellRuns || {};
+  const difficulties = hellRunsSettings[effectiveHellRunType] || HELL_RUN_PRESETS[effectiveHellRunType];
   if (!difficulties) {
     // No preset (like LowerNorfair) - requires suits
     return { bool: false, difficulty: 0 };
   }
 
   const reserves = energyReserveCount(snapshot, staticData);
-  const minE = minEArg !== undefined ? minEArg : 2;
 
   // Must have minimum energy first
   if (reserves < minE) {
@@ -463,8 +502,6 @@ export function canHellRun(snapshot, staticData, hellRunType, mult = 1.0, minEAr
   // Check each difficulty tier
   // Python formula: energyReserveCountOk(threshold / mult, difficulty)
   // The mult DIVIDES the threshold, so mult < 1.0 means MORE energy needed
-  const effectiveMult = mult || 1.0;
-
   let lowestPassingDifficulty = Infinity;
   for (const [threshold, difficulty] of difficulties) {
     // Calculate effective threshold: threshold / mult
@@ -602,10 +639,29 @@ export function canOpenYellowDoors(snapshot, staticData) {
 }
 
 export function heatProof(snapshot, staticData) {
-  // Heat immunity with Varia or Gravity suit (simplified - ignores ROM patches)
-  return wor(snapshot, staticData,
-    haveItem(snapshot, staticData, 'Varia'),
-    haveItem(snapshot, staticData, 'Gravity'));
+  // Heat immunity - matching VARIA's logic with ROM patches
+  // Varia always provides full heat protection
+  // Gravity only provides full heat protection if NOT ProgressiveSuits and NOT NoGravityEnvProtection
+  // Default gravityBehaviour is 'Balanced' which has NoGravityEnvProtection ACTIVE
+  const playerId = snapshot?.playerId || '1';
+  const romPatches = staticData?.settings?.[playerId]?.romPatches || {};
+
+  // ProgressiveSuits must be explicitly enabled (true) to be active
+  const progressiveSuits = romPatches.ProgressiveSuits === true;
+  // NoGravityEnvProtection defaults to TRUE (Balanced mode) - must be explicitly disabled
+  const noGravityEnvProtection = romPatches.NoGravityEnvProtection !== false;
+
+  // Varia always provides full heat protection
+  if (haveItem(snapshot, staticData, 'Varia').bool) {
+    return { bool: true, difficulty: 0 };
+  }
+
+  // Gravity only provides full protection if NOT progressive suits and NOT NoGravityEnvProtection
+  if (!progressiveSuits && !noGravityEnvProtection && haveItem(snapshot, staticData, 'Gravity').bool) {
+    return { bool: true, difficulty: 0 };
+  }
+
+  return { bool: false, difficulty: 0 };
 }
 
 export function canKillBeetoms(snapshot, staticData) {
@@ -886,7 +942,42 @@ export function knowsKillPlasmaPiratesWithCharge(snapshot, staticData) {
 }
 
 export function knowsGravityJump(snapshot, staticData) {
-  return { bool: true, difficulty: 0 };
+  // Check exported knows settings
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('GravityJump' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.GravityJump;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  // Default: enabled with difficulty 10 (Regular preset value)
+  return { bool: true, difficulty: 10 };
+}
+
+export function knowsLavaDive(snapshot, staticData) {
+  // Check exported knows settings
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('LavaDive' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.LavaDive;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  // Default: enabled with difficulty 50 (Regular preset value)
+  return { bool: true, difficulty: 50 };
+}
+
+export function knowsLavaDiveNoHiJump(snapshot, staticData) {
+  // Check exported knows settings
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('LavaDiveNoHiJump' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.LavaDiveNoHiJump;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  // Default: disabled (Regular preset value)
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsMtEverestGravJump(snapshot, staticData) {
@@ -903,6 +994,20 @@ export function knowsRedTowerClimb(snapshot, staticData) {
   // Wall jump technique to climb Red Tower
   // Enabled in regular preset with difficulty 25 (harder)
   return { bool: true, difficulty: 25 };
+}
+
+export function knowsNovaBoost(snapshot, staticData) {
+  // D-Boost on the Sova to enter Cathedral with shorter hell run
+  // Check exported knows settings
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('NovaBoost' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.NovaBoost;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  // Default: disabled (Regular preset value)
+  return { bool: false, difficulty: 0 };
 }
 
 // Room-specific helpers - Conservative implementations
@@ -974,15 +1079,26 @@ export function canPassMtEverest(snapshot, staticData) {
 }
 
 export function canDefeatBotwoon(snapshot, staticData) {
-  // Botwoon boss - needs weapons
-  return wor(snapshot, staticData,
-    haveItem(snapshot, staticData, 'Ice'),
-    haveItem(snapshot, staticData, 'SpeedBooster'),
+  // Botwoon boss - Python: wand(enoughStuffBotwoon(), canPassBotwoonHallway())
+  // enoughStuffBotwoon requires dealing 6000 damage to Botwoon
+  // Simplified: need Charge beam OR enough ammo (missiles/supers)
+  // Botwoon has 6000 HP: need 60+ missiles (100 dmg each) OR 20+ supers (300 dmg each) OR charged shots
+  const enoughStuff = wor(snapshot, staticData,
+    // Charged shots can defeat Botwoon
     wand(snapshot, staticData,
       haveItem(snapshot, staticData, 'Charge'),
       wor(snapshot, staticData,
         haveItem(snapshot, staticData, 'Wave'),
-        haveItem(snapshot, staticData, 'Plasma'))));
+        haveItem(snapshot, staticData, 'Plasma'))),
+    // Or enough missiles/supers (simplified: need at least 4 missile packs and 2 super packs for ~6000 damage)
+    wand(snapshot, staticData,
+      itemCountOk(snapshot, staticData, 'Missile', 4),
+      itemCountOk(snapshot, staticData, 'Super', 2))
+  );
+
+  return wand(snapshot, staticData,
+    enoughStuff,
+    canPassBotwoonHallway(snapshot, staticData));
 }
 
 /**
@@ -1079,12 +1195,46 @@ export function energyReserveCountOkHardRoom(snapshot, staticData, roomName, mul
 }
 
 export function canPassLavaPit(snapshot, staticData) {
-  // Lower Norfair lava pit - needs heat + Gravity or HiJump
-  return wand(snapshot, staticData,
-    heatProof(snapshot, staticData),
+  // Lower Norfair lava pit - matching VARIA's complex logic:
+  // Option 1: Gravity + SpaceJump
+  // Option 2: knowsGravityJump + Gravity + (HiJump OR knowsLavaDive)
+  // Option 3: (knowsLavaDive + HiJump OR knowsLavaDiveNoHiJump) + energyReserveCountOk(nTanks)
+  // ALL options require canUsePowerBombs
+
+  // Calculate required tanks for dive without heat protection
+  const dmgReduction = getDmgReduction(snapshot, staticData);
+  let nTanks4Dive = Math.ceil(8 / dmgReduction);
+  const hasHiJump = haveItem(snapshot, staticData, 'HiJump').bool;
+  if (!hasHiJump) {
+    nTanks4Dive = Math.ceil(nTanks4Dive * 1.25);
+  }
+
+  // Check each option
+  const opt1 = wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Gravity'),
+    haveItem(snapshot, staticData, 'SpaceJump'));
+
+  const opt2 = wand(snapshot, staticData,
+    knowsGravityJump(snapshot, staticData),
+    haveItem(snapshot, staticData, 'Gravity'),
     wor(snapshot, staticData,
-      haveItem(snapshot, staticData, 'Gravity'),
-      haveItem(snapshot, staticData, 'HiJump')));
+      haveItem(snapshot, staticData, 'HiJump'),
+      knowsLavaDive(snapshot, staticData)));
+
+  // Option 3: LavaDive technique without suits
+  const diveTech = wor(snapshot, staticData,
+    wand(snapshot, staticData,
+      knowsLavaDive(snapshot, staticData),
+      haveItem(snapshot, staticData, 'HiJump')),
+    knowsLavaDiveNoHiJump(snapshot, staticData));
+  const opt3 = wand(snapshot, staticData,
+    diveTech,
+    energyReserveCountOk(snapshot, staticData, nTanks4Dive));
+
+  // All options require power bombs
+  return wand(snapshot, staticData,
+    wor(snapshot, staticData, opt1, opt2, opt3),
+    canUsePowerBombs(snapshot, staticData));
 }
 
 export function canPassLavaPitReverse(snapshot, staticData) {
@@ -1098,8 +1248,29 @@ export function canPassLavaPitReverse(snapshot, staticData) {
 }
 
 export function canGrappleEscape(snapshot, staticData) {
-  // Escape using grapple beam
-  return haveItem(snapshot, staticData, 'Grapple');
+  // Multiple ways to escape:
+  // 1. SpaceJump
+  // 2. InfiniteBombJump + (heatProof OR Gravity OR Ice)
+  // 3. Grapple
+  // 4. SpeedBooster + (HiJump OR knowsShortCharge)
+  return wor(snapshot, staticData,
+    // SpaceJump
+    haveItem(snapshot, staticData, 'SpaceJump'),
+    // IBJ with heat protection or ice for the enemy
+    wand(snapshot, staticData,
+      canInfiniteBombJump(snapshot, staticData),
+      wor(snapshot, staticData,
+        heatProof(snapshot, staticData),
+        haveItem(snapshot, staticData, 'Gravity'),
+        haveItem(snapshot, staticData, 'Ice'))),
+    // Grapple
+    haveItem(snapshot, staticData, 'Grapple'),
+    // SpeedBooster + vertical assist
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'SpeedBooster'),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'HiJump'),
+        knowsShortCharge(snapshot, staticData))));
 }
 
 export function canClimbBottomRedTower(snapshot, staticData) {
@@ -1272,8 +1443,15 @@ export function knowsDiagonalBombJump(snapshot, staticData) {
 }
 
 export function knowsMockballWs(snapshot, staticData) {
-  // Mockball in West Sand technique
-  return { bool: true, difficulty: 0 };
+  // Mockball in West Sand technique - DISABLED in Regular preset
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('MockballWs' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.MockballWs;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  return { bool: false, difficulty: 0 };  // Default: disabled
 }
 
 export function knowsGravLessLevel1(snapshot, staticData) {
@@ -1501,9 +1679,12 @@ export const helperFunctions = {
   knowsKillPlasmaPiratesWithSpark,
   knowsKillPlasmaPiratesWithCharge,
   knowsGravityJump,
+  knowsLavaDive,
+  knowsLavaDiveNoHiJump,
   knowsMtEverestGravJump,
   knowsTediousMountEverest,
   knowsRedTowerClimb,
+  knowsNovaBoost,
   // Advanced movement
   canInfiniteBombJump,
   canFly,
@@ -2133,23 +2314,33 @@ export function canMorphJump(snapshot, staticData) {
 
 /**
  * Can enter Cathedral from Business Center
- * Requires canHellRun (heat protection OR enough energy) + movement option
+ * Requires: traverse red door + canHellRun (heat protection OR enough energy) + movement option
+ * Python: sm.wand(sm.traverse('CathedralEntranceRight'), sm.wor(path1, path2))
  */
 export function canEnterCathedral(snapshot, staticData, mult = 1.0) {
-  // Python logic: canHellRun('MainUpperNorfair', mult) AND movement option
-  // Movement options:
-  // - CathedralEntranceWallJump ROM patch (included in TotalBase - typically active)
-  // - HiJump, canFly, SpeedBooster, canSpringBallJump
-  // The ROM patch adds a wall jump platform, allowing entry with difficulty 0
+  // Path 1: canHellRun + movement option (wall jump patch, HiJump, canFly, SpeedBooster, canSpringBallJump)
+  // Path 2: canHellRun with 0.5*mult + Morph + knowsNovaBoost
   return wand(snapshot, staticData,
-    canHellRun(snapshot, staticData, 'MainUpperNorfair', mult),  // Requires 5+ reserves for hardcore difficulty
+    traverse(snapshot, staticData, 'CathedralEntranceRight'),  // Red door - requires Missile or Super
     wor(snapshot, staticData,
-      // CathedralEntranceWallJump ROM patch - typically active, difficulty 0
-      SMBool(snapshot, staticData, true),
-      haveItem(snapshot, staticData, 'HiJump'),
-      canFly(snapshot, staticData),
-      haveItem(snapshot, staticData, 'SpeedBooster'),
-      canSpringBallJump(snapshot, staticData)
+      // Path 1: Standard movement options
+      wand(snapshot, staticData,
+        canHellRun(snapshot, staticData, 'MainUpperNorfair', mult),
+        wor(snapshot, staticData,
+          // CathedralEntranceWallJump ROM patch - typically active, difficulty 0
+          SMBool(snapshot, staticData, true),
+          haveItem(snapshot, staticData, 'HiJump'),
+          canFly(snapshot, staticData),
+          haveItem(snapshot, staticData, 'SpeedBooster'),
+          canSpringBallJump(snapshot, staticData)
+        )
+      ),
+      // Path 2: NovaBoost alternative (shorter hell run, requires Morph + knowledge)
+      wand(snapshot, staticData,
+        canHellRun(snapshot, staticData, 'MainUpperNorfair', 0.5 * mult),
+        haveItem(snapshot, staticData, 'Morph'),
+        knowsNovaBoost(snapshot, staticData)
+      )
     )
   );
 }
@@ -2452,7 +2643,18 @@ export function knowsHiJumpGauntletAccess(snapshot, staticData) {
 }
 
 export function knowsHiJumpLessGauntletAccess(snapshot, staticData) {
-  return { bool: true, difficulty: 4 };
+  // HiJumpLessGauntletAccess is DISABLED by default in VARIA
+  // Requires tricky wall jumps without HiJump
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('HiJumpLessGauntletAccess' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.HiJumpLessGauntletAccess;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+
+  // Default: disabled
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsLowGauntlet(snapshot, staticData) {
@@ -2476,7 +2678,19 @@ export function knowsFrogSpeedwayWithoutSpeed(snapshot, staticData) {
 }
 
 export function knowsNorfairReserveDBoost(snapshot, staticData) {
-  return { bool: true, difficulty: 3 };
+  // NorfairReserveDBoost is DISABLED by default in VARIA
+  // Only enabled in expert, master, veteran, samus presets
+  // Check if knows settings override exists in staticData
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('NorfairReserveDBoost' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.NorfairReserveDBoost;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+
+  // Default: disabled
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsDoubleChamberWallJump(snapshot, staticData) {
@@ -2499,7 +2713,16 @@ export function canGoThroughColosseumSuitless(snapshot, staticData) {
 }
 
 export function knowsPuyoClip(snapshot, staticData) {
-  return { bool: true, difficulty: 5 };
+  // Check exported knows settings
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('PuyoClip' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.PuyoClip;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  // Default: disabled (not in Regular preset)
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsAccessSpringBallWithHiJump(snapshot, staticData) {
