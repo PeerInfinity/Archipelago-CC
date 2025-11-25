@@ -612,6 +612,30 @@ class SMGameExportHandler(GenericGameExportHandler):
         """
         self._current_location_context = location_name
 
+    def postprocess_entrance_rule(self, rule: Dict[str, Any], exit_name: str, connected_region: str = None) -> Dict[str, Any]:
+        """Post-process an exit rule to expand and transform it.
+
+        This is called by the main exporter after initial rule analysis.
+        We use this to fill in missing canHellRun arguments based on exit context.
+
+        Args:
+            rule: The analyzed rule structure
+            exit_name: The exit name in format "Source->Destination"
+            connected_region: The name of the connected region
+
+        Returns:
+            Expanded and transformed rule
+        """
+        # Set exit context for expand_rule to use
+        saved_exit_context = self._current_exit_context
+        self._current_exit_context = exit_name
+
+        try:
+            expanded = self.expand_rule(rule)
+            return expanded if expanded else rule
+        finally:
+            self._current_exit_context = saved_exit_context
+
     def _extract_accessfrom_requirements(self, location_name: str) -> Optional[Dict[str, Any]]:
         """Extract and export AccessFrom requirements for a location.
 
@@ -903,6 +927,23 @@ class SMGameExportHandler(GenericGameExportHandler):
                             # Conservative fallback: assume patch is not active
                             return {'type': 'constant', 'value': False}
 
+        # Handle Bosses.bossDead() calls - convert to helper call
+        if rule_type == 'function_call':
+            function = rule.get('function', {})
+            if (function.get('type') == 'attribute' and
+                function.get('attr') == 'bossDead' and
+                function.get('object', {}).get('type') == 'name' and
+                function.get('object', {}).get('name') == 'Bosses'):
+                # This is a Bosses.bossDead(sm, bossName) call
+                # Convert to helper: bossDead(bossName)
+                args = rule.get('args', [])
+                # First arg is 'sm', second is the boss name
+                if len(args) >= 2:
+                    boss_arg = args[1]  # Second arg is the boss name
+                    expanded_boss_arg = self.expand_rule(boss_arg)
+                    logger.info(f"SM: Converted Bosses.bossDead to helper call with boss={expanded_boss_arg}")
+                    return {'type': 'helper', 'name': 'bossDead', 'args': [expanded_boss_arg]}
+
         # Check for AND rules that combine accessFrom and Available
         # The accessFrom comprehension can't be properly exported, so we skip it
         # However, if Available is SMBool(True), we need to export as False instead
@@ -1025,7 +1066,38 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         # Process helper arguments
         if rule_type == 'helper':
-            if 'args' in rule:
+            # Handle canHellRun with no args - kwargs from Settings.hellRunsTable were lost
+            # Add default arguments based on context if available
+            if rule.get('name') == 'canHellRun' and not rule.get('args'):
+                # Determine hell run type from exit context if available
+                # Most exits use 'MainUpperNorfair', Ice area uses 'Ice'
+                hellrun_type = 'MainUpperNorfair'  # Default to stricter type
+                mult = 1.0
+                minE = 2
+
+                if self._current_exit_context:
+                    exit_name = self._current_exit_context.lower()
+                    # Ice area exits use 'Ice' preset
+                    if 'ice' in exit_name or 'cathedral' in exit_name:
+                        hellrun_type = 'Ice'
+                    # Some exits to Cathedral from Bubble Mountain need stricter mult
+                    if 'bubble' in exit_name and 'cathedral' in exit_name:
+                        mult = 0.66  # Matches 'Bubble -> Cathedral Missiles' in hellRunsTable
+                    logger.info(f"SM: canHellRun with no args in exit '{self._current_exit_context}', using type={hellrun_type}, mult={mult}")
+                elif self._current_location_context:
+                    loc_name = self._current_location_context.lower()
+                    if 'ice' in loc_name:
+                        hellrun_type = 'Ice'
+                    logger.info(f"SM: canHellRun with no args in location '{self._current_location_context}', using type={hellrun_type}")
+                else:
+                    logger.info(f"SM: canHellRun with no args, no context, using type={hellrun_type}")
+
+                rule['args'] = [
+                    {'type': 'constant', 'value': hellrun_type},
+                    {'type': 'constant', 'value': mult},
+                    {'type': 'constant', 'value': minE}
+                ]
+            elif 'args' in rule:
                 rule['args'] = [self.expand_rule(arg) for arg in rule['args']]
 
         # Process function_call arguments (for other function calls)
