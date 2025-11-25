@@ -377,7 +377,21 @@ export function runBFSPass(sm) {
         )
         : true; // No rule means true
 
-      const canTraverse = !exit.access_rule || ruleEvaluationResult;
+      // Handle SMBool results from SM helper functions (exit rules don't use evalSMBool wrapper)
+      // SMBool format: { bool: boolean, difficulty: number }
+      // Check difficulty against maxDiff (default 50 for hardcore)
+      let canTraverse;
+      if (!exit.access_rule) {
+        canTraverse = true;
+      } else if (ruleEvaluationResult && typeof ruleEvaluationResult === 'object' &&
+                 'bool' in ruleEvaluationResult && 'difficulty' in ruleEvaluationResult) {
+        // SMBool result - check difficulty against maxDiff
+        // Get maxDiff from gameStateModule (SM uses state.smbm[player].maxDiff)
+        const maxDiff = sm.gameStateModule?.smbm?.[sm.playerId]?.maxDiff ?? 50;
+        canTraverse = ruleEvaluationResult.bool && ruleEvaluationResult.difficulty <= maxDiff;
+      } else {
+        canTraverse = Boolean(ruleEvaluationResult);
+      }
 
       if (canTraverse) {
         // Region is now reachable

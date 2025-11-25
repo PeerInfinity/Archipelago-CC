@@ -702,6 +702,10 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         For inter-area connections, the traverse lambda is used instead of a transition lambda.
 
+        SPECIAL CASE: For exits to location-regions, we return None to keep the default behavior
+        (always accessible). In SM, location-regions don't require traverse checks - the item
+        requirements are handled by the location's access_rule, not the region exit.
+
         Args:
             exit_name: The exit name in format "Source->Destination"
             original_lambda: The Archipelago exit access_rule wrapper (not used)
@@ -722,6 +726,15 @@ class SMGameExportHandler(GenericGameExportHandler):
 
             source_ap_name = parts[0]
             dest_ap_name = parts[1]
+
+            # SPECIAL CASE: Check if destination is a location-region
+            # Location-regions should have NO exit rules (always accessible)
+            # Item requirements are handled by location access_rules, not region exits
+            accessfrom_data = self._get_accessfrom_data()
+            if dest_ap_name in accessfrom_data:
+                # This is an exit to a location-region - return None to use default (no rule)
+                logger.info(f"SM: Exit '{exit_name}' goes to location-region, skipping traverse (always accessible)")
+                return None
 
             # Try to get the unwrapped transition lambda directly from AccessPoint
             # This will return None if the transition doesn't exist or isn't wrapped

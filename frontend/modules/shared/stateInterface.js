@@ -342,6 +342,20 @@ export function createStateSnapshotInterface(
             return logicObject;
           }
           return undefined;
+        case 'Bosses':
+          // SM-specific Bosses object for checking boss defeat status
+          // Used by rules like Bosses.bossDead(sm, "BossName")
+          const bossHelpers = getHelperFunctions(gameName);
+          if (bossHelpers?.bossDead) {
+            return {
+              bossDead: (sm, bossName) => {
+                // The 'sm' argument is the SMBoolManager reference from Python, which we don't need
+                // We just need the bossName to check if that boss item is in inventory
+                return bossHelpers.bossDead(snapshot, staticData, bossName);
+              }
+            };
+          }
+          return undefined;
         default:
           // Check if this is a game-specific variable (e.g., required_technologies for Factorio)
           const currentPlayerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
