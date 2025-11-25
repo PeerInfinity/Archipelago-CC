@@ -391,7 +391,8 @@ Energy Tank, Waterway
 Energy Tank, Wrecked Ship
         Menu -> StartAP
    =>   Landing Site -> Landing Site->Keyhunter Room Bottom
-   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Right
+   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Left
+   =>   Moat Left -> Moat Left->Moat Right
    =>   Moat Right -> Moat Right->West Ocean Left
    =>   West Ocean Left -> West Ocean Left->Wrecked Ship Main
    =>   Wrecked Ship Main -> Wrecked Ship Main->Wrecked Ship Back
@@ -434,7 +435,8 @@ Grapple Beam
 Gravity Suit
         Menu -> StartAP
    =>   Landing Site -> Landing Site->Keyhunter Room Bottom
-   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Right
+   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Left
+   =>   Moat Left -> Moat Left->Moat Right
    =>   Moat Right -> Moat Right->West Ocean Left
    =>   West Ocean Left -> West Ocean Left->Wrecked Ship Main
    =>   Wrecked Ship Main -> Wrecked Ship Main->Gravity Suit
@@ -479,7 +481,8 @@ Missile (Gold Torizo)
 Missile (Gravity Suit)
         Menu -> StartAP
    =>   Landing Site -> Landing Site->Keyhunter Room Bottom
-   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Right
+   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Left
+   =>   Moat Left -> Moat Left->Moat Right
    =>   Moat Right -> Moat Right->West Ocean Left
    =>   West Ocean Left -> West Ocean Left->Wrecked Ship Main
    =>   Wrecked Ship Main -> Wrecked Ship Main->Missile (Gravity Suit)
@@ -656,7 +659,8 @@ Missile (lower Norfair near Wave Beam)
 Missile (outside Wrecked Ship middle)
         Menu -> StartAP
    =>   Landing Site -> Landing Site->Keyhunter Room Bottom
-   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Right
+   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Left
+   =>   Moat Left -> Moat Left->Moat Right
    =>   Moat Right -> Moat Right->West Ocean Left
    =>   West Ocean Left -> West Ocean Left->Wrecked Ship Main
    =>   Wrecked Ship Main -> Wrecked Ship Main->Missile (outside Wrecked Ship middle)
@@ -732,7 +736,8 @@ Mother Brain
 Phantoon
         Menu -> StartAP
    =>   Landing Site -> Landing Site->Keyhunter Room Bottom
-   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Right
+   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Left
+   =>   Moat Left -> Moat Left->Moat Right
    =>   Moat Right -> Moat Right->West Ocean Left
    =>   West Ocean Left -> West Ocean Left->Wrecked Ship Main
    =>   Wrecked Ship Main -> Wrecked Ship Main->PhantoonRoomOut
@@ -864,7 +869,8 @@ Super Missile (Crateria)
 Super Missile (Wrecked Ship left)
         Menu -> StartAP
    =>   Landing Site -> Landing Site->Keyhunter Room Bottom
-   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Right
+   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Left
+   =>   Moat Left -> Moat Left->Moat Right
    =>   Moat Right -> Moat Right->West Ocean Left
    =>   West Ocean Left -> West Ocean Left->Wrecked Ship Main
    =>   Wrecked Ship Main -> Wrecked Ship Main->Super Missile (Wrecked Ship left)

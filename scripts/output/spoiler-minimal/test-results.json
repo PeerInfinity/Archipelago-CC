@@ -211,7 +211,7 @@
       ],
       "last_updated": "2025-11-25T19:29:14.776363"
     },
-    "last_updated": "2025-11-25T19:30:11.141839",
+    "last_updated": "2025-11-25T19:43:55.332686",
     "script_version": "1.0.0"
   },
   "results": {
@@ -42339,7 +42339,7 @@
           "generation": {
             "error_count": 2,
             "error_type": null,
-            "processing_time_seconds": 26.75,
+            "processing_time_seconds": 24.94,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -42354,7 +42354,7 @@
           "spoiler_test": {
             "error_count": 8,
             "pass_fail": "failed",
-            "processing_time_seconds": 9.68,
+            "processing_time_seconds": 12.99,
             "return_code": 1,
             "sphere_reached": 5.1,
             "success": false,
@@ -42362,7 +42362,7 @@
             "warning_count": 0
           },
           "template_filename": "Super Metroid.yaml",
-          "timestamp": "2025-11-25T19:29:34.206852",
+          "timestamp": "2025-11-25T19:43:16.902415",
           "world_info": {
             "exporter_path": "exporter/games/sm.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
@@ -42400,7 +42400,7 @@
         "failure_rate": 1.0
       },
       "template_filename": "Super Metroid.yaml",
-      "timestamp": "2025-11-25T19:29:34.206852",
+      "timestamp": "2025-11-25T19:43:16.902415",
       "total_seeds_tested": 2,
       "world_info": {
         "exporter_path": "exporter/games/sm.py",
