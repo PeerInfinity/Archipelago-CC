@@ -274,7 +274,7 @@ jobs:
             -p
 
       - name: Upload test results for split ${{ matrix.split_num }}
-        if: always()
+        if: !cancelled()
         uses: actions/upload-artifact@v4
         with:
           name: test-results-minimal-spoiler-split-${{ matrix.split_num }}
@@ -286,7 +286,7 @@ jobs:
     name: Combine Minimal Spoiler Results
     runs-on: ubuntu-latest
     needs: test-minimal-spoiler
-    if: always() && inputs.enable_minimal_spoiler
+    if: !cancelled() && inputs.enable_minimal_spoiler
 
     steps:
       - name: Checkout test-results-update branch
@@ -345,7 +345,7 @@ jobs:
     name: Test Full Spoiler Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     needs: [setup-branch, combine-minimal-spoiler]
-    if: always() && inputs.enable_full_spoiler && (needs.setup-branch.result == 'success')
+    if: !cancelled() && inputs.enable_full_spoiler && (needs.setup-branch.result == 'success')
     timeout-minutes: 180
 
     strategy:
@@ -464,7 +464,7 @@ jobs:
           done
 
       - name: Upload test results for split ${{ matrix.split_num }}
-        if: always()
+        if: !cancelled()
         uses: actions/upload-artifact@v4
         with:
           name: test-results-full-spoiler-split-${{ matrix.split_num }}
@@ -476,7 +476,7 @@ jobs:
     name: Combine Full Spoiler Results
     runs-on: ubuntu-latest
     needs: test-full-spoiler
-    if: always() && inputs.enable_full_spoiler
+    if: !cancelled() && inputs.enable_full_spoiler
 
     steps:
       - name: Checkout test-results-update branch
@@ -535,7 +535,7 @@ jobs:
     name: Test Multiclient Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     needs: [setup-branch, combine-full-spoiler]
-    if: always() && inputs.enable_multiclient && (needs.setup-branch.result == 'success')
+    if: !cancelled() && inputs.enable_multiclient && (needs.setup-branch.result == 'success')
     timeout-minutes: 180
 
     strategy:
@@ -605,7 +605,7 @@ jobs:
             -p
 
       - name: Upload test results for split ${{ matrix.split_num }}
-        if: always()
+        if: !cancelled()
         uses: actions/upload-artifact@v4
         with:
           name: test-results-multiclient-split-${{ matrix.split_num }}
@@ -617,7 +617,7 @@ jobs:
     name: Combine Multiclient Results
     runs-on: ubuntu-latest
     needs: test-multiclient
-    if: always() && inputs.enable_multiclient
+    if: !cancelled() && inputs.enable_multiclient
 
     steps:
       - name: Checkout test-results-update branch
@@ -675,7 +675,7 @@ jobs:
     name: Test Multiworld (Single Job)
     runs-on: ubuntu-latest
     needs: [setup-branch, combine-multiclient]
-    if: always() && inputs.enable_multiworld && inputs.multiworld_parallelization == 'single-job' && (needs.setup-branch.result == 'success')
+    if: !cancelled() && inputs.enable_multiworld && inputs.multiworld_parallelization == 'single-job' && (needs.setup-branch.result == 'success')
     timeout-minutes: 180
 
     steps:
@@ -737,7 +737,7 @@ jobs:
             -p
 
       - name: Upload test results
-        if: always()
+        if: !cancelled()
         uses: actions/upload-artifact@v4
         with:
           name: test-results-multiworld-single
@@ -749,7 +749,7 @@ jobs:
     name: Combine Multiworld Results (Single Job)
     runs-on: ubuntu-latest
     needs: test-multiworld-single
-    if: always() && inputs.enable_multiworld && inputs.multiworld_parallelization == 'single-job'
+    if: !cancelled() && inputs.enable_multiworld && inputs.multiworld_parallelization == 'single-job'
 
     steps:
       - name: Checkout test-results-update branch
@@ -800,7 +800,7 @@ jobs:
     name: Test Multiworld Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     needs: [setup-branch, combine-multiclient]
-    if: always() && inputs.enable_multiworld && inputs.multiworld_parallelization == 'parallel-10-jobs' && (needs.setup-branch.result == 'success')
+    if: !cancelled() && inputs.enable_multiworld && inputs.multiworld_parallelization == 'parallel-10-jobs' && (needs.setup-branch.result == 'success')
     timeout-minutes: 180
 
     strategy:
@@ -870,7 +870,7 @@ jobs:
             -p
 
       - name: Upload test results for split ${{ matrix.split_num }}
-        if: always()
+        if: !cancelled()
         uses: actions/upload-artifact@v4
         with:
           name: test-results-multiworld-split-${{ matrix.split_num }}
@@ -882,7 +882,7 @@ jobs:
     name: Combine Multiworld Results
     runs-on: ubuntu-latest
     needs: test-multiworld
-    if: always() && inputs.enable_multiworld && inputs.multiworld_parallelization == 'parallel-10-jobs'
+    if: !cancelled() && inputs.enable_multiworld && inputs.multiworld_parallelization == 'parallel-10-jobs'
 
     steps:
       - name: Checkout test-results-update branch
@@ -940,7 +940,7 @@ jobs:
     name: Test Minimal Multitemplate Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     needs: [setup-branch, combine-multiworld, combine-multiworld-single]
-    if: always() && (inputs.multitemplate_tests == 'minimal-only' || inputs.multitemplate_tests == 'both') && (needs.setup-branch.result == 'success')
+    if: !cancelled() && (inputs.multitemplate_tests == 'minimal-only' || inputs.multitemplate_tests == 'both') && (needs.setup-branch.result == 'success')
     timeout-minutes: 180
 
     strategy:
@@ -1016,7 +1016,7 @@ jobs:
             -p
 
       - name: Upload test results for split ${{ matrix.split_num }}
-        if: always()
+        if: !cancelled()
         uses: actions/upload-artifact@v4
         with:
           name: test-results-minimal-multitemplate-split-${{ matrix.split_num }}
@@ -1028,7 +1028,7 @@ jobs:
     name: Combine Minimal Multitemplate Results
     runs-on: ubuntu-latest
     needs: test-minimal-multitemplate
-    if: always() && (inputs.multitemplate_tests == 'minimal-only' || inputs.multitemplate_tests == 'both')
+    if: !cancelled() && (inputs.multitemplate_tests == 'minimal-only' || inputs.multitemplate_tests == 'both')
 
     steps:
       - name: Checkout test-results-update branch
@@ -1086,7 +1086,7 @@ jobs:
     name: Test Full Multitemplate Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     needs: [setup-branch, combine-minimal-multitemplate]
-    if: always() && (inputs.multitemplate_tests == 'full-only' || inputs.multitemplate_tests == 'both') && (needs.setup-branch.result == 'success')
+    if: !cancelled() && (inputs.multitemplate_tests == 'full-only' || inputs.multitemplate_tests == 'both') && (needs.setup-branch.result == 'success')
     timeout-minutes: 180
 
     strategy:
@@ -1162,7 +1162,7 @@ jobs:
             -p
 
       - name: Upload test results for split ${{ matrix.split_num }}
-        if: always()
+        if: !cancelled()
         uses: actions/upload-artifact@v4
         with:
           name: test-results-full-multitemplate-split-${{ matrix.split_num }}
@@ -1174,7 +1174,7 @@ jobs:
     name: Combine Full Multitemplate Results
     runs-on: ubuntu-latest
     needs: test-full-multitemplate
-    if: always() && (inputs.multitemplate_tests == 'full-only' || inputs.multitemplate_tests == 'both')
+    if: !cancelled() && (inputs.multitemplate_tests == 'full-only' || inputs.multitemplate_tests == 'both')
 
     steps:
       - name: Checkout test-results-update branch
