@@ -2,8 +2,8 @@
   "metadata": {
     "combination_note": "Results combined from parallel seed tests (multitemplate structure)",
     "combined_from": 10,
-    "created": "2025-11-23T06:38:52.412096",
-    "last_updated": "2025-11-23T06:38:52.412102",
+    "created": "2025-11-24T08:14:30.331989",
+    "last_updated": "2025-11-24T08:14:30.331998",
     "script_version": "1.0.0"
   },
   "results": {
@@ -19,7 +19,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.4,
+          "processing_time_seconds": 8.79,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -34,7 +34,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.93,
+          "processing_time_seconds": 18.13,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -42,7 +42,7 @@
           "warning_count": 0
         },
         "template_filename": "accessibility_full.yaml",
-        "timestamp": "2025-11-23T06:10:44.478280",
+        "timestamp": "2025-11-24T07:48:12.096384",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -64,7 +64,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.35,
+          "processing_time_seconds": 9.01,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -79,7 +79,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 17.11,
+          "processing_time_seconds": 17.47,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -87,7 +87,7 @@
           "warning_count": 0
         },
         "template_filename": "accessibility_items.yaml",
-        "timestamp": "2025-11-23T06:10:46.513741",
+        "timestamp": "2025-11-24T07:48:22.069314",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -109,7 +109,7 @@
         "generation": {
           "error_count": 3,
           "error_type": "FillError",
-          "processing_time_seconds": 2.54,
+          "processing_time_seconds": 2.58,
           "return_code": 1,
           "success": false,
           "warning_count": 2
@@ -132,7 +132,7 @@
           "warning_count": 0
         },
         "template_filename": "accessibility_minimal.yaml",
-        "timestamp": "2025-11-23T06:10:51.718463",
+        "timestamp": "2025-11-24T07:48:09.326491",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -154,7 +154,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.0,
+          "processing_time_seconds": 8.43,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -169,7 +169,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 17.93,
+          "processing_time_seconds": 16.29,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -177,7 +177,7 @@
           "warning_count": 0
         },
         "template_filename": "allow_collect_false.yaml",
-        "timestamp": "2025-11-23T06:10:52.694954",
+        "timestamp": "2025-11-24T07:48:08.938675",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -199,7 +199,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.51,
+          "processing_time_seconds": 8.3,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -214,7 +214,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.53,
+          "processing_time_seconds": 17.03,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -222,7 +222,7 @@
           "warning_count": 0
         },
         "template_filename": "allow_collect_true.yaml",
-        "timestamp": "2025-11-23T06:10:39.368342",
+        "timestamp": "2025-11-24T07:48:13.858519",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -244,7 +244,7 @@
         "generation": {
           "error_count": 7,
           "error_type": "ValueError",
-          "processing_time_seconds": 2.08,
+          "processing_time_seconds": 2.17,
           "return_code": 1,
           "success": false,
           "warning_count": 0
@@ -267,7 +267,7 @@
           "warning_count": 0
         },
         "template_filename": "beemizer.yaml",
-        "timestamp": "2025-11-23T06:10:41.195743",
+        "timestamp": "2025-11-24T07:48:28.153513",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -289,7 +289,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.39,
+          "processing_time_seconds": 7.85,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -304,7 +304,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.96,
+          "processing_time_seconds": 16.74,
           "return_code": 0,
           "sphere_reached": 38.1,
           "success": true,
@@ -312,7 +312,7 @@
           "warning_count": 0
         },
         "template_filename": "big_key_shuffle_any_world.yaml",
-        "timestamp": "2025-11-23T06:10:55.960928",
+        "timestamp": "2025-11-24T07:48:09.019207",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -334,7 +334,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.46,
+          "processing_time_seconds": 8.38,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -349,7 +349,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.46,
+          "processing_time_seconds": 16.83,
           "return_code": 0,
           "sphere_reached": 38.1,
           "success": true,
@@ -357,7 +357,7 @@
           "warning_count": 0
         },
         "template_filename": "big_key_shuffle_different_world.yaml",
-        "timestamp": "2025-11-23T06:10:39.344340",
+        "timestamp": "2025-11-24T07:48:05.387198",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -379,7 +379,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.37,
+          "processing_time_seconds": 8.88,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -394,7 +394,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 17.66,
+          "processing_time_seconds": 16.33,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -402,7 +402,7 @@
           "warning_count": 0
         },
         "template_filename": "big_key_shuffle_original_dungeon.yaml",
-        "timestamp": "2025-11-23T06:10:51.948624",
+        "timestamp": "2025-11-24T07:48:09.079414",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -424,7 +424,7 @@
         "generation": {
           "error_count": 3,
           "error_type": "FillError",
-          "processing_time_seconds": 2.62,
+          "processing_time_seconds": 2.41,
           "return_code": 1,
           "success": false,
           "warning_count": 2
@@ -447,7 +447,7 @@
           "warning_count": 0
         },
         "template_filename": "big_key_shuffle_own_dungeons.yaml",
-        "timestamp": "2025-11-23T06:10:50.620716",
+        "timestamp": "2025-11-24T07:48:13.551314",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -469,7 +469,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.21,
+          "processing_time_seconds": 8.33,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -484,7 +484,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.96,
+          "processing_time_seconds": 15.92,
           "return_code": 0,
           "sphere_reached": 38.1,
           "success": true,
@@ -492,7 +492,7 @@
           "warning_count": 0
         },
         "template_filename": "big_key_shuffle_own_world.yaml",
-        "timestamp": "2025-11-23T06:11:10.122399",
+        "timestamp": "2025-11-24T07:48:39.335562",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -514,7 +514,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.12,
+          "processing_time_seconds": 8.69,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -529,7 +529,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 14.95,
+          "processing_time_seconds": 14.92,
           "return_code": 0,
           "sphere_reached": 18.1,
           "success": true,
@@ -537,7 +537,7 @@
           "warning_count": 0
         },
         "template_filename": "big_key_shuffle_start_with.yaml",
-        "timestamp": "2025-11-23T06:11:12.277625",
+        "timestamp": "2025-11-24T07:48:48.886353",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -559,7 +559,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.45,
+          "processing_time_seconds": 8.63,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -574,7 +574,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 17.15,
+          "processing_time_seconds": 16.31,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -582,7 +582,7 @@
           "warning_count": 0
         },
         "template_filename": "bombless_start_false.yaml",
-        "timestamp": "2025-11-23T06:10:54.415634",
+        "timestamp": "2025-11-24T07:48:12.073655",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -604,7 +604,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.2,
+          "processing_time_seconds": 8.39,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -619,7 +619,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 14.55,
+          "processing_time_seconds": 14.75,
           "return_code": 1,
           "sphere_reached": 0.0,
           "success": false,
@@ -627,7 +627,7 @@
           "warning_count": 0
         },
         "template_filename": "bombless_start_true.yaml",
-        "timestamp": "2025-11-23T06:11:18.915419",
+        "timestamp": "2025-11-24T07:48:33.986722",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -649,7 +649,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.28,
+          "processing_time_seconds": 8.19,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -664,7 +664,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 14.77,
+          "processing_time_seconds": 14.67,
           "return_code": 1,
           "sphere_reached": 0.0,
           "success": false,
@@ -672,7 +672,7 @@
           "warning_count": 0
         },
         "template_filename": "boss_chaos.yaml",
-        "timestamp": "2025-11-23T06:11:04.726901",
+        "timestamp": "2025-11-24T07:48:39.506009",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -694,7 +694,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.27,
+          "processing_time_seconds": 8.52,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -709,7 +709,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 17.58,
+          "processing_time_seconds": 17.56,
           "return_code": 0,
           "sphere_reached": 23.1,
           "success": true,
@@ -717,7 +717,7 @@
           "warning_count": 0
         },
         "template_filename": "boss_shuffle_basic.yaml",
-        "timestamp": "2025-11-23T06:10:43.428608",
+        "timestamp": "2025-11-24T07:48:30.490137",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -739,7 +739,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.18,
+          "processing_time_seconds": 7.78,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -754,7 +754,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.94,
+          "processing_time_seconds": 15.73,
           "return_code": 0,
           "sphere_reached": 19.1,
           "success": true,
@@ -762,7 +762,7 @@
           "warning_count": 0
         },
         "template_filename": "boss_shuffle_chaos.yaml",
-        "timestamp": "2025-11-23T06:11:21.631330",
+        "timestamp": "2025-11-24T07:48:33.896153",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -784,7 +784,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.49,
+          "processing_time_seconds": 8.35,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -799,7 +799,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.97,
+          "processing_time_seconds": 15.85,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -807,7 +807,7 @@
           "warning_count": 0
         },
         "template_filename": "boss_shuffle_full.yaml",
-        "timestamp": "2025-11-23T06:11:04.583633",
+        "timestamp": "2025-11-24T07:48:30.935497",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -829,7 +829,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.16,
+          "processing_time_seconds": 8.46,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -844,7 +844,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.96,
+          "processing_time_seconds": 15.89,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -852,7 +852,7 @@
           "warning_count": 0
         },
         "template_filename": "boss_shuffle_none.yaml",
-        "timestamp": "2025-11-23T06:11:18.289028",
+        "timestamp": "2025-11-24T07:48:34.650981",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -874,7 +874,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.65,
+          "processing_time_seconds": 7.87,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -889,7 +889,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.6,
+          "processing_time_seconds": 16.66,
           "return_code": 0,
           "sphere_reached": 27.1,
           "success": true,
@@ -897,7 +897,7 @@
           "warning_count": 0
         },
         "template_filename": "boss_shuffle_singularity.yaml",
-        "timestamp": "2025-11-23T06:10:53.399396",
+        "timestamp": "2025-11-24T07:48:16.114989",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -919,7 +919,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.18,
+          "processing_time_seconds": 8.37,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -934,7 +934,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.95,
+          "processing_time_seconds": 15.89,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -942,7 +942,7 @@
           "warning_count": 0
         },
         "template_filename": "bush_shuffle_false.yaml",
-        "timestamp": "2025-11-23T06:11:34.602502",
+        "timestamp": "2025-11-24T07:49:03.892562",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -964,7 +964,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.11,
+          "processing_time_seconds": 8.69,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -979,7 +979,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.05,
+          "processing_time_seconds": 15.93,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -987,7 +987,7 @@
           "warning_count": 0
         },
         "template_filename": "bush_shuffle_true.yaml",
-        "timestamp": "2025-11-23T06:11:35.652277",
+        "timestamp": "2025-11-24T07:49:12.815655",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1009,7 +1009,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.69,
+          "processing_time_seconds": 8.75,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1024,7 +1024,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.03,
+          "processing_time_seconds": 16.99,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -1032,7 +1032,7 @@
           "warning_count": 0
         },
         "template_filename": "compass_shuffle_any_world.yaml",
-        "timestamp": "2025-11-23T06:11:20.326178",
+        "timestamp": "2025-11-24T07:48:37.339115",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1054,7 +1054,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.17,
+          "processing_time_seconds": 8.51,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1069,7 +1069,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.9,
+          "processing_time_seconds": 15.88,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -1077,7 +1077,7 @@
           "warning_count": 0
         },
         "template_filename": "compass_shuffle_different_world.yaml",
-        "timestamp": "2025-11-23T06:11:41.966096",
+        "timestamp": "2025-11-24T07:48:57.476311",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1099,7 +1099,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.46,
+          "processing_time_seconds": 8.13,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1114,7 +1114,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.03,
+          "processing_time_seconds": 15.85,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -1122,7 +1122,7 @@
           "warning_count": 0
         },
         "template_filename": "compass_shuffle_original_dungeon.yaml",
-        "timestamp": "2025-11-23T06:11:28.121581",
+        "timestamp": "2025-11-24T07:49:02.890444",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1144,7 +1144,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.17,
+          "processing_time_seconds": 8.37,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1159,7 +1159,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.91,
+          "processing_time_seconds": 15.87,
           "return_code": 0,
           "sphere_reached": 18.1,
           "success": true,
@@ -1167,7 +1167,7 @@
           "warning_count": 0
         },
         "template_filename": "compass_shuffle_own_dungeons.yaml",
-        "timestamp": "2025-11-23T06:11:09.585923",
+        "timestamp": "2025-11-24T07:48:56.881372",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1189,7 +1189,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.15,
+          "processing_time_seconds": 7.66,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1204,7 +1204,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.94,
+          "processing_time_seconds": 15.7,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -1212,7 +1212,7 @@
           "warning_count": 0
         },
         "template_filename": "compass_shuffle_own_world.yaml",
-        "timestamp": "2025-11-23T06:11:46.067027",
+        "timestamp": "2025-11-24T07:48:57.685256",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1234,7 +1234,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.22,
+          "processing_time_seconds": 8.26,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1249,7 +1249,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.98,
+          "processing_time_seconds": 15.84,
           "return_code": 0,
           "sphere_reached": 20.1,
           "success": true,
@@ -1257,7 +1257,7 @@
           "warning_count": 0
         },
         "template_filename": "compass_shuffle_start_with.yaml",
-        "timestamp": "2025-11-23T06:11:29.354991",
+        "timestamp": "2025-11-24T07:48:55.441387",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1279,7 +1279,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.51,
+          "processing_time_seconds": 8.43,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1294,7 +1294,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 17.03,
+          "processing_time_seconds": 15.89,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -1302,7 +1302,7 @@
           "warning_count": 0
         },
         "template_filename": "dark_room_logic_lamp.yaml",
-        "timestamp": "2025-11-23T06:11:42.737019",
+        "timestamp": "2025-11-24T07:48:59.312642",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1324,7 +1324,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.57,
+          "processing_time_seconds": 7.87,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1337,17 +1337,17 @@
         "seed": "1",
         "seed_id": "AP_14089154938208861744",
         "spoiler_test": {
-          "error_count": 4,
-          "pass_fail": "failed",
-          "processing_time_seconds": 168.67,
+          "error_count": 0,
+          "pass_fail": "passed",
+          "processing_time_seconds": 16.74,
           "return_code": 0,
-          "sphere_reached": 0,
+          "sphere_reached": 22.1,
           "success": true,
           "total_spheres": 22.1,
           "warning_count": 0
         },
         "template_filename": "dark_room_logic_none.yaml",
-        "timestamp": "2025-11-23T06:11:18.973052",
+        "timestamp": "2025-11-24T07:48:40.931844",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1369,7 +1369,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.22,
+          "processing_time_seconds": 8.25,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1384,7 +1384,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.99,
+          "processing_time_seconds": 15.89,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -1392,7 +1392,7 @@
           "warning_count": 0
         },
         "template_filename": "dark_room_logic_torches.yaml",
-        "timestamp": "2025-11-23T06:11:59.046289",
+        "timestamp": "2025-11-24T07:49:28.460031",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1414,7 +1414,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.12,
+          "processing_time_seconds": 8.96,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1429,7 +1429,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.94,
+          "processing_time_seconds": 15.95,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -1437,7 +1437,7 @@
           "warning_count": 0
         },
         "template_filename": "death_link_false.yaml",
-        "timestamp": "2025-11-23T06:12:00.115453",
+        "timestamp": "2025-11-24T07:49:37.752348",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1459,7 +1459,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.22,
+          "processing_time_seconds": 8.78,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1482,7 +1482,7 @@
           "warning_count": 0
         },
         "template_filename": "death_link_true.yaml",
-        "timestamp": "2025-11-23T06:11:45.371092",
+        "timestamp": "2025-11-24T07:49:03.408553",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1504,7 +1504,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.2,
+          "processing_time_seconds": 8.68,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1519,7 +1519,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.94,
+          "processing_time_seconds": 15.86,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -1527,7 +1527,7 @@
           "warning_count": 0
         },
         "template_filename": "dungeon_counters_default.yaml",
-        "timestamp": "2025-11-23T06:12:06.327266",
+        "timestamp": "2025-11-24T07:49:22.177048",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1549,7 +1549,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.15,
+          "processing_time_seconds": 8.16,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1564,7 +1564,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.96,
+          "processing_time_seconds": 15.85,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -1572,7 +1572,7 @@
           "warning_count": 0
         },
         "template_filename": "dungeon_counters_off.yaml",
-        "timestamp": "2025-11-23T06:11:52.914185",
+        "timestamp": "2025-11-24T07:49:27.181871",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1594,7 +1594,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.18,
+          "processing_time_seconds": 8.28,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1609,7 +1609,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.95,
+          "processing_time_seconds": 15.92,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -1617,7 +1617,7 @@
           "warning_count": 0
         },
         "template_filename": "dungeon_counters_on.yaml",
-        "timestamp": "2025-11-23T06:11:33.976227",
+        "timestamp": "2025-11-24T07:49:21.431192",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1639,7 +1639,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.19,
+          "processing_time_seconds": 7.57,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1654,7 +1654,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.94,
+          "processing_time_seconds": 15.69,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -1662,7 +1662,7 @@
           "warning_count": 0
         },
         "template_filename": "dungeon_counters_pickup.yaml",
-        "timestamp": "2025-11-23T06:12:10.471650",
+        "timestamp": "2025-11-24T07:49:21.321544",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1699,7 +1699,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.98,
+          "processing_time_seconds": 15.87,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -1707,7 +1707,7 @@
           "warning_count": 0
         },
         "template_filename": "enemy_damage_chaos.yaml",
-        "timestamp": "2025-11-23T06:11:53.871246",
+        "timestamp": "2025-11-24T07:49:19.860963",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1729,7 +1729,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.51,
+          "processing_time_seconds": 8.37,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1744,7 +1744,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.97,
+          "processing_time_seconds": 15.88,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -1752,7 +1752,7 @@
           "warning_count": 0
         },
         "template_filename": "enemy_damage_default.yaml",
-        "timestamp": "2025-11-23T06:12:08.606411",
+        "timestamp": "2025-11-24T07:49:23.948947",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1774,7 +1774,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.24,
+          "processing_time_seconds": 7.97,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1789,7 +1789,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.99,
+          "processing_time_seconds": 15.72,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -1797,7 +1797,7 @@
           "warning_count": 0
         },
         "template_filename": "enemy_damage_shuffled.yaml",
-        "timestamp": "2025-11-23T06:14:16.527182",
+        "timestamp": "2025-11-24T07:49:05.832525",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1819,7 +1819,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.2,
+          "processing_time_seconds": 8.29,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1834,7 +1834,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.96,
+          "processing_time_seconds": 15.88,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -1842,7 +1842,7 @@
           "warning_count": 0
         },
         "template_filename": "enemy_health_default.yaml",
-        "timestamp": "2025-11-23T06:12:23.564812",
+        "timestamp": "2025-11-24T07:49:52.910824",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1864,7 +1864,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.29,
+          "processing_time_seconds": 8.68,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1879,7 +1879,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.92,
+          "processing_time_seconds": 15.95,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -1887,7 +1887,7 @@
           "warning_count": 0
         },
         "template_filename": "enemy_health_easy.yaml",
-        "timestamp": "2025-11-23T06:12:24.478705",
+        "timestamp": "2025-11-24T07:50:02.980152",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1909,7 +1909,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.28,
+          "processing_time_seconds": 8.74,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1924,7 +1924,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.95,
+          "processing_time_seconds": 15.98,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -1932,7 +1932,7 @@
           "warning_count": 0
         },
         "template_filename": "enemy_health_expert.yaml",
-        "timestamp": "2025-11-23T06:12:09.841924",
+        "timestamp": "2025-11-24T07:49:28.471722",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1954,7 +1954,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.22,
+          "processing_time_seconds": 8.25,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -1969,7 +1969,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.96,
+          "processing_time_seconds": 15.88,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -1977,7 +1977,7 @@
           "warning_count": 0
         },
         "template_filename": "enemy_health_hard.yaml",
-        "timestamp": "2025-11-23T06:12:30.764674",
+        "timestamp": "2025-11-24T07:49:47.034263",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1999,7 +1999,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.77,
+          "processing_time_seconds": 8.14,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -2014,7 +2014,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.0,
+          "processing_time_seconds": 15.87,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -2022,7 +2022,7 @@
           "warning_count": 0
         },
         "template_filename": "enemy_shuffle_false.yaml",
-        "timestamp": "2025-11-23T06:12:17.343205",
+        "timestamp": "2025-11-24T07:49:51.504183",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2044,7 +2044,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.4,
+          "processing_time_seconds": 8.49,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -2059,7 +2059,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 14.67,
+          "processing_time_seconds": 14.7,
           "return_code": 1,
           "sphere_reached": 0.0,
           "success": false,
@@ -2067,7 +2067,7 @@
           "warning_count": 0
         },
         "template_filename": "enemy_shuffle_true.yaml",
-        "timestamp": "2025-11-23T06:11:58.425942",
+        "timestamp": "2025-11-24T07:49:45.972698",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2112,7 +2112,7 @@
           "warning_count": 0
         },
         "template_filename": "entrance_shuffle_crossed.yaml",
-        "timestamp": "2025-11-23T06:12:34.906337",
+        "timestamp": "2025-11-24T07:49:44.864270",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2157,7 +2157,7 @@
           "warning_count": 0
         },
         "template_filename": "entrance_shuffle_dungeons_crossed.yaml",
-        "timestamp": "2025-11-23T06:12:18.318976",
+        "timestamp": "2025-11-24T07:49:44.190482",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2202,7 +2202,7 @@
           "warning_count": 0
         },
         "template_filename": "entrance_shuffle_dungeons_full.yaml",
-        "timestamp": "2025-11-23T06:12:33.393932",
+        "timestamp": "2025-11-24T07:49:48.504238",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2224,7 +2224,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 7.67,
+          "processing_time_seconds": 7.24,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -2239,7 +2239,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.0,
+          "processing_time_seconds": 15.79,
           "return_code": 0,
           "sphere_reached": 24.2,
           "success": true,
@@ -2247,7 +2247,7 @@
           "warning_count": 0
         },
         "template_filename": "entrance_shuffle_dungeons_simple.yaml",
-        "timestamp": "2025-11-23T06:14:41.073203",
+        "timestamp": "2025-11-24T07:49:29.811887",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2292,7 +2292,7 @@
           "warning_count": 0
         },
         "template_filename": "entrance_shuffle_full.yaml",
-        "timestamp": "2025-11-23T06:12:48.043036",
+        "timestamp": "2025-11-24T07:50:17.393735",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2337,7 +2337,7 @@
           "warning_count": 0
         },
         "template_filename": "entrance_shuffle_insanity.yaml",
-        "timestamp": "2025-11-23T06:12:48.987056",
+        "timestamp": "2025-11-24T07:50:27.931459",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2359,7 +2359,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 7.83,
+          "processing_time_seconds": 8.12,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -2372,17 +2372,17 @@
         "seed": "1",
         "seed_id": "AP_14089154938208861744",
         "spoiler_test": {
-          "error_count": 4,
-          "pass_fail": "failed",
-          "processing_time_seconds": 167.58,
+          "error_count": 0,
+          "pass_fail": "passed",
+          "processing_time_seconds": 15.94,
           "return_code": 0,
-          "sphere_reached": 0,
+          "sphere_reached": 33.2,
           "success": true,
           "total_spheres": 33.2,
           "warning_count": 0
         },
         "template_filename": "entrance_shuffle_restricted.yaml",
-        "timestamp": "2025-11-23T06:12:34.387413",
+        "timestamp": "2025-11-24T07:49:53.516099",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2404,7 +2404,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 7.41,
+          "processing_time_seconds": 7.42,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -2419,7 +2419,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.91,
+          "processing_time_seconds": 15.85,
           "return_code": 0,
           "sphere_reached": 28.2,
           "success": true,
@@ -2427,7 +2427,7 @@
           "warning_count": 0
         },
         "template_filename": "entrance_shuffle_simple.yaml",
-        "timestamp": "2025-11-23T06:12:55.250004",
+        "timestamp": "2025-11-24T07:50:11.477702",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2449,7 +2449,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.26,
+          "processing_time_seconds": 8.08,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -2464,7 +2464,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.92,
+          "processing_time_seconds": 15.87,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -2472,7 +2472,7 @@
           "warning_count": 0
         },
         "template_filename": "entrance_shuffle_vanilla.yaml",
-        "timestamp": "2025-11-23T06:12:42.435342",
+        "timestamp": "2025-11-24T07:50:15.822349",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2494,7 +2494,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.21,
+          "processing_time_seconds": 8.38,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -2509,7 +2509,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.93,
+          "processing_time_seconds": 15.87,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -2517,7 +2517,7 @@
           "warning_count": 0
         },
         "template_filename": "expert_mode.yaml",
-        "timestamp": "2025-11-23T06:12:21.816508",
+        "timestamp": "2025-11-24T07:50:09.743065",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2539,7 +2539,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.73,
+          "processing_time_seconds": 8.13,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -2554,7 +2554,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 14.81,
+          "processing_time_seconds": 14.41,
           "return_code": 1,
           "sphere_reached": 0.0,
           "success": false,
@@ -2562,7 +2562,7 @@
           "warning_count": 0
         },
         "template_filename": "fully_randomized.yaml",
-        "timestamp": "2025-11-23T06:22:35.112370",
+        "timestamp": "2025-11-24T07:59:45.050564",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2584,7 +2584,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.36,
+          "processing_time_seconds": 8.37,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -2599,7 +2599,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.96,
+          "processing_time_seconds": 15.87,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -2607,7 +2607,7 @@
           "warning_count": 0
         },
         "template_filename": "glitch_boots_false.yaml",
-        "timestamp": "2025-11-23T06:22:18.521192",
+        "timestamp": "2025-11-24T07:59:44.397201",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2629,7 +2629,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.19,
+          "processing_time_seconds": 8.34,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -2644,7 +2644,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.93,
+          "processing_time_seconds": 15.9,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -2652,7 +2652,7 @@
           "warning_count": 0
         },
         "template_filename": "glitch_boots_true.yaml",
-        "timestamp": "2025-11-23T06:22:33.587444",
+        "timestamp": "2025-11-24T07:59:48.704165",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2674,7 +2674,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 9.85,
+          "processing_time_seconds": 9.14,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -2689,7 +2689,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 15.04,
+          "processing_time_seconds": 14.62,
           "return_code": 1,
           "sphere_reached": 0.1,
           "success": false,
@@ -2697,7 +2697,7 @@
           "warning_count": 0
         },
         "template_filename": "glitched_logic.yaml",
-        "timestamp": "2025-11-23T06:15:05.055797",
+        "timestamp": "2025-11-24T07:49:53.126814",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2719,7 +2719,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 9.37,
+          "processing_time_seconds": 9.58,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -2734,7 +2734,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 14.92,
+          "processing_time_seconds": 14.97,
           "return_code": 1,
           "sphere_reached": 0.1,
           "success": false,
@@ -2742,7 +2742,7 @@
           "warning_count": 0
         },
         "template_filename": "glitches_required_hybrid_major_glitches.yaml",
-        "timestamp": "2025-11-23T06:22:48.237355",
+        "timestamp": "2025-11-24T08:00:17.593076",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2764,7 +2764,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.89,
+          "processing_time_seconds": 8.97,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -2779,7 +2779,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 14.8,
+          "processing_time_seconds": 14.79,
           "return_code": 1,
           "sphere_reached": 0.3,
           "success": false,
@@ -2787,7 +2787,7 @@
           "warning_count": 0
         },
         "template_filename": "glitches_required_minor_glitches.yaml",
-        "timestamp": "2025-11-23T06:22:49.183860",
+        "timestamp": "2025-11-24T08:00:28.135934",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2809,7 +2809,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.26,
+          "processing_time_seconds": 8.58,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -2824,7 +2824,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.97,
+          "processing_time_seconds": 15.9,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -2832,7 +2832,7 @@
           "warning_count": 0
         },
         "template_filename": "glitches_required_no_glitches.yaml",
-        "timestamp": "2025-11-23T06:15:30.099408",
+        "timestamp": "2025-11-24T07:50:17.884626",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2854,7 +2854,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 3.02,
+          "processing_time_seconds": 2.92,
           "return_code": 0,
           "success": true,
           "warning_count": 3
@@ -2869,7 +2869,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 14.94,
+          "processing_time_seconds": 13.84,
           "return_code": 0,
           "sphere_reached": 0.131,
           "success": true,
@@ -2877,7 +2877,7 @@
           "warning_count": 0
         },
         "template_filename": "glitches_required_no_logic.yaml",
-        "timestamp": "2025-11-23T06:13:18.869796",
+        "timestamp": "2025-11-24T07:50:35.055110",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2899,7 +2899,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 9.43,
+          "processing_time_seconds": 9.37,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -2914,7 +2914,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 15.0,
+          "processing_time_seconds": 14.98,
           "return_code": 1,
           "sphere_reached": 0.1,
           "success": false,
@@ -2922,7 +2922,7 @@
           "warning_count": 0
         },
         "template_filename": "glitches_required_overworld_glitches.yaml",
-        "timestamp": "2025-11-23T06:13:06.917635",
+        "timestamp": "2025-11-24T07:50:40.085548",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2944,7 +2944,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.19,
+          "processing_time_seconds": 8.31,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -2959,7 +2959,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.97,
+          "processing_time_seconds": 15.9,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -2967,7 +2967,7 @@
           "warning_count": 0
         },
         "template_filename": "goal_bosses.yaml",
-        "timestamp": "2025-11-23T06:12:46.277162",
+        "timestamp": "2025-11-24T07:50:34.307697",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -2989,7 +2989,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.29,
+          "processing_time_seconds": 7.71,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3004,7 +3004,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 21.05,
+          "processing_time_seconds": 20.56,
           "return_code": 1,
           "sphere_reached": 6.1,
           "success": false,
@@ -3012,7 +3012,7 @@
           "warning_count": 0
         },
         "template_filename": "goal_crystals.yaml",
-        "timestamp": "2025-11-23T06:22:58.987385",
+        "timestamp": "2025-11-24T08:00:07.888678",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3034,7 +3034,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.28,
+          "processing_time_seconds": 8.25,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3049,7 +3049,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.96,
+          "processing_time_seconds": 15.83,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -3057,7 +3057,7 @@
           "warning_count": 0
         },
         "template_filename": "goal_ganon.yaml",
-        "timestamp": "2025-11-23T06:22:43.159090",
+        "timestamp": "2025-11-24T08:00:08.951323",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3079,7 +3079,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.3,
+          "processing_time_seconds": 8.36,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3094,7 +3094,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 21.01,
+          "processing_time_seconds": 21.06,
           "return_code": 1,
           "sphere_reached": 6.1,
           "success": false,
@@ -3102,7 +3102,7 @@
           "warning_count": 0
         },
         "template_filename": "goal_ganon_pedestal.yaml",
-        "timestamp": "2025-11-23T06:22:58.020831",
+        "timestamp": "2025-11-24T08:00:13.264927",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3124,7 +3124,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.66,
+          "processing_time_seconds": 8.05,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3139,7 +3139,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 18.07,
+          "processing_time_seconds": 17.59,
           "return_code": 1,
           "sphere_reached": 1.9,
           "success": false,
@@ -3147,7 +3147,7 @@
           "warning_count": 0
         },
         "template_filename": "goal_ganon_triforce_hunt.yaml",
-        "timestamp": "2025-11-23T06:15:30.286055",
+        "timestamp": "2025-11-24T07:50:17.407149",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3169,7 +3169,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.2,
+          "processing_time_seconds": 8.93,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3184,7 +3184,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 17.99,
+          "processing_time_seconds": 18.05,
           "return_code": 1,
           "sphere_reached": 1.9,
           "success": false,
@@ -3192,7 +3192,7 @@
           "warning_count": 0
         },
         "template_filename": "goal_local_ganon_triforce_hunt.yaml",
-        "timestamp": "2025-11-23T06:23:13.030203",
+        "timestamp": "2025-11-24T08:00:42.480521",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3214,7 +3214,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.25,
+          "processing_time_seconds": 8.31,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3229,7 +3229,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 33.25,
+          "processing_time_seconds": 33.36,
           "return_code": 1,
           "sphere_reached": 4.1,
           "success": false,
@@ -3237,7 +3237,7 @@
           "warning_count": 0
         },
         "template_filename": "goal_local_triforce_hunt.yaml",
-        "timestamp": "2025-11-23T06:23:13.197152",
+        "timestamp": "2025-11-24T08:00:52.218782",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3259,7 +3259,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.4,
+          "processing_time_seconds": 8.49,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3274,7 +3274,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.97,
+          "processing_time_seconds": 15.86,
           "return_code": 0,
           "sphere_reached": 25.3,
           "success": true,
@@ -3282,7 +3282,7 @@
           "warning_count": 0
         },
         "template_filename": "goal_pedestal.yaml",
-        "timestamp": "2025-11-23T06:15:54.644369",
+        "timestamp": "2025-11-24T07:50:42.695783",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3304,7 +3304,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.38,
+          "processing_time_seconds": 8.45,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3319,7 +3319,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 33.22,
+          "processing_time_seconds": 33.29,
           "return_code": 1,
           "sphere_reached": 4.1,
           "success": false,
@@ -3327,7 +3327,7 @@
           "warning_count": 0
         },
         "template_filename": "goal_triforce_hunt.yaml",
-        "timestamp": "2025-11-23T06:13:37.128459",
+        "timestamp": "2025-11-24T07:50:52.124610",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3349,7 +3349,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.39,
+          "processing_time_seconds": 8.45,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3364,7 +3364,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.02,
+          "processing_time_seconds": 15.92,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -3372,7 +3372,7 @@
           "warning_count": 0
         },
         "template_filename": "hard_mode.yaml",
-        "timestamp": "2025-11-23T06:13:31.674507",
+        "timestamp": "2025-11-24T07:51:04.776402",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3394,7 +3394,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.15,
+          "processing_time_seconds": 8.3,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3409,7 +3409,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.93,
+          "processing_time_seconds": 15.86,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -3417,7 +3417,7 @@
           "warning_count": 0
         },
         "template_filename": "hints_full.yaml",
-        "timestamp": "2025-11-23T06:13:10.745868",
+        "timestamp": "2025-11-24T07:50:58.829488",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3439,7 +3439,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.24,
+          "processing_time_seconds": 7.75,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3454,7 +3454,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.95,
+          "processing_time_seconds": 15.67,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -3462,7 +3462,7 @@
           "warning_count": 0
         },
         "template_filename": "hints_off.yaml",
-        "timestamp": "2025-11-23T06:23:28.650841",
+        "timestamp": "2025-11-24T08:00:36.463055",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3484,7 +3484,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.31,
+          "processing_time_seconds": 8.29,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3499,7 +3499,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.95,
+          "processing_time_seconds": 15.87,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -3507,7 +3507,7 @@
           "warning_count": 0
         },
         "template_filename": "hints_on.yaml",
-        "timestamp": "2025-11-23T06:23:07.707221",
+        "timestamp": "2025-11-24T08:00:33.339277",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3529,7 +3529,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.14,
+          "processing_time_seconds": 8.29,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3544,7 +3544,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.01,
+          "processing_time_seconds": 15.88,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -3552,7 +3552,7 @@
           "warning_count": 0
         },
         "template_filename": "include_witch_hut_false.yaml",
-        "timestamp": "2025-11-23T06:23:27.655597",
+        "timestamp": "2025-11-24T08:00:43.320914",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3574,7 +3574,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.36,
+          "processing_time_seconds": 7.93,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3589,7 +3589,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.99,
+          "processing_time_seconds": 15.71,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -3597,7 +3597,7 @@
           "warning_count": 0
         },
         "template_filename": "include_witch_hut_true.yaml",
-        "timestamp": "2025-11-23T06:15:57.349037",
+        "timestamp": "2025-11-24T07:50:43.352451",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3619,7 +3619,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.17,
+          "processing_time_seconds": 8.46,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3634,7 +3634,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.98,
+          "processing_time_seconds": 15.88,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -3642,7 +3642,7 @@
           "warning_count": 0
         },
         "template_filename": "item_functionality_easy.yaml",
-        "timestamp": "2025-11-23T06:23:39.549076",
+        "timestamp": "2025-11-24T08:01:09.792742",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3664,7 +3664,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.11,
+          "processing_time_seconds": 8.29,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3679,7 +3679,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.93,
+          "processing_time_seconds": 15.91,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -3687,7 +3687,7 @@
           "warning_count": 0
         },
         "template_filename": "item_functionality_expert.yaml",
-        "timestamp": "2025-11-23T06:23:55.021378",
+        "timestamp": "2025-11-24T08:01:34.216273",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3709,7 +3709,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.5,
+          "processing_time_seconds": 8.44,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3722,17 +3722,17 @@
         "seed": "1",
         "seed_id": "AP_14089154938208861744",
         "spoiler_test": {
-          "error_count": 4,
-          "pass_fail": "failed",
-          "processing_time_seconds": 167.56,
+          "error_count": 0,
+          "pass_fail": "passed",
+          "processing_time_seconds": 15.93,
           "return_code": 0,
-          "sphere_reached": 0,
+          "sphere_reached": 22.1,
           "success": true,
           "total_spheres": 22.1,
           "warning_count": 0
         },
         "template_filename": "item_functionality_hard.yaml",
-        "timestamp": "2025-11-23T06:16:19.325166",
+        "timestamp": "2025-11-24T07:51:07.360577",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3754,7 +3754,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.31,
+          "processing_time_seconds": 8.41,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3769,7 +3769,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.93,
+          "processing_time_seconds": 15.89,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -3777,7 +3777,7 @@
           "warning_count": 0
         },
         "template_filename": "item_functionality_normal.yaml",
-        "timestamp": "2025-11-23T06:14:19.039509",
+        "timestamp": "2025-11-24T07:51:34.202420",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3799,7 +3799,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.24,
+          "processing_time_seconds": 8.21,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3814,7 +3814,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 17.01,
+          "processing_time_seconds": 16.87,
           "return_code": 0,
           "sphere_reached": 20.3,
           "success": true,
@@ -3822,7 +3822,7 @@
           "warning_count": 0
         },
         "template_filename": "item_pool_easy.yaml",
-        "timestamp": "2025-11-23T06:13:56.396665",
+        "timestamp": "2025-11-24T07:51:29.451383",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3844,7 +3844,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.15,
+          "processing_time_seconds": 8.38,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3859,7 +3859,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.95,
+          "processing_time_seconds": 15.89,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -3867,7 +3867,7 @@
           "warning_count": 0
         },
         "template_filename": "item_pool_expert.yaml",
-        "timestamp": "2025-11-23T06:13:35.141233",
+        "timestamp": "2025-11-24T07:51:23.306257",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3889,7 +3889,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.17,
+          "processing_time_seconds": 7.81,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3904,7 +3904,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.0,
+          "processing_time_seconds": 15.74,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -3912,7 +3912,7 @@
           "warning_count": 0
         },
         "template_filename": "item_pool_hard.yaml",
-        "timestamp": "2025-11-23T06:23:53.154799",
+        "timestamp": "2025-11-24T08:01:00.169237",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3934,7 +3934,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.29,
+          "processing_time_seconds": 8.2,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3949,7 +3949,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.99,
+          "processing_time_seconds": 15.9,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -3957,7 +3957,7 @@
           "warning_count": 0
         },
         "template_filename": "item_pool_normal.yaml",
-        "timestamp": "2025-11-23T06:23:32.276435",
+        "timestamp": "2025-11-24T08:00:57.812986",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -3979,7 +3979,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.16,
+          "processing_time_seconds": 8.36,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -3994,7 +3994,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.01,
+          "processing_time_seconds": 15.89,
           "return_code": 0,
           "sphere_reached": 26.1,
           "success": true,
@@ -4002,7 +4002,7 @@
           "warning_count": 0
         },
         "template_filename": "key_drop_shuffle_false.yaml",
-        "timestamp": "2025-11-23T06:23:52.112444",
+        "timestamp": "2025-11-24T08:01:07.808664",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4024,7 +4024,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.31,
+          "processing_time_seconds": 7.91,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -4039,7 +4039,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.0,
+          "processing_time_seconds": 15.8,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -4047,7 +4047,7 @@
           "warning_count": 0
         },
         "template_filename": "key_drop_shuffle_true.yaml",
-        "timestamp": "2025-11-23T06:16:22.007629",
+        "timestamp": "2025-11-24T07:51:07.286386",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4069,7 +4069,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 7.8,
+          "processing_time_seconds": 8.4,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -4084,7 +4084,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.98,
+          "processing_time_seconds": 15.93,
           "return_code": 0,
           "sphere_reached": 21.3,
           "success": true,
@@ -4092,7 +4092,7 @@
           "warning_count": 0
         },
         "template_filename": "key_shuffle_extreme.yaml",
-        "timestamp": "2025-11-23T06:24:04.009391",
+        "timestamp": "2025-11-24T08:01:34.462711",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4114,7 +4114,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.11,
+          "processing_time_seconds": 8.2,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -4129,7 +4129,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.93,
+          "processing_time_seconds": 15.88,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -4137,7 +4137,7 @@
           "warning_count": 0
         },
         "template_filename": "killable_thieves_false.yaml",
-        "timestamp": "2025-11-23T06:24:19.367368",
+        "timestamp": "2025-11-24T08:01:58.729815",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4159,7 +4159,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.31,
+          "processing_time_seconds": 8.28,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -4174,7 +4174,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.99,
+          "processing_time_seconds": 15.87,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -4182,7 +4182,7 @@
           "warning_count": 0
         },
         "template_filename": "killable_thieves_true.yaml",
-        "timestamp": "2025-11-23T06:19:15.692047",
+        "timestamp": "2025-11-24T07:51:32.041880",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4204,7 +4204,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.17,
+          "processing_time_seconds": 8.25,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -4217,17 +4217,17 @@
         "seed": "1",
         "seed_id": "AP_14089154938208861744",
         "spoiler_test": {
-          "error_count": 4,
-          "pass_fail": "failed",
-          "processing_time_seconds": 168.52,
+          "error_count": 0,
+          "pass_fail": "passed",
+          "processing_time_seconds": 15.89,
           "return_code": 0,
-          "sphere_reached": 0,
+          "sphere_reached": 17.1,
           "success": true,
           "total_spheres": 17.1,
           "warning_count": 0
         },
         "template_filename": "map_shuffle_any_world.yaml",
-        "timestamp": "2025-11-23T06:14:43.581813",
+        "timestamp": "2025-11-24T07:51:58.808772",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4249,7 +4249,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.46,
+          "processing_time_seconds": 8.08,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -4264,7 +4264,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.04,
+          "processing_time_seconds": 15.86,
           "return_code": 0,
           "sphere_reached": 17.1,
           "success": true,
@@ -4272,7 +4272,7 @@
           "warning_count": 0
         },
         "template_filename": "map_shuffle_different_world.yaml",
-        "timestamp": "2025-11-23T06:14:21.970621",
+        "timestamp": "2025-11-24T07:51:54.834573",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4294,7 +4294,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.13,
+          "processing_time_seconds": 8.51,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -4309,7 +4309,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.97,
+          "processing_time_seconds": 15.92,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -4317,7 +4317,7 @@
           "warning_count": 0
         },
         "template_filename": "map_shuffle_original_dungeon.yaml",
-        "timestamp": "2025-11-23T06:13:59.560200",
+        "timestamp": "2025-11-24T07:51:47.885916",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4339,7 +4339,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.16,
+          "processing_time_seconds": 7.94,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -4354,7 +4354,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.97,
+          "processing_time_seconds": 15.73,
           "return_code": 0,
           "sphere_reached": 18.1,
           "success": true,
@@ -4362,7 +4362,7 @@
           "warning_count": 0
         },
         "template_filename": "map_shuffle_own_dungeons.yaml",
-        "timestamp": "2025-11-23T06:24:17.629123",
+        "timestamp": "2025-11-24T08:01:24.000286",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4384,7 +4384,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.17,
+          "processing_time_seconds": 8.22,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -4397,17 +4397,17 @@
         "seed": "1",
         "seed_id": "AP_14089154938208861744",
         "spoiler_test": {
-          "error_count": 4,
-          "pass_fail": "failed",
-          "processing_time_seconds": 167.57,
+          "error_count": 0,
+          "pass_fail": "passed",
+          "processing_time_seconds": 15.86,
           "return_code": 0,
-          "sphere_reached": 0,
+          "sphere_reached": 17.1,
           "success": true,
           "total_spheres": 17.1,
           "warning_count": 0
         },
         "template_filename": "map_shuffle_own_world.yaml",
-        "timestamp": "2025-11-23T06:23:56.881304",
+        "timestamp": "2025-11-24T08:01:22.227648",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4429,7 +4429,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.3,
+          "processing_time_seconds": 8.44,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -4444,7 +4444,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.0,
+          "processing_time_seconds": 15.89,
           "return_code": 0,
           "sphere_reached": 18.1,
           "success": true,
@@ -4452,7 +4452,7 @@
           "warning_count": 0
         },
         "template_filename": "map_shuffle_start_with.yaml",
-        "timestamp": "2025-11-23T06:24:16.597060",
+        "timestamp": "2025-11-24T08:01:32.378453",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4474,7 +4474,7 @@
         "generation": {
           "error_count": 3,
           "error_type": "FillError",
-          "processing_time_seconds": 2.38,
+          "processing_time_seconds": 2.29,
           "return_code": 1,
           "success": false,
           "warning_count": 2
@@ -4497,7 +4497,7 @@
           "warning_count": 0
         },
         "template_filename": "minimal_access.yaml",
-        "timestamp": "2025-11-23T06:16:46.641461",
+        "timestamp": "2025-11-24T07:51:31.297921",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4519,7 +4519,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.22,
+          "processing_time_seconds": 8.44,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -4534,7 +4534,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.94,
+          "processing_time_seconds": 15.91,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -4542,7 +4542,7 @@
           "warning_count": 0
         },
         "template_filename": "misery_mire_medallion_bombos.yaml",
-        "timestamp": "2025-11-23T06:24:28.095330",
+        "timestamp": "2025-11-24T08:01:59.105067",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4564,7 +4564,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.1,
+          "processing_time_seconds": 8.25,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -4579,7 +4579,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.97,
+          "processing_time_seconds": 15.88,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -4587,7 +4587,7 @@
           "warning_count": 0
         },
         "template_filename": "misery_mire_medallion_ether.yaml",
-        "timestamp": "2025-11-23T06:24:43.714416",
+        "timestamp": "2025-11-24T08:02:23.134707",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4609,7 +4609,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.35,
+          "processing_time_seconds": 8.25,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -4624,7 +4624,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.97,
+          "processing_time_seconds": 15.87,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -4632,7 +4632,7 @@
           "warning_count": 0
         },
         "template_filename": "misery_mire_medallion_quake.yaml",
-        "timestamp": "2025-11-23T06:19:40.306054",
+        "timestamp": "2025-11-24T07:51:56.505853",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4654,7 +4654,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.8,
+          "processing_time_seconds": 9.21,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -4669,7 +4669,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 20.96,
+          "processing_time_seconds": 21.03,
           "return_code": 1,
           "sphere_reached": 9.1,
           "success": false,
@@ -4677,7 +4677,7 @@
           "warning_count": 0
         },
         "template_filename": "mode_inverted.yaml",
-        "timestamp": "2025-11-23T06:17:40.571567",
+        "timestamp": "2025-11-24T07:52:23.258963",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4699,7 +4699,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.2,
+          "processing_time_seconds": 8.14,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -4712,17 +4712,17 @@
         "seed": "1",
         "seed_id": "AP_14089154938208861744",
         "spoiler_test": {
-          "error_count": 4,
-          "pass_fail": "failed",
-          "processing_time_seconds": 167.59,
+          "error_count": 0,
+          "pass_fail": "passed",
+          "processing_time_seconds": 15.83,
           "return_code": 0,
-          "sphere_reached": 0,
+          "sphere_reached": 22.1,
           "success": true,
           "total_spheres": 22.1,
           "warning_count": 0
         },
         "template_filename": "mode_open.yaml",
-        "timestamp": "2025-11-23T06:14:46.780708",
+        "timestamp": "2025-11-24T07:52:19.084439",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4744,7 +4744,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.14,
+          "processing_time_seconds": 8.47,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -4759,7 +4759,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.96,
+          "processing_time_seconds": 15.93,
           "return_code": 0,
           "sphere_reached": 27.1,
           "success": true,
@@ -4767,7 +4767,7 @@
           "warning_count": 0
         },
         "template_filename": "mode_standard.yaml",
-        "timestamp": "2025-11-23T06:14:23.972548",
+        "timestamp": "2025-11-24T07:52:12.639606",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4812,7 +4812,7 @@
           "warning_count": 0
         },
         "template_filename": "open_inverted.yaml",
-        "timestamp": "2025-11-23T06:24:42.069973",
+        "timestamp": "2025-11-24T08:01:47.949719",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4834,7 +4834,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.16,
+          "processing_time_seconds": 8.37,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -4849,7 +4849,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.04,
+          "processing_time_seconds": 15.88,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -4857,7 +4857,7 @@
           "warning_count": 0
         },
         "template_filename": "open_pyramid_auto.yaml",
-        "timestamp": "2025-11-23T06:26:52.937738",
+        "timestamp": "2025-11-24T08:01:46.623579",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4879,7 +4879,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.36,
+          "processing_time_seconds": 8.46,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -4894,7 +4894,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.95,
+          "processing_time_seconds": 15.89,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -4902,7 +4902,7 @@
           "warning_count": 0
         },
         "template_filename": "open_pyramid_closed.yaml",
-        "timestamp": "2025-11-23T06:24:41.210425",
+        "timestamp": "2025-11-24T08:01:57.029177",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4924,7 +4924,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.33,
+          "processing_time_seconds": 7.98,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -4939,7 +4939,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.01,
+          "processing_time_seconds": 15.77,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -4947,7 +4947,7 @@
           "warning_count": 0
         },
         "template_filename": "open_pyramid_goal.yaml",
-        "timestamp": "2025-11-23T06:16:49.182552",
+        "timestamp": "2025-11-24T07:51:33.738146",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -4969,7 +4969,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.25,
+          "processing_time_seconds": 8.54,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -4984,7 +4984,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 21.04,
+          "processing_time_seconds": 21.19,
           "return_code": 1,
           "sphere_reached": 6.1,
           "success": false,
@@ -4992,7 +4992,7 @@
           "warning_count": 0
         },
         "template_filename": "open_pyramid_open.yaml",
-        "timestamp": "2025-11-23T06:24:52.569892",
+        "timestamp": "2025-11-24T08:02:23.776400",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -5014,7 +5014,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.21,
+          "processing_time_seconds": 8.24,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -5029,7 +5029,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.93,
+          "processing_time_seconds": 15.91,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -5037,7 +5037,7 @@
           "warning_count": 0
         },
         "template_filename": "pot_shuffle_false.yaml",
-        "timestamp": "2025-11-23T06:25:08.099479",
+        "timestamp": "2025-11-24T08:02:47.576176",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -5059,7 +5059,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.18,
+          "processing_time_seconds": 8.5,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -5074,7 +5074,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.95,
+          "processing_time_seconds": 15.88,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -5082,7 +5082,7 @@
           "warning_count": 0
         },
         "template_filename": "pot_shuffle_true.yaml",
-        "timestamp": "2025-11-23T06:20:04.933174",
+        "timestamp": "2025-11-24T07:52:20.940641",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -5104,7 +5104,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.21,
+          "processing_time_seconds": 8.27,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -5119,7 +5119,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.91,
+          "processing_time_seconds": 15.89,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -5127,7 +5127,7 @@
           "warning_count": 0
         },
         "template_filename": "progression_balancing_disabled.yaml",
-        "timestamp": "2025-11-23T06:18:10.651452",
+        "timestamp": "2025-11-24T07:52:53.831538",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -5149,7 +5149,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.3,
+          "processing_time_seconds": 8.09,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -5164,7 +5164,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.94,
+          "processing_time_seconds": 15.84,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -5172,7 +5172,7 @@
           "warning_count": 0
         },
         "template_filename": "progression_balancing_extreme.yaml",
-        "timestamp": "2025-11-23T06:17:42.886227",
+        "timestamp": "2025-11-24T07:52:43.359450",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -5194,7 +5194,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.16,
+          "processing_time_seconds": 8.54,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -5209,7 +5209,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.94,
+          "processing_time_seconds": 15.87,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -5217,7 +5217,7 @@
           "warning_count": 0
         },
         "template_filename": "progression_balancing_normal.yaml",
-        "timestamp": "2025-11-23T06:14:48.388879",
+        "timestamp": "2025-11-24T07:52:37.362178",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -5239,7 +5239,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.21,
+          "processing_time_seconds": 7.67,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -5254,7 +5254,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.94,
+          "processing_time_seconds": 15.73,
           "return_code": 0,
           "sphere_reached": 24.1,
           "success": true,
@@ -5262,7 +5262,7 @@
           "warning_count": 0
         },
         "template_filename": "progressive_grouped_random.yaml",
-        "timestamp": "2025-11-23T06:34:42.270982",
+        "timestamp": "2025-11-24T08:11:48.142244",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -5284,7 +5284,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.24,
+          "processing_time_seconds": 8.18,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -5299,7 +5299,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.97,
+          "processing_time_seconds": 15.85,
           "return_code": 0,
           "sphere_reached": 28.1,
           "success": true,
@@ -5307,7 +5307,7 @@
           "warning_count": 0
         },
         "template_filename": "progressive_off.yaml",
-        "timestamp": "2025-11-23T06:27:17.451160",
+        "timestamp": "2025-11-24T08:02:11.177518",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -5329,7 +5329,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.32,
+          "processing_time_seconds": 8.46,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -5344,7 +5344,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.93,
+          "processing_time_seconds": 15.86,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -5352,7 +5352,7 @@
           "warning_count": 0
         },
         "template_filename": "progressive_on.yaml",
-        "timestamp": "2025-11-23T06:25:05.830282",
+        "timestamp": "2025-11-24T08:02:21.694636",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -5374,7 +5374,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.49,
+          "processing_time_seconds": 7.92,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -5389,7 +5389,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.97,
+          "processing_time_seconds": 15.74,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -5397,7 +5397,7 @@
           "warning_count": 0
         },
         "template_filename": "randomize_cost_types_false.yaml",
-        "timestamp": "2025-11-23T06:17:13.828826",
+        "timestamp": "2025-11-24T07:51:57.780355",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -5419,7 +5419,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.28,
+          "processing_time_seconds": 8.66,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -5434,7 +5434,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 19.04,
+          "processing_time_seconds": 18.97,
           "return_code": 0,
           "sphere_reached": 18.1,
           "success": true,
@@ -5442,7 +5442,7 @@
           "warning_count": 0
         },
         "template_filename": "randomize_cost_types_true.yaml",
-        "timestamp": "2025-11-23T06:25:22.186124",
+        "timestamp": "2025-11-24T08:02:53.846144",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -5464,7 +5464,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.11,
+          "processing_time_seconds": 8.24,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -5479,7 +5479,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.91,
+          "processing_time_seconds": 15.85,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -5487,7 +5487,7 @@
           "warning_count": 0
         },
         "template_filename": "randomize_shop_inventories_default.yaml",
-        "timestamp": "2025-11-23T06:25:32.538263",
+        "timestamp": "2025-11-24T08:03:12.043933",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -5509,7 +5509,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.31,
+          "processing_time_seconds": 8.43,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -5524,7 +5524,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.95,
+          "processing_time_seconds": 15.92,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -5532,7 +5532,7 @@
           "warning_count": 0
         },
         "template_filename": "randomize_shop_inventories_randomize_by_shop_type.yaml",
-        "timestamp": "2025-11-23T06:20:29.373188",
+        "timestamp": "2025-11-24T07:52:45.632332",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -5554,7 +5554,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.25,
+          "processing_time_seconds": 8.24,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -5569,7 +5569,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.9,
+          "processing_time_seconds": 15.88,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -5577,7 +5577,7 @@
           "warning_count": 0
         },
         "template_filename": "randomize_shop_inventories_randomize_each.yaml",
-        "timestamp": "2025-11-23T06:18:35.069539",
+        "timestamp": "2025-11-24T07:53:18.312009",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -5599,7 +5599,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.13,
+          "processing_time_seconds": 8.19,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -5614,7 +5614,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.0,
+          "processing_time_seconds": 15.89,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -5622,7 +5622,7 @@
           "warning_count": 0
         },
         "template_filename": "randomize_shop_prices_false.yaml",
-        "timestamp": "2025-11-23T06:18:07.443084",
+        "timestamp": "2025-11-24T07:53:07.596757",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -5644,142 +5644,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.14,
-          "return_code": 0,
-          "success": true,
-          "warning_count": 2
-        },
-        "rules_file": {
-          "path": "frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-          "size_bytes": 564096,
-          "size_mb": 0.54
-        },
-        "seed": "1",
-        "seed_id": "AP_14089154938208861744",
-        "spoiler_test": {
-          "error_count": 0,
-          "pass_fail": "passed",
-          "processing_time_seconds": 15.95,
-          "return_code": 0,
-          "sphere_reached": 22.1,
-          "success": true,
-          "total_spheres": 22.1,
-          "warning_count": 0
-        },
-        "template_filename": "randomize_shop_prices_true.yaml",
-        "timestamp": "2025-11-23T06:15:12.803206",
-        "world_info": {
-          "exporter_path": "exporter/games/alttp.py",
-          "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
-          "game_name_from_filename": "randomize_shop_prices_true",
-          "game_name_from_yaml": "A Link to the Past",
-          "has_custom_exporter": true,
-          "has_custom_game_logic": true,
-          "world_directory": "alttp"
-        }
-      },
-      "restrict_dungeon_item_on_boss_false": {
-        "analysis": {
-          "error_count": 0,
-          "success": true,
-          "warning_count": 0
-        },
-        "game_name_from_filename": "restrict_dungeon_item_on_boss_false",
-        "game_name_from_yaml": "A Link to the Past",
-        "generation": {
-          "error_count": 0,
-          "error_type": null,
-          "processing_time_seconds": 8.19,
-          "return_code": 0,
-          "success": true,
-          "warning_count": 2
-        },
-        "rules_file": {
-          "path": "frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-          "size_bytes": 564096,
-          "size_mb": 0.54
-        },
-        "seed": "1",
-        "seed_id": "AP_14089154938208861744",
-        "spoiler_test": {
-          "error_count": 0,
-          "pass_fail": "passed",
-          "processing_time_seconds": 15.95,
-          "return_code": 0,
-          "sphere_reached": 22.1,
-          "success": true,
-          "total_spheres": 22.1,
-          "warning_count": 0
-        },
-        "template_filename": "restrict_dungeon_item_on_boss_false.yaml",
-        "timestamp": "2025-11-23T06:35:06.728469",
-        "world_info": {
-          "exporter_path": "exporter/games/alttp.py",
-          "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
-          "game_name_from_filename": "restrict_dungeon_item_on_boss_false",
-          "game_name_from_yaml": "A Link to the Past",
-          "has_custom_exporter": true,
-          "has_custom_game_logic": true,
-          "world_directory": "alttp"
-        }
-      },
-      "restrict_dungeon_item_on_boss_true": {
-        "analysis": {
-          "error_count": 0,
-          "success": true,
-          "warning_count": 0
-        },
-        "game_name_from_filename": "restrict_dungeon_item_on_boss_true",
-        "game_name_from_yaml": "A Link to the Past",
-        "generation": {
-          "error_count": 0,
-          "error_type": null,
-          "processing_time_seconds": 8.21,
-          "return_code": 0,
-          "success": true,
-          "warning_count": 2
-        },
-        "rules_file": {
-          "path": "frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-          "size_bytes": 564096,
-          "size_mb": 0.54
-        },
-        "seed": "1",
-        "seed_id": "AP_14089154938208861744",
-        "spoiler_test": {
-          "error_count": 0,
-          "pass_fail": "passed",
-          "processing_time_seconds": 15.97,
-          "return_code": 0,
-          "sphere_reached": 30.1,
-          "success": true,
-          "total_spheres": 30.1,
-          "warning_count": 0
-        },
-        "template_filename": "restrict_dungeon_item_on_boss_true.yaml",
-        "timestamp": "2025-11-23T06:27:41.965864",
-        "world_info": {
-          "exporter_path": "exporter/games/alttp.py",
-          "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
-          "game_name_from_filename": "restrict_dungeon_item_on_boss_true",
-          "game_name_from_yaml": "A Link to the Past",
-          "has_custom_exporter": true,
-          "has_custom_game_logic": true,
-          "world_directory": "alttp"
-        }
-      },
-      "retro_bow_false": {
-        "analysis": {
-          "error_count": 0,
-          "success": true,
-          "warning_count": 0
-        },
-        "game_name_from_filename": "retro_bow_false",
-        "game_name_from_yaml": "A Link to the Past",
-        "generation": {
-          "error_count": 0,
-          "error_type": null,
-          "processing_time_seconds": 8.07,
+          "processing_time_seconds": 8.37,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -5801,8 +5666,143 @@
           "total_spheres": 22.1,
           "warning_count": 0
         },
+        "template_filename": "randomize_shop_prices_true.yaml",
+        "timestamp": "2025-11-24T07:53:02.096304",
+        "world_info": {
+          "exporter_path": "exporter/games/alttp.py",
+          "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
+          "game_name_from_filename": "randomize_shop_prices_true",
+          "game_name_from_yaml": "A Link to the Past",
+          "has_custom_exporter": true,
+          "has_custom_game_logic": true,
+          "world_directory": "alttp"
+        }
+      },
+      "restrict_dungeon_item_on_boss_false": {
+        "analysis": {
+          "error_count": 0,
+          "success": true,
+          "warning_count": 0
+        },
+        "game_name_from_filename": "restrict_dungeon_item_on_boss_false",
+        "game_name_from_yaml": "A Link to the Past",
+        "generation": {
+          "error_count": 0,
+          "error_type": null,
+          "processing_time_seconds": 7.79,
+          "return_code": 0,
+          "success": true,
+          "warning_count": 2
+        },
+        "rules_file": {
+          "path": "frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "size_bytes": 564096,
+          "size_mb": 0.54
+        },
+        "seed": "1",
+        "seed_id": "AP_14089154938208861744",
+        "spoiler_test": {
+          "error_count": 0,
+          "pass_fail": "passed",
+          "processing_time_seconds": 15.68,
+          "return_code": 0,
+          "sphere_reached": 22.1,
+          "success": true,
+          "total_spheres": 22.1,
+          "warning_count": 0
+        },
+        "template_filename": "restrict_dungeon_item_on_boss_false.yaml",
+        "timestamp": "2025-11-24T08:12:11.824203",
+        "world_info": {
+          "exporter_path": "exporter/games/alttp.py",
+          "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
+          "game_name_from_filename": "restrict_dungeon_item_on_boss_false",
+          "game_name_from_yaml": "A Link to the Past",
+          "has_custom_exporter": true,
+          "has_custom_game_logic": true,
+          "world_directory": "alttp"
+        }
+      },
+      "restrict_dungeon_item_on_boss_true": {
+        "analysis": {
+          "error_count": 0,
+          "success": true,
+          "warning_count": 0
+        },
+        "game_name_from_filename": "restrict_dungeon_item_on_boss_true",
+        "game_name_from_yaml": "A Link to the Past",
+        "generation": {
+          "error_count": 0,
+          "error_type": null,
+          "processing_time_seconds": 8.22,
+          "return_code": 0,
+          "success": true,
+          "warning_count": 2
+        },
+        "rules_file": {
+          "path": "frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "size_bytes": 564096,
+          "size_mb": 0.54
+        },
+        "seed": "1",
+        "seed_id": "AP_14089154938208861744",
+        "spoiler_test": {
+          "error_count": 0,
+          "pass_fail": "passed",
+          "processing_time_seconds": 15.89,
+          "return_code": 0,
+          "sphere_reached": 30.1,
+          "success": true,
+          "total_spheres": 30.1,
+          "warning_count": 0
+        },
+        "template_filename": "restrict_dungeon_item_on_boss_true.yaml",
+        "timestamp": "2025-11-24T08:02:35.525458",
+        "world_info": {
+          "exporter_path": "exporter/games/alttp.py",
+          "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
+          "game_name_from_filename": "restrict_dungeon_item_on_boss_true",
+          "game_name_from_yaml": "A Link to the Past",
+          "has_custom_exporter": true,
+          "has_custom_game_logic": true,
+          "world_directory": "alttp"
+        }
+      },
+      "retro_bow_false": {
+        "analysis": {
+          "error_count": 0,
+          "success": true,
+          "warning_count": 0
+        },
+        "game_name_from_filename": "retro_bow_false",
+        "game_name_from_yaml": "A Link to the Past",
+        "generation": {
+          "error_count": 0,
+          "error_type": null,
+          "processing_time_seconds": 8.4,
+          "return_code": 0,
+          "success": true,
+          "warning_count": 2
+        },
+        "rules_file": {
+          "path": "frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "size_bytes": 564096,
+          "size_mb": 0.54
+        },
+        "seed": "1",
+        "seed_id": "AP_14089154938208861744",
+        "spoiler_test": {
+          "error_count": 0,
+          "pass_fail": "passed",
+          "processing_time_seconds": 15.95,
+          "return_code": 0,
+          "sphere_reached": 22.1,
+          "success": true,
+          "total_spheres": 22.1,
+          "warning_count": 0
+        },
         "template_filename": "retro_bow_false.yaml",
-        "timestamp": "2025-11-23T06:25:30.382811",
+        "timestamp": "2025-11-24T08:02:46.333540",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -5824,7 +5824,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.27,
+          "processing_time_seconds": 7.91,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -5839,7 +5839,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 14.76,
+          "processing_time_seconds": 14.37,
           "return_code": 1,
           "sphere_reached": 0.0,
           "success": false,
@@ -5847,7 +5847,7 @@
           "warning_count": 0
         },
         "template_filename": "retro_bow_true.yaml",
-        "timestamp": "2025-11-23T06:17:38.604431",
+        "timestamp": "2025-11-24T07:52:21.729140",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -5869,7 +5869,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.16,
+          "processing_time_seconds": 9.14,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -5884,7 +5884,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.98,
+          "processing_time_seconds": 16.01,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -5892,7 +5892,7 @@
           "warning_count": 0
         },
         "template_filename": "retro_caves_false.yaml",
-        "timestamp": "2025-11-23T06:25:49.819120",
+        "timestamp": "2025-11-24T08:03:21.810301",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -5914,7 +5914,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.14,
+          "processing_time_seconds": 8.47,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -5929,7 +5929,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.97,
+          "processing_time_seconds": 15.88,
           "return_code": 0,
           "sphere_reached": 28.1,
           "success": true,
@@ -5937,7 +5937,7 @@
           "warning_count": 0
         },
         "template_filename": "retro_caves_true.yaml",
-        "timestamp": "2025-11-23T06:25:56.864296",
+        "timestamp": "2025-11-24T08:03:36.459457",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -5959,7 +5959,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.37,
+          "processing_time_seconds": 8.31,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -5974,7 +5974,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 14.76,
+          "processing_time_seconds": 14.73,
           "return_code": 1,
           "sphere_reached": 0.0,
           "success": false,
@@ -5982,7 +5982,7 @@
           "warning_count": 0
         },
         "template_filename": "retro_mode.yaml",
-        "timestamp": "2025-11-23T06:20:53.956984",
+        "timestamp": "2025-11-24T07:53:10.296328",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6004,7 +6004,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.25,
+          "processing_time_seconds": 8.18,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -6019,7 +6019,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.93,
+          "processing_time_seconds": 15.86,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -6027,7 +6027,7 @@
           "warning_count": 0
         },
         "template_filename": "scams_all.yaml",
-        "timestamp": "2025-11-23T06:18:59.523641",
+        "timestamp": "2025-11-24T07:53:42.741870",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6049,7 +6049,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.41,
+          "processing_time_seconds": 8.12,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -6064,7 +6064,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.0,
+          "processing_time_seconds": 15.83,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -6072,7 +6072,7 @@
           "warning_count": 0
         },
         "template_filename": "scams_bottle_merchant.yaml",
-        "timestamp": "2025-11-23T06:18:31.894621",
+        "timestamp": "2025-11-24T07:53:31.993043",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6094,7 +6094,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.13,
+          "processing_time_seconds": 8.44,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -6109,7 +6109,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.94,
+          "processing_time_seconds": 15.87,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -6117,7 +6117,7 @@
           "warning_count": 0
         },
         "template_filename": "scams_king_zora.yaml",
-        "timestamp": "2025-11-23T06:15:37.202680",
+        "timestamp": "2025-11-24T07:53:26.722802",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6139,7 +6139,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.23,
+          "processing_time_seconds": 7.75,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -6154,7 +6154,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.97,
+          "processing_time_seconds": 15.7,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -6162,7 +6162,7 @@
           "warning_count": 0
         },
         "template_filename": "scams_off.yaml",
-        "timestamp": "2025-11-23T06:35:31.179892",
+        "timestamp": "2025-11-24T08:12:35.572959",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6184,7 +6184,7 @@
         "generation": {
           "error_count": 7,
           "error_type": "ValueError",
-          "processing_time_seconds": 2.14,
+          "processing_time_seconds": 2.11,
           "return_code": 1,
           "success": false,
           "warning_count": 0
@@ -6207,7 +6207,7 @@
           "warning_count": 0
         },
         "template_filename": "shop_randomizer.yaml",
-        "timestamp": "2025-11-23T06:28:06.459770",
+        "timestamp": "2025-11-24T08:02:59.947910",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6229,7 +6229,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.08,
+          "processing_time_seconds": 8.44,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -6252,7 +6252,7 @@
           "warning_count": 0
         },
         "template_filename": "shuffle_capacity_upgrades_off.yaml",
-        "timestamp": "2025-11-23T06:25:54.678458",
+        "timestamp": "2025-11-24T08:03:10.998020",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6274,7 +6274,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.71,
+          "processing_time_seconds": 8.03,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -6289,7 +6289,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 14.94,
+          "processing_time_seconds": 14.6,
           "return_code": 1,
           "sphere_reached": 0.11,
           "success": false,
@@ -6297,7 +6297,7 @@
           "warning_count": 0
         },
         "template_filename": "shuffle_capacity_upgrades_on.yaml",
-        "timestamp": "2025-11-23T06:18:01.966074",
+        "timestamp": "2025-11-24T07:52:44.322464",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6319,7 +6319,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.23,
+          "processing_time_seconds": 9.13,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -6334,7 +6334,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 27.2,
+          "processing_time_seconds": 27.52,
           "return_code": 1,
           "sphere_reached": 9.11,
           "success": false,
@@ -6342,7 +6342,7 @@
           "warning_count": 0
         },
         "template_filename": "shuffle_capacity_upgrades_on_combined.yaml",
-        "timestamp": "2025-11-23T06:26:14.270838",
+        "timestamp": "2025-11-24T08:03:47.293561",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6364,7 +6364,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.15,
+          "processing_time_seconds": 8.39,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -6379,7 +6379,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.94,
+          "processing_time_seconds": 15.88,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -6387,7 +6387,7 @@
           "warning_count": 0
         },
         "template_filename": "shuffle_prizes_bonk.yaml",
-        "timestamp": "2025-11-23T06:26:21.287853",
+        "timestamp": "2025-11-24T08:04:01.124776",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6409,7 +6409,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.47,
+          "processing_time_seconds": 8.28,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -6424,7 +6424,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.97,
+          "processing_time_seconds": 15.89,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -6432,7 +6432,7 @@
           "warning_count": 0
         },
         "template_filename": "shuffle_prizes_both.yaml",
-        "timestamp": "2025-11-23T06:21:17.424970",
+        "timestamp": "2025-11-24T07:53:33.846827",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6454,7 +6454,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.19,
+          "processing_time_seconds": 8.27,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -6469,7 +6469,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.93,
+          "processing_time_seconds": 15.86,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -6477,7 +6477,7 @@
           "warning_count": 0
         },
         "template_filename": "shuffle_prizes_general.yaml",
-        "timestamp": "2025-11-23T06:19:24.014080",
+        "timestamp": "2025-11-24T07:54:07.093675",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6499,7 +6499,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.21,
+          "processing_time_seconds": 8.11,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -6514,7 +6514,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.95,
+          "processing_time_seconds": 15.87,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -6522,7 +6522,7 @@
           "warning_count": 0
         },
         "template_filename": "shuffle_prizes_off.yaml",
-        "timestamp": "2025-11-23T06:18:56.621507",
+        "timestamp": "2025-11-24T07:53:56.256596",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6544,7 +6544,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.15,
+          "processing_time_seconds": 8.33,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -6559,7 +6559,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.94,
+          "processing_time_seconds": 15.9,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -6567,7 +6567,7 @@
           "warning_count": 0
         },
         "template_filename": "shuffle_shop_inventories_false.yaml",
-        "timestamp": "2025-11-23T06:16:01.583189",
+        "timestamp": "2025-11-24T07:53:51.351925",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6589,7 +6589,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.2,
+          "processing_time_seconds": 7.65,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -6604,7 +6604,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.96,
+          "processing_time_seconds": 15.71,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -6612,7 +6612,7 @@
           "warning_count": 0
         },
         "template_filename": "shuffle_shop_inventories_true.yaml",
-        "timestamp": "2025-11-23T06:35:55.687777",
+        "timestamp": "2025-11-24T08:12:59.307960",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6657,7 +6657,7 @@
           "warning_count": 0
         },
         "template_filename": "shuffled_everything.yaml",
-        "timestamp": "2025-11-23T06:28:08.761251",
+        "timestamp": "2025-11-24T08:03:02.216648",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6679,7 +6679,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.1,
+          "processing_time_seconds": 8.44,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -6694,7 +6694,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.97,
+          "processing_time_seconds": 15.89,
           "return_code": 0,
           "sphere_reached": 19.2,
           "success": true,
@@ -6702,7 +6702,7 @@
           "warning_count": 0
         },
         "template_filename": "small_key_shuffle_any_world.yaml",
-        "timestamp": "2025-11-23T06:26:19.008266",
+        "timestamp": "2025-11-24T08:03:35.680111",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6724,7 +6724,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.57,
+          "processing_time_seconds": 7.92,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -6739,7 +6739,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.02,
+          "processing_time_seconds": 15.73,
           "return_code": 0,
           "sphere_reached": 19.2,
           "success": true,
@@ -6747,7 +6747,7 @@
           "warning_count": 0
         },
         "template_filename": "small_key_shuffle_different_world.yaml",
-        "timestamp": "2025-11-23T06:18:25.940720",
+        "timestamp": "2025-11-24T07:53:07.251056",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6769,7 +6769,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.14,
+          "processing_time_seconds": 9.2,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -6784,7 +6784,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.95,
+          "processing_time_seconds": 15.99,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -6792,7 +6792,7 @@
           "warning_count": 0
         },
         "template_filename": "small_key_shuffle_original_dungeon.yaml",
-        "timestamp": "2025-11-23T06:26:50.032915",
+        "timestamp": "2025-11-24T08:04:24.292531",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6814,7 +6814,7 @@
         "generation": {
           "error_count": 3,
           "error_type": "FillError",
-          "processing_time_seconds": 2.28,
+          "processing_time_seconds": 2.36,
           "return_code": 1,
           "success": false,
           "warning_count": 2
@@ -6837,7 +6837,7 @@
           "warning_count": 0
         },
         "template_filename": "small_key_shuffle_own_dungeons.yaml",
-        "timestamp": "2025-11-23T06:26:45.679858",
+        "timestamp": "2025-11-24T08:04:25.714857",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6859,7 +6859,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.3,
+          "processing_time_seconds": 8.33,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -6874,7 +6874,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.97,
+          "processing_time_seconds": 15.91,
           "return_code": 0,
           "sphere_reached": 19.2,
           "success": true,
@@ -6882,7 +6882,7 @@
           "warning_count": 0
         },
         "template_filename": "small_key_shuffle_own_world.yaml",
-        "timestamp": "2025-11-23T06:21:42.182207",
+        "timestamp": "2025-11-24T07:53:58.330597",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6904,7 +6904,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.1,
+          "processing_time_seconds": 8.11,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -6919,7 +6919,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 10.82,
+          "processing_time_seconds": 10.84,
           "return_code": 0,
           "sphere_reached": 12.1,
           "success": true,
@@ -6927,7 +6927,7 @@
           "warning_count": 0
         },
         "template_filename": "small_key_shuffle_start_with.yaml",
-        "timestamp": "2025-11-23T06:19:48.433287",
+        "timestamp": "2025-11-24T07:54:31.538406",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6949,7 +6949,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.5,
+          "processing_time_seconds": 8.0,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -6964,7 +6964,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 14.92,
+          "processing_time_seconds": 14.75,
           "return_code": 1,
           "sphere_reached": 0.0,
           "success": false,
@@ -6972,7 +6972,7 @@
           "warning_count": 0
         },
         "template_filename": "small_key_shuffle_universal.yaml",
-        "timestamp": "2025-11-23T06:19:21.103337",
+        "timestamp": "2025-11-24T07:54:20.551383",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -6994,7 +6994,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.19,
+          "processing_time_seconds": 8.35,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -7009,7 +7009,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 14.68,
+          "processing_time_seconds": 14.7,
           "return_code": 1,
           "sphere_reached": 0.0,
           "success": false,
@@ -7017,7 +7017,7 @@
           "warning_count": 0
         },
         "template_filename": "swordless_challenge.yaml",
-        "timestamp": "2025-11-23T06:16:25.987391",
+        "timestamp": "2025-11-24T07:54:15.902556",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -7039,7 +7039,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.14,
+          "processing_time_seconds": 7.65,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -7054,7 +7054,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.94,
+          "processing_time_seconds": 15.65,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -7062,7 +7062,7 @@
           "warning_count": 0
         },
         "template_filename": "swordless_false.yaml",
-        "timestamp": "2025-11-23T06:36:20.157519",
+        "timestamp": "2025-11-24T08:13:22.957510",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -7084,7 +7084,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.27,
+          "processing_time_seconds": 8.3,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -7099,7 +7099,7 @@
         "spoiler_test": {
           "error_count": 8,
           "pass_fail": "failed",
-          "processing_time_seconds": 14.75,
+          "processing_time_seconds": 14.65,
           "return_code": 1,
           "sphere_reached": 0.0,
           "success": false,
@@ -7107,7 +7107,7 @@
           "warning_count": 0
         },
         "template_filename": "swordless_true.yaml",
-        "timestamp": "2025-11-23T06:38:08.968894",
+        "timestamp": "2025-11-24T08:13:02.423237",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -7129,7 +7129,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.17,
+          "processing_time_seconds": 8.48,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -7144,7 +7144,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.95,
+          "processing_time_seconds": 15.93,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -7152,7 +7152,7 @@
           "warning_count": 0
         },
         "template_filename": "tile_shuffle_false.yaml",
-        "timestamp": "2025-11-23T06:26:43.382340",
+        "timestamp": "2025-11-24T08:04:00.330216",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -7174,7 +7174,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.25,
+          "processing_time_seconds": 7.88,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -7189,7 +7189,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.98,
+          "processing_time_seconds": 15.74,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -7197,7 +7197,7 @@
           "warning_count": 0
         },
         "template_filename": "tile_shuffle_true.yaml",
-        "timestamp": "2025-11-23T06:18:50.847112",
+        "timestamp": "2025-11-24T07:53:31.180752",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -7219,7 +7219,7 @@
         "generation": {
           "error_count": 7,
           "error_type": "ValueError",
-          "processing_time_seconds": 2.12,
+          "processing_time_seconds": 2.32,
           "return_code": 1,
           "success": false,
           "warning_count": 0
@@ -7242,7 +7242,7 @@
           "warning_count": 0
         },
         "template_filename": "timer_challenge.yaml",
-        "timestamp": "2025-11-23T06:27:14.436464",
+        "timestamp": "2025-11-24T08:04:49.812553",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -7264,7 +7264,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.14,
+          "processing_time_seconds": 8.49,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -7279,7 +7279,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.93,
+          "processing_time_seconds": 15.88,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -7287,7 +7287,7 @@
           "warning_count": 0
         },
         "template_filename": "timer_display.yaml",
-        "timestamp": "2025-11-23T06:26:48.113569",
+        "timestamp": "2025-11-24T08:04:28.240839",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -7309,7 +7309,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.16,
+          "processing_time_seconds": 8.34,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -7324,7 +7324,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.96,
+          "processing_time_seconds": 15.85,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -7332,7 +7332,7 @@
           "warning_count": 0
         },
         "template_filename": "timer_none.yaml",
-        "timestamp": "2025-11-23T06:22:06.761886",
+        "timestamp": "2025-11-24T07:54:22.887353",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -7354,7 +7354,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.24,
+          "processing_time_seconds": 8.26,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -7369,7 +7369,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.93,
+          "processing_time_seconds": 15.89,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -7377,7 +7377,7 @@
           "warning_count": 0
         },
         "template_filename": "timer_ohko.yaml",
-        "timestamp": "2025-11-23T06:20:07.656669",
+        "timestamp": "2025-11-24T07:54:50.794554",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -7399,7 +7399,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.14,
+          "processing_time_seconds": 8.13,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -7414,7 +7414,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.93,
+          "processing_time_seconds": 15.84,
           "return_code": 0,
           "sphere_reached": 34.1,
           "success": true,
@@ -7422,7 +7422,7 @@
           "warning_count": 0
         },
         "template_filename": "timer_timed.yaml",
-        "timestamp": "2025-11-23T06:19:44.856510",
+        "timestamp": "2025-11-24T07:54:43.636191",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -7444,7 +7444,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.14,
+          "processing_time_seconds": 8.36,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -7459,7 +7459,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.95,
+          "processing_time_seconds": 15.86,
           "return_code": 0,
           "sphere_reached": 34.1,
           "success": true,
@@ -7467,7 +7467,7 @@
           "warning_count": 0
         },
         "template_filename": "timer_timed_countdown.yaml",
-        "timestamp": "2025-11-23T06:16:49.187566",
+        "timestamp": "2025-11-24T07:54:39.281921",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -7489,7 +7489,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.22,
+          "processing_time_seconds": 7.6,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -7504,7 +7504,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.98,
+          "processing_time_seconds": 15.68,
           "return_code": 0,
           "sphere_reached": 33.1,
           "success": true,
@@ -7512,7 +7512,7 @@
           "warning_count": 0
         },
         "template_filename": "timer_timed_ohko.yaml",
-        "timestamp": "2025-11-23T06:36:44.551093",
+        "timestamp": "2025-11-24T08:13:46.538049",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -7534,7 +7534,7 @@
         "generation": {
           "error_count": 7,
           "error_type": "ValueError",
-          "processing_time_seconds": 2.17,
+          "processing_time_seconds": 2.13,
           "return_code": 1,
           "success": false,
           "warning_count": 0
@@ -7557,7 +7557,7 @@
           "warning_count": 0
         },
         "template_filename": "triforce_hunt_easy.yaml",
-        "timestamp": "2025-11-23T06:38:32.318792",
+        "timestamp": "2025-11-24T08:13:25.705897",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -7579,7 +7579,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.23,
+          "processing_time_seconds": 8.51,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -7594,7 +7594,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 16.01,
+          "processing_time_seconds": 15.9,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -7602,7 +7602,7 @@
           "warning_count": 0
         },
         "template_filename": "triforce_pieces_mode_available.yaml",
-        "timestamp": "2025-11-23T06:27:07.810808",
+        "timestamp": "2025-11-24T08:04:25.059869",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -7624,7 +7624,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.5,
+          "processing_time_seconds": 7.98,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -7639,7 +7639,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.99,
+          "processing_time_seconds": 15.77,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -7647,7 +7647,7 @@
           "warning_count": 0
         },
         "template_filename": "triforce_pieces_mode_extra.yaml",
-        "timestamp": "2025-11-23T06:19:15.388381",
+        "timestamp": "2025-11-24T07:53:55.097392",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -7669,7 +7669,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.16,
+          "processing_time_seconds": 9.05,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -7684,7 +7684,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.95,
+          "processing_time_seconds": 16.96,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -7692,7 +7692,7 @@
           "warning_count": 0
         },
         "template_filename": "triforce_pieces_mode_percentage.yaml",
-        "timestamp": "2025-11-23T06:27:16.717562",
+        "timestamp": "2025-11-24T08:04:52.298873",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -7714,7 +7714,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.14,
+          "processing_time_seconds": 8.4,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -7729,7 +7729,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.95,
+          "processing_time_seconds": 15.88,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -7737,7 +7737,7 @@
           "warning_count": 0
         },
         "template_filename": "turtle_rock_medallion_bombos.yaml",
-        "timestamp": "2025-11-23T06:27:12.492251",
+        "timestamp": "2025-11-24T08:04:52.929378",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -7759,7 +7759,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 8.23,
+          "processing_time_seconds": 8.67,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -7774,7 +7774,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.95,
+          "processing_time_seconds": 15.87,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -7782,7 +7782,7 @@
           "warning_count": 0
         },
         "template_filename": "turtle_rock_medallion_ether.yaml",
-        "timestamp": "2025-11-23T06:22:31.198662",
+        "timestamp": "2025-11-24T07:54:47.391142",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -7804,7 +7804,7 @@
         "generation": {
           "error_count": 0,
           "error_type": null,
-          "processing_time_seconds": 7.97,
+          "processing_time_seconds": 8.38,
           "return_code": 0,
           "success": true,
           "warning_count": 2
@@ -7819,7 +7819,7 @@
         "spoiler_test": {
           "error_count": 0,
           "pass_fail": "passed",
-          "processing_time_seconds": 15.83,
+          "processing_time_seconds": 15.87,
           "return_code": 0,
           "sphere_reached": 22.1,
           "success": true,
@@ -7827,7 +7827,7 @@
           "warning_count": 0
         },
         "template_filename": "turtle_rock_medallion_quake.yaml",
-        "timestamp": "2025-11-23T06:20:32.122446",
+        "timestamp": "2025-11-24T07:55:15.253490",
         "world_info": {
           "exporter_path": "exporter/games/alttp.py",
           "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",

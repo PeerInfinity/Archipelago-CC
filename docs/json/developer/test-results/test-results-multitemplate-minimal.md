@@ -4,23 +4,23 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-23 07:12:22
+**Generated:** 2025-11-24 19:45:31
 
-**Source Data Created:** 2025-11-23T06:38:52.412096
+**Source Data Created:** 2025-11-24T08:14:30.331989
 
-**Source Data Last Updated:** 2025-11-23T06:38:52.412102
+**Source Data Last Updated:** 2025-11-24T08:14:30.331998
 
 ## Summary
 
 - **Total Games:** 1
 - **Total Template Configurations:** 174
-- **Passed Configurations:** 130 (74.7%)
-- **Failed Configurations:** 40 (23.0%)
+- **Passed Configurations:** 136 (78.2%)
+- **Failed Configurations:** 34 (19.5%)
 - **Invalid Configurations:** 4 (2.3%)
 
 ## A Link to the Past
 
-**Results:** 130/174 passed (74.7%)  
+**Results:** 136/174 passed (78.2%)  
 **Custom Exporter:** ✅ Yes | **Custom GameLogic:** ✅ Yes
 
 | Template | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress |
@@ -54,7 +54,7 @@
 | compass_shuffle_own_world | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | compass_shuffle_start_with | ✅ Passed | 0 | 20.1 | 20.1 | 100.0% |
 | dark_room_logic_lamp | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| dark_room_logic_none | ❌ Failed | 0 | 0 | 22.1 | 0.0% |
+| dark_room_logic_none | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | dark_room_logic_torches | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | death_link_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | death_link_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
@@ -77,7 +77,7 @@
 | entrance_shuffle_dungeons_simple | ✅ Passed | 0 | 24.2 | 24.2 | 100.0% |
 | entrance_shuffle_full | ❌ No Spheres | 0 | 0 | 0 | N/A |
 | entrance_shuffle_insanity | ❌ No Spheres | 0 | 0 | 0 | N/A |
-| entrance_shuffle_restricted | ❌ Failed | 0 | 0 | 33.2 | 0.0% |
+| entrance_shuffle_restricted | ✅ Passed | 0 | 33.2 | 33.2 | 100.0% |
 | entrance_shuffle_simple | ✅ Passed | 0 | 28.2 | 28.2 | 100.0% |
 | entrance_shuffle_vanilla | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | expert_mode | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
@@ -107,7 +107,7 @@
 | include_witch_hut_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | item_functionality_easy | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | item_functionality_expert | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| item_functionality_hard | ❌ Failed | 0 | 0 | 22.1 | 0.0% |
+| item_functionality_hard | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | item_functionality_normal | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | item_pool_easy | ✅ Passed | 0 | 20.3 | 20.3 | 100.0% |
 | item_pool_expert | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
@@ -118,18 +118,18 @@
 | key_shuffle_extreme | ✅ Passed | 0 | 21.3 | 21.3 | 100.0% |
 | killable_thieves_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | killable_thieves_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| map_shuffle_any_world | ❌ Failed | 0 | 0 | 17.1 | 0.0% |
+| map_shuffle_any_world | ✅ Passed | 0 | 17.1 | 17.1 | 100.0% |
 | map_shuffle_different_world | ✅ Passed | 0 | 17.1 | 17.1 | 100.0% |
 | map_shuffle_original_dungeon | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | map_shuffle_own_dungeons | ✅ Passed | 0 | 18.1 | 18.1 | 100.0% |
-| map_shuffle_own_world | ❌ Failed | 0 | 0 | 17.1 | 0.0% |
+| map_shuffle_own_world | ✅ Passed | 0 | 17.1 | 17.1 | 100.0% |
 | map_shuffle_start_with | ✅ Passed | 0 | 18.1 | 18.1 | 100.0% |
 | minimal_access | ⚫ Invalid | 3 | 0 | 0 | N/A |
 | misery_mire_medallion_bombos | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | misery_mire_medallion_ether | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | misery_mire_medallion_quake | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | mode_inverted | ❌ Failed | 0 | 9.1 | 26.1 | 34.9% |
-| mode_open | ❌ Failed | 0 | 0 | 22.1 | 0.0% |
+| mode_open | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | mode_standard | ✅ Passed | 0 | 27.1 | 27.1 | 100.0% |
 | open_inverted | ❌ No Spheres | 0 | 0 | 0 | N/A |
 | open_pyramid_auto | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
