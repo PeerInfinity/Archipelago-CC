@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-24 19:45:31
+**Generated:** 2025-11-25 08:52:03
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -12,30 +12,30 @@ This summary combines results from four types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 75/76 passed (98.7%)
+- **Minimal Test:** 74/76 passed (97.4%)
 - **Full Test:** 72/76 passed (94.7%)
 - **Multiclient Test:** 57/76 passed (75.0%)
-- **Multiworld Test:** 54/76 passed (71.1%)
+- **Multiworld Test:** 56/76 passed (73.7%)
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 7 game(s), 35 total failure(s)
+- **Minimal Spoilers Test:** 6 game(s), 29 total failure(s)
 - **Full Spoilers Test:** 5 game(s), 27 total failure(s)
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 54/76 (71.1%)
-- **Templates passing 3 tests:** 3/76 (3.9%)
+- **Templates passing all 4 tests:** 56/76 (73.7%)
+- **Templates passing 3 tests:** 1/76 (1.3%)
 - **Templates passing 2 tests:** 15/76 (19.7%)
-- **Templates passing 1 test:** 3/76 (3.9%)
-- **Templates passing 0 tests:** 1/76 (1.3%)
+- **Templates passing 1 test:** 2/76 (2.6%)
+- **Templates passing 0 tests:** 2/76 (2.6%)
 
 ## Test Results
 
 | Game Name | Minimal Test | Full Test | Multiclient Test | Multiworld Test | Consistent Rules | Consistent Spoilers | Custom Exporter | Custom GameLogic |
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|-----------------|------------------|
 | A Hat in Time | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ |
+| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Aquaria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
@@ -45,7 +45,7 @@ This summary combines results from four types of tests:
 | Bumper Stickers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ |
 | Castlevania 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Celeste 64 | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ |
+| Celeste 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | ChecksFinder | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | ChocolateChipCookies | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Civilization VI | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
@@ -83,7 +83,7 @@ This summary combines results from four types of tests:
 | Pokemon Red and Blue | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | Raft | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ⚫ | ⚫ |
-| SMZ3 | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
+| SMZ3 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | Saving Princess | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Shivers | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
@@ -94,13 +94,13 @@ This summary combines results from four types of tests:
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | Super Mario World | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
-| Super Metroid | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ❓ N/A | ❓ N/A | ✅ | ✅ |
+| Super Metroid | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | TUNIC | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Terraria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | The Messenger | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| The Witness | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ✅ | ✅ | ✅ |
+| The Witness | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Undertale | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | VVVVVV | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
