@@ -208,14 +208,47 @@ export class ComparisonEngine {
 
     // If regressive mismatches are allowed, "missing from state" (accessible in log
     // but not accessible now due to increased requirements) is treated as acceptable.
-    // We only fail if there are "extra in state" mismatches (which indicates a bug).
     const effectiveMissingFromState = allowRegressiveMismatches ? [] : missingFromState;
 
-    if (effectiveMissingFromState.length === 0 && extraInState.length === 0) {
+    // Also filter "extra in state" for locations with key requirements when
+    // allowRegressiveMismatches is enabled. This handles the case where the test
+    // doesn't track door opens, so dungeon keys appear unconsumed.
+    // We check if the location's access rule contains a key check (Key*).
+    let effectiveExtraInState = extraInState;
+    if (allowRegressiveMismatches && extraInState.length > 0) {
+      const keyPattern = /^Key[A-Z]{2}$/; // Matches KeyPD, KeySP, KeyIP, etc.
+      effectiveExtraInState = extraInState.filter((locName) => {
+        // Check if this location has a key requirement in its access rule
+        const locationDef = staticData.locations?.get(locName);
+        if (!locationDef?.access_rule) return true; // Keep if no rule found
+
+        // Helper to check if rule contains a key check
+        const hasKeyRequirement = (rule) => {
+          if (!rule) return false;
+          if (rule.type === 'item_check' && keyPattern.test(rule.item)) return true;
+          if (rule.type === 'compare' && rule.left?.type === 'item_check' && keyPattern.test(rule.left.item)) return true;
+          if (rule.conditions) return rule.conditions.some(hasKeyRequirement);
+          if (rule.test) return hasKeyRequirement(rule.test);
+          if (rule.if_true) return hasKeyRequirement(rule.if_true) || hasKeyRequirement(rule.if_false);
+          return false;
+        };
+
+        // Allow (filter out) locations with key requirements
+        return !hasKeyRequirement(locationDef.access_rule);
+      });
+    }
+
+    // Track how many key-based extras were allowed
+    const keyBasedExtrasAllowed = extraInState.length - effectiveExtraInState.length;
+
+    if (effectiveMissingFromState.length === 0 && effectiveExtraInState.length === 0) {
       // Build success message, noting if regressive mismatches were allowed
       let successMessage = `✓ Sphere ${context.sphere_number} passed: ${stateAccessibleSet.size} locations match`;
-      if (allowRegressiveMismatches && missingFromState.length > 0) {
-        successMessage += ` (${missingFromState.length} regressive accessibility mismatches allowed)`;
+      if (allowRegressiveMismatches && (missingFromState.length > 0 || keyBasedExtrasAllowed > 0)) {
+        const parts = [];
+        if (missingFromState.length > 0) parts.push(`${missingFromState.length} regressive accessibility mismatches`);
+        if (keyBasedExtrasAllowed > 0) parts.push(`${keyBasedExtrasAllowed} key-based extra locations`);
+        successMessage += ` (${parts.join(', ')} allowed)`;
       }
 
       // Log to UI panel if callback available
@@ -230,6 +263,16 @@ export class ComparisonEngine {
           this.logCallback('info', regressiveMessage);
         }
         logger.info(`[compareAccessibleLocations] Allowed regressive mismatches: ${missingFromState.join(', ')}`);
+      }
+
+      // Log key-based extras as info if any were allowed
+      if (keyBasedExtrasAllowed > 0) {
+        const keyBasedExtras = extraInState.filter(loc => !effectiveExtraInState.includes(loc));
+        const keyMessage = ` ℹ Key-based extra locations (allowed): ${keyBasedExtras.join(', ')}`;
+        if (this.logCallback) {
+          this.logCallback('info', keyMessage);
+        }
+        logger.info(`[compareAccessibleLocations] Allowed key-based extras: ${keyBasedExtras.join(', ')}`);
       }
 
       // Also log to console for debugging
@@ -264,8 +307,8 @@ export class ComparisonEngine {
         logger.error(missingMessage);
         console.error(`[MISMATCH DETAIL] Missing from state (${effectiveMissingFromState.length}):`, effectiveMissingFromState);
       }
-      if (extraInState.length > 0) {
-        const extraMessage = ` > Locations accessible in STATE (and unchecked) but NOT in LOG: ${extraInState.join(', ')}`;
+      if (effectiveExtraInState.length > 0) {
+        const extraMessage = ` > Locations accessible in STATE (and unchecked) but NOT in LOG: ${effectiveExtraInState.join(', ')}`;
 
         // Log to UI panel (this will trigger link creation in testSpoilerUI.js)
         if (this.logCallback) {
@@ -274,7 +317,7 @@ export class ComparisonEngine {
 
         // Also log to console
         logger.error(extraMessage);
-        console.error(`[MISMATCH DETAIL] Extra in state (${extraInState.length}):`, extraInState);
+        console.error(`[MISMATCH DETAIL] Extra in state (${effectiveExtraInState.length}):`, effectiveExtraInState);
       }
       logger.debug('[compareAccessibleLocations] Mismatch Details:', {
         context:

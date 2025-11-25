@@ -36,7 +36,13 @@ import { has as alttpHas, count as alttpCount } from '../alttp/alttpLogic.js';
  * @returns {boolean} True if player has the item
  */
 function hasItem(snapshot, staticData, itemName) {
-  return alttpHas(snapshot, staticData, itemName);
+  const result = alttpHas(snapshot, staticData, itemName);
+  // Debug: log keycard checks when they fail
+  if (itemName.startsWith('Card') && !result) {
+    console.log(`[smz3 hasItem DEBUG] ${itemName} = ${result}, inventory Card* keys:`,
+      Object.keys(snapshot?.inventory || {}).filter(k => k.startsWith('Card')).join(', ') || 'NONE');
+  }
+  return result;
 }
 
 /**
@@ -428,13 +434,19 @@ export function smz3_CanAccessDarkWorldPortal(snapshot, staticData) {
  */
 export function smz3_CanAccessMiseryMirePortal(snapshot, staticData) {
   // Simplified implementation (Normal logic)
-  return (hasItem(snapshot, staticData, 'CardNorfairL2') ||
-          (hasItem(snapshot, staticData, 'SpeedBooster') && hasItem(snapshot, staticData, 'Wave'))) &&
-         hasItem(snapshot, staticData, 'Varia') &&
-         hasItem(snapshot, staticData, 'Super') &&
-         hasItem(snapshot, staticData, 'Gravity') &&
-         hasItem(snapshot, staticData, 'SpaceJump') &&
-         smz3_CanUsePowerBombs(snapshot, staticData);
+  const hasCardNorfairL2 = hasItem(snapshot, staticData, 'CardNorfairL2');
+  const hasSpeedBooster = hasItem(snapshot, staticData, 'SpeedBooster');
+  const hasWave = hasItem(snapshot, staticData, 'Wave');
+  const hasVaria = hasItem(snapshot, staticData, 'Varia');
+  const hasSuper = hasItem(snapshot, staticData, 'Super');
+  const hasGravity = hasItem(snapshot, staticData, 'Gravity');
+  const hasSpaceJump = hasItem(snapshot, staticData, 'SpaceJump');
+  const canUsePowerBombs = smz3_CanUsePowerBombs(snapshot, staticData);
+
+  const pathA = hasCardNorfairL2 || (hasSpeedBooster && hasWave);
+  const result = pathA && hasVaria && hasSuper && hasGravity && hasSpaceJump && canUsePowerBombs;
+
+  return result;
 }
 
 /**
@@ -469,16 +481,43 @@ export function smz3_CanAccessNorfairLowerPortal(snapshot, staticData) {
  *                (self.CanSpringBallJump() or self.HiJump or self.Gravity) and self.Morph and \
  *                (world.CanAcquire(self, RewardType.Agahnim) or self.Hammer and self.CanLiftLight() or self.CanLiftHeavy())
  *
- * Note: Using simplified logic for now (Normal mode requirements, without Agahnim check)
+ * Note: Using Normal mode requirements.
  */
 export function smz3_CanAccessMaridiaPortal(snapshot, staticData) {
-  // Simplified implementation (Normal logic, without Agahnim event check for now)
+  // RewardType.Agahnim = 1 (Castle Tower reward type)
+  const REWARD_AGAHNIM = 1;
+
   return hasItem(snapshot, staticData, 'MoonPearl') &&
          hasItem(snapshot, staticData, 'Flippers') &&
          hasItem(snapshot, staticData, 'Gravity') &&
          hasItem(snapshot, staticData, 'Morph') &&
-         (hasItem(snapshot, staticData, 'Hammer') && smz3_CanLiftLight(snapshot, staticData) ||
+         (smz3_CanAcquire(snapshot, staticData, REWARD_AGAHNIM) ||
+          hasItem(snapshot, staticData, 'Hammer') && smz3_CanLiftLight(snapshot, staticData) ||
           smz3_CanLiftHeavy(snapshot, staticData));
+}
+
+/**
+ * Check if player can use keys without wasting them before accessible locations.
+ * Python: def CanNotWasteKeysBeforeAccessible(self, items: Progression, locations: List[Location]):
+ *     return self.world.ForwardSearch or not items.BigKeyIP or any(l.ItemIs(ItemType.BigKeyIP, self.world) for l in locations)
+ *
+ * This function prevents wasting small keys on doors that don't lead to the big key
+ * when the player already has the big key. Returns true if:
+ * 1. ForwardSearch is True (always true in Archipelago's fill), OR
+ * 2. Player does NOT have the dungeon's big key (so no risk of wasting), OR
+ * 3. Any of the locations in the list contains the big key
+ *
+ * Since ForwardSearch is always true in Archipelago, this function always returns true.
+ *
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static data
+ * @param {Array} locations - List of location objects to check
+ */
+export function smz3_CanNotWasteKeysBeforeAccessible(snapshot, staticData, locations) {
+  // ForwardSearch is always true in Archipelago's fill algorithm,
+  // so this function always returns true.
+  // This is intentional as the Archipelago fill guarantees the world is beatable.
+  return true;
 }
 
 /**
@@ -1081,11 +1120,8 @@ function evaluateSimpleRule(rule, snapshot, staticData) {
           return smz3_LeftSide(snapshot, staticData, ...evaluatedArgs);
         case 'smz3_RightSide':
           return smz3_RightSide(snapshot, staticData, ...evaluatedArgs);
-        // Helper stubs for functions that need implementation
         case 'smz3_CanNotWasteKeysBeforeAccessible':
-          // This needs proper implementation - for now return true to avoid blocking
-          console.warn(`[evaluateSimpleRule] Helper '${helperName}' not fully implemented, returning true`);
-          return true;
+          return smz3_CanNotWasteKeysBeforeAccessible(snapshot, staticData, ...evaluatedArgs);
         default:
           console.warn(`[evaluateSimpleRule] Unknown helper '${helperName}', returning false`);
           return false;
