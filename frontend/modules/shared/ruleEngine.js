@@ -422,8 +422,17 @@ export const evaluateRule = (rule, context, depth = 0) => {
             // evalSMBool is the only helper that explicitly handles SMBool conversion,
             // so it returns a boolean already and doesn't need this
             if (result && typeof result === 'object' && 'bool' in result && 'difficulty' in result) {
-              // Convert to boolean with high difficulty threshold
-              result = result.bool === true && result.difficulty <= 999;
+              // Get maxDiff from game state (SM uses state.smbm[player].maxDiff)
+              // Default to 50 (hardcore) for Super Metroid
+              let maxDiff = 50;
+              if (typeof context.getPlayerId === 'function' && typeof context.resolveName === 'function') {
+                const playerId = context.getPlayerId();
+                const state = context.resolveName('state');
+                if (state?.smbm?.[playerId]?.maxDiff !== undefined) {
+                  maxDiff = state.smbm[playerId].maxDiff;
+                }
+              }
+              result = result.bool === true && result.difficulty <= maxDiff;
             }
           } else {
             log(
@@ -450,7 +459,17 @@ export const evaluateRule = (rule, context, depth = 0) => {
 
             // Auto-convert SMBool objects to booleans
             if (result && typeof result === 'object' && 'bool' in result && 'difficulty' in result) {
-              result = result.bool === true && result.difficulty <= 999;
+              // Get maxDiff from game state (SM uses state.smbm[player].maxDiff)
+              // Default to 50 (hardcore) for Super Metroid
+              let maxDiff = 50;
+              if (typeof context.getPlayerId === 'function' && typeof context.resolveName === 'function') {
+                const playerId = context.getPlayerId();
+                const state = context.resolveName('state');
+                if (state?.smbm?.[playerId]?.maxDiff !== undefined) {
+                  maxDiff = state.smbm[playerId].maxDiff;
+                }
+              }
+              result = result.bool === true && result.difficulty <= maxDiff;
             }
           } else {
             log(

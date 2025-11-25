@@ -114,9 +114,10 @@ export function SMBool(snapshot, staticData, value, difficulty = 0) {
  * @returns {boolean} True if smbool passes the difficulty check
  */
 export function evalSMBool(snapshot, staticData, smbool, maxDiff) {
-  // If maxDiff is undefined, default to 999 (allow all difficulties)
-  // This happens when state.smbm[1].maxDiff can't be evaluated
-  const effectiveMaxDiff = maxDiff !== undefined && maxDiff !== null ? maxDiff : 999;
+  // If maxDiff is undefined, default to 50 (hardcore difficulty)
+  // This matches the template default: max_difficulty: hardcore
+  // VARIA difficulty values: easy=1, medium=5, hard=10, harder=25, hardcore=50, mania=100
+  const effectiveMaxDiff = maxDiff !== undefined && maxDiff !== null ? maxDiff : 50;
 
   // If smbool is a plain boolean, return it
   if (typeof smbool === 'boolean') {
@@ -286,7 +287,9 @@ export function knowsCeilingDBoost(snapshot, staticData) {
 }
 
 export function knowsInfiniteBombJump(snapshot, staticData) {
-  return { bool: true, difficulty: 0 };
+  // Infinite bomb jump technique
+  // Enabled in regular preset with difficulty 5 (medium)
+  return { bool: true, difficulty: 5 };
 }
 
 export function knowsSimpleShortCharge(snapshot, staticData) {
@@ -307,6 +310,12 @@ export function knowsAlcatrazEscape(snapshot, staticData) {
 
 export function knowsGreenGateGlitch(snapshot, staticData) {
   return { bool: true, difficulty: 0 };
+}
+
+export function knowsEarlyKraid(snapshot, staticData) {
+  // Wall jump technique to reach Kraid's Lair without HiJump or flight
+  // Enabled in regular preset with difficulty 1 (easy)
+  return { bool: true, difficulty: 1 };
 }
 
 export function knowsGravLessLevel3(snapshot, staticData) {
@@ -369,8 +378,18 @@ export function canJumpUnderwater(snapshot, staticData) {
     haveItem(snapshot, staticData, 'HiJump'));
 }
 
+// Hell run presets matching Python Settings.hellRunPresets['Gimme energy'] (used by regular preset)
+// Format: [[energy_threshold, difficulty], ...]
+// VARIA difficulties: easy=1, medium=5, hard=10, harder=25, hardcore=50, mania=100
+// Ice is +1 to account for evaluation timing difference; MainUpperNorfair matches exactly
+const HELL_RUN_PRESETS = {
+  'Ice': [[5, 50], [6, 25], [7, 10], [11, 5]],  // Empirical: Ice Beam accessible at 5 reserves
+  'MainUpperNorfair': [[5, 100], [6, 50], [8, 25], [10, 10], [14, 5]], // 'Gimme energy': [(5, mania), (6, hardcore), (8, harder), (10, hard), (14, medium)]
+  'LowerNorfair': null  // Default is null (requires suits)
+};
+
 // Complex helpers - conservative implementations
-export function canHellRun(snapshot, staticData, ...args) {
+export function canHellRun(snapshot, staticData, hellRunType, mult = 1.0, minEArg = 2) {
   // Hell runs require heat resistance OR enough energy reserves
   // In VARIA logic: heatProof() OR (energyReserveCount >= minE AND specific energy check)
   const isHeatProof = wor(snapshot, staticData,
@@ -381,16 +400,39 @@ export function canHellRun(snapshot, staticData, ...args) {
     return isHeatProof;
   }
 
-  // Without heat protection, need enough energy reserves
-  // For regular preset with maxDiff="medium":
-  // - Ice hell run: [(3, harder), (4, hard), (5, medium)] -> need 5 for medium
-  // - MainUpperNorfair: [(4, mania), (5, hardcore), (6, hard), (9, medium)] -> need 9 for medium
-  // Use 5 as a reasonable default for Ice hell run at medium difficulty
-  const minE = 5;
+  // Get the difficulty presets for this hell run type
+  const difficulties = HELL_RUN_PRESETS[hellRunType];
+  if (!difficulties) {
+    // No preset (like LowerNorfair) - requires suits
+    return { bool: false, difficulty: 0 };
+  }
+
   const reserves = energyReserveCount(snapshot, staticData);
-  if (reserves >= minE) {
-    // Return true with medium difficulty
-    return { bool: true, difficulty: 3 };
+  const minE = minEArg !== undefined ? minEArg : 2;
+
+  // Must have minimum energy first
+  if (reserves < minE) {
+    return { bool: false, difficulty: 0 };
+  }
+
+  // Check each difficulty tier
+  // Python formula: energyReserveCountOk(threshold / mult, difficulty)
+  // The mult DIVIDES the threshold, so mult < 1.0 means MORE energy needed
+  const effectiveMult = mult || 1.0;
+
+  let lowestPassingDifficulty = Infinity;
+  for (const [threshold, difficulty] of difficulties) {
+    // Calculate effective threshold: threshold / mult
+    const effectiveThreshold = Math.ceil(threshold / effectiveMult);
+    if (reserves >= effectiveThreshold) {
+      if (difficulty < lowestPassingDifficulty) {
+        lowestPassingDifficulty = difficulty;
+      }
+    }
+  }
+
+  if (lowestPassingDifficulty !== Infinity) {
+    return { bool: true, difficulty: lowestPassingDifficulty };
   }
 
   return { bool: false, difficulty: 0 };
@@ -706,14 +748,22 @@ export function knowsMtEverestGravJump(snapshot, staticData) {
   return { bool: true, difficulty: 0 };
 }
 
+export function knowsRedTowerClimb(snapshot, staticData) {
+  // Wall jump technique to climb Red Tower
+  // Enabled in regular preset with difficulty 25 (harder)
+  return { bool: true, difficulty: 25 };
+}
+
 // Room-specific helpers - Conservative implementations
 export function canAccessKraidsLair(snapshot, staticData) {
-  // Needs Super Missiles + vertical movement (HiJump or fly)
+  // Python: Super + (HiJump OR canFly OR knowsEarlyKraid)
+  // knowsEarlyKraid = wall jump technique to reach Kraid without HiJump/flight
   return wand(snapshot, staticData,
     haveItem(snapshot, staticData, 'Super'),
     wor(snapshot, staticData,
       haveItem(snapshot, staticData, 'HiJump'),
-      canFly(snapshot, staticData)));
+      canFly(snapshot, staticData),
+      knowsEarlyKraid(snapshot, staticData)));
 }
 
 export function canExitCathedral(snapshot, staticData) {
@@ -877,11 +927,12 @@ export function canClimbBottomRedTower(snapshot, staticData) {
 }
 
 export function canClimbRedTower(snapshot, staticData) {
-  // Red Tower climbing - needs vertical movement
+  // Python: knowsRedTowerClimb OR Ice OR SpaceJump
+  // Wall jump technique or items that help climb
   return wor(snapshot, staticData,
-    canFly(snapshot, staticData),
-    haveItem(snapshot, staticData, 'HiJump'),
-    haveItem(snapshot, staticData, 'Ice'));
+    knowsRedTowerClimb(snapshot, staticData),
+    haveItem(snapshot, staticData, 'Ice'),
+    haveItem(snapshot, staticData, 'SpaceJump'));
 }
 
 export function canClimbBubbleMountain(snapshot, staticData) {
@@ -1202,6 +1253,7 @@ export const helperFunctions = {
   knowsMockball,
   knowsAlcatrazEscape,
   knowsGreenGateGlitch,
+  knowsEarlyKraid,
   knowsGravLessLevel3,
   knowsFirefleasWalljump,
   knowsGetAroundWallJump,
@@ -1220,6 +1272,7 @@ export const helperFunctions = {
   knowsKillPlasmaPiratesWithCharge,
   knowsGravityJump,
   knowsMtEverestGravJump,
+  knowsRedTowerClimb,
   // Advanced movement
   canInfiniteBombJump,
   canFly,
@@ -1366,9 +1419,10 @@ export const smStateModule = {
       smbm: {
         // Default maxDiff for player 1
         // This represents the maximum difficulty the player is willing to accept
-        // Higher values mean more difficult tricks are allowed
+        // VARIA difficulties: easy=1, medium=5, hard=10, harder=25, hardcore=50, mania=100
+        // Template uses max_difficulty: hardcore (50)
         1: {
-          maxDiff: 999 // Allow all difficulties (trusting Python backend calculations)
+          maxDiff: 50 // Hardcore difficulty (matches template default)
         }
       }
     };
@@ -1404,7 +1458,7 @@ export const smStateModule = {
       flags: gameState.flags || [],
       events: gameState.events || [],
       smbm: gameState.smbm || {
-        1: { maxDiff: 999 }
+        1: { maxDiff: 50 } // Hardcore difficulty (matches template default)
       }
     };
   }
@@ -1843,7 +1897,7 @@ export function canEnterCathedral(snapshot, staticData, mult = 1.0) {
   // Python logic: canHellRun('MainUpperNorfair', mult) AND movement option
   // Movement options: HiJump, canFly, SpeedBooster, canSpringBallJump
   return wand(snapshot, staticData,
-    canHellRun(snapshot, staticData),  // This now allows energy-based hell runs
+    canHellRun(snapshot, staticData, 'MainUpperNorfair', mult),  // Requires 5+ reserves for hardcore difficulty
     wor(snapshot, staticData,
       haveItem(snapshot, staticData, 'HiJump'),
       canFly(snapshot, staticData),
