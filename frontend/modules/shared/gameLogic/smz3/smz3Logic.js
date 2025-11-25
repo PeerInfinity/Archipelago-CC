@@ -446,20 +446,6 @@ export function smz3_CanAccessMiseryMirePortal(snapshot, staticData) {
   const pathA = hasCardNorfairL2 || (hasSpeedBooster && hasWave);
   const result = pathA && hasVaria && hasSuper && hasGravity && hasSpaceJump && canUsePowerBombs;
 
-  // UNCONDITIONAL debug logging for troubleshooting region accessibility
-  if (!result) {
-    console.log('[smz3_CanAccessMiseryMirePortal] FAILED - Missing:',
-      [
-        !hasCardNorfairL2 && !hasSpeedBooster && 'path(CardNorfairL2 OR SpeedBooster+Wave)',
-        !hasVaria && 'Varia',
-        !hasSuper && 'Super',
-        !hasGravity && 'Gravity',
-        !hasSpaceJump && 'SpaceJump',
-        !canUsePowerBombs && 'canUsePowerBombs'
-      ].filter(Boolean).join(', ')
-    );
-  }
-
   return result;
 }
 
@@ -495,15 +481,18 @@ export function smz3_CanAccessNorfairLowerPortal(snapshot, staticData) {
  *                (self.CanSpringBallJump() or self.HiJump or self.Gravity) and self.Morph and \
  *                (world.CanAcquire(self, RewardType.Agahnim) or self.Hammer and self.CanLiftLight() or self.CanLiftHeavy())
  *
- * Note: Using simplified logic for now (Normal mode requirements, without Agahnim check)
+ * Note: Using Normal mode requirements.
  */
 export function smz3_CanAccessMaridiaPortal(snapshot, staticData) {
-  // Simplified implementation (Normal logic, without Agahnim event check for now)
+  // RewardType.Agahnim = 1 (Castle Tower reward type)
+  const REWARD_AGAHNIM = 1;
+
   return hasItem(snapshot, staticData, 'MoonPearl') &&
          hasItem(snapshot, staticData, 'Flippers') &&
          hasItem(snapshot, staticData, 'Gravity') &&
          hasItem(snapshot, staticData, 'Morph') &&
-         (hasItem(snapshot, staticData, 'Hammer') && smz3_CanLiftLight(snapshot, staticData) ||
+         (smz3_CanAcquire(snapshot, staticData, REWARD_AGAHNIM) ||
+          hasItem(snapshot, staticData, 'Hammer') && smz3_CanLiftLight(snapshot, staticData) ||
           smz3_CanLiftHeavy(snapshot, staticData));
 }
 

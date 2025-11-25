@@ -415,8 +415,10 @@ export const evaluateRule = (rule, context, depth = 0) => {
 
         // SM helpers like wor, wand can handle undefined args by treating them as false
         // Don't fail early for these helpers - let them evaluate what they can
+        // Also include SMZ3 helpers that receive Config arguments which may be undefined
         const helpersAllowingUndefinedArgs = new Set([
-          'wor', 'wand', 'evalSMBool', 'SMBool'
+          'wor', 'wand', 'evalSMBool', 'SMBool',
+          'smz3_CanAccessMiseryMirePortal'
         ]);
         const allowUndefinedArgs = helpersAllowingUndefinedArgs.has(rule.name);
 
