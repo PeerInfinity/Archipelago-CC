@@ -7,7 +7,9 @@ This project is a fork of the main Archipelago project that focuses on two key a
 1.  A Python-based system to export a game's logic (location access rules, region connections, item data) into a standardized JSON format.
 2.  A modular, feature-rich web client that consumes this JSON to provide advanced tracking, accessibility analysis, and other tools.
 
-For the main project overview, live demo link, and credits, please see the [README.md at the project root](../../README.md).
+**Try the Live Demo:** Either the **[Latest Stable Version](https://peerinfinity.github.io/Archipelago/)** or the **[Latest Development Version](https://peerinfinity.github.io/Archipelago-CC/)**
+
+For the main project overview and credits, please see the [README.md at the project root](../../README.md).
 
 ## Documentation Sections
 
@@ -17,7 +19,8 @@ This documentation is organized into the following main sections:
 
 This section is for anyone who wants to use the JSON Web Client to play or track their Archipelago games. These guides cover the application's features from a user's perspective.
 
-- **[Quick Start Guide](./user/quick-start.md)**: The best place to start. A fast-paced introduction to getting the client running.
+- **[Overview: What Is This?](./user/overview.md)**: Start here if you're new. Learn what this project does, see game compatibility, and understand how to use the tracker.
+- **[Quick Start Guide](./user/quick-start.md)**: A fast-paced introduction to getting the client running.
 - **[Standard Client Guide](./user/standard-client.md)**: A detailed guide on using the client for tracking, checking accessibility, and connecting to a multiworld server.
 - **[Tips & Tricks](./user/tips-and-tricks.md)**: A collection of useful notes, console commands, and frequently asked questions.
 

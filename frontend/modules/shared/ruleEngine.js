@@ -412,18 +412,39 @@ export const evaluateRule = (rule, context, depth = 0) => {
         const args = rule.args
           ? rule.args.map((arg) => evaluateRule(arg, context, depth + 1))
           : [];
-        if (args.some((arg) => arg === undefined)) {
+
+        // SM helpers like wor, wand can handle undefined args by treating them as false
+        // Don't fail early for these helpers - let them evaluate what they can
+        const helpersAllowingUndefinedArgs = new Set([
+          'wor', 'wand', 'evalSMBool', 'SMBool'
+        ]);
+        const allowUndefinedArgs = helpersAllowingUndefinedArgs.has(rule.name);
+
+        if (!allowUndefinedArgs && args.some((arg) => arg === undefined)) {
           result = undefined;
         } else if (isValidContext) {
           if (typeof context.executeHelper === 'function') {
             result = context.executeHelper(rule.name, ...args);
 
-            // Auto-convert SMBool objects to booleans
-            // evalSMBool is the only helper that explicitly handles SMBool conversion,
-            // so it returns a boolean already and doesn't need this
+            // Handle SMBool objects from SM helpers
+            // For SM helpers that return SMBool objects {bool, difficulty}:
+            // - At depth 0 (top-level): check difficulty against maxDiff and convert to boolean
+            // - At depth > 0: preserve the SMBool object so parent helpers (wand, wor) can
+            //   work with difficulty values correctly
             if (result && typeof result === 'object' && 'bool' in result && 'difficulty' in result) {
-              // Convert to boolean with high difficulty threshold
-              result = result.bool === true && result.difficulty <= 999;
+              if (depth === 0) {
+                // Top-level: check difficulty against maxDiff
+                let maxDiff = 50; // Default to hardcore for Super Metroid
+                if (typeof context.getPlayerId === 'function' && typeof context.resolveName === 'function') {
+                  const playerId = context.getPlayerId();
+                  const state = context.resolveName('state');
+                  if (state?.smbm?.[playerId]?.maxDiff !== undefined) {
+                    maxDiff = state.smbm[playerId].maxDiff;
+                  }
+                }
+                result = result.bool === true && result.difficulty <= maxDiff;
+              }
+              // At depth > 0: leave result as SMBool object so parent helpers can use difficulty
             }
           } else {
             log(
@@ -448,9 +469,20 @@ export const evaluateRule = (rule, context, depth = 0) => {
           if (typeof context.executeHelper === 'function') {
             result = context.executeHelper(rule.name, ...args);
 
-            // Auto-convert SMBool objects to booleans
+            // Same SMBool handling as regular helpers - preserve at depth > 0
             if (result && typeof result === 'object' && 'bool' in result && 'difficulty' in result) {
-              result = result.bool === true && result.difficulty <= 999;
+              if (depth === 0) {
+                let maxDiff = 50;
+                if (typeof context.getPlayerId === 'function' && typeof context.resolveName === 'function') {
+                  const playerId = context.getPlayerId();
+                  const state = context.resolveName('state');
+                  if (state?.smbm?.[playerId]?.maxDiff !== undefined) {
+                    maxDiff = state.smbm[playerId].maxDiff;
+                  }
+                }
+                result = result.bool === true && result.difficulty <= maxDiff;
+              }
+              // At depth > 0: leave result as SMBool object
             }
           } else {
             log(

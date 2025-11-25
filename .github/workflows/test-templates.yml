@@ -104,7 +104,7 @@ jobs:
           npm test -- --mode=test-regression
 
       - name: Upload test results
-        if: always()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: quick-test-results
@@ -229,7 +229,7 @@ jobs:
           ${{ matrix.test_command }}
 
       - name: Upload test results
-        if: always()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: full-test-${{ matrix.test_name }}
@@ -240,7 +240,7 @@ jobs:
           retention-days: 14
 
       - name: Check for test failures
-        if: always()
+        if: ${{ !cancelled() }}
         run: |
           source .venv/bin/activate
           # Parse results and fail if tests failed
@@ -295,7 +295,7 @@ jobs:
     name: Commit Test Results
     runs-on: ubuntu-latest
     needs: full-test
-    if: always() && github.event_name == 'workflow_dispatch' && github.event.inputs.test_suite == 'full'
+    if: ${{ !cancelled() && github.event_name == 'workflow_dispatch' && github.event.inputs.test_suite == 'full' }}
 
     steps:
       - name: Checkout repository

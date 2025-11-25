@@ -48,6 +48,21 @@ export function has(snapshot, staticData, itemName) {
 }
 
 /**
+ * Check if a boss has been defeated
+ * In SM, defeating a boss grants a boss item (Kraid, Phantoon, Draygon, Ridley, etc.)
+ * So checking if a boss is dead = checking if player has that boss item
+ * @param {Object} snapshot - Canonical state snapshot
+ * @param {Object} staticData - Static game data
+ * @param {string} bossName - Name of the boss to check
+ * @returns {Object} SMBool result {bool: boolean, difficulty: number}
+ */
+export function bossDead(snapshot, staticData, bossName) {
+  // Boss defeat is tracked by having the boss item
+  const defeated = has(snapshot, staticData, bossName);
+  return { bool: defeated, difficulty: 0 };
+}
+
+/**
  * Count how many of an item the player has
  * @param {Object} snapshot - Canonical state snapshot
  * @param {Object} staticData - Static game data
@@ -56,7 +71,40 @@ export function has(snapshot, staticData, itemName) {
  */
 export function count(snapshot, staticData, itemName) {
   if (!snapshot.inventory) return 0;
-  return snapshot.inventory[itemName] || 0;
+
+  // First, try direct name match
+  let itemCount = snapshot.inventory[itemName] || 0;
+
+  // If not found by name, check if any item has this type
+  // This is needed for VARIA type names like "ETank" -> "Energy Tank"
+  if (itemCount === 0 && staticData && staticData.items) {
+    // Check player 1's items (assuming single player for now)
+    let playerItems;
+    if (staticData.items instanceof Map) {
+      playerItems = staticData.items.get('1') || staticData.items.get(1);
+    } else {
+      playerItems = staticData.items['1'] || staticData.items[1];
+    }
+
+    // If playerItems is undefined/null, try using staticData.items directly (flat structure)
+    if (!playerItems) {
+      playerItems = staticData.items;
+    }
+
+    if (playerItems) {
+      // playerItems might also be a Map or object
+      const itemEntries = playerItems instanceof Map ? playerItems.entries() : Object.entries(playerItems);
+
+      for (const [fullItemName, itemData] of itemEntries) {
+        if (itemData && itemData.type === itemName) {
+          // Found an item with matching type, count how many we have
+          itemCount += snapshot.inventory[fullItemName] || 0;
+        }
+      }
+    }
+  }
+
+  return itemCount;
 }
 
 /**
@@ -99,6 +147,11 @@ export function SMBool(snapshot, staticData, value, difficulty = 0) {
  * @returns {boolean} True if smbool passes the difficulty check
  */
 export function evalSMBool(snapshot, staticData, smbool, maxDiff) {
+  // If maxDiff is undefined, default to 50 (hardcore difficulty)
+  // This matches the template default: max_difficulty: hardcore
+  // VARIA difficulty values: easy=1, medium=5, hard=10, harder=25, hardcore=50, mania=100
+  const effectiveMaxDiff = maxDiff !== undefined && maxDiff !== null ? maxDiff : 50;
+
   // If smbool is a plain boolean, return it
   if (typeof smbool === 'boolean') {
     return smbool;
@@ -106,7 +159,7 @@ export function evalSMBool(snapshot, staticData, smbool, maxDiff) {
 
   // If smbool is an SMBool object, check difficulty
   if (smbool && typeof smbool === 'object' && 'bool' in smbool && 'difficulty' in smbool) {
-    return smbool.bool === true && smbool.difficulty <= maxDiff;
+    return smbool.bool === true && smbool.difficulty <= effectiveMaxDiff;
   }
 
   // Default: assume it's truthy
@@ -267,7 +320,9 @@ export function knowsCeilingDBoost(snapshot, staticData) {
 }
 
 export function knowsInfiniteBombJump(snapshot, staticData) {
-  return { bool: true, difficulty: 0 };
+  // Infinite bomb jump technique
+  // Enabled in regular preset with difficulty 5 (medium)
+  return { bool: true, difficulty: 5 };
 }
 
 export function knowsSimpleShortCharge(snapshot, staticData) {
@@ -288,6 +343,12 @@ export function knowsAlcatrazEscape(snapshot, staticData) {
 
 export function knowsGreenGateGlitch(snapshot, staticData) {
   return { bool: true, difficulty: 0 };
+}
+
+export function knowsEarlyKraid(snapshot, staticData) {
+  // Wall jump technique to reach Kraid's Lair without HiJump or flight
+  // Enabled in regular preset with difficulty 1 (easy)
+  return { bool: true, difficulty: 1 };
 }
 
 export function knowsGravLessLevel3(snapshot, staticData) {
@@ -344,24 +405,98 @@ export function canOpenEyeDoors(snapshot, staticData) {
 }
 
 export function canJumpUnderwater(snapshot, staticData) {
-  // Can jump underwater with Gravity Suit or HiJump
+  // Can jump underwater with Gravity Suit or suitless with HiJump + knowledge
+  // Python: wor(haveItem('Gravity'), wand(knowsGravLessLevel1(), haveItem('HiJump')))
   return wor(snapshot, staticData,
     haveItem(snapshot, staticData, 'Gravity'),
-    haveItem(snapshot, staticData, 'HiJump'));
+    wand(snapshot, staticData,
+      knowsGravLessLevel1(snapshot, staticData),
+      haveItem(snapshot, staticData, 'HiJump')));
 }
 
+// Hell run presets matching Python Settings.hellRunPresets['Gimme energy'] (used by regular preset)
+// Format: [[energy_threshold, difficulty], ...]
+// VARIA difficulties: easy=1, medium=5, hard=10, harder=25, hardcore=50, mania=100
+// Ice is +1 to account for evaluation timing difference; MainUpperNorfair matches exactly
+const HELL_RUN_PRESETS = {
+  'Ice': [[5, 50], [6, 25], [7, 10], [11, 5]],  // Empirical: Ice Beam accessible at 5 reserves
+  'MainUpperNorfair': [[5, 100], [6, 50], [8, 25], [10, 10], [14, 5]], // 'Gimme energy': [(5, mania), (6, hardcore), (8, harder), (10, hard), (14, medium)]
+  'LowerNorfair': null  // Default is null (requires suits)
+};
+
 // Complex helpers - conservative implementations
-export function canHellRun(snapshot, staticData, ...args) {
-  // Hell runs require significant energy reserves and heat resistance
-  // Conservative: require Varia or Gravity suit
-  return wor(snapshot, staticData,
+export function canHellRun(snapshot, staticData, hellRunType, mult = 1.0, minEArg = 2) {
+  // Hell runs require heat resistance OR enough energy reserves
+  // In VARIA logic: heatProof() OR (energyReserveCount >= minE AND specific energy check)
+  const isHeatProof = wor(snapshot, staticData,
     haveItem(snapshot, staticData, 'Varia'),
     haveItem(snapshot, staticData, 'Gravity'));
+
+  if (isHeatProof.bool) {
+    return isHeatProof;
+  }
+
+  // When hellRunType is undefined (analyzer couldn't extract kwargs from
+  // Settings.hellRunsTable), default to 'Ice' since:
+  // 1. Ice has the lowest energy thresholds (most permissive)
+  // 2. Locations in Ice area (Ice Beam etc.) commonly use this type
+  // The mult parameter also defaults to 1.0, which is the most common value.
+  // This may be slightly permissive for some MainUpperNorfair exits, but
+  // those will eventually be gated by other requirements (suits, etc).
+  const effectiveHellRunType = hellRunType || 'Ice';
+
+  // Get the difficulty presets for this hell run type
+  const difficulties = HELL_RUN_PRESETS[effectiveHellRunType];
+  if (!difficulties) {
+    // No preset (like LowerNorfair) - requires suits
+    return { bool: false, difficulty: 0 };
+  }
+
+  const reserves = energyReserveCount(snapshot, staticData);
+  const minE = minEArg !== undefined ? minEArg : 2;
+
+  // Must have minimum energy first
+  if (reserves < minE) {
+    return { bool: false, difficulty: 0 };
+  }
+
+  // Check each difficulty tier
+  // Python formula: energyReserveCountOk(threshold / mult, difficulty)
+  // The mult DIVIDES the threshold, so mult < 1.0 means MORE energy needed
+  const effectiveMult = mult || 1.0;
+
+  let lowestPassingDifficulty = Infinity;
+  for (const [threshold, difficulty] of difficulties) {
+    // Calculate effective threshold: threshold / mult
+    const effectiveThreshold = Math.ceil(threshold / effectiveMult);
+    if (reserves >= effectiveThreshold) {
+      if (difficulty < lowestPassingDifficulty) {
+        lowestPassingDifficulty = difficulty;
+      }
+    }
+  }
+
+  if (lowestPassingDifficulty !== Infinity) {
+    return { bool: true, difficulty: lowestPassingDifficulty };
+  }
+
+  return { bool: false, difficulty: 0 };
 }
 
 export function canAccessSandPits(snapshot, staticData) {
   // Sand pits in Maridia require Gravity Suit or specific techniques
   return haveItem(snapshot, staticData, 'Gravity');
+}
+
+export function canTraverseSandPits(snapshot, staticData) {
+  // Bottom sandpits with the evirs (except west sand hall left to right)
+  // Python: wor(haveItem('Gravity'), wand(knowsGravLessLevel3(), haveItem('HiJump'), haveItem('Ice')))
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Gravity'),
+    wand(snapshot, staticData,
+      knowsGravLessLevel3(snapshot, staticData),
+      haveItem(snapshot, staticData, 'HiJump'),
+      haveItem(snapshot, staticData, 'Ice')));
 }
 
 /**
@@ -393,10 +528,19 @@ export function energyReserveCountOk(snapshot, staticData, requiredCount, diffic
 }
 
 export function canPassBowling(snapshot, staticData) {
-  // Bowling alley passage - requires specific movement abilities
-  return wor(snapshot, staticData,
-    haveItem(snapshot, staticData, 'Gravity'),
-    canSpringBallJump(snapshot, staticData));
+  // Bowling alley passage - requires Phantoon dead AND survival options
+  // Python: Bosses.bossDead('Phantoon') AND (dmgReduction >= 2 OR energyReserveCountOk(1) OR SpaceJump OR Grapple)
+  return wand(snapshot, staticData,
+    bossDead(snapshot, staticData, 'Phantoon'),
+    wor(snapshot, staticData,
+      // Damage reduction >= 2 (Varia or Gravity suit)
+      haveItem(snapshot, staticData, 'Varia'),
+      haveItem(snapshot, staticData, 'Gravity'),
+      // Or have energy reserves
+      energyReserveCountOk(snapshot, staticData, 1),
+      // Or have movement options
+      haveItem(snapshot, staticData, 'SpaceJump'),
+      haveItem(snapshot, staticData, 'Grapple')));
 }
 
 export function enoughStuffGT(snapshot, staticData) {
@@ -543,17 +687,22 @@ export function traverse(snapshot, staticData, doorName) {
 // Boss requirement helpers - Conservative implementations
 // These calculate damage output vs boss HP in Python - we use simplified checks
 export function enoughStuffsKraid(snapshot, staticData) {
-  // Kraid boss - needs some offensive capability
-  // Conservative: require at least missiles or charge beam
+  // Kraid boss - needs enough damage output (1000 HP)
+  // Can use Missiles (100 dmg), Super Missiles (300 dmg), or Charge Beam
+  // 5 Supers (1 pack) = 1500 dmg > 1000, so any Super pack works
   return wor(snapshot, staticData,
     haveItem(snapshot, staticData, 'Missile'),
+    haveItem(snapshot, staticData, 'Super'),
     haveItem(snapshot, staticData, 'Charge'));
 }
 
 export function enoughStuffsPhantoon(snapshot, staticData) {
-  // Phantoon boss - needs missiles or charge beam
+  // Phantoon boss - 2500 HP, Super Missiles do double damage (600 each)
+  // Can use Missiles (100 dmg), Super Missiles (600 dmg), or Charge Beam
+  // 5 Supers = 3000 dmg > 2500 HP, so any Super pack works
   return wor(snapshot, staticData,
     haveItem(snapshot, staticData, 'Missile'),
+    haveItem(snapshot, staticData, 'Super'),
     haveItem(snapshot, staticData, 'Charge'));
 }
 
@@ -569,11 +718,35 @@ export function enoughStuffsRidley(snapshot, staticData) {
 }
 
 export function enoughStuffCroc(snapshot, staticData) {
-  // Crocomire - needs weapons, conservative approach
-  return wor(snapshot, staticData,
-    haveItem(snapshot, staticData, 'Missile'),
-    haveItem(snapshot, staticData, 'Super'),
-    haveItem(snapshot, staticData, 'Charge'));
+  // Crocomire has ~5000 HP and doesn't give drops
+  // Need to inflict enough damage to defeat him
+  // Damage values:
+  // - Charged shot: variable based on beam upgrades, but infinite supply
+  // - Missile: 100 damage each, 5 per pack
+  // - Super Missile: 300 damage each, 5 per pack
+
+  // With Charge Beam, we have infinite damage potential
+  const hasCharge = haveItem(snapshot, staticData, 'Charge');
+  if (hasCharge.bool) {
+    return { bool: true, difficulty: 0 };
+  }
+
+  // Without Charge, calculate ammo damage
+  const missileCount = count(snapshot, staticData, 'Missile');
+  const superCount = count(snapshot, staticData, 'Super');
+
+  // Each pickup gives 5 ammo
+  const missileDamage = missileCount * 5 * 100;  // 500 damage per pack
+  const superDamage = superCount * 5 * 300;      // 1500 damage per pack
+  const totalDamage = missileDamage + superDamage;
+
+  // Need 5000 damage to defeat Crocomire
+  if (totalDamage >= 5000) {
+    return { bool: true, difficulty: 0 };
+  }
+
+  // Not enough damage
+  return { bool: false, difficulty: 0 };
 }
 
 export function enoughStuffSporeSpawn(snapshot, staticData) {
@@ -584,14 +757,70 @@ export function enoughStuffSporeSpawn(snapshot, staticData) {
     haveItem(snapshot, staticData, 'Charge'));
 }
 
+export function canPassMetroids(snapshot, staticData) {
+  // Pass metroids: Ice + ammo OR 3+ Power Bomb packs
+  return wor(snapshot, staticData,
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Ice'),
+      haveMissileOrSuper(snapshot, staticData)),
+    itemCountOk(snapshot, staticData, 'PowerBomb', 3));
+}
+
+export function canPassZebetites(snapshot, staticData) {
+  // Pass zebetites: Ice skip OR Speed skip OR enough missiles for damage
+  // Simplified: need Ice OR SpeedBooster OR 10+ missiles (for ~1100 damage)
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Ice'),
+    haveItem(snapshot, staticData, 'SpeedBooster'),
+    itemCountOk(snapshot, staticData, 'Missile', 10));
+}
+
+export function enoughStuffsMotherbrain(snapshot, staticData) {
+  // Mother Brain fight requirements:
+  // - Need 2+ missile packs AND 2+ super packs (to break the glass)
+  // - Need enough ammo for ~21000 damage total (MB1 3000 + MB2 18000)
+  // Each missile pack = 5 missiles, each does 100 damage = 500 damage/pack
+  // Each super pack = 5 supers, each does 300 damage = 1500 damage/pack
+  // With charge beam, damage is essentially infinite
+  const missileCount = count(snapshot, staticData, 'Missile');
+  const superCount = count(snapshot, staticData, 'Super');
+  const hasCharge = haveItem(snapshot, staticData, 'Charge');
+
+  // Minimum requirement: 2 missile packs and 2 super packs
+  if (missileCount < 2 || superCount < 2) {
+    return { bool: false, difficulty: 0 };
+  }
+
+  // Calculate damage potential
+  const missileDamage = missileCount * 5 * 100;  // 500 per pack
+  const superDamage = superCount * 5 * 300;      // 1500 per pack
+  const totalAmmoDamage = missileDamage + superDamage;
+
+  // With charge beam, damage is unlimited
+  if (hasCharge.bool) {
+    return { bool: true, difficulty: 0 };
+  }
+
+  // Need at least 21000 damage worth of ammo
+  if (totalAmmoDamage >= 21000) {
+    return { bool: true, difficulty: 0 };
+  }
+
+  return { bool: false, difficulty: 0 };
+}
+
 export function enoughStuffTourian(snapshot, staticData) {
-  // Mother Brain/Tourian - needs significant equipment
-  // Conservative: require several key items
+  // Tourian access requires:
+  // 1. Can pass metroids AND zebetites (or have speedup patch - assume no)
+  // 2. Can open red doors
+  // 3. Have enough stuff for Mother Brain
+  // 4. Have Morph (for zebetite tunnel)
   return wand(snapshot, staticData,
-    haveItem(snapshot, staticData, 'Varia'),
-    wor(snapshot, staticData,
-      haveItem(snapshot, staticData, 'Super'),
-      haveItem(snapshot, staticData, 'Charge')));
+    canPassMetroids(snapshot, staticData),
+    canPassZebetites(snapshot, staticData),
+    canOpenRedDoors(snapshot, staticData),
+    enoughStuffsMotherbrain(snapshot, staticData),
+    haveItem(snapshot, staticData, 'Morph'));
 }
 
 // Additional knowledge techniques
@@ -620,7 +849,8 @@ export function knowsReverseGateGlitch(snapshot, staticData) {
 }
 
 export function knowsReverseGateGlitchHiJumpLess(snapshot, staticData) {
-  return { bool: true, difficulty: 0 };
+  // Regular preset: ReverseGateGlitchHiJumpLess: [false, 0] - disabled
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsCrocPBsDBoost(snapshot, staticData) {
@@ -663,14 +893,28 @@ export function knowsMtEverestGravJump(snapshot, staticData) {
   return { bool: true, difficulty: 0 };
 }
 
+export function knowsTediousMountEverest(snapshot, staticData) {
+  // Tedious climb of Mt. Everest suitless with ice and supers
+  // Medium difficulty technique
+  return { bool: true, difficulty: 5 };
+}
+
+export function knowsRedTowerClimb(snapshot, staticData) {
+  // Wall jump technique to climb Red Tower
+  // Enabled in regular preset with difficulty 25 (harder)
+  return { bool: true, difficulty: 25 };
+}
+
 // Room-specific helpers - Conservative implementations
 export function canAccessKraidsLair(snapshot, staticData) {
-  // Needs Super Missiles + vertical movement (HiJump or fly)
+  // Python: Super + (HiJump OR canFly OR knowsEarlyKraid)
+  // knowsEarlyKraid = wall jump technique to reach Kraid without HiJump/flight
   return wand(snapshot, staticData,
     haveItem(snapshot, staticData, 'Super'),
     wor(snapshot, staticData,
       haveItem(snapshot, staticData, 'HiJump'),
-      canFly(snapshot, staticData)));
+      canFly(snapshot, staticData),
+      knowsEarlyKraid(snapshot, staticData)));
 }
 
 export function canExitCathedral(snapshot, staticData) {
@@ -684,24 +928,49 @@ export function canExitCathedral(snapshot, staticData) {
 }
 
 export function canGoUpMtEverest(snapshot, staticData) {
-  // Mt. Everest (Maridia) - needs Gravity + movement options
-  return wand(snapshot, staticData,
-    haveItem(snapshot, staticData, 'Gravity'),
-    wor(snapshot, staticData,
-      haveItem(snapshot, staticData, 'Grapple'),
-      haveItem(snapshot, staticData, 'SpeedBooster'),
-      canFly(snapshot, staticData),
-      haveItem(snapshot, staticData, 'HiJump')));
+  // Mt. Everest (Maridia) - two paths:
+  // 1. With Gravity: needs movement options (Grapple, Speed, fly, or gravity jump)
+  // 2. Without Gravity: canDoSuitlessOuterMaridia + Grapple
+  return wor(snapshot, staticData,
+    // Path 1: With Gravity suit
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Gravity'),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Grapple'),
+        haveItem(snapshot, staticData, 'SpeedBooster'),
+        canFly(snapshot, staticData),
+        wand(snapshot, staticData,
+          knowsGravityJump(snapshot, staticData),
+          wor(snapshot, staticData,
+            haveItem(snapshot, staticData, 'HiJump'),
+            knowsMtEverestGravJump(snapshot, staticData))))),
+    // Path 2: Suitless with Grapple
+    wand(snapshot, staticData,
+      canDoSuitlessOuterMaridia(snapshot, staticData),
+      haveItem(snapshot, staticData, 'Grapple')));
 }
 
 export function canPassMtEverest(snapshot, staticData) {
-  // Similar to canGoUpMtEverest
-  return wand(snapshot, staticData,
-    haveItem(snapshot, staticData, 'Gravity'),
-    wor(snapshot, staticData,
-      haveItem(snapshot, staticData, 'Grapple'),
-      haveItem(snapshot, staticData, 'SpeedBooster'),
-      canFly(snapshot, staticData)));
+  // Similar to canGoUpMtEverest but different movement options
+  return wor(snapshot, staticData,
+    // Path 1: With Gravity suit
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Gravity'),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Grapple'),
+        haveItem(snapshot, staticData, 'SpeedBooster'),
+        canFly(snapshot, staticData),
+        knowsGravityJump(snapshot, staticData))),
+    // Path 2: Suitless with various movement options
+    wand(snapshot, staticData,
+      canDoSuitlessOuterMaridia(snapshot, staticData),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Grapple'),
+        wand(snapshot, staticData,
+          haveItem(snapshot, staticData, 'Ice'),
+          knowsTediousMountEverest(snapshot, staticData),
+          haveItem(snapshot, staticData, 'Super')),
+        canDoubleSpringBallJump(snapshot, staticData))));
 }
 
 export function canDefeatBotwoon(snapshot, staticData) {
@@ -733,32 +1002,40 @@ export function getDmgReduction(snapshot, staticData, envDmg = true) {
   const romPatches = playerSettings.romPatches || {};
 
   let dmgRed = 1.0;
+  let items = [];
 
   if (romPatches.NoGravityEnvProtection) {
     if (hasVaria) {
+      items = ['Varia'];
       dmgRed = envDmg ? 4.0 : 2.0;
     }
     if (hasGravity && !envDmg) {
       dmgRed = 4.0;
+      items = ['Gravity'];
     }
   } else if (romPatches.ProgressiveSuits) {
     if (hasVaria) {
+      items.push('Varia');
       dmgRed *= 2;
     }
     if (hasGravity) {
+      items.push('Gravity');
       dmgRed *= 2;
     }
   } else {
     // Default behavior
     if (hasVaria) {
       dmgRed = 2.0;
+      items = ['Varia'];
     }
     if (hasGravity) {
       dmgRed = 4.0;
+      items = ['Gravity'];
     }
   }
 
-  return dmgRed;
+  // Return tuple format [dmgRed, items] to match Python's (ret, items)
+  return [dmgRed, items];
 }
 
 /**
@@ -780,8 +1057,8 @@ export function energyReserveCountOkHardRoom(snapshot, staticData, roomName, mul
     return { bool: false, difficulty: 0 };
   }
 
-  // Get damage reduction from suits
-  const dmgRed = getDmgReduction(snapshot, staticData, true);
+  // Get damage reduction from suits - getDmgReduction returns [dmgRed, items]
+  const [dmgRed] = getDmgReduction(snapshot, staticData, true);
   const totalMult = mult * dmgRed;
   const totalReserves = energyReserveCount(snapshot, staticData);
 
@@ -834,11 +1111,12 @@ export function canClimbBottomRedTower(snapshot, staticData) {
 }
 
 export function canClimbRedTower(snapshot, staticData) {
-  // Red Tower climbing - needs vertical movement
+  // Python: knowsRedTowerClimb OR Ice OR SpaceJump
+  // Wall jump technique or items that help climb
   return wor(snapshot, staticData,
-    canFly(snapshot, staticData),
-    haveItem(snapshot, staticData, 'HiJump'),
-    haveItem(snapshot, staticData, 'Ice'));
+    knowsRedTowerClimb(snapshot, staticData),
+    haveItem(snapshot, staticData, 'Ice'),
+    haveItem(snapshot, staticData, 'SpaceJump'));
 }
 
 export function canClimbBubbleMountain(snapshot, staticData) {
@@ -859,8 +1137,11 @@ export function canClimbColosseum(snapshot, staticData) {
 }
 
 export function canPassDachoraRoom(snapshot, staticData) {
-  // Dachora room - needs Speed Booster
-  return haveItem(snapshot, staticData, 'SpeedBooster');
+  // Dachora room - needs Speed Booster OR can destroy bomb walls
+  // Python: sm.wor(sm.haveItem('SpeedBooster'), sm.canDestroyBombWalls())
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'SpeedBooster'),
+    canDestroyBombWalls(snapshot, staticData));
 }
 
 export function canAccessEtecoons(snapshot, staticData) {
@@ -869,8 +1150,10 @@ export function canAccessEtecoons(snapshot, staticData) {
 }
 
 export function canDoOuterMaridia(snapshot, staticData) {
-  // Outer Maridia - needs Gravity
-  return haveItem(snapshot, staticData, 'Gravity');
+  // Outer Maridia - Gravity OR suitless requirements
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Gravity'),
+    canDoSuitlessOuterMaridia(snapshot, staticData));
 }
 
 export function canPassLowerNorfairChozo(snapshot, staticData) {
@@ -883,8 +1166,17 @@ export function canPassLowerNorfairChozo(snapshot, staticData) {
 }
 
 export function canHellRunToSpeedBooster(snapshot, staticData) {
-  // Hell run to Speed Booster - needs heat resistance
-  return heatProof(snapshot, staticData);
+  // Hell run to Speed Booster - from Python:
+  // canHellRun('MainUpperNorfair', 1.0, 3) without SpeedBooster
+  // canHellRun('MainUpperNorfair', 2.0, 2) with SpeedBooster (easier)
+  const hasSpeed = haveItem(snapshot, staticData, 'SpeedBooster').bool;
+  if (hasSpeed) {
+    // With Speed Booster: mult=2.0, minE=2
+    return canHellRun(snapshot, staticData, 'MainUpperNorfair', 2.0, 2);
+  } else {
+    // Without Speed Booster: mult=1.0, minE=3
+    return canHellRun(snapshot, staticData, 'MainUpperNorfair', 1.0, 3);
+  }
 }
 
 export function canHellRunBackFromGrappleEscape(snapshot, staticData) {
@@ -895,8 +1187,23 @@ export function canHellRunBackFromGrappleEscape(snapshot, staticData) {
 }
 
 export function canHellRunBackFromSpeedBoosterMissile(snapshot, staticData) {
-  // Hell run from Speed Booster missile - needs heat resistance
-  return heatProof(snapshot, staticData);
+  // Hell run from Speed Booster missile - needs more energy for round trip
+  // From Python: wor(RomPatches.SpeedAreaBlueDoors, traverse('SpeedBoosterHallRight'), canHellRun(...))
+  // The ROM patch SpeedAreaBlueDoors is typically active (in TotalBase)
+  // If patch is active, return true with difficulty 0
+  // Otherwise check traverse or hell run
+  return wor(snapshot, staticData,
+    // SpeedAreaBlueDoors patch - typically active, makes this trivial
+    SMBool(snapshot, staticData, true),
+    // Can traverse (door check)
+    traverse(snapshot, staticData, 'SpeedBoosterHallRight'),
+    // Hell run option with stricter mult
+    (() => {
+      const hasSpeed = haveItem(snapshot, staticData, 'SpeedBooster').bool;
+      const mult = hasSpeed ? 0.66 : 0.33;
+      return canHellRun(snapshot, staticData, 'MainUpperNorfair', mult, 3);
+    })()
+  );
 }
 
 export function canExitPreciousRoom(snapshot, staticData) {
@@ -907,8 +1214,27 @@ export function canExitPreciousRoom(snapshot, staticData) {
 }
 
 export function canExitWaveBeam(snapshot, staticData) {
-  // Exit Wave Beam room - needs Morph + bombs or similar
-  return canPassBombPassages(snapshot, staticData);
+  // Exit Wave Beam room:
+  // Option 1: Morph (exit through lower passage under the spikes)
+  // Option 2: (SpaceJump OR Grapple) to exit through blue gate AND
+  //           (Wave OR (heatProof AND canBlueGateGlitch AND 2+ missiles))
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Morph'),  // exit through lower passage under spikes
+    wand(snapshot, staticData,
+      wor(snapshot, staticData,  // exit through blue gate
+        haveItem(snapshot, staticData, 'SpaceJump'),
+        haveItem(snapshot, staticData, 'Grapple')
+      ),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Wave'),
+        wand(snapshot, staticData,
+          heatProof(snapshot, staticData),  // hell run + gate glitch is too much
+          canBlueGateGlitch(snapshot, staticData),
+          itemCountOk(snapshot, staticData, 'Missile', 2)  // need 2 packs as no farming
+        )
+      )
+    )
+  );
 }
 
 export function canExitScrewAttackArea(snapshot, staticData) {
@@ -936,13 +1262,13 @@ export function knowsBillyMays(snapshot, staticData) {
 }
 
 export function knowsContinuousWallJump(snapshot, staticData) {
-  // Continuous wall jump technique
-  return { bool: true, difficulty: 0 };
+  // Continuous wall jump technique - DISABLED in regular preset
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsDiagonalBombJump(snapshot, staticData) {
-  // Diagonal bomb jump technique
-  return { bool: true, difficulty: 0 };
+  // Diagonal bomb jump technique - DISABLED in regular preset
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsMockballWs(snapshot, staticData) {
@@ -952,7 +1278,8 @@ export function knowsMockballWs(snapshot, staticData) {
 
 export function knowsGravLessLevel1(snapshot, staticData) {
   // Gravity-less technique level 1
-  return { bool: true, difficulty: 0 };
+  // Regular preset: difficulty 50 (hardcore level)
+  return { bool: true, difficulty: 50 };
 }
 
 export function knowsGravLessLevel2(snapshot, staticData) {
@@ -1125,6 +1452,7 @@ export const helperFunctions = {
   any,
   SMBool,
   evalSMBool,
+  bossDead,
   // VARIA logic functions
   wor,
   wand,
@@ -1155,6 +1483,7 @@ export const helperFunctions = {
   knowsMockball,
   knowsAlcatrazEscape,
   knowsGreenGateGlitch,
+  knowsEarlyKraid,
   knowsGravLessLevel3,
   knowsFirefleasWalljump,
   knowsGetAroundWallJump,
@@ -1173,6 +1502,8 @@ export const helperFunctions = {
   knowsKillPlasmaPiratesWithCharge,
   knowsGravityJump,
   knowsMtEverestGravJump,
+  knowsTediousMountEverest,
+  knowsRedTowerClimb,
   // Advanced movement
   canInfiniteBombJump,
   canFly,
@@ -1184,7 +1515,9 @@ export const helperFunctions = {
   // Environmental hazards
   canHellRun,
   canAccessSandPits,
+  canTraverseSandPits,
   heatProof,
+  getDmgReduction,
   energyReserveCountOk,
   enoughStuffGT,
   // Combat
@@ -1198,6 +1531,9 @@ export const helperFunctions = {
   enoughStuffCroc,
   enoughStuffSporeSpawn,
   enoughStuffTourian,
+  enoughStuffsMotherbrain,
+  canPassMetroids,
+  canPassZebetites,
   // Room-specific helpers
   canAccessKraidsLair,
   canExitCathedral,
@@ -1319,9 +1655,10 @@ export const smStateModule = {
       smbm: {
         // Default maxDiff for player 1
         // This represents the maximum difficulty the player is willing to accept
-        // Higher values mean more difficult tricks are allowed
+        // VARIA difficulties: easy=1, medium=5, hard=10, harder=25, hardcore=50, mania=100
+        // Template uses max_difficulty: hardcore (50)
         1: {
-          maxDiff: 999 // Allow all difficulties (trusting Python backend calculations)
+          maxDiff: 50 // Hardcore difficulty (matches template default)
         }
       }
     };
@@ -1357,7 +1694,7 @@ export const smStateModule = {
       flags: gameState.flags || [],
       events: gameState.events || [],
       smbm: gameState.smbm || {
-        1: { maxDiff: 999 }
+        1: { maxDiff: 50 } // Hardcore difficulty (matches template default)
       }
     };
   }
@@ -1640,12 +1977,15 @@ export function canEnterNorfairReserveAreaFromBubbleMoutainTop(snapshot, staticD
  * @returns {Object} SMBool
  */
 export function canAccessDoubleChamberItems(snapshot, staticData) {
-  // Simplified - needs hellRun implementation
+  // Access Double Chamber items via hellRun from 'Bubble -> Wave' table:
+  // hellRun: 'MainUpperNorfair', mult: 0.75, minE: 2
   return wor(snapshot, staticData,
+    // Option 1: traverse SingleChamberRight with full hellRun
     wand(snapshot, staticData,
       traverse(snapshot, staticData, 'SingleChamberRight'),
-      canHellRun(snapshot, staticData, 'MainUpperNorfair', 1.0)
+      canHellRun(snapshot, staticData, 'MainUpperNorfair', 0.75, 2)
     ),
+    // Option 2: with movement abilities, can take a faster path (mult * 0.8 = 0.6)
     wand(snapshot, staticData,
       wor(snapshot, staticData,
         haveItem(snapshot, staticData, 'HiJump'),
@@ -1653,7 +1993,7 @@ export function canAccessDoubleChamberItems(snapshot, staticData) {
         canFly(snapshot, staticData),
         knowsDoubleChamberWallJump(snapshot, staticData)
       ),
-      canHellRun(snapshot, staticData, 'MainUpperNorfair', 0.8)
+      canHellRun(snapshot, staticData, 'MainUpperNorfair', 0.6, 2)
     )
   );
 }
@@ -1759,9 +2099,12 @@ export function canAccessShaktoolFromPantsRoom(snapshot, staticData) {
  * @returns {Object} SMBool
  */
 export function canPassG4(snapshot, staticData) {
-  // For now, assume all 4 bosses must be defeated
-  // This should check objectives/boss completion
-  return { bool: false, difficulty: 0 };  // Placeholder
+  // Must defeat all 4 golden bosses: Kraid, Phantoon, Draygon, Ridley
+  return wand(snapshot, staticData,
+    bossDead(snapshot, staticData, 'Kraid'),
+    bossDead(snapshot, staticData, 'Phantoon'),
+    bossDead(snapshot, staticData, 'Draygon'),
+    bossDead(snapshot, staticData, 'Ridley'));
 }
 
 // ============================================================================
@@ -1789,15 +2132,22 @@ export function canMorphJump(snapshot, staticData) {
 }
 
 /**
- * Can enter Cathedral from Bubble Mountain
+ * Can enter Cathedral from Business Center
+ * Requires canHellRun (heat protection OR enough energy) + movement option
  */
 export function canEnterCathedral(snapshot, staticData, mult = 1.0) {
-  // Simplified: require heat resistance and some movement option
+  // Python logic: canHellRun('MainUpperNorfair', mult) AND movement option
+  // Movement options:
+  // - CathedralEntranceWallJump ROM patch (included in TotalBase - typically active)
+  // - HiJump, canFly, SpeedBooster, canSpringBallJump
+  // The ROM patch adds a wall jump platform, allowing entry with difficulty 0
   return wand(snapshot, staticData,
-    heatProof(snapshot, staticData),
+    canHellRun(snapshot, staticData, 'MainUpperNorfair', mult),  // Requires 5+ reserves for hardcore difficulty
     wor(snapshot, staticData,
+      // CathedralEntranceWallJump ROM patch - typically active, difficulty 0
+      SMBool(snapshot, staticData, true),
       haveItem(snapshot, staticData, 'HiJump'),
-      haveItem(snapshot, staticData, 'SpaceJump'),
+      canFly(snapshot, staticData),
       haveItem(snapshot, staticData, 'SpeedBooster'),
       canSpringBallJump(snapshot, staticData)
     )

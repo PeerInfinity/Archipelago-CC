@@ -342,6 +342,35 @@ export function createStateSnapshotInterface(
             return logicObject;
           }
           return undefined;
+        case 'Bosses':
+          // SM-specific Bosses object for checking boss defeat status
+          // Used by rules like Bosses.bossDead(sm, "BossName")
+          const bossHelpers = getHelperFunctions(gameName);
+          if (bossHelpers?.bossDead) {
+            return {
+              bossDead: (sm, bossName) => {
+                // The 'sm' argument is the SMBoolManager reference from Python, which we don't need
+                // We just need the bossName to check if that boss item is in inventory
+                return bossHelpers.bossDead(snapshot, staticData, bossName);
+              }
+            };
+          }
+          return undefined;
+        case 'sm':
+        case 'smbm':
+          // SM-specific SMBoolManager reference used in rules like sm.getDmgReduction()
+          // Return an object with all helper functions wrapped for the current state
+          const smHelpers = getHelperFunctions(gameName);
+          if (smHelpers) {
+            const smObject = {};
+            for (const [helperName, helperFunction] of Object.entries(smHelpers)) {
+              smObject[helperName] = (...args) => {
+                return helperFunction(snapshot, staticData, ...args);
+              };
+            }
+            return smObject;
+          }
+          return undefined;
         default:
           // Check if this is a game-specific variable (e.g., required_technologies for Factorio)
           const currentPlayerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;

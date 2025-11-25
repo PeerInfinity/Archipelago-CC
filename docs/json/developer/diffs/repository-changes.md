@@ -15,7 +15,7 @@ This document tracks the differences between this repository and the upstream Ar
 - **Total new files:** 1,046
 - **Total changes:** 1,068
 
-**For detailed line-by-line changes:** See the **[Diff Files](../diffs/)** directory for complete diff outputs of all modifications.
+**For detailed line-by-line changes:** See the **[Diff Files README](./README.md)** for complete diff outputs of all modifications.
 
 ---
 
