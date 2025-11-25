@@ -331,13 +331,17 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
         current_playthrough_state.locations_checked.clear()
 
         if spoiler_log_file_handler:
-            # Collect precollected items into the state
-            precollected_advancement_items = sorted(
-                [item for p_items in multiworld.precollected_items.values() for item in p_items if item.advancement],
+            # Collect ALL precollected items into the state (not just advancement items)
+            # This is necessary because some games (like SMZ3) have important precollected items
+            # (such as keycards) that are marked as filler but are still needed for rule evaluation.
+            # The starting_items in rules.json includes all precollected items, so the sphere log
+            # should match by including them all.
+            precollected_items = sorted(
+                [item for p_items in multiworld.precollected_items.values() for item in p_items],
                 key=lambda item: (item.player, item.name)
             )
 
-            for item in precollected_advancement_items:
+            for item in precollected_items:
                 current_playthrough_state.collect(item, True)  # Collect into the accumulating state, prevent sweep
 
             # Log the final "sphere 0" state (contains all precollected items)

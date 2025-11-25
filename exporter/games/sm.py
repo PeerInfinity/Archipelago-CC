@@ -676,7 +676,31 @@ class SMGameExportHandler(GenericGameExportHandler):
                         # Combine with region reachability check
                         # The location is accessible from this region IF:
                         # 1. The region is reachable (state.can_reach)
-                        # 2. The region's lambda requirements are met
+                        # 2. The region's lambda requirements pass evalSMBool check
+                        #
+                        # In Python: state.can_reach(region) AND self.evalSMBool(rule(smbm), maxDiff)
+                        # The AccessFrom rule returns an SMBool, which must be evaluated against maxDiff
+                        wrapped_expanded = {
+                            'type': 'helper',
+                            'name': 'evalSMBool',
+                            'args': [
+                                expanded,
+                                # maxDiff from state.smbm[player].maxDiff
+                                {
+                                    'type': 'attribute',
+                                    'object': {
+                                        'type': 'subscript',
+                                        'value': {
+                                            'type': 'attribute',
+                                            'object': {'type': 'name', 'name': 'state'},
+                                            'attr': 'smbm'
+                                        },
+                                        'index': {'type': 'constant', 'value': self.world.player if self.world else 1}
+                                    },
+                                    'attr': 'maxDiff'
+                                }
+                            ]
+                        }
                         combined_rule = {
                             'type': 'and',
                             'conditions': [
@@ -685,7 +709,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                                     'method': 'can_reach',
                                     'args': [{'type': 'constant', 'value': region_name}]
                                 },
-                                expanded
+                                wrapped_expanded
                             ]
                         }
                         region_rules.append(combined_rule)
@@ -1054,6 +1078,75 @@ class SMGameExportHandler(GenericGameExportHandler):
                     # Convert to helper call
                     print(f"[SM] Converting sm.{attr}(...) to helper call")
                     expanded_args = [self.expand_rule(arg) for arg in rule.get('args', [])]
+
+                    # Special handling for canHellRun with no args - add default arguments
+                    if attr == 'canHellRun' and not expanded_args:
+                        # Determine hell run type from context
+                        hellrun_type = 'MainUpperNorfair'  # Default
+                        mult = 1.0
+                        minE = 2
+
+                        if self._current_exit_context:
+                            exit_name = self._current_exit_context.lower()
+                            # Lower Norfair exits use 'LowerNorfair' type with minE=8
+                            ln_keywords = ['ln ', 'ln->', 'lower norfair', 'firefleas', 'screw attack', 'ridley',
+                                           'golden torizo', 'three muskateers', 'wasteland', 'mickey mouse']
+                            if any(kw in exit_name for kw in ln_keywords):
+                                hellrun_type = 'LowerNorfair'
+                                mult = 1.0
+                                minE = 8
+                            # Ice hellrun is only for Ice area exits (not Cathedral which uses MainUpperNorfair)
+                            elif 'ice' in exit_name and 'cathedral' not in exit_name:
+                                hellrun_type = 'Ice'
+                            # Map exit names to hellRunsTable entries for accurate mult/minE
+                            # 'Bubble -> Cathedral Missiles': {'mult': 0.66, 'minE': 2, 'hellRun': 'MainUpperNorfair'}
+                            elif 'bubble' in exit_name and 'cathedral' in exit_name:
+                                mult = 0.66
+                                hellrun_type = 'MainUpperNorfair'  # Cathedral uses MainUpperNorfair, not Ice
+                            # 'Bubble -> Croc': {'mult': 2.0, 'minE': 2}
+                            # 'Norfair Entrance -> Croc via Frog': {'mult': 2.0, 'minE': 1}
+                            elif 'croc' in exit_name or 'speedway' in exit_name:
+                                if 'bubble' in exit_name:
+                                    mult = 2.0
+                                    minE = 2
+                                elif 'business' in exit_name or 'norfair entrance' in exit_name:
+                                    mult = 2.0  # Without Wave: 2.0, with Wave: 4.0 - use conservative
+                                    minE = 1
+                            # 'Bubble -> Kronic Boost Room': {'mult': 1.25, 'minE': 2}
+                            elif 'kronic' in exit_name:
+                                mult = 1.25
+                                minE = 2
+                            logger.info(f"SM: canHellRun() converted with type={hellrun_type}, mult={mult}, minE={minE} for exit '{self._current_exit_context}'")
+                        elif self._current_location_context:
+                            loc_name = self._current_location_context.lower()
+                            # Lower Norfair locations use 'LowerNorfair' type with minE=8
+                            ln_keywords = ['lower norfair', 'firefleas', 'screw attack', 'ridley',
+                                           'golden torizo', 'mickey mouse', 'wasteland']
+                            if any(kw in loc_name for kw in ln_keywords):
+                                hellrun_type = 'LowerNorfair'
+                                mult = 1.0
+                                minE = 8
+                            elif 'ice' in loc_name:
+                                hellrun_type = 'Ice'
+                            # Map location names to hellRunsTable entries for accurate mult/minE
+                            # 'Bubble -> Norfair Reserve Missiles': {'mult': 3.0, 'minE': 1}
+                            elif 'bubble' in loc_name and ('norfair' in loc_name or 'green door' in loc_name):
+                                mult = 3.0
+                                minE = 1
+                            # 'Bubble -> Norfair Reserve': {'mult': 1.0, 'minE': 2}
+                            elif 'reserve' in loc_name and 'norfair' in loc_name:
+                                mult = 1.0
+                                minE = 2
+                            logger.info(f"SM: canHellRun() converted with type={hellrun_type}, mult={mult}, minE={minE} for location '{self._current_location_context}'")
+                        else:
+                            logger.info(f"SM: canHellRun() converted with default type={hellrun_type}")
+
+                        expanded_args = [
+                            {'type': 'constant', 'value': hellrun_type},
+                            {'type': 'constant', 'value': mult},
+                            {'type': 'constant', 'value': minE}
+                        ]
+
                     return {'type': 'helper', 'name': attr, 'args': expanded_args}
 
         # Recursively process nested structures
@@ -1071,24 +1164,64 @@ class SMGameExportHandler(GenericGameExportHandler):
             if rule.get('name') == 'canHellRun' and not rule.get('args'):
                 # Determine hell run type from exit context if available
                 # Most exits use 'MainUpperNorfair', Ice area uses 'Ice'
+                # Values from Settings.hellRunsTable in VARIA randomizer
                 hellrun_type = 'MainUpperNorfair'  # Default to stricter type
                 mult = 1.0
                 minE = 2
 
                 if self._current_exit_context:
                     exit_name = self._current_exit_context.lower()
-                    # Ice area exits use 'Ice' preset
-                    if 'ice' in exit_name or 'cathedral' in exit_name:
+                    # Lower Norfair exits use 'LowerNorfair' type with minE=8 (requires suits)
+                    # Settings.hellRunsTable['LowerNorfair']['Main'] = {'mult':1.0, 'minE':8, 'hellRun':'LowerNorfair'}
+                    ln_keywords = ['ln ', 'ln->', 'lower norfair', 'firefleas', 'screw attack', 'ridley',
+                                   'golden torizo', 'three muskateers', 'wasteland', 'mickey mouse']
+                    if any(kw in exit_name for kw in ln_keywords):
+                        hellrun_type = 'LowerNorfair'
+                        mult = 1.0
+                        minE = 8  # LN requires heat protection (suits) or 8+ energy
+                    # Ice hellrun is only for Ice area exits (not Cathedral which uses MainUpperNorfair)
+                    elif 'ice' in exit_name and 'cathedral' not in exit_name:
                         hellrun_type = 'Ice'
-                    # Some exits to Cathedral from Bubble Mountain need stricter mult
-                    if 'bubble' in exit_name and 'cathedral' in exit_name:
-                        mult = 0.66  # Matches 'Bubble -> Cathedral Missiles' in hellRunsTable
-                    logger.info(f"SM: canHellRun with no args in exit '{self._current_exit_context}', using type={hellrun_type}, mult={mult}")
+                    # Map exit names to hellRunsTable entries for accurate mult/minE
+                    # 'Bubble -> Cathedral Missiles': {'mult': 0.66, 'minE': 2, 'hellRun': 'MainUpperNorfair'}
+                    elif 'bubble' in exit_name and 'cathedral' in exit_name:
+                        mult = 0.66
+                        hellrun_type = 'MainUpperNorfair'  # Cathedral uses MainUpperNorfair, not Ice
+                    # 'Bubble -> Croc': {'mult': 2.0, 'minE': 2}
+                    # 'Norfair Entrance -> Croc via Frog': {'mult': 2.0, 'minE': 1}
+                    elif 'croc' in exit_name or 'speedway' in exit_name:
+                        if 'bubble' in exit_name:
+                            mult = 2.0
+                            minE = 2
+                        elif 'business' in exit_name or 'norfair entrance' in exit_name:
+                            mult = 2.0  # Without Wave: 2.0, with Wave: 4.0 - use conservative
+                            minE = 1
+                    # 'Bubble -> Kronic Boost Room': {'mult': 1.25, 'minE': 2}
+                    elif 'kronic' in exit_name:
+                        mult = 1.25
+                        minE = 2
+                    logger.info(f"SM: canHellRun with no args in exit '{self._current_exit_context}', using type={hellrun_type}, mult={mult}, minE={minE}")
                 elif self._current_location_context:
                     loc_name = self._current_location_context.lower()
-                    if 'ice' in loc_name:
+                    # Lower Norfair locations use 'LowerNorfair' type with minE=8
+                    ln_keywords = ['lower norfair', 'firefleas', 'screw attack', 'ridley',
+                                   'golden torizo', 'mickey mouse', 'wasteland']
+                    if any(kw in loc_name for kw in ln_keywords):
+                        hellrun_type = 'LowerNorfair'
+                        mult = 1.0
+                        minE = 8
+                    elif 'ice' in loc_name:
                         hellrun_type = 'Ice'
-                    logger.info(f"SM: canHellRun with no args in location '{self._current_location_context}', using type={hellrun_type}")
+                    # Map location names to hellRunsTable entries for accurate mult/minE
+                    # 'Bubble -> Norfair Reserve Missiles': {'mult': 3.0, 'minE': 1}
+                    elif 'bubble' in loc_name and ('norfair' in loc_name or 'green door' in loc_name):
+                        mult = 3.0
+                        minE = 1
+                    # 'Bubble -> Norfair Reserve': {'mult': 1.0, 'minE': 2}
+                    elif 'reserve' in loc_name and 'norfair' in loc_name:
+                        mult = 1.0
+                        minE = 2
+                    logger.info(f"SM: canHellRun with no args in location '{self._current_location_context}', using type={hellrun_type}, mult={mult}, minE={minE}")
                 else:
                     logger.info(f"SM: canHellRun with no args, no context, using type={hellrun_type}")
 
@@ -1193,5 +1326,52 @@ class SMGameExportHandler(GenericGameExportHandler):
         except Exception as e:
             logger.error(f"SM: Failed to export ROM patches: {e}", exc_info=True)
             settings['romPatches'] = {}
+
+        # Add knows settings from VARIA preset (these determine which techniques are available)
+        knows_settings = {}
+        try:
+            from worlds.sm.variaRandomizer.utils.parameters import Knows, isKnows
+
+            # Get knows settings for this player from VARIA's Knows dictionary
+            if player in Knows.knowsDict:
+                player_knows = Knows.knowsDict[player]
+                for knows_name in Knows.__dict__:
+                    if isKnows(knows_name):
+                        knows_smb = getattr(player_knows, knows_name, None)
+                        if knows_smb is not None:
+                            # Export as [enabled, difficulty] matching VARIA's format
+                            knows_settings[knows_name] = [knows_smb.bool, knows_smb.difficulty]
+
+                logger.info(f"SM: Exported {len(knows_settings)} knows settings for player {player}")
+            else:
+                logger.warning(f"SM: No knows settings found for player {player} in Knows.knowsDict")
+        except Exception as e:
+            logger.error(f"SM: Failed to export knows settings: {e}", exc_info=True)
+
+        settings['knows'] = knows_settings
+
+        # Add hellRuns settings from VARIA preset (energy requirements for heated areas)
+        hell_runs = {}
+        try:
+            from worlds.sm.variaRandomizer.utils.parameters import Settings as SMSettings
+
+            # Get hellRuns settings for this player
+            if player in SMSettings.SettingsDict:
+                player_settings = SMSettings.SettingsDict[player]
+                if hasattr(player_settings, 'hellRuns') and player_settings.hellRuns:
+                    # hellRuns is a dict like {'Ice': [(tanks, difficulty), ...], 'MainUpperNorfair': [...]}
+                    for run_name, thresholds in player_settings.hellRuns.items():
+                        if thresholds is not None:
+                            # Convert SMBool tuples to plain lists [[tanks, difficulty], ...]
+                            hell_runs[run_name] = [[t[0], t[1]] for t in thresholds]
+                        else:
+                            hell_runs[run_name] = None
+                    logger.info(f"SM: Exported hellRuns settings for player {player}: {list(hell_runs.keys())}")
+            else:
+                logger.warning(f"SM: No settings found for player {player} in Settings.SettingsDict")
+        except Exception as e:
+            logger.error(f"SM: Failed to export hellRuns settings: {e}", exc_info=True)
+
+        settings['hellRuns'] = hell_runs
 
         return settings

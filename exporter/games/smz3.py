@@ -956,20 +956,20 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             # Handle regressive accessibility: if both branches are numeric constants
             # and the if_true value is GREATER than if_false, use the minimum value.
             #
-            # This simplification is applied when:
-            # 1. simplify_nested_regressive is True (we're inside an ItemIs-resolved branch), OR
-            # 2. The test involves ItemIs patterns (self-referential)
+            # SMZ3 has "anti-softlock" key logic where acquiring certain items
+            # (Bow+Hammer+Lamp) INCREASES key requirements. This creates a semantic
+            # mismatch between Python and JavaScript evaluation:
+            # - Python: Marks locations accessible at time of discovery (cumulative)
+            # - JavaScript: Re-evaluates accessibility with current inventory (real-time)
             #
-            # For standalone item-based conditionals (like Compass Chest), we keep them
-            # for dynamic evaluation because the player might have the items before
-            # collecting enough keys, requiring the higher threshold.
+            # Solution: Always use the minimum key requirement for regressive conditionals.
+            # This ensures that once Python marks a location accessible, JavaScript agrees.
             #
-            # Examples:
-            #   ItemIs-resolved branch: KeyPD >= (6 if Bow+Hammer+Lamp else 5)
-            #   -> Simplify to 5 because we know item placement, any ordering should work
-            #
-            #   Standalone item-based: KeyPD >= (4 if Bow+Hammer+Lamp else 3)
-            #   -> Keep as-is for dynamic evaluation (player may have items before keys)
+            # Example: Palace of Darkness - Dark Maze requires:
+            #   KeyPD >= (6 if Bow+Hammer else 5)
+            # When player has 5 keys and no Bow+Hammer, location is accessible.
+            # Later gaining Bow+Hammer shouldn't "un-access" the location.
+            # Solution: Export as KeyPD >= 5 (always use minimum).
 
             if (isinstance(if_true, dict) and if_true.get('type') == 'constant' and
                 isinstance(if_false, dict) and if_false.get('type') == 'constant'):
@@ -979,13 +979,18 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 # INCREASES the requirement (true_val > false_val = regressive)
                 if isinstance(true_val, (int, float)) and isinstance(false_val, (int, float)):
                     if true_val > false_val:
-                        # Only simplify if we're inside an ItemIs-resolved branch
-                        if simplify_nested_regressive:
-                            logger.info(f"Simplified nested regressive conditional: using minimum value {false_val} instead of ({true_val} if test else {false_val})")
-                            return {'type': 'constant', 'value': false_val}
-                        else:
-                            # Keep for dynamic evaluation (standalone item-based conditional)
-                            logger.info(f"Keeping standalone item-based conditional for dynamic evaluation: ({true_val} if test else {false_val})")
+                        # ALWAYS simplify regressive conditionals in SMZ3
+                        # This is critical because:
+                        # 1. Python's sphere calculation marks locations accessible at time of discovery
+                        # 2. Later gaining items (Bow+Hammer) shouldn't make the location inaccessible
+                        # 3. The regressive logic is anti-softlock and doesn't affect accessibility tracking
+                        #
+                        # Example: Palace of Darkness - Dark Maze requires KeyPD >= (6 if Bow+Hammer else 5)
+                        # If player has 5 keys and no Bow+Hammer, location is accessible.
+                        # Later gaining Bow+Hammer shouldn't un-access the location.
+                        # Solution: Always use minimum requirement (5 keys).
+                        logger.info(f"Simplified regressive conditional: using minimum value {false_val} instead of ({true_val} if test else {false_val})")
+                        return {'type': 'constant', 'value': false_val}
                     # If true_val <= false_val, this is normal behavior (having items helps)
                     # Keep the conditional as-is
         elif rule.get('type') == 'not' and rule.get('condition'):
@@ -1003,11 +1008,77 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             if rule.get('args'):
                 rule['args'] = [self.postprocess_rule(arg, simplify_nested_regressive) for arg in rule['args']]
         elif rule.get('type') == 'any_of':
-            # Process any_of rules (all_of in Python) - recursively process element_rule and iterator_info
-            if rule.get('element_rule'):
-                rule['element_rule'] = self.postprocess_rule(rule['element_rule'], simplify_nested_regressive)
-            if rule.get('iterator_info'):
-                iterator_info = rule['iterator_info']
+            # Process any_of rules (all_of in Python)
+            # Special handling: if element_rule is constant false, the any_of is false
+            # But first, try to properly evaluate the any_of if it involves GetLocation().ItemIs()
+            element_rule = rule.get('element_rule')
+            iterator_info = rule.get('iterator_info')
+
+            logger.info(f"Processing any_of: element_rule={element_rule}, has_iterator_info={iterator_info is not None}")
+            if iterator_info:
+                logger.info(f"  iterator_info: {iterator_info}")
+                logger.info(f"  iterator type: {iterator_info.get('iterator', {}).get('type')}")
+
+            # Check if this is a GetLocation().ItemIs() pattern that we can evaluate at export time
+            # Pattern: any(loc.ItemIs(type, world) for type in [ItemType.X, ItemType.Y])
+            has_location = hasattr(self, '_current_location_object') and self._current_location_object is not None
+            logger.info(f"  has_location: {has_location}, location_name: {getattr(self, '_current_location_name', None)}")
+
+            if (iterator_info and
+                iterator_info.get('iterator', {}).get('type') == 'list' and
+                has_location):
+
+                # Get the list of item types to check
+                iterator_list = iterator_info.get('iterator', {}).get('value', [])
+                if iterator_list:
+                    # Try to evaluate ItemIs for each type in the list
+                    try:
+                        loc_obj = self._current_location_object
+                        from worlds.smz3.TotalSMZ3.Item import ItemType
+
+                        any_match = False
+                        for item_type_rule in iterator_list:
+                            item_type_name = None
+                            # Handle constant types (already processed)
+                            if item_type_rule.get('type') == 'constant':
+                                item_type_name = item_type_rule.get('value')
+                            # Handle attribute types like ItemType.KeyGT
+                            elif item_type_rule.get('type') == 'attribute':
+                                obj = item_type_rule.get('object', {})
+                                if obj.get('type') == 'name' and obj.get('name') == 'ItemType':
+                                    item_type_name = item_type_rule.get('attr')
+
+                            if isinstance(item_type_name, str):
+                                item_type_enum = getattr(ItemType, item_type_name, None)
+                                if item_type_enum is not None and hasattr(loc_obj, 'ItemIs'):
+                                    world = loc_obj.Region.world if hasattr(loc_obj.Region, 'world') else None
+                                    if world:
+                                        result = loc_obj.ItemIs(item_type_enum, world)
+                                        logger.info(f"Evaluated any_of ItemIs({item_type_name}) = {result}")
+                                        if result:
+                                            any_match = True
+                                            break
+
+                        logger.info(f"any_of ItemIs evaluation complete: any_match = {any_match}")
+                        return {'type': 'constant', 'value': any_match}
+                    except Exception as e:
+                        logger.warning(f"Could not evaluate any_of ItemIs at export time: {e}")
+
+            # If element_rule is constant false, the any_of is false
+            if isinstance(element_rule, dict) and element_rule.get('type') == 'constant':
+                if element_rule.get('value') == False:
+                    logger.info("Simplifying any_of with constant false element_rule to false")
+                    return {'type': 'constant', 'value': False}
+                elif element_rule.get('value') == True:
+                    # any(True for x in [non-empty]) is True
+                    iterator_list = iterator_info.get('iterator', {}).get('value', []) if iterator_info else []
+                    if iterator_list:
+                        return {'type': 'constant', 'value': True}
+
+            # Recursively process children
+            if element_rule:
+                rule['element_rule'] = self.postprocess_rule(element_rule, simplify_nested_regressive)
+            if iterator_info:
                 # Process the iterator (list of values to iterate over)
                 if iterator_info.get('iterator'):
                     iterator_info['iterator'] = self.postprocess_rule(iterator_info['iterator'], simplify_nested_regressive)
