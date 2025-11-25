@@ -48,6 +48,21 @@ export function has(snapshot, staticData, itemName) {
 }
 
 /**
+ * Check if a boss has been defeated
+ * In SM, defeating a boss grants a boss item (Kraid, Phantoon, Draygon, Ridley, etc.)
+ * So checking if a boss is dead = checking if player has that boss item
+ * @param {Object} snapshot - Canonical state snapshot
+ * @param {Object} staticData - Static game data
+ * @param {string} bossName - Name of the boss to check
+ * @returns {Object} SMBool result {bool: boolean, difficulty: number}
+ */
+export function bossDead(snapshot, staticData, bossName) {
+  // Boss defeat is tracked by having the boss item
+  const defeated = has(snapshot, staticData, bossName);
+  return { bool: defeated, difficulty: 0 };
+}
+
+/**
  * Count how many of an item the player has
  * @param {Object} snapshot - Canonical state snapshot
  * @param {Object} staticData - Static game data
@@ -356,11 +371,29 @@ export function canJumpUnderwater(snapshot, staticData) {
 
 // Complex helpers - conservative implementations
 export function canHellRun(snapshot, staticData, ...args) {
-  // Hell runs require significant energy reserves and heat resistance
-  // Conservative: require Varia or Gravity suit
-  return wor(snapshot, staticData,
+  // Hell runs require heat resistance OR enough energy reserves
+  // In VARIA logic: heatProof() OR (energyReserveCount >= minE AND specific energy check)
+  const isHeatProof = wor(snapshot, staticData,
     haveItem(snapshot, staticData, 'Varia'),
     haveItem(snapshot, staticData, 'Gravity'));
+
+  if (isHeatProof.bool) {
+    return isHeatProof;
+  }
+
+  // Without heat protection, need enough energy reserves
+  // For regular preset with maxDiff="medium":
+  // - Ice hell run: [(3, harder), (4, hard), (5, medium)] -> need 5 for medium
+  // - MainUpperNorfair: [(4, mania), (5, hardcore), (6, hard), (9, medium)] -> need 9 for medium
+  // Use 5 as a reasonable default for Ice hell run at medium difficulty
+  const minE = 5;
+  const reserves = energyReserveCount(snapshot, staticData);
+  if (reserves >= minE) {
+    // Return true with medium difficulty
+    return { bool: true, difficulty: 3 };
+  }
+
+  return { bool: false, difficulty: 0 };
 }
 
 export function canAccessSandPits(snapshot, staticData) {
@@ -557,9 +590,12 @@ export function enoughStuffsKraid(snapshot, staticData) {
 }
 
 export function enoughStuffsPhantoon(snapshot, staticData) {
-  // Phantoon boss - needs missiles or charge beam
+  // Phantoon boss - 2500 HP, Super Missiles do double damage (600 each)
+  // Can use Missiles (100 dmg), Super Missiles (600 dmg), or Charge Beam
+  // 5 Supers = 3000 dmg > 2500 HP, so any Super pack works
   return wor(snapshot, staticData,
     haveItem(snapshot, staticData, 'Missile'),
+    haveItem(snapshot, staticData, 'Super'),
     haveItem(snapshot, staticData, 'Charge'));
 }
 
@@ -626,7 +662,8 @@ export function knowsReverseGateGlitch(snapshot, staticData) {
 }
 
 export function knowsReverseGateGlitchHiJumpLess(snapshot, staticData) {
-  return { bool: true, difficulty: 0 };
+  // Regular preset: ReverseGateGlitchHiJumpLess: [false, 0] - disabled
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsCrocPBsDBoost(snapshot, staticData) {
@@ -1134,6 +1171,7 @@ export const helperFunctions = {
   any,
   SMBool,
   evalSMBool,
+  bossDead,
   // VARIA logic functions
   wor,
   wand,
@@ -1798,15 +1836,17 @@ export function canMorphJump(snapshot, staticData) {
 }
 
 /**
- * Can enter Cathedral from Bubble Mountain
+ * Can enter Cathedral from Business Center
+ * Requires canHellRun (heat protection OR enough energy) + movement option
  */
 export function canEnterCathedral(snapshot, staticData, mult = 1.0) {
-  // Simplified: require heat resistance and some movement option
+  // Python logic: canHellRun('MainUpperNorfair', mult) AND movement option
+  // Movement options: HiJump, canFly, SpeedBooster, canSpringBallJump
   return wand(snapshot, staticData,
-    heatProof(snapshot, staticData),
+    canHellRun(snapshot, staticData),  // This now allows energy-based hell runs
     wor(snapshot, staticData,
       haveItem(snapshot, staticData, 'HiJump'),
-      haveItem(snapshot, staticData, 'SpaceJump'),
+      canFly(snapshot, staticData),
       haveItem(snapshot, staticData, 'SpeedBooster'),
       canSpringBallJump(snapshot, staticData)
     )

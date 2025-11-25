@@ -1022,6 +1022,46 @@ export const evaluateRule = (rule, context, depth = 0) => {
           }
         }
 
+        // Special handling for SM-specific Bosses.bossDead(sm, "BossName") calls
+        // These check if a boss has been defeated (player has the boss item)
+        if (
+          rule.function?.type === 'attribute' &&
+          rule.function.object?.type === 'name' &&
+          rule.function.object.name === 'Bosses' &&
+          rule.function.attr === 'bossDead'
+        ) {
+          // Args are [sm, "BossName"] - we only need the boss name (second arg)
+          const args = (rule.args || []).map(
+            (arg) => evaluateRule(arg, context, depth + 1)
+          );
+
+          // Get the boss name from the second argument
+          const bossName = args.length >= 2 ? args[1] : args[0];
+
+          // Call the bossDead helper function
+          if (context.executeHelper) {
+            try {
+              result = context.executeHelper('bossDead', bossName);
+              break;
+            } catch (error) {
+              logError(
+                LOG_LEVEL.ERROR,
+                `[ruleEngine] [evaluateRule] Failed to execute bossDead helper for '${bossName}':`,
+                error
+              );
+              result = undefined;
+              break;
+            }
+          } else {
+            logError(
+              LOG_LEVEL.ERROR,
+              `[ruleEngine] [evaluateRule] No executeHelper method in context for bossDead`
+            );
+            result = undefined;
+            break;
+          }
+        }
+
         const func = evaluateRule(rule.function, context, depth + 1);
 
         if (typeof func === 'undefined') {
