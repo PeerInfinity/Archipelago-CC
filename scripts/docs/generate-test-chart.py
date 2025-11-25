@@ -254,8 +254,8 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
         md_content += f"- **Total Intermittent Failures:** {intermittent_total_count}\n\n"
 
     md_content += "## Test Results\n\n"
-    md_content += "| Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Consistent Rules | Consistent Spoilers | Custom Exporter | Custom GameLogic |\n"
-    md_content += "|-----------|-------------|------------|----------------|-------------|----------|------------------|---------------------|-----------------|------------------|\n"
+    md_content += "| Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Custom Exporter | Custom GameLogic |\n"
+    md_content += "|-----------|-------------|------------|----------------|-------------|----------|-----------------|------------------|\n"
 
     for game_name, pass_fail, gen_error_count, sphere_reached, max_spheres, has_custom_exporter, has_custom_game_logic, rules_consistent, spoilers_consistent in chart_data:
         if 'passed' in pass_fail.lower():
@@ -281,22 +281,10 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
         exporter_indicator = "✅" if has_custom_exporter else "⚫"
         game_logic_indicator = "✅" if has_custom_game_logic else "⚫"
 
-        # Format consistency indicators
-        def format_consistency(value):
-            if value is None:
-                return "❓ N/A"
-            elif value is False:
-                return "⚫"
-            else:  # True
-                return "✅"
-
-        rules_indicator = format_consistency(rules_consistent)
-        spoilers_indicator = format_consistency(spoilers_consistent)
-
-        md_content += f"| {game_name} | {result_display} | {gen_error_count} | {sphere_reached:g} | {max_spheres:g} | {progress} | {rules_indicator} | {spoilers_indicator} | {exporter_indicator} | {game_logic_indicator} |\n"
+        md_content += f"| {game_name} | {result_display} | {gen_error_count} | {sphere_reached:g} | {max_spheres:g} | {progress} | {exporter_indicator} | {game_logic_indicator} |\n"
 
     if not chart_data:
-        md_content += "| No data available | - | - | - | - | - | - | - | - | - |\n"
+        md_content += "| No data available | - | - | - | - | - | - | - |\n"
 
     # Add Intermittent Failures section if there are any
     if metadata and 'intermittent_tracking' in metadata:

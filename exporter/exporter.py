@@ -447,6 +447,18 @@ def make_serializable(obj):
     if obj is None or isinstance(obj, (bool, int, float, str)):
         return obj
 
+    # Handle callable objects (functions, lambdas, methods) before other checks
+    # These should not be serialized with memory addresses as that causes inconsistency
+    if callable(obj):
+        # Get a consistent representation that doesn't include memory addresses
+        obj_str = str(obj)
+        # Remove memory address portion (e.g., "at 0x7ea5d7e49ee0")
+        if ' at 0x' in obj_str:
+            # Split on ' at 0x' and take everything before it, then add the closing '>'
+            base_repr = obj_str.rsplit(' at 0x', 1)[0]
+            return base_repr + '>'
+        return obj_str
+
     # Handle dictionaries
     if isinstance(obj, dict):
         serialized_dict = {str(k): make_serializable(v) for k, v in obj.items()}

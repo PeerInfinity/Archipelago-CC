@@ -144,7 +144,7 @@ export function executeStateMethod(manager, method, ...args) {
     if (method === 'can_reach' && args.length >= 1) {
       const targetName = args[0];
       const targetType = args[1] || 'Region';
-      const player = args[2] || 1;
+      const player = args[2] || manager.playerSlot || 1;
       return manager.can_reach(targetName, targetType, player);
     }
 
