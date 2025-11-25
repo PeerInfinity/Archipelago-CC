@@ -214,8 +214,6 @@ jobs:
               --retest-from-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
               --retest-continue-after-failure \
               --seed 1 \
-              --every-nth ${{ matrix.split_total }} \
-              --skip-first $((${{ matrix.split_num }} - 1)) \
               --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
               --no-backup \
               -p
@@ -428,8 +426,6 @@ jobs:
               --retest-from-file scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json \
               --retest-continue-after-failure \
               --seed 1 \
-              --every-nth ${{ matrix.split_total }} \
-              --skip-first $((${{ matrix.split_num }} - 1)) \
               --output-file scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json \
               --no-backup \
               -p
