@@ -4,11 +4,11 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-25 08:52:03
+**Generated:** 2025-11-25 19:29:15
 
 **Source Data Created:** 2025-11-25T06:13:39.768280
 
-**Source Data Last Updated:** 2025-11-25T06:13:39.768288
+**Source Data Last Updated:** 2025-11-25T19:29:14.776481
 
 ## Summary
 
@@ -71,7 +71,7 @@
 | Pokemon Red and Blue | ✅ Passed seeds 1-10 | 0 | 10.2 | 10.2 | 🟢 Complete | ✅ | ✅ |
 | Raft | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed seeds 1-10 | 0 | 8.3 | 8.3 | 🟢 Complete | ⚫ | ⚫ |
-| SMZ3 | ❌ Failed seed 1 | 0 | 7.6 | 16.2 | 🟡 46.9% | ✅ | ✅ |
+| SMZ3 | ❌ Failed seed 2 | 0 | 6.13 | 13.1 | 🟡 46.8% | ✅ | ✅ |
 | Saving Princess | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ⚫ |
 | Secret of Evermore | ✅ Passed seeds 1-10 | 0 | 5.2 | 5.2 | 🟢 Complete | ✅ | ✅ |
 | Shivers | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |

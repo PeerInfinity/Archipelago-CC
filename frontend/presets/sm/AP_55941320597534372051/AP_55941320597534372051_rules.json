@@ -3,7 +3,7 @@
   "game_name": "Super Metroid",
   "game_directory": "sm",
   "archipelago_version": "0.6.4",
-  "generation_seed": 1,
+  "generation_seed": 10,
   "player_names": {
     "1": "Player1"
   },
@@ -5633,10 +5633,10 @@
               ]
             },
             "item": {
-              "name": "Super Missile",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": "Super"
+              "advancement": false,
+              "type": "Missile"
             }
           }
         ]
@@ -5776,10 +5776,10 @@
               ]
             },
             "item": {
-              "name": "Spazer",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": "Spazer"
+              "advancement": false,
+              "type": "Missile"
             }
           }
         ]
@@ -5862,10 +5862,10 @@
               ]
             },
             "item": {
-              "name": "Reserve Tank",
+              "name": "Super Missile",
               "player": 1,
-              "advancement": true,
-              "type": "Reserve"
+              "advancement": false,
+              "type": "Super"
             }
           }
         ]
@@ -5990,10 +5990,10 @@
               ]
             },
             "item": {
-              "name": "Charge Beam",
+              "name": "Super Missile",
               "player": 1,
-              "advancement": true,
-              "type": "Charge"
+              "advancement": false,
+              "type": "Super"
             }
           }
         ]
@@ -6066,10 +6066,10 @@
               ]
             },
             "item": {
-              "name": "Ice Beam",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": "Ice"
+              "advancement": false,
+              "type": "Missile"
             }
           }
         ]
@@ -6297,10 +6297,10 @@
               ]
             },
             "item": {
-              "name": "Energy Tank",
+              "name": "Missile",
               "player": 1,
               "advancement": true,
-              "type": "ETank"
+              "type": "Missile"
             }
           }
         ]
@@ -6575,10 +6575,10 @@
               ]
             },
             "item": {
-              "name": "Grappling Beam",
+              "name": "Super Missile",
               "player": 1,
-              "advancement": true,
-              "type": "Grapple"
+              "advancement": false,
+              "type": "Super"
             }
           }
         ]
@@ -6809,10 +6809,10 @@
               ]
             },
             "item": {
-              "name": "Super Missile",
+              "name": "Power Bomb",
               "player": 1,
               "advancement": false,
-              "type": "Super"
+              "type": "PowerBomb"
             }
           }
         ]
@@ -7019,10 +7019,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Energy Tank",
               "player": 1,
-              "advancement": false,
-              "type": "Missile"
+              "advancement": true,
+              "type": "ETank"
             }
           }
         ]
@@ -7176,10 +7176,10 @@
               ]
             },
             "item": {
-              "name": "Power Bomb",
+              "name": "Energy Tank",
               "player": 1,
-              "advancement": false,
-              "type": "PowerBomb"
+              "advancement": true,
+              "type": "ETank"
             }
           }
         ]
@@ -7337,10 +7337,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Super Missile",
               "player": 1,
               "advancement": false,
-              "type": "Missile"
+              "type": "Super"
             }
           }
         ]
@@ -7483,10 +7483,10 @@
               ]
             },
             "item": {
-              "name": "Reserve Tank",
+              "name": "Varia Suit",
               "player": 1,
               "advancement": true,
-              "type": "Reserve"
+              "type": "Varia"
             }
           }
         ]
@@ -8074,10 +8074,10 @@
               ]
             },
             "item": {
-              "name": "Spring Ball",
+              "name": "Missile",
               "player": 1,
               "advancement": true,
-              "type": "SpringBall"
+              "type": "Missile"
             }
           }
         ]
@@ -8176,10 +8176,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Super Missile",
               "player": 1,
               "advancement": false,
-              "type": "Missile"
+              "type": "Super"
             }
           }
         ]
@@ -8287,10 +8287,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Super Missile",
               "player": 1,
               "advancement": false,
-              "type": "Missile"
+              "type": "Super"
             }
           }
         ]
@@ -8466,10 +8466,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Power Bomb",
               "player": 1,
               "advancement": false,
-              "type": "Missile"
+              "type": "PowerBomb"
             }
           }
         ]
@@ -8544,7 +8544,7 @@
             "item": {
               "name": "Super Missile",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "Super"
             }
           }
@@ -8720,10 +8720,10 @@
               ]
             },
             "item": {
-              "name": "Super Missile",
+              "name": "Grappling Beam",
               "player": 1,
-              "advancement": false,
-              "type": "Super"
+              "advancement": true,
+              "type": "Grapple"
             }
           }
         ]
@@ -8817,10 +8817,10 @@
               ]
             },
             "item": {
-              "name": "Super Missile",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": "Super"
+              "type": "Missile"
             }
           }
         ]
@@ -8918,10 +8918,10 @@
               ]
             },
             "item": {
-              "name": "Screw Attack",
+              "name": "Energy Tank",
               "player": 1,
               "advancement": true,
-              "type": "ScrewAttack"
+              "type": "ETank"
             }
           }
         ]
@@ -9070,10 +9070,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Super Missile",
               "player": 1,
               "advancement": false,
-              "type": "Missile"
+              "type": "Super"
             }
           }
         ]
@@ -9157,10 +9157,10 @@
               ]
             },
             "item": {
-              "name": "X-Ray Scope",
+              "name": "Spazer",
               "player": 1,
               "advancement": true,
-              "type": "XRayScope"
+              "type": "Spazer"
             }
           }
         ]
@@ -9382,10 +9382,10 @@
               ]
             },
             "item": {
-              "name": "Gravity Suit",
+              "name": "Super Missile",
               "player": 1,
-              "advancement": true,
-              "type": "Gravity"
+              "advancement": false,
+              "type": "Super"
             }
           }
         ]
@@ -9663,10 +9663,10 @@
               ]
             },
             "item": {
-              "name": "Energy Tank",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": "ETank"
+              "advancement": false,
+              "type": "Missile"
             }
           }
         ]
@@ -9734,10 +9734,10 @@
               ]
             },
             "item": {
-              "name": "Energy Tank",
+              "name": "Reserve Tank",
               "player": 1,
               "advancement": true,
-              "type": "ETank"
+              "type": "Reserve"
             }
           }
         ]
@@ -9920,10 +9920,10 @@
               ]
             },
             "item": {
-              "name": "Super Missile",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": "Super"
+              "advancement": false,
+              "type": "Missile"
             }
           }
         ]
@@ -9996,10 +9996,10 @@
               ]
             },
             "item": {
-              "name": "Super Missile",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": "Super"
+              "type": "Missile"
             }
           }
         ]
@@ -10622,10 +10622,10 @@
               ]
             },
             "item": {
-              "name": "Varia Suit",
+              "name": "Super Missile",
               "player": 1,
-              "advancement": true,
-              "type": "Varia"
+              "advancement": false,
+              "type": "Super"
             }
           }
         ]
@@ -10738,10 +10738,10 @@
               ]
             },
             "item": {
-              "name": "Hi-Jump Boots",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": "HiJump"
+              "advancement": false,
+              "type": "Missile"
             }
           }
         ]
@@ -10819,10 +10819,10 @@
               ]
             },
             "item": {
-              "name": "Speed Booster",
+              "name": "Super Missile",
               "player": 1,
-              "advancement": true,
-              "type": "SpeedBooster"
+              "advancement": false,
+              "type": "Super"
             }
           }
         ]
@@ -10926,10 +10926,10 @@
               ]
             },
             "item": {
-              "name": "Super Missile",
+              "name": "Bomb",
               "player": 1,
-              "advancement": false,
-              "type": "Super"
+              "advancement": true,
+              "type": "Bomb"
             }
           }
         ]
@@ -11072,7 +11072,7 @@
             "item": {
               "name": "Super Missile",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "Super"
             }
           }
@@ -11158,10 +11158,10 @@
               ]
             },
             "item": {
-              "name": "Wave Beam",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": "Wave"
+              "advancement": false,
+              "type": "Missile"
             }
           }
         ]
@@ -11246,10 +11246,10 @@
               ]
             },
             "item": {
-              "name": "Power Bomb",
+              "name": "Super Missile",
               "player": 1,
-              "advancement": true,
-              "type": "PowerBomb"
+              "advancement": false,
+              "type": "Super"
             }
           }
         ]
@@ -11467,10 +11467,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Space Jump",
               "player": 1,
-              "advancement": false,
-              "type": "Missile"
+              "advancement": true,
+              "type": "SpaceJump"
             }
           }
         ]
@@ -11635,10 +11635,10 @@
               ]
             },
             "item": {
-              "name": "Power Bomb",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": "PowerBomb"
+              "type": "Missile"
             }
           }
         ]
@@ -11800,10 +11800,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Charge Beam",
               "player": 1,
-              "advancement": false,
-              "type": "Missile"
+              "advancement": true,
+              "type": "Charge"
             }
           }
         ]
@@ -11896,10 +11896,10 @@
               ]
             },
             "item": {
-              "name": "Energy Tank",
+              "name": "Reserve Tank",
               "player": 1,
               "advancement": true,
-              "type": "ETank"
+              "type": "Reserve"
             }
           }
         ]
@@ -11998,10 +11998,10 @@
               ]
             },
             "item": {
-              "name": "Super Missile",
+              "name": "Energy Tank",
               "player": 1,
-              "advancement": false,
-              "type": "Super"
+              "advancement": true,
+              "type": "ETank"
             }
           }
         ]
@@ -12158,10 +12158,10 @@
               ]
             },
             "item": {
-              "name": "Super Missile",
+              "name": "Power Bomb",
               "player": 1,
-              "advancement": false,
-              "type": "Super"
+              "advancement": true,
+              "type": "PowerBomb"
             }
           }
         ]
@@ -12286,10 +12286,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Super Missile",
               "player": 1,
               "advancement": false,
-              "type": "Missile"
+              "type": "Super"
             }
           }
         ]
@@ -12327,10 +12327,10 @@
               ]
             },
             "item": {
-              "name": "Super Missile",
+              "name": "Energy Tank",
               "player": 1,
-              "advancement": false,
-              "type": "Super"
+              "advancement": true,
+              "type": "ETank"
             }
           }
         ]
@@ -12541,10 +12541,10 @@
               ]
             },
             "item": {
-              "name": "Space Jump",
+              "name": "Hi-Jump Boots",
               "player": 1,
               "advancement": true,
-              "type": "SpaceJump"
+              "type": "HiJump"
             }
           }
         ]
@@ -12629,10 +12629,10 @@
               ]
             },
             "item": {
-              "name": "Power Bomb",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": "PowerBomb"
+              "type": "Missile"
             }
           }
         ]
@@ -12746,10 +12746,10 @@
               ]
             },
             "item": {
-              "name": "Bomb",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": "Bomb"
+              "advancement": false,
+              "type": "Missile"
             }
           }
         ]
@@ -12868,10 +12868,10 @@
               ]
             },
             "item": {
-              "name": "Energy Tank",
+              "name": "Power Bomb",
               "player": 1,
               "advancement": true,
-              "type": "ETank"
+              "type": "PowerBomb"
             }
           }
         ]
@@ -12946,7 +12946,7 @@
             "item": {
               "name": "Missile",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "Missile"
             }
           }
@@ -13020,10 +13020,10 @@
               ]
             },
             "item": {
-              "name": "Super Missile",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": "Super"
+              "type": "Missile"
             }
           }
         ]
@@ -13112,10 +13112,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Super Missile",
               "player": 1,
               "advancement": false,
-              "type": "Missile"
+              "type": "Super"
             }
           }
         ]
@@ -13193,10 +13193,10 @@
               ]
             },
             "item": {
-              "name": "Super Missile",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": "Super"
+              "type": "Missile"
             }
           }
         ]
@@ -13361,10 +13361,10 @@
               ]
             },
             "item": {
-              "name": "Energy Tank",
+              "name": "Power Bomb",
               "player": 1,
-              "advancement": true,
-              "type": "ETank"
+              "advancement": false,
+              "type": "PowerBomb"
             }
           }
         ]
@@ -13587,10 +13587,10 @@
               ]
             },
             "item": {
-              "name": "Power Bomb",
+              "name": "X-Ray Scope",
               "player": 1,
-              "advancement": false,
-              "type": "PowerBomb"
+              "advancement": true,
+              "type": "XRayScope"
             }
           }
         ]
@@ -13628,10 +13628,10 @@
               ]
             },
             "item": {
-              "name": "Super Missile",
+              "name": "Power Bomb",
               "player": 1,
-              "advancement": false,
-              "type": "Super"
+              "advancement": true,
+              "type": "PowerBomb"
             }
           }
         ]
@@ -13831,10 +13831,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Wave Beam",
               "player": 1,
-              "advancement": false,
-              "type": "Missile"
+              "advancement": true,
+              "type": "Wave"
             }
           }
         ]
@@ -14034,10 +14034,10 @@
               ]
             },
             "item": {
-              "name": "Energy Tank",
+              "name": "Power Bomb",
               "player": 1,
-              "advancement": true,
-              "type": "ETank"
+              "advancement": false,
+              "type": "PowerBomb"
             }
           }
         ]
@@ -14141,10 +14141,10 @@
               ]
             },
             "item": {
-              "name": "Power Bomb",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": "PowerBomb"
+              "advancement": false,
+              "type": "Missile"
             }
           }
         ]
@@ -14525,10 +14525,10 @@
               ]
             },
             "item": {
-              "name": "Super Missile",
+              "name": "Energy Tank",
               "player": 1,
-              "advancement": false,
-              "type": "Super"
+              "advancement": true,
+              "type": "ETank"
             }
           }
         ]
@@ -14621,10 +14621,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Energy Tank",
               "player": 1,
-              "advancement": false,
-              "type": "Missile"
+              "advancement": true,
+              "type": "ETank"
             }
           }
         ]
@@ -14662,10 +14662,10 @@
               ]
             },
             "item": {
-              "name": "Super Missile",
+              "name": "Energy Tank",
               "player": 1,
-              "advancement": false,
-              "type": "Super"
+              "advancement": true,
+              "type": "ETank"
             }
           }
         ]
@@ -14783,10 +14783,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Energy Tank",
               "player": 1,
               "advancement": true,
-              "type": "Missile"
+              "type": "ETank"
             }
           }
         ]
@@ -14819,10 +14819,10 @@
               ]
             },
             "item": {
-              "name": "Reserve Tank",
+              "name": "Super Missile",
               "player": 1,
-              "advancement": true,
-              "type": "Reserve"
+              "advancement": false,
+              "type": "Super"
             }
           }
         ]
@@ -14930,10 +14930,10 @@
               ]
             },
             "item": {
-              "name": "Super Missile",
+              "name": "Gravity Suit",
               "player": 1,
-              "advancement": false,
-              "type": "Super"
+              "advancement": true,
+              "type": "Gravity"
             }
           }
         ]
@@ -15041,10 +15041,10 @@
               ]
             },
             "item": {
-              "name": "Super Missile",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": "Super"
+              "type": "Missile"
             }
           }
         ]
@@ -15159,10 +15159,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Super Missile",
               "player": 1,
               "advancement": false,
-              "type": "Missile"
+              "type": "Super"
             }
           }
         ]
@@ -15200,10 +15200,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Plasma Beam",
               "player": 1,
               "advancement": true,
-              "type": "Missile"
+              "type": "Plasma"
             }
           }
         ]
@@ -15236,10 +15236,10 @@
               ]
             },
             "item": {
-              "name": "Power Bomb",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": "PowerBomb"
+              "advancement": false,
+              "type": "Missile"
             }
           }
         ]
@@ -15333,10 +15333,10 @@
               ]
             },
             "item": {
-              "name": "Super Missile",
+              "name": "Speed Booster",
               "player": 1,
-              "advancement": false,
-              "type": "Super"
+              "advancement": true,
+              "type": "SpeedBooster"
             }
           }
         ]
@@ -15496,10 +15496,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Reserve Tank",
               "player": 1,
-              "advancement": false,
-              "type": "Missile"
+              "advancement": true,
+              "type": "Reserve"
             }
           }
         ]
@@ -15658,10 +15658,10 @@
               ]
             },
             "item": {
-              "name": "Power Bomb",
+              "name": "Screw Attack",
               "player": 1,
-              "advancement": false,
-              "type": "PowerBomb"
+              "advancement": true,
+              "type": "ScrewAttack"
             }
           }
         ]
@@ -15816,10 +15816,10 @@
               ]
             },
             "item": {
-              "name": "Super Missile",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": "Super"
+              "type": "Missile"
             }
           }
         ]
@@ -15892,10 +15892,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Super Missile",
               "player": 1,
               "advancement": false,
-              "type": "Missile"
+              "type": "Super"
             }
           }
         ]
@@ -15984,10 +15984,10 @@
               ]
             },
             "item": {
-              "name": "Plasma Beam",
+              "name": "Super Missile",
               "player": 1,
-              "advancement": true,
-              "type": "Plasma"
+              "advancement": false,
+              "type": "Super"
             }
           }
         ]
@@ -16025,10 +16025,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Super Missile",
               "player": 1,
               "advancement": false,
-              "type": "Missile"
+              "type": "Super"
             }
           }
         ]
@@ -16066,10 +16066,10 @@
               ]
             },
             "item": {
-              "name": "Energy Tank",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": "ETank"
+              "advancement": false,
+              "type": "Missile"
             }
           }
         ]
@@ -16107,10 +16107,10 @@
               ]
             },
             "item": {
-              "name": "Power Bomb",
+              "name": "Missile",
               "player": 1,
-              "advancement": false,
-              "type": "PowerBomb"
+              "advancement": true,
+              "type": "Missile"
             }
           }
         ]
@@ -16178,10 +16178,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Spring Ball",
               "player": 1,
-              "advancement": false,
-              "type": "Missile"
+              "advancement": true,
+              "type": "SpringBall"
             }
           }
         ]
@@ -16286,10 +16286,10 @@
               ]
             },
             "item": {
-              "name": "Energy Tank",
+              "name": "Ice Beam",
               "player": 1,
               "advancement": true,
-              "type": "ETank"
+              "type": "Ice"
             }
           }
         ]
@@ -16399,10 +16399,10 @@
               ]
             },
             "item": {
-              "name": "Energy Tank",
+              "name": "Super Missile",
               "player": 1,
-              "advancement": true,
-              "type": "ETank"
+              "advancement": false,
+              "type": "Super"
             }
           }
         ]
@@ -16440,10 +16440,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Energy Tank",
               "player": 1,
-              "advancement": false,
-              "type": "Missile"
+              "advancement": true,
+              "type": "ETank"
             }
           }
         ]
@@ -16522,10 +16522,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Super Missile",
               "player": 1,
               "advancement": false,
-              "type": "Missile"
+              "type": "Super"
             }
           }
         ]
@@ -16580,7 +16580,7 @@
         "trap": false,
         "event": false,
         "type": "Missile",
-        "max_count": 60
+        "max_count": 62
       },
       "Super Missile": {
         "name": "Super Missile",
@@ -16593,7 +16593,7 @@
         "trap": false,
         "event": false,
         "type": "Super",
-        "max_count": 50
+        "max_count": 52
       },
       "Power Bomb": {
         "name": "Power Bomb",
@@ -16606,7 +16606,7 @@
         "trap": false,
         "event": false,
         "type": "PowerBomb",
-        "max_count": 22
+        "max_count": 18
       },
       "Bomb": {
         "name": "Bomb",
@@ -17006,12 +17006,12 @@
       "Hi-Jump Boots": 2,
       "Ice Beam": 2,
       "Kraid": 1,
-      "Missile": 60,
+      "Missile": 62,
       "Morph Ball": 2,
       "Mother Brain": 1,
       "Phantoon": 1,
       "Plasma Beam": 2,
-      "Power Bomb": 22,
+      "Power Bomb": 18,
       "Reserve Tank": 8,
       "Ridley": 1,
       "Screw Attack": 2,
@@ -17020,7 +17020,7 @@
       "Speed Booster": 2,
       "Spore Spawn": 1,
       "Spring Ball": 2,
-      "Super Missile": 50,
+      "Super Missile": 52,
       "Varia Suit": 2,
       "Wave Beam": 2,
       "X-Ray Scope": 2
