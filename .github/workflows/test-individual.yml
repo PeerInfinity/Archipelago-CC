@@ -190,7 +190,7 @@ jobs:
     name: Commit Test Results
     runs-on: ubuntu-latest
     needs: individual-test
-    if: !cancelled()
+    if: ${{ !cancelled() }}
 
     steps:
       - name: Checkout repository
