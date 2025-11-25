@@ -73,6 +73,7 @@
  */
 
 import { createUniversalLogger } from '../../../app/core/universalLogger.js';
+import { PlayerIdUtils } from '../../shared/playerIdUtils.js';
 
 const moduleLogger = createUniversalLogger('ruleEvaluator');
 
@@ -144,8 +145,9 @@ export function executeStateMethod(manager, method, ...args) {
     if (method === 'can_reach' && args.length >= 1) {
       const targetName = args[0];
       const targetType = args[1] || 'Region';
-      const player = args[2] || manager.playerSlot || 1;
-      return manager.can_reach(targetName, targetType, player);
+      // Normalize player ID, defaulting to current player if not specified
+      const playerId = args[2] !== undefined ? PlayerIdUtils.normalize(args[2]) : manager.playerId;
+      return manager.can_reach(targetName, targetType, playerId);
     }
 
     // 3. Check for game-specific state methods (e.g., has_from_list_unique for Mario Land 2)

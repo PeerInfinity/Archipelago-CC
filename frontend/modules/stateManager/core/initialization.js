@@ -26,6 +26,7 @@
  */
 
 import { getGameLogic } from '../../shared/gameLogic/gameLogicRegistry.js';
+import { PlayerIdUtils } from '../../shared/playerIdUtils.js';
 
 /**
  * Loads and processes JSON rules data for a specific player
@@ -42,6 +43,11 @@ export function loadFromJSON(stateManager, jsonData, selectedPlayerId) {
   sm.invalidateCache();
   sm.clearCheckedLocations({ sendUpdate: false });
 
+  // Warn if playerId was not explicitly provided
+  if (selectedPlayerId === undefined || selectedPlayerId === null) {
+    sm.logger.warn('StateManager', '[Initialization] No playerId provided - defaulting to player 1. Consider explicitly specifying playerId for multiworld support.');
+  }
+
   sm._logDebug(
     `[Initialization] Loading JSON for player ${selectedPlayerId}...`
   );
@@ -57,9 +63,9 @@ export function loadFromJSON(stateManager, jsonData, selectedPlayerId) {
   // Validate input
   validateJSONData(jsonData, selectedPlayerId);
 
-  // Set player slot
-  sm.playerSlot = parseInt(selectedPlayerId, 10);
-  sm.logger.info('StateManager', `Player slot set to: ${sm.playerSlot}`);
+  // Set player ID (normalized to string)
+  sm.playerId = PlayerIdUtils.normalize(selectedPlayerId);
+  sm.logger.info('StateManager', `Player ID set to: ${sm.playerId}`);
 
   // Store rules and log game info
   sm.rules = jsonData;
@@ -351,8 +357,8 @@ function loadExits(sm, selectedPlayerId) {
           access_rule: originalExitObject.access_rule,
           parentRegion: regionName,
           player: originalExitObject.player !== undefined
-            ? originalExitObject.player
-            : sm.playerSlot,
+            ? PlayerIdUtils.normalize(originalExitObject.player)
+            : sm.playerId,
           type: originalExitObject.type || 'Exit',
         };
 

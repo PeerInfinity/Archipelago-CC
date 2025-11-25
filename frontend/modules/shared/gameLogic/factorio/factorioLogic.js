@@ -1,6 +1,9 @@
 /**
  * Factorio game logic module
  */
+
+import { DEFAULT_PLAYER_ID } from '../../playerIdUtils.js';
+
 export const factorioStateModule = {
   /**
    * Initializes a new, empty Factorio game state.
@@ -62,7 +65,7 @@ export const helperFunctions = {
 
     // Progressive item resolution: Check if this item is a resolved form of a progressive item
     // For Factorio, technologies like "logistic-science-pack" can be obtained through "progressive-science-pack"
-    const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+    const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
     // Try player-indexed progression_mapping first (from rules.json), then fall back to camelCase progressionMapping (from sm.progressionMapping)
     const progressionMapping = staticData?.progression_mapping?.[playerSlot] || staticData?.progressionMapping;

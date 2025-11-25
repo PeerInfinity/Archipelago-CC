@@ -6,6 +6,8 @@
  * Ported from worlds/pokemon_rb/logic.py
  */
 
+import { DEFAULT_PLAYER_ID } from '../../playerIdUtils.js';
+
 /**
  * Check if player has an item
  * @param {Object} snapshot - Canonical state snapshot
@@ -76,14 +78,14 @@ export function has_any(snapshot, staticData, items) {
 // Helper function to get world options
 function getOptions(staticData) {
   // Settings are nested by player ID
-  const playerId = staticData?.playerId || '1';
+  const playerId = staticData?.playerId || DEFAULT_PLAYER_ID;
   const settings = staticData?.settings?.[playerId] || staticData?.settings || {};
   return settings;
 }
 
 // Helper function to get game-specific data from game_info
 function getGameData(staticData, key) {
-  const playerId = staticData?.playerId || '1';
+  const playerId = staticData?.playerId || DEFAULT_PLAYER_ID;
 
   // Try to get from game_info first (nested by player)
   if (staticData?.game_info?.[playerId]?.[key]) {

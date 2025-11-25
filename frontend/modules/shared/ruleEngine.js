@@ -1,3 +1,5 @@
+import { DEFAULT_PLAYER_ID } from './playerIdUtils.js';
+
 /**
  * Rule Engine - Thread-Agnostic Rule Evaluation
  *
@@ -656,7 +658,7 @@ export const evaluateRule = (rule, context, depth = 0) => {
           // Try to get the setting value from context
           if (context.getStaticData || context.staticData) {
             const staticData = context.getStaticData ? context.getStaticData() : context.staticData;
-            const playerId = context.playerId || context.getPlayerSlot?.() || '1';
+            const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
 
             // Special case: if accessing self.options, return the settings object so nested attributes work
             if (rule.attr === 'options' && staticData?.settings && staticData.settings[playerId]) {
@@ -681,7 +683,7 @@ export const evaluateRule = (rule, context, depth = 0) => {
           // Try to get the setting value from context
           if (context.getStaticData) {
             const staticData = context.getStaticData();
-            const playerId = context.playerId || context.getPlayerSlot?.() || '1';
+            const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
 
             // Check if the setting exists
             if (staticData.settings && staticData.settings[playerId]) {

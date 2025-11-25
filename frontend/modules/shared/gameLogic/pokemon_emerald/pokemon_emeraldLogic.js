@@ -6,6 +6,8 @@
  * Ported from worlds/pokemon_emerald/logic.py
  */
 
+import { DEFAULT_PLAYER_ID } from '../../playerIdUtils.js';
+
 /**
  * Check if player has an item
  * @param {Object} snapshot - Canonical state snapshot
@@ -92,7 +94,7 @@ export function has_group_unique(snapshot, staticData, groupName, requiredCount 
     return false;
   }
 
-  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
   const playerItemGroups = staticData?.item_groups?.[playerSlot] || staticData?.item_groups;
 
   let uniqueItemsFound = 0;
@@ -154,14 +156,14 @@ export function has_group_unique(snapshot, staticData, groupName, requiredCount 
 // Helper function to get world options
 function getOptions(staticData) {
   // Settings are nested by player ID
-  const playerId = staticData?.playerId || '1';
+  const playerId = staticData?.playerId || DEFAULT_PLAYER_ID;
   const settings = staticData?.settings?.[playerId] || staticData?.settings || {};
   return settings;
 }
 
 // Helper function to get game-specific data from game_info
 function getGameData(staticData, key) {
-  const playerId = staticData?.playerId || '1';
+  const playerId = staticData?.playerId || DEFAULT_PLAYER_ID;
 
   // Try to get from game_info first (nested by player)
   if (staticData?.game_info?.[playerId]?.[key]) {

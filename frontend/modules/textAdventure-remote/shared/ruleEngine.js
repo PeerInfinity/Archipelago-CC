@@ -1,3 +1,5 @@
+import { DEFAULT_PLAYER_ID } from './playerIdUtils.js';
+
 /**
  * Rule Engine - Thread-Agnostic Rule Evaluation
  *
@@ -415,6 +417,14 @@ export const evaluateRule = (rule, context, depth = 0) => {
         } else if (isValidContext) {
           if (typeof context.executeHelper === 'function') {
             result = context.executeHelper(rule.name, ...args);
+
+            // Auto-convert SMBool objects to booleans
+            // evalSMBool is the only helper that explicitly handles SMBool conversion,
+            // so it returns a boolean already and doesn't need this
+            if (result && typeof result === 'object' && 'bool' in result && 'difficulty' in result) {
+              // Convert to boolean with high difficulty threshold
+              result = result.bool === true && result.difficulty <= 999;
+            }
           } else {
             log(
               'warn',
@@ -437,6 +447,11 @@ export const evaluateRule = (rule, context, depth = 0) => {
         } else if (isValidContext) {
           if (typeof context.executeHelper === 'function') {
             result = context.executeHelper(rule.name, ...args);
+
+            // Auto-convert SMBool objects to booleans
+            if (result && typeof result === 'object' && 'bool' in result && 'difficulty' in result) {
+              result = result.bool === true && result.difficulty <= 999;
+            }
           } else {
             log(
               'warn',
@@ -482,13 +497,21 @@ export const evaluateRule = (rule, context, depth = 0) => {
         let hasUndefined = false;
         for (const condition of rule.conditions || []) {
           const conditionResult = evaluateRule(condition, context, depth + 1);
+
+          // Handle SMBool objects from Super Metroid
+          let boolValue = conditionResult;
+          if (conditionResult && typeof conditionResult === 'object' && 'bool' in conditionResult) {
+            // SMBool object - extract the boolean value (ignore difficulty for and/or)
+            boolValue = conditionResult.bool === true;
+          }
+
           // Check for falsiness (but not undefined, which is handled separately)
-          if (!conditionResult && conditionResult !== undefined) {
+          if (!boolValue && boolValue !== undefined) {
             result = false;
             hasUndefined = false; // Definitively false
             break;
           }
-          if (conditionResult === undefined) {
+          if (boolValue === undefined) {
             hasUndefined = true; // Potential undefined result
           }
         }
@@ -504,8 +527,16 @@ export const evaluateRule = (rule, context, depth = 0) => {
         let hasUndefined = false;
         for (const condition of rule.conditions || []) {
           const conditionResult = evaluateRule(condition, context, depth + 1);
+
+          // Handle SMBool objects from Super Metroid
+          let boolValue = conditionResult;
+          if (conditionResult && typeof conditionResult === 'object' && 'bool' in conditionResult) {
+            // SMBool object - extract the boolean value (ignore difficulty for and/or)
+            boolValue = conditionResult.bool === true;
+          }
+
           // Check for truthiness (but not undefined, which is handled separately)
-          if (conditionResult && conditionResult !== undefined) {
+          if (boolValue && boolValue !== undefined) {
             result = true;
             hasUndefined = false; // Definitively true
             break;
@@ -627,7 +658,7 @@ export const evaluateRule = (rule, context, depth = 0) => {
           // Try to get the setting value from context
           if (context.getStaticData || context.staticData) {
             const staticData = context.getStaticData ? context.getStaticData() : context.staticData;
-            const playerId = context.playerId || context.getPlayerSlot?.() || '1';
+            const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
 
             // Special case: if accessing self.options, return the settings object so nested attributes work
             if (rule.attr === 'options' && staticData?.settings && staticData.settings[playerId]) {
@@ -652,7 +683,7 @@ export const evaluateRule = (rule, context, depth = 0) => {
           // Try to get the setting value from context
           if (context.getStaticData) {
             const staticData = context.getStaticData();
-            const playerId = context.playerId || context.getPlayerSlot?.() || '1';
+            const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
 
             // Check if the setting exists
             if (staticData.settings && staticData.settings[playerId]) {
@@ -761,9 +792,55 @@ export const evaluateRule = (rule, context, depth = 0) => {
       }
 
       case 'function_call': {
+        // Special handling for state method calls like state.CanAcquireAtLeast()
+        // In the exported rules, these appear as: {type: 'function_call', function: {type: 'attribute', object: {type: 'constant', value: true}, attr: 'MethodName'}}
+        // The constant 'true' is a placeholder for the state/world object
+        if (rule.function?.type === 'attribute' &&
+            rule.function.object?.type === 'constant' &&
+            rule.function.object.value === true) {
+
+          const methodName = rule.function.attr;
+          const args = (rule.args || []).map(
+            (arg) => evaluateRule(arg, context, depth + 1)
+          );
+
+          // If any argument evaluation results in undefined, return undefined
+          if (args.some((arg) => arg === undefined)) {
+            result = undefined;
+            break;
+          }
+
+          // For SMZ3, prepend 'smz3_' to the method name to get the helper function name
+          // This handles methods like CanAcquireAtLeast, CanAcquireAll, etc.
+          const helperName = `smz3_${methodName}`;
+
+          // Call the helper function through context.executeHelper
+          if (context.executeHelper) {
+            try {
+              result = context.executeHelper(helperName, ...args);
+              break;
+            } catch (error) {
+              logError(
+                LOG_LEVEL.ERROR,
+                `[ruleEngine] [evaluateRule] Failed to execute state method helper '${helperName}':`,
+                error
+              );
+              result = undefined;
+              break;
+            }
+          } else {
+            logError(
+              LOG_LEVEL.ERROR,
+              `[ruleEngine] [evaluateRule] No executeHelper method in context for state method '${helperName}'`
+            );
+            result = undefined;
+            break;
+          }
+        }
+
         // Special handling for state.multiworld.get_location() calls
         // These are used in location access rules to reference the location's parent_region
-        if (rule.function?.type === 'attribute' && 
+        if (rule.function?.type === 'attribute' &&
             rule.function.attr === 'get_location' &&
             rule.function.object?.type === 'attribute' &&
             rule.function.object.attr === 'multiworld') {
@@ -1069,8 +1146,42 @@ export const evaluateRule = (rule, context, depth = 0) => {
       }
 
       case 'compare': {
-        const left = evaluateRule(rule.left, context, depth + 1);
-        const right = evaluateRule(rule.right, context, depth + 1);
+        // Special handling for item_check in comparisons
+        // When item_check (without a count field) is used as an operand in a comparison,
+        // we need the item COUNT, not a boolean. This handles cases like KeyPD >= 4.
+        let left = rule.left;
+        let right = rule.right;
+
+        // If left is an item_check without a count field, get the item count directly
+        if (left && left.type === 'item_check' && left.count === undefined) {
+          const itemName = evaluateRule(left.item, context, depth + 1);
+          if (itemName === undefined) {
+            left = undefined;
+          } else if (typeof context.countItem === 'function') {
+            left = context.countItem(itemName) || 0;
+          } else {
+            log('warn', '[evaluateRule] context.countItem not available for item_check in compare');
+            left = undefined;
+          }
+        } else {
+          left = evaluateRule(left, context, depth + 1);
+        }
+
+        // If right is an item_check without a count field, get the item count directly
+        if (right && right.type === 'item_check' && right.count === undefined) {
+          const itemName = evaluateRule(right.item, context, depth + 1);
+          if (itemName === undefined) {
+            right = undefined;
+          } else if (typeof context.countItem === 'function') {
+            right = context.countItem(itemName) || 0;
+          } else {
+            log('warn', '[evaluateRule] context.countItem not available for item_check in compare');
+            right = undefined;
+          }
+        } else {
+          right = evaluateRule(right, context, depth + 1);
+        }
+
         const op = rule.op;
 
         // If either operand is undefined, the comparison result is undefined
@@ -1221,17 +1332,12 @@ export const evaluateRule = (rule, context, depth = 0) => {
       case 'locations_checked': {
         // Check if player has checked at least N locations
         const requiredCount = evaluateRule(rule.count, context, depth + 1);
-        console.log('[locations_checked] Rule triggered, requiredCount:', requiredCount);
         if (requiredCount === undefined) {
-          console.log('[locations_checked] requiredCount is undefined');
           result = undefined;
         } else if (typeof context.getCheckedLocationsCount === 'function') {
           const checkedCount = context.getCheckedLocationsCount();
-          console.log(`[locations_checked] Checking if ${checkedCount} >= ${requiredCount}`);
           result = checkedCount >= requiredCount;
-          console.log(`[locations_checked] Result: ${result}`);
         } else {
-          console.log('[locations_checked] context.getCheckedLocationsCount is not a function');
           log('warn', '[evaluateRule] context.getCheckedLocationsCount is not a function for locations_checked.');
           result = undefined;
         }

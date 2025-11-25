@@ -5,6 +5,8 @@
  * what percentage of the target image can be painted with current items.
  */
 
+import { DEFAULT_PLAYER_ID } from '../../playerIdUtils.js';
+
 /**
  * Calculate paint_percent_available - the core Paint game logic function.
  *
@@ -25,7 +27,7 @@
  */
 export function paint_percent_available(snapshot, staticData) {
     // Get world options from settings (settings are per-player, so we access player slot)
-    const playerSlot = snapshot?.player?.slot || '1';
+    const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
     const settings = staticData?.settings?.[playerSlot] || {};
     const canvasSizeIncrement = settings.canvas_size_increment || 50; // Default from Paint.yaml
     const logicPercent = settings.logic_percent || 60; // Default from Paint.yaml

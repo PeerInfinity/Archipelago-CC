@@ -292,9 +292,9 @@ export function _addItemToInventory(sm, itemName, count = 1) {
   }
 
   // Handle prog_items accumulation based on game metadata (generic for all games)
-  const gameInfo = sm.gameInfo?.[String(sm.playerSlot)]; // gameInfo uses string keys from Python export
+  const gameInfo = sm.gameInfo?.[sm.playerId]; // gameInfo uses string keys from Python export
   if (gameInfo?.accumulator_rules && sm.prog_items) {
-    const playerId = sm.playerSlot; // prog_items can use numeric keys (object key coercion)
+    const playerId = sm.playerId; // prog_items uses string keys
 
     for (const rule of gameInfo.accumulator_rules) {
       const match = itemName.match(new RegExp(rule.pattern));
@@ -376,9 +376,9 @@ export function _removeItemFromInventory(sm, itemName, count = 1) {
   }
 
   // Handle prog_items removal based on game metadata (generic for all games)
-  const gameInfo = sm.gameInfo?.[String(sm.playerSlot)]; // gameInfo uses string keys from Python export
+  const gameInfo = sm.gameInfo?.[sm.playerId]; // gameInfo uses string keys from Python export
   if (gameInfo?.accumulator_rules && sm.prog_items) {
-    const playerId = sm.playerSlot; // prog_items can use numeric keys (object key coercion)
+    const playerId = sm.playerId; // prog_items uses string keys
 
     for (const rule of gameInfo.accumulator_rules) {
       const match = itemName.match(new RegExp(rule.pattern));

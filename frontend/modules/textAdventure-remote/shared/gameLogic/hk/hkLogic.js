@@ -106,7 +106,7 @@ export const helperFunctions = {
       return false;
     }
 
-    const playerSettings = staticData.settings[playerId.toString()];
+    const playerSettings = staticData.settings[playerId]; // Object key coercion handles numeric playerId
     if (!playerSettings) {
       return false;
     }

@@ -72,6 +72,7 @@
  */
 
 import { initializeGameLogic, getGameLogic } from '../../shared/gameLogic/gameLogicRegistry.js';
+import { DEFAULT_PLAYER_ID } from '../../shared/playerIdUtils.js';
 
 // Module-level helper for logging
 function log(level, message, ...data) {
@@ -189,8 +190,9 @@ export function getSnapshot(sm) {
     locationReachability: locationReachability,
     // serverProvidedUncheckedLocations: Array.from(sm.serverProvidedUncheckedLocations || []), // Optionally expose if UI needs it directly
     player: {
-      name: sm.settings?.playerName || `Player ${sm.playerSlot}`,
-      slot: sm.playerSlot,
+      name: sm.settings?.playerName || `Player ${sm.playerId}`,
+      id: sm.playerId,
+      slot: sm.playerId, // Deprecated: use 'id' instead
       team: sm.team, // Assuming sm.team exists on StateManager
     },
     game: sm.rules?.game_name || sm.settings?.game || 'Unknown', // Single game identifier
@@ -286,7 +288,7 @@ export function _createSelfSnapshotInterface(sm) {
             inventory: sm.inventory,
             flags: sm.gameStateModule?.flags || [],
             events: sm.gameStateModule?.events || [],
-            player: { slot: sm.playerSlot }
+            player: { id: sm.playerId, slot: sm.playerId }
           };
           const staticData = {
             progressionMapping: sm.progressionMapping,
@@ -310,7 +312,7 @@ export function _createSelfSnapshotInterface(sm) {
             inventory: sm.inventory,
             flags: sm.gameStateModule?.flags || [],
             events: sm.gameStateModule?.events || [],
-            player: { slot: sm.playerSlot }
+            player: { id: sm.playerId, slot: sm.playerId }
           };
           const staticData = {
             progressionMapping: sm.progressionMapping,
@@ -389,7 +391,8 @@ export function _createSelfSnapshotInterface(sm) {
     getAllItems: () => sm.itemData,
     getAllLocations: () => Array.from(sm.locations.values()),
     getAllRegions: () => sm.regions,
-    getPlayerSlot: () => sm.playerSlot,
+    getPlayerId: () => sm.playerId,
+    getPlayerSlot: () => sm.playerId, // Deprecated: use getPlayerId
     helpers: sm.helpers,
     resolveName: (name) => {
       // Standard constants
@@ -397,14 +400,14 @@ export function _createSelfSnapshotInterface(sm) {
       if (name === 'False') return false;
       if (name === 'None') return null;
 
-      // Player slot
-      if (name === 'player') return sm.playerSlot;
+      // Player ID
+      if (name === 'player') return sm.playerId;
 
       // World object (commonly used in helper functions)
       if (name === 'world') {
         return {
-          player: sm.playerSlot,
-          options: sm.settings?.[sm.playerSlot] || sm.settings || {}
+          player: sm.playerId,
+          options: sm.settings?.[sm.playerId] || sm.settings || {}
         };
       }
 
@@ -471,7 +474,7 @@ export function _createSelfSnapshotInterface(sm) {
             stateObject = gameLogic.stateModule.buildStateWithMultiworld(
               sm.gameStateModule,
               sm.settings,
-              sm.playerSlot
+              sm.playerId
             );
           } else {
             // Fallback: return gameStateModule as-is
@@ -532,7 +535,7 @@ export function _createSelfSnapshotInterface(sm) {
       // Check if this is a game-specific variable (e.g., required_technologies for Factorio)
       // These are stored in game_info[playerId].variables in the rules.json
       const staticData = getStaticGameData(sm);
-      const currentPlayerId = sm.playerSlot || '1';
+      const currentPlayerId = sm.playerId || DEFAULT_PLAYER_ID;
       if (staticData?.game_info?.[currentPlayerId]?.variables &&
           staticData.game_info[currentPlayerId].variables[name]) {
         return staticData.game_info[currentPlayerId].variables[name];
@@ -657,17 +660,17 @@ export function getStaticGameData(sm) {
   return {
     game_name: sm.rules?.game_name,
     game_directory: sm.rules?.game_directory,
-    playerId: sm.playerSlot, // Numeric player ID for consistency
+    playerId: sm.playerId, // String player ID
     locations: sm.locations || new Map(),  // Return Map directly
     regions: sm.regions || new Map(),      // Return Map directly
     exits: sm.exits,
     dungeons: sm.dungeons || new Map(),    // Return Map directly
     items: sm.itemData,  // Direct access for UI components
-    itemsByPlayer: { [String(sm.playerSlot)]: sm.itemData },  // Provide items indexed by player slot for stateInterface
+    itemsByPlayer: { [sm.playerId]: sm.itemData },  // Provide items indexed by player ID for stateInterface
     itemData: sm.itemData,  // Keep for backwards compatibility
     groups: sm.groupData,
     groupData: sm.groupData,
-    item_groups: { [String(sm.playerSlot)]: sm.groupData },  // Provide item_groups for stateInterface.countGroup
+    item_groups: { [sm.playerId]: sm.groupData },  // Provide item_groups for stateInterface.countGroup
     progressionMapping: sm.progressionMapping,
     progression_mapping: sm.rules?.progression_mapping,  // Add snake_case version for compatibility with game helpers
     itempoolCounts: sm.itempoolCounts,

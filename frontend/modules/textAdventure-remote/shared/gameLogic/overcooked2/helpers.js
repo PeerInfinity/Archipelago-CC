@@ -5,6 +5,8 @@
  * and level completion requirements.
  */
 
+import { DEFAULT_PLAYER_ID } from '../../playerIdUtils.js';
+
 /**
  * Check if player has enough total stars (Star + Bonus Star)
  *
@@ -44,7 +46,7 @@ export function has_requirements_for_level_star(snapshot, staticData, levelShort
     }
 
     // Get level logic from game_info
-    const playerId = staticData?.playerId || '1';
+    const playerId = staticData?.playerId || DEFAULT_PLAYER_ID;
     const levelLogic = staticData?.game_info?.[playerId]?.level_logic;
     if (!levelLogic) {
         // No logic defined at all - assume accessible

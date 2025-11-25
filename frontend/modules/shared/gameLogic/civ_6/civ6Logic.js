@@ -1,6 +1,9 @@
 /**
  * Civilization VI state management module
  */
+
+import { DEFAULT_PLAYER_ID } from '../../playerIdUtils.js';
+
 export const civ6StateModule = {
   /**
    * Initializes a new Civilization VI game state.
@@ -92,7 +95,7 @@ export const helperFunctions = {
    */
   has_non_progressive_items(snapshot, staticData, eraName) {
     // Get the era requirements from game_info
-    const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+    const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
     const gameInfo = staticData?.game_info?.[playerSlot];
     if (!gameInfo || !gameInfo.era_required_non_progressive_items) {
       console.warn(`[civ6Logic] No era requirements found in game_info`);
@@ -132,7 +135,7 @@ export const helperFunctions = {
    */
   has_progressive_items(snapshot, staticData, eraName) {
     // Get the era requirements from game_info
-    const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+    const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
     const gameInfo = staticData?.game_info?.[playerSlot];
     if (!gameInfo || !gameInfo.era_required_progressive_items_counts) {
       console.warn(`[civ6Logic] No progressive era requirements found in game_info`);

@@ -141,6 +141,111 @@ export function smz3_CanBeatBoss(snapshot, staticData) {
          hasItem(snapshot, staticData, 'Somaria');
 }
 
+/**
+ * Check if player can beat Armos Knights (Eastern Palace boss).
+ * Python (from EasternPalace): def CanBeatBoss(self, items: Progression):
+ *     return items.Sword or items.Hammer or items.Bow or \
+ *            items.Firerod or items.Icerod or \
+ *            items.Byrna or items.Somaria
+ * Same as generic CanBeatBoss.
+ */
+export function smz3_CanBeatArmos(snapshot, staticData) {
+  return smz3_CanBeatBoss(snapshot, staticData);
+}
+
+/**
+ * Check if player can beat Moldorm (Tower of Hera boss).
+ * Python (from TowerOfHera): def CanBeatBoss(self, items: Progression):
+ *     return items.Sword or items.Hammer
+ * Requires either Sword or Hammer (more restrictive than generic).
+ */
+export function smz3_CanBeatMoldorm(snapshot, staticData) {
+  return hasItem(snapshot, staticData, 'ProgressiveSword') ||
+         hasItem(snapshot, staticData, 'Hammer');
+}
+
+// ====================
+// Ganon's Tower Navigation Helpers
+// ====================
+
+/**
+ * Check if player can access the left side of Ganon's Tower.
+ * Python (from GanonsTower):
+ * def LeftSide(self, items: Progression, locations: List[Location]):
+ *     return items.Hammer and items.Hookshot and items.KeyGT >= (3 if any(l.ItemIs(ItemType.BigKeyGT, self.world) for l in locations) else 4)
+ *
+ * Requires:
+ * - Hammer AND Hookshot
+ * - 3 KeyGT if any location in the list contains BigKeyGT, otherwise 4 KeyGT
+ *
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static data
+ * @param {Array} locations - List of location objects to check
+ */
+export function smz3_LeftSide(snapshot, staticData, locations) {
+  const hasHammer = hasItem(snapshot, staticData, 'Hammer');
+  const hasHookshot = hasItem(snapshot, staticData, 'Hookshot');
+
+  if (!hasHammer || !hasHookshot) {
+    return false;
+  }
+
+  // Check if any location in the list contains BigKeyGT
+  let anyContainsBigKeyGT = false;
+  if (locations && Array.isArray(locations)) {
+    for (const loc of locations) {
+      if (loc && loc.ItemIs && loc.ItemIs('BigKeyGT')) {
+        anyContainsBigKeyGT = true;
+        break;
+      }
+    }
+  }
+
+  const requiredKeys = anyContainsBigKeyGT ? 3 : 4;
+  const keyCount = getItemCount(snapshot, staticData, 'KeyGT');
+
+  return keyCount >= requiredKeys;
+}
+
+/**
+ * Check if player can access the right side of Ganon's Tower.
+ * Python (from GanonsTower):
+ * def RightSide(self, items: Progression, locations: List[Location]):
+ *     return items.Somaria and items.Firerod and items.KeyGT >= (3 if any(l.ItemIs(ItemType.BigKeyGT, self.world) for l in locations) else 4)
+ *
+ * Requires:
+ * - Somaria AND Firerod
+ * - 3 KeyGT if any location in the list contains BigKeyGT, otherwise 4 KeyGT
+ *
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static data
+ * @param {Array} locations - List of location objects to check
+ */
+export function smz3_RightSide(snapshot, staticData, locations) {
+  const hasSomaria = hasItem(snapshot, staticData, 'Somaria');
+  const hasFirerod = hasItem(snapshot, staticData, 'Firerod');
+
+  if (!hasSomaria || !hasFirerod) {
+    return false;
+  }
+
+  // Check if any location in the list contains BigKeyGT
+  let anyContainsBigKeyGT = false;
+  if (locations && Array.isArray(locations)) {
+    for (const loc of locations) {
+      if (loc && loc.ItemIs && loc.ItemIs('BigKeyGT')) {
+        anyContainsBigKeyGT = true;
+        break;
+      }
+    }
+  }
+
+  const requiredKeys = anyContainsBigKeyGT ? 3 : 4;
+  const keyCount = getItemCount(snapshot, staticData, 'KeyGT');
+
+  return keyCount >= requiredKeys;
+}
+
 // ====================
 // Super Metroid Helper Functions
 // ====================
@@ -553,20 +658,12 @@ export function smz3_GetLocation(snapshot, staticData, locationName) {
  * @param {number} rewardType - The reward type value to check for
  */
 export function smz3_CanAcquire(snapshot, staticData, rewardType) {
-  console.log('[smz3_CanAcquire] Called with rewardType:', rewardType);
-  console.log('[smz3_CanAcquire] snapshot.player:', snapshot.player);
-  console.log('[smz3_CanAcquire] snapshot.inventory keys:', snapshot.inventory ? Object.keys(snapshot.inventory).length : 'undefined');
-  console.log('[smz3_CanAcquire] Sample inventory - Hammer:', snapshot.inventory?.['Hammer'], 'Hookshot:', snapshot.inventory?.['Hookshot'], 'KeySP:', snapshot.inventory?.['KeySP']);
-
   // Get player slot - snapshot.player can be either a number or an object with slot property
   const playerSlot = String(typeof snapshot.player === 'object' ? snapshot.player.slot : snapshot.player);
-  console.log('[smz3_CanAcquire] playerSlot:', playerSlot);
 
   // Get the reward_regions mapping from settings
   const settings = staticData.settings?.[playerSlot] || {};
   const rewardRegions = settings.reward_regions || {};
-
-  console.log('[smz3_CanAcquire] rewardRegions:', rewardRegions);
 
   // Boss location mapping: maps region name to boss location name
   // Note: Some regions (like Castle Tower) don't have a specific boss location
@@ -590,16 +687,12 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
   };
 
   // Find the region that has the specified reward
-  console.log(`[smz3_CanAcquire] Searching for reward type ${rewardType} in ${Object.keys(rewardRegions).length} regions`);
-
   for (const [regionName, rewardInfo] of Object.entries(rewardRegions)) {
     if (rewardInfo.reward_type === rewardType) {
       // Found the region with this reward
-      console.log(`[smz3_CanAcquire] Found region '${regionName}' with reward type ${rewardType}`);
       const bossLocationName = bossLocations[regionName];
 
       if (!bossLocationName) {
-        console.log(`[smz3_CanAcquire] Region ${regionName} has no boss location, checking CanComplete logic`);
 
         // Implement CanComplete logic for regions without boss locations
         if (regionName === 'Castle Tower') {
@@ -617,17 +710,6 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
 
           const canComplete = canEnter && hasLamp && hasEnoughKeys && hasSword;
 
-          console.log(`[smz3_CanAcquire] Castle Tower CanComplete:`, {
-            canKillManyEnemies,
-            hasCapeOrMasterSword,
-            canEnter,
-            hasLamp,
-            hasEnoughKeys,
-            hasSword,
-            canComplete
-          });
-
-          console.log(`[smz3_CanAcquire] Returning ${canComplete} for Castle Tower`);
           return canComplete;
         } else if (regionName === 'Wrecked Ship') {
           // Wrecked Ship CanComplete: CanEnter && CanUnlockShip
@@ -643,25 +725,15 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
 
           const canComplete = hasSuper && canUnlockShip;
 
-          console.log(`[smz3_CanAcquire] Wrecked Ship CanComplete:`, {
-            hasCard,
-            canPassBomb,
-            canUnlockShip,
-            hasSuper,
-            canComplete
-          });
-
           return canComplete;
         }
 
-        console.warn(`[smz3_CanAcquire] Region ${regionName} has no boss location and no CanComplete implementation, returning false`);
         return false;
       }
 
       // Check if the boss location is accessible
       // Find the boss location first (doesn't require evaluateRule)
       if (!staticData.regions) {
-        console.warn('[smz3_CanAcquire] No regions data in staticData');
         return false;
       }
 
@@ -675,70 +747,27 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
         if (region.locations) {
           bossLocation = region.locations.find(loc => loc.name === bossLocationName);
           if (bossLocation) {
-            console.log(`[smz3_CanAcquire] Found boss location: ${bossLocationName} in region: ${region.name}`);
             break;
           }
         }
       }
 
       if (!bossLocation) {
-        console.warn(`[smz3_CanAcquire] Boss location not found: ${bossLocationName}`);
         return false;
       }
 
       // Check if the location is accessible
       if (bossLocation.access_rule) {
-        // For simple rules (AND with item_check), evaluate manually to avoid recursive evaluateRule calls
-        // which can cause issues with the snapshot interface
-        const rule = bossLocation.access_rule;
-
-        // Handle simple AND rules with item_check conditions
-        if (rule.type === 'and' && rule.conditions) {
-          const allItemChecks = rule.conditions.every(cond => cond.type === 'item_check');
-          if (allItemChecks) {
-            // Log what items are being checked and what the player has
-            const itemChecks = rule.conditions.map(cond => ({
-              item: cond.item,
-              required: true,
-              has: hasItem(snapshot, staticData, cond.item),
-              count: getItemCount(snapshot, staticData, cond.item)
-            }));
-            console.log(`[smz3_CanAcquire] Checking items for ${bossLocationName}:`, JSON.stringify(itemChecks));
-
-            // Manually check all items
-            const result = rule.conditions.every(cond => hasItem(snapshot, staticData, cond.item));
-            console.log(`[smz3_CanAcquire] Manually evaluated boss location (${bossLocationName}):`, result);
-            console.log(`[smz3_CanAcquire] Returning ${result} for region '${regionName}'`);
-            return result;
-          }
-        }
-
-        // For other rule types, try using evaluateRule if available
-        if (snapshot.evaluateRule) {
-          try {
-            const result = snapshot.evaluateRule(bossLocation.access_rule);
-            console.log(`[smz3_CanAcquire] Evaluated boss location (${bossLocationName}) via evaluateRule:`, result);
-            console.log(`[smz3_CanAcquire] Returning ${result} for region '${regionName}'`);
-            return result;
-          } catch (error) {
-            console.error(`[smz3_CanAcquire] Error evaluating boss location (${bossLocationName}):`, error);
-            console.log(`[smz3_CanAcquire] Returning false for region '${regionName}' due to error`);
-            return false;
-          }
-        } else {
-          // snapshot.evaluateRule not available and rule is complex
-          console.warn(`[smz3_CanAcquire] Cannot evaluate complex rule for ${bossLocationName}, snapshot.evaluateRule not available`);
-          return false;
-        }
+        // Use the simple rule evaluator to handle common rule types
+        const result = evaluateSimpleRule(bossLocation.access_rule, snapshot, staticData);
+        return result;
       } else {
         // No access rule means always accessible
-        console.log(`[smz3_CanAcquire] No access rule for boss location, returning true for region '${regionName}'`);
         return true;
       }
     }
   }
 
-  console.warn(`[smz3_CanAcquire] No region found with reward type: ${rewardType}`);
   return false;
 }
 
@@ -759,8 +788,6 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
  * @param {number} rewardType - The reward type mask to check for
  */
 export function smz3_CanAcquireAll(snapshot, staticData, rewardType) {
-  console.log('[smz3_CanAcquireAll] Called with rewardType:', rewardType);
-
   // Get player slot
   const playerSlot = String(typeof snapshot.player === 'object' ? snapshot.player.slot : snapshot.player);
 
@@ -777,11 +804,8 @@ export function smz3_CanAcquireAll(snapshot, staticData, rewardType) {
     }
   }
 
-  console.log(`[smz3_CanAcquireAll] Found ${matchingRegions.length} regions matching mask ${rewardType}`);
-
   // If no regions match, return false (can't acquire what doesn't exist)
   if (matchingRegions.length === 0) {
-    console.log('[smz3_CanAcquireAll] No matching regions, returning false');
     return false;
   }
 
@@ -793,22 +817,333 @@ export function smz3_CanAcquireAll(snapshot, staticData, rewardType) {
     // we need to check THIS specific region's boss location directly.
     const canCompleteRegion = checkRegionCompletion(snapshot, staticData, region.name);
     if (!canCompleteRegion) {
-      console.log(`[smz3_CanAcquireAll] Cannot complete region '${region.name}', returning false`);
       return false;
     }
   }
 
-  console.log(`[smz3_CanAcquireAll] All ${matchingRegions.length} regions can be completed, returning true`);
   return true;
 }
 
 /**
+ * Check if player can acquire AT LEAST a certain number of rewards of a specific type(s).
+ * Python: def CanAcquireAtLeast(self, amount, items, rewardsMask):
+ *     return len([region for region in self.rewardLookup[rewardsMask.value] if region.CanComplete(items)]) >= amount
+ *
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static data (contains settings with reward_regions)
+ * @param {number} amount - Minimum number of regions to complete
+ * @param {number} rewardType - The reward type mask to check for
+ */
+export function smz3_CanAcquireAtLeast(snapshot, staticData, amount, rewardType) {
+  // Get player slot
+  const playerSlot = String(typeof snapshot.player === 'object' ? snapshot.player.slot : snapshot.player);
+
+  // Get the reward_regions mapping from settings
+  const settings = staticData.settings?.[playerSlot] || {};
+  const rewardRegions = settings.reward_regions || {};
+
+  // Find all regions that have rewards matching ANY bit in the mask
+  const matchingRegions = [];
+  for (const [regionName, rewardInfo] of Object.entries(rewardRegions)) {
+    // Check if this region's reward type matches any bit in the mask
+    if ((rewardInfo.reward_type & rewardType) !== 0) {
+      matchingRegions.push({ name: regionName, rewardType: rewardInfo.reward_type });
+    }
+  }
+
+  // Count how many of these regions can be completed
+  let completableCount = 0;
+  for (const region of matchingRegions) {
+    const canCompleteRegion = checkRegionCompletion(snapshot, staticData, region.name);
+    if (canCompleteRegion) {
+      completableCount++;
+    }
+  }
+
+  return completableCount >= amount;
+}
+
+/**
+ * Simple rule evaluator for use within helper functions.
+ * Handles basic rule types without needing snapshot.evaluateRule().
+ * @param {Object} rule - The rule to evaluate
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static data
+ * @returns {boolean} Result of rule evaluation
+ */
+function evaluateSimpleRule(rule, snapshot, staticData) {
+  if (!rule) return true; // null/undefined rules are always true
+
+  switch (rule.type) {
+    case 'constant':
+      return !!rule.value;
+
+    case 'conditional':
+      // Handle conditional (ternary) expressions: test ? if_true : if_false
+      if (!rule.test) {
+        console.warn('[evaluateSimpleRule] conditional rule missing test');
+        return false;
+      }
+      const testResult = evaluateSimpleRule(rule.test, snapshot, staticData);
+      if (testResult) {
+        return rule.if_true ? evaluateSimpleRule(rule.if_true, snapshot, staticData) : true;
+      } else {
+        return rule.if_false ? evaluateSimpleRule(rule.if_false, snapshot, staticData) : false;
+      }
+
+    case 'item_check':
+      return hasItem(snapshot, staticData, rule.item);
+
+    case 'and':
+      if (!rule.conditions || !Array.isArray(rule.conditions)) {
+        return true;
+      }
+      // All conditions must be true
+      return rule.conditions.every(cond => evaluateSimpleRule(cond, snapshot, staticData));
+
+    case 'or':
+      if (!rule.conditions || !Array.isArray(rule.conditions)) {
+        return false;
+      }
+      // At least one condition must be true
+      return rule.conditions.some(cond => evaluateSimpleRule(cond, snapshot, staticData));
+
+    case 'not':
+      if (!rule.condition) {
+        return true;
+      }
+      return !evaluateSimpleRule(rule.condition, snapshot, staticData);
+
+    case 'region_check':
+      // Check if region is reachable
+      const regionName = typeof rule.region === 'string' ? rule.region : rule.region?.value;
+      return snapshot.regionReachability?.[regionName] === true;
+
+    case 'binary_op':
+      // Handle arithmetic operations like +, -, *, /, %
+      if (!rule.left || !rule.right || !rule.op) {
+        console.warn('[evaluateSimpleRule] Invalid binary_op rule, missing left/right/op');
+        return 0;
+      }
+
+      // Evaluate left and right sides
+      const leftVal = evaluateSimpleRule(rule.left, snapshot, staticData);
+      const rightVal = evaluateSimpleRule(rule.right, snapshot, staticData);
+
+      // Perform the operation
+      switch (rule.op) {
+        case '+': return leftVal + rightVal;
+        case '-': return leftVal - rightVal;
+        case '*': return leftVal * rightVal;
+        case '/': return rightVal !== 0 ? Math.floor(leftVal / rightVal) : 0;
+        case '%': return rightVal !== 0 ? leftVal % rightVal : 0;
+        default:
+          console.warn(`[evaluateSimpleRule] Unknown binary operator '${rule.op}'`);
+          return 0;
+      }
+
+    case 'compare':
+      // Handle comparison operations like >= , <=, ==, !=, >, <
+      if (!rule.left || !rule.right || !rule.op) {
+        console.warn('[evaluateSimpleRule] Invalid compare rule, missing left/right/op');
+        return false;
+      }
+
+      // Evaluate left and right sides
+      let leftValue;
+      if (rule.left.type === 'item_check') {
+        leftValue = getItemCount(snapshot, staticData, rule.left.item);
+      } else {
+        leftValue = evaluateSimpleRule(rule.left, snapshot, staticData);
+      }
+
+      let rightValue;
+      if (rule.right.type === 'constant') {
+        rightValue = rule.right.value;
+      } else {
+        rightValue = evaluateSimpleRule(rule.right, snapshot, staticData);
+      }
+
+      // Perform comparison
+      switch (rule.op) {
+        case '>=': return leftValue >= rightValue;
+        case '<=': return leftValue <= rightValue;
+        case '>': return leftValue > rightValue;
+        case '<': return leftValue < rightValue;
+        case '==': return leftValue == rightValue;
+        case '!=': return leftValue != rightValue;
+        default:
+          console.warn(`[evaluateSimpleRule] Unknown comparison operator '${rule.op}'`);
+          return false;
+      }
+
+    case 'helper':
+      // Try to call the helper function
+      const helperName = rule.name;
+      const args = rule.args || [];
+
+      // Evaluate arguments recursively
+      const evaluatedArgs = args.map(arg => {
+        if (arg && typeof arg === 'object' && arg.type) {
+          // If it's a rule, evaluate it
+          return evaluateSimpleRule(arg, snapshot, staticData);
+        }
+        return arg;
+      });
+
+      // Call the helper function by name
+      // Check if the helper exists in the global scope (it's exported from this module)
+      if (typeof global !== 'undefined' && typeof global[helperName] === 'function') {
+        return global[helperName](snapshot, staticData, ...evaluatedArgs);
+      }
+
+      // Try window scope (browser)
+      if (typeof window !== 'undefined' && typeof window[helperName] === 'function') {
+        return window[helperName](snapshot, staticData, ...evaluatedArgs);
+      }
+
+      // Try calling it directly if it's defined in this module
+      // We need to handle special cases for the helpers defined in this file
+      switch (helperName) {
+        case 'smz3_CanAcquire':
+          return smz3_CanAcquire(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanAcquireAll':
+          return smz3_CanAcquireAll(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanAcquireAtLeast':
+          return smz3_CanAcquireAtLeast(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanLiftLight':
+          return smz3_CanLiftLight(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanLiftHeavy':
+          return smz3_CanLiftHeavy(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanKillManyEnemies':
+          return smz3_CanKillManyEnemies(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanBeatBoss':
+          return smz3_CanBeatBoss(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanLightTorches':
+          return smz3_CanLightTorches(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanMeltFreezors':
+          return smz3_CanMeltFreezors(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanExtendMagic':
+          return smz3_CanExtendMagic(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanIbj':
+          return smz3_CanIbj(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanFly':
+          return smz3_CanFly(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanUsePowerBombs':
+          return smz3_CanUsePowerBombs(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanPassBombPassages':
+          return smz3_CanPassBombPassages(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanDestroyBombWalls':
+          return smz3_CanDestroyBombWalls(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanSpringBallJump':
+          return smz3_CanSpringBallJump(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanHellRun':
+          return smz3_CanHellRun(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_HasEnergyReserves':
+          return smz3_HasEnergyReserves(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanOpenRedDoors':
+          return smz3_CanOpenRedDoors(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanAccessCrocomire':
+          return smz3_CanAccessCrocomire(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanUnlockShip':
+          return smz3_CanUnlockShip(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanEnterAndLeaveGauntlet':
+          return smz3_CanEnterAndLeaveGauntlet(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanAccessDeathMountainPortal':
+          return smz3_CanAccessDeathMountainPortal(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanAccessDarkWorldPortal':
+          return smz3_CanAccessDarkWorldPortal(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanAccessMiseryMirePortal':
+          return smz3_CanAccessMiseryMirePortal(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanAccessNorfairUpperPortal':
+          return smz3_CanAccessNorfairUpperPortal(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanAccessNorfairLowerPortal':
+          return smz3_CanAccessNorfairLowerPortal(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanAccessMaridiaPortal':
+          return smz3_CanAccessMaridiaPortal(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanReachAqueduct':
+          return smz3_CanReachAqueduct(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanDefeatBotwoon':
+          return smz3_CanDefeatBotwoon(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanDefeatDraygon':
+          return smz3_CanDefeatDraygon(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanExit':
+          return smz3_CanExit(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_GetLocation':
+          return smz3_GetLocation(snapshot, staticData, ...evaluatedArgs);
+        // Boss-specific helpers
+        case 'smz3_CanBeatArmos':
+          return smz3_CanBeatArmos(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_CanBeatMoldorm':
+          return smz3_CanBeatMoldorm(snapshot, staticData, ...evaluatedArgs);
+        // Ganon's Tower navigation helpers
+        case 'smz3_LeftSide':
+          return smz3_LeftSide(snapshot, staticData, ...evaluatedArgs);
+        case 'smz3_RightSide':
+          return smz3_RightSide(snapshot, staticData, ...evaluatedArgs);
+        // Helper stubs for functions that need implementation
+        case 'smz3_CanNotWasteKeysBeforeAccessible':
+          // This needs proper implementation - for now return true to avoid blocking
+          console.warn(`[evaluateSimpleRule] Helper '${helperName}' not fully implemented, returning true`);
+          return true;
+        default:
+          console.warn(`[evaluateSimpleRule] Unknown helper '${helperName}', returning false`);
+          return false;
+      }
+
+    case 'function_call':
+      // Handle function calls, which can be attribute access (e.g., state.CanAcquireAtLeast)
+      if (!rule.function) {
+        console.warn('[evaluateSimpleRule] function_call rule missing function property');
+        return false;
+      }
+
+      // Check if it's an attribute access
+      if (rule.function.type === 'attribute') {
+        const attrName = rule.function.attr;
+        const args = rule.args || [];
+
+        // Evaluate arguments
+        const evaluatedArgs = args.map(arg => {
+          if (arg && typeof arg === 'object' && arg.type) {
+            return evaluateSimpleRule(arg, snapshot, staticData);
+          }
+          return arg;
+        });
+
+        // Map attribute names to helper function names
+        const functionName = `smz3_${attrName}`;
+
+        // Call the helper function
+        switch (functionName) {
+          case 'smz3_CanAcquireAtLeast':
+            return smz3_CanAcquireAtLeast(snapshot, staticData, ...evaluatedArgs);
+          case 'smz3_CanAcquireAll':
+            return smz3_CanAcquireAll(snapshot, staticData, ...evaluatedArgs);
+          case 'smz3_CanAcquire':
+            return smz3_CanAcquire(snapshot, staticData, ...evaluatedArgs);
+          default:
+            console.warn(`[evaluateSimpleRule] Unknown function_call attribute '${attrName}', returning false`);
+            return false;
+        }
+      } else {
+        console.warn(`[evaluateSimpleRule] function_call with unsupported function type '${rule.function.type}'`);
+        return false;
+      }
+
+    default:
+      console.warn(`[evaluateSimpleRule] Unknown rule type '${rule.type}', returning false`);
+      return false;
+  }
+}
+
+/**
  * Internal helper to check if a specific region can be completed.
- * This is similar to CanAcquire but checks a specific region by name instead of finding by reward type.
+ * A region can be completed if its boss location is accessible.
+ * We check the snapshot's locationAccessibility to avoid circular dependencies
+ * during reachability calculation.
  */
 function checkRegionCompletion(snapshot, staticData, regionName) {
-  console.log(`[checkRegionCompletion] Checking region '${regionName}'`);
-
   // Boss location mapping: maps region name to boss location name
   const bossLocations = {
     'Castle Tower': null,  // No boss location - completion based on CanEnter + items
@@ -831,8 +1166,6 @@ function checkRegionCompletion(snapshot, staticData, regionName) {
   const bossLocationName = bossLocations[regionName];
 
   if (!bossLocationName) {
-    console.log(`[checkRegionCompletion] Region ${regionName} has no boss location, checking CanComplete logic`);
-
     // Implement CanComplete logic for regions without boss locations
     if (regionName === 'Castle Tower') {
       // Castle Tower (Agahnim) CanComplete requirements:
@@ -849,16 +1182,6 @@ function checkRegionCompletion(snapshot, staticData, regionName) {
 
       const canComplete = canEnter && hasLamp && hasEnoughKeys && hasSword;
 
-      console.log(`[checkRegionCompletion] Castle Tower CanComplete:`, {
-        canKillManyEnemies,
-        hasCapeOrMasterSword,
-        canEnter,
-        hasLamp,
-        hasEnoughKeys,
-        hasSword,
-        canComplete
-      });
-
       return canComplete;
     } else if (regionName === 'Wrecked Ship') {
       // Wrecked Ship CanComplete: CanEnter && CanUnlockShip
@@ -872,18 +1195,9 @@ function checkRegionCompletion(snapshot, staticData, regionName) {
 
       const canComplete = hasSuper && canUnlockShip;
 
-      console.log(`[checkRegionCompletion] Wrecked Ship CanComplete:`, {
-        hasCard,
-        canPassBomb,
-        canUnlockShip,
-        hasSuper,
-        canComplete
-      });
-
       return canComplete;
     }
 
-    console.warn(`[checkRegionCompletion] Region ${regionName} has no boss location and no CanComplete implementation, returning false`);
     return false;
   }
 
@@ -897,52 +1211,28 @@ function checkRegionCompletion(snapshot, staticData, regionName) {
     if (region.locations) {
       bossLocation = region.locations.find(loc => loc.name === bossLocationName);
       if (bossLocation) {
-        console.log(`[checkRegionCompletion] Found boss location: ${bossLocationName} in region: ${region.name}`);
         break;
       }
     }
   }
 
   if (!bossLocation) {
-    console.error(`[checkRegionCompletion] Could not find boss location: ${bossLocationName}`);
     return false;
   }
 
-  // Check if the location is accessible
-  if (bossLocation.access_rule) {
-    // For simple rules (AND with item_check), evaluate manually to avoid recursive evaluateRule calls
-    // which can cause issues with the snapshot interface
-    const rule = bossLocation.access_rule;
-
-    // Handle simple AND rules with item_check conditions
-    if (rule.type === 'and' && rule.conditions) {
-      const allItemChecks = rule.conditions.every(cond => cond.type === 'item_check');
-      if (allItemChecks) {
-        // Manually check all items
-        const result = rule.conditions.every(cond => hasItem(snapshot, staticData, cond.item));
-        console.log(`[checkRegionCompletion] Manually evaluated boss location (${bossLocationName}):`, result);
-        return result;
-      }
-    }
-
-    // For other rule types, try using evaluateRule if available
-    if (snapshot.evaluateRule) {
-      try {
-        const result = snapshot.evaluateRule(bossLocation.access_rule);
-        console.log(`[checkRegionCompletion] Evaluated boss location (${bossLocationName}) via evaluateRule:`, result);
-        return result;
-      } catch (error) {
-        console.error(`[checkRegionCompletion] Error evaluating boss location (${bossLocationName}):`, error);
-        return false;
-      }
-    } else {
-      // snapshot.evaluateRule not available and rule is complex
-      console.warn(`[checkRegionCompletion] Cannot evaluate complex rule for ${bossLocationName}, snapshot.evaluateRule not available`);
-      return false;
-    }
-  } else {
-    // No access rule means always accessible
-    console.log(`[checkRegionCompletion] No access rule for boss location, returning true for region '${regionName}'`);
-    return true;
+  // Check if the boss location is accessible using the precomputed locationAccessibility
+  // This avoids circular dependencies during reachability calculation
+  if (snapshot.locationAccessibility) {
+    const isAccessible = snapshot.locationAccessibility[bossLocationName] === true;
+    return isAccessible;
   }
+
+  // Fallback: if locationAccessibility isn't available, evaluate the access rule
+  if (bossLocation.access_rule) {
+    const result = evaluateSimpleRule(bossLocation.access_rule, snapshot, staticData);
+    return result;
+  }
+
+  // No access rule means always accessible
+  return true;
 }
