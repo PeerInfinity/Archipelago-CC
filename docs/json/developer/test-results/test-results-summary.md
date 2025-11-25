@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-25 06:48:55
+**Generated:** 2025-11-25 07:19:05
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -13,7 +13,7 @@ This summary combines results from four types of tests:
 ### Individual Test Results
 
 - **Minimal Test:** 74/76 passed (97.4%)
-- **Full Test:** 71/76 passed (93.4%)
+- **Full Test:** 72/76 passed (94.7%)
 - **Multiclient Test:** 57/76 passed (75.0%)
 - **Multiworld Test:** 0/76 passed (0.0%)
 
@@ -25,8 +25,8 @@ This summary combines results from four types of tests:
 ### Combined Test Results
 
 - **Templates passing all 4 tests:** 0/76 (0.0%)
-- **Templates passing 3 tests:** 56/76 (73.7%)
-- **Templates passing 2 tests:** 16/76 (21.1%)
+- **Templates passing 3 tests:** 57/76 (75.0%)
+- **Templates passing 2 tests:** 15/76 (19.7%)
 - **Templates passing 1 test:** 2/76 (2.6%)
 - **Templates passing 0 tests:** 2/76 (2.6%)
 
@@ -45,7 +45,7 @@ This summary combines results from four types of tests:
 | Bumper Stickers | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | Castlevania 64 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
-| Celeste 64 | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
+| Celeste 64 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | ChecksFinder | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ⚫ |
 | ChocolateChipCookies | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ⚫ |
 | Civilization VI | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ⚫ |
