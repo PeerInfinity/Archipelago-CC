@@ -3,6 +3,13 @@
  *
  * These helpers implement game-specific logic that can't be expressed
  * purely through the rule system.
+ *
+ * All helper functions follow the standardized signature:
+ * `(snapshot, staticData, ...args) => boolean | number | any`
+ *
+ * Where:
+ * - snapshot: { inventory, flags, events, player, regionReachability, evaluateRule }
+ * - staticData: { settings, progressionMapping, regions, locations, items }
  */
 
 /**
@@ -14,11 +21,11 @@
  * This matches the Python behavior in worlds/ladx/__init__.py lines 514-521
  * where the collect() method adds rupee values to prog_items["RUPEES"].
  *
- * @param {Object} state - The current game state
- * @param {number} player - The player ID
+ * @param {Object} snapshot - Game state snapshot
+ * @param {Object} staticData - Static game data
  * @returns {number} Total rupees collected
  */
-export function calculateRupees(state, player) {
+export function calculateRupees(snapshot, staticData) {
     const rupeeItems = {
         '20 Rupees': 20,
         '50 Rupees': 50,
@@ -28,9 +35,11 @@ export function calculateRupees(state, player) {
     };
 
     let total = 0;
-    for (const [itemName, value] of Object.entries(rupeeItems)) {
-        const count = state.count(itemName, player);
-        total += count * value;
+    if (snapshot && snapshot.inventory) {
+        for (const [itemName, value] of Object.entries(rupeeItems)) {
+            const itemCount = snapshot.inventory[itemName] || 0;
+            total += itemCount * value;
+        }
     }
 
     return total;
@@ -40,13 +49,13 @@ export function calculateRupees(state, player) {
  * Helper to check if player has enough RUPEES.
  * This is used by rules that check: FOUND("RUPEES", amount) or COUNT("RUPEES", amount)
  *
- * @param {Object} state - The current game state
- * @param {number} player - The player ID
+ * @param {Object} snapshot - Game state snapshot
+ * @param {Object} staticData - Static game data
  * @param {number} amount - Required amount of rupees
  * @returns {boolean} True if player has >= amount rupees
  */
-export function hasRupees(state, player, amount) {
-    return calculateRupees(state, player) >= amount;
+export function hasRupees(snapshot, staticData, amount) {
+    return calculateRupees(snapshot, staticData) >= amount;
 }
 
 /**
