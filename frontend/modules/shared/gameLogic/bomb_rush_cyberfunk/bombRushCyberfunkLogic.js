@@ -455,7 +455,7 @@ function mataan_faux(snapshot, staticData, limit, glitched) {
 
 // Helper to get options from static data
 function getOptionsFromStaticData(snapshot, staticData) {
-    const playerSlot = snapshot?.player?.slot || '1';
+    const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
     const settings = staticData?.settings?.[playerSlot];
     if (!settings) {
         return {

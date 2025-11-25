@@ -25,7 +25,7 @@
  */
 export function paint_percent_available(snapshot, staticData) {
     // Get world options from settings (settings are per-player, so we access player slot)
-    const playerSlot = snapshot?.player?.slot || '1';
+    const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
     const settings = staticData?.settings?.[playerSlot] || {};
     const canvasSizeIncrement = settings.canvas_size_increment || 50; // Default from Paint.yaml
     const logicPercent = settings.logic_percent || 60; // Default from Paint.yaml

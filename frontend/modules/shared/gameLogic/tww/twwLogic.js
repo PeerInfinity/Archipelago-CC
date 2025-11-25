@@ -34,7 +34,7 @@ export function has(snapshot, staticData, itemName, player, count = 1) {
   if (!snapshot.inventory) return false;
 
   // Get player slot
-  const playerSlot = snapshot?.player?.slot || '1';
+  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
 
   // Direct item check
   const itemCount = snapshot.inventory[itemName] || 0;
@@ -80,7 +80,7 @@ export function has(snapshot, staticData, itemName, player, count = 1) {
 export function count(snapshot, staticData, itemName, player) {
   if (!snapshot.inventory) return 0;
 
-  const playerSlot = snapshot?.player?.slot || '1';
+  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
   const playerProgressionMapping = staticData?.progressionMapping?.[playerSlot] || staticData?.progressionMapping;
 
   // If the item itself is a base progressive item, return its direct count
@@ -149,7 +149,7 @@ export function hasAll(snapshot, staticData, itemNames, player) {
 export function hasGroupUnique(snapshot, staticData, groupName, player, countNeeded) {
   if (!snapshot.inventory) return false;
 
-  const playerSlot = snapshot?.player?.slot || '1';
+  const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
 
   // Get the items data - check multiple possible locations
   const items = staticData?.itemsByPlayer?.[playerSlot] || staticData?.itemData || staticData?.items?.[playerSlot];
