@@ -428,9 +428,11 @@ export function canJumpUnderwater(snapshot, staticData) {
 // Hell run presets matching Python Settings.hellRunPresets['Gimme energy'] (used by regular preset)
 // Format: [[energy_threshold, difficulty], ...]
 // VARIA difficulties: easy=1, medium=5, hard=10, harder=25, hardcore=50, mania=100
-// Ice is +1 to account for evaluation timing difference; MainUpperNorfair matches exactly
+// Regular preset uses 'Gimme energy' for Ice and MainUpperNorfair (not 'Default')
+// Ice 'Gimme energy' = [(4, hardcore), (5, harder), (6, hard), (10, medium)]
+// MainUpperNorfair 'Gimme energy' = [(5, mania), (6, hardcore), (8, harder), (10, hard), (14, medium)]
 const HELL_RUN_PRESETS = {
-  'Ice': [[5, 50], [6, 25], [7, 10], [11, 5]],  // Empirical: Ice Beam accessible at 5 reserves
+  'Ice': [[4, 50], [5, 25], [6, 10], [10, 5]],  // 'Gimme energy': [(4, hardcore), (5, harder), (6, hard), (10, medium)]
   'MainUpperNorfair': [[5, 100], [6, 50], [8, 25], [10, 10], [14, 5]], // 'Gimme energy': [(5, mania), (6, hardcore), (8, harder), (10, hard), (14, medium)]
   'LowerNorfair': null  // Default is null (requires suits)
 };
@@ -1304,8 +1306,15 @@ export function knowsDiagonalBombJump(snapshot, staticData) {
 }
 
 export function knowsMockballWs(snapshot, staticData) {
-  // Mockball in West Sand technique
-  return { bool: true, difficulty: 0 };
+  // Mockball in West Sand technique - DISABLED in Regular preset
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('MockballWs' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.MockballWs;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  return { bool: false, difficulty: 0 };  // Default: disabled
 }
 
 export function knowsGravLessLevel1(snapshot, staticData) {

@@ -1247,4 +1247,27 @@ class SMGameExportHandler(GenericGameExportHandler):
             logger.error(f"SM: Failed to export ROM patches: {e}", exc_info=True)
             settings['romPatches'] = {}
 
+        # Add knows settings from VARIA preset (these determine which techniques are available)
+        knows_settings = {}
+        try:
+            from worlds.sm.variaRandomizer.utils.parameters import Knows, isKnows
+
+            # Get knows settings for this player from VARIA's Knows dictionary
+            if player in Knows.knowsDict:
+                player_knows = Knows.knowsDict[player]
+                for knows_name in Knows.__dict__:
+                    if isKnows(knows_name):
+                        knows_smb = getattr(player_knows, knows_name, None)
+                        if knows_smb is not None:
+                            # Export as [enabled, difficulty] matching VARIA's format
+                            knows_settings[knows_name] = [knows_smb.bool, knows_smb.difficulty]
+
+                logger.info(f"SM: Exported {len(knows_settings)} knows settings for player {player}")
+            else:
+                logger.warning(f"SM: No knows settings found for player {player} in Knows.knowsDict")
+        except Exception as e:
+            logger.error(f"SM: Failed to export knows settings: {e}", exc_info=True)
+
+        settings['knows'] = knows_settings
+
         return settings

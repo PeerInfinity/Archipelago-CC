@@ -360,8 +360,8 @@ Energy Tank, Ridley
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Crocomire Speedway Bottom
-   =>   Crocomire Speedway Bottom -> Crocomire Speedway Bottom->Kronic Boost Room Bottom Left
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
    =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
    =>   Lava Dive Right -> Lava Dive Right->LN Entrance
    =>   LN Entrance -> LN Entrance->Firefleas
@@ -405,8 +405,8 @@ Golden Torizo
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Crocomire Speedway Bottom
-   =>   Crocomire Speedway Bottom -> Crocomire Speedway Bottom->Kronic Boost Room Bottom Left
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
    =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
    =>   Lava Dive Right -> Lava Dive Right->LN Entrance
    =>   LN Entrance -> LN Entrance->Screw Attack Bottom
@@ -568,8 +568,8 @@ Missile (lower Norfair above fire flea room)
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Crocomire Speedway Bottom
-   =>   Crocomire Speedway Bottom -> Crocomire Speedway Bottom->Kronic Boost Room Bottom Left
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
    =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
    =>   Lava Dive Right -> Lava Dive Right->LN Entrance
    =>   LN Entrance -> LN Entrance->Firefleas
@@ -619,12 +619,8 @@ Missile (pink Maridia)
    =>   Missile (pink Maridia)
 Missile (red Brinstar spike room)
         Menu -> StartAP
-   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
-   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
-   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
-   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
-   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
-   =>   Red Tower Top Left -> Red Tower Top Left->Red Brinstar Elevator
+   =>   Landing Site -> Landing Site->Keyhunter Room Bottom
+   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Red Brinstar Elevator
    =>   Red Brinstar Elevator -> Red Brinstar Elevator->Missile (red Brinstar spike room)
    =>   Missile (red Brinstar spike room)
 Morphing Ball
@@ -688,8 +684,8 @@ Power Bomb (Power Bombs of shame)
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Crocomire Speedway Bottom
-   =>   Crocomire Speedway Bottom -> Crocomire Speedway Bottom->Kronic Boost Room Bottom Left
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
    =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
    =>   Lava Dive Right -> Lava Dive Right->LN Entrance
    =>   LN Entrance -> LN Entrance->Firefleas
@@ -706,12 +702,8 @@ Power Bomb (green Brinstar bottom)
    =>   Power Bomb (green Brinstar bottom)
 Power Bomb (red Brinstar spike room)
         Menu -> StartAP
-   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
-   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
-   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
-   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
-   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
-   =>   Red Tower Top Left -> Red Tower Top Left->Red Brinstar Elevator
+   =>   Landing Site -> Landing Site->Keyhunter Room Bottom
+   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Red Brinstar Elevator
    =>   Red Brinstar Elevator -> Red Brinstar Elevator->Power Bomb (red Brinstar spike room)
    =>   Power Bomb (red Brinstar spike room)
 Ridley
@@ -724,8 +716,8 @@ Ridley
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Crocomire Speedway Bottom
-   =>   Crocomire Speedway Bottom -> Crocomire Speedway Bottom->Kronic Boost Room Bottom Left
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
    =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
    =>   Lava Dive Right -> Lava Dive Right->LN Entrance
    =>   LN Entrance -> LN Entrance->Firefleas
@@ -797,8 +789,8 @@ Super Missile (Gold Torizo)
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Crocomire Speedway Bottom
-   =>   Crocomire Speedway Bottom -> Crocomire Speedway Bottom->Kronic Boost Room Bottom Left
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
    =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
    =>   Lava Dive Right -> Lava Dive Right->LN Entrance
    =>   LN Entrance -> LN Entrance->Screw Attack Bottom
