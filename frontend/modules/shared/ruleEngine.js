@@ -412,7 +412,15 @@ export const evaluateRule = (rule, context, depth = 0) => {
         const args = rule.args
           ? rule.args.map((arg) => evaluateRule(arg, context, depth + 1))
           : [];
-        if (args.some((arg) => arg === undefined)) {
+
+        // SM helpers like wor, wand can handle undefined args by treating them as false
+        // Don't fail early for these helpers - let them evaluate what they can
+        const helpersAllowingUndefinedArgs = new Set([
+          'wor', 'wand', 'evalSMBool', 'SMBool'
+        ]);
+        const allowUndefinedArgs = helpersAllowingUndefinedArgs.has(rule.name);
+
+        if (!allowUndefinedArgs && args.some((arg) => arg === undefined)) {
           result = undefined;
         } else if (isValidContext) {
           if (typeof context.executeHelper === 'function') {

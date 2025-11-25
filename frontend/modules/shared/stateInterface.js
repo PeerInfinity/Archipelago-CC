@@ -356,6 +356,21 @@ export function createStateSnapshotInterface(
             };
           }
           return undefined;
+        case 'sm':
+        case 'smbm':
+          // SM-specific SMBoolManager reference used in rules like sm.getDmgReduction()
+          // Return an object with all helper functions wrapped for the current state
+          const smHelpers = getHelperFunctions(gameName);
+          if (smHelpers) {
+            const smObject = {};
+            for (const [helperName, helperFunction] of Object.entries(smHelpers)) {
+              smObject[helperName] = (...args) => {
+                return helperFunction(snapshot, staticData, ...args);
+              };
+            }
+            return smObject;
+          }
+          return undefined;
         default:
           // Check if this is a game-specific variable (e.g., required_technologies for Factorio)
           const currentPlayerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
