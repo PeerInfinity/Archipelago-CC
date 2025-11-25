@@ -274,7 +274,7 @@ jobs:
             -p
 
       - name: Upload test results for split ${{ matrix.split_num }}
-        if: !cancelled()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: test-results-minimal-spoiler-split-${{ matrix.split_num }}
@@ -464,7 +464,7 @@ jobs:
           done
 
       - name: Upload test results for split ${{ matrix.split_num }}
-        if: !cancelled()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: test-results-full-spoiler-split-${{ matrix.split_num }}
@@ -605,7 +605,7 @@ jobs:
             -p
 
       - name: Upload test results for split ${{ matrix.split_num }}
-        if: !cancelled()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: test-results-multiclient-split-${{ matrix.split_num }}
@@ -737,7 +737,7 @@ jobs:
             -p
 
       - name: Upload test results
-        if: !cancelled()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: test-results-multiworld-single
@@ -870,7 +870,7 @@ jobs:
             -p
 
       - name: Upload test results for split ${{ matrix.split_num }}
-        if: !cancelled()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: test-results-multiworld-split-${{ matrix.split_num }}
@@ -1016,7 +1016,7 @@ jobs:
             -p
 
       - name: Upload test results for split ${{ matrix.split_num }}
-        if: !cancelled()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: test-results-minimal-multitemplate-split-${{ matrix.split_num }}
@@ -1162,7 +1162,7 @@ jobs:
             -p
 
       - name: Upload test results for split ${{ matrix.split_num }}
-        if: !cancelled()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: test-results-full-multitemplate-split-${{ matrix.split_num }}

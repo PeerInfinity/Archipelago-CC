@@ -97,7 +97,7 @@ jobs:
             -p
 
       - name: Upload test results for seed ${{ matrix.seed }}
-        if: !cancelled()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: test-results-seed-${{ matrix.seed }}
@@ -319,7 +319,7 @@ jobs:
             -p
 
       - name: Upload test results for split ${{ matrix.split_num }}
-        if: !cancelled()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: test-results-spoiler-minimal-templates-split-${{ matrix.split_num }}
@@ -530,7 +530,7 @@ jobs:
             -p
 
       - name: Upload test results for split ${{ matrix.split_num }}
-        if: !cancelled()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: test-results-spoiler-full-templates-split-${{ matrix.split_num }}
@@ -741,7 +741,7 @@ jobs:
             -p
 
       - name: Upload test results for split ${{ matrix.split_num }}
-        if: !cancelled()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: test-results-multiclient-split-${{ matrix.split_num }}
@@ -956,7 +956,7 @@ jobs:
             -p
 
       - name: Upload test results for split ${{ matrix.split_num }}
-        if: !cancelled()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: test-results-multitemplate-minimal-split-${{ matrix.split_num }}
@@ -1172,7 +1172,7 @@ jobs:
             -p
 
       - name: Upload test results for split ${{ matrix.split_num }}
-        if: !cancelled()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: test-results-multitemplate-full-split-${{ matrix.split_num }}
@@ -1383,7 +1383,7 @@ jobs:
             -p
 
       - name: Upload test results for split ${{ matrix.split_num }}
-        if: !cancelled()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: test-results-multiworld-split-${{ matrix.split_num }}
