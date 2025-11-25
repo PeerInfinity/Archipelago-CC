@@ -10,18 +10,31 @@ For a stable release, visit [Stable Demo](https://peerinfinity.github.io/Archipe
 
 ## About This Repository
 
-This is the active development repository for the Archipelago JSON Export Tools project. The original [PeerInfinity/Archipelago](https://github.com/PeerInfinity/Archipelago) repository has been archived, with development continuing here.
+This is the active development repository for the Archipelago JSON Export Tools project.
 
-### Repository Structure
+### Related Repositories
 
-- **Main Branch Development:** Code is maintained in the `main` branch to simplify development workflows
-- **Claude Code Integration:** This repository is configured for development with Claude Code through the cloud interface
-  - Each Claude Code session creates a new branch, which are preserved for reference
-- **GitHub Pages Setup:**
-  - Only the `frontend` directory is deployed to GitHub Pages (not the entire repository)
-  - Deployed automatically via GitHub Actions on every push to `main`
-  - Provides the latest version of the code (may not always be stable)
-- **Upstream Lineage:** Originally forked from [PeerInfinity/Archipelago](https://github.com/PeerInfinity/Archipelago/tree/JSONExport) (now archived), which itself was forked from [ArchipelagoMW/Archipelago](https://github.com/ArchipelagoMW/Archipelago)
+- **[PeerInfinity/Archipelago](https://github.com/PeerInfinity/Archipelago)** (archived) - Stable snapshot, periodically updated with current files (no git history). Use this for a clean starting point.
+- **[ArchipelagoMW/Archipelago](https://github.com/ArchipelagoMW/Archipelago)** - The main upstream Archipelago project.
+
+### Repository Notes
+
+- Code is maintained in the `main` branch
+- This repository is configured for Claude Code development (session branches are preserved)
+- The `frontend` directory is deployed to GitHub Pages automatically
+- **Note:** The commit history contains large files. See "Contributing" below for implications.
+
+### Contributing
+
+**To contribute to this project:** Clone or fork normally. The large file history will increase clone size but won't affect your work.
+
+**To contribute to upstream Archipelago or maintain your own clean fork:** Do not fork this repository directly. Instead:
+
+1. Fork the [main ArchipelagoMW repository](https://github.com/ArchipelagoMW/Archipelago)
+2. Copy the new directories (see [Repository Changes](./docs/json/developer/diffs/repository-changes.md))
+3. Apply the diff files (see [Diff Files](./docs/json/developer/diffs/README.md))
+
+This approach ensures your fork maintains a clean relationship with the upstream Archipelago project.
 
 ## Key Features
 

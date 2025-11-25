@@ -73,7 +73,13 @@ grep -A 999999 "diff --git a/BaseClasses.py" docs/json/developer/diffs/core-file
 - Total lines changed across all diffs: 781 lines (151 + 152 + 478)
 - These diffs only include modifications to existing files that also exist in upstream
 - New files and new directories are not included in these diffs
-- For a complete list of all changes, see `docs/json/developer/reference/repository-changes.md`
+- For a complete list of all changes, see [repository-changes.md](./repository-changes.md)
+
+## When to Use These Diffs
+
+**Contributing to upstream Archipelago or maintaining your own clean fork:** Fork the [main ArchipelagoMW repository](https://github.com/ArchipelagoMW/Archipelago), copy the new directories from this repository, and apply these diffs.
+
+**Contributing to this project (Archipelago-CC):** You don't need these diffs. Just clone or fork normally. The commit history contains large files which will increase clone size, but won't affect your work.
 
 ## Diff Generation Command
 
@@ -84,5 +90,4 @@ git diff 16d5b453a79c7ef869e20c1e27b3cf4192b037b3 HEAD -- [files...] > [output.d
 
 ## Related Documentation
 
-- **repository-changes.md** - Complete overview of all changes from upstream
-- **../reference/** - Additional reference documentation
+- **[repository-changes.md](./repository-changes.md)** - Complete overview of all changes from upstream
