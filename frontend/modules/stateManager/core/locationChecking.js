@@ -133,21 +133,16 @@ export function checkLocation(sm, locationName, addItems = true) {
               `[StateManager Class] Skipping ${location.item.name} - cross-player item for Player ${itemPlayerId} (current player is ${currentPlayerId}).`
             );
           } else {
-            // In spoiler test mode, only add advancement items to inventory (matching Python's CollectionState behavior)
-            // Python's state.count() only counts items where location.item.advancement is true
-            // In normal gameplay, add all items
-            const shouldAddItem = !sm.spoilerTestMode || location.item.advancement !== false;
-
-            if (shouldAddItem) {
-              sm._addItemToInventory(location.item.name, 1);
-              sm._logDebug(
-                `[StateManager Class] Added ${location.item.name} to inventory.`
-              );
-            } else {
-              sm._logDebug(
-                `[StateManager Class] Skipping ${location.item.name} - non-advancement item in spoiler test mode (advancement=${location.item.advancement}).`
-              );
-            }
+            // Always add items to inventory when checking locations.
+            // In full spoilers mode (extend_sphere_log_to_all_locations=True), Python's sphere logger
+            // collects ALL items including non-advancement ones. The sphere log contains the expected
+            // items at each location, so we should add them regardless of the advancement flag.
+            // The previous filter (only advancement items in spoiler test mode) was incorrect for
+            // full spoilers mode and caused mismatches at locations with non-advancement items.
+            sm._addItemToInventory(location.item.name, 1);
+            sm._logDebug(
+              `[StateManager Class] Added ${location.item.name} to inventory.`
+            );
           }
           // Potentially trigger an event for item acquisition if needed by other systems
           // sm._publishEvent('itemAcquired', { itemName: location.item.name, locationName });
@@ -170,6 +165,13 @@ export function checkLocation(sm, locationName, addItems = true) {
         sm.invalidateCache();
       }
     }
+  }
+
+  // Always recompute region reachability after checking a location
+  // This is critical because adding items to inventory can unlock new regions
+  // Without this, the snapshot would have stale region reachability data
+  if (locationWasActuallyChecked) {
+    sm.computeReachableRegions();
   }
 
   // Always send a snapshot update so the UI knows the operation completed
