@@ -291,6 +291,67 @@ export async function timerSendTest(testController) {
       testController.log(`Manually-checkable locations: ${totalManuallyCheckable}`);
       testController.log(`Total locations (including events): ${totalLocations}`);
 
+      // Debug: Log which manually-checkable locations were NOT checked
+      if (checkedCount < totalManuallyCheckable) {
+        const checkedSet = new Set(finalSnapshot.checkedLocations || []);
+        const uncheckedManualLocations = manuallyCheckableLocations.filter(
+          loc => !checkedSet.has(loc.name)
+        );
+        testController.log(`DEBUG: ${uncheckedManualLocations.length} manually-checkable locations NOT checked:`);
+
+        // Create a snapshot interface to check accessibility
+        const { createStateSnapshotInterface } = await import('../../shared/stateInterface.js');
+        const snapshotInterface = createStateSnapshotInterface(finalSnapshot, staticData);
+
+        for (const loc of uncheckedManualLocations.slice(0, 20)) {
+          const regionName = loc.region || loc.parent_region_name;
+          const regionReachable = snapshotInterface.isRegionReachable(regionName);
+          const locationAccessible = snapshotInterface.isLocationAccessible(loc.name);
+          testController.log(`DEBUG: Unchecked: "${loc.name}" (region: ${regionName}, id: ${loc.id}, regionReachable: ${regionReachable}, locationAccessible: ${locationAccessible})`);
+
+          // Log access rule details for debugging
+          if (loc.access_rule) {
+            testController.log(`DEBUG:   Access rule type: ${loc.access_rule.type}`);
+            if (loc.access_rule.type === 'helper') {
+              testController.log(`DEBUG:   Helper name: ${loc.access_rule.name}`);
+            } else if (loc.access_rule.type === 'and' || loc.access_rule.type === 'or') {
+              testController.log(`DEBUG:   Has ${loc.access_rule.conditions?.length || 0} conditions`);
+            }
+          }
+        }
+
+        // Log inventory summary for debugging
+        const invKeys = Object.keys(finalSnapshot.inventory || {}).slice(0, 30);
+        testController.log(`DEBUG: Inventory items (first 30): ${invKeys.join(', ')}`);
+
+        // Check for Boss Clear specifically
+        const bossClears = finalSnapshot.inventory?.['Boss Clear'] || 0;
+        testController.log(`DEBUG: Boss Clear count: ${bossClears}`);
+
+        // Log event locations if available
+        if (finalSnapshot.eventLocations) {
+          testController.log(`DEBUG: Event locations count: ${Object.keys(finalSnapshot.eventLocations).length}`);
+        } else {
+          testController.log(`DEBUG: Event locations not in snapshot`);
+        }
+
+        // Log checked locations count
+        testController.log(`DEBUG: Checked locations count: ${finalSnapshot.checkedLocations?.length || 0}`);
+
+        // Log reachable regions for debugging
+        const reachableRegions = Object.entries(finalSnapshot.regionReachability || {})
+          .filter(([_, status]) => status === 'reachable')
+          .map(([region, _]) => region);
+        testController.log(`DEBUG: Reachable regions count: ${reachableRegions.length}`);
+
+        // Check specific boss room regions
+        const bossRoomRegions = reachableRegions.filter(r => r.includes('Boss Room'));
+        testController.log(`DEBUG: Boss Room regions reachable: ${bossRoomRegions.length}`);
+        if (bossRoomRegions.length < 5) {
+          testController.log(`DEBUG: Boss rooms that ARE reachable: ${bossRoomRegions.join(', ')}`);
+        }
+      }
+
       // Test passes if ALL locations were checked (including auto-checked events)
       // The timer checks manually-checkable locations, but events should also be auto-collected
       if (checkedCount >= totalLocations) {

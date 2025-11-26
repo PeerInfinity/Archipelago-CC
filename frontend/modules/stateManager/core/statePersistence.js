@@ -292,7 +292,8 @@ export function _createSelfSnapshotInterface(sm) {
           };
           const staticData = {
             progressionMapping: sm.progressionMapping,
-            items: sm.itemData
+            items: sm.itemData,
+            settings: sm.rules?.settings  // Include settings for game-specific logic
           };
           return sm.helperFunctions.has(snapshot, staticData, itemName);
         } catch (e) {
@@ -316,7 +317,8 @@ export function _createSelfSnapshotInterface(sm) {
           };
           const staticData = {
             progressionMapping: sm.progressionMapping,
-            items: sm.itemData
+            items: sm.itemData,
+            settings: sm.rules?.settings  // Include settings for game-specific logic
           };
           return sm.helperFunctions.count(snapshot, staticData, itemName);
         } catch (e) {

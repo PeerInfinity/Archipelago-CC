@@ -300,14 +300,28 @@ function loadLocations(sm, selectedPlayerId) {
         sm.originalLocationOrder.push(descriptiveName);
 
         // Track event locations
-        // Event locations are those with event=true in their item
+        // Event locations are identified by:
+        // 1. Items with event=true in their item data
+        // 2. Locations with id=null or id=undefined (Archipelago convention for event locations)
         // Look up the full item data from sm.itemData to get the event flag
         // Note: Must explicitly check === true to exclude items with event=false
+        let isEventLocation = false;
+
+        // Check if location has null/undefined id (Archipelago event location convention)
+        if (locationDataItem.id === null || locationDataItem.id === undefined) {
+          isEventLocation = true;
+        }
+
+        // Also check if the item has event=true flag
         if (locationDataItem.item && locationDataItem.item.name) {
           const fullItemData = sm.itemData[locationDataItem.item.name];
           if (fullItemData && fullItemData.event === true) {
-            sm.eventLocations.set(descriptiveName, locationObject);
+            isEventLocation = true;
           }
+        }
+
+        if (isEventLocation) {
+          sm.eventLocations.set(descriptiveName, locationObject);
         }
 
         // Store location ID mapping
