@@ -177,6 +177,10 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
 
             # Handle Received rule (most common)
             if rule_type == 'Received':
+                # Check for count=0 first - "has at least 0 items" is always true
+                if hasattr(rule_obj, 'count') and rule_obj.count == 0:
+                    return {'type': 'constant', 'value': True}
+
                 result = {
                     'type': 'item_check',
                     'item': rule_obj.item

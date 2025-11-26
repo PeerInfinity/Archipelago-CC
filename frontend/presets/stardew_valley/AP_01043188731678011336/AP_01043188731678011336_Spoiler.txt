@@ -1,0 +1,1131 @@
+﻿Archipelago Version 0.6.4  -  Seed: 2
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Stardew Valley
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Goal:                            Community Center
+Farm Type:                       Wilderness
+Bundle Randomization:            Remixed
+Bundle Price:                    Normal
+Entrance Randomization:          Disabled
+Season Randomization:            Randomized
+Cropsanity:                      Enabled
+Backpack Progression:            Early Progressive
+Tool Progression:                Progressive
+Skill Progression:               Progressive With Masteries
+Building Progression:            Progressive Cheap
+Festival Locations:              Easy
+Elevator Progression:            Progressive From Previous Floor
+Arcade Machine Locations:        Full Shuffling
+Special Order Locations:         Board Short
+Quest Locations:                 7
+Fishsanity:                      None
+Museumsanity:                    Milestones
+Monstersanity:                   One Per Category
+Shipsanity:                      None
+Cooksanity:                      None
+Chefsanity:                      0
+Craftsanity:                     None
+Friendsanity:                    None
+Friendsanity Heart Size:         4
+Booksanity:                      Power Skill
+Walnutsanity:                    
+Exclude Ginger Island:           No
+Quick Start:                     Yes
+Starting Gold:                   5000
+Profit Margin:                   100
+Experience Multiplier:           200
+Friendship Multiplier:           200
+Debris Multiplier:               Half
+Number of Movement Buffs:        4
+Enabled Filler Buffs:            Bite Rate, Defense, Luck
+Trap Difficulty:                 Medium
+Trap Distribution:               Babies Trap: 100, Bark Trap: 100, Benjamin Budton Trap: 100, Bomb Trap: 100, Burnt Trap: 100, Darkness Trap: 100, Debris Trap: 100, Drought Trap: 100, Frozen Trap: 100, Inflation Trap: 100, Jinxed Trap: 100, Meow Trap: 100, Monsters Trap: 100, Nauseated Trap: 100, Nudge Trap: 100, Pariah Trap: 100, Random Teleport Trap: 100, Shuffle Trap: 100, Slimed Trap: 100, Taxes Trap: 100, The Crows Trap: 100, Time Flies Trap: 100, Weakness Trap: 100
+Multiple Day Sleep Enabled:      Yes
+Multiple Day Sleep Cost:         0
+Gifting:                         Yes
+Mods:                            
+Bundle Plando:                   
+Death Link:                      No
+
+
+Community Center (Player1):
+	[Pantry] Agronomist's Bundle (3 required):
+		5x Deluxe Fertilizer
+		50x Quality Retaining Soil
+		80x Basic Retaining Soil
+		100x Basic Fertilizer
+	[Pantry] Artisan Bundle (6 required):
+		1x Caviar
+		1x Pomegranate
+		1x Cherry
+		1x Cloth
+		1x Apple
+		1x Green Tea
+		1x Pale Ale
+		1x Mead
+		1x Beer
+		1x Orange
+		1x Aged Roe
+		1x Wine
+	[Pantry] Sommelier Bundle (3 required):
+		1x Wine [Melon]
+		1x Wine [Banana]
+		1x Wine [Coconut]
+		1x Wine [Starfruit]
+		1x Wine [Ancient Fruit]
+		1x Wine [Cranberries]
+	[Pantry] Fall Crops Bundle (4 required):
+		1x Pumpkin
+		1x Eggplant
+		1x Sunflower
+		1x Wheat
+	[Pantry] Slime Farmer Bundle (3 required):
+		1x Green Slime Egg
+		10x Petrified Slime
+		1x Tiger Slime Egg
+		1x Purple Slime Egg
+	[Pantry] Island Crops Bundle (3 required):
+		1x Pineapple
+		1x Banana
+		1x Mango
+	[Crafts Room] Sticky Bundle (1 required):
+		500x Sap
+	[Crafts Room] Construction Bundle (4 required):
+		99x Stone
+		99x Fiber
+		10x Clay
+		99x Wood
+	[Crafts Room] Desert Foraging Bundle (2 required):
+		5x Cactus Fruit
+		1x Cactus Fruit (Gold)
+	[Crafts Room] Fall Foraging Bundle (4 required):
+		1x Hazelnut
+		1x Common Mushroom
+		1x Blackberry
+		1x Wild Plum
+	[Crafts Room] Beach Foraging Bundle (4 required):
+		1x Nautilus Shell
+		1x Rainbow Shell
+		1x Cockle
+		1x Oyster
+	[Crafts Room] Summer Foraging Bundle (3 required):
+		1x Fiddlehead Fern
+		1x Red Mushroom
+		1x Grape
+	[Fish Tank] Specific Fishing Bundle (3 required):
+		10x Targeted Bait [Pufferfish]
+		10x Targeted Bait [Walleye]
+		10x Targeted Bait [Snail]
+		10x Targeted Bait [Carp]
+		10x Targeted Bait [Red Snapper]
+		10x Targeted Bait [Rainbow Trout]
+	[Fish Tank] Master Baiter Bundle (2 required):
+		10x Magic Bait
+		50x Deluxe Bait
+		25x Challenge Bait
+	[Fish Tank] Winter Fishing Bundle (4 required):
+		1x Sardine
+		1x Lingcod
+		1x Tiger Trout
+		1x Pike
+	[Fish Tank] Summer Fishing Bundle (4 required):
+		1x Halibut
+		1x Tilapia
+		1x Rainbow Trout
+		1x Red Mullet
+	[Fish Tank] Quality Fish Bundle (3 required):
+		2x Sea Cucumber (Gold)
+		2x Chub (Gold)
+		2x Albacore (Gold)
+		2x Super Cucumber (Gold)
+	[Fish Tank] Ocean Fish Bundle (4 required):
+		1x Octopus
+		1x Anchovy
+		1x Herring
+		1x Eel
+	[Boiler Room] Blacksmith's Bundle (3 required):
+		1x Copper Bar
+		1x Iridium Bar
+		3x Refined Quartz
+	[Boiler Room] Paleontologist's Bundle (3 required):
+		1x Skeletal Hand
+		1x Prehistoric Vertebra
+		1x Trilobite
+		1x Nautilus Fossil
+		1x Prehistoric Skull
+		1x Prehistoric Scapula
+	[Boiler Room] Archaeologist's Bundle (3 required):
+		1x Chipped Amphora
+		1x Chicken Statue
+		1x Bone Flute
+		1x Rusty Spoon
+		1x Prehistoric Tool
+		1x Ornamental Fan
+	[Bulletin Board] Enchanter's Bundle (4 required):
+		1x Wine
+		1x Fire Quartz
+		1x Pomegranate
+		1x Frozen Tear
+	[Bulletin Board] Fodder Bundle (3 required):
+		3x Green Bean
+		3x Potato
+		3x White Algae
+	[Bulletin Board] Calico Bundle (2 required):
+		5x Crab Cakes
+		5x Spicy Eel
+	[Bulletin Board] Winter Star Bundle (2 required):
+		5x Holly
+		1x Plum Pudding
+	[Bulletin Board] Home Cook's Bundle (3 required):
+		100x Sugar
+		100x Wheat Flour
+		100x Vinegar
+	[Vault] Qi's Helper Bundle (1 required):
+		25x Qi Gem
+	[Vault] 5,000g Bundle (1 required):
+		5000x Money
+	[Vault] 25,000g Bundle (1 required):
+		25000x Money
+	[Vault] Carnival Bundle (1 required):
+		2500x Star Token
+	[Abandoned Joja Mart] The Missing Bundle (5 required):
+		1x Truffle Oil
+		1x Beer (Silver)
+		1x Wine (Silver)
+		1x Mead (Silver)
+		5x Starfruit (Gold)
+		1x Ancient Fruit (Gold)
+	[Raccoon Requests] Raccoon Request 1 (2 required):
+		5x Egg (Brown)
+		5x Egg
+		1x Dried Mushrooms [Chanterelle]
+	[Raccoon Requests] Raccoon Request 2 (2 required):
+		1x Jelly [Grape]
+		1x Jelly [Powdermelon]
+		1x Jelly [Pomegranate]
+	[Raccoon Requests] Raccoon Request 3 (2 required):
+		1x Smoked Fish [Ghostfish]
+		5x Clam
+		1x Smoked Fish [Bullhead]
+	[Raccoon Requests] Raccoon Request 4 (2 required):
+		10x Moss
+		3x Magma Geode
+		3x Ghostfish
+	[Raccoon Requests] Raccoon Request 5 (2 required):
+		1x Pickles [Wheat]
+		1x Dried Fruit [Blueberry]
+		1x Jelly [Spice Berry]
+	[Raccoon Requests] Raccoon Request 6 (2 required):
+		1x Smoked Fish [Tuna]
+		5x Cockle
+		5x Crayfish
+	[Raccoon Requests] Raccoon Request 7 (2 required):
+		1x Smoked Fish [Red Mullet]
+		1x Smoked Fish [Perch]
+		1x Smoked Fish [Shad]
+	[Raccoon Requests] Raccoon Request 8 (2 required):
+		1x Pickles [Tomato]
+		1x Pickles [Radish]
+		1x Pickles [Bok Choy]
+
+
+Starting Items:
+
+Fall
+Pet Bowl
+
+Locations:
+
+The Mines Floor 10 Treasure: Progressive Mine Elevator
+The Mines Floor 20 Treasure: Sinister Signal
+The Mines Floor 40 Treasure: Treehouse
+The Mines Floor 50 Treasure: Book: The Art O' Crabbing
+The Mines Floor 60 Treasure: Progressive Watering Can
+The Mines Floor 70 Treasure: Peach Sapling
+The Mines Floor 80 Treasure: Foraging Level
+The Mines Floor 90 Treasure: Junimo Kart: Extra Life
+The Mines Floor 100 Treasure: Potato Seeds
+The Mines Floor 110 Treasure: Jazz Seeds
+The Mines Floor 120 Treasure: Volcano Exit Shortcut
+Grim Reaper statue: Fortune Teller
+The Mines Entrance Cutscene: Magic Rock Candy
+Demetrius's Breakthrough: Progressive Mine Elevator
+Volcano Caldera Treasure: Auto-Petter
+Old Master Cannoli: Traveling Merchant: Thursday
+Beach Bridge Repair: Progressive Club
+Galaxy Sword Shrine: Return Scepter
+Krobus Stardrop: Rice Shoot
+Pot Of Gold: Combat Mastery
+Traveling Merchant Sunday Item 1: Progressive Watering Can
+Traveling Merchant Sunday Item 2: Mini-Fridge
+Traveling Merchant Sunday Item 3: Ancient Seeds
+Traveling Merchant Monday Item 1: Traveling Merchant Stock Size
+Traveling Merchant Monday Item 2: Frozen Trap
+Traveling Merchant Monday Item 3: Resource Pack: 100 Calico Egg
+Traveling Merchant Tuesday Item 1: Debris Trap
+Traveling Merchant Tuesday Item 2: Taro Tuber
+Traveling Merchant Tuesday Item 3: Prize Ticket
+Traveling Merchant Wednesday Item 1: Traveling Merchant: Sunday
+Traveling Merchant Wednesday Item 2: Progressive Axe
+Traveling Merchant Wednesday Item 3: Junimo Kart: Extra Life
+Traveling Merchant Thursday Item 1: Island Farmhouse
+Traveling Merchant Thursday Item 2: Rhubarb Seeds
+Traveling Merchant Thursday Item 3: JotPK: Progressive Ammo
+Traveling Merchant Friday Item 1: Magic Rock Candy
+Traveling Merchant Friday Item 2: Pepper Seeds
+Traveling Merchant Friday Item 3: Garlic Seeds
+Traveling Merchant Saturday Item 1: Pierre's Missing Stocklist
+Traveling Merchant Saturday Item 2: Desert Obelisk
+Traveling Merchant Saturday Item 3: Geode Crusher Recipe
+Complete Pantry: Bear's Knowledge
+Agronomist's Bundle: Fishing Level
+Artisan Bundle: Progressive Trash Can
+Sommelier Bundle: Progressive Fishing Rod
+Fall Crops Bundle: Foraging Mastery
+Slime Farmer Bundle: Traveling Merchant Stock Size
+Island Crops Bundle: Power: Way Of The Wind pt. 2
+Complete Crafts Room: Mushroom Boxes
+Sticky Bundle: Progressive Scythe
+Construction Bundle: Mill
+Desert Foraging Bundle: Progressive Mine Elevator
+Fall Foraging Bundle: Skull Key
+Beach Foraging Bundle: Fishing Level
+Summer Foraging Bundle: Fishing Level
+Complete Fish Tank: Open Professor Snail Cave
+Specific Fishing Bundle: Magic Rock Candy
+Master Baiter Bundle: Magic Rock Candy
+Winter Fishing Bundle: Crystalarium
+Summer Fishing Bundle: Mining Level
+Quality Fish Bundle: Progressive Hoe
+Ocean Fish Bundle: Bucket Hat
+Complete Boiler Room: Corn Seeds
+Blacksmith's Bundle: Blueberry Seeds
+Paleontologist's Bundle: Progressive Footwear
+Archaeologist's Bundle: Ancient Seeds
+Complete Bulletin Board: Progressive Mine Elevator
+Enchanter's Bundle: Farm Computer Recipe
+Fodder Bundle: Beet Seeds
+Calico Bundle: Progressive Mine Elevator
+Winter Star Bundle: Progressive Mine Elevator
+Home Cook's Bundle: Weather Report
+Complete Vault: Island West Turtle
+Qi's Helper Bundle: Tub o' Flowers Recipe
+5,000g Bundle: Progressive Mine Elevator
+25,000g Bundle: Stardrop
+Carnival Bundle: Progressive Pickaxe
+The Missing Bundle: Progressive Footwear
+Raccoon Request 1: Lupini: Solar Kingdom
+Raccoon Request 2: Recycling Machine
+Raccoon Request 3: Pariah Trap
+Raccoon Request 4: Bone Mill Recipe
+Raccoon Request 5: Dark Talisman
+Raccoon Request 6: Drought Trap
+Raccoon Request 7: Farming Level
+Raccoon Request 8: Progressive Club
+Large Pack: JotPK: Increased Drop Rate
+Deluxe Pack: Nudge Trap
+Copper Hoe Upgrade: JotPK: Progressive Boots
+Iron Hoe Upgrade: Nauseated Trap
+Gold Hoe Upgrade: Power: Raccoon Journal
+Iridium Hoe Upgrade: Progressive Mine Elevator
+Copper Pickaxe Upgrade: Lupini: 1000 Years From Now
+Iron Pickaxe Upgrade: Garden Pot
+Gold Pickaxe Upgrade: Progressive Pan
+Iridium Pickaxe Upgrade: Apple Sapling
+Copper Axe Upgrade: Progressive Mine Elevator
+Iron Axe Upgrade: Hyper Speed-Gro Recipe
+Gold Axe Upgrade: Power: Ol' Slitherlegs
+Iridium Axe Upgrade: Poppy Seeds
+Copper Watering Can Upgrade: Traveling Merchant: Tuesday
+Iron Watering Can Upgrade: Magnet
+Gold Watering Can Upgrade: Keg
+Iridium Watering Can Upgrade: Fishing Level
+Copper Trash Can Upgrade: The Crows Trap
+Iron Trash Can Upgrade: Fruit Bats
+Gold Trash Can Upgrade: Mining Mastery
+Iridium Trash Can Upgrade: Fiber Seeds Recipe
+Purchase Training Rod: Traveling Merchant: Friday
+Bamboo Pole Cutscene: Luck Bonus
+Purchase Fiberglass Rod: Mushroom Tree Seed
+Purchase Iridium Rod: Mayonnaise Machine
+Copper Pan Cutscene: Fishing Level
+Iron Pan Upgrade: Straw Hat
+Gold Pan Upgrade: Progressive Axe
+Iridium Pan Upgrade: Progressive Dagger
+Floor 5 Elevator: Tent Kit
+Floor 10 Elevator: Rarecrow #4
+Floor 15 Elevator: Traveling Merchant Stock Size
+Floor 20 Elevator: Tomato Seeds
+Floor 25 Elevator: Jinxed Trap
+Floor 30 Elevator: Mining Level
+Floor 35 Elevator: Progressive Fishing Rod
+Floor 40 Elevator: Rarecrow #1
+Floor 45 Elevator: Fishing Level
+Floor 50 Elevator: Cherry Sapling
+Floor 55 Elevator: Progressive Pickaxe
+Floor 60 Elevator: Farm Computer
+Floor 65 Elevator: Magic Rock Candy
+Floor 70 Elevator: Inflation Trap
+Floor 75 Elevator: Darkness Trap
+Floor 80 Elevator: Progressive Hoe
+Floor 85 Elevator: Earth Obelisk
+Floor 90 Elevator: Traveling Merchant Metal Detector
+Floor 95 Elevator: Yam Seeds
+Floor 100 Elevator: Bite Rate Bonus
+Floor 105 Elevator: Pomegranate Sapling
+Floor 110 Elevator: Fairy Dust Recipe
+Floor 115 Elevator: Movement Speed Bonus
+Floor 120 Elevator: Stable
+Level 1 Farming: Sewing Machine
+Level 2 Farming: Worm Bin
+Level 3 Farming: JotPK: Progressive Gun
+Level 4 Farming: Parrot Express
+Level 5 Farming: Grape Starter
+Level 6 Farming: Power: Woody's Secret
+Level 7 Farming: Slimed Trap
+Level 8 Farming: Progressive Mine Elevator
+Level 9 Farming: Bus Repair
+Level 10 Farming: Iridium Snake Milk
+Farming Mastery: Progressive Trash Can
+Level 1 Foraging: Fishing Level
+Level 2 Foraging: Traveling Merchant Stock Size
+Level 3 Foraging: JotPK: Progressive Gun
+Level 4 Foraging: Junimo Kart: Extra Life
+Level 5 Foraging: Broccoli Seeds
+Level 6 Foraging: Deluxe Scarecrow
+Level 7 Foraging: Foraging Level
+Level 8 Foraging: Island Trader
+Level 9 Foraging: Junimo Kart: Extra Life
+Level 10 Foraging: Ancient Seeds
+Foraging Mastery: Cauliflower Seeds
+Level 1 Fishing: Progressive House
+Level 2 Fishing: Progressive Mine Elevator
+Level 3 Fishing: Progressive Raccoon
+Level 4 Fishing: Squid Hat
+Level 5 Fishing: Progressive Mine Elevator
+Level 6 Fishing: Progressive Coop
+Level 7 Fishing: Calico Statue
+Level 8 Fishing: Deluxe Fertilizer Recipe
+Level 9 Fishing: Quality Sprinkler
+Level 10 Fishing: Starport Decal
+Fishing Mastery: Charcoal Kiln
+Level 1 Mining: Power: Mapping Cave Systems
+Level 2 Mining: Solar Panel
+Level 3 Mining: Combat Level
+Level 4 Mining: Progressive Mine Elevator
+Level 5 Mining: Traveling Merchant Stock Size
+Level 6 Mining: Farm Obelisk
+Level 7 Mining: Junimo Kart: Extra Life
+Level 8 Mining: Meow Trap
+Level 9 Mining: Farming Level
+Level 10 Mining: Oil Maker
+Mining Mastery: Foraging Level
+Level 1 Combat: Fishing Level
+Level 2 Combat: Rarecrow #6
+Level 3 Combat: Shuffle Trap
+Level 4 Combat: Progressive Mine Elevator
+Level 5 Combat: Progressive Footwear
+Level 6 Combat: Golden Pumpkin
+Level 7 Combat: Power: Jack Be Nimble, Jack Be Thick
+Level 8 Combat: Progressive Raccoon
+Level 9 Combat: Progressive Shed
+Level 10 Combat: Progressive Watering Can
+Combat Mastery: Wheat Seeds
+Barn Blueprint: Rare Seed
+Big Barn Blueprint: Resource Pack: 120 Calico Egg
+Deluxe Barn Blueprint: Lupini: Land Of Clay
+Coop Blueprint: Power: The Diamond Hunter
+Big Coop Blueprint: Combat Level
+Deluxe Coop Blueprint: Progressive Dagger
+Fish Pond Blueprint: Power: Price Catalogue
+Mill Blueprint: Fishing Level
+Shed Blueprint: Mastery Of The Five Ways
+Big Shed Blueprint: Progressive Movie Theater
+Silo Blueprint: Ancient Seeds Recipe
+Slime Hutch Blueprint: Moonlight Jellies Banner
+Stable Blueprint: Junimo Kart: Extra Life
+Well Blueprint: Foraging Level
+Shipping Bin Blueprint: Progressive Sword
+Kitchen Blueprint: Hops Starter
+Kids Room Blueprint: Combat Level
+Cellar Blueprint: Progressive Footwear
+Journey of the Prairie King Victory: Progressive Backpack
+Junimo Kart: Sunset Speedway (Victory): Sprinkler
+JotPK: Boots 1: Progressive Hoe
+JotPK: Boots 2: Defense Bonus
+JotPK: Gun 1: Progressive Scythe
+JotPK: Gun 2: Progressive Mine Elevator
+JotPK: Gun 3: Chest
+JotPK: Super Gun: Traveling Merchant: Wednesday
+JotPK: Ammo 1: Resource Pack: 50 Calico Egg
+JotPK: Ammo 2: Resource Pack: 5000 Money
+JotPK: Ammo 3: Stardrop
+JotPK: Cowboy 1: Water Obelisk
+JotPK: Cowboy 2: JotPK: Progressive Gun
+Junimo Kart: Crumble Cavern: Rarecrow #3
+Junimo Kart: Slippery Slopes: Iridium Fireplace
+Junimo Kart: Secret Level: Progressive Trash Can
+Junimo Kart: The Gem Sea Giant: Progressive Club
+Junimo Kart: Slomp's Stomp: Loom
+Junimo Kart: Ghastly Galleon: Iridium Sprinkler
+Junimo Kart: Glowshroom Grotto: Benjamin Budton Trap
+Junimo Kart: Red Hot Rollercoaster: Railroad Boulder Removed
+Harvest Apple: Farming Level
+Harvest Apricot: Beach Bridge
+Harvest Cherry: Mining Level
+Harvest Orange: Cactus Seeds
+Harvest Peach: Island Mailbox
+Harvest Pomegranate: Junimo Kart: Extra Life
+Harvest Parsnip: Artichoke Seeds
+Harvest Green Bean: Quality Bobber Recipe
+Harvest Cauliflower: Sailor's Cap
+Harvest Potato: Livin' Off The Land
+Harvest Tulip: Progressive Watering Can
+Harvest Kale: Pineapple Seeds
+Harvest Blue Jazz: Random Teleport Trap
+Harvest Garlic: Special Order Board
+Harvest Unmilled Rice: Amaranth Seeds
+Harvest Melon: Progressive Mine Elevator
+Harvest Tomato: Island Resort
+Harvest Blueberry: Seed Maker
+Harvest Hot Pepper: Progressive Pan
+Harvest Wheat: Movement Speed Bonus
+Harvest Radish: Club Card
+Harvest Poppy: Solar Panel Recipe
+Harvest Summer Spangle: Bomb Trap
+Harvest Hops: Traveling Merchant: Saturday
+Harvest Corn: Deluxe Fish Tank
+Harvest Sunflower: Foraging Level
+Harvest Red Cabbage: Progressive Barn
+Harvest Eggplant: Enricher
+Harvest Pumpkin: Volcano Bridge
+Harvest Bok Choy: Ostrich Incubator Recipe
+Harvest Yam: Magic Rock Candy
+Harvest Cranberries: Lupini: Clouds
+Harvest Fairy Rose: Rarecrow #8
+Harvest Amaranth: Qi Walnut Room
+Harvest Grape: Progressive Pan
+Harvest Artichoke: Weakness Trap
+Harvest Broccoli: Progressive Pickaxe
+Harvest Carrot: Power: Jewels Of The Sea
+Harvest Powdermelon: Progressive Raccoon
+Harvest Summer Squash: Fish Pond
+Harvest Strawberry: Power: Way Of The Wind pt. 1
+Harvest Sweet Gem Berry: Silo
+Harvest Ancient Fruit: Mini-Shipping Bin
+Harvest Coffee Bean: Power: Treasure Appraisal Guide
+Harvest Banana: Island North Turtle
+Harvest Cactus Fruit: Progressive Shed
+Harvest Mango: Farming Level
+Harvest Pineapple: Progressive Sword
+Harvest Rhubarb: Magic Rock Candy
+Harvest Starfruit: Fishing Information Broadcasting Service
+Harvest Beet: Farming Level
+Harvest Taro Root: Progressive Dagger
+Museumsanity: 5 Donations: Progressive Sword
+Museumsanity: 10 Donations: Lupini: Portrait Of A Mermaid
+Museumsanity: 15 Donations: Friendship Bonus (2 <3)
+Museumsanity: 20 Donations: Stardrop
+Museumsanity: 25 Donations: Hopper Recipe
+Museumsanity: 30 Donations: Progressive Fishing Rod
+Museumsanity: 35 Donations: Furnace
+Museumsanity: 40 Donations: Tulip Bulb
+Museumsanity: 50 Donations: Power: Animal Catalogue
+Museumsanity: 60 Donations: Bean Starter
+Museumsanity: 70 Donations: Progressive Axe
+Museumsanity: 80 Donations: Time Flies Trap
+Museumsanity: 90 Donations: Lupini: 'Tropical Fish #173'
+Museumsanity: 95 Donations: Gil's Hat
+Museumsanity: 11 Minerals: Heavy Tapper
+Museumsanity: 21 Minerals: Foraging Level
+Museumsanity: 31 Minerals: Melon Seeds
+Museumsanity: 41 Minerals: Resource Pack: 200 Calico Egg
+Museumsanity: 50 Minerals: JotPK: Progressive Gun
+Museumsanity: 3 Artifacts: Rarecrow #2
+Museumsanity: 6 Artifacts: Island Obelisk
+Museumsanity: 9 Artifacts: Glittering Boulder Removed
+Museumsanity: 11 Artifacts: Progressive Raccoon
+Museumsanity: 15 Artifacts: Junimo Kart: Extra Life
+Museumsanity: 20 Artifacts: Combat Level
+Museumsanity: Dwarf Scrolls: JotPK: Extra Life
+Museumsanity: Skeleton Front: Progressive Raccoon
+Museumsanity: Skeleton Middle: Rarecrow #5
+Museumsanity: Skeleton Back: Summer Squash Seeds
+Museumsanity: Ancient Seed: Powdermelon Seeds
+Egg Hunt Victory: Mining Level
+Egg Festival: Strawberry Seeds: Mummy Mask
+Dance with someone: Golden Egg
+Rarecrow #5 (Woman): Power: The Art O' Crabbing
+Luau Soup: Magnifying Glass
+Dance of the Moonlight Jellies: Preserves Jar
+Smashing Stone: Spring
+Grange Display: Progressive Backpack
+Rarecrow #1 (Turnip Head): Prize Ticket
+Fair Stardrop: Gold Clock
+Spirit's Eve Maze: Carrot Seeds
+Rarecrow #2 (Witch): Progressive Dagger
+Win Fishing Competition: Cheese Press
+Rarecrow #4 (Snowman): Progressive Club
+Mermaid Pearl: Dressed Spinner
+Rarecrow #7 (Tanuki): Slime Hutch
+Rarecrow #8 (Tribal Mask): JotPK: Progressive Ammo
+Lupini: Red Eagle: Combat Level
+Lupini: Portrait Of A Mermaid: Resource Pack: 30 Calico Egg
+Lupini: Solar Kingdom: Progressive Trash Can
+Secret Santa: Heavy Tapper Recipe
+The Legend of the Winter Star: Farming Level
+Collect All Rarecrows: Mining Level
+Tub o' Flowers Recipe: Combat Level
+Jack-O-Lantern Recipe: Winter
+Moonlight Jellies Banner: Bee House
+Starport Decal: Progressive Dagger
+Rarecrow #3 (Alien): Foraging Level
+Calico Race: Combat Level
+Calico Statue: Movement Speed Bonus
+Emily's Outfit Services: Resource Pack: 20 Magic Bait
+Free Cactis: Radish Seeds
+Touch A Calico Statue: Minecarts Repair
+Real Calico Egg Hunter: Stone Chest
+Desert Scholar: Starfruit Seeds
+Trout Derby Reward 1: Power: Monster Compendium
+Trout Derby Reward 2: Fishing Mastery
+Trout Derby Reward 3: Deluxe Scarecrow Recipe
+SquidFest Day 1 Copper: Power: Friendship 101
+SquidFest Day 1 Iron: Strawberry Seeds
+SquidFest Day 2 Copper: Pumpkin Seeds
+SquidFest Day 2 Iron: Lightning Rod
+Sweet Bean Cake: Deconstructor
+Sour Salad: Dwarvish Translation Guide
+Crystal Cake: Hopper
+Smell Of The Sea: Spangle Seeds
+Superfood Cake: Boat Repair
+Island Ingredients: 15 Qi Gems
+Cave Patrol: Progressive Hoe
+Aquatic Overpopulation: Cone Hat
+Biome Balance: Eggplant Seeds
+Rock Rejuvenation: Combat Level
+Gifts for George: JotPK: Progressive Boots
+Fragments of the past: Mango Sapling
+Gus' Famous Omelet: Horse Flute
+Crop Order: Progressive Movie Theater
+Community Cleanup: Traveling Merchant Stock Size
+The Strong Stuff: Fishing Level
+Pierre's Prime Produce: Apricot Sapling
+Robin's Project: Bok Choy Seeds
+Robin's Resource Rush: The Queen of Sauce
+Juicy Bugs Wanted!: Progressive Mine Elevator
+Tropical Fish: Mr Qi's Plane Ride
+A Curious Substance: Key To The Town
+Prismatic Jelly: Magic Bait Recipe
+Repair Ticket Machine: Resource Pack: 10 Qi Seasoning
+Repair Boat Hull: Cranberry Seeds
+Repair Boat Anchor: Greenhouse
+Open Professor Snail Cave: Stone Chest Recipe
+Complete Island Field Office: Power: Dwarvish Safety Manual
+Leo's Parrot: Coffee Maker
+Island West Turtle: Mining Level
+Island Farmhouse: Junimo Hut
+Island Mailbox: Foraging Level
+Farm Obelisk: Sunflower Seeds
+Dig Site Bridge: Progressive Coop
+Island Trader: Resource Pack: 40 Calico Egg
+Volcano Bridge: Lupini: Red Eagle
+Volcano Exit Shortcut: Banana Sapling
+Island Resort: Mini-Obelisk Recipe
+Parrot Express: 'Squid Kid'
+Monster Eradication: Slimes: Taxes Trap
+Monster Eradication: Void Spirits: Mounted Trout
+Monster Eradication: Bats: Progressive Raccoon
+Monster Eradication: Skeletons: Progressive Barn
+Monster Eradication: Cave Insects: Geode Crusher
+Monster Eradication: Duggies: Pearl
+Monster Eradication: Dust Sprites: Magic Rock Candy
+Monster Eradication: Rock Crabs: Cask
+Monster Eradication: Mummies: Ancient Seeds
+Monster Eradication: Pepper Rex: Progressive Pickaxe
+Monster Eradication: Serpents: Seafoam Pudding
+Monster Eradication: Magma Sprites: Fairy Seeds
+Introductions: Progressive Mine Elevator
+How To Win Friends: Mining Level
+Getting Started: Auto-Grabber
+Raising Animals: Progressive Mine Elevator
+Advancement: Babies Trap
+Archaeology: Combat Level
+Meet The Wizard: Summer
+Forging Ahead: Resource Pack: 35 Calico Egg
+Smelting: Mining Level
+Initiation: Trap Bobber
+Robin's Lost Axe: Jack-O-Lantern Recipe
+Jodi's Request: Progressive Barn
+Mayor's "Shorts": Power: Horse: The Book
+Blackberry Basket: Progressive Raccoon
+Marnie's Request: Dig Site Bridge
+Pam Is Thirsty: Foraging Level
+A Dark Reagent: Farming Mastery
+Cow's Delight: Rarecrow #7
+The Skull Key: Barbed Hook
+Crop Research: Kale Seeds
+Knee Therapy: Progressive Fishing Rod
+Robin's Request: Combat Level
+Qi's Challenge: Movement Speed Bonus
+The Mysterious Qi: Resource Pack: 10000 Money
+Carving Pumpkins: Farming Level
+A Winter Mystery: Farming Level
+Strange Note: Progressive House
+Cryptic Note: Parsnip Seeds
+Fresh Fruit: Progressive Raccoon
+Aquatic Research: Progressive Mine Elevator
+A Soldier's Star: Free Cactis
+Mayor's Need: Ostrich Incubator
+Wanted: Lobster: Lupini: Three Trees
+Pam Needs Juice: Progressive Slingshot
+Fish Casserole: Bark Trap
+Catch A Squid: Burnt Trap
+Fish Stew: Progressive Pan
+Pierre's Notice: Progressive Mine Elevator
+Clint's Attempt: Farming Level
+A Favor For Clint: JotPK: Extra Life
+Staff Of Power: Ancient Seeds
+Granny's Gift: Bridge Repair
+Exotic Spirits: Magic Rock Candy
+Catch a Lingcod: Monsters Trap
+The Pirate's Wife: Farming Level
+Dark Talisman: Progressive Fishing Rod
+Goblin Problem: Stardrop
+Magic Ink: Power: Book of Mysteries
+The Giant Stump: Power: The Alleyway Buffet
+Help Wanted: Item Delivery 1: Progressive Sword
+Help Wanted: Item Delivery 2: Progressive Coop
+Help Wanted: Item Delivery 3: Progressive House
+Help Wanted: Item Delivery 4: Rusty Key
+Help Wanted: Fishing 1: Monster Musk Recipe
+Help Wanted: Slay Monsters 1: 15 Qi Gems
+Help Wanted: Gathering 1: Shipping Bin
+Read Jack Be Nimble, Jack Be Thick: Progressive Mine Elevator
+Read Woody's Secret: Magic Rock Candy
+Read Animal Catalogue: Mining Level
+Read Book of Mysteries: Lupini: The Serpent
+Read Dwarvish Safety Manual: Traveling Merchant: Monday
+Read Friendship 101: Pressure Nozzle
+Read Horse: The Book: Stardrop
+Read Jewels Of The Sea: Tapper
+Read Mapping Cave Systems: Orange Sapling
+Read Monster Compendium: Bone Mill
+Read Ol' Slitherlegs: Galaxy Soul
+Read Price Catalogue: Red Cabbage Seeds
+Read The Alleyway Buffet: Foraging Level
+Read The Art O' Crabbing: Progressive Mine Elevator
+Read Treasure Appraisal Guide: Mining Level
+Read Raccoon Journal: Blue Grass Starter Recipe
+Read Way Of The Wind pt. 1: Progressive Sword
+Read Way Of The Wind pt. 2: Progressive Mine Elevator
+Read Book Of Stars: Progressive Axe
+Read Bait And Bobber: Well
+Read Combat Quarterly: Traveling Merchant Metal Detector
+Read Mining Monthly: Coffee Bean
+Read Stardew Valley Almanac: JotPK: Progressive Ammo
+Read Woodcutter's Weekly: Progressive Raccoon
+Read The Diamond Hunter: Progressive Club
+Read Queen Of Sauce Cookbook: Progressive Slingshot
+Copper Bar (Logic event): Copper Bar (Logic event)
+Iron Bar (Logic event): Iron Bar (Logic event)
+Gold Bar (Logic event): Gold Bar (Logic event)
+Iridium Bar (Logic event): Iridium Bar (Logic event)
+Copper Ore (Logic event): Copper Ore (Logic event)
+Iron Ore (Logic event): Iron Ore (Logic event)
+Gold Ore (Logic event): Gold Ore (Logic event)
+Iridium Ore (Logic event): Iridium Ore (Logic event)
+Complete Community Center: Victory
+
+Playthrough:
+
+0: {
+  Fall
+  Pet Bowl
+}
+1: {
+  Archaeology: Combat Level
+  Beach Bridge Repair: Progressive Club
+  Blackberry Basket: Progressive Raccoon
+  Carnival Bundle: Progressive Pickaxe
+  Fall Foraging Bundle: Skull Key
+  Grange Display: Progressive Backpack
+  Help Wanted: Gathering 1: Shipping Bin
+  Help Wanted: Item Delivery 1: Progressive Sword
+  Help Wanted: Item Delivery 2: Progressive Coop
+  Help Wanted: Item Delivery 3: Progressive House
+  Help Wanted: Item Delivery 4: Rusty Key
+  How To Win Friends: Mining Level
+  Introductions: Progressive Mine Elevator
+  Level 1 Foraging: Fishing Level
+  Meet The Wizard: Summer
+  Purchase Training Rod: Traveling Merchant: Friday
+  Shipping Bin Blueprint: Progressive Sword
+  Smashing Stone: Spring
+  Spirit's Eve Maze: Carrot Seeds
+}
+2: {
+  5,000g Bundle: Progressive Mine Elevator
+  Barn Blueprint: Rare Seed
+  Big Coop Blueprint: Combat Level
+  Construction Bundle: Mill
+  Copper Ore (Logic event): Copper Ore (Logic event)
+  Dance with someone: Golden Egg
+  Demetrius's Breakthrough: Progressive Mine Elevator
+  Egg Hunt Victory: Mining Level
+  Floor 10 Elevator: Rarecrow #4
+  Granny's Gift: Bridge Repair
+  Help Wanted: Slay Monsters 1: 15 Qi Gems
+  Jack-O-Lantern Recipe: Winter
+  Kitchen Blueprint: Hops Starter
+  Krobus Stardrop: Rice Shoot
+  Large Pack: JotPK: Increased Drop Rate
+  Luau Soup: Magnifying Glass
+  Marnie's Request: Dig Site Bridge
+  Pot Of Gold: Combat Mastery
+  Rarecrow #2 (Witch): Progressive Dagger
+  Read Jack Be Nimble, Jack Be Thick: Progressive Mine Elevator
+  Robin's Lost Axe: Jack-O-Lantern Recipe
+  Shed Blueprint: Mastery Of The Five Ways
+  Starport Decal: Progressive Dagger
+  The Mines Floor 10 Treasure: Progressive Mine Elevator
+  Traveling Merchant Friday Item 2: Pepper Seeds
+  Traveling Merchant Friday Item 3: Garlic Seeds
+  Tub o' Flowers Recipe: Combat Level
+  Well Blueprint: Foraging Level
+}
+3: {
+  A Winter Mystery: Farming Level
+  Copper Bar (Logic event): Copper Bar (Logic event)
+  Floor 20 Elevator: Tomato Seeds
+  Floor 30 Elevator: Mining Level
+  Floor 35 Elevator: Progressive Fishing Rod
+  Harvest Garlic: Special Order Board
+  Harvest Hops: Traveling Merchant: Saturday
+  Harvest Hot Pepper: Progressive Pan
+  Harvest Sweet Gem Berry: Silo
+  Harvest Unmilled Rice: Amaranth Seeds
+  Knee Therapy: Progressive Fishing Rod
+  Level 1 Combat: Fishing Level
+  Level 2 Combat: Rarecrow #6
+  Lupini: Red Eagle: Combat Level
+  Lupini: Solar Kingdom: Progressive Trash Can
+  Monster Eradication: Bats: Progressive Raccoon
+  Museumsanity: 3 Artifacts: Rarecrow #2
+  Museumsanity: 5 Donations: Progressive Sword
+  Museumsanity: 6 Artifacts: Island Obelisk
+  Rarecrow #4 (Snowman): Progressive Club
+  Read Book Of Stars: Progressive Axe
+  Read Combat Quarterly: Traveling Merchant Metal Detector
+  Read Mining Monthly: Coffee Bean
+  Read Stardew Valley Almanac: JotPK: Progressive Ammo
+  Read Woodcutter's Weekly: Progressive Raccoon
+  Secret Santa: Heavy Tapper Recipe
+  The Legend of the Winter Star: Farming Level
+}
+4: {
+  Agronomist's Bundle: Fishing Level
+  Archaeologist's Bundle: Ancient Seeds
+  Copper Axe Upgrade: Progressive Mine Elevator
+  Copper Hoe Upgrade: JotPK: Progressive Boots
+  Copper Watering Can Upgrade: Traveling Merchant: Tuesday
+  Cow's Delight: Rarecrow #7
+  Gifts for George: JotPK: Progressive Boots
+  Harvest Amaranth: Qi Walnut Room
+  Harvest Tomato: Island Resort
+  Help Wanted: Fishing 1: Monster Musk Recipe
+  JotPK: Boots 1: Progressive Hoe
+  Juicy Bugs Wanted!: Progressive Mine Elevator
+  Leo's Parrot: Coffee Maker
+  Museumsanity: 11 Artifacts: Progressive Raccoon
+  Museumsanity: 15 Artifacts: Junimo Kart: Extra Life
+  Museumsanity: 9 Artifacts: Glittering Boulder Removed
+  Pierre's Notice: Progressive Mine Elevator
+  Prismatic Jelly: Magic Bait Recipe
+  Read Animal Catalogue: Mining Level
+  Read Price Catalogue: Red Cabbage Seeds
+  Read Raccoon Journal: Blue Grass Starter Recipe
+  Read Way Of The Wind pt. 1: Progressive Sword
+  Silo Blueprint: Ancient Seeds Recipe
+  Smelting: Mining Level
+  Traveling Merchant Saturday Item 2: Desert Obelisk
+  Traveling Merchant Saturday Item 3: Geode Crusher Recipe
+}
+5: {
+  Beach Foraging Bundle: Fishing Level
+  Clint's Attempt: Farming Level
+  Copper Pan Cutscene: Fishing Level
+  Floor 40 Elevator: Rarecrow #1
+  Floor 45 Elevator: Fishing Level
+  Floor 50 Elevator: Cherry Sapling
+  Harvest Red Cabbage: Progressive Barn
+  Iron Ore (Logic event): Iron Ore (Logic event)
+  JotPK: Cowboy 2: JotPK: Progressive Gun
+  JotPK: Gun 2: Progressive Mine Elevator
+  Level 3 Mining: Combat Level
+  Level 4 Combat: Progressive Mine Elevator
+  Level 4 Mining: Progressive Mine Elevator
+  Museumsanity: 20 Artifacts: Combat Level
+  Museumsanity: 21 Minerals: Foraging Level
+  Museumsanity: 25 Donations: Hopper Recipe
+  Museumsanity: 30 Donations: Progressive Fishing Rod
+  Museumsanity: 31 Minerals: Melon Seeds
+  Museumsanity: 40 Donations: Tulip Bulb
+  Museumsanity: 60 Donations: Bean Starter
+  Rarecrow #7 (Tanuki): Slime Hutch
+  Rarecrow #8 (Tribal Mask): JotPK: Progressive Ammo
+  The Mines Floor 40 Treasure: Treehouse
+  The Mines Floor 50 Treasure: Book: The Art O' Crabbing
+  Traveling Merchant Tuesday Item 2: Taro Tuber
+  Trout Derby Reward 2: Fishing Mastery
+  Trout Derby Reward 3: Deluxe Scarecrow Recipe
+}
+6: {
+  Crop Research: Kale Seeds
+  Fish Stew: Progressive Pan
+  Floor 55 Elevator: Progressive Pickaxe
+  Harvest Cherry: Mining Level
+  Harvest Green Bean: Quality Bobber Recipe
+  Harvest Melon: Progressive Mine Elevator
+  Harvest Tulip: Progressive Watering Can
+  Iron Bar (Logic event): Iron Bar (Logic event)
+  Level 1 Fishing: Progressive House
+  Level 2 Fishing: Progressive Mine Elevator
+  Level 3 Fishing: Progressive Raccoon
+  Level 3 Foraging: JotPK: Progressive Gun
+  Level 5 Fishing: Progressive Mine Elevator
+  Level 6 Fishing: Progressive Coop
+  Mill Blueprint: Fishing Level
+  Read Dwarvish Safety Manual: Traveling Merchant: Monday
+  Read The Alleyway Buffet: Foraging Level
+  Read The Art O' Crabbing: Progressive Mine Elevator
+  Read Treasure Appraisal Guide: Mining Level
+  SquidFest Day 1 Iron: Strawberry Seeds
+  SquidFest Day 2 Copper: Pumpkin Seeds
+  Summer Fishing Bundle: Mining Level
+  The Mines Floor 60 Treasure: Progressive Watering Can
+}
+7: {
+  A Dark Reagent: Farming Mastery
+  A Favor For Clint: JotPK: Extra Life
+  Carving Pumpkins: Farming Level
+  Cave Patrol: Progressive Hoe
+  Deluxe Coop Blueprint: Progressive Dagger
+  Floor 80 Elevator: Progressive Hoe
+  Gold Ore (Logic event): Gold Ore (Logic event)
+  Harvest Kale: Pineapple Seeds
+  Harvest Pumpkin: Volcano Bridge
+  Harvest Strawberry: Power: Way Of The Wind pt. 1
+  Iron Axe Upgrade: Hyper Speed-Gro Recipe
+  Iron Trash Can Upgrade: Fruit Bats
+  JotPK: Super Gun: Traveling Merchant: Wednesday
+  Level 3 Farming: JotPK: Progressive Gun
+  Level 4 Farming: Parrot Express
+  Level 4 Foraging: Junimo Kart: Extra Life
+  Level 6 Mining: Farm Obelisk
+  Level 8 Fishing: Deluxe Fertilizer Recipe
+  Monster Eradication: Mummies: Ancient Seeds
+  Monster Eradication: Pepper Rex: Progressive Pickaxe
+  The Mines Floor 70 Treasure: Peach Sapling
+  The Mines Floor 80 Treasure: Foraging Level
+}
+8: {
+  Gold Bar (Logic event): Gold Bar (Logic event)
+  Harvest Ancient Fruit: Mini-Shipping Bin
+  Harvest Peach: Island Mailbox
+  Journey of the Prairie King Victory: Progressive Backpack
+  Junimo Kart: Crumble Cavern: Rarecrow #3
+  Kids Room Blueprint: Combat Level
+  Level 5 Farming: Grape Starter
+  Level 7 Mining: Junimo Kart: Extra Life
+  Open Professor Snail Cave: Stone Chest Recipe
+  Read Mapping Cave Systems: Orange Sapling
+  Read Way Of The Wind pt. 2: Progressive Mine Elevator
+  Robin's Request: Combat Level
+  Stable Blueprint: Junimo Kart: Extra Life
+  The Pirate's Wife: Farming Level
+  Traveling Merchant Wednesday Item 1: Traveling Merchant: Sunday
+  Traveling Merchant Wednesday Item 2: Progressive Axe
+  Traveling Merchant Wednesday Item 3: Junimo Kart: Extra Life
+}
+9: {
+  Cryptic Note: Parsnip Seeds
+  Floor 90 Elevator: Traveling Merchant Metal Detector
+  Gold Pan Upgrade: Progressive Axe
+  Gold Pickaxe Upgrade: Progressive Pan
+  Harvest Grape: Progressive Pan
+  Harvest Orange: Cactus Seeds
+  Junimo Kart: The Gem Sea Giant: Progressive Club
+  Level 5 Foraging: Broccoli Seeds
+  Level 8 Combat: Progressive Raccoon
+  Old Master Cannoli: Traveling Merchant: Thursday
+  Strange Note: Progressive House
+  Summer Foraging Bundle: Fishing Level
+  The Mines Floor 90 Treasure: Junimo Kart: Extra Life
+  Traveling Merchant Sunday Item 1: Progressive Watering Can
+  Traveling Merchant Sunday Item 3: Ancient Seeds
+}
+10: {
+  Harvest Broccoli: Progressive Pickaxe
+  Harvest Cactus Fruit: Progressive Shed
+  Harvest Parsnip: Artichoke Seeds
+  Iridium Ore (Logic event): Iridium Ore (Logic event)
+  Junimo Kart: Red Hot Rollercoaster: Railroad Boulder Removed
+  Museumsanity: 50 Minerals: JotPK: Progressive Gun
+  Museumsanity: 70 Donations: Progressive Axe
+  Museumsanity: Ancient Seed: Powdermelon Seeds
+  Museumsanity: Skeleton Back: Summer Squash Seeds
+  Museumsanity: Skeleton Front: Progressive Raccoon
+  Museumsanity: Skeleton Middle: Rarecrow #5
+  Raising Animals: Progressive Mine Elevator
+  Traveling Merchant Thursday Item 1: Island Farmhouse
+  Traveling Merchant Thursday Item 2: Rhubarb Seeds
+  Traveling Merchant Thursday Item 3: JotPK: Progressive Ammo
+}
+11: {
+  Big Shed Blueprint: Progressive Movie Theater
+  Dark Talisman: Progressive Fishing Rod
+  Floor 95 Elevator: Yam Seeds
+  Harvest Powdermelon: Progressive Raccoon
+  Harvest Summer Squash: Fish Pond
+  Iridium Bar (Logic event): Iridium Bar (Logic event)
+  Island Mailbox: Foraging Level
+}
+12: {
+  Aquatic Research: Progressive Mine Elevator
+  Artisan Bundle: Progressive Trash Can
+  Blacksmith's Bundle: Blueberry Seeds
+  Complete Boiler Room: Corn Seeds
+  Iridium Axe Upgrade: Poppy Seeds
+  Iridium Hoe Upgrade: Progressive Mine Elevator
+  Iridium Pan Upgrade: Progressive Dagger
+  Iridium Pickaxe Upgrade: Apple Sapling
+  Iridium Watering Can Upgrade: Fishing Level
+  Quality Fish Bundle: Progressive Hoe
+  Rock Rejuvenation: Combat Level
+  Staff Of Power: Ancient Seeds
+  Tropical Fish: Mr Qi's Plane Ride
+}
+13: {
+  Floor 105 Elevator: Pomegranate Sapling
+  Fragments of the past: Mango Sapling
+  Gold Trash Can Upgrade: Mining Mastery
+  Harvest Apple: Farming Level
+  Harvest Poppy: Solar Panel Recipe
+  Level 9 Mining: Farming Level
+  Monster Eradication: Skeletons: Progressive Barn
+  Museumsanity: Dwarf Scrolls: JotPK: Extra Life
+  Raccoon Request 4: Bone Mill Recipe
+  Raccoon Request 5: Dark Talisman
+  Raccoon Request 7: Farming Level
+  The Mines Floor 100 Treasure: Potato Seeds
+}
+14: {
+  Enchanter's Bundle: Farm Computer Recipe
+  Fodder Bundle: Beet Seeds
+  Harvest Pomegranate: Junimo Kart: Extra Life
+  Level 8 Farming: Progressive Mine Elevator
+  Magic Ink: Power: Book of Mysteries
+  Pam Is Thirsty: Foraging Level
+  Pam Needs Juice: Progressive Slingshot
+  The Strong Stuff: Fishing Level
+}
+15: {
+  Biome Balance: Eggplant Seeds
+  Floor 110 Elevator: Fairy Dust Recipe
+  Harvest Beet: Farming Level
+  Level 7 Foraging: Foraging Level
+  The Mines Floor 110 Treasure: Jazz Seeds
+}
+16: {
+  Level 8 Foraging: Island Trader
+}
+17: {
+  Harvest Mango: Farming Level
+  Harvest Taro Root: Progressive Dagger
+}
+18: {
+  Harvest Pineapple: Progressive Sword
+  Level 10 Combat: Progressive Watering Can
+  Level 9 Combat: Progressive Shed
+  Monster Eradication: Magma Sprites: Fairy Seeds
+}
+19: {
+  Crop Order: Progressive Movie Theater
+  Harvest Fairy Rose: Rarecrow #8
+  Island Ingredients: 15 Qi Gems
+  Level 9 Farming: Bus Repair
+  Pierre's Prime Produce: Apricot Sapling
+}
+20: {
+  Calico Race: Combat Level
+  Collect All Rarecrows: Mining Level
+  Complete Vault: Island West Turtle
+  Desert Scholar: Starfruit Seeds
+  Free Cactis: Radish Seeds
+  Fresh Fruit: Progressive Raccoon
+  Harvest Apricot: Beach Bridge
+  Qi's Helper Bundle: Tub o' Flowers Recipe
+  Smell Of The Sea: Spangle Seeds
+  Sour Salad: Dwarvish Translation Guide
+  Superfood Cake: Boat Repair
+}
+21: {
+  Combat Mastery: Wheat Seeds
+  Complete Fish Tank: Open Professor Snail Cave
+  Dig Site Bridge: Progressive Coop
+  Harvest Radish: Club Card
+  Raccoon Request 8: Progressive Club
+  Read The Diamond Hunter: Progressive Club
+  Repair Boat Anchor: Greenhouse
+  Repair Boat Hull: Cranberry Seeds
+  Sommelier Bundle: Progressive Fishing Rod
+  Volcano Exit Shortcut: Banana Sapling
+}
+22: {
+  Farm Obelisk: Sunflower Seeds
+  Harvest Banana: Island North Turtle
+  Island Resort: Mini-Obelisk Recipe
+  Rarecrow #3 (Alien): Foraging Level
+  Read Queen Of Sauce Cookbook: Progressive Slingshot
+}
+23: {
+  Fall Crops Bundle: Foraging Mastery
+  Harvest Sunflower: Foraging Level
+  Island West Turtle: Mining Level
+  Level 9 Foraging: Junimo Kart: Extra Life
+}
+24: {
+  Complete Crafts Room: Mushroom Boxes
+  Desert Foraging Bundle: Progressive Mine Elevator
+  Junimo Kart: Secret Level: Progressive Trash Can
+  Level 10 Foraging: Ancient Seeds
+  Mining Mastery: Foraging Level
+}
+25: {
+  Foraging Mastery: Cauliflower Seeds
+  Iridium Trash Can Upgrade: Fiber Seeds Recipe
+  Robin's Project: Bok Choy Seeds
+  Robin's Resource Rush: The Queen of Sauce
+}
+26: {
+  Calico Bundle: Progressive Mine Elevator
+  Complete Bulletin Board: Progressive Mine Elevator
+  Complete Community Center: Victory
+  Harvest Bok Choy: Ostrich Incubator Recipe
+  Jodi's Request: Progressive Barn
+  Winter Star Bundle: Progressive Mine Elevator
+}
