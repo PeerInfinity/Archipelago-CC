@@ -265,8 +265,8 @@ export function computeReachableRegions(sm) {
         for (const loc of sm.eventLocations.values()) {
           if (sm.knownReachableRegions.has(loc.region)) {
             const canAccessLoc = isLocationAccessible(sm, loc);
-            // Check if location hasn't been checked yet AND item isn't already collected
-            if (canAccessLoc && !sm.checkedLocations.has(loc.name) && !sm._hasItem(loc.item.name)) {
+            // Check if location hasn't been checked yet (item can be collected multiple times from different locations)
+            if (canAccessLoc && !sm.checkedLocations.has(loc.name)) {
               sm._addItemToInventory(loc.item.name, 1);
               sm.checkedLocations.add(loc.name);
               newEventCollected = true;
