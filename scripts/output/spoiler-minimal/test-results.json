@@ -3,7 +3,40 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-26T04:17:36.751623",
-    "last_updated": "2025-11-26T04:17:36.751629",
+    "intermittent_tracking": {
+      "failures": [
+        {
+          "now_passing": true,
+          "previously_failed": true,
+          "seed": 4,
+          "template": "Kingdom Hearts 2.yaml",
+          "timestamp": "2025-11-26T05:43:55.254094"
+        },
+        {
+          "now_passing": true,
+          "previously_failed": true,
+          "seed": 5,
+          "template": "MegaMan Battle Network 3.yaml",
+          "timestamp": "2025-11-26T05:45:31.854969"
+        },
+        {
+          "now_passing": true,
+          "previously_failed": true,
+          "seed": 2,
+          "template": "Starcraft 2.yaml",
+          "timestamp": "2025-11-26T05:55:50.180673"
+        },
+        {
+          "now_passing": true,
+          "previously_failed": true,
+          "seed": 2,
+          "template": "Stardew Valley.yaml",
+          "timestamp": "2025-11-26T06:03:25.022727"
+        }
+      ],
+      "last_updated": "2025-11-26T06:18:32.788016"
+    },
+    "last_updated": "2025-11-26T06:45:52.465352",
     "script_version": "1.0.0"
   },
   "results": {
@@ -19750,7 +19783,7 @@
         "success": true,
         "warning_count": 0
       },
-      "consecutive_passes_before_failure": 3,
+      "consecutive_passes_before_failure": 10,
       "consistency_tests": {
         "1": {
           "new_rules_hash": "828fadbbcbf5d5b5b7de5e661c97296a3ef7fb3277b4ec95bd84a1a52b28b353",
@@ -19853,8 +19886,8 @@
           "timestamp": "2025-11-26T04:11:10.597557"
         }
       },
-      "first_failure_reason": "Test failed at sphere 5.15",
-      "first_failure_seed": 4,
+      "first_failure_reason": null,
+      "first_failure_seed": null,
       "game_name_from_filename": "kh2",
       "game_name_from_yaml": "Kingdom Hearts 2",
       "generation": {
@@ -19929,24 +19962,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "10": {
-              "new_rules_hash": "8714e34d99ab86e66133cb5230c3214da4594acd7d1146828e46ae1b5546a23e",
-              "new_spheres_hash": "10e5a14f38ce2ab66f88d467838631a3a273c449116699cc05c0be7dd9196fc9",
-              "original_rules_hash": "8714e34d99ab86e66133cb5230c3214da4594acd7d1146828e46ae1b5546a23e",
-              "original_spheres_hash": "10e5a14f38ce2ab66f88d467838631a3a273c449116699cc05c0be7dd9196fc9",
-              "rules_identical": true,
-              "seed": "10",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:11:54.138596"
-            }
-          },
           "game_name_from_filename": "kh2",
           "game_name_from_yaml": "Kingdom Hearts 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 3.78,
+            "processing_time_seconds": 5.9,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -19961,7 +19982,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 30.72,
+            "processing_time_seconds": 36.66,
             "return_code": 0,
             "sphere_reached": 18.5,
             "success": true,
@@ -19969,7 +19990,7 @@
             "warning_count": 0
           },
           "template_filename": "Kingdom Hearts 2.yaml",
-          "timestamp": "2025-11-26T03:44:42.378055",
+          "timestamp": "2025-11-26T05:43:12.285750",
           "world_info": {
             "exporter_path": "exporter/games/kh2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
@@ -20100,24 +20121,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "4": {
-              "new_rules_hash": "b15514167c85c5939a3c7cdd8f304e29191b54207e0a70e72cca780b91a80a6c",
-              "new_spheres_hash": "2a4f807a00662d3dfe274d9dc0568b68d65238f00265663cc435966bfba58761",
-              "original_rules_hash": "b15514167c85c5939a3c7cdd8f304e29191b54207e0a70e72cca780b91a80a6c",
-              "original_spheres_hash": "2a4f807a00662d3dfe274d9dc0568b68d65238f00265663cc435966bfba58761",
-              "rules_identical": true,
-              "seed": "4",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:09:38.683008"
-            }
-          },
           "game_name_from_filename": "kh2",
           "game_name_from_yaml": "Kingdom Hearts 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 3.36,
+            "processing_time_seconds": 5.51,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -20130,17 +20139,17 @@
           "seed": "4",
           "seed_id": "AP_05594871498841892311",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 35.94,
-            "return_code": 1,
-            "sphere_reached": 5.15,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 36.68,
+            "return_code": 0,
+            "sphere_reached": 19.2,
+            "success": true,
             "total_spheres": 19.2,
             "warning_count": 0
           },
           "template_filename": "Kingdom Hearts 2.yaml",
-          "timestamp": "2025-11-26T04:05:40.924370",
+          "timestamp": "2025-11-26T05:38:54.169492",
           "world_info": {
             "exporter_path": "exporter/games/kh2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
@@ -20157,24 +20166,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "5": {
-              "new_rules_hash": "375c965a13bebc5d65b4e437ffea31e0ace79e9f24b695ced920d05ad2da8963",
-              "new_spheres_hash": "ede1009f7c65360f4b9c3690aee732a83449b496c89726e3991f77b14581d692",
-              "original_rules_hash": "375c965a13bebc5d65b4e437ffea31e0ace79e9f24b695ced920d05ad2da8963",
-              "original_spheres_hash": "ede1009f7c65360f4b9c3690aee732a83449b496c89726e3991f77b14581d692",
-              "rules_identical": true,
-              "seed": "5",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:12:17.249245"
-            }
-          },
           "game_name_from_filename": "kh2",
           "game_name_from_yaml": "Kingdom Hearts 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 3.84,
+            "processing_time_seconds": 6.04,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -20189,7 +20186,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 32.23,
+            "processing_time_seconds": 36.85,
             "return_code": 0,
             "sphere_reached": 20.1,
             "success": true,
@@ -20197,7 +20194,7 @@
             "warning_count": 0
           },
           "template_filename": "Kingdom Hearts 2.yaml",
-          "timestamp": "2025-11-26T03:44:56.904200",
+          "timestamp": "2025-11-26T05:39:36.815336",
           "world_info": {
             "exporter_path": "exporter/games/kh2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
@@ -20214,24 +20211,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "6": {
-              "new_rules_hash": "ad32995bb57835e9bb92078225e2ee8f571a32cebfa5f0ca9b193d97a04efe73",
-              "new_spheres_hash": "95a703852200a1168651b8556330d55e4e70c18bcaa1c6d24c41639c10c11991",
-              "original_rules_hash": "ad32995bb57835e9bb92078225e2ee8f571a32cebfa5f0ca9b193d97a04efe73",
-              "original_spheres_hash": "95a703852200a1168651b8556330d55e4e70c18bcaa1c6d24c41639c10c11991",
-              "rules_identical": true,
-              "seed": "6",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:07:20.037112"
-            }
-          },
           "game_name_from_filename": "kh2",
           "game_name_from_yaml": "Kingdom Hearts 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 3.63,
+            "processing_time_seconds": 5.86,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -20246,7 +20231,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 31.12,
+            "processing_time_seconds": 36.59,
             "return_code": 0,
             "sphere_reached": 14.3,
             "success": true,
@@ -20254,7 +20239,7 @@
             "warning_count": 0
           },
           "template_filename": "Kingdom Hearts 2.yaml",
-          "timestamp": "2025-11-26T03:44:37.038843",
+          "timestamp": "2025-11-26T05:40:20.194493",
           "world_info": {
             "exporter_path": "exporter/games/kh2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
@@ -20271,24 +20256,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "7": {
-              "new_rules_hash": "e5da773575945bd4fac2178cf8303791fc09a05d6150f88aed03c911fb56c05a",
-              "new_spheres_hash": "dfd7e51fd08ec17de515f7e354c3b718ac9bc6dfb49473611285f7d326a1d003",
-              "original_rules_hash": "e5da773575945bd4fac2178cf8303791fc09a05d6150f88aed03c911fb56c05a",
-              "original_spheres_hash": "dfd7e51fd08ec17de515f7e354c3b718ac9bc6dfb49473611285f7d326a1d003",
-              "rules_identical": true,
-              "seed": "7",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:06:27.279791"
-            }
-          },
           "game_name_from_filename": "kh2",
           "game_name_from_yaml": "Kingdom Hearts 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 3.58,
+            "processing_time_seconds": 6.01,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -20303,7 +20276,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 30.1,
+            "processing_time_seconds": 36.73,
             "return_code": 0,
             "sphere_reached": 17.13,
             "success": true,
@@ -20311,7 +20284,7 @@
             "warning_count": 0
           },
           "template_filename": "Kingdom Hearts 2.yaml",
-          "timestamp": "2025-11-26T03:44:59.948780",
+          "timestamp": "2025-11-26T05:41:03.118006",
           "world_info": {
             "exporter_path": "exporter/games/kh2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
@@ -20328,24 +20301,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "8": {
-              "new_rules_hash": "4fc7e83c979bf9ea6bfb18b831f73356e2e57d8add72a5f5d3b83ee82dce4c83",
-              "new_spheres_hash": "f4df3f62e708130ee6a6d54490c7bb8ad97e1baf0c622b61b11d3f317f8596ae",
-              "original_rules_hash": "4fc7e83c979bf9ea6bfb18b831f73356e2e57d8add72a5f5d3b83ee82dce4c83",
-              "original_spheres_hash": "f4df3f62e708130ee6a6d54490c7bb8ad97e1baf0c622b61b11d3f317f8596ae",
-              "rules_identical": true,
-              "seed": "8",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:10:10.750960"
-            }
-          },
           "game_name_from_filename": "kh2",
           "game_name_from_yaml": "Kingdom Hearts 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 3.64,
+            "processing_time_seconds": 5.76,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -20358,17 +20319,17 @@
           "seed": "8",
           "seed_id": "AP_20777137877808592492",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 37.56,
-            "return_code": 1,
-            "sphere_reached": 7.7,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 36.74,
+            "return_code": 0,
+            "sphere_reached": 16.4,
+            "success": true,
             "total_spheres": 16.4,
             "warning_count": 0
           },
           "template_filename": "Kingdom Hearts 2.yaml",
-          "timestamp": "2025-11-26T04:04:24.868543",
+          "timestamp": "2025-11-26T05:41:46.358741",
           "world_info": {
             "exporter_path": "exporter/games/kh2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
@@ -20385,24 +20346,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "9": {
-              "new_rules_hash": "92020e5d5046fc8c4de470f1ae6c14cea21ad2183007b5c3cd76296ad1b1351c",
-              "new_spheres_hash": "f9aec842f041b16083f066d20fd91b46497d62565d5cadfe5d12e6385435de69",
-              "original_rules_hash": "92020e5d5046fc8c4de470f1ae6c14cea21ad2183007b5c3cd76296ad1b1351c",
-              "original_spheres_hash": "f9aec842f041b16083f066d20fd91b46497d62565d5cadfe5d12e6385435de69",
-              "rules_identical": true,
-              "seed": "9",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:11:10.597557"
-            }
-          },
           "game_name_from_filename": "kh2",
           "game_name_from_yaml": "Kingdom Hearts 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 3.67,
+            "processing_time_seconds": 5.76,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -20415,17 +20364,17 @@
           "seed": "9",
           "seed_id": "AP_48205312626925217390",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 39.68,
-            "return_code": 1,
-            "sphere_reached": 12.2,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 36.75,
+            "return_code": 0,
+            "sphere_reached": 23.1,
+            "success": true,
             "total_spheres": 23.1,
             "warning_count": 0
           },
           "template_filename": "Kingdom Hearts 2.yaml",
-          "timestamp": "2025-11-26T04:06:03.725146",
+          "timestamp": "2025-11-26T05:42:29.311732",
           "world_info": {
             "exporter_path": "exporter/games/kh2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
@@ -20445,8 +20394,8 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 3,
-      "seeds_passed": 7,
+      "seeds_failed": 0,
+      "seeds_passed": 10,
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
@@ -20458,12 +20407,12 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": false,
-        "any_failed": true,
-        "failure_rate": 0.3
+        "all_passed": true,
+        "any_failed": false,
+        "failure_rate": 0.0
       },
       "template_filename": "Kingdom Hearts 2.yaml",
-      "timestamp": "2025-11-26T03:45:13.836917",
+      "timestamp": "2025-11-26T05:38:54.103048",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/kh2.py",
@@ -27060,7 +27009,7 @@
         "success": true,
         "warning_count": 0
       },
-      "consecutive_passes_before_failure": 4,
+      "consecutive_passes_before_failure": 10,
       "consistency_tests": {
         "1": {
           "new_rules_hash": "d6885736171b05d50e440cfdd6105ab5a8a8b649e80f62f8be4cdb5eb8ae425f",
@@ -27163,8 +27112,8 @@
           "timestamp": "2025-11-26T04:11:45.423396"
         }
       },
-      "first_failure_reason": "Test failed at sphere 3.2",
-      "first_failure_seed": 5,
+      "first_failure_reason": null,
+      "first_failure_seed": null,
       "game_name_from_filename": "mmbn3",
       "game_name_from_yaml": "MegaMan Battle Network 3",
       "generation": {
@@ -27239,24 +27188,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "10": {
-              "new_rules_hash": "87f5947fcb80f5796013b3d48dbfa9446f7450b2bcfd000392997cfd5c54d471",
-              "new_spheres_hash": "6a1ada4c34ccfd0bdfbbf5a58b6e38e1acf6ae35671a22221f86d45c3bdf4988",
-              "original_rules_hash": "87f5947fcb80f5796013b3d48dbfa9446f7450b2bcfd000392997cfd5c54d471",
-              "original_spheres_hash": "6a1ada4c34ccfd0bdfbbf5a58b6e38e1acf6ae35671a22221f86d45c3bdf4988",
-              "rules_identical": true,
-              "seed": "10",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:12:31.757726"
-            }
-          },
           "game_name_from_filename": "mmbn3",
           "game_name_from_yaml": "MegaMan Battle Network 3",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.85,
+            "processing_time_seconds": 4.59,
             "return_code": 0,
             "success": true,
             "warning_count": 2
@@ -27271,7 +27208,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 7.93,
+            "processing_time_seconds": 10.8,
             "return_code": 0,
             "sphere_reached": 3.7,
             "success": true,
@@ -27279,7 +27216,7 @@
             "warning_count": 0
           },
           "template_filename": "MegaMan Battle Network 3.yaml",
-          "timestamp": "2025-11-26T03:47:59.200761",
+          "timestamp": "2025-11-26T05:45:16.055379",
           "world_info": {
             "exporter_path": "exporter/games/mmbn3.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js",
@@ -27467,24 +27404,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "5": {
-              "new_rules_hash": "64bb0947949673346a9f0d30103daebf723662527b9b5616a130491c92cbc75c",
-              "new_spheres_hash": "b4cb43377d2a50ca4364c847ce97796318931fe614de966eaf9537ee5eaf13c3",
-              "original_rules_hash": "64bb0947949673346a9f0d30103daebf723662527b9b5616a130491c92cbc75c",
-              "original_spheres_hash": "b4cb43377d2a50ca4364c847ce97796318931fe614de966eaf9537ee5eaf13c3",
-              "rules_identical": true,
-              "seed": "5",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:12:54.811417"
-            }
-          },
           "game_name_from_filename": "mmbn3",
           "game_name_from_yaml": "MegaMan Battle Network 3",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.84,
+            "processing_time_seconds": 5.14,
             "return_code": 0,
             "success": true,
             "warning_count": 2
@@ -27497,17 +27422,17 @@
           "seed": "5",
           "seed_id": "AP_96945849220684217413",
           "spoiler_test": {
-            "error_count": 9,
-            "pass_fail": "failed",
-            "processing_time_seconds": 18.18,
-            "return_code": 1,
-            "sphere_reached": 3.2,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.85,
+            "return_code": 0,
+            "sphere_reached": 4.3,
+            "success": true,
             "total_spheres": 4.3,
             "warning_count": 0
           },
           "template_filename": "MegaMan Battle Network 3.yaml",
-          "timestamp": "2025-11-26T04:07:52.504577",
+          "timestamp": "2025-11-26T05:43:55.637754",
           "world_info": {
             "exporter_path": "exporter/games/mmbn3.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js",
@@ -27524,24 +27449,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "6": {
-              "new_rules_hash": "1c7c72f62c215961390a3c1fe0d5043262be5016ef7e74e65da8c5a0673f898e",
-              "new_spheres_hash": "91f9c87269d155e7728c1ddad19a68cc3e679bebe68b72bd15e1c5efa2cb1159",
-              "original_rules_hash": "1c7c72f62c215961390a3c1fe0d5043262be5016ef7e74e65da8c5a0673f898e",
-              "original_spheres_hash": "91f9c87269d155e7728c1ddad19a68cc3e679bebe68b72bd15e1c5efa2cb1159",
-              "rules_identical": true,
-              "seed": "6",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:07:56.436567"
-            }
-          },
           "game_name_from_filename": "mmbn3",
           "game_name_from_yaml": "MegaMan Battle Network 3",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.74,
+            "processing_time_seconds": 4.73,
             "return_code": 0,
             "success": true,
             "warning_count": 2
@@ -27556,7 +27469,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 7.87,
+            "processing_time_seconds": 10.84,
             "return_code": 0,
             "sphere_reached": 4.4,
             "success": true,
@@ -27564,7 +27477,7 @@
             "warning_count": 0
           },
           "template_filename": "MegaMan Battle Network 3.yaml",
-          "timestamp": "2025-11-26T03:47:46.241739",
+          "timestamp": "2025-11-26T05:44:12.099474",
           "world_info": {
             "exporter_path": "exporter/games/mmbn3.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js",
@@ -27581,24 +27494,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "7": {
-              "new_rules_hash": "aaf9e667015cb9b3df270cd9ce2e3de8b1df8cc7fe3535ade3672135f85b12c6",
-              "new_spheres_hash": "f814d2500b34c061809599d92bcd88dc39f9a050a24838df47417c3117c066e3",
-              "original_rules_hash": "aaf9e667015cb9b3df270cd9ce2e3de8b1df8cc7fe3535ade3672135f85b12c6",
-              "original_spheres_hash": "f814d2500b34c061809599d92bcd88dc39f9a050a24838df47417c3117c066e3",
-              "rules_identical": true,
-              "seed": "7",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:07:01.451200"
-            }
-          },
           "game_name_from_filename": "mmbn3",
           "game_name_from_yaml": "MegaMan Battle Network 3",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.53,
+            "processing_time_seconds": 4.87,
             "return_code": 0,
             "success": true,
             "warning_count": 2
@@ -27613,7 +27514,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 7.77,
+            "processing_time_seconds": 10.73,
             "return_code": 0,
             "sphere_reached": 4.1,
             "success": true,
@@ -27621,7 +27522,7 @@
             "warning_count": 0
           },
           "template_filename": "MegaMan Battle Network 3.yaml",
-          "timestamp": "2025-11-26T03:48:03.726123",
+          "timestamp": "2025-11-26T05:44:28.143917",
           "world_info": {
             "exporter_path": "exporter/games/mmbn3.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js",
@@ -27638,24 +27539,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "8": {
-              "new_rules_hash": "71ba08eb89ed2c9258af9118d7e88eb8682f373a3e31d3c8ba824be9c8b1a737",
-              "new_spheres_hash": "6ec271e443aafb79b2cdc700bac5bdc4656d9b4764cd813adc9a7709c37eb442",
-              "original_rules_hash": "71ba08eb89ed2c9258af9118d7e88eb8682f373a3e31d3c8ba824be9c8b1a737",
-              "original_spheres_hash": "6ec271e443aafb79b2cdc700bac5bdc4656d9b4764cd813adc9a7709c37eb442",
-              "rules_identical": true,
-              "seed": "8",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:10:45.588211"
-            }
-          },
           "game_name_from_filename": "mmbn3",
           "game_name_from_yaml": "MegaMan Battle Network 3",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.6,
+            "processing_time_seconds": 4.7,
             "return_code": 0,
             "success": true,
             "warning_count": 2
@@ -27670,7 +27559,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 7.83,
+            "processing_time_seconds": 10.74,
             "return_code": 0,
             "sphere_reached": 6.1,
             "success": true,
@@ -27678,7 +27567,7 @@
             "warning_count": 0
           },
           "template_filename": "MegaMan Battle Network 3.yaml",
-          "timestamp": "2025-11-26T03:47:52.878686",
+          "timestamp": "2025-11-26T05:44:44.209745",
           "world_info": {
             "exporter_path": "exporter/games/mmbn3.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js",
@@ -27695,24 +27584,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "9": {
-              "new_rules_hash": "1ef8c23a5ff7bb50c20dab4714ebcf49825ec80501c384418df0f7cc60a73050",
-              "new_spheres_hash": "0070527d81093cf7722f6f7761fab4a9b88c96ad510cac52fd2e9d41176af189",
-              "original_rules_hash": "1ef8c23a5ff7bb50c20dab4714ebcf49825ec80501c384418df0f7cc60a73050",
-              "original_spheres_hash": "0070527d81093cf7722f6f7761fab4a9b88c96ad510cac52fd2e9d41176af189",
-              "rules_identical": true,
-              "seed": "9",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:11:45.423396"
-            }
-          },
           "game_name_from_filename": "mmbn3",
           "game_name_from_yaml": "MegaMan Battle Network 3",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.58,
+            "processing_time_seconds": 4.82,
             "return_code": 0,
             "success": true,
             "warning_count": 2
@@ -27725,17 +27602,17 @@
           "seed": "9",
           "seed_id": "AP_48205312626925217390",
           "spoiler_test": {
-            "error_count": 9,
-            "pass_fail": "failed",
-            "processing_time_seconds": 20.89,
-            "return_code": 1,
-            "sphere_reached": 3.3,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.6,
+            "return_code": 0,
+            "sphere_reached": 4.1,
+            "success": true,
             "total_spheres": 4.1,
             "warning_count": 0
           },
           "template_filename": "MegaMan Battle Network 3.yaml",
-          "timestamp": "2025-11-26T04:06:47.382374",
+          "timestamp": "2025-11-26T05:45:00.117074",
           "world_info": {
             "exporter_path": "exporter/games/mmbn3.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js",
@@ -27755,8 +27632,8 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 2,
-      "seeds_passed": 8,
+      "seeds_failed": 0,
+      "seeds_passed": 10,
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
@@ -27768,12 +27645,12 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": false,
-        "any_failed": true,
-        "failure_rate": 0.2
+        "all_passed": true,
+        "any_failed": false,
+        "failure_rate": 0.0
       },
       "template_filename": "MegaMan Battle Network 3.yaml",
-      "timestamp": "2025-11-26T03:48:28.702309",
+      "timestamp": "2025-11-26T05:43:55.583134",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/mmbn3.py",
@@ -39487,7 +39364,7 @@
         "success": true,
         "warning_count": 0
       },
-      "consecutive_passes_before_failure": 1,
+      "consecutive_passes_before_failure": 10,
       "consistency_tests": {
         "1": {
           "new_rules_hash": "07d35a0a15151eb270b1c3550612bc6d5006ed2ae9da077604ba604e793bf0c9",
@@ -39590,8 +39467,8 @@
           "timestamp": "2025-11-26T04:12:55.362397"
         }
       },
-      "first_failure_reason": "Test failed at sphere 3.3",
-      "first_failure_seed": 2,
+      "first_failure_reason": null,
+      "first_failure_seed": null,
       "game_name_from_filename": "sc2",
       "game_name_from_yaml": "Starcraft 2",
       "generation": {
@@ -39666,24 +39543,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "10": {
-              "new_rules_hash": "93de7209d1ac61c7a72fd427b9cdb5e6d7dfc7f7f7a6e358eb27be9ba25a5670",
-              "new_spheres_hash": "5bce1eab91c80c81b78f2d68c77780ec0e368f0e7b1560d058b66c0a712314dc",
-              "original_rules_hash": "93de7209d1ac61c7a72fd427b9cdb5e6d7dfc7f7f7a6e358eb27be9ba25a5670",
-              "original_spheres_hash": "5bce1eab91c80c81b78f2d68c77780ec0e368f0e7b1560d058b66c0a712314dc",
-              "rules_identical": true,
-              "seed": "10",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:13:45.209072"
-            }
-          },
           "game_name_from_filename": "sc2",
           "game_name_from_yaml": "Starcraft 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.46,
+            "processing_time_seconds": 9.02,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -39696,17 +39561,17 @@
           "seed": "10",
           "seed_id": "AP_55941320597534372051",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 30.68,
-            "return_code": 1,
-            "sphere_reached": 9.9,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 59.28,
+            "return_code": 0,
+            "sphere_reached": 29.2,
+            "success": true,
             "total_spheres": 29.2,
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-11-26T04:07:39.748189",
+          "timestamp": "2025-11-26T05:54:41.452814",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -39723,24 +39588,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "2": {
-              "new_rules_hash": "3ce6f99e6f5f07b1d4f20502b69b3a2af77d87913762cdd095620e3079060120",
-              "new_spheres_hash": "bdff87e71760f402b610ce053594d72643de47acb0d9e32778ce7ddfb6694c8f",
-              "original_rules_hash": "3ce6f99e6f5f07b1d4f20502b69b3a2af77d87913762cdd095620e3079060120",
-              "original_spheres_hash": "bdff87e71760f402b610ce053594d72643de47acb0d9e32778ce7ddfb6694c8f",
-              "rules_identical": true,
-              "seed": "2",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:11:15.122861"
-            }
-          },
           "game_name_from_filename": "sc2",
           "game_name_from_yaml": "Starcraft 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.07,
+            "processing_time_seconds": 8.71,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -39753,17 +39606,17 @@
           "seed": "2",
           "seed_id": "AP_01043188731678011336",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 21.28,
-            "return_code": 1,
-            "sphere_reached": 3.3,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 58.99,
+            "return_code": 0,
+            "sphere_reached": 32.2,
+            "success": true,
             "total_spheres": 32.2,
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-11-26T04:06:08.807376",
+          "timestamp": "2025-11-26T05:45:32.223628",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -39780,24 +39633,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "3": {
-              "new_rules_hash": "907f775c7cd2eed37e70d0da6dca868215281cae20abc0b61e8375103da9f654",
-              "new_spheres_hash": "df61fc3bb0207c2160f262c723577484f64e9ed5f57d368b93116215f40185cc",
-              "original_rules_hash": "907f775c7cd2eed37e70d0da6dca868215281cae20abc0b61e8375103da9f654",
-              "original_spheres_hash": "df61fc3bb0207c2160f262c723577484f64e9ed5f57d368b93116215f40185cc",
-              "rules_identical": true,
-              "seed": "3",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:15:57.347558"
-            }
-          },
           "game_name_from_filename": "sc2",
           "game_name_from_yaml": "Starcraft 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.27,
+            "processing_time_seconds": 8.79,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -39810,17 +39651,17 @@
           "seed": "3",
           "seed_id": "AP_84719271504320872445",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 15.19,
-            "return_code": 1,
-            "sphere_reached": 0.6,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 58.01,
+            "return_code": 0,
+            "sphere_reached": 40.2,
+            "success": true,
             "total_spheres": 40.2,
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-11-26T04:10:15.039769",
+          "timestamp": "2025-11-26T05:46:40.409886",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -39837,24 +39678,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "4": {
-              "new_rules_hash": "914d1d1d0ee5e5950449956713c1294a524806dc44bd189394d6db80e389de6a",
-              "new_spheres_hash": "23e55e225c46b052eb627946d07b0a689183131b24d0668ca7eaffbb86dcd388",
-              "original_rules_hash": "914d1d1d0ee5e5950449956713c1294a524806dc44bd189394d6db80e389de6a",
-              "original_spheres_hash": "23e55e225c46b052eb627946d07b0a689183131b24d0668ca7eaffbb86dcd388",
-              "rules_identical": true,
-              "seed": "4",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:11:15.742416"
-            }
-          },
           "game_name_from_filename": "sc2",
           "game_name_from_yaml": "Starcraft 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 6.52,
+            "processing_time_seconds": 8.71,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -39867,17 +39696,17 @@
           "seed": "4",
           "seed_id": "AP_05594871498841892311",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 23.85,
-            "return_code": 1,
-            "sphere_reached": 5.11,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 59.36,
+            "return_code": 0,
+            "sphere_reached": 30.4,
+            "success": true,
             "total_spheres": 30.4,
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-11-26T04:06:20.525371",
+          "timestamp": "2025-11-26T05:47:47.686036",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -39894,24 +39723,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "5": {
-              "new_rules_hash": "a7d322fbde89bc6ce6bf869d2ffe4d7538443518fb0758ac5753327f13e0bf3a",
-              "new_spheres_hash": "7d26aee8c3fe21295f61bcf1782cea9dfb47b959f8ce77eee12850c0d2838580",
-              "original_rules_hash": "a7d322fbde89bc6ce6bf869d2ffe4d7538443518fb0758ac5753327f13e0bf3a",
-              "original_spheres_hash": "7d26aee8c3fe21295f61bcf1782cea9dfb47b959f8ce77eee12850c0d2838580",
-              "rules_identical": true,
-              "seed": "5",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:14:10.655360"
-            }
-          },
           "game_name_from_filename": "sc2",
           "game_name_from_yaml": "Starcraft 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.6,
+            "processing_time_seconds": 8.87,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -39924,17 +39741,17 @@
           "seed": "5",
           "seed_id": "AP_96945849220684217413",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 21.5,
-            "return_code": 1,
-            "sphere_reached": 4.3,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 58.43,
+            "return_code": 0,
+            "sphere_reached": 33.2,
+            "success": true,
             "total_spheres": 33.2,
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-11-26T04:08:13.879420",
+          "timestamp": "2025-11-26T05:48:56.267694",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -39951,24 +39768,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "6": {
-              "new_rules_hash": "424f948ecfe273445fb280d31c3d56e8b044a3aaa2011df17537eff7037e5785",
-              "new_spheres_hash": "b27bcdc7cf42db409acbdd7e47d3b7f42cd82e9312698b4a38b2478aac331bd7",
-              "original_rules_hash": "424f948ecfe273445fb280d31c3d56e8b044a3aaa2011df17537eff7037e5785",
-              "original_spheres_hash": "b27bcdc7cf42db409acbdd7e47d3b7f42cd82e9312698b4a38b2478aac331bd7",
-              "rules_identical": true,
-              "seed": "6",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:09:08.631945"
-            }
-          },
           "game_name_from_filename": "sc2",
           "game_name_from_yaml": "Starcraft 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.56,
+            "processing_time_seconds": 8.69,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -39981,17 +39786,17 @@
           "seed": "6",
           "seed_id": "AP_00679259829289197625",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 21.47,
-            "return_code": 1,
-            "sphere_reached": 6.5,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 60.25,
+            "return_code": 0,
+            "sphere_reached": 31.2,
+            "success": true,
             "total_spheres": 31.2,
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-11-26T04:03:45.133473",
+          "timestamp": "2025-11-26T05:50:04.065844",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -40008,24 +39813,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "7": {
-              "new_rules_hash": "e57f186ddd46b11b44dfabbafb6524e43506a5e73a3f4dd35685a58534d6bd40",
-              "new_spheres_hash": "edf6e0c5a07f1e4d6a213158d6626d976edcdeebd79f26ec983982acf0150f5e",
-              "original_rules_hash": "e57f186ddd46b11b44dfabbafb6524e43506a5e73a3f4dd35685a58534d6bd40",
-              "original_spheres_hash": "edf6e0c5a07f1e4d6a213158d6626d976edcdeebd79f26ec983982acf0150f5e",
-              "rules_identical": true,
-              "seed": "7",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:08:10.525800"
-            }
-          },
           "game_name_from_filename": "sc2",
           "game_name_from_yaml": "Starcraft 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.01,
+            "processing_time_seconds": 9.44,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -40038,17 +39831,17 @@
           "seed": "7",
           "seed_id": "AP_35931773795037525048",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 25.24,
-            "return_code": 1,
-            "sphere_reached": 7.1,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 59.26,
+            "return_code": 0,
+            "sphere_reached": 36.2,
+            "success": true,
             "total_spheres": 36.2,
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-11-26T04:03:17.615713",
+          "timestamp": "2025-11-26T05:51:13.535799",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -40065,24 +39858,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "8": {
-              "new_rules_hash": "b7f5eab6cdb6cba15d5dc185a8b6ffd000e8e2182c437dac42e4be00d14cecf4",
-              "new_spheres_hash": "bffe54c3593bcae5ac44489666bc010d8caecf22ff4c25bcf792b6c5cac83d9d",
-              "original_rules_hash": "b7f5eab6cdb6cba15d5dc185a8b6ffd000e8e2182c437dac42e4be00d14cecf4",
-              "original_spheres_hash": "bffe54c3593bcae5ac44489666bc010d8caecf22ff4c25bcf792b6c5cac83d9d",
-              "rules_identical": true,
-              "seed": "8",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:11:56.337218"
-            }
-          },
           "game_name_from_filename": "sc2",
           "game_name_from_yaml": "Starcraft 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.21,
+            "processing_time_seconds": 9.42,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -40095,17 +39876,17 @@
           "seed": "8",
           "seed_id": "AP_20777137877808592492",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 36.74,
-            "return_code": 1,
-            "sphere_reached": 14.2,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 60.36,
+            "return_code": 0,
+            "sphere_reached": 30.2,
+            "success": true,
             "total_spheres": 30.2,
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-11-26T04:05:06.409776",
+          "timestamp": "2025-11-26T05:52:22.733790",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -40122,24 +39903,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "9": {
-              "new_rules_hash": "92b315a86c1dad76085251a2f8137dca95d8d77a496e0c991b8f8f96adc88a3c",
-              "new_spheres_hash": "23e893b8894e026f6ef811ec3f8b414e663d0da6d84b2e603cd13427dd77d953",
-              "original_rules_hash": "92b315a86c1dad76085251a2f8137dca95d8d77a496e0c991b8f8f96adc88a3c",
-              "original_spheres_hash": "23e893b8894e026f6ef811ec3f8b414e663d0da6d84b2e603cd13427dd77d953",
-              "rules_identical": true,
-              "seed": "9",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:12:55.362397"
-            }
-          },
           "game_name_from_filename": "sc2",
           "game_name_from_yaml": "Starcraft 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.12,
+            "processing_time_seconds": 9.69,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -40152,17 +39921,17 @@
           "seed": "9",
           "seed_id": "AP_48205312626925217390",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 33.35,
-            "return_code": 1,
-            "sphere_reached": 11.1,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 58.23,
+            "return_code": 0,
+            "sphere_reached": 28.2,
+            "success": true,
             "total_spheres": 28.2,
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-11-26T04:07:11.192270",
+          "timestamp": "2025-11-26T05:53:33.058395",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -40182,8 +39951,8 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 9,
-      "seeds_passed": 1,
+      "seeds_failed": 0,
+      "seeds_passed": 10,
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
@@ -40195,12 +39964,12 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": false,
-        "any_failed": true,
-        "failure_rate": 0.9
+        "all_passed": true,
+        "any_failed": false,
+        "failure_rate": 0.0
       },
       "template_filename": "Starcraft 2.yaml",
-      "timestamp": "2025-11-26T03:55:12.879727",
+      "timestamp": "2025-11-26T05:45:32.162101",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/sc2.py",
@@ -40218,7 +39987,7 @@
         "success": true,
         "warning_count": 0
       },
-      "consecutive_passes_before_failure": 1,
+      "consecutive_passes_before_failure": 10,
       "consistency_tests": {
         "1": {
           "new_rules_hash": "c35cd4afc17949ad94e7737f78b66e98c81e3a769b6d5690c440c4592715d945",
@@ -40321,8 +40090,8 @@
           "timestamp": "2025-11-26T04:13:00.900752"
         }
       },
-      "first_failure_reason": "Test failed at sphere 0.2",
-      "first_failure_seed": 2,
+      "first_failure_reason": null,
+      "first_failure_seed": null,
       "game_name_from_filename": "stardew_valley",
       "game_name_from_yaml": "Stardew Valley",
       "generation": {
@@ -40397,47 +40166,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "10": {
-              "new_rules_hash": "a0b3618059a5d9af2f2a9039b13f7257134cda3279f6d37b622af0e3d19ba571",
-              "new_spheres_hash": "12cbd5b64c8e4072e02a7c2865e5f8cc4528b61fb831aa1fc709282aab517376",
-              "original_rules_hash": "a0b3618059a5d9af2f2a9039b13f7257134cda3279f6d37b622af0e3d19ba571",
-              "original_spheres_hash": "12cbd5b64c8e4072e02a7c2865e5f8cc4528b61fb831aa1fc709282aab517376",
-              "rules_identical": true,
-              "seed": "10",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:13:50.703977"
-            }
-          },
           "game_name_from_filename": "stardew_valley",
           "game_name_from_yaml": "Stardew Valley",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 5.53,
+            "processing_time_seconds": 8.03,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/stardew_valley/AP_55941320597534372051/AP_55941320597534372051_rules.json",
-            "size_bytes": 8001054,
+            "size_bytes": 8000654,
             "size_mb": 7.63
           },
           "seed": "10",
           "seed_id": "AP_55941320597534372051",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 19.29,
-            "return_code": 1,
-            "sphere_reached": 1.11,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 41.73,
+            "return_code": 0,
+            "sphere_reached": 32.2,
+            "success": true,
             "total_spheres": 32.2,
             "warning_count": 0
           },
           "template_filename": "Stardew Valley.yaml",
-          "timestamp": "2025-11-26T04:08:18.250129",
+          "timestamp": "2025-11-26T06:02:34.840332",
           "world_info": {
             "exporter_path": "exporter/games/stardew_valley.py",
             "game_logic_path": null,
@@ -40454,47 +40211,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "2": {
-              "new_rules_hash": "c6baa94a9a580b04a9e66eccf17ab49619991ee9b64a5b889e41dcc14b04030b",
-              "new_spheres_hash": "829570e81372504c7bb69f608e3ad760d6cc4527c094fb35161058646837b611",
-              "original_rules_hash": "c6baa94a9a580b04a9e66eccf17ab49619991ee9b64a5b889e41dcc14b04030b",
-              "original_spheres_hash": "829570e81372504c7bb69f608e3ad760d6cc4527c094fb35161058646837b611",
-              "rules_identical": true,
-              "seed": "2",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:11:20.579101"
-            }
-          },
           "game_name_from_filename": "stardew_valley",
           "game_name_from_yaml": "Stardew Valley",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 5.44,
+            "processing_time_seconds": 7.55,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/stardew_valley/AP_01043188731678011336/AP_01043188731678011336_rules.json",
-            "size_bytes": 8310468,
+            "size_bytes": 8310068,
             "size_mb": 7.93
           },
           "seed": "2",
           "seed_id": "AP_01043188731678011336",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 15.82,
-            "return_code": 1,
-            "sphere_reached": 0.2,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 41.62,
+            "return_code": 0,
+            "sphere_reached": 25.6,
+            "success": true,
             "total_spheres": 25.6,
             "warning_count": 0
           },
           "template_filename": "Stardew Valley.yaml",
-          "timestamp": "2025-11-26T04:06:37.508574",
+          "timestamp": "2025-11-26T05:55:50.595106",
           "world_info": {
             "exporter_path": "exporter/games/stardew_valley.py",
             "game_logic_path": null,
@@ -40511,47 +40256,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "3": {
-              "new_rules_hash": "73b1d21707920fe54fbbb497538167f407f0ab5062e9233c75d0512a0d596920",
-              "new_spheres_hash": "bc918a2cdf2eb03f418865f975d3815b327844c0073bde86cc9b7481648d9309",
-              "original_rules_hash": "73b1d21707920fe54fbbb497538167f407f0ab5062e9233c75d0512a0d596920",
-              "original_spheres_hash": "bc918a2cdf2eb03f418865f975d3815b327844c0073bde86cc9b7481648d9309",
-              "rules_identical": true,
-              "seed": "3",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:16:03.171254"
-            }
-          },
           "game_name_from_filename": "stardew_valley",
           "game_name_from_yaml": "Stardew Valley",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 5.69,
+            "processing_time_seconds": 8.04,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/stardew_valley/AP_84719271504320872445/AP_84719271504320872445_rules.json",
-            "size_bytes": 8437687,
+            "size_bytes": 8437287,
             "size_mb": 8.05
           },
           "seed": "3",
           "seed_id": "AP_84719271504320872445",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 16.06,
-            "return_code": 1,
-            "sphere_reached": 0.7,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 42.5,
+            "return_code": 0,
+            "sphere_reached": 26.1,
+            "success": true,
             "total_spheres": 26.1,
             "warning_count": 0
           },
           "template_filename": "Stardew Valley.yaml",
-          "timestamp": "2025-11-26T04:10:37.853306",
+          "timestamp": "2025-11-26T05:56:40.264320",
           "world_info": {
             "exporter_path": "exporter/games/stardew_valley.py",
             "game_logic_path": null,
@@ -40568,47 +40301,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "4": {
-              "new_rules_hash": "9704540f1f359a0f1e50a1608f2d54678d57903f51e0af98f1f0d13b96e62b41",
-              "new_spheres_hash": "dba8680945f632eeffacf96370dc5d690aee971b12b69299b26ebd0922877092",
-              "original_rules_hash": "9704540f1f359a0f1e50a1608f2d54678d57903f51e0af98f1f0d13b96e62b41",
-              "original_spheres_hash": "dba8680945f632eeffacf96370dc5d690aee971b12b69299b26ebd0922877092",
-              "rules_identical": true,
-              "seed": "4",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:11:21.103978"
-            }
-          },
           "game_name_from_filename": "stardew_valley",
           "game_name_from_yaml": "Stardew Valley",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 5.48,
+            "processing_time_seconds": 8.3,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/stardew_valley/AP_05594871498841892311/AP_05594871498841892311_rules.json",
-            "size_bytes": 8207124,
+            "size_bytes": 8206724,
             "size_mb": 7.83
           },
           "seed": "4",
           "seed_id": "AP_05594871498841892311",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 18.41,
-            "return_code": 1,
-            "sphere_reached": 1.9,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 42.46,
+            "return_code": 0,
+            "sphere_reached": 46.1,
+            "success": true,
             "total_spheres": 46.1,
             "warning_count": 0
           },
           "template_filename": "Stardew Valley.yaml",
-          "timestamp": "2025-11-26T04:06:51.206479",
+          "timestamp": "2025-11-26T05:57:31.374395",
           "world_info": {
             "exporter_path": "exporter/games/stardew_valley.py",
             "game_logic_path": null,
@@ -40625,47 +40346,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "5": {
-              "new_rules_hash": "4baf2a8f562175a59703b45bac9ee69645c7334d559dca068f515dc84fe1ca10",
-              "new_spheres_hash": "9780bb52d04f3a61f48b841d3c1d331306d7ecb544c302b5bb89229948084a61",
-              "original_rules_hash": "4baf2a8f562175a59703b45bac9ee69645c7334d559dca068f515dc84fe1ca10",
-              "original_spheres_hash": "9780bb52d04f3a61f48b841d3c1d331306d7ecb544c302b5bb89229948084a61",
-              "rules_identical": true,
-              "seed": "5",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:14:16.441980"
-            }
-          },
           "game_name_from_filename": "stardew_valley",
           "game_name_from_yaml": "Stardew Valley",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 5.76,
+            "processing_time_seconds": 8.15,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/stardew_valley/AP_96945849220684217413/AP_96945849220684217413_rules.json",
-            "size_bytes": 8576189,
+            "size_bytes": 8575789,
             "size_mb": 8.18
           },
           "seed": "5",
           "seed_id": "AP_96945849220684217413",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 16.22,
-            "return_code": 1,
-            "sphere_reached": 0.9,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 42.54,
+            "return_code": 0,
+            "sphere_reached": 29.1,
+            "success": true,
             "total_spheres": 29.1,
             "warning_count": 0
           },
           "template_filename": "Stardew Valley.yaml",
-          "timestamp": "2025-11-26T04:08:43.334267",
+          "timestamp": "2025-11-26T05:58:22.632050",
           "world_info": {
             "exporter_path": "exporter/games/stardew_valley.py",
             "game_logic_path": null,
@@ -40682,31 +40391,19 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "6": {
-              "new_rules_hash": "0d5d12b2577655a5518f7e20df6f05fef5899874ade826f77d86ec2c601f6312",
-              "new_spheres_hash": "fa01b3c6fc2f8093f6a4a1f4bc5590aea6df359bf9ef68e58d434b2637b43a72",
-              "original_rules_hash": "0d5d12b2577655a5518f7e20df6f05fef5899874ade826f77d86ec2c601f6312",
-              "original_spheres_hash": "fa01b3c6fc2f8093f6a4a1f4bc5590aea6df359bf9ef68e58d434b2637b43a72",
-              "rules_identical": true,
-              "seed": "6",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:09:14.132099"
-            }
-          },
           "game_name_from_filename": "stardew_valley",
           "game_name_from_yaml": "Stardew Valley",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 5.31,
+            "processing_time_seconds": 7.71,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/stardew_valley/AP_00679259829289197625/AP_00679259829289197625_rules.json",
-            "size_bytes": 8198857,
+            "size_bytes": 8198457,
             "size_mb": 7.82
           },
           "seed": "6",
@@ -40714,7 +40411,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 32.99,
+            "processing_time_seconds": 42.55,
             "return_code": 0,
             "sphere_reached": 30.2,
             "success": true,
@@ -40722,7 +40419,7 @@
             "warning_count": 0
           },
           "template_filename": "Stardew Valley.yaml",
-          "timestamp": "2025-11-26T03:54:36.904321",
+          "timestamp": "2025-11-26T05:59:13.840505",
           "world_info": {
             "exporter_path": "exporter/games/stardew_valley.py",
             "game_logic_path": null,
@@ -40739,31 +40436,19 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "7": {
-              "new_rules_hash": "a0a4f38faa4d28820fc3ba302c187773e8f9f1b13ff889db5ed8218cb42513bf",
-              "new_spheres_hash": "1ee9076de2078992003ebe95dcbb7f7d5fa711d1dc9c0bab1d695d4b1548cc8f",
-              "original_rules_hash": "a0a4f38faa4d28820fc3ba302c187773e8f9f1b13ff889db5ed8218cb42513bf",
-              "original_spheres_hash": "1ee9076de2078992003ebe95dcbb7f7d5fa711d1dc9c0bab1d695d4b1548cc8f",
-              "rules_identical": true,
-              "seed": "7",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:08:16.223565"
-            }
-          },
           "game_name_from_filename": "stardew_valley",
           "game_name_from_yaml": "Stardew Valley",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 5.53,
+            "processing_time_seconds": 8.51,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/stardew_valley/AP_35931773795037525048/AP_35931773795037525048_rules.json",
-            "size_bytes": 8044068,
+            "size_bytes": 8043668,
             "size_mb": 7.67
           },
           "seed": "7",
@@ -40771,7 +40456,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 31.8,
+            "processing_time_seconds": 41.76,
             "return_code": 0,
             "sphere_reached": 35.4,
             "success": true,
@@ -40779,7 +40464,7 @@
             "warning_count": 0
           },
           "template_filename": "Stardew Valley.yaml",
-          "timestamp": "2025-11-26T03:54:50.983766",
+          "timestamp": "2025-11-26T06:00:04.641619",
           "world_info": {
             "exporter_path": "exporter/games/stardew_valley.py",
             "game_logic_path": null,
@@ -40796,47 +40481,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "8": {
-              "new_rules_hash": "78d2ca02ad6cdfaf007e8f2769727d6710d22eae3652199dbbaa5c66a0ee4342",
-              "new_spheres_hash": "9dce81fa8b7d883d9501358dd6be0285d83a06b29acb088bba2132130eb5152d",
-              "original_rules_hash": "78d2ca02ad6cdfaf007e8f2769727d6710d22eae3652199dbbaa5c66a0ee4342",
-              "original_spheres_hash": "9dce81fa8b7d883d9501358dd6be0285d83a06b29acb088bba2132130eb5152d",
-              "rules_identical": true,
-              "seed": "8",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:12:01.748377"
-            }
-          },
           "game_name_from_filename": "stardew_valley",
           "game_name_from_yaml": "Stardew Valley",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 5.36,
+            "processing_time_seconds": 7.56,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/stardew_valley/AP_20777137877808592492/AP_20777137877808592492_rules.json",
-            "size_bytes": 8344333,
+            "size_bytes": 8343933,
             "size_mb": 7.96
           },
           "seed": "8",
           "seed_id": "AP_20777137877808592492",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 15.91,
-            "return_code": 1,
-            "sphere_reached": 0.8,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 41.4,
+            "return_code": 0,
+            "sphere_reached": 37.1,
+            "success": true,
             "total_spheres": 37.1,
             "warning_count": 0
           },
           "template_filename": "Stardew Valley.yaml",
-          "timestamp": "2025-11-26T04:05:50.699107",
+          "timestamp": "2025-11-26T06:00:55.455247",
           "world_info": {
             "exporter_path": "exporter/games/stardew_valley.py",
             "game_logic_path": null,
@@ -40853,47 +40526,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "9": {
-              "new_rules_hash": "9b12aa242ec61b97984eead3697f9d50fa12c234c130cc07c8fd1ad6290422ab",
-              "new_spheres_hash": "bae65fb0b40d96288ad19b0efae5f64074558a2151494b715dceaf25d54d05ec",
-              "original_rules_hash": "9b12aa242ec61b97984eead3697f9d50fa12c234c130cc07c8fd1ad6290422ab",
-              "original_spheres_hash": "bae65fb0b40d96288ad19b0efae5f64074558a2151494b715dceaf25d54d05ec",
-              "rules_identical": true,
-              "seed": "9",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:13:00.900752"
-            }
-          },
           "game_name_from_filename": "stardew_valley",
           "game_name_from_yaml": "Stardew Valley",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 5.56,
+            "processing_time_seconds": 7.79,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/stardew_valley/AP_48205312626925217390/AP_48205312626925217390_rules.json",
-            "size_bytes": 8064799,
+            "size_bytes": 8064399,
             "size_mb": 7.69
           },
           "seed": "9",
           "seed_id": "AP_48205312626925217390",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 15.76,
-            "return_code": 1,
-            "sphere_reached": 0.1,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 41.58,
+            "return_code": 0,
+            "sphere_reached": 40.2,
+            "success": true,
             "total_spheres": 40.2,
             "warning_count": 0
           },
           "template_filename": "Stardew Valley.yaml",
-          "timestamp": "2025-11-26T04:07:52.010063",
+          "timestamp": "2025-11-26T06:01:44.916516",
           "world_info": {
             "exporter_path": "exporter/games/stardew_valley.py",
             "game_logic_path": null,
@@ -40913,8 +40574,8 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 7,
-      "seeds_passed": 3,
+      "seeds_failed": 0,
+      "seeds_passed": 10,
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
@@ -40926,12 +40587,12 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": false,
-        "any_failed": true,
-        "failure_rate": 0.7
+        "all_passed": true,
+        "any_failed": false,
+        "failure_rate": 0.0
       },
       "template_filename": "Stardew Valley.yaml",
-      "timestamp": "2025-11-26T03:56:13.820907",
+      "timestamp": "2025-11-26T05:55:50.499599",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/stardew_valley.py",
@@ -43873,7 +43534,7 @@
         "success": true,
         "warning_count": 0
       },
-      "consecutive_passes_before_failure": 2,
+      "consecutive_passes_before_failure": 5,
       "consistency_tests": {
         "1": {
           "new_rules_hash": "6a2dad5f8267e6e0f5116bd5cd8aff5f95db0d6eac297ea49d9e59227a70773c",
@@ -43976,8 +43637,8 @@
           "timestamp": "2025-11-26T04:13:27.428956"
         }
       },
-      "first_failure_reason": "Test failed at sphere 2.12",
-      "first_failure_seed": 3,
+      "first_failure_reason": "Test failed at sphere 1.3",
+      "first_failure_seed": 6,
       "game_name_from_filename": "sm",
       "game_name_from_yaml": "Super Metroid",
       "generation": {
@@ -44052,47 +43713,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "10": {
-              "new_rules_hash": "ffaa733f43a459abaf1295e7d8230f6f13e36ea306dac484d68b0d1fb7524d32",
-              "new_spheres_hash": "3b519ad08e38a8562940eeac54e7bc24b02c44dfe4344835aecb251b0b3916d4",
-              "original_rules_hash": "ffaa733f43a459abaf1295e7d8230f6f13e36ea306dac484d68b0d1fb7524d32",
-              "original_spheres_hash": "3b519ad08e38a8562940eeac54e7bc24b02c44dfe4344835aecb251b0b3916d4",
-              "rules_identical": true,
-              "seed": "10",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:14:19.129855"
-            }
-          },
           "game_name_from_filename": "sm",
           "game_name_from_yaml": "Super Metroid",
           "generation": {
-            "error_count": 2,
+            "error_count": 1,
             "error_type": null,
-            "processing_time_seconds": 15.91,
+            "processing_time_seconds": 29.11,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/sm/AP_55941320597534372051/AP_55941320597534372051_rules.json",
-            "size_bytes": 674035,
-            "size_mb": 0.64
+            "size_bytes": 543076,
+            "size_mb": 0.52
           },
           "seed": "10",
           "seed_id": "AP_55941320597534372051",
           "spoiler_test": {
             "error_count": 8,
             "pass_fail": "failed",
-            "processing_time_seconds": 19.2,
+            "processing_time_seconds": 11.4,
             "return_code": 1,
-            "sphere_reached": 5.3,
+            "sphere_reached": 6.1,
             "success": false,
             "total_spheres": 12.2,
             "warning_count": 0
           },
           "template_filename": "Super Metroid.yaml",
-          "timestamp": "2025-11-26T04:08:43.425434",
+          "timestamp": "2025-11-26T06:42:42.745871",
           "world_info": {
             "exporter_path": "exporter/games/sm.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
@@ -44166,47 +43815,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "3": {
-              "new_rules_hash": "2b32b538517ce0387b97e919f49bffb6e6ba1e5885f5adcaac31dc9f03c5e4b1",
-              "new_spheres_hash": "0b5b3fe3ec9b8c48e82580488a82e322cccfa1308661149c6a1b3b809b6e6d95",
-              "original_rules_hash": "2b32b538517ce0387b97e919f49bffb6e6ba1e5885f5adcaac31dc9f03c5e4b1",
-              "original_spheres_hash": "0b5b3fe3ec9b8c48e82580488a82e322cccfa1308661149c6a1b3b809b6e6d95",
-              "rules_identical": true,
-              "seed": "3",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:16:30.504149"
-            }
-          },
           "game_name_from_filename": "sm",
           "game_name_from_yaml": "Super Metroid",
           "generation": {
-            "error_count": 2,
+            "error_count": 1,
             "error_type": null,
-            "processing_time_seconds": 15.41,
+            "processing_time_seconds": 27.62,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/sm/AP_84719271504320872445/AP_84719271504320872445_rules.json",
-            "size_bytes": 674025,
+            "size_bytes": 674184,
             "size_mb": 0.64
           },
           "seed": "3",
           "seed_id": "AP_84719271504320872445",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 18.04,
-            "return_code": 1,
-            "sphere_reached": 2.12,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 15.16,
+            "return_code": 0,
+            "sphere_reached": 6.3,
+            "success": true,
             "total_spheres": 6.3,
             "warning_count": 0
           },
           "template_filename": "Super Metroid.yaml",
-          "timestamp": "2025-11-26T04:10:59.935033",
+          "timestamp": "2025-11-26T06:03:25.445318",
           "world_info": {
             "exporter_path": "exporter/games/sm.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
@@ -44223,47 +43860,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "4": {
-              "new_rules_hash": "9ccaebc74f9c7bdd271ae0205ff1be8b93f84ca6a021047300c7e4a91ce8079e",
-              "new_spheres_hash": "8ba8faede1208bf1709b829798925a23b890ae1bd301dfa3dfd93171591bd203",
-              "original_rules_hash": "9ccaebc74f9c7bdd271ae0205ff1be8b93f84ca6a021047300c7e4a91ce8079e",
-              "original_spheres_hash": "8ba8faede1208bf1709b829798925a23b890ae1bd301dfa3dfd93171591bd203",
-              "rules_identical": true,
-              "seed": "4",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:11:45.420008"
-            }
-          },
           "game_name_from_filename": "sm",
           "game_name_from_yaml": "Super Metroid",
           "generation": {
-            "error_count": 2,
+            "error_count": 1,
             "error_type": null,
-            "processing_time_seconds": 13.84,
+            "processing_time_seconds": 27.17,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/sm/AP_05594871498841892311/AP_05594871498841892311_rules.json",
-            "size_bytes": 674050,
+            "size_bytes": 674209,
             "size_mb": 0.64
           },
           "seed": "4",
           "seed_id": "AP_05594871498841892311",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 14.52,
-            "return_code": 1,
-            "sphere_reached": 3.2,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 15.03,
+            "return_code": 0,
+            "sphere_reached": 11.3,
+            "success": true,
             "total_spheres": 11.3,
             "warning_count": 0
           },
           "template_filename": "Super Metroid.yaml",
-          "timestamp": "2025-11-26T04:07:15.392837",
+          "timestamp": "2025-11-26T06:17:09.809376",
           "world_info": {
             "exporter_path": "exporter/games/sm.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
@@ -44280,47 +43905,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "5": {
-              "new_rules_hash": "94059b4af5803e547eb0dbe210370d72d5a85b2a8ae117aff1b6a1f2d0feaab1",
-              "new_spheres_hash": "ba9ae54af854b0a7e58866c8235ed3f0e7550f0174890186fe5a09f0c56a6980",
-              "original_rules_hash": "94059b4af5803e547eb0dbe210370d72d5a85b2a8ae117aff1b6a1f2d0feaab1",
-              "original_spheres_hash": "ba9ae54af854b0a7e58866c8235ed3f0e7550f0174890186fe5a09f0c56a6980",
-              "rules_identical": true,
-              "seed": "5",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:14:45.327003"
-            }
-          },
           "game_name_from_filename": "sm",
           "game_name_from_yaml": "Super Metroid",
           "generation": {
-            "error_count": 2,
+            "error_count": 1,
             "error_type": null,
-            "processing_time_seconds": 16.18,
+            "processing_time_seconds": 30.3,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/sm/AP_96945849220684217413/AP_96945849220684217413_rules.json",
-            "size_bytes": 674042,
-            "size_mb": 0.64
+            "size_bytes": 543083,
+            "size_mb": 0.52
           },
           "seed": "5",
           "seed_id": "AP_96945849220684217413",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 15.11,
-            "return_code": 1,
-            "sphere_reached": 1.2,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 15.17,
+            "return_code": 0,
+            "sphere_reached": 11.2,
+            "success": true,
             "total_spheres": 11.2,
             "warning_count": 0
           },
           "template_filename": "Super Metroid.yaml",
-          "timestamp": "2025-11-26T04:09:05.661713",
+          "timestamp": "2025-11-26T06:45:06.457042",
           "world_info": {
             "exporter_path": "exporter/games/sm.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
@@ -44568,8 +44181,8 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 8,
-      "seeds_passed": 2,
+      "seeds_failed": 5,
+      "seeds_passed": 5,
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
@@ -44583,10 +44196,10 @@
       "summary": {
         "all_passed": false,
         "any_failed": true,
-        "failure_rate": 0.8
+        "failure_rate": 0.5
       },
       "template_filename": "Super Metroid.yaml",
-      "timestamp": "2025-11-26T03:57:47.699369",
+      "timestamp": "2025-11-26T06:45:06.457042",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/sm.py",
