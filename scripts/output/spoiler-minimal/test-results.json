@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-26T04:17:36.751623",
-    "last_updated": "2025-11-26T04:17:36.751629",
+    "last_updated": "2025-11-26T04:47:18.661290",
     "script_version": "1.0.0"
   },
   "results": {
@@ -20100,24 +20100,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "4": {
-              "new_rules_hash": "b15514167c85c5939a3c7cdd8f304e29191b54207e0a70e72cca780b91a80a6c",
-              "new_spheres_hash": "2a4f807a00662d3dfe274d9dc0568b68d65238f00265663cc435966bfba58761",
-              "original_rules_hash": "b15514167c85c5939a3c7cdd8f304e29191b54207e0a70e72cca780b91a80a6c",
-              "original_spheres_hash": "2a4f807a00662d3dfe274d9dc0568b68d65238f00265663cc435966bfba58761",
-              "rules_identical": true,
-              "seed": "4",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:09:38.683008"
-            }
-          },
           "game_name_from_filename": "kh2",
           "game_name_from_yaml": "Kingdom Hearts 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 3.36,
+            "processing_time_seconds": 6.03,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -20132,7 +20120,7 @@
           "spoiler_test": {
             "error_count": 8,
             "pass_fail": "failed",
-            "processing_time_seconds": 35.94,
+            "processing_time_seconds": 16.04,
             "return_code": 1,
             "sphere_reached": 5.15,
             "success": false,
@@ -20140,7 +20128,7 @@
             "warning_count": 0
           },
           "template_filename": "Kingdom Hearts 2.yaml",
-          "timestamp": "2025-11-26T04:05:40.924370",
+          "timestamp": "2025-11-26T04:43:24.849499",
           "world_info": {
             "exporter_path": "exporter/games/kh2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
@@ -20463,7 +20451,7 @@
         "failure_rate": 0.3
       },
       "template_filename": "Kingdom Hearts 2.yaml",
-      "timestamp": "2025-11-26T03:45:13.836917",
+      "timestamp": "2025-11-26T04:43:24.820123",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/kh2.py",
@@ -40218,7 +40206,7 @@
         "success": true,
         "warning_count": 0
       },
-      "consecutive_passes_before_failure": 1,
+      "consecutive_passes_before_failure": 7,
       "consistency_tests": {
         "1": {
           "new_rules_hash": "c35cd4afc17949ad94e7737f78b66e98c81e3a769b6d5690c440c4592715d945",
@@ -40321,8 +40309,8 @@
           "timestamp": "2025-11-26T04:13:00.900752"
         }
       },
-      "first_failure_reason": "Test failed at sphere 0.2",
-      "first_failure_seed": 2,
+      "first_failure_reason": "Test failed at sphere 0.8",
+      "first_failure_seed": 8,
       "game_name_from_filename": "stardew_valley",
       "game_name_from_yaml": "Stardew Valley",
       "generation": {
@@ -40454,47 +40442,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "2": {
-              "new_rules_hash": "c6baa94a9a580b04a9e66eccf17ab49619991ee9b64a5b889e41dcc14b04030b",
-              "new_spheres_hash": "829570e81372504c7bb69f608e3ad760d6cc4527c094fb35161058646837b611",
-              "original_rules_hash": "c6baa94a9a580b04a9e66eccf17ab49619991ee9b64a5b889e41dcc14b04030b",
-              "original_spheres_hash": "829570e81372504c7bb69f608e3ad760d6cc4527c094fb35161058646837b611",
-              "rules_identical": true,
-              "seed": "2",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:11:20.579101"
-            }
-          },
           "game_name_from_filename": "stardew_valley",
           "game_name_from_yaml": "Stardew Valley",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 5.44,
+            "processing_time_seconds": 8.05,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/stardew_valley/AP_01043188731678011336/AP_01043188731678011336_rules.json",
-            "size_bytes": 8310468,
+            "size_bytes": 8310068,
             "size_mb": 7.93
           },
           "seed": "2",
           "seed_id": "AP_01043188731678011336",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 15.82,
-            "return_code": 1,
-            "sphere_reached": 0.2,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 39.99,
+            "return_code": 0,
+            "sphere_reached": 25.6,
+            "success": true,
             "total_spheres": 25.6,
             "warning_count": 0
           },
           "template_filename": "Stardew Valley.yaml",
-          "timestamp": "2025-11-26T04:06:37.508574",
+          "timestamp": "2025-11-26T04:44:01.488692",
           "world_info": {
             "exporter_path": "exporter/games/stardew_valley.py",
             "game_logic_path": null,
@@ -40511,47 +40487,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "3": {
-              "new_rules_hash": "73b1d21707920fe54fbbb497538167f407f0ab5062e9233c75d0512a0d596920",
-              "new_spheres_hash": "bc918a2cdf2eb03f418865f975d3815b327844c0073bde86cc9b7481648d9309",
-              "original_rules_hash": "73b1d21707920fe54fbbb497538167f407f0ab5062e9233c75d0512a0d596920",
-              "original_spheres_hash": "bc918a2cdf2eb03f418865f975d3815b327844c0073bde86cc9b7481648d9309",
-              "rules_identical": true,
-              "seed": "3",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:16:03.171254"
-            }
-          },
           "game_name_from_filename": "stardew_valley",
           "game_name_from_yaml": "Stardew Valley",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 5.69,
+            "processing_time_seconds": 7.7,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/stardew_valley/AP_84719271504320872445/AP_84719271504320872445_rules.json",
-            "size_bytes": 8437687,
+            "size_bytes": 8437287,
             "size_mb": 8.05
           },
           "seed": "3",
           "seed_id": "AP_84719271504320872445",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 16.06,
-            "return_code": 1,
-            "sphere_reached": 0.7,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 40.98,
+            "return_code": 0,
+            "sphere_reached": 26.1,
+            "success": true,
             "total_spheres": 26.1,
             "warning_count": 0
           },
           "template_filename": "Stardew Valley.yaml",
-          "timestamp": "2025-11-26T04:10:37.853306",
+          "timestamp": "2025-11-26T04:44:50.042022",
           "world_info": {
             "exporter_path": "exporter/games/stardew_valley.py",
             "game_logic_path": null,
@@ -40568,47 +40532,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "4": {
-              "new_rules_hash": "9704540f1f359a0f1e50a1608f2d54678d57903f51e0af98f1f0d13b96e62b41",
-              "new_spheres_hash": "dba8680945f632eeffacf96370dc5d690aee971b12b69299b26ebd0922877092",
-              "original_rules_hash": "9704540f1f359a0f1e50a1608f2d54678d57903f51e0af98f1f0d13b96e62b41",
-              "original_spheres_hash": "dba8680945f632eeffacf96370dc5d690aee971b12b69299b26ebd0922877092",
-              "rules_identical": true,
-              "seed": "4",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:11:21.103978"
-            }
-          },
           "game_name_from_filename": "stardew_valley",
           "game_name_from_yaml": "Stardew Valley",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 5.48,
+            "processing_time_seconds": 7.94,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/stardew_valley/AP_05594871498841892311/AP_05594871498841892311_rules.json",
-            "size_bytes": 8207124,
+            "size_bytes": 8206724,
             "size_mb": 7.83
           },
           "seed": "4",
           "seed_id": "AP_05594871498841892311",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 18.41,
-            "return_code": 1,
-            "sphere_reached": 1.9,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 41.06,
+            "return_code": 0,
+            "sphere_reached": 46.1,
+            "success": true,
             "total_spheres": 46.1,
             "warning_count": 0
           },
           "template_filename": "Stardew Valley.yaml",
-          "timestamp": "2025-11-26T04:06:51.206479",
+          "timestamp": "2025-11-26T04:45:39.262786",
           "world_info": {
             "exporter_path": "exporter/games/stardew_valley.py",
             "game_logic_path": null,
@@ -40625,47 +40577,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "5": {
-              "new_rules_hash": "4baf2a8f562175a59703b45bac9ee69645c7334d559dca068f515dc84fe1ca10",
-              "new_spheres_hash": "9780bb52d04f3a61f48b841d3c1d331306d7ecb544c302b5bb89229948084a61",
-              "original_rules_hash": "4baf2a8f562175a59703b45bac9ee69645c7334d559dca068f515dc84fe1ca10",
-              "original_spheres_hash": "9780bb52d04f3a61f48b841d3c1d331306d7ecb544c302b5bb89229948084a61",
-              "rules_identical": true,
-              "seed": "5",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:14:16.441980"
-            }
-          },
           "game_name_from_filename": "stardew_valley",
           "game_name_from_yaml": "Stardew Valley",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 5.76,
+            "processing_time_seconds": 7.85,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/stardew_valley/AP_96945849220684217413/AP_96945849220684217413_rules.json",
-            "size_bytes": 8576189,
+            "size_bytes": 8575789,
             "size_mb": 8.18
           },
           "seed": "5",
           "seed_id": "AP_96945849220684217413",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 16.22,
-            "return_code": 1,
-            "sphere_reached": 0.9,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 41.3,
+            "return_code": 0,
+            "sphere_reached": 29.1,
+            "success": true,
             "total_spheres": 29.1,
             "warning_count": 0
           },
           "template_filename": "Stardew Valley.yaml",
-          "timestamp": "2025-11-26T04:08:43.334267",
+          "timestamp": "2025-11-26T04:46:28.764868",
           "world_info": {
             "exporter_path": "exporter/games/stardew_valley.py",
             "game_logic_path": null,
@@ -40913,8 +40853,8 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 7,
-      "seeds_passed": 3,
+      "seeds_failed": 3,
+      "seeds_passed": 7,
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
@@ -40928,10 +40868,10 @@
       "summary": {
         "all_passed": false,
         "any_failed": true,
-        "failure_rate": 0.7
+        "failure_rate": 0.3
       },
       "template_filename": "Stardew Valley.yaml",
-      "timestamp": "2025-11-26T03:56:13.820907",
+      "timestamp": "2025-11-26T04:44:01.400182",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/stardew_valley.py",
