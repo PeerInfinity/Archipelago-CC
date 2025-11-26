@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-26T04:17:36.751623",
-    "last_updated": "2025-11-26T04:17:36.751629",
+    "last_updated": "2025-11-26T05:09:53.399693",
     "script_version": "1.0.0"
   },
   "results": {
@@ -20100,24 +20100,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "4": {
-              "new_rules_hash": "b15514167c85c5939a3c7cdd8f304e29191b54207e0a70e72cca780b91a80a6c",
-              "new_spheres_hash": "2a4f807a00662d3dfe274d9dc0568b68d65238f00265663cc435966bfba58761",
-              "original_rules_hash": "b15514167c85c5939a3c7cdd8f304e29191b54207e0a70e72cca780b91a80a6c",
-              "original_spheres_hash": "2a4f807a00662d3dfe274d9dc0568b68d65238f00265663cc435966bfba58761",
-              "rules_identical": true,
-              "seed": "4",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:09:38.683008"
-            }
-          },
           "game_name_from_filename": "kh2",
           "game_name_from_yaml": "Kingdom Hearts 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 3.36,
+            "processing_time_seconds": 5.52,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -20132,7 +20120,7 @@
           "spoiler_test": {
             "error_count": 8,
             "pass_fail": "failed",
-            "processing_time_seconds": 35.94,
+            "processing_time_seconds": 15.77,
             "return_code": 1,
             "sphere_reached": 5.15,
             "success": false,
@@ -20140,7 +20128,7 @@
             "warning_count": 0
           },
           "template_filename": "Kingdom Hearts 2.yaml",
-          "timestamp": "2025-11-26T04:05:40.924370",
+          "timestamp": "2025-11-26T05:08:09.356294",
           "world_info": {
             "exporter_path": "exporter/games/kh2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
@@ -20463,7 +20451,7 @@
         "failure_rate": 0.3
       },
       "template_filename": "Kingdom Hearts 2.yaml",
-      "timestamp": "2025-11-26T03:45:13.836917",
+      "timestamp": "2025-11-26T05:08:09.302819",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/kh2.py",
@@ -48438,47 +48426,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "10": {
-              "new_rules_hash": "6ce6c5a56a9f24e6a5cf83e4b725fba14b5300c3ac13107c4077f32cc5dd0c84",
-              "new_spheres_hash": "9e11928304a247f8605ec128af56372c72fabea33c82916ce055c0460af68d7b",
-              "original_rules_hash": "6ce6c5a56a9f24e6a5cf83e4b725fba14b5300c3ac13107c4077f32cc5dd0c84",
-              "original_spheres_hash": "9e11928304a247f8605ec128af56372c72fabea33c82916ce055c0460af68d7b",
-              "rules_identical": true,
-              "seed": "10",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:14:42.284342"
-            }
-          },
           "game_name_from_filename": "witness",
           "game_name_from_yaml": "The Witness",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.59,
+            "processing_time_seconds": 8.88,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/witness/AP_55941320597534372051/AP_55941320597534372051_rules.json",
-            "size_bytes": 275436,
-            "size_mb": 0.26
+            "size_bytes": 288898,
+            "size_mb": 0.28
           },
           "seed": "10",
           "seed_id": "AP_55941320597534372051",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 14.96,
-            "return_code": 1,
-            "sphere_reached": 1.6,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.68,
+            "return_code": 0,
+            "sphere_reached": 8.1,
+            "success": true,
             "total_spheres": 8.1,
             "warning_count": 0
           },
           "template_filename": "The Witness.yaml",
-          "timestamp": "2025-11-26T04:09:18.876878",
+          "timestamp": "2025-11-26T05:09:34.122963",
           "world_info": {
             "exporter_path": "exporter/games/witness.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/witness/witnessLogic.js",
@@ -48666,47 +48642,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "5": {
-              "new_rules_hash": "ed2ebbf54978a794f82849bfd5e0559001aea4cf1b0b3663f64a60fb58e99ea2",
-              "new_spheres_hash": "be99970732652aa397f6012d7ad2df7243da00c82a2416a0db10c434467f9580",
-              "original_rules_hash": "ed2ebbf54978a794f82849bfd5e0559001aea4cf1b0b3663f64a60fb58e99ea2",
-              "original_spheres_hash": "be99970732652aa397f6012d7ad2df7243da00c82a2416a0db10c434467f9580",
-              "rules_identical": true,
-              "seed": "5",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:15:09.561917"
-            }
-          },
           "game_name_from_filename": "witness",
           "game_name_from_yaml": "The Witness",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.68,
+            "processing_time_seconds": 8.87,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/witness/AP_96945849220684217413/AP_96945849220684217413_rules.json",
-            "size_bytes": 275435,
-            "size_mb": 0.26
+            "size_bytes": 288897,
+            "size_mb": 0.28
           },
           "seed": "5",
           "seed_id": "AP_96945849220684217413",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 18.22,
-            "return_code": 1,
-            "sphere_reached": 6.2,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.88,
+            "return_code": 0,
+            "sphere_reached": 7.3,
+            "success": true,
             "total_spheres": 7.3,
             "warning_count": 0
           },
           "template_filename": "The Witness.yaml",
-          "timestamp": "2025-11-26T04:09:37.297590",
+          "timestamp": "2025-11-26T05:09:03.853607",
           "world_info": {
             "exporter_path": "exporter/games/witness.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/witness/witnessLogic.js",
@@ -48954,8 +48918,8 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 7,
-      "seeds_passed": 3,
+      "seeds_failed": 5,
+      "seeds_passed": 5,
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
@@ -48969,10 +48933,10 @@
       "summary": {
         "all_passed": false,
         "any_failed": true,
-        "failure_rate": 0.7
+        "failure_rate": 0.5
       },
       "template_filename": "The Witness.yaml",
-      "timestamp": "2025-11-26T03:59:32.209501",
+      "timestamp": "2025-11-26T05:09:34.122963",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/witness.py",
