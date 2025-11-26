@@ -500,12 +500,13 @@ export function canHellRun(snapshot, staticData, hellRunType, mult = 1.0, minEAr
   }
 
   // Check each difficulty tier
-  // Python formula: energyReserveCountOk(threshold / mult, difficulty)
+  // Python formula: energyReserveCountOk(normalizeRounding(threshold / mult), difficulty)
   // The mult DIVIDES the threshold, so mult < 1.0 means MORE energy needed
+  // Python uses round() which rounds .5 up, matching JavaScript's Math.round()
   let lowestPassingDifficulty = Infinity;
   for (const [threshold, difficulty] of difficulties) {
-    // Calculate effective threshold: threshold / mult
-    const effectiveThreshold = Math.ceil(threshold / effectiveMult);
+    // Calculate effective threshold: threshold / mult (using round like Python)
+    const effectiveThreshold = Math.round(threshold / effectiveMult);
     if (reserves >= effectiveThreshold) {
       if (difficulty < lowestPassingDifficulty) {
         lowestPassingDifficulty = difficulty;
@@ -1009,13 +1010,30 @@ export function knowsLavaDiveNoHiJump(snapshot, staticData) {
 }
 
 export function knowsMtEverestGravJump(snapshot, staticData) {
-  return { bool: true, difficulty: 0 };
+  // Check exported knows settings
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('MtEverestGravJump' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.MtEverestGravJump;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  // Default: disabled (Regular preset value)
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsTediousMountEverest(snapshot, staticData) {
   // Tedious climb of Mt. Everest suitless with ice and supers
-  // Medium difficulty technique
-  return { bool: true, difficulty: 5 };
+  // Check exported knows settings
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('TediousMountEverest' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.TediousMountEverest;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  // Default: disabled (Regular preset value)
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsRedTowerClimb(snapshot, staticData) {
@@ -1108,17 +1126,17 @@ export function canPassMtEverest(snapshot, staticData) {
 
 export function canDefeatBotwoon(snapshot, staticData) {
   // Botwoon boss - Python: wand(enoughStuffBotwoon(), canPassBotwoonHallway())
-  // enoughStuffBotwoon requires dealing 6000 damage to Botwoon
-  // Simplified: need Charge beam OR enough ammo (missiles/supers)
-  // Botwoon has 6000 HP: need 60+ missiles (100 dmg each) OR 20+ supers (300 dmg each) OR charged shots
+  // enoughStuffBotwoon uses canInflictEnoughDamages(6000, givesDrops=False)
+  // In Python: canBeatBoss = chargeDamage > 0 (Charge beam alone is sufficient)
+  // Charge beam does 20 base * 3 = 60 damage per shot, infinite shots = boss beatable
   const enoughStuff = wor(snapshot, staticData,
-    // Charged shots can defeat Botwoon
-    wand(snapshot, staticData,
-      haveItem(snapshot, staticData, 'Charge'),
-      wor(snapshot, staticData,
-        haveItem(snapshot, staticData, 'Wave'),
-        haveItem(snapshot, staticData, 'Plasma'))),
-    // Or enough missiles/supers (simplified: need at least 4 missile packs and 2 super packs for ~6000 damage)
+    // Charge beam alone can defeat Botwoon (infinite charged shots)
+    haveItem(snapshot, staticData, 'Charge'),
+    // Or enough missiles (60 missiles = 6000 damage, 12 packs minimum)
+    itemCountOk(snapshot, staticData, 'Missile', 12),
+    // Or enough supers (20 supers = 6000 damage, 4 packs minimum)
+    itemCountOk(snapshot, staticData, 'Super', 4),
+    // Or combo of missiles and supers (lowered requirements)
     wand(snapshot, staticData,
       itemCountOk(snapshot, staticData, 'Missile', 4),
       itemCountOk(snapshot, staticData, 'Super', 2))
@@ -1181,6 +1199,20 @@ export function getDmgReduction(snapshot, staticData, envDmg = true) {
 
   // Return tuple format [dmgRed, items] to match Python's (ret, items)
   return [dmgRed, items];
+}
+
+/**
+ * Divide a value by the damage reduction factor (for energy requirements)
+ * Used in rules like energyReserveCountOk(3/getDmgReduction()[0])
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static game data
+ * @param {number} value - The numerator value to divide
+ * @returns {number} The ceiling of value / dmgReduction
+ */
+export function divideByDmgReduction(snapshot, staticData, value) {
+  const [dmgRed, _items] = getDmgReduction(snapshot, staticData);
+  // Return ceiling since these are typically energy tank requirements
+  return Math.ceil(value / dmgRed);
 }
 
 /**
@@ -1777,6 +1809,7 @@ export const helperFunctions = {
   canTraverseSandPits,
   heatProof,
   getDmgReduction,
+  divideByDmgReduction,
   energyReserveCountOk,
   enoughStuffGT,
   // Combat
@@ -2499,14 +2532,33 @@ export function canPassCacatacAlley(snapshot, staticData) {
  * Can pass Forgotten Highway (west Maridia)
  */
 export function canPassForgottenHighway(snapshot, staticData, fromWs = true) {
+  // Match Python: When coming from Wrecked Ship without EastOceanPlatforms patch,
+  // suitless path requires SpringBallJump or SpaceJump in addition to HiJump
+  const playerId = snapshot?.playerId || '1';
+  const romPatches = staticData?.settings?.[playerId]?.romPatches || {};
+  const eastOceanPlatforms = romPatches.EastOceanPlatforms === true;
+
+  let suitless = wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'HiJump'),
+    knowsGravLessLevel1(snapshot, staticData)
+  );
+
+  // Additional requirement when coming from Wrecked Ship without the platform patch
+  if (fromWs === true && !eastOceanPlatforms) {
+    suitless = wand(snapshot, staticData,
+      suitless,
+      wor(snapshot, staticData,
+        canSpringBallJump(snapshot, staticData),
+        haveItem(snapshot, staticData, 'SpaceJump')
+      )
+    );
+  }
+
   return wand(snapshot, staticData,
     haveItem(snapshot, staticData, 'Morph'),
     wor(snapshot, staticData,
       haveItem(snapshot, staticData, 'Gravity'),
-      wand(snapshot, staticData,
-        haveItem(snapshot, staticData, 'HiJump'),
-        { bool: true, difficulty: 3 } // knowsGravLessLevel1
-      )
+      suitless
     )
   );
 }
@@ -2536,15 +2588,19 @@ export function canPassNinjaPirates(snapshot, staticData) {
  * Can pass red Kihunters (lower Norfair)
  */
 export function canPassRedKiHunters(snapshot, staticData) {
-  // Simplified: require strong beam or many missiles
+  // Match Python canKillRedKiHunters(3): need ways to kill 3 red kihunters
   return wor(snapshot, staticData,
     haveItem(snapshot, staticData, 'Plasma'),
     haveItem(snapshot, staticData, 'ScrewAttack'),
     wand(snapshot, staticData,
       heatProof(snapshot, staticData),
-      haveItem(snapshot, staticData, 'Spazer')
-    ),
-    itemCountOk(snapshot, staticData, 'Missile', 15)
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Spazer'),
+        haveItem(snapshot, staticData, 'Ice'),
+        wand(snapshot, staticData,
+          haveItem(snapshot, staticData, 'Charge'),
+          haveItem(snapshot, staticData, 'Wave')))),
+    knowsDodgeLowerNorfairEnemies(snapshot, staticData)
   );
 }
 
@@ -2552,15 +2608,19 @@ export function canPassRedKiHunters(snapshot, staticData) {
  * Can pass Three Muskateers (lower Norfair)
  */
 export function canPassThreeMuskateers(snapshot, staticData) {
-  // Similar to canPassRedKiHunters but more enemies
+  // Match Python canKillRedKiHunters(6): need ways to kill 6 red kihunters
   return wor(snapshot, staticData,
     haveItem(snapshot, staticData, 'Plasma'),
     haveItem(snapshot, staticData, 'ScrewAttack'),
     wand(snapshot, staticData,
       heatProof(snapshot, staticData),
-      haveItem(snapshot, staticData, 'Spazer')
-    ),
-    itemCountOk(snapshot, staticData, 'Missile', 25)
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Spazer'),
+        haveItem(snapshot, staticData, 'Ice'),
+        wand(snapshot, staticData,
+          haveItem(snapshot, staticData, 'Charge'),
+          haveItem(snapshot, staticData, 'Wave')))),
+    knowsDodgeLowerNorfairEnemies(snapshot, staticData)
   );
 }
 
@@ -2568,14 +2628,19 @@ export function canPassThreeMuskateers(snapshot, staticData) {
  * Can pass Wasteland Dessgeegas (lower Norfair)
  */
 export function canPassWastelandDessgeegas(snapshot, staticData) {
+  // Match Python: heatProof + (Spazer OR (Charge + Wave))
   return wor(snapshot, staticData,
     haveItem(snapshot, staticData, 'Plasma'),
     haveItem(snapshot, staticData, 'ScrewAttack'),
     wand(snapshot, staticData,
       heatProof(snapshot, staticData),
-      haveItem(snapshot, staticData, 'Spazer')
-    ),
-    itemCountOk(snapshot, staticData, 'PowerBomb', 4)
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Spazer'),
+        wand(snapshot, staticData,
+          haveItem(snapshot, staticData, 'Charge'),
+          haveItem(snapshot, staticData, 'Wave')))),
+    itemCountOk(snapshot, staticData, 'PowerBomb', 4),
+    knowsDodgeLowerNorfairEnemies(snapshot, staticData)
   );
 }
 
@@ -2756,7 +2821,16 @@ export function knowsWorstRoomWallJump(snapshot, staticData) {
 }
 
 export function knowsDodgeLowerNorfairEnemies(snapshot, staticData) {
-  return { bool: true, difficulty: 5 };
+  // Check exported knows settings
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('DodgeLowerNorfairEnemies' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.DodgeLowerNorfairEnemies;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  // Default: disabled (Regular preset value)
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsFrogSpeedwayWithoutSpeed(snapshot, staticData) {

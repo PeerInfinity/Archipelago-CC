@@ -471,8 +471,13 @@ def count_total_spheres(spheres_log_path: str, player_num: int = None) -> float:
         return 0
 
 
-def parse_multiclient_test_results(test_results_dir: str) -> Dict:
-    """Parse multiclient test results from JSON files for both clients."""
+def parse_multiclient_test_results(test_results_dir: str, single_client: bool = False) -> Dict:
+    """Parse multiclient test results from JSON files for both clients.
+
+    Args:
+        test_results_dir: Directory containing test result JSON files
+        single_client: If True, only check Client 1 results (no Client 2 required)
+    """
     result = {
         'success': False,
         'client1_passed': False,
@@ -481,13 +486,19 @@ def parse_multiclient_test_results(test_results_dir: str) -> Dict:
         'client1_manually_checkable': 0,
         'client2_locations_received': 0,
         'client2_total_locations': 0,
-        'error_message': None
+        'error_message': None,
+        'single_client_mode': single_client
     }
 
     # Find the most recent test result files for both clients
     try:
         from pathlib import Path
-        client1_files = list(Path(test_results_dir).glob('client1-timer-*.json'))
+        # In single-client mode, look for 'client1-timer-single-*.json' files
+        # In dual-client mode, look for 'client1-timer-send-*.json' files
+        if single_client:
+            client1_files = list(Path(test_results_dir).glob('client1-timer-single-*.json'))
+        else:
+            client1_files = list(Path(test_results_dir).glob('client1-timer-send-*.json'))
         client2_files = list(Path(test_results_dir).glob('client2-timer-*.json'))
 
         if not client1_files:
@@ -567,13 +578,20 @@ def parse_multiclient_test_results(test_results_dir: str) -> Dict:
                 result['client2_locations_received'] = final_state_val
 
         # Test passes if:
-        # - Client 1 passed (sent all manually-checkable locations)
-        # - Client 2 passed (received all locations)
-        # - Client 2 received all expected locations
-        result['success'] = (result['client1_passed'] and
-                            result['client2_passed'] and
-                            result['client2_locations_received'] >= result['client2_total_locations'] and
-                            result['client2_total_locations'] > 0)
+        # - In single-client mode: Client 1 passed and checked all locations
+        # - In dual-client mode: Client 1 passed AND Client 2 passed and received all locations
+        if single_client:
+            # Single-client mode: only Client 1 needs to pass
+            # Check that all locations were checked (checked >= manually_checkable)
+            result['success'] = (result['client1_passed'] and
+                                result['client1_locations_checked'] >= result['client1_manually_checkable'] and
+                                result['client1_manually_checkable'] > 0)
+        else:
+            # Dual-client mode: both clients must pass
+            result['success'] = (result['client1_passed'] and
+                                result['client2_passed'] and
+                                result['client2_locations_received'] >= result['client2_total_locations'] and
+                                result['client2_total_locations'] > 0)
 
     except Exception as e:
         result['error_message'] = f"Error parsing test results: {str(e)}"

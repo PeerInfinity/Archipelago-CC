@@ -276,11 +276,22 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
             logging.debug('Calculated initial sphere %i, containing %i of %i progress items.',
                           len(initial_collection_spheres), len(sphere), len(prog_locations))
             if not sphere:
-                if any([multiworld.worlds[location.item.player].options.accessibility != 'minimal' for location in sphere_candidates]):
-                    raise RuntimeError(f'Not all progression items reachable ({sphere_candidates}). Something went wrong.')
-                else:
+                # When extend_sphere_log_to_all_locations is enabled, only check advancement items
+                # Non-advancement items at unreachable locations are expected and OK
+                if extend_sphere_log_to_all_locations:
+                    unreachable_advancement = [loc for loc in sphere_candidates if loc.item and loc.item.advancement]
+                    if unreachable_advancement:
+                        if any([multiworld.worlds[location.item.player].options.accessibility != 'minimal' for location in unreachable_advancement]):
+                            raise RuntimeError(f'Not all progression items reachable ({unreachable_advancement}). Something went wrong.')
+                    # Non-advancement items are OK to be unreachable in full spoilers mode
                     spoiler.unreachables = sphere_candidates
                     break
+                else:
+                    if any([multiworld.worlds[location.item.player].options.accessibility != 'minimal' for location in sphere_candidates]):
+                        raise RuntimeError(f'Not all progression items reachable ({sphere_candidates}). Something went wrong.')
+                    else:
+                        spoiler.unreachables = sphere_candidates
+                        break
 
         # Pruning phase
         if not extend_sphere_log_to_all_locations:
