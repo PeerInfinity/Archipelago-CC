@@ -1847,13 +1847,13 @@ export const helperFunctions = {
     const forms = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
 
     let hasFormLevel = false;
-    if (fightLogic === 0) { // easy: any form level 5
+    if (fightLogic === 0) { // easy: any form level 5 (requires 3 forms total)
       hasFormLevel = forms.some(form =>
-        helperFunctions.form_list_unlock(snapshot, staticData, form, 5, true)
+        helperFunctions.form_list_unlock(snapshot, staticData, form, 3, true)
       );
-    } else if (fightLogic === 1) { // normal: any form level 4
+    } else if (fightLogic === 1) { // normal: any form level 4 (requires 2 forms total)
       hasFormLevel = forms.some(form =>
-        helperFunctions.form_list_unlock(snapshot, staticData, form, 4, true)
+        helperFunctions.form_list_unlock(snapshot, staticData, form, 2, true)
       );
     } // hard: no form requirement
 
