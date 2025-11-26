@@ -1109,8 +1109,9 @@ export function canDefeatBotwoon(snapshot, staticData) {
  * @returns {number} Damage reduction multiplier
  */
 export function getDmgReduction(snapshot, staticData, envDmg = true) {
-  const hasVaria = has(snapshot, staticData, 'Varia');
-  const hasGravity = has(snapshot, staticData, 'Gravity');
+  // Use haveItem which supports VARIA type lookups (e.g., 'Varia' -> 'Varia Suit')
+  const hasVaria = haveItem(snapshot, staticData, 'Varia').bool;
+  const hasGravity = haveItem(snapshot, staticData, 'Gravity').bool;
 
   // Get player settings - try both snapshot.playerId and default to '1'
   const playerId = snapshot?.playerId || DEFAULT_PLAYER_ID;
@@ -1202,7 +1203,8 @@ export function canPassLavaPit(snapshot, staticData) {
   // ALL options require canUsePowerBombs
 
   // Calculate required tanks for dive without heat protection
-  const dmgReduction = getDmgReduction(snapshot, staticData);
+  // getDmgReduction returns [dmgRed, items], need to destructure
+  const [dmgReduction] = getDmgReduction(snapshot, staticData);
   let nTanks4Dive = Math.ceil(8 / dmgReduction);
   const hasHiJump = haveItem(snapshot, staticData, 'HiJump').bool;
   if (!hasHiJump) {
