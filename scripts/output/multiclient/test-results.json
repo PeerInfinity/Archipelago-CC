@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-26T07:22:33.003108",
-    "last_updated": "2025-11-26T07:22:33.003114",
+    "last_updated": "2025-11-26T20:19:08.945729",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1497,26 +1497,27 @@
       "game_name_from_yaml": "Lufia II Ancient Cave",
       "generation": {
         "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 2.51,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 2
+        "note": "Skipped in test-only mode",
+        "processing_time_seconds": 0,
+        "return_code": null,
+        "success": false,
+        "warning_count": 0
       },
       "multiclient_test": {
-        "client1_locations_checked": 11,
+        "client1_locations_checked": 40,
         "client1_manually_checkable": 35,
-        "client1_passed": false,
+        "client1_passed": true,
         "client2_locations_received": 0,
         "client2_passed": false,
-        "client2_total_locations": 40,
-        "error_count": 9,
-        "locations_checked": 0,
-        "processing_time_seconds": 62.9,
-        "return_code": 1,
-        "success": false,
-        "total_locations": 40,
-        "warning_count": 0
+        "client2_total_locations": 0,
+        "error_count": 0,
+        "locations_checked": 40,
+        "processing_time_seconds": 17.53,
+        "return_code": 0,
+        "single_client_mode": true,
+        "success": true,
+        "total_locations": 35,
+        "warning_count": 8
       },
       "rules_file": {
         "path": "frontend/presets/lufia2ac/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -1526,7 +1527,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Lufia II Ancient Cave.yaml",
-      "timestamp": "2025-11-26T07:14:08.039968",
+      "timestamp": "2025-11-26T20:18:51.405405",
       "world_info": {
         "exporter_path": null,
         "game_logic_path": null,
