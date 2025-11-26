@@ -173,12 +173,13 @@ export async function timerSendTest(testController) {
 
     testController.reportCondition('Timer components available', true);
 
-    // Set timer delay to 0.1 seconds between checks
-    // The timer uses minCheckDelay and maxCheckDelay in seconds
-    timerLogic.minCheckDelay = 0.0;
-    timerLogic.maxCheckDelay = 0.0;
+    // Set timer delay to 0.2 seconds between checks
+    // This allows time for server to process checks and return items
+    // before the timer re-evaluates accessibility
+    timerLogic.minCheckDelay = 0.2;
+    timerLogic.maxCheckDelay = 0.2;
 
-    testController.log('Timer delay set to 0.1 seconds');
+    testController.log('Timer delay set to 0.2 seconds');
     testController.reportCondition('Timer delay configured', true);
 
     // Get the control button and click it to begin
