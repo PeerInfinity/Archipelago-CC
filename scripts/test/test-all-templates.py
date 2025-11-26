@@ -1334,9 +1334,31 @@ def main():
 
     print(f"\n=== Testing Complete ===")
 
-    # Special message for retest mode where all tests passed
-    if args.retest:
-        print(f"🎉 All {len(yaml_files)} previously failed tests are now passing!")
+    # Special message for retest mode - check if tests actually passed
+    if args.retest and len(yaml_files) > 0:
+        # Count how many retested templates are now passing vs still failing
+        retest_passed = 0
+        retest_failed = 0
+        for template_filename in yaml_files:
+            if template_filename in results['results']:
+                result = results['results'][template_filename]
+                if args.multiclient:
+                    if result.get('multiclient_test', {}).get('success', False):
+                        retest_passed += 1
+                    else:
+                        retest_failed += 1
+                else:
+                    if result.get('spoiler_test', {}).get('pass_fail') == 'passed':
+                        retest_passed += 1
+                    else:
+                        retest_failed += 1
+
+        if retest_failed == 0 and retest_passed > 0:
+            print(f"🎉 All {retest_passed} previously failed tests are now passing!")
+        elif retest_passed > 0 and retest_failed > 0:
+            print(f"⚠️  {retest_passed} test(s) now passing, {retest_failed} still failing")
+        elif retest_failed > 0:
+            print(f"❌ All {retest_failed} retested test(s) are still failing")
 
     print(f"Processed {len(yaml_files)} templates")
     print(f"Total batch processing time: {total_batch_time:.1f} seconds ({total_batch_time/60:.1f} minutes)")

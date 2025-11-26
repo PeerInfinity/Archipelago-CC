@@ -603,23 +603,30 @@ def parse_playwright_analysis(analysis_text: str) -> Dict:
     result['first_warning_line'] = first_warning
 
     # Parse for sphere information and pass/fail status
+    # Track if we've seen an explicit failure - failures should never be overwritten
+    seen_explicit_fail = False
+
     lines = analysis_text.split('\n')
     for line in lines:
         line_stripped = line.strip()
         line_upper = line_stripped.upper()
 
         # Look for pass/fail status - check for [PASS] or [FAIL] in test results
-        if '[PASS]' in line_upper:
-            result['pass_fail'] = 'passed'
-        elif '[FAIL]' in line_upper:
+        # Once we see a [FAIL], don't let anything override it
+        if '[FAIL]' in line_upper:
             result['pass_fail'] = 'failed'
-        elif 'PASSED:' in line_upper or 'FAILED:' in line_upper:
-            if 'PASSED:' in line_upper:
+            seen_explicit_fail = True
+        elif not seen_explicit_fail:
+            # Only set to passed if we haven't seen an explicit failure
+            if '[PASS]' in line_upper:
                 result['pass_fail'] = 'passed'
-            else:
+            elif 'NO ERRORS DETECTED' in line_upper:
+                result['pass_fail'] = 'passed'
+            # Check for "Failed: N" summary lines - if N > 0, it's a failure
+            # Match patterns like "Failed: 1" or "Failed: 10" but not "Failed: 0"
+            elif re.match(r'FAILED:\s*[1-9]', line_upper):
                 result['pass_fail'] = 'failed'
-        elif 'NO ERRORS DETECTED' in line_upper:
-            result['pass_fail'] = 'passed'
+                seen_explicit_fail = True
 
         # Look for sphere information
         sphere_match = re.search(r'sphere\s+(\d+(?:\.\d+)?)', line_stripped.lower())
