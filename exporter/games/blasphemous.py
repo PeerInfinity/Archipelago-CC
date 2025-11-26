@@ -78,7 +78,101 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
         """Override rule analysis for Blasphemous to reconstruct from original logic data."""
         # Check if this is a boss check method - these need special handling to preserve boss names
         if hasattr(rule_func, '__name__'):
-            boss_mapping = {
+            func_name = rule_func.__name__
+
+            # Explicit rule definitions for Amanecida boss methods
+            # These have complex AND/OR region requirements that can't be auto-detected
+            explicit_boss_rules = {
+                'can_beat_graveyard_boss': {
+                    'type': 'and',
+                    'conditions': [
+                        {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'amanecida'}]},
+                        {'type': 'helper', 'name': 'wall_climb', 'args': []},
+                        {'type': 'state_method', 'method': 'can_reach_region', 'args': [{'type': 'constant', 'value': 'D01Z06S01[Santos]'}]},
+                        {'type': 'state_method', 'method': 'can_reach_region', 'args': [{'type': 'constant', 'value': 'D02Z03S18[NW]'}]},
+                        {'type': 'state_method', 'method': 'can_reach_region', 'args': [{'type': 'constant', 'value': 'D02Z02S03[NE]'}]}
+                    ]
+                },
+                'can_beat_jondo_boss': {
+                    'type': 'and',
+                    'conditions': [
+                        {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'amanecida'}]},
+                        {'type': 'state_method', 'method': 'can_reach_region', 'args': [{'type': 'constant', 'value': 'D01Z06S01[Santos]'}]},
+                        {
+                            'type': 'or',
+                            'conditions': [
+                                {'type': 'state_method', 'method': 'can_reach_region', 'args': [{'type': 'constant', 'value': 'D20Z01S06[NE]'}]},
+                                {'type': 'state_method', 'method': 'can_reach_region', 'args': [{'type': 'constant', 'value': 'D20Z01S04[W]'}]}
+                            ]
+                        },
+                        {
+                            'type': 'or',
+                            'conditions': [
+                                {'type': 'state_method', 'method': 'can_reach_region', 'args': [{'type': 'constant', 'value': 'D03Z01S04[E]'}]},
+                                {'type': 'state_method', 'method': 'can_reach_region', 'args': [{'type': 'constant', 'value': 'D03Z02S10[N]'}]}
+                            ]
+                        }
+                    ]
+                },
+                'can_beat_patio_boss': {
+                    'type': 'and',
+                    'conditions': [
+                        {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'amanecida'}]},
+                        {'type': 'state_method', 'method': 'can_reach_region', 'args': [{'type': 'constant', 'value': 'D01Z06S01[Santos]'}]},
+                        {'type': 'state_method', 'method': 'can_reach_region', 'args': [{'type': 'constant', 'value': 'D06Z01S02[W]'}]},
+                        {
+                            'type': 'or',
+                            'conditions': [
+                                {'type': 'state_method', 'method': 'can_reach_region', 'args': [{'type': 'constant', 'value': 'D04Z01S03[E]'}]},
+                                {'type': 'state_method', 'method': 'can_reach_region', 'args': [{'type': 'constant', 'value': 'D04Z01S01[W]'}]},
+                                {'type': 'state_method', 'method': 'can_reach_region', 'args': [{'type': 'constant', 'value': 'D06Z01S18[-Cherubs]'}]}
+                            ]
+                        }
+                    ]
+                },
+                'can_beat_wall_boss': {
+                    'type': 'and',
+                    'conditions': [
+                        {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'amanecida'}]},
+                        {'type': 'state_method', 'method': 'can_reach_region', 'args': [{'type': 'constant', 'value': 'D01Z06S01[Santos]'}]},
+                        {'type': 'state_method', 'method': 'can_reach_region', 'args': [{'type': 'constant', 'value': 'D09Z01S09[Cell24]'}]},
+                        {
+                            'type': 'or',
+                            'conditions': [
+                                {'type': 'state_method', 'method': 'can_reach_region', 'args': [{'type': 'constant', 'value': 'D09Z01S11[E]'}]},
+                                {'type': 'state_method', 'method': 'can_reach_region', 'args': [{'type': 'constant', 'value': 'D06Z01S13[W]'}]}
+                            ]
+                        }
+                    ]
+                },
+                'can_beat_hall_boss': {
+                    'type': 'and',
+                    'conditions': [
+                        {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'laudes'}]},
+                        {
+                            'type': 'or',
+                            'conditions': [
+                                {'type': 'state_method', 'method': 'can_reach_region', 'args': [{'type': 'constant', 'value': 'D08Z01S02[NE]'}]},
+                                {'type': 'state_method', 'method': 'can_reach_region', 'args': [{'type': 'constant', 'value': 'D08Z03S02[NW]'}]}
+                            ]
+                        }
+                    ]
+                },
+                'can_beat_mourning_boss': {
+                    'type': 'and',
+                    'conditions': [
+                        {'type': 'helper', 'name': 'has_boss_strength', 'args': [{'type': 'constant', 'value': 'sierpes'}]},
+                        {'type': 'state_method', 'method': 'can_reach_region', 'args': [{'type': 'constant', 'value': 'D20Z02S07[W]'}]}
+                    ]
+                }
+            }
+
+            # Return explicit rule if defined
+            if func_name in explicit_boss_rules:
+                return explicit_boss_rules[func_name]
+
+            # Simple boss mappings for other bosses (no region requirements in their methods)
+            simple_boss_mapping = {
                 'can_beat_brotherhood_boss': 'warden',
                 'can_beat_mercy_boss': 'ten-piedad',
                 'can_beat_convent_boss': 'charred-visage',
@@ -89,89 +183,15 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
                 'can_beat_prison_boss': 'quirce',
                 'can_beat_rooftops_boss': 'crisanta',
                 'can_beat_ossuary_boss': 'isidora',
-                'can_beat_mourning_boss': 'sierpes',
-                'can_beat_graveyard_boss': 'amanecida',
-                'can_beat_jondo_boss': 'amanecida',
-                'can_beat_patio_boss': 'amanecida',
-                'can_beat_wall_boss': 'amanecida',
-                'can_beat_hall_boss': 'laudes',
             }
 
-            func_name = rule_func.__name__
-            if func_name in boss_mapping:
-                boss_name = boss_mapping[func_name]
-                # For boss methods, manually construct the rule with the boss name
-                # Most boss methods follow the pattern:
-                # has_boss_strength(state, "boss_name") AND (region1 OR region2)
-                #
-                # Inspect the function to extract any region requirements
-                import inspect
-                source = inspect.getsource(rule_func)
-
-                # Extract region names from can_reach_region calls
-                import re
-                region_matches = re.findall(r'can_reach_region\(["\']([^"\']+)["\']', source)
-
-                # Build the rule conditions
-                conditions = [
-                    {
-                        'type': 'helper',
-                        'name': 'has_boss_strength',
-                        'args': [{'type': 'constant', 'value': boss_name}]
-                    }
-                ]
-
-                # Add region requirements as OR condition (boss fights can be entered from multiple doors)
-                if len(region_matches) > 1:
-                    # Multiple regions are ORed together (can enter boss from either side)
-                    region_conditions = []
-                    for region in region_matches:
-                        region_conditions.append({
-                            'type': 'state_method',
-                            'method': 'can_reach_region',
-                            'args': [{'type': 'constant', 'value': region}]
-                        })
-                    conditions.append({
-                        'type': 'or',
-                        'conditions': region_conditions
-                    })
-                elif len(region_matches) == 1:
-                    # Single region - add directly
-                    conditions.append({
-                        'type': 'state_method',
-                        'method': 'can_reach_region',
-                        'args': [{'type': 'constant', 'value': region_matches[0]}]
-                    })
-
-                # Add wall_climb or double_jump requirement if found in source
-                # Note: These are also ORed in the source (wall_climb OR double_jump)
-                if 'wall_climb' in source or 'double_jump' in source:
-                    movement_conditions = []
-                    if 'wall_climb' in source:
-                        movement_conditions.append({
-                            'type': 'helper',
-                            'name': 'wall_climb',
-                            'args': []
-                        })
-                    if 'double_jump' in source:
-                        movement_conditions.append({
-                            'type': 'helper',
-                            'name': 'double_jump',
-                            'args': []
-                        })
-                    if len(movement_conditions) > 1:
-                        conditions.append({
-                            'type': 'or',
-                            'conditions': movement_conditions
-                        })
-                    else:
-                        conditions.append(movement_conditions[0])
-
-                # Return AND of all conditions
-                if len(conditions) == 1:
-                    return conditions[0]
-                else:
-                    return {'type': 'and', 'conditions': conditions}
+            if func_name in simple_boss_mapping:
+                boss_name = simple_boss_mapping[func_name]
+                return {
+                    'type': 'helper',
+                    'name': 'has_boss_strength',
+                    'args': [{'type': 'constant', 'value': boss_name}]
+                }
 
         # First try to extract from closure variables if this is a lambda with clauses
         closure_result = self._try_extract_from_closure(rule_func)
