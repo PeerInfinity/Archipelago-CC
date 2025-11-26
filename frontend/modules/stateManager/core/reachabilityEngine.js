@@ -265,25 +265,40 @@ export function computeReachableRegions(sm) {
         for (const loc of sm.eventLocations.values()) {
           if (sm.knownReachableRegions.has(loc.region)) {
             const canAccessLoc = isLocationAccessible(sm, loc);
-            // Check if location hasn't been checked yet AND item isn't already collected
-            if (canAccessLoc && !sm.checkedLocations.has(loc.name) && !sm._hasItem(loc.item.name)) {
-              sm._addItemToInventory(loc.item.name, 1);
+            // Check if location hasn't been checked yet
+            if (canAccessLoc && !sm.checkedLocations.has(loc.name)) {
+              // Mark location as checked
               sm.checkedLocations.add(loc.name);
-              newEventCollected = true;
-              continueSearching = true;
-              sm._logDebug(
-                `[ReachabilityEngine] Auto-collected event item: ${loc.item.name} from ${loc.name}`
-              );
 
-              // Process event item to update gameStateModule.events
-              if (sm.gameStateModule && sm.logicModule && typeof sm.logicModule.processEventItem === 'function') {
-                const updatedState = sm.logicModule.processEventItem(sm.gameStateModule, loc.item.name);
-                if (updatedState) {
-                  sm.gameStateModule = updatedState;
-                  sm._logDebug(
-                    `[ReachabilityEngine] Processed event item: ${loc.item.name}`
-                  );
+              // Track if this is a new item (didn't have any before)
+              const hadItemBefore = sm._hasItem(loc.item.name);
+
+              // Always add the item - _addItemToInventory handles max_count limits
+              // Some items like "Tier 1 Beaten" need multiple copies to unlock later content
+              sm._addItemToInventory(loc.item.name, 1);
+
+              // Signal progress if we didn't have this item before
+              if (!hadItemBefore) {
+                newEventCollected = true;
+                continueSearching = true;
+                sm._logDebug(
+                  `[ReachabilityEngine] Auto-collected event item: ${loc.item.name} from ${loc.name}`
+                );
+
+                // Process event item to update gameStateModule.events
+                if (sm.gameStateModule && sm.logicModule && typeof sm.logicModule.processEventItem === 'function') {
+                  const updatedState = sm.logicModule.processEventItem(sm.gameStateModule, loc.item.name);
+                  if (updatedState) {
+                    sm.gameStateModule = updatedState;
+                    sm._logDebug(
+                      `[ReachabilityEngine] Processed event item: ${loc.item.name}`
+                    );
+                  }
                 }
+              } else {
+                sm._logDebug(
+                  `[ReachabilityEngine] Auto-collected additional copy of: ${loc.item.name} from ${loc.name}`
+                );
               }
             }
           }
