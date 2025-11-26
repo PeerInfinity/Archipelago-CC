@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-26T06:10:19.808816",
-    "last_updated": "2025-11-26T06:10:19.808826",
+    "last_updated": "2025-11-26T20:23:12.192178",
     "script_version": "1.0.0"
   },
   "results": {
@@ -16217,39 +16217,27 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "1": {
-              "new_rules_hash": "3ac704779a8ee852d028a50f8b98bd0e8e94c2809c3c74cbe92a1f00c46b7a3e",
-              "new_spheres_hash": "c76171a7870e64bdac1958ed4acda9551a3c91c4f866f7e8a03242884737039c",
-              "original_rules_hash": "3ac704779a8ee852d028a50f8b98bd0e8e94c2809c3c74cbe92a1f00c46b7a3e",
-              "original_spheres_hash": "c76171a7870e64bdac1958ed4acda9551a3c91c4f866f7e8a03242884737039c",
-              "rules_identical": true,
-              "seed": "1",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T06:04:13.600497"
-            }
-          },
           "game_name_from_filename": "ffmq",
           "game_name_from_yaml": "Final Fantasy Mystic Quest",
           "generation": {
             "error_count": 0,
-            "error_type": null,
-            "processing_time_seconds": 3.06,
-            "return_code": 0,
-            "success": true,
+            "note": "Skipped in test-only mode",
+            "processing_time_seconds": 0,
+            "return_code": null,
+            "success": false,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/ffmq/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-            "size_bytes": 434043,
-            "size_mb": 0.41
+            "size_bytes": 436107,
+            "size_mb": 0.42
           },
           "seed": "1",
           "seed_id": "AP_14089154938208861744",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 9.81,
+            "processing_time_seconds": 12.89,
             "return_code": 0,
             "sphere_reached": 18.2,
             "success": true,
@@ -16257,7 +16245,7 @@
             "warning_count": 0
           },
           "template_filename": "Final Fantasy Mystic Quest.yaml",
-          "timestamp": "2025-11-26T05:41:17.277918",
+          "timestamp": "2025-11-26T20:22:58.837452",
           "world_info": {
             "exporter_path": "exporter/games/ffmq.py",
             "game_logic_path": null,
@@ -16808,7 +16796,7 @@
         "failure_rate": 0.0
       },
       "template_filename": "Final Fantasy Mystic Quest.yaml",
-      "timestamp": "2025-11-26T05:41:17.277918",
+      "timestamp": "2025-11-26T20:22:58.837452",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/ffmq.py",

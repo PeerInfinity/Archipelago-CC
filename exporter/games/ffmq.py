@@ -195,15 +195,18 @@ class FFMQGameExportHandler(BaseGameExportHandler):
                 elif hasattr(FFMQItems, 'trap_items') and item_name in FFMQItems.trap_items:
                     is_trap = True
 
+                # Items with id=None are event items (e.g., "Barrel Pushed", "Long Spine Bombed")
+                is_event = item_data.id is None
+
                 ffmq_items_data[item_name] = {
                     'name': item_name,
                     'id': item_data.id,
-                    'groups': sorted(groups),
-                    'advancement': is_advancement,
+                    'groups': sorted(groups) if not is_event else ['Event'],
+                    'advancement': is_advancement or is_event,  # Events are progression
                     'useful': is_useful,
                     'trap': is_trap,
-                    'event': False,
-                    'type': None,
+                    'event': is_event,
+                    'type': 'Event' if is_event else None,
                     'max_count': 1
                 }
                 
