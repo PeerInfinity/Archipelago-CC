@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-26T06:10:19.808816",
-    "last_updated": "2025-11-26T06:10:19.808826",
+    "last_updated": "2025-11-26T18:51:28.169239",
     "script_version": "1.0.0"
   },
   "results": {
@@ -39609,24 +39609,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "1": {
-              "new_rules_hash": "07d35a0a15151eb270b1c3550612bc6d5006ed2ae9da077604ba604e793bf0c9",
-              "new_spheres_hash": "11e0324bda3c1cff4fcfd86b3f661f847f7a484602261bf8945a7e8cb8dd9b2a",
-              "original_rules_hash": "07d35a0a15151eb270b1c3550612bc6d5006ed2ae9da077604ba604e793bf0c9",
-              "original_spheres_hash": "11e0324bda3c1cff4fcfd86b3f661f847f7a484602261bf8945a7e8cb8dd9b2a",
-              "rules_identical": true,
-              "seed": "1",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T06:06:14.367740"
-            }
-          },
           "game_name_from_filename": "sc2",
           "game_name_from_yaml": "Starcraft 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.15,
+            "processing_time_seconds": 8.96,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -39641,7 +39629,7 @@
           "spoiler_test": {
             "error_count": 8,
             "pass_fail": "failed",
-            "processing_time_seconds": 49.04,
+            "processing_time_seconds": 21.13,
             "return_code": 1,
             "sphere_reached": 14.9,
             "success": false,
@@ -39649,7 +39637,7 @@
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-11-26T06:01:27.129271",
+          "timestamp": "2025-11-26T18:47:16.980445",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -40200,7 +40188,7 @@
         "failure_rate": 0.1
       },
       "template_filename": "Starcraft 2.yaml",
-      "timestamp": "2025-11-26T06:01:27.129271",
+      "timestamp": "2025-11-26T18:47:16.928463",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/sc2.py",
@@ -48259,7 +48247,7 @@
         "success": true,
         "warning_count": 0
       },
-      "consecutive_passes_before_failure": 7,
+      "consecutive_passes_before_failure": 10,
       "consistency_tests": {
         "1": {
           "new_rules_hash": "3536073d8cd5e935209b4527fb7f65c3364677101a7ab6ea55fdb607a5a9e357",
@@ -48362,8 +48350,8 @@
           "timestamp": "2025-11-26T06:06:35.713244"
         }
       },
-      "first_failure_reason": "Test failed at sphere 0.5",
-      "first_failure_seed": 8,
+      "first_failure_reason": null,
+      "first_failure_seed": null,
       "game_name_from_filename": "witness",
       "game_name_from_yaml": "The Witness",
       "generation": {
@@ -48381,31 +48369,19 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "1": {
-              "new_rules_hash": "3536073d8cd5e935209b4527fb7f65c3364677101a7ab6ea55fdb607a5a9e357",
-              "new_spheres_hash": "7dd083577b2e57500ad770689a4b898072e7b4b0b6d7b19012a108bacf4c68e3",
-              "original_rules_hash": "3536073d8cd5e935209b4527fb7f65c3364677101a7ab6ea55fdb607a5a9e357",
-              "original_spheres_hash": "7dd083577b2e57500ad770689a4b898072e7b4b0b6d7b19012a108bacf4c68e3",
-              "rules_identical": true,
-              "seed": "1",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T06:07:09.694315"
-            }
-          },
           "game_name_from_filename": "witness",
           "game_name_from_yaml": "The Witness",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.25,
+            "processing_time_seconds": 9.15,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/witness/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-            "size_bytes": 288744,
+            "size_bytes": 290522,
             "size_mb": 0.28
           },
           "seed": "1",
@@ -48413,7 +48389,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 6.82,
+            "processing_time_seconds": 9.81,
             "return_code": 0,
             "sphere_reached": 9.1,
             "success": true,
@@ -48421,7 +48397,7 @@
             "warning_count": 0
           },
           "template_filename": "The Witness.yaml",
-          "timestamp": "2025-11-26T05:56:09.904817",
+          "timestamp": "2025-11-26T18:48:08.522465",
           "world_info": {
             "exporter_path": "exporter/games/witness.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/witness/witnessLogic.js",
@@ -48438,31 +48414,19 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "10": {
-              "new_rules_hash": "9a4032e9638f4920dc886a27f41007684a80390aef9600be82b71f782b4081da",
-              "new_spheres_hash": "9e11928304a247f8605ec128af56372c72fabea33c82916ce055c0460af68d7b",
-              "original_rules_hash": "9a4032e9638f4920dc886a27f41007684a80390aef9600be82b71f782b4081da",
-              "original_spheres_hash": "9e11928304a247f8605ec128af56372c72fabea33c82916ce055c0460af68d7b",
-              "rules_identical": true,
-              "seed": "10",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T06:07:00.615025"
-            }
-          },
           "game_name_from_filename": "witness",
           "game_name_from_yaml": "The Witness",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.15,
+            "processing_time_seconds": 8.86,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/witness/AP_55941320597534372051/AP_55941320597534372051_rules.json",
-            "size_bytes": 288745,
+            "size_bytes": 290523,
             "size_mb": 0.28
           },
           "seed": "10",
@@ -48470,7 +48434,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 6.81,
+            "processing_time_seconds": 9.76,
             "return_code": 0,
             "sphere_reached": 8.1,
             "success": true,
@@ -48478,7 +48442,7 @@
             "warning_count": 0
           },
           "template_filename": "The Witness.yaml",
-          "timestamp": "2025-11-26T05:56:30.624028",
+          "timestamp": "2025-11-26T18:51:09.048409",
           "world_info": {
             "exporter_path": "exporter/games/witness.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/witness/witnessLogic.js",
@@ -48495,31 +48459,19 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "2": {
-              "new_rules_hash": "95e37d39d5e7900bb8cf27a0d9cbef04f68fe675d3c7908ccf0dbaae3ebb3f21",
-              "new_spheres_hash": "9bf4b5cdda7f82b6f1f32b95504c52dd7f5af47b7e4cd6e80d8555fd734eb7ab",
-              "original_rules_hash": "95e37d39d5e7900bb8cf27a0d9cbef04f68fe675d3c7908ccf0dbaae3ebb3f21",
-              "original_spheres_hash": "9bf4b5cdda7f82b6f1f32b95504c52dd7f5af47b7e4cd6e80d8555fd734eb7ab",
-              "rules_identical": true,
-              "seed": "2",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T06:08:37.993306"
-            }
-          },
           "game_name_from_filename": "witness",
           "game_name_from_yaml": "The Witness",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.25,
+            "processing_time_seconds": 8.91,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/witness/AP_01043188731678011336/AP_01043188731678011336_rules.json",
-            "size_bytes": 288744,
+            "size_bytes": 290522,
             "size_mb": 0.28
           },
           "seed": "2",
@@ -48527,7 +48479,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 6.85,
+            "processing_time_seconds": 9.7,
             "return_code": 0,
             "sphere_reached": 7.2,
             "success": true,
@@ -48535,7 +48487,7 @@
             "warning_count": 0
           },
           "template_filename": "The Witness.yaml",
-          "timestamp": "2025-11-26T05:57:04.835324",
+          "timestamp": "2025-11-26T18:48:27.941692",
           "world_info": {
             "exporter_path": "exporter/games/witness.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/witness/witnessLogic.js",
@@ -48552,31 +48504,19 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "3": {
-              "new_rules_hash": "dfb5033807402b136e88ddb9138cbd9e8bc6a5c9c022e633687a022bd6046778",
-              "new_spheres_hash": "3e82ea8cc999ac295713e536f79df7a43f141c46620a16cbd68b6263acd26e65",
-              "original_rules_hash": "dfb5033807402b136e88ddb9138cbd9e8bc6a5c9c022e633687a022bd6046778",
-              "original_spheres_hash": "3e82ea8cc999ac295713e536f79df7a43f141c46620a16cbd68b6263acd26e65",
-              "rules_identical": true,
-              "seed": "3",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T06:09:36.794771"
-            }
-          },
           "game_name_from_filename": "witness",
           "game_name_from_yaml": "The Witness",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.06,
+            "processing_time_seconds": 8.47,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/witness/AP_84719271504320872445/AP_84719271504320872445_rules.json",
-            "size_bytes": 288744,
+            "size_bytes": 290522,
             "size_mb": 0.28
           },
           "seed": "3",
@@ -48584,7 +48524,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 6.79,
+            "processing_time_seconds": 9.59,
             "return_code": 0,
             "sphere_reached": 7.3,
             "success": true,
@@ -48592,7 +48532,7 @@
             "warning_count": 0
           },
           "template_filename": "The Witness.yaml",
-          "timestamp": "2025-11-26T05:58:07.379184",
+          "timestamp": "2025-11-26T18:48:46.989523",
           "world_info": {
             "exporter_path": "exporter/games/witness.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/witness/witnessLogic.js",
@@ -48609,31 +48549,19 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "4": {
-              "new_rules_hash": "81d1bf23cb41f0ee3c7145800b5388d6fc650437a91e37e5f1e05d81fb3d0067",
-              "new_spheres_hash": "1c59040844f3e918ba37fa1b50b17ea832af246c54f05e6068441873b7c32c43",
-              "original_rules_hash": "81d1bf23cb41f0ee3c7145800b5388d6fc650437a91e37e5f1e05d81fb3d0067",
-              "original_spheres_hash": "1c59040844f3e918ba37fa1b50b17ea832af246c54f05e6068441873b7c32c43",
-              "rules_identical": true,
-              "seed": "4",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T06:07:45.561200"
-            }
-          },
           "game_name_from_filename": "witness",
           "game_name_from_yaml": "The Witness",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 6.9,
+            "processing_time_seconds": 8.94,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/witness/AP_05594871498841892311/AP_05594871498841892311_rules.json",
-            "size_bytes": 288744,
+            "size_bytes": 290522,
             "size_mb": 0.28
           },
           "seed": "4",
@@ -48641,7 +48569,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 6.74,
+            "processing_time_seconds": 9.81,
             "return_code": 0,
             "sphere_reached": 6.2,
             "success": true,
@@ -48649,7 +48577,7 @@
             "warning_count": 0
           },
           "template_filename": "The Witness.yaml",
-          "timestamp": "2025-11-26T05:55:25.023863",
+          "timestamp": "2025-11-26T18:49:05.481482",
           "world_info": {
             "exporter_path": "exporter/games/witness.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/witness/witnessLogic.js",
@@ -48666,31 +48594,19 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "5": {
-              "new_rules_hash": "b8207bff3db0976df609a02e996439742bba300bd51aa067a36f2b205ea583ea",
-              "new_spheres_hash": "be99970732652aa397f6012d7ad2df7243da00c82a2416a0db10c434467f9580",
-              "original_rules_hash": "b8207bff3db0976df609a02e996439742bba300bd51aa067a36f2b205ea583ea",
-              "original_spheres_hash": "be99970732652aa397f6012d7ad2df7243da00c82a2416a0db10c434467f9580",
-              "rules_identical": true,
-              "seed": "5",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T06:09:06.947976"
-            }
-          },
           "game_name_from_filename": "witness",
           "game_name_from_yaml": "The Witness",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.26,
+            "processing_time_seconds": 8.5,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/witness/AP_96945849220684217413/AP_96945849220684217413_rules.json",
-            "size_bytes": 288744,
+            "size_bytes": 290522,
             "size_mb": 0.28
           },
           "seed": "5",
@@ -48698,7 +48614,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 6.83,
+            "processing_time_seconds": 9.69,
             "return_code": 0,
             "sphere_reached": 7.3,
             "success": true,
@@ -48706,7 +48622,7 @@
             "warning_count": 0
           },
           "template_filename": "The Witness.yaml",
-          "timestamp": "2025-11-26T05:56:11.782593",
+          "timestamp": "2025-11-26T18:49:24.682621",
           "world_info": {
             "exporter_path": "exporter/games/witness.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/witness/witnessLogic.js",
@@ -48723,31 +48639,19 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "6": {
-              "new_rules_hash": "63fe341dddf9893a56aa5a4702ff613daca11b2d00b5deae57eb7ecbb721a51c",
-              "new_spheres_hash": "4e329c91865fb64d97773660ea75b247fc87f05b7e3cbb7ec0453ff8edc9b361",
-              "original_rules_hash": "63fe341dddf9893a56aa5a4702ff613daca11b2d00b5deae57eb7ecbb721a51c",
-              "original_spheres_hash": "4e329c91865fb64d97773660ea75b247fc87f05b7e3cbb7ec0453ff8edc9b361",
-              "rules_identical": true,
-              "seed": "6",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T06:05:53.002180"
-            }
-          },
           "game_name_from_filename": "witness",
           "game_name_from_yaml": "The Witness",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 6.91,
+            "processing_time_seconds": 8.92,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/witness/AP_00679259829289197625/AP_00679259829289197625_rules.json",
-            "size_bytes": 288744,
+            "size_bytes": 290522,
             "size_mb": 0.28
           },
           "seed": "6",
@@ -48755,7 +48659,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 6.64,
+            "processing_time_seconds": 9.68,
             "return_code": 0,
             "sphere_reached": 10.1,
             "success": true,
@@ -48763,7 +48667,7 @@
             "warning_count": 0
           },
           "template_filename": "The Witness.yaml",
-          "timestamp": "2025-11-26T05:55:57.554963",
+          "timestamp": "2025-11-26T18:49:53.109230",
           "world_info": {
             "exporter_path": "exporter/games/witness.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/witness/witnessLogic.js",
@@ -48780,31 +48684,19 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "7": {
-              "new_rules_hash": "73966556badd91482de5e79c499f52bc97758ff746b5a396a20d076db6166e08",
-              "new_spheres_hash": "b20db339b570673ec33234e4ed0a154cd4f5445a0ad54c37f2ecf17a043e9278",
-              "original_rules_hash": "73966556badd91482de5e79c499f52bc97758ff746b5a396a20d076db6166e08",
-              "original_spheres_hash": "b20db339b570673ec33234e4ed0a154cd4f5445a0ad54c37f2ecf17a043e9278",
-              "rules_identical": true,
-              "seed": "7",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T06:07:35.206587"
-            }
-          },
           "game_name_from_filename": "witness",
           "game_name_from_yaml": "The Witness",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.3,
+            "processing_time_seconds": 8.82,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/witness/AP_35931773795037525048/AP_35931773795037525048_rules.json",
-            "size_bytes": 288744,
+            "size_bytes": 290522,
             "size_mb": 0.28
           },
           "seed": "7",
@@ -48812,7 +48704,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 6.87,
+            "processing_time_seconds": 9.6,
             "return_code": 0,
             "sphere_reached": 7.2,
             "success": true,
@@ -48820,7 +48712,7 @@
             "warning_count": 0
           },
           "template_filename": "The Witness.yaml",
-          "timestamp": "2025-11-26T05:57:02.107131",
+          "timestamp": "2025-11-26T18:50:12.167139",
           "world_info": {
             "exporter_path": "exporter/games/witness.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/witness/witnessLogic.js",
@@ -48837,47 +48729,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "8": {
-              "new_rules_hash": "5ab40149e49a93f75d1583ad878e9891617af0bb5c81b12fb52885a48f30a2ab",
-              "new_spheres_hash": "3f9000512880fbc0ba8971976855f9265c20b230c156f3a94819c1ffd24712f3",
-              "original_rules_hash": "5ab40149e49a93f75d1583ad878e9891617af0bb5c81b12fb52885a48f30a2ab",
-              "original_spheres_hash": "3f9000512880fbc0ba8971976855f9265c20b230c156f3a94819c1ffd24712f3",
-              "rules_identical": true,
-              "seed": "8",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T06:07:17.905209"
-            }
-          },
           "game_name_from_filename": "witness",
           "game_name_from_yaml": "The Witness",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.11,
+            "processing_time_seconds": 8.65,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/witness/AP_20777137877808592492/AP_20777137877808592492_rules.json",
-            "size_bytes": 288744,
+            "size_bytes": 290522,
             "size_mb": 0.28
           },
           "seed": "8",
           "seed_id": "AP_20777137877808592492",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 14.82,
-            "return_code": 1,
-            "sphere_reached": 0.5,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.75,
+            "return_code": 0,
+            "sphere_reached": 7.1,
+            "success": true,
             "total_spheres": 7.1,
             "warning_count": 0
           },
           "template_filename": "The Witness.yaml",
-          "timestamp": "2025-11-26T06:02:02.650363",
+          "timestamp": "2025-11-26T18:50:31.048064",
           "world_info": {
             "exporter_path": "exporter/games/witness.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/witness/witnessLogic.js",
@@ -48894,47 +48774,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "9": {
-              "new_rules_hash": "4b667d85da52c62a5359038511ed2dd7d8e50493bb0131b4268ccbaa254ed6cc",
-              "new_spheres_hash": "74a520e44044f3e9386c39ceab9a067c79ac2fc121431d213aeb973e3bf8590b",
-              "original_rules_hash": "4b667d85da52c62a5359038511ed2dd7d8e50493bb0131b4268ccbaa254ed6cc",
-              "original_spheres_hash": "74a520e44044f3e9386c39ceab9a067c79ac2fc121431d213aeb973e3bf8590b",
-              "rules_identical": true,
-              "seed": "9",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T06:06:35.713244"
-            }
-          },
           "game_name_from_filename": "witness",
           "game_name_from_yaml": "The Witness",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 6.88,
+            "processing_time_seconds": 8.99,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/witness/AP_48205312626925217390/AP_48205312626925217390_rules.json",
-            "size_bytes": 288744,
+            "size_bytes": 290522,
             "size_mb": 0.28
           },
           "seed": "9",
           "seed_id": "AP_48205312626925217390",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 14.72,
-            "return_code": 1,
-            "sphere_reached": 2.1,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.71,
+            "return_code": 0,
+            "sphere_reached": 6.1,
+            "success": true,
             "total_spheres": 6.1,
             "warning_count": 0
           },
           "template_filename": "The Witness.yaml",
-          "timestamp": "2025-11-26T06:01:36.063798",
+          "timestamp": "2025-11-26T18:50:49.898282",
           "world_info": {
             "exporter_path": "exporter/games/witness.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/witness/witnessLogic.js",
@@ -48954,8 +48822,8 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 2,
-      "seeds_passed": 8,
+      "seeds_failed": 0,
+      "seeds_passed": 10,
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
@@ -48967,12 +48835,12 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": false,
-        "any_failed": true,
-        "failure_rate": 0.2
+        "all_passed": true,
+        "any_failed": false,
+        "failure_rate": 0.0
       },
       "template_filename": "The Witness.yaml",
-      "timestamp": "2025-11-26T05:56:09.904817",
+      "timestamp": "2025-11-26T18:49:53.063327",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/witness.py",

@@ -3,7 +3,7 @@
   "game_name": "The Witness",
   "game_directory": "witness",
   "archipelago_version": "0.6.4",
-  "generation_seed": 1,
+  "generation_seed": 10,
   "player_names": {
     "1": "Player1"
   },
@@ -448,7 +448,7 @@
               "value": true
             },
             "item": {
-              "name": "Slowness",
+              "name": "Speed Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -485,7 +485,7 @@
               ]
             },
             "item": {
-              "name": "Power Surge",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -526,7 +526,7 @@
               }
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Slowness",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -544,7 +544,7 @@
               }
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Functioning Brain",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -589,9 +589,9 @@
               }
             },
             "item": {
-              "name": "Negative Shapers",
+              "name": "Speed Boost",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -636,7 +636,7 @@
               ]
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Bonk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -678,7 +678,7 @@
               "value": true
             },
             "item": {
-              "name": "Sound Dots",
+              "name": "Progressive Symmetry",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -902,7 +902,7 @@
               }
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -938,9 +938,9 @@
               }
             },
             "item": {
-              "name": "Slowness",
+              "name": "Progressive Dots",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -1131,7 +1131,7 @@
               }
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Slowness",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1154,7 +1154,7 @@
               ]
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Slowness",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1178,7 +1178,7 @@
               }
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1214,7 +1214,7 @@
               }
             },
             "item": {
-              "name": "Slowness",
+              "name": "Speed Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1265,7 +1265,7 @@
               "value": true
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Power Surge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1397,9 +1397,9 @@
               "value": true
             },
             "item": {
-              "name": "Triangles",
+              "name": "Speed Boost",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -1431,7 +1431,7 @@
               "value": true
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "Speed Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1517,7 +1517,7 @@
               }
             },
             "item": {
-              "name": "Shapers",
+              "name": "Progressive Stars",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1543,7 +1543,7 @@
               ]
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Slowness",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1679,7 +1679,7 @@
               }
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "Slowness",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1904,7 +1904,7 @@
               ]
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Slowness",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1976,7 +1976,7 @@
               ]
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Slowness",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2039,7 +2039,7 @@
               }
             },
             "item": {
-              "name": "Bonk",
+              "name": "Speed Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2062,7 +2062,7 @@
               ]
             },
             "item": {
-              "name": "Power Surge",
+              "name": "Speed Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2136,7 +2136,7 @@
               ]
             },
             "item": {
-              "name": "Slowness",
+              "name": "Power Surge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2198,7 +2198,7 @@
               ]
             },
             "item": {
-              "name": "Slowness",
+              "name": "Speed Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2267,9 +2267,9 @@
               "value": true
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Eraser",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2337,7 +2337,7 @@
               "value": true
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "Speed Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2508,7 +2508,7 @@
               "value": true
             },
             "item": {
-              "name": "Slowness",
+              "name": "Speed Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2545,9 +2545,9 @@
               "value": true
             },
             "item": {
-              "name": "Bonk",
+              "name": "Colored Squares",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -2705,7 +2705,7 @@
               ]
             },
             "item": {
-              "name": "Slowness",
+              "name": "Speed Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2830,7 +2830,7 @@
               }
             },
             "item": {
-              "name": "Slowness",
+              "name": "Speed Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2885,9 +2885,9 @@
               }
             },
             "item": {
-              "name": "Slowness",
+              "name": "Shapers",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -3082,9 +3082,9 @@
               ]
             },
             "item": {
-              "name": "Progressive Dots",
+              "name": "Speed Boost",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3181,7 +3181,7 @@
               ]
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Slowness",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3230,9 +3230,9 @@
               ]
             },
             "item": {
-              "name": "Boat",
+              "name": "Puzzle Skip",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -3305,9 +3305,9 @@
               }
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Progressive Dots",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -3359,7 +3359,7 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "Slowness",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3640,7 +3640,7 @@
               "value": true
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Slowness",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3685,7 +3685,7 @@
               }
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "Speed Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3722,7 +3722,7 @@
               }
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "Speed Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3826,9 +3826,9 @@
               ]
             },
             "item": {
-              "name": "Progressive Stars",
+              "name": "Speed Boost",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -3889,9 +3889,9 @@
               "value": true
             },
             "item": {
-              "name": "Progressive Dots",
+              "name": "Speed Boost",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3903,7 +3903,7 @@
               "value": true
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "Speed Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3921,7 +3921,7 @@
               }
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "Speed Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3939,9 +3939,9 @@
               }
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Progressive Symmetry",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -4088,9 +4088,9 @@
               ]
             },
             "item": {
-              "name": "Slowness",
+              "name": "Negative Shapers",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -4144,9 +4144,9 @@
               ]
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Rotated Shapers",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -4375,9 +4375,9 @@
               "value": true
             },
             "item": {
-              "name": "Progressive Symmetry",
+              "name": "Speed Boost",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -4420,9 +4420,9 @@
               }
             },
             "item": {
-              "name": "Rotated Shapers",
+              "name": "Power Surge",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -4584,7 +4584,7 @@
               }
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4704,7 +4704,7 @@
               }
             },
             "item": {
-              "name": "Power Surge",
+              "name": "Speed Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4768,7 +4768,7 @@
               ]
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4841,9 +4841,9 @@
               ]
             },
             "item": {
-              "name": "Eraser",
+              "name": "Speed Boost",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -5234,9 +5234,9 @@
               ]
             },
             "item": {
-              "name": "Colored Squares",
+              "name": "Slowness",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -5311,7 +5311,7 @@
               }
             },
             "item": {
-              "name": "Functioning Brain",
+              "name": "Slowness",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5348,9 +5348,9 @@
               }
             },
             "item": {
-              "name": "Progressive Symmetry",
+              "name": "Speed Boost",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -5422,7 +5422,7 @@
               }
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5552,7 +5552,7 @@
               }
             },
             "item": {
-              "name": "Power Surge",
+              "name": "Slowness",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5589,7 +5589,7 @@
               }
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "Speed Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5638,7 +5638,7 @@
               ]
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5801,7 +5801,7 @@
               ]
             },
             "item": {
-              "name": "Slowness",
+              "name": "Speed Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6174,9 +6174,9 @@
               ]
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Sound Dots",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6200,7 +6200,7 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "Speed Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6223,9 +6223,9 @@
               ]
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Triangles",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -6259,7 +6259,7 @@
               ]
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Power Surge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6530,7 +6530,7 @@
               ]
             },
             "item": {
-              "name": "Slowness",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6678,7 +6678,7 @@
               ]
             },
             "item": {
-              "name": "Slowness",
+              "name": "Bonk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6869,9 +6869,9 @@
               ]
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Boat",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6943,7 +6943,7 @@
               ]
             },
             "item": {
-              "name": "Speed Boost",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
