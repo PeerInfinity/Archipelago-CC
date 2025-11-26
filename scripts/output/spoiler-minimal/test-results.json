@@ -211,7 +211,7 @@
       ],
       "last_updated": "2025-11-26T00:50:27.260049"
     },
-    "last_updated": "2025-11-26T00:50:27.260046",
+    "last_updated": "2025-11-26T01:50:38.449935",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1074,24 +1074,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "1": {
-              "new_rules_hash": "a7de2109b969c4c406fb71b51a42c304a68ff2951048e3d9e675e42ee7944a43",
-              "new_spheres_hash": "8e266afac3ba7d81ef74fc8d135603123618995f21fa4b5dcd6df0a25e755d2f",
-              "original_rules_hash": "a7de2109b969c4c406fb71b51a42c304a68ff2951048e3d9e675e42ee7944a43",
-              "original_spheres_hash": "8e266afac3ba7d81ef74fc8d135603123618995f21fa4b5dcd6df0a25e755d2f",
-              "rules_identical": true,
-              "seed": "1",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T00:41:48.298370"
-            }
-          },
           "game_name_from_filename": "alttp",
           "game_name_from_yaml": "A Link to the Past",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 9.23,
+            "processing_time_seconds": 11.28,
             "return_code": 0,
             "success": true,
             "warning_count": 2
@@ -1106,7 +1094,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 17.02,
+            "processing_time_seconds": 23.24,
             "return_code": 0,
             "sphere_reached": 22.1,
             "success": true,
@@ -1114,7 +1102,7 @@
             "warning_count": 0
           },
           "template_filename": "A Link to the Past.yaml",
-          "timestamp": "2025-11-26T00:11:39.481274",
+          "timestamp": "2025-11-26T01:50:03.438162",
           "world_info": {
             "exporter_path": "exporter/games/alttp.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -1665,7 +1653,7 @@
         "failure_rate": 0.0
       },
       "template_filename": "A Link to the Past.yaml",
-      "timestamp": "2025-11-26T00:11:39.481274",
+      "timestamp": "2025-11-26T01:50:03.438162",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/alttp.py",
