@@ -4,19 +4,19 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-25 08:52:03
+**Generated:** 2025-11-26 00:21:20
 
 **Source Data Created:** 2025-11-25T06:13:39.768280
 
-**Source Data Last Updated:** 2025-11-25T06:13:39.768288
+**Source Data Last Updated:** 2025-11-26T00:21:20.597327
 
 ## Summary
 
 - **Total Games:** 76
 - **Passed:** 74 (97.4%)
 - **Failed:** 2 (2.6%)
-- **Games with Intermittent Failures:** 6
-- **Total Intermittent Failures:** 29
+- **Games with Intermittent Failures:** 7
+- **Total Intermittent Failures:** 30
 
 ## Test Results
 
@@ -71,12 +71,12 @@
 | Pokemon Red and Blue | ✅ Passed seeds 1-10 | 0 | 10.2 | 10.2 | 🟢 Complete | ✅ | ✅ |
 | Raft | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed seeds 1-10 | 0 | 8.3 | 8.3 | 🟢 Complete | ⚫ | ⚫ |
-| SMZ3 | ❌ Failed seed 1 | 0 | 7.6 | 16.2 | 🟡 46.9% | ✅ | ✅ |
+| SMZ3 | ✅ Passed seeds 1-10 | 0 | 16.2 | 16.2 | 🟢 Complete | ✅ | ✅ |
 | Saving Princess | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ⚫ |
 | Secret of Evermore | ✅ Passed seeds 1-10 | 0 | 5.2 | 5.2 | 🟢 Complete | ✅ | ✅ |
 | Shivers | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed seeds 1-10 | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ⚫ |
-| Starcraft 2 | ✅ Passed seeds 1 | 0 | 32.2 | 32.2 | 🟢 Complete | ✅ | ✅ |
+| Starcraft 2 | ❌ Failed seed 2 | 0 | 3.3 | 32.2 | 🟡 10.2% | ✅ | ✅ |
 | Stardew Valley | ✅ Passed seeds 1-7 | 0 | 44.1 | 44.1 | 🟢 Complete | ✅ | ⚫ |
 | Subnautica | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed seeds 1-10 | 0 | 5.4 | 5.4 | 🟢 Complete | ✅ | ✅ |
@@ -110,6 +110,7 @@ These seeds were previously failing but passed during a retest run:
 | Kingdom Hearts 2 | 9 | 2025-11-25 06:02 | Previously failed, now passing |
 | MegaMan Battle Network 3 | 5 | 2025-11-25 06:04 | Previously failed, now passing |
 | MegaMan Battle Network 3 | 9 | 2025-11-25 06:02 | Previously failed, now passing |
+| SMZ3 | 1 | 2025-11-26 00:21 | Previously failed, now passing |
 | Starcraft 2 | 2 | 2025-11-25 06:05 | Previously failed, now passing |
 | Starcraft 2 | 3 | 2025-11-25 06:06 | Previously failed, now passing |
 | Starcraft 2 | 4 | 2025-11-25 06:05 | Previously failed, now passing |
