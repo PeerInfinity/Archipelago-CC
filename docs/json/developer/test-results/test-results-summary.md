@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-26 08:43:55
+**Generated:** 2025-11-26 18:57:47
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -12,22 +12,22 @@ This summary combines results from four types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 73/76 passed (96.1%)
+- **Minimal Test:** 74/76 passed (97.4%)
 - **Full Test:** 71/76 passed (93.4%)
 - **Multiclient Test:** 59/76 passed (77.6%)
 - **Multiworld Test:** 56/76 passed (73.7%)
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 0 game(s), 0 total failure(s)
+- **Minimal Spoilers Test:** 1 game(s), 1 total failure(s)
 - **Full Spoilers Test:** 0 game(s), 0 total failure(s)
 
 ### Combined Test Results
 
 - **Templates passing all 4 tests:** 56/76 (73.7%)
 - **Templates passing 3 tests:** 1/76 (1.3%)
-- **Templates passing 2 tests:** 15/76 (19.7%)
-- **Templates passing 1 test:** 2/76 (2.6%)
+- **Templates passing 2 tests:** 16/76 (21.1%)
+- **Templates passing 1 test:** 1/76 (1.3%)
 - **Templates passing 0 tests:** 2/76 (2.6%)
 
 ## Test Results
@@ -88,7 +88,7 @@ This summary combines results from four types of tests:
 | Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Shivers | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
-| Starcraft 2 | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
+| Starcraft 2 | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | Stardew Valley | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ⚫ |
 | Subnautica | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |

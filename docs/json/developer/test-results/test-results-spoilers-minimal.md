@@ -4,19 +4,19 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-26 08:43:55
+**Generated:** 2025-11-26 18:57:47
 
 **Source Data Created:** 2025-11-26T06:10:19.808816
 
-**Source Data Last Updated:** 2025-11-26T06:10:19.808826
+**Source Data Last Updated:** 2025-11-26T18:57:47.110034
 
 ## Summary
 
 - **Total Games:** 76
-- **Passed:** 73 (96.1%)
-- **Failed:** 3 (3.9%)
-- **Games with Intermittent Failures:** 0
-- **Total Intermittent Failures:** 0
+- **Passed:** 74 (97.4%)
+- **Failed:** 2 (2.6%)
+- **Games with Intermittent Failures:** 1
+- **Total Intermittent Failures:** 1
 
 ## Test Results
 
@@ -76,13 +76,13 @@
 | Secret of Evermore | ✅ Passed seeds 1-10 | 0 | 5.2 | 5.2 | 🟢 Complete | ✅ | ✅ |
 | Shivers | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed seeds 1-10 | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ⚫ |
-| Starcraft 2 | ❌ Failed seed 1 | 0 | 14.9 | 32.2 | 🟡 46.3% | ✅ | ✅ |
+| Starcraft 2 | ✅ Passed seeds 1-10 | 0 | 32.2 | 32.2 | 🟢 Complete | ✅ | ✅ |
 | Stardew Valley | ✅ Passed seeds 1-10 | 0 | 44.1 | 44.1 | 🟢 Complete | ✅ | ⚫ |
 | Subnautica | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed seeds 1-10 | 0 | 5.4 | 5.4 | 🟢 Complete | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
 | Super Mario World | ✅ Passed seeds 1-10 | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ⚫ |
-| Super Metroid | ❌ Failed seed 4 | 1 | 3.2 | 11.3 | 🟡 28.3% | ✅ | ✅ |
+| Super Metroid | ❌ Failed seed 7 | 1 | 5.8 | 9.2 | 🟡 63.0% | ✅ | ✅ |
 | TUNIC | ✅ Passed seeds 1-10 | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ⚫ |
 | Terraria | ✅ Passed seeds 1-10 | 0 | 9.5 | 9.5 | 🟢 Complete | ✅ | ✅ |
 | The Legend of Zelda | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
@@ -98,6 +98,15 @@
 | Yoshi's Island | ✅ Passed seeds 1-10 | 0 | 12.4 | 12.4 | 🟢 Complete | ✅ | ✅ |
 | Yu-Gi-Oh! 2006 | ✅ Passed seeds 1-10 | 0 | 21.23 | 21.23 | 🟢 Complete | ✅ | ✅ |
 | shapez | ✅ Passed seeds 1-10 | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
+
+## Intermittent Failures
+
+These seeds were previously failing but passed during a retest run:
+
+| Template | Seed | Timestamp | Notes |
+|----------|------|-----------|-------|
+| Starcraft 2 | 1 | 2025-11-26 18:55 | Previously failed, now passing |
+
 
 ## Notes
 
