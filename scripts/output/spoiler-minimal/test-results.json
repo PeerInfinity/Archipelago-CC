@@ -207,11 +207,18 @@
           "seed": 8,
           "template": "Yu-Gi-Oh! 2006.yaml",
           "timestamp": "2025-11-25T06:08:40.508260"
+        },
+        {
+          "now_passing": true,
+          "previously_failed": true,
+          "seed": 1,
+          "template": "SMZ3.yaml",
+          "timestamp": "2025-11-26T00:15:53.967577"
         }
       ],
-      "last_updated": "2025-11-25T06:13:39.768290"
+      "last_updated": "2025-11-26T00:16:14.739924"
     },
-    "last_updated": "2025-11-25T06:13:39.768288",
+    "last_updated": "2025-11-26T00:18:25.133511",
     "script_version": "1.0.0"
   },
   "results": {
@@ -4786,47 +4793,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "10": {
-              "new_rules_hash": "610d7477a1d43befa2dc2f83d2b6f66b03d4ba3466f9f34ee2a9e3a8f45a28f0",
-              "new_spheres_hash": "6384ef7384b03c81f4e777e79e273f7b3c99bd4c244d063225d5272a52ad93c2",
-              "original_rules_hash": "610d7477a1d43befa2dc2f83d2b6f66b03d4ba3466f9f34ee2a9e3a8f45a28f0",
-              "original_spheres_hash": "6384ef7384b03c81f4e777e79e273f7b3c99bd4c244d063225d5272a52ad93c2",
-              "rules_identical": true,
-              "seed": "10",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-25T06:07:59.772691"
-            }
-          },
           "game_name_from_filename": "blasphemous",
           "game_name_from_yaml": "Blasphemous",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 39.63,
+            "processing_time_seconds": 38.41,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/blasphemous/AP_55941320597534372051/AP_55941320597534372051_rules.json",
-            "size_bytes": 3107005,
-            "size_mb": 2.96
+            "size_bytes": 3114750,
+            "size_mb": 2.97
           },
           "seed": "10",
           "seed_id": "AP_55941320597534372051",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 300.01,
-            "return_code": -1,
+            "processing_time_seconds": 67.18,
+            "return_code": 0,
             "sphere_reached": 10.2,
-            "success": false,
+            "success": true,
             "total_spheres": 10.2,
             "warning_count": 0
           },
           "template_filename": "Blasphemous.yaml",
-          "timestamp": "2025-11-25T05:34:11.625453",
+          "timestamp": "2025-11-26T00:16:38.770081",
           "world_info": {
             "exporter_path": "exporter/games/blasphemous.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
@@ -5320,7 +5315,7 @@
         "failure_rate": 0.0
       },
       "template_filename": "Blasphemous.yaml",
-      "timestamp": "2025-11-25T05:34:07.011788",
+      "timestamp": "2025-11-26T00:16:38.770081",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/blasphemous.py",
@@ -35681,7 +35676,7 @@
         "success": true,
         "warning_count": 0
       },
-      "consecutive_passes_before_failure": 0,
+      "consecutive_passes_before_failure": 10,
       "consistency_tests": {
         "1": {
           "new_rules_hash": "a21bb6bb80b1cf706ce80a5af7e963b59fe077713e1f9bcf8ce0ca8e06deae39",
@@ -35724,8 +35719,8 @@
           "timestamp": "2025-11-25T06:08:27.019167"
         }
       },
-      "first_failure_reason": "Test failed at sphere 7.6",
-      "first_failure_seed": 1,
+      "first_failure_reason": null,
+      "first_failure_seed": null,
       "game_name_from_filename": "smz3",
       "game_name_from_yaml": "SMZ3",
       "generation": {
@@ -35748,30 +35743,30 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 4.09,
+            "processing_time_seconds": 6.27,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/smz3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-            "size_bytes": 511961,
-            "size_mb": 0.49
+            "size_bytes": 507441,
+            "size_mb": 0.48
           },
           "seed": "1",
           "seed_id": "AP_14089154938208861744",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 27.18,
-            "return_code": 1,
-            "sphere_reached": 7.6,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 18.88,
+            "return_code": 0,
+            "sphere_reached": 16.2,
+            "success": true,
             "total_spheres": 16.2,
             "warning_count": 0
           },
           "template_filename": "SMZ3.yaml",
-          "timestamp": "2025-11-25T06:00:42.934544",
+          "timestamp": "2025-11-26T00:11:32.729087",
           "world_info": {
             "exporter_path": "exporter/games/smz3.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
@@ -35788,39 +35783,27 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "10": {
-              "new_rules_hash": "1b8a1194a3a124d96e76f15414974081f57c585bda24c8e0c2b09ae771f60db6",
-              "new_spheres_hash": "ec863e7923db0c12932f8a0b3c041ce48e1ef16b4d63a915c32694c0d4fbe11c",
-              "original_rules_hash": "1b8a1194a3a124d96e76f15414974081f57c585bda24c8e0c2b09ae771f60db6",
-              "original_spheres_hash": "ec863e7923db0c12932f8a0b3c041ce48e1ef16b4d63a915c32694c0d4fbe11c",
-              "rules_identical": true,
-              "seed": "10",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-25T06:10:30.564891"
-            }
-          },
           "game_name_from_filename": "smz3",
           "game_name_from_yaml": "SMZ3",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 4.29,
+            "processing_time_seconds": 7.05,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/smz3/AP_55941320597534372051/AP_55941320597534372051_rules.json",
-            "size_bytes": 511959,
-            "size_mb": 0.49
+            "size_bytes": 507439,
+            "size_mb": 0.48
           },
           "seed": "10",
           "seed_id": "AP_55941320597534372051",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 14.96,
+            "processing_time_seconds": 19.13,
             "return_code": 0,
             "sphere_reached": 21.2,
             "success": true,
@@ -35828,7 +35811,97 @@
             "warning_count": 0
           },
           "template_filename": "SMZ3.yaml",
-          "timestamp": "2025-11-25T05:52:44.353909",
+          "timestamp": "2025-11-26T00:15:27.328430",
+          "world_info": {
+            "exporter_path": "exporter/games/smz3.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
+            "game_name_from_filename": "smz3",
+            "game_name_from_yaml": "SMZ3",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "world_directory": "smz3"
+          }
+        },
+        "2": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "smz3",
+          "game_name_from_yaml": "SMZ3",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.74,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/smz3/AP_01043188731678011336/AP_01043188731678011336_rules.json",
+            "size_bytes": 507436,
+            "size_mb": 0.48
+          },
+          "seed": "2",
+          "seed_id": "AP_01043188731678011336",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 18.81,
+            "return_code": 0,
+            "sphere_reached": 13.1,
+            "success": true,
+            "total_spheres": 13.1,
+            "warning_count": 0
+          },
+          "template_filename": "SMZ3.yaml",
+          "timestamp": "2025-11-26T00:11:58.340977",
+          "world_info": {
+            "exporter_path": "exporter/games/smz3.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
+            "game_name_from_filename": "smz3",
+            "game_name_from_yaml": "SMZ3",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "world_directory": "smz3"
+          }
+        },
+        "3": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "smz3",
+          "game_name_from_yaml": "SMZ3",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.42,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/smz3/AP_84719271504320872445/AP_84719271504320872445_rules.json",
+            "size_bytes": 507438,
+            "size_mb": 0.48
+          },
+          "seed": "3",
+          "seed_id": "AP_84719271504320872445",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 18.75,
+            "return_code": 0,
+            "sphere_reached": 18.1,
+            "success": true,
+            "total_spheres": 18.1,
+            "warning_count": 0
+          },
+          "template_filename": "SMZ3.yaml",
+          "timestamp": "2025-11-26T00:12:24.392538",
           "world_info": {
             "exporter_path": "exporter/games/smz3.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
@@ -35845,39 +35918,27 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "4": {
-              "new_rules_hash": "84614e614cf404ffe5f5632d8b132ba64896878f10c04c4cc19cb9301409fb1b",
-              "new_spheres_hash": "64ed0c7683270a8af433848a96494466be382a8f62add1ec5d39430c84df54a3",
-              "original_rules_hash": "84614e614cf404ffe5f5632d8b132ba64896878f10c04c4cc19cb9301409fb1b",
-              "original_spheres_hash": "64ed0c7683270a8af433848a96494466be382a8f62add1ec5d39430c84df54a3",
-              "rules_identical": true,
-              "seed": "4",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-25T06:10:17.966484"
-            }
-          },
           "game_name_from_filename": "smz3",
           "game_name_from_yaml": "SMZ3",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 4.2,
+            "processing_time_seconds": 7.0,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/smz3/AP_05594871498841892311/AP_05594871498841892311_rules.json",
-            "size_bytes": 511962,
-            "size_mb": 0.49
+            "size_bytes": 507442,
+            "size_mb": 0.48
           },
           "seed": "4",
           "seed_id": "AP_05594871498841892311",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 14.92,
+            "processing_time_seconds": 18.93,
             "return_code": 0,
             "sphere_reached": 13.2,
             "success": true,
@@ -35885,7 +35946,187 @@
             "warning_count": 0
           },
           "template_filename": "SMZ3.yaml",
-          "timestamp": "2025-11-25T05:52:34.578579",
+          "timestamp": "2025-11-26T00:12:50.036034",
+          "world_info": {
+            "exporter_path": "exporter/games/smz3.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
+            "game_name_from_filename": "smz3",
+            "game_name_from_yaml": "SMZ3",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "world_directory": "smz3"
+          }
+        },
+        "5": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "smz3",
+          "game_name_from_yaml": "SMZ3",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.43,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/smz3/AP_96945849220684217413/AP_96945849220684217413_rules.json",
+            "size_bytes": 507437,
+            "size_mb": 0.48
+          },
+          "seed": "5",
+          "seed_id": "AP_96945849220684217413",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 18.88,
+            "return_code": 0,
+            "sphere_reached": 17.4,
+            "success": true,
+            "total_spheres": 17.4,
+            "warning_count": 0
+          },
+          "template_filename": "SMZ3.yaml",
+          "timestamp": "2025-11-26T00:13:16.455567",
+          "world_info": {
+            "exporter_path": "exporter/games/smz3.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
+            "game_name_from_filename": "smz3",
+            "game_name_from_yaml": "SMZ3",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "world_directory": "smz3"
+          }
+        },
+        "6": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "smz3",
+          "game_name_from_yaml": "SMZ3",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.75,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/smz3/AP_00679259829289197625/AP_00679259829289197625_rules.json",
+            "size_bytes": 508021,
+            "size_mb": 0.48
+          },
+          "seed": "6",
+          "seed_id": "AP_00679259829289197625",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 18.91,
+            "return_code": 0,
+            "sphere_reached": 17.1,
+            "success": true,
+            "total_spheres": 17.1,
+            "warning_count": 0
+          },
+          "template_filename": "SMZ3.yaml",
+          "timestamp": "2025-11-26T00:13:42.248320",
+          "world_info": {
+            "exporter_path": "exporter/games/smz3.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
+            "game_name_from_filename": "smz3",
+            "game_name_from_yaml": "SMZ3",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "world_directory": "smz3"
+          }
+        },
+        "7": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "smz3",
+          "game_name_from_yaml": "SMZ3",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.32,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/smz3/AP_35931773795037525048/AP_35931773795037525048_rules.json",
+            "size_bytes": 507437,
+            "size_mb": 0.48
+          },
+          "seed": "7",
+          "seed_id": "AP_35931773795037525048",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 18.85,
+            "return_code": 0,
+            "sphere_reached": 14.2,
+            "success": true,
+            "total_spheres": 14.2,
+            "warning_count": 0
+          },
+          "template_filename": "SMZ3.yaml",
+          "timestamp": "2025-11-26T00:14:08.376744",
+          "world_info": {
+            "exporter_path": "exporter/games/smz3.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
+            "game_name_from_filename": "smz3",
+            "game_name_from_yaml": "SMZ3",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "world_directory": "smz3"
+          }
+        },
+        "8": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "smz3",
+          "game_name_from_yaml": "SMZ3",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.72,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/smz3/AP_20777137877808592492/AP_20777137877808592492_rules.json",
+            "size_bytes": 507438,
+            "size_mb": 0.48
+          },
+          "seed": "8",
+          "seed_id": "AP_20777137877808592492",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 18.87,
+            "return_code": 0,
+            "sphere_reached": 12.1,
+            "success": true,
+            "total_spheres": 12.1,
+            "warning_count": 0
+          },
+          "template_filename": "SMZ3.yaml",
+          "timestamp": "2025-11-26T00:14:34.021729",
           "world_info": {
             "exporter_path": "exporter/games/smz3.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
@@ -35902,39 +36143,27 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "9": {
-              "new_rules_hash": "a723983dbd7aafaf69b3e1eae86f55153962a81cdf42b809fbaadec242ee0b9d",
-              "new_spheres_hash": "02eb52c8d6b7f275f454599284d21ac6e9c451dd6238725b3b4bc15a9b7cbfb4",
-              "original_rules_hash": "a723983dbd7aafaf69b3e1eae86f55153962a81cdf42b809fbaadec242ee0b9d",
-              "original_spheres_hash": "02eb52c8d6b7f275f454599284d21ac6e9c451dd6238725b3b4bc15a9b7cbfb4",
-              "rules_identical": true,
-              "seed": "9",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-25T06:08:27.019167"
-            }
-          },
           "game_name_from_filename": "smz3",
           "game_name_from_yaml": "SMZ3",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 4.18,
+            "processing_time_seconds": 6.75,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/smz3/AP_48205312626925217390/AP_48205312626925217390_rules.json",
-            "size_bytes": 512541,
-            "size_mb": 0.49
+            "size_bytes": 508021,
+            "size_mb": 0.48
           },
           "seed": "9",
           "seed_id": "AP_48205312626925217390",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 14.85,
+            "processing_time_seconds": 19.98,
             "return_code": 0,
             "sphere_reached": 16.1,
             "success": true,
@@ -35942,7 +36171,7 @@
             "warning_count": 0
           },
           "template_filename": "SMZ3.yaml",
-          "timestamp": "2025-11-25T05:52:48.982981",
+          "timestamp": "2025-11-26T00:15:00.106161",
           "world_info": {
             "exporter_path": "exporter/games/smz3.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
@@ -35962,8 +36191,8 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 7,
-      "seeds_passed": 3,
+      "seeds_failed": 0,
+      "seeds_passed": 10,
       "spoiler_test": {
         "error_count": 8,
         "pass_fail": "failed",
@@ -35975,12 +36204,12 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": false,
-        "any_failed": true,
-        "failure_rate": 0.7
+        "all_passed": true,
+        "any_failed": false,
+        "failure_rate": 0.0
       },
       "template_filename": "SMZ3.yaml",
-      "timestamp": "2025-11-25T06:06:36.777887",
+      "timestamp": "2025-11-26T00:11:32.665658",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/smz3.py",
@@ -38922,7 +39151,7 @@
         "success": true,
         "warning_count": 0
       },
-      "consecutive_passes_before_failure": 10,
+      "consecutive_passes_before_failure": 1,
       "consistency_tests": {
         "1": {
           "new_rules_hash": "07d35a0a15151eb270b1c3550612bc6d5006ed2ae9da077604ba604e793bf0c9",
@@ -38935,8 +39164,8 @@
           "timestamp": "2025-11-25T06:11:53.358751"
         }
       },
-      "first_failure_reason": null,
-      "first_failure_seed": null,
+      "first_failure_reason": "Test failed at sphere 3.3",
+      "first_failure_seed": 2,
       "game_name_from_filename": "sc2",
       "game_name_from_yaml": "Starcraft 2",
       "generation": {
@@ -38992,6 +39221,51 @@
             "has_custom_game_logic": true,
             "world_directory": "sc2"
           }
+        },
+        "2": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "sc2",
+          "game_name_from_yaml": "Starcraft 2",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 8.76,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/sc2/AP_01043188731678011336/AP_01043188731678011336_rules.json",
+            "size_bytes": 809031,
+            "size_mb": 0.77
+          },
+          "seed": "2",
+          "seed_id": "AP_01043188731678011336",
+          "spoiler_test": {
+            "error_count": 8,
+            "pass_fail": "failed",
+            "processing_time_seconds": 11.11,
+            "return_code": 1,
+            "sphere_reached": 3.3,
+            "success": false,
+            "total_spheres": 32.2,
+            "warning_count": 0
+          },
+          "template_filename": "Starcraft 2.yaml",
+          "timestamp": "2025-11-26T00:15:54.395503",
+          "world_info": {
+            "exporter_path": "exporter/games/sc2.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
+            "game_name_from_filename": "sc2",
+            "game_name_from_yaml": "Starcraft 2",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "world_directory": "sc2"
+          }
         }
       },
       "rules_file": {
@@ -39001,9 +39275,9 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "seed_range": "1",
-      "seeds_failed": 0,
-      "seeds_passed": 10,
+      "seed_range": "1-2",
+      "seeds_failed": 1,
+      "seeds_passed": 1,
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
@@ -39015,13 +39289,13 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": true,
-        "any_failed": false,
-        "failure_rate": 0.0
+        "all_passed": false,
+        "any_failed": true,
+        "failure_rate": 0.5
       },
       "template_filename": "Starcraft 2.yaml",
-      "timestamp": "2025-11-25T05:54:21.758249",
-      "total_seeds_tested": 10,
+      "timestamp": "2025-11-26T00:15:54.308434",
+      "total_seeds_tested": 2,
       "world_info": {
         "exporter_path": "exporter/games/sc2.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",

@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-25 08:52:03
+**Generated:** 2025-11-26 00:18:25
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -19,16 +19,16 @@ This summary combines results from four types of tests:
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 6 game(s), 29 total failure(s)
+- **Minimal Spoilers Test:** 7 game(s), 30 total failure(s)
 - **Full Spoilers Test:** 5 game(s), 27 total failure(s)
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 56/76 (73.7%)
-- **Templates passing 3 tests:** 1/76 (1.3%)
+- **Templates passing all 4 tests:** 55/76 (72.4%)
+- **Templates passing 3 tests:** 2/76 (2.6%)
 - **Templates passing 2 tests:** 15/76 (19.7%)
-- **Templates passing 1 test:** 2/76 (2.6%)
-- **Templates passing 0 tests:** 2/76 (2.6%)
+- **Templates passing 1 test:** 3/76 (3.9%)
+- **Templates passing 0 tests:** 1/76 (1.3%)
 
 ## Test Results
 
@@ -83,12 +83,12 @@ This summary combines results from four types of tests:
 | Pokemon Red and Blue | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | Raft | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ⚫ | ⚫ |
-| SMZ3 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
+| SMZ3 | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | Saving Princess | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Shivers | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
-| Starcraft 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Starcraft 2 | ❌ Failed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Stardew Valley | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ⚫ |
 | Subnautica | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
