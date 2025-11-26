@@ -300,10 +300,14 @@ function loadLocations(sm, selectedPlayerId) {
         sm.originalLocationOrder.push(descriptiveName);
 
         // Track event locations
-        // Event locations are those with event=true in their item
-        // Look up the full item data from sm.itemData to get the event flag
-        // Note: Must explicitly check === true to exclude items with event=false
-        if (locationDataItem.item && locationDataItem.item.name) {
+        // Event locations are those with id=null (not part of multiworld) OR with event=true in their item
+        // In Archipelago, locations with id=null are local events that provide items immediately when accessible
+        // Primary condition: location.id is null (this is the canonical way Archipelago identifies events)
+        // Secondary condition: item has event=true flag (backward compatibility)
+        if (locationDataItem.id === null && locationDataItem.item && locationDataItem.item.name) {
+          sm.eventLocations.set(descriptiveName, locationObject);
+        } else if (locationDataItem.item && locationDataItem.item.name) {
+          // Fallback: check item's event flag for backward compatibility
           const fullItemData = sm.itemData[locationDataItem.item.name];
           if (fullItemData && fullItemData.event === true) {
             sm.eventLocations.set(descriptiveName, locationObject);
