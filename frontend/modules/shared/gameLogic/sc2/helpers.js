@@ -606,7 +606,7 @@ export function protoss_competent_comp(snapshot, staticData) {
  * Protoss can heal
  */
 export function protoss_heal(snapshot, staticData) {
-    return has_any(snapshot, ['Carrier', 'Sentry', 'Shield Battery', 'Reconstruction Beam']);
+    return has_any(snapshot, ['Carrier', 'Sentry', 'Shield Battery', 'Reconstruction Beam (Spear of Adun Auto-Cast)']);
 }
 
 /**
