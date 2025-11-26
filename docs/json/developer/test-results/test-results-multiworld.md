@@ -4,7 +4,7 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-26 00:50:27
+**Generated:** 2025-11-26 07:44:27
 
 ## Summary
 
@@ -54,24 +54,24 @@
 | Mario & Luigi Superstar Saga | ✅ Passed | 28 | 28 | 1 | 0 | ✅ | ✅ |
 | MathProof2p2e4 | ✅ Passed | 29 | 29 | 1 | 0 | ⚫ | ⚫ |
 | Mega Man 2 | ✅ Passed | 30 | 30 | 1 | 0 | ✅ | ✅ |
-| MegaMan Battle Network 3 | ⚫ Skipped | 31 | N/A | N/A | N/A | ✅ | ✅ |
-| Meritous | ✅ Passed | 31 | 31 | 1 | 0 | ⚫ | ⚫ |
-| Metamath | ✅ Passed | 32 | 32 | 1 | 0 | ✅ | ⚫ |
-| Muse Dash | ✅ Passed | 33 | 33 | 1 | 0 | ⚫ | ⚫ |
-| Noita | ✅ Passed | 34 | 34 | 1 | 0 | ⚫ | ⚫ |
-| Old School Runescape | ✅ Passed | 35 | 35 | 1 | 0 | ✅ | ✅ |
-| Overcooked! 2 | ⚫ Skipped | 36 | N/A | N/A | N/A | ✅ | ✅ |
-| Paint | ✅ Passed | 36 | 36 | 1 | 0 | ✅ | ✅ |
-| Pokemon Emerald | ⚫ Skipped | 37 | N/A | N/A | N/A | ✅ | ✅ |
-| Pokemon Red and Blue | ⚫ Skipped | 37 | N/A | N/A | N/A | ✅ | ✅ |
-| Raft | ✅ Passed | 37 | 37 | 1 | 0 | ✅ | ✅ |
-| Risk of Rain 2 | ✅ Passed | 38 | 38 | 1 | 0 | ⚫ | ⚫ |
-| SMZ3 | ⚫ Skipped | 39 | N/A | N/A | N/A | ✅ | ✅ |
-| Saving Princess | ✅ Passed | 39 | 39 | 1 | 0 | ✅ | ⚫ |
-| Secret of Evermore | ✅ Passed | 40 | 40 | 1 | 0 | ✅ | ✅ |
-| Shivers | ⚫ Skipped | 41 | N/A | N/A | N/A | ✅ | ✅ |
-| Sonic Adventure 2 Battle | ✅ Passed | 41 | 41 | 1 | 0 | ✅ | ⚫ |
-| Starcraft 2 | ✅ Passed | 42 | 42 | 1 | 0 | ✅ | ✅ |
+| MegaMan Battle Network 3 | ✅ Passed | 31 | 31 | 1 | 0 | ✅ | ✅ |
+| Meritous | ✅ Passed | 32 | 32 | 1 | 0 | ⚫ | ⚫ |
+| Metamath | ✅ Passed | 33 | 33 | 1 | 0 | ✅ | ⚫ |
+| Muse Dash | ✅ Passed | 34 | 34 | 1 | 0 | ⚫ | ⚫ |
+| Noita | ✅ Passed | 35 | 35 | 1 | 0 | ⚫ | ⚫ |
+| Old School Runescape | ✅ Passed | 36 | 36 | 1 | 0 | ✅ | ✅ |
+| Overcooked! 2 | ⚫ Skipped | 37 | N/A | N/A | N/A | ✅ | ✅ |
+| Paint | ✅ Passed | 37 | 37 | 1 | 0 | ✅ | ✅ |
+| Pokemon Emerald | ⚫ Skipped | 38 | N/A | N/A | N/A | ✅ | ✅ |
+| Pokemon Red and Blue | ⚫ Skipped | 38 | N/A | N/A | N/A | ✅ | ✅ |
+| Raft | ✅ Passed | 38 | 38 | 1 | 0 | ✅ | ✅ |
+| Risk of Rain 2 | ✅ Passed | 39 | 39 | 1 | 0 | ⚫ | ⚫ |
+| SMZ3 | ⚫ Skipped | 40 | N/A | N/A | N/A | ✅ | ✅ |
+| Saving Princess | ✅ Passed | 40 | 40 | 1 | 0 | ✅ | ⚫ |
+| Secret of Evermore | ✅ Passed | 41 | 41 | 1 | 0 | ✅ | ✅ |
+| Shivers | ⚫ Skipped | 42 | N/A | N/A | N/A | ✅ | ✅ |
+| Sonic Adventure 2 Battle | ✅ Passed | 42 | 42 | 1 | 0 | ✅ | ⚫ |
+| Starcraft 2 | ⚫ Skipped | 43 | N/A | N/A | N/A | ✅ | ✅ |
 | Stardew Valley | ⚫ Skipped | 43 | N/A | N/A | N/A | ✅ | ⚫ |
 | Subnautica | ⚫ Skipped | 43 | N/A | N/A | N/A | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed | 43 | 43 | 1 | 0 | ✅ | ✅ |
