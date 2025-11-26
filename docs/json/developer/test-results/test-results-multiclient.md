@@ -4,13 +4,13 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-26 00:50:27
+**Generated:** 2025-11-26 08:43:55
 
 ## Summary
 
 - **Total Games:** 76
-- **Passed:** 57 (75.0%)
-- **Failed:** 19 (25.0%)
+- **Passed:** 59 (77.6%)
+- **Failed:** 17 (22.4%)
 
 ## Test Results
 
@@ -22,7 +22,7 @@
 | Adventure | ✅ Passed | 0 | ✅ | 25 | 24 | ✅ | 25 | 25 | ✅ | ⚫ |
 | Aquaria | ✅ Passed | 0 | ✅ | 237 | 218 | ✅ | 237 | 237 | ✅ | ✅ |
 | ArchipIDLE | ✅ Passed | 0 | ✅ | 200 | 200 | ✅ | 200 | 200 | ✅ | ✅ |
-| Blasphemous | ❌ Failed | 0 | ❌ | 1 | 304 | ❌ | 0 | 305 | ✅ | ✅ |
+| Blasphemous | ✅ Passed | 0 | ✅ | 305 | 304 | ✅ | 305 | 305 | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ❌ Failed | 0 | ❌ | 116 | 247 | ❌ | 0 | 252 | ✅ | ⚫ |
 | Bumper Stickers | ✅ Passed | 0 | ✅ | 100 | 100 | ✅ | 100 | 100 | ✅ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed | 0 | ✅ | 125 | 124 | ✅ | 125 | 125 | ✅ | ✅ |
@@ -53,7 +53,7 @@
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | ✅ | 557 | 556 | ✅ | 557 | 557 | ✅ | ✅ |
 | MathProof2p2e4 | ✅ Passed | 0 | ✅ | 11 | 10 | ✅ | 11 | 11 | ⚫ | ⚫ |
 | Mega Man 2 | ✅ Passed | 0 | ✅ | 50 | 44 | ✅ | 50 | 50 | ✅ | ✅ |
-| MegaMan Battle Network 3 | ❌ Failed | 0 | ❌ | 263 | 263 | ❌ | 0 | 264 | ✅ | ✅ |
+| MegaMan Battle Network 3 | ✅ Passed | 0 | ✅ | 264 | 263 | ✅ | 264 | 264 | ✅ | ✅ |
 | Meritous | ✅ Passed | 0 | ✅ | 109 | 104 | ✅ | 109 | 109 | ⚫ | ⚫ |
 | Metamath | ✅ Passed | 0 | ✅ | 9 | 9 | ✅ | 9 | 9 | ✅ | ⚫ |
 | Muse Dash | ✅ Passed | 0 | ✅ | 90 | 90 | ✅ | 90 | 90 | ⚫ | ⚫ |
@@ -76,7 +76,7 @@
 | Super Mario 64 | ✅ Passed | 0 | ✅ | 149 | 149 | ✅ | 149 | 149 | ✅ | ✅ |
 | Super Mario Land 2 | ❌ Failed | 0 | ❌ | 53 | 59 | ❌ | 0 | 60 | ✅ | ✅ |
 | Super Mario World | ✅ Passed | 0 | ✅ | 108 | 108 | ✅ | 108 | 108 | ✅ | ⚫ |
-| Super Metroid | ❌ Failed | 2 | ❌ | 76 | 101 | ❌ | 0 | 109 | ✅ | ✅ |
+| Super Metroid | ❌ Failed | 1 | ✅ | 109 | 101 | ✅ | 109 | 109 | ✅ | ✅ |
 | TUNIC | ✅ Passed | 0 | ✅ | 303 | 302 | ✅ | 303 | 303 | ✅ | ⚫ |
 | Terraria | ✅ Passed | 0 | ✅ | 244 | 63 | ✅ | 244 | 244 | ✅ | ✅ |
 | The Legend of Zelda | ✅ Passed | 0 | ✅ | 165 | 155 | ✅ | 165 | 165 | ✅ | ✅ |
