@@ -1822,9 +1822,19 @@ export const evaluateRule = (rule, context, depth = 0) => {
         break;
       }
 
-      case 'can_reach': {
+      case 'can_reach':
+      case 'reach_region': {
         // Check if a region is reachable
-        const regionName = evaluateRule(rule.region, context, depth + 1);
+        // reach_region is the same as can_reach but with a direct string region name
+        // (used by The Witness exporter when converting bound methods to rules)
+        let regionName;
+        if (typeof rule.region === 'string') {
+          // Direct string region name
+          regionName = rule.region;
+        } else {
+          // Rule needs evaluation
+          regionName = evaluateRule(rule.region, context, depth + 1);
+        }
         if (regionName === undefined) {
           result = undefined;
         } else if (typeof context.isRegionReachable === 'function') {
@@ -1833,7 +1843,7 @@ export const evaluateRule = (rule, context, depth = 0) => {
             log('debug', `[evaluateRule] Region ${regionName} reachability could not be determined`);
           }
         } else {
-          log('warn', '[evaluateRule] context.isRegionReachable is not a function for can_reach.');
+          log('warn', '[evaluateRule] context.isRegionReachable is not a function for can_reach/reach_region.');
           result = undefined;
         }
         break;
