@@ -740,3 +740,15 @@ export function can_reach(sm, target, type = 'Region', playerId = null) {
 export function can_reach_region(sm, region, playerId = null) {
   return can_reach(sm, region, 'Region', playerId || sm.playerId);
 }
+
+/**
+ * Check if a location can be reached (Python CollectionState.can_reach_location equivalent)
+ *
+ * @param {Object} sm - StateManager instance
+ * @param {string} location - Location name to check
+ * @param {string|number|null} playerId - Player ID (defaults to sm.playerId if null)
+ * @returns {boolean} True if location is reachable
+ */
+export function can_reach_location(sm, location, playerId = null) {
+  return can_reach(sm, location, 'Location', playerId || sm.playerId);
+}

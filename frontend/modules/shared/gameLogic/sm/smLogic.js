@@ -581,11 +581,19 @@ export function canPassBowling(snapshot, staticData) {
 }
 
 export function enoughStuffGT(snapshot, staticData) {
-  // Golden Torizo requirements - needs strong equipment
-  // Conservative: require several major items
-  return wand(snapshot, staticData,
-    haveItem(snapshot, staticData, 'Super'),
-    haveItem(snapshot, staticData, 'Varia'));
+  // Golden Torizo requires dealing ~9000 damage.
+  // From Python: canInflictEnoughDamages(9000, ignoreMissiles=True, givesDrops=hasBeams)
+  //
+  // CRITICAL: ignoreMissiles=True means Missiles/Super Missiles are NOT counted!
+  // Only damage sources are:
+  // - Charged shots: Requires Charge beam (base 60 damage per shot, more with beam combos)
+  // - Power Bombs: 200 damage each (need Morph + Power Bomb)
+  //
+  // Without Charge beam, you need 45+ Power Bombs to deal 9000 damage!
+  // In practice, Charge beam is almost always required.
+  //
+  // Simple accurate rule: Charge beam is required (just like Python)
+  return haveItem(snapshot, staticData, 'Charge');
 }
 
 // High priority helpers (3+ uses)
@@ -893,11 +901,31 @@ export function knowsIceEscape(snapshot, staticData) {
 }
 
 export function knowsXrayDboost(snapshot, staticData) {
-  return { bool: true, difficulty: 0 };
+  // Check exported knows settings for XrayDboost technique
+  // Regular preset: XrayDboost: [false, 0] - disabled
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('XrayDboost' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.XrayDboost;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  // Default: disabled (Regular preset value)
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsXrayIce(snapshot, staticData) {
-  return { bool: true, difficulty: 0 };
+  // Check exported knows settings for XrayIce technique
+  // Regular preset: XrayIce: [true, 10] - enabled with difficulty 10
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('XrayIce' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.XrayIce;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  // Default: enabled with difficulty 10 (Regular preset value)
+  return { bool: true, difficulty: 10 };
 }
 
 export function knowsReverseGateGlitch(snapshot, staticData) {
@@ -1330,12 +1358,23 @@ export function canDoOuterMaridia(snapshot, staticData) {
 }
 
 export function canPassLowerNorfairChozo(snapshot, staticData) {
-  // Lower Norfair Chozo - needs heat protection + movement
+  // Lower Norfair Chozo - from Python:
+  // sm.wand(sm.canHellRun(**Settings.hellRunsTable['LowerNorfair']['Entrance -> GT via Chozo']),
+  //         sm.canUsePowerBombs(),
+  //         sm.wor(RomPatches.has(sm.player, RomPatches.LNChozoSJCheckDisabled), sm.haveItem('SpaceJump')))
+  //
+  // The LNChozoSJCheckDisabled ROM patch allows passing without Space Jump.
+  // Without the patch, Space Jump is required to reach the area.
+  const playerId = snapshot?.playerId || '1';
+  const romPatches = staticData?.settings?.[playerId]?.romPatches || {};
+  const hasLNChozoSJCheckDisabled = romPatches.LNChozoSJCheckDisabled === true;
+
   return wand(snapshot, staticData,
-    heatProof(snapshot, staticData),
+    canHellRun(snapshot, staticData, 'LowerNorfair'),
+    canUsePowerBombs(snapshot, staticData),
     wor(snapshot, staticData,
-      canFly(snapshot, staticData),
-      haveItem(snapshot, staticData, 'HiJump')));
+      SMBool(hasLNChozoSJCheckDisabled, 0),
+      haveItem(snapshot, staticData, 'SpaceJump')));
 }
 
 export function canHellRunToSpeedBooster(snapshot, staticData) {
@@ -1411,11 +1450,48 @@ export function canExitWaveBeam(snapshot, staticData) {
 }
 
 export function canExitScrewAttackArea(snapshot, staticData) {
-  // Exit Screw Attack area - needs movement abilities
-  return wor(snapshot, staticData,
-    canFly(snapshot, staticData),
-    haveItem(snapshot, staticData, 'HiJump'),
-    haveItem(snapshot, staticData, 'Ice'));
+  // Exit Screw Attack area - from Python:
+  // sm.wand(sm.canDestroyBombWalls(),
+  //         sm.wor(sm.canFly(),
+  //                sm.wand(HiJump, SpeedBooster, wor(wand(ScrewAttack, knowsScrewAttackExit), knowsScrewAttackExitWithoutScrew)),
+  //                sm.wand(canUseSpringBall(), knowsSpringBallJumpFromWall()),
+  //                sm.wand(canSimpleShortCharge(), enoughStuffGT())))
+
+  // Get knows settings for this player
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  // Check knows techniques
+  const screwAttackExitKnows = knowsSettings.ScrewAttackExit || [false, 0];
+  const screwAttackExitWithoutScrewKnows = knowsSettings.ScrewAttackExitWithoutScrew || [false, 0];
+  const springBallJumpFromWallKnows = knowsSettings.SpringBallJumpFromWall || [false, 0];
+
+  const hasScrewAttackExit = screwAttackExitKnows[0] === true;
+  const hasScrewAttackExitWithoutScrew = screwAttackExitWithoutScrewKnows[0] === true;
+  const hasSpringBallJumpFromWall = springBallJumpFromWallKnows[0] === true;
+
+  return wand(snapshot, staticData,
+    canDestroyBombWalls(snapshot, staticData),
+    wor(snapshot, staticData,
+      // Option 1: Space Jump
+      canFly(snapshot, staticData),
+      // Option 2: HiJump + SpeedBooster + knows technique
+      wand(snapshot, staticData,
+        haveItem(snapshot, staticData, 'HiJump'),
+        haveItem(snapshot, staticData, 'SpeedBooster'),
+        wor(snapshot, staticData,
+          wand(snapshot, staticData,
+            haveItem(snapshot, staticData, 'ScrewAttack'),
+            SMBool(hasScrewAttackExit, screwAttackExitKnows[1] || 0)),
+          SMBool(hasScrewAttackExitWithoutScrew, screwAttackExitWithoutScrewKnows[1] || 0))),
+      // Option 3: Spring Ball technique
+      wand(snapshot, staticData,
+        canUseSpringBall(snapshot, staticData),
+        SMBool(hasSpringBallJumpFromWall, springBallJumpFromWallKnows[1] || 0)),
+      // Option 4: Short charge + kill GT (can spark out after fighting GT)
+      wand(snapshot, staticData,
+        canSimpleShortCharge(snapshot, staticData),
+        enoughStuffGT(snapshot, staticData))));
 }
 
 export function getPiratesPseudoScrewCoeff(snapshot, staticData) {
@@ -2437,14 +2513,22 @@ export function canPassForgottenHighway(snapshot, staticData, fromWs = true) {
 
 /**
  * Can pass ninja space pirates (lower Norfair)
+ * Need enough firepower to kill them: missiles, supers, plasma, or good beam combos
  */
 export function canPassNinjaPirates(snapshot, staticData) {
   return wor(snapshot, staticData,
     itemCountOk(snapshot, staticData, 'Missile', 10),
     itemCountOk(snapshot, staticData, 'Super', 2),
     haveItem(snapshot, staticData, 'Plasma'),
-    haveItem(snapshot, staticData, 'Spazer'),
-    canShortCharge(snapshot, staticData)
+    // Spazer OR (Charge AND (Wave OR Ice)) - good beam damage
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Spazer'),
+      wand(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Charge'),
+        wor(snapshot, staticData,
+          haveItem(snapshot, staticData, 'Wave'),
+          haveItem(snapshot, staticData, 'Ice')))),
+    canShortCharge(snapshot, staticData)  // echoes kill
   );
 }
 
