@@ -60,14 +60,31 @@ function count(snapshot, itemName) {
 
 /**
  * Check if player has any of the basic Terran units
+ *
+ * Standard basic units: Marine, Marauder, Goliath, Hellion, Vulture, Warhound
+ * Advanced adds: Reaper, Diamondback, Viking, Siege Tank, Banshee, Thor, Battlecruiser, Cyclone
  */
 export function terran_common_unit(snapshot, staticData) {
-    // basic_terran_units is dynamically computed based on settings
-    // For now, check common basic units
-    return has_any(snapshot, [
-        'Marine', 'Firebat', 'Marauder', 'Reaper', 'Hellion',
-        'Goliath', 'Diamondback', 'Viking', 'Banshee'
-    ]);
+    const advancedTactics = isAdvancedTactics(staticData);
+
+    // Basic units (always included)
+    const basicUnits = ['Marine', 'Marauder', 'Goliath', 'Hellion', 'Vulture', 'Warhound'];
+
+    // Advanced tactics units
+    const advancedUnits = [
+        'Reaper', 'Diamondback', 'Viking', 'Siege Tank', 'Banshee',
+        'Thor', 'Battlecruiser', 'Cyclone'
+    ];
+
+    if (has_any(snapshot, basicUnits)) {
+        return true;
+    }
+
+    if (advancedTactics && has_any(snapshot, advancedUnits)) {
+        return true;
+    }
+
+    return false;
 }
 
 /**
@@ -431,14 +448,33 @@ export function terran_beats_protoss_deathball(snapshot, staticData) {
 
 /**
  * Check if player has any of the basic Protoss units
+ *
+ * Standard basic units: Zealot, Centurion, Sentinel, Stalker, Instigator, Slayer, Dragoon, Adept
+ * Advanced adds: Dark Templar, Blood Hunter, Avenger, Immortal, Annihilator, Vanguard
+ * No-logic adds: Sentry, High Templar, Signifier, Energizer, Colossus
  */
 export function protoss_common_unit(snapshot, staticData) {
-    // basic_protoss_units is dynamically computed based on settings
-    // For now, check common basic units
-    return has_any(snapshot, [
-        'Zealot', 'Centurion', 'Sentinel', 'Stalker', 'Slayer', 'Instigator',
-        'Adept', 'Sentry', 'Immortal', 'Annihilator', 'Colossus', 'Vanguard'
-    ]);
+    const advancedTactics = isAdvancedTactics(staticData);
+
+    // Basic units (always included)
+    const basicUnits = [
+        'Zealot', 'Centurion', 'Sentinel', 'Stalker', 'Instigator', 'Slayer', 'Dragoon', 'Adept'
+    ];
+
+    // Advanced tactics units
+    const advancedUnits = [
+        'Dark Templar', 'Blood Hunter', 'Avenger', 'Immortal', 'Annihilator', 'Vanguard'
+    ];
+
+    if (has_any(snapshot, basicUnits)) {
+        return true;
+    }
+
+    if (advancedTactics && has_any(snapshot, advancedUnits)) {
+        return true;
+    }
+
+    return false;
 }
 
 /**
@@ -605,6 +641,12 @@ export function zerg_competent_anti_air(snapshot, staticData) {
 
 /**
  * Zerg basic anti-air
+ *
+ * Note: The Python check `self.kerrigan_unit_available in kerrigan_unit_available` has unusual semantics.
+ * It checks if the boolean is in the list [0]. Since True == 1 and False == 0:
+ * - When Kerrigan IS available (True), the check fails (True in [0] = False)
+ * - When Kerrigan is NOT available (False), the check passes (False in [0] = True)
+ * So this check passes when we're NOT in a HotS Zerg context, effectively skipping anti-air requirements.
  */
 export function zerg_basic_anti_air(snapshot, staticData) {
     const advancedTactics = isAdvancedTactics(staticData);
@@ -617,8 +659,9 @@ export function zerg_basic_anti_air(snapshot, staticData) {
         return true;
     }
 
-    // Check if Kerrigan is available as a unit
-    if (kerriganUnitAvailable) {
+    // Match Python's semantics: pass if Kerrigan is NOT available
+    // (This effectively skips anti-air requirements for non-HotS Zerg contexts)
+    if (!kerriganUnitAvailable) {
         return true;
     }
 
@@ -834,6 +877,82 @@ export function kerrigan_levels(snapshot, staticData, target) {
     return levels >= target;
 }
 
+/**
+ * Infantry upgrade to infantry-only no-build segments
+ * Has any of the specific upgrades OR (2+ Progressive Stimpack AND 1+ mission completed)
+ */
+function marine_medic_upgrade(snapshot, staticData) {
+    const specificUpgrades = [
+        'Combat Shield (Marine)',
+        'Magrail Munitions (Marine)',
+        'Stabilizer Medpacks (Medic)'
+    ];
+
+    if (has_any(snapshot, specificUpgrades)) {
+        return true;
+    }
+
+    // Check for 2+ Progressive Stimpack (Marine) AND at least 1 mission completed
+    const stimpacks = count(snapshot, 'Progressive Stimpack (Marine)');
+    if (stimpacks >= 2) {
+        // Check if player has completed any mission (items starting with "Beat ")
+        const inventory = snapshot?.inventory || {};
+        for (const itemName of Object.keys(inventory)) {
+            if (itemName.startsWith('Beat ') && inventory[itemName] > 0) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Engine of Destruction mission requirement
+ */
+function engine_of_destruction_requirement(snapshot, staticData) {
+    // Engine of Destruction requires marine_medic_upgrade AND
+    // ((terran_competent_anti_air AND terran_common_unit) OR Wraith)
+    return marine_medic_upgrade(snapshot, staticData)
+        && (
+            (terran_competent_anti_air(snapshot, staticData) && terran_common_unit(snapshot, staticData))
+            || has(snapshot, 'Wraith')
+        );
+}
+
+/**
+ * Check if stuff is granted for The Escape mission
+ */
+function the_escape_stuff_granted(snapshot, staticData) {
+    const playerId = staticData?.player || DEFAULT_PLAYER_ID;
+    const settings = staticData?.settings?.[playerId];
+    const storyTechGranted = settings?.story_tech_granted || false;
+    const missionOrder = settings?.mission_order;
+    const enabledCampaigns = settings?.enabled_campaigns;
+
+    // The NCO first mission requires having too much stuff first before actually able to do anything
+    // MissionOrder.option_vanilla = 0
+    // SC2Campaign.NCO = enabled_campaigns containing only NCO
+    return storyTechGranted
+        || (missionOrder === 0 && enabledCampaigns === 'NCO');
+}
+
+/**
+ * The Escape first stage requirement
+ */
+function the_escape_first_stage_requirement(snapshot, staticData) {
+    return the_escape_stuff_granted(snapshot, staticData)
+        || (nova_ranged_weapon(snapshot, staticData) && (nova_full_stealth(snapshot, staticData) || nova_heal(snapshot, staticData)));
+}
+
+/**
+ * The Escape mission requirement
+ */
+function the_escape_requirement(snapshot, staticData) {
+    return the_escape_first_stage_requirement(snapshot, staticData)
+        && (the_escape_stuff_granted(snapshot, staticData) || nova_splash(snapshot, staticData));
+}
+
 // Export all helpers
 export default {
     terran_common_unit,
@@ -965,8 +1084,14 @@ export default {
         );
     },
     zerg_pass_vents: (snapshot, staticData) => {
-        // Small zerg units that can fit through vents
-        return has_any(snapshot, ['Zergling', 'Baneling', 'Infested Terran']);
+        const playerId = staticData?.player || DEFAULT_PLAYER_ID;
+        const settings = staticData?.settings?.[playerId];
+        const storyTechGranted = settings?.story_tech_granted || false;
+        const advancedTactics = isAdvancedTactics(staticData);
+
+        return storyTechGranted
+            || has_any(snapshot, ['Zergling', 'Hydralisk', 'Roach'])
+            || (advancedTactics && has(snapshot, 'Infestor'));
     },
 
     spread_creep,
@@ -978,25 +1103,7 @@ export default {
     kerrigan_levels,
     two_kerrigan_actives,
 
-    marine_medic_upgrade: (snapshot, staticData) => {
-        // Check if player has upgrades that benefit Marine+Medic synergy
-        // This includes having upgrades for both Marines and Medics
-        const marineUpgrades = [
-            'Progressive Stimpack (Marine)',
-            'Combat Shield (Marine)',
-            'Magrail Munitions (Marine)',
-            'Optimized Logistics (Marine)'
-        ];
-        const medicUpgrades = [
-            'Advanced Medic Facilities',
-            'Stabilizer Medpacks (Medic)',
-            'Restoration (Medic)',
-            'Optical Flare (Medic)',
-            'Adaptive Medpacks (Medic)'
-        ];
-
-        return has_any(snapshot, marineUpgrades) && has_any(snapshot, medicUpgrades);
-    },
+    marine_medic_upgrade,
     can_nuke: (snapshot, staticData) => {
         const advancedTactics = isAdvancedTactics(staticData);
 
@@ -1065,10 +1172,7 @@ export default {
                 )
             );
     },
-    engine_of_destruction_requirement: (snapshot, staticData) => {
-        // Engine of Destruction requires completing Cutthroat mission
-        return has(snapshot, 'Beat Cutthroat');
-    },
+    engine_of_destruction_requirement,
     trouble_in_paradise_requirement: (snapshot, staticData) => {
         return nova_any_weapon(snapshot, staticData)
             && nova_splash(snapshot, staticData)
@@ -1076,8 +1180,33 @@ export default {
             && terran_defense_rating(snapshot, staticData, true, true) >= 7;
     },
     sudden_strike_requirement: (snapshot, staticData) => {
-        // Sudden Strike requires completing The Escape mission
-        return has(snapshot, 'Beat The Escape');
+        // Sudden Strike requires:
+        // 1. sudden_strike_can_reach_objectives
+        // 2. AND terran_able_to_snipe_defiler
+        // 3. AND (Siege Tank OR Vulture)
+        // 4. AND nova_splash
+        // 5. AND (terran_defense_rating >= 2 OR Jump Suit Module)
+        const canReach = (
+            terran_cliffjumper(snapshot, staticData)
+            || has_any(snapshot, ['Banshee', 'Viking'])
+            || (isAdvancedTactics(staticData)
+                && has(snapshot, 'Medivac')
+                && has_any(snapshot, ['Marine', 'Marauder', 'Vulture', 'Hellion', 'Goliath']))
+        );
+
+        const canSnipeDefiler = has_all(snapshot, ['Jump Suit Module (Nova Suit Module)', 'C20A Canister Rifle (Nova Weapon)'])
+            || has_all(snapshot, ['Siege Tank', 'Maelstrom Rounds (Siege Tank)', 'Jump Jets (Siege Tank)']);
+
+        const hasTankOrVulture = has_any(snapshot, ['Siege Tank', 'Vulture']);
+
+        const hasDefenseOrJumpSuit = terran_defense_rating(snapshot, staticData, true, false) >= 2
+            || has(snapshot, 'Jump Suit Module (Nova Suit Module)');
+
+        return canReach
+            && canSnipeDefiler
+            && hasTankOrVulture
+            && nova_splash(snapshot, staticData)
+            && hasDefenseOrJumpSuit;
     },
     sudden_strike_can_reach_objectives: (snapshot, staticData) => {
         const advancedTactics = isAdvancedTactics(staticData);
@@ -1104,58 +1233,9 @@ export default {
     enemy_intelligence_first_stage_requirement,
     enemy_intelligence_second_stage_requirement,
     enemy_intelligence_third_stage_requirement,
-    the_escape_first_stage_requirement: (snapshot, staticData) => {
-        const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-        const settings = staticData?.settings?.[playerId];
-        const storyTechGranted = settings?.story_tech_granted || false;
-        const missionOrder = settings?.mission_order;
-        const enabledCampaigns = settings?.enabled_campaigns;
-
-        const stuffGranted = storyTechGranted || (missionOrder === 0 && enabledCampaigns === 'NCO');
-
-        return stuffGranted
-            || (nova_ranged_weapon(snapshot, staticData) && (nova_full_stealth(snapshot, staticData) || nova_heal(snapshot, staticData)));
-    },
-    the_escape_requirement: (snapshot, staticData) => {
-        // The Escape mission requires a Nova suit module AND at least 2 Nova weapons
-        // First stage requirement (suit module - not Jump Suit)
-        const hasSuitModule = has_any(snapshot, [
-            'Armored Suit Module (Nova Suit Module)',
-            'Energy Suit Module (Nova Suit Module)',
-            'Progressive Stealth Suit Module (Nova Suit Module)'
-        ]);
-
-        // Count Nova weapons (need at least 2)
-        const novaWeapons = [
-            'Blazefire Gunblade (Nova Weapon)',
-            'C20A Canister Rifle (Nova Weapon)',
-            'Hellfire Shotgun (Nova Weapon)',
-            'Monomolecular Blade (Nova Weapon)',
-            'Plasma Rifle (Nova Weapon)'
-        ];
-
-        let weaponCount = 0;
-        for (const weapon of novaWeapons) {
-            if (has(snapshot, weapon)) {
-                weaponCount++;
-            }
-        }
-
-        return hasSuitModule && weaponCount >= 2;
-    },
-    the_escape_stuff_granted: (snapshot, staticData) => {
-        const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-        const settings = staticData?.settings?.[playerId];
-        const storyTechGranted = settings?.story_tech_granted || false;
-        const missionOrder = settings?.mission_order;
-        const enabledCampaigns = settings?.enabled_campaigns;
-
-        // The NCO first mission requires having too much stuff first before actually able to do anything
-        // MissionOrder.option_vanilla = 0
-        // SC2Campaign.NCO = enabled_campaigns containing only NCO
-        return storyTechGranted
-            || (missionOrder === 0 && enabledCampaigns === 'NCO');
-    },
+    the_escape_first_stage_requirement,
+    the_escape_requirement,
+    the_escape_stuff_granted,
     /**
      * Brothers in Arms mission requirement
      */
@@ -1426,12 +1506,33 @@ export default {
                 && protoss_static_defense(snapshot, staticData));
     },
     templars_return_requirement: (snapshot, staticData) => {
-        // Templar's Return requires fleet units similar to Templar's Charge
-        return protoss_fleet(snapshot, staticData);
+        // Templar's Return requires:
+        // story_tech_granted OR
+        // (has_any(Immortal, Annihilator) AND has_any(Colossus, Vanguard, Reaver, Dark Templar)
+        //  AND has_any(Sentry, High Templar))
+        const playerId = staticData?.player || DEFAULT_PLAYER_ID;
+        const settings = staticData?.settings?.[playerId];
+        const storyTechGranted = settings?.story_tech_granted || false;
+
+        return storyTechGranted
+            || (
+                has_any(snapshot, ['Immortal', 'Annihilator'])
+                && has_any(snapshot, ['Colossus', 'Vanguard', 'Reaver', 'Dark Templar'])
+                && has_any(snapshot, ['Sentry', 'High Templar'])
+            );
     },
     templars_charge_requirement: (snapshot, staticData) => {
-        // Templar's Charge requires fleet units (air superiority)
-        return protoss_fleet(snapshot, staticData);
+        // Templar's Charge requires:
+        // protoss_heal AND protoss_anti_armor_anti_air AND
+        // (protoss_fleet OR (advanced_tactics AND protoss_competent_comp))
+        const advancedTactics = isAdvancedTactics(staticData);
+
+        return protoss_heal(snapshot, staticData)
+            && protoss_anti_armor_anti_air(snapshot, staticData)
+            && (
+                protoss_fleet(snapshot, staticData)
+                || (advancedTactics && protoss_competent_comp(snapshot, staticData))
+            );
     },
     the_infinite_cycle_requirement: (snapshot, staticData) => {
         const playerId = staticData?.player || DEFAULT_PLAYER_ID;
