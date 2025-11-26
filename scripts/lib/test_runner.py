@@ -313,7 +313,7 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
             except Exception as e:
                 print(f"ERROR: Could not list test results directory: {e}")
 
-        test_results = parse_multiclient_test_results(test_results_dir)
+        test_results = parse_multiclient_test_results(test_results_dir, single_client=single_client)
 
         result['multiclient_test'].update({
             'success': test_results['success'],
@@ -323,9 +323,10 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
             'client1_manually_checkable': test_results['client1_manually_checkable'],
             'client2_locations_received': test_results['client2_locations_received'],
             'client2_total_locations': test_results['client2_total_locations'],
+            'single_client_mode': test_results.get('single_client_mode', False),
             # Legacy fields for backwards compatibility
-            'locations_checked': test_results['client2_locations_received'],
-            'total_locations': test_results['client2_total_locations']
+            'locations_checked': test_results['client2_locations_received'] if not single_client else test_results['client1_locations_checked'],
+            'total_locations': test_results['client2_total_locations'] if not single_client else test_results['client1_manually_checkable']
         })
 
         if include_error_details and test_results.get('error_message'):
