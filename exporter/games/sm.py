@@ -1303,23 +1303,25 @@ class SMGameExportHandler(GenericGameExportHandler):
         # Add ROM patch settings (these affect logic)
         rom_patches = {}
         try:
-            from worlds.sm.variaRandomizer.rom.rompatches import RomPatches
+            from worlds.sm.variaRandomizer.rom.rom_patches import RomPatches
 
             # Check which ROM patches are active for this player
-            # These patches affect logic evaluation
-            patch_names = [
-                'NoGravityEnvProtection',
-                'ProgressiveSuits',
-                'AreaRandoBlueDoors',
-                'AreaRandoGreenDoors',
-                'AreaRandoYellowDoors'
-            ]
+            # These patches affect logic evaluation (especially suit behavior)
+            # RomPatches.ActivePatches[player] contains the list of active patch IDs
+            patch_mapping = {
+                'NoGravityEnvProtection': RomPatches.NoGravityEnvProtection,
+                'ProgressiveSuits': RomPatches.ProgressiveSuits,
+                'AreaRandoBlueDoors': RomPatches.AreaRandoBlueDoors,
+                'LNChozoSJCheckDisabled': RomPatches.LNChozoSJCheckDisabled,
+            }
 
-            for patch_name in patch_names:
-                # RomPatches.has(player, patch) checks if patch is active
-                # For now, we'll export False for all since we don't have player-specific data
-                # The actual evaluation happens in helper functions
-                rom_patches[patch_name] = False
+            # Get active patches for this player
+            active_patches = RomPatches.ActivePatches.get(player, [])
+            logger.info(f"SM: Active ROM patches for player {player}: {active_patches}")
+
+            for patch_name, patch_id in patch_mapping.items():
+                # Check if this patch ID is in the active patches list
+                rom_patches[patch_name] = patch_id in active_patches
 
             settings['romPatches'] = rom_patches
             logger.info(f"SM: Exported ROM patches: {rom_patches}")
