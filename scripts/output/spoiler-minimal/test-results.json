@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-26T06:10:19.808816",
-    "last_updated": "2025-11-26T06:10:19.808826",
+    "last_updated": "2025-11-26T20:16:50.439762",
     "script_version": "1.0.0"
   },
   "results": {
@@ -38147,26 +38147,14 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "1": {
-              "new_rules_hash": "905bfec9daa4437c4b9fbb057732e0530e8454ee3c7cb82b3f54293c19601d81",
-              "new_spheres_hash": "53260fc2d61e2fc4980bec29909918bbae1a165b2e044072d85c3d61720d588f",
-              "original_rules_hash": "905bfec9daa4437c4b9fbb057732e0530e8454ee3c7cb82b3f54293c19601d81",
-              "original_spheres_hash": "53260fc2d61e2fc4980bec29909918bbae1a165b2e044072d85c3d61720d588f",
-              "rules_identical": true,
-              "seed": "1",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T06:06:04.269668"
-            }
-          },
           "game_name_from_filename": "shivers",
           "game_name_from_yaml": "Shivers",
           "generation": {
             "error_count": 0,
-            "error_type": null,
-            "processing_time_seconds": 2.72,
-            "return_code": 0,
-            "success": true,
+            "note": "Skipped in test-only mode",
+            "processing_time_seconds": 0,
+            "return_code": null,
+            "success": false,
             "warning_count": 0
           },
           "rules_file": {
@@ -38179,7 +38167,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 9.84,
+            "processing_time_seconds": 14.22,
             "return_code": 0,
             "sphere_reached": 17.1,
             "success": true,
@@ -38187,7 +38175,7 @@
             "warning_count": 0
           },
           "template_filename": "Shivers.yaml",
-          "timestamp": "2025-11-26T05:51:31.333713",
+          "timestamp": "2025-11-26T20:16:35.718527",
           "world_info": {
             "exporter_path": "exporter/games/shivers.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/shivers/shiversLogic.js",
@@ -38738,7 +38726,7 @@
         "failure_rate": 0.0
       },
       "template_filename": "Shivers.yaml",
-      "timestamp": "2025-11-26T05:51:31.333713",
+      "timestamp": "2025-11-26T20:16:35.718527",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/shivers.py",
