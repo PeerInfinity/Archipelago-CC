@@ -19,8 +19,12 @@ from lib.test_utils import read_host_yaml_config, load_template_exclude_list
 from lib.test_results import is_test_passing, load_existing_results
 
 
-def get_test_results_path(project_root, use_full_spoilers=False, use_minimal_spoilers=False):
+def get_test_results_path(project_root, use_full_spoilers=False, use_minimal_spoilers=False, use_multiclient=False):
     """Determine the correct test results path based on host.yaml configuration or command-line flags."""
+    # If --multiclient is set, use the multiclient results path
+    if use_multiclient:
+        return Path(project_root) / 'scripts/output/multiclient/test-results.json'
+
     # If --full-spoilers is set, always use the full spoilers path
     if use_full_spoilers:
         return Path(project_root) / 'scripts/output/spoiler-full/test-results.json'
@@ -40,9 +44,9 @@ def get_test_results_path(project_root, use_full_spoilers=False, use_minimal_spo
         return Path(project_root) / 'scripts/output/spoiler-minimal/test-results.json'
 
 
-def load_test_results(project_root, use_full_spoilers=False, use_minimal_spoilers=False):
+def load_test_results(project_root, use_full_spoilers=False, use_minimal_spoilers=False, use_multiclient=False):
     """Load the template test results JSON file."""
-    results_file = get_test_results_path(project_root, use_full_spoilers, use_minimal_spoilers)
+    results_file = get_test_results_path(project_root, use_full_spoilers, use_minimal_spoilers, use_multiclient)
     if not results_file.exists():
         return {}
 
@@ -218,12 +222,18 @@ def main():
                        help='Pass --full-spoilers to prompt.py to include full spoilers mode instructions')
     parser.add_argument('--minimal-spoilers', action='store_true',
                        help='Read test results from scripts/output/spoiler-minimal/test-results.json')
+    parser.add_argument('--multiclient', action='store_true',
+                       help='Check multiclient test results and generate prompts for failing multiclient tests')
 
     args = parser.parse_args()
 
     # Validate mutually exclusive options
     if args.full_spoilers and args.minimal_spoilers:
         print("Error: --full-spoilers and --minimal-spoilers are mutually exclusive")
+        sys.exit(1)
+
+    if args.multiclient and (args.full_spoilers or args.minimal_spoilers):
+        print("Error: --multiclient cannot be combined with --full-spoilers or --minimal-spoilers")
         sys.exit(1)
 
     # Determine project root
@@ -274,17 +284,17 @@ def main():
             print(f"{'='*60}")
 
         # Load current test results
-        test_results = load_test_results(project_root, args.full_spoilers, args.minimal_spoilers)
+        test_results = load_test_results(project_root, args.full_spoilers, args.minimal_spoilers, args.multiclient)
 
-        # Check if we need to run the test
-        if template_file not in test_results:
+        # Check if we need to run the test (skip for multiclient mode - tests must already exist)
+        if template_file not in test_results and not args.multiclient:
             if not quiet_mode:
                 print("No test results found, running initial test...")
             run_template_test(template_file, args.seed)
-            test_results = load_test_results(project_root, args.full_spoilers, args.minimal_spoilers)
+            test_results = load_test_results(project_root, args.full_spoilers, args.minimal_spoilers, args.multiclient)
 
         # Check if test is passing
-        if is_test_passing(template_file, test_results):
+        if is_test_passing(template_file, test_results, multiclient=args.multiclient):
             if not quiet_mode:
                 print(f"✅ {template_file} is already passing, skipping...")
         else:
@@ -309,21 +319,33 @@ def main():
 
                 # Handle --promptfile mode
                 if args.promptfile:
-                    try:
-                        cmd = ['python', 'CC/scripts/prompt.py', game_name_from_yaml, '--seed', str(seed_to_use), '-p']
-                        if args.CC:
-                            cmd.append('--CC')
-                        if args.full_spoilers:
-                            cmd.append('--full-spoilers')
-                        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
-                        if result.returncode == 0:
-                            collected_prompts.append(result.stdout)
-                        else:
+                    if args.multiclient:
+                        # Generate multiclient-specific prompt
+                        multiclient_prompt = f"""Please read CC/game-debugging-multiclient-CC.md
+
+The next game we want to work on is {game_name_from_yaml}.
+
+The command to run the test is
+
+python scripts/test/test-all-templates.py --include-list "{template_file}" --multiclient --single-client
+"""
+                        collected_prompts.append(multiclient_prompt)
+                    else:
+                        try:
+                            cmd = ['python', 'CC/scripts/prompt.py', game_name_from_yaml, '--seed', str(seed_to_use), '-p']
+                            if args.CC:
+                                cmd.append('--CC')
+                            if args.full_spoilers:
+                                cmd.append('--full-spoilers')
+                            result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+                            if result.returncode == 0:
+                                collected_prompts.append(result.stdout)
+                            else:
+                                if not quiet_mode:
+                                    print(f"Error getting prompt for {game_name_from_yaml}: {result.stderr}", file=sys.stderr)
+                        except Exception as e:
                             if not quiet_mode:
-                                print(f"Error getting prompt for {game_name_from_yaml}: {result.stderr}", file=sys.stderr)
-                    except Exception as e:
-                        if not quiet_mode:
-                            print(f"Error getting prompt for {game_name_from_yaml}: {e}", file=sys.stderr)
+                                print(f"Error getting prompt for {game_name_from_yaml}: {e}", file=sys.stderr)
                 else:
                     # Run prompt script
                     run_prompt_for_game(game_name_from_yaml, args.text, args.prompt, seed_to_use, quiet_mode, args.CC, args.full_spoilers)
