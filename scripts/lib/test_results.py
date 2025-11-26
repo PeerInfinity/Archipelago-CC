@@ -185,7 +185,28 @@ def get_failing_seed_info(template_file: str, test_results: Dict, multiclient: b
             'has_seed_range_data': has_seed_range_data
         }
 
-    # Single seed test or no seed range info
+    # Single seed test - check if this specific seed failed
+    result_seed = result.get('seed')
+    if result_seed is not None:
+        try:
+            seed_num = int(result_seed)
+            # Check if this single-seed test failed
+            if multiclient:
+                test_failed = not result.get('multiclient_test', {}).get('success', False)
+            else:
+                test_failed = result.get('spoiler_test', {}).get('pass_fail') != 'passed'
+
+            if test_failed:
+                return {
+                    'failing_seed': seed_num,
+                    'last_passing_seed': None,
+                    'seed_range_tested': str(seed_num),
+                    'has_seed_range_data': False
+                }
+        except (ValueError, TypeError):
+            pass
+
+    # No seed range info and no failing seed
     return {'failing_seed': None, 'last_passing_seed': None, 'seed_range_tested': None, 'has_seed_range_data': False}
 
 
