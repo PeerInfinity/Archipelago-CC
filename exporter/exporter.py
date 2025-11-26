@@ -1299,7 +1299,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                             
                             location_data = {
                                 'name': location_name,
-                                'id': location_name_to_id.get(location_name, None),  # Add location ID from mapping
+                                'id': location_name_to_id.get(location_name, 0),  # Add location ID from mapping (0 for events)
                                 'access_rule': access_rule_result,
                                 'item_rule': item_rule_result,
                                 'item': None
