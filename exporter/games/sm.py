@@ -461,6 +461,67 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         return False
 
+    def _is_maxdiff_reference(self, rule: Dict[str, Any]) -> bool:
+        """Check if a rule is a reference to maxDiff (state.smbm[player].maxDiff).
+
+        The VARIA logic uses state.smbm[player].maxDiff to get the maximum difficulty.
+        This is a Python object that doesn't exist in the frontend, so we need to
+        replace it with a constant value.
+
+        Args:
+            rule: The rule to check
+
+        Returns:
+            True if this is a maxDiff reference pattern
+        """
+        if not rule or not isinstance(rule, dict):
+            return False
+
+        # Pattern: attribute access where attr is 'maxDiff'
+        if rule.get('type') == 'attribute' and rule.get('attr') == 'maxDiff':
+            return True
+
+        # Pattern: subscript into smbm
+        if rule.get('type') == 'subscript':
+            value = rule.get('value', {})
+            if (value.get('type') == 'attribute' and
+                value.get('attr') == 'smbm'):
+                return True
+
+        return False
+
+    def _is_getDmgReduction_reference(self, rule: Dict[str, Any]) -> bool:
+        """Check if a rule is a reference to sm.getDmgReduction()[0].
+
+        The VARIA logic uses sm.getDmgReduction()[0] to get the damage reduction factor.
+        This is a dynamic calculation based on current inventory that can't be directly
+        evaluated in the frontend as a subscript into a function call result.
+
+        Args:
+            rule: The rule to check
+
+        Returns:
+            True if this is a getDmgReduction reference pattern
+        """
+        if not rule or not isinstance(rule, dict):
+            return False
+
+        # Pattern: subscript into function_call where function is sm.getDmgReduction
+        # {type: subscript, value: {type: function_call, function: {type: attribute, object: {name: sm}, attr: getDmgReduction}}, index: ...}
+        if rule.get('type') == 'subscript':
+            value = rule.get('value', {})
+            if value.get('type') == 'function_call':
+                func = value.get('function', {})
+                if func.get('type') == 'attribute':
+                    obj = func.get('object', {})
+                    attr = func.get('attr')
+                    if (obj.get('type') == 'name' and
+                        obj.get('name') == 'sm' and
+                        attr == 'getDmgReduction'):
+                        return True
+
+        return False
+
     def _check_deeply_nested_any_of(self, rule: Dict[str, Any], max_depth: int = 5) -> bool:
         """Check if a rule has deeply nested any_of structures (indicating recursion).
 
@@ -685,20 +746,8 @@ class SMGameExportHandler(GenericGameExportHandler):
                             'name': 'evalSMBool',
                             'args': [
                                 expanded,
-                                # maxDiff from state.smbm[player].maxDiff
-                                {
-                                    'type': 'attribute',
-                                    'object': {
-                                        'type': 'subscript',
-                                        'value': {
-                                            'type': 'attribute',
-                                            'object': {'type': 'name', 'name': 'state'},
-                                            'attr': 'smbm'
-                                        },
-                                        'index': {'type': 'constant', 'value': self.world.player if self.world else 1}
-                                    },
-                                    'attr': 'maxDiff'
-                                }
+                                # maxDiff - use constant value (50 = hardcore) instead of complex Python path
+                                {'type': 'constant', 'value': 50}
                             ]
                         }
                         combined_rule = {
@@ -1053,7 +1102,17 @@ class SMGameExportHandler(GenericGameExportHandler):
             # Preserve the evalSMBool helper call and expand its arguments
             print("[SM] Preserving evalSMBool helper (will be evaluated by frontend)")
             if 'args' in rule:
-                rule['args'] = [self.expand_rule(arg) for arg in rule['args']]
+                expanded_args = []
+                for i, arg in enumerate(rule['args']):
+                    expanded_arg = self.expand_rule(arg)
+                    # The second argument is typically maxDiff (state.smbm[player].maxDiff)
+                    # Replace complex attribute access patterns with the actual maxDiff value (50 = hardcore)
+                    if i == 1 and self._is_maxdiff_reference(expanded_arg):
+                        # Replace with constant maxDiff value (hardcore = 50)
+                        expanded_args.append({'type': 'constant', 'value': 50})
+                    else:
+                        expanded_args.append(expanded_arg)
+                rule['args'] = expanded_args
             return rule
 
         # Transform function_call nodes where function is an attribute access on 'self' or 'sm'
@@ -1245,6 +1304,19 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         # Process binary operations
         if rule_type == 'binary_op' or rule_type == 'compare':
+            # Special case: division by sm.getDmgReduction()[0]
+            # Transform: X / getDmgReduction()[0] -> divideByDmgReduction(X)
+            if (rule.get('op') == '/' and
+                self._is_getDmgReduction_reference(rule.get('right'))):
+                numerator = rule.get('left', {'type': 'constant', 'value': 1})
+                # Recursively expand the numerator first
+                numerator = self.expand_rule(numerator)
+                return {
+                    'type': 'helper',
+                    'name': 'divideByDmgReduction',
+                    'args': [numerator]
+                }
+
             if 'left' in rule:
                 rule['left'] = self.expand_rule(rule['left'])
             if 'right' in rule:
