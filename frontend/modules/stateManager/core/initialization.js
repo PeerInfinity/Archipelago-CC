@@ -319,6 +319,9 @@ function loadLocations(sm, selectedPlayerId) {
   sm._logDebug(
     `Processed ${sm.locations.size} locations into Map`
   );
+  sm._logDebug(
+    `Detected ${sm.eventLocations.size} event locations`
+  );
 }
 
 /**

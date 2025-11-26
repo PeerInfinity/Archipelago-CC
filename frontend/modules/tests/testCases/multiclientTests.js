@@ -265,19 +265,8 @@ export async function timerSendTest(testController) {
 
     // staticData was already loaded at the start of the test
     if (staticData && staticData.locations) {
-      testController.log(`DEBUG: staticData.locations type: ${staticData.locations.constructor.name}`);
-      testController.log(`DEBUG: staticData.locations is Map: ${staticData.locations instanceof Map}`);
-
       // staticData.locations is always a Map after initialization
       const locationsArray = Array.from(staticData.locations.values());
-
-      testController.log(`DEBUG: locationsArray length: ${locationsArray.length}`);
-
-      // Debug: Check first few locations
-      if (locationsArray.length > 0) {
-        testController.log(`DEBUG: First location sample: ${JSON.stringify(locationsArray[0])}`);
-        testController.log(`DEBUG: First 3 location IDs: ${locationsArray.slice(0, 3).map(l => l.id).join(', ')}`);
-      }
 
       // Count manually-checkable locations (those with IDs > 0)
       // Locations with id=0 are events that get checked automatically, not by the timer

@@ -8373,23 +8373,27 @@
       "Chapter Completed": {
         "name": "Chapter Completed",
         "id": null,
-        "groups": [],
+        "groups": [
+          "Event"
+        ],
         "advancement": true,
         "useful": false,
         "trap": false,
         "event": true,
-        "type": null,
+        "type": "Event",
         "max_count": 4
       },
       "Victory": {
         "name": "Victory",
         "id": null,
-        "groups": [],
+        "groups": [
+          "Event"
+        ],
         "advancement": true,
         "useful": false,
         "trap": false,
         "event": true,
-        "type": null,
+        "type": "Event",
         "max_count": 1
       }
     }
