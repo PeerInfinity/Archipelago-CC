@@ -61,7 +61,13 @@ test.describe('Multiplayer Client Interaction Tests', () => {
 
     console.log(`Starting server with: ${fullPath}`);
 
-    const serverProc = spawn('python3', [
+    // Use the venv python if available, otherwise fall back to system python
+    const venvPython = './venv/bin/python3';
+    const dotVenvPython = './.venv/bin/python3';
+    const pythonPath = fs.existsSync(dotVenvPython) ? dotVenvPython :
+                       fs.existsSync(venvPython) ? venvPython : 'python3';
+
+    const serverProc = spawn(pythonPath, [
       'MultiServer.py',
       '--host', 'localhost',
       '--port', serverPort.toString(),
