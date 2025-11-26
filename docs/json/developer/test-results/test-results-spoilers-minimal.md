@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-26 04:17:36
+**Generated:** 2025-11-26 06:10:19
 
-**Source Data Created:** 2025-11-26T04:17:36.751623
+**Source Data Created:** 2025-11-26T06:10:19.808816
 
-**Source Data Last Updated:** 2025-11-26T04:17:36.751629
+**Source Data Last Updated:** 2025-11-26T06:10:19.808826
 
 ## Summary
 
 - **Total Games:** 76
-- **Passed:** 69 (90.8%)
-- **Failed:** 7 (9.2%)
+- **Passed:** 73 (96.1%)
+- **Failed:** 3 (3.9%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
@@ -50,7 +50,7 @@
 | Inscryption | ✅ Passed seeds 1-10 | 0 | 9.2 | 9.2 | 🟢 Complete | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed seeds 1-10 | 0 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
 | Kingdom Hearts | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
-| Kingdom Hearts 2 | ❌ Failed seed 4 | 0 | 5.15 | 19.2 | 🟡 26.8% | ✅ | ✅ |
+| Kingdom Hearts 2 | ✅ Passed seeds 1-10 | 0 | 15.1 | 15.1 | 🟢 Complete | ✅ | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Lingo | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
@@ -59,7 +59,7 @@
 | Mario & Luigi Superstar Saga | ✅ Passed seeds 1-10 | 0 | 7.3 | 7.3 | 🟢 Complete | ✅ | ✅ |
 | MathProof2p2e4 | ✅ Passed seeds 1-10 | 0 | 4.1 | 4.1 | 🟢 Complete | ⚫ | ⚫ |
 | Mega Man 2 | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
-| MegaMan Battle Network 3 | ❌ Failed seed 5 | 0 | 3.2 | 4.3 | 🟡 74.4% | ✅ | ✅ |
+| MegaMan Battle Network 3 | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Meritous | ✅ Passed seeds 1-10 | 0 | 7.2 | 7.2 | 🟢 Complete | ⚫ | ⚫ |
 | Metamath | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ⚫ |
 | Muse Dash | ✅ Passed seeds 1-10 | 0 | 8.1 | 8.1 | 🟢 Complete | ⚫ | ⚫ |
@@ -76,19 +76,19 @@
 | Secret of Evermore | ✅ Passed seeds 1-10 | 0 | 5.2 | 5.2 | 🟢 Complete | ✅ | ✅ |
 | Shivers | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed seeds 1-10 | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ⚫ |
-| Starcraft 2 | ❌ Failed seed 2 | 0 | 3.3 | 32.2 | 🟡 10.2% | ✅ | ✅ |
-| Stardew Valley | ❌ Failed seed 2 | 0 | 0.2 | 25.6 | 🟠 0.8% | ✅ | ⚫ |
+| Starcraft 2 | ❌ Failed seed 1 | 0 | 14.9 | 32.2 | 🟡 46.3% | ✅ | ✅ |
+| Stardew Valley | ✅ Passed seeds 1-10 | 0 | 44.1 | 44.1 | 🟢 Complete | ✅ | ⚫ |
 | Subnautica | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed seeds 1-10 | 0 | 5.4 | 5.4 | 🟢 Complete | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
 | Super Mario World | ✅ Passed seeds 1-10 | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ⚫ |
-| Super Metroid | ❌ Failed seed 3 | 2 | 2.12 | 6.3 | 🟡 33.7% | ✅ | ✅ |
+| Super Metroid | ❌ Failed seed 4 | 1 | 3.2 | 11.3 | 🟡 28.3% | ✅ | ✅ |
 | TUNIC | ✅ Passed seeds 1-10 | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ⚫ |
 | Terraria | ✅ Passed seeds 1-10 | 0 | 9.5 | 9.5 | 🟢 Complete | ✅ | ✅ |
 | The Legend of Zelda | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | The Messenger | ✅ Passed seeds 1-10 | 0 | 6.3 | 6.3 | 🟢 Complete | ✅ | ✅ |
 | The Wind Waker | ✅ Passed seeds 1-10 | 0 | 18.1 | 18.1 | 🟢 Complete | ✅ | ✅ |
-| The Witness | ❌ Failed seed 2 | 0 | 5.1 | 7.2 | 🟡 70.8% | ✅ | ✅ |
+| The Witness | ❌ Failed seed 8 | 0 | 0.5 | 7.1 | 🟠 7.0% | ✅ | ✅ |
 | Timespinner | ✅ Passed seeds 1-10 | 0 | 8.6 | 8.6 | 🟢 Complete | ✅ | ✅ |
 | Undertale | ✅ Passed seeds 1-10 | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ⚫ |
 | VVVVVV | ✅ Passed seeds 1-10 | 0 | 2.4 | 2.4 | 🟢 Complete | ✅ | ✅ |
@@ -96,7 +96,7 @@
 | WebDevJourney | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ⚫ | ⚫ |
 | Yacht Dice | ✅ Passed seeds 1-10 | 0 | 21.1 | 21.1 | 🟢 Complete | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed seeds 1-10 | 0 | 12.4 | 12.4 | 🟢 Complete | ✅ | ✅ |
-| Yu-Gi-Oh! 2006 | ❌ Failed seed 8 | 0 | 2.32 | 20.11 | 🟡 11.5% | ✅ | ✅ |
+| Yu-Gi-Oh! 2006 | ✅ Passed seeds 1-10 | 0 | 21.23 | 21.23 | 🟢 Complete | ✅ | ✅ |
 | shapez | ✅ Passed seeds 1-10 | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
 
 ## Notes
