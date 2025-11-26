@@ -283,6 +283,64 @@ export async function timerSendTest(testController) {
     testController.log(`DEBUG: eventLocations count: ${eventLocationsCount}`);
     testController.log(`DEBUG: Fishing rods in inventory: Old Rod=${finalSnapshot.inventory?.['Old Rod'] || 0}, Good Rod=${finalSnapshot.inventory?.['Good Rod'] || 0}, Super Rod=${finalSnapshot.inventory?.['Super Rod'] || 0}`);
 
+    // Debug: Log all non-zero inventory items
+    if (finalSnapshot.inventory) {
+      const nonZeroItems = Object.entries(finalSnapshot.inventory)
+        .filter(([_, count]) => count > 0)
+        .slice(0, 20);  // Limit to first 20 items
+      testController.log(`DEBUG: Total inventory items with count > 0: ${Object.entries(finalSnapshot.inventory).filter(([_, c]) => c > 0).length}`);
+      testController.log(`DEBUG: First 20 non-zero items: ${JSON.stringify(nonZeroItems)}`);
+
+      // Check for rod-related items (case insensitive)
+      const rodItems = Object.entries(finalSnapshot.inventory)
+        .filter(([name, _]) => name.toLowerCase().includes('rod'))
+        .slice(0, 10);
+      testController.log(`DEBUG: Rod-related items in inventory: ${JSON.stringify(rodItems)}`);
+
+      // Check for HM items
+      const hmItems = Object.entries(finalSnapshot.inventory)
+        .filter(([name, _]) => name.toLowerCase().includes('hm'))
+        .slice(0, 10);
+      testController.log(`DEBUG: HM items in inventory: ${JSON.stringify(hmItems)}`);
+
+      // Check for EVENT items
+      const eventItems = Object.entries(finalSnapshot.inventory)
+        .filter(([name, count]) => name.startsWith('EVENT_') && count > 0)
+        .slice(0, 20);
+      testController.log(`DEBUG: First 20 EVENT items in inventory: ${JSON.stringify(eventItems)}`);
+      testController.log(`DEBUG: Total EVENT items with count > 0: ${Object.entries(finalSnapshot.inventory).filter(([name, c]) => name.startsWith('EVENT_') && c > 0).length}`);
+
+      // Check for CATCH_SPECIES items
+      const catchSpeciesItems = Object.entries(finalSnapshot.inventory)
+        .filter(([name, count]) => name.startsWith('CATCH_SPECIES_') && count > 0);
+      testController.log(`DEBUG: Total CATCH_SPECIES items with count > 0: ${catchSpeciesItems.length}`);
+
+      // Check for specific key events
+      const keyEvents = ['EVENT_TALK_TO_MR_STONE', 'EVENT_RETURN_DEVON_GOODS', 'EVENT_RECOVER_DEVON_GOODS', 'EVENT_VISITED_DEWFORD_TOWN'];
+      const keyEventStatus = keyEvents.map(e => `${e}=${finalSnapshot.inventory?.[e] || 0}`).join(', ');
+      testController.log(`DEBUG: Key events: ${keyEventStatus}`);
+
+      // Check if Dewford Town region is in reachable regions
+      // Note: snapshot has regionReachability object, not reachableRegions array
+      const dewfordReachability = finalSnapshot.regionReachability?.['REGION_DEWFORD_TOWN/MAIN'] || 'unknown';
+      testController.log(`DEBUG: REGION_DEWFORD_TOWN/MAIN reachability: ${dewfordReachability}`);
+      const reachableRegionCount = Object.values(finalSnapshot.regionReachability || {}).filter(v => v === 'reachable').length;
+      testController.log(`DEBUG: Total reachable regions: ${reachableRegionCount} out of ${Object.keys(finalSnapshot.regionReachability || {}).length}`);
+
+      // Check if Old Rod location is in checked locations
+      const oldRodChecked = finalSnapshot.checkedLocations?.includes('Dewford Town - Old Rod from Fisherman') || false;
+      testController.log(`DEBUG: "Dewford Town - Old Rod from Fisherman" checked: ${oldRodChecked}`);
+
+      // Check location reachability for Old Rod location
+      const oldRodLocationReachability = finalSnapshot.locationReachability?.['Dewford Town - Old Rod from Fisherman'] || 'unknown';
+      testController.log(`DEBUG: "Dewford Town - Old Rod from Fisherman" reachability: ${oldRodLocationReachability}`);
+
+      // Check start regions
+      testController.log(`DEBUG: startRegions: ${JSON.stringify(finalSnapshot.startRegions)}`);
+    } else {
+      testController.log(`DEBUG: finalSnapshot.inventory is null or undefined`);
+    }
+
     // staticData was already loaded at the start of the test
     if (staticData && staticData.locations) {
       testController.log(`DEBUG: staticData.locations type: ${staticData.locations.constructor.name}`);
