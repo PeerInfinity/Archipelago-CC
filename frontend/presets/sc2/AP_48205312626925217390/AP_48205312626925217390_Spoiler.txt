@@ -1,0 +1,1150 @@
+﻿Archipelago Version 0.6.4  -  Seed: 9
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Starcraft 2
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Game Difficulty:                 Normal
+Game Speed:                      Default
+Disable Forced Camera Movement:  No
+Skip Cutscenes:                  No
+All In Map:                      Ground
+Mission Order:                   Vanilla
+Maximum Campaign Size:           83
+Start with two unlocked missions on grid:No
+Terran Player Color (Raynor):    Default
+Protoss Player Color:            Default
+Zerg Player Color:               Default
+Zerg Player Color (Primal):      Default
+Enable Wings of Liberty missions:Yes
+Enable Prophecy missions:        Yes
+Enable Heart of the Swarm missions:Yes
+Enable Prologue (Legacy of the Void) missions:Yes
+Enable Legacy of the Void (main campaign) missions:Yes
+Enable Epilogue missions:        Yes
+Enable Nova Covert Ops missions: Yes
+Shuffle Campaigns:               Yes
+Shuffle No-Build Missions:       Yes
+Starter Unit:                    Off
+Required Tactics:                Standard
+Ensure Generic Items:            25
+Minimum number of upgrades per unit/structure:2
+Maximum number of upgrades per unit/structure:-1
+Generic Upgrade Missions:        0
+Generic Upgrade Research:        Vanilla
+Generic Upgrade Items:           Individual Items
+Kerrigan Presence:               Vanilla
+Levels Per Mission Beaten:       0
+Levels Per Mission Beaten Cap:   -1
+Kerrigan Level Item Sum:         70
+Kerrigan Level Item Distribution:Smooth
+Total Level Cap:                 -1
+Starting Primary Abilities:      0
+Kerrigan Primal Status:          Vanilla
+Spear of Adun Presence:          LotV Protoss
+Spear of Adun Present in No-Build:No
+Spear of Adun Autonomously Cast Powers Presence:LotV Protoss
+Spear of Adun Autonomously Cast Powers Present in No-Build:No
+Grant Story Tech:                No
+Grant Story Levels:              Minimum
+Take Over AI Allies:             No
+Locked Items:                    
+Excluded Items:                  
+Excluded Missions:               
+Exclude Very Hard Missions:      Default
+Nova Covert Ops Items:           Yes
+Brood War Items:                 Yes
+Extended Items:                  Yes
+Vanilla Locations:               Enabled
+Extra Locations:                 Enabled
+Challenge Locations:             Enabled
+Mastery Locations:               Enabled
+Minerals Per Item:               25
+Vespene Per Item:                25
+Starting Supply Per Item:        5
+
+
+Locations:
+
+Liberation Day: Victory: Chitinous Plating (Ultralisk)
+Liberation Day: First Statue: Durable Materials (Raven)
+Liberation Day: Second Statue: Progressive Terran Ship Armor
+Liberation Day: Third Statue: W.I.L.D. Missiles (Viking)
+Liberation Day: Fourth Statue: Additional Starting Minerals
+Liberation Day: Fifth Statue: Phoenix
+Liberation Day: Sixth Statue: Ionic Force Field (Nova Gadget)
+Liberation Day: Special Delivery: Predator
+Liberation Day: Transport: Progressive Fire-Suppression System
+Beat Liberation Day: Beat Liberation Day
+The Outlaws: Victory: Additional Starting Minerals
+The Outlaws: Rebel Base: Resource Efficiency (Hydralisk)
+The Outlaws: North Resource Pickups: Progressive Regenerative Bio-Steel
+The Outlaws: Bunker: Adapted Spines (Lurker)
+The Outlaws: Close Resource Pickups: Infested Siege Tanks
+Beat The Outlaws: Beat The Outlaws
+Zero Hour: Victory: Trillic Compression System (Dragoon)
+Zero Hour: First Group Rescued: Resource Efficiency (Siege Tank)
+Zero Hour: Second Group Rescued: Orbital Assimilators
+Zero Hour: Third Group Rescued: Progressive Terran Ship Weapon
+Zero Hour: First Hatchery: Progressive Terran Vehicle Armor
+Zero Hour: Second Hatchery: Improved Nano-Repair (Science Vessel)
+Zero Hour: Third Hatchery: Progressive Replenishable Magazine (Vulture)
+Zero Hour: Fourth Hatchery: Progressive Zerg Flyer Attack
+Zero Hour: Ride's on its Way: Spawn Leviathan (Kerrigan Tier 7)
+Zero Hour: Hold Just a Little Longer: Deep Tunnel (Swarm Queen)
+Zero Hour: Cavalry's on the Way: Crushing Grip (Kerrigan Tier 2)
+Beat Zero Hour: Beat Zero Hour
+Evacuation: Victory: Hyperflight Rotors (Banshee)
+Evacuation: North Chrysalis: Corrosive Spray (Devourer)
+Evacuation: West Chrysalis: Additional Starting Vespene
+Evacuation: East Chrysalis: Khaydarin Core (Arbiter)
+Evacuation: Reach Hanson: Advanced AI Systems (Science Vessel)
+Evacuation: Secret Resource Stash: Executioner Missiles (Widow Mine)
+Evacuation: Flawless: Torrasque Strain (Ultralisk)
+Beat Evacuation: Beat Evacuation
+Outbreak: Victory: Observer
+Outbreak: Left Infestor: Rapid Regeneration (Mutalisk)
+Outbreak: Right Infestor: 7 Kerrigan Levels
+Outbreak: North Infested Command Center: Concealment (Widow Mine)
+Outbreak: South Infested Command Center: Flux Vanes (Void Ray/Destroyer)
+Outbreak: Northwest Bar: Hydralisk
+Outbreak: North Bar: Additional Starting Vespene
+Outbreak: South Bar: Winged Nightmares
+Beat Outbreak: Beat Outbreak
+Safe Haven: Victory: Mirage
+Safe Haven: North Nexus: Progressive Protoss Air Armor
+Safe Haven: East Nexus: Additional Starting Minerals
+Safe Haven: South Nexus: Ultralisk
+Safe Haven: First Terror Fleet: Wraith
+Safe Haven: Second Terror Fleet: 5 Kerrigan Levels
+Safe Haven: Third Terror Fleet: Dusk Wings
+Beat Safe Haven: Beat Safe Haven
+Haven's Fall: Victory: Ancillary Carapace (Hydralisk)
+Haven's Fall: North Hive: Vespene Efficiency (Kerrigan Tier 5)
+Haven's Fall: East Hive: Infernal Pre-Igniter (Firebat)
+Haven's Fall: South Hive: Reforged Bloodshard Core (Destroyer)
+Haven's Fall: Northeast Colony Base: Additional Starting Vespene
+Haven's Fall: East Colony Base: Progressive Stimpack (Marauder)
+Haven's Fall: Middle Colony Base: Evolved Carapace (Brood Lord)
+Haven's Fall: Southeast Colony Base: Ultra-Capacitors
+Haven's Fall: Southwest Colony Base: Bloodshard Resonance (Havoc)
+Haven's Fall: Southwest Gas Pickups: Matter Dispersion (Vanguard)
+Haven's Fall: East Gas Pickups: Resource Efficiency (Valkyrie)
+Haven's Fall: Southeast Gas Pickups: Aerodynamic Glaive Shape (Mutalisk)
+Beat Haven's Fall: Beat Haven's Fall
+Smash and Grab: Victory: Advanced Targeting (Planetary Fortress)
+Smash and Grab: First Relic: Rapid Incubation (Swarm Host)
+Smash and Grab: Second Relic: Progressive Protoss Shields
+Smash and Grab: Third Relic: Deploy Fenix (Spear of Adun Calldown)
+Smash and Grab: Fourth Relic: Progressive Zerg Ground Carapace
+Smash and Grab: First Forcefield Area Busted: Cloak (Predator)
+Smash and Grab: Second Forcefield Area Busted: Progressive Protoss Ground Armor
+Beat Smash and Grab: Beat Smash and Grab
+The Dig: Victory: Covert Ops Engines (Battlecruiser)
+The Dig: Left Relic: Destroyer
+The Dig: Right Ground Relic: Immortal
+The Dig: Right Cliff Relic: Additional Starting Supply
+The Dig: Moebius Base: Targeting Optics (Cyclone)
+The Dig: Door Outer Layer: Additional Starting Minerals
+The Dig: Door Thermal Barrier: Carrier
+The Dig: Cutting Through the Core: Additional Starting Supply
+The Dig: Structure Access Imminent: Progressive Stimpack (Hellion)
+Beat The Dig: Beat The Dig
+The Moebius Factor: Victory: Solar Bombardment (Spear of Adun Calldown)
+The Moebius Factor: 1st Data Core: Shockwave Missile Battery (Banshee)
+The Moebius Factor: 2nd Data Core: Primal Adaptation (Guardian)
+The Moebius Factor: South Rescue: Twin Drones (Kerrigan Tier 5)
+The Moebius Factor: Wall Rescue: Auto-Repair (Vulture)
+The Moebius Factor: Mid Rescue: Resource Efficiency (Warhound)
+The Moebius Factor: Nydus Roof Rescue: Rogue Forces
+The Moebius Factor: Alive Inside Rescue: Apial Sensors (Scout)
+The Moebius Factor: Brutalisk: Progressive Zerg Ground Carapace
+The Moebius Factor: 3rd Data Core: Progressive Terran Vehicle Weapon
+Beat The Moebius Factor: Beat The Moebius Factor
+Supernova: Victory: Argus Jewel (Corsair)
+Supernova: West Relic: Progressive Protoss Shields
+Supernova: North Relic: Baneling Aspect (Zergling)
+Supernova: South Relic: Hellstorm Batteries (Missile Turret)
+Supernova: East Relic: Widow Mine
+Supernova: Landing Zone Cleared: Additional Starting Supply
+Supernova: Middle Base: Swarm Scourge (Scourge)
+Supernova: Southeast Base: Hi-Sec Auto Tracking
+Beat Supernova: Beat Supernova
+Maw of the Void: Victory: Corsair
+Maw of the Void: Landing Zone Cleared: Auto Launchers (Vulture)
+Maw of the Void: Expansion Prisoners: Shield Capacity (Zealot/Sentinel/Centurion)
+Maw of the Void: South Close Prisoners: Progressive Zerg Flyer Carapace
+Maw of the Void: South Far Prisoners: Virulent Spores (Scourge)
+Maw of the Void: North Prisoners: Holo Decoy (Nova Gadget)
+Maw of the Void: Mothership: Nexus Overcharge
+Maw of the Void: Expansion Rip Field Generator: Lurker Aspect (Hydralisk)
+Maw of the Void: Middle Rip Field Generator: Orbital Strike (Spear of Adun Calldown)
+Maw of the Void: Southeast Rip Field Generator: Ion Thrusters (Vulture)
+Maw of the Void: Stargate Rip Field Generator: Progressive Protoss Air Weapon
+Maw of the Void: Northwest Rip Field Generator: Resource Efficiency (HERC)
+Maw of the Void: West Rip Field Generator: Hydriodic Bile (Roach)
+Maw of the Void: Southwest Rip Field Generator: Zealot
+Beat Maw of the Void: Beat Maw of the Void
+Devil's Playground: Victory: Additional Starting Supply
+Devil's Playground: Tosh's Miners: Oracle
+Devil's Playground: Brutalisk: Phase Blaster (Warp Prism)
+Devil's Playground: North Reapers: Sensor Tower
+Devil's Playground: Middle Reapers: Fury (Kerrigan Tier 6)
+Devil's Playground: Southwest Reapers: Frenzy (Hydralisk)
+Devil's Playground: Southeast Reapers: Psionic Lash (Spectre)
+Devil's Playground: East Reapers: Hardened Carapace (Zergling)
+Devil's Playground: Zerg Cleared: Shroud of Adun (Dark Templar/Avenger/Blood Hunter)
+Beat Devil's Playground: Beat Devil's Playground
+Welcome to the Jungle: Victory: Resonating Glaives (Adept)
+Welcome to the Jungle: Close Relic: Tempest
+Welcome to the Jungle: West Relic: Stabilizer Medpacks (Medic)
+Welcome to the Jungle: North-East Relic: Gravitic Thrusters (Scout)
+Welcome to the Jungle: Middle Base: Chronostatic Reinforcement (Arbiter)
+Welcome to the Jungle: Main Base: 6 Kerrigan Levels
+Welcome to the Jungle: No Terrazine Nodes Sealed: Mag-Field Accelerators (Cyclone)
+Welcome to the Jungle: Up to 1 Terrazine Node Sealed: Sentinel
+Welcome to the Jungle: Up to 2 Terrazine Nodes Sealed: Reconstruction Beam (Spear of Adun Auto-Cast)
+Welcome to the Jungle: Up to 3 Terrazine Nodes Sealed: Viking
+Welcome to the Jungle: Up to 4 Terrazine Nodes Sealed: High Templar
+Welcome to the Jungle: Up to 5 Terrazine Nodes Sealed: 9 Kerrigan Levels
+Beat Welcome to the Jungle: Beat Welcome to the Jungle
+Breakout: Victory: Rupture (Baneling)
+Breakout: Diamondback Prison: Fungal Growth (Brood Queen)
+Breakout: Siege Tank Prison: Splitter Strain (Baneling)
+Breakout: First Checkpoint: Chrono Surge (Spear of Adun Calldown)
+Breakout: Second Checkpoint: Progressive Regenerative Bio-Steel
+Beat Breakout: Beat Breakout
+Ghost of a Chance: Victory: Resource Efficiency (Spectre)
+Ghost of a Chance: Terrazine Tank: Additional Starting Minerals
+Ghost of a Chance: Jorium Stockpile: Slayer
+Ghost of a Chance: First Island Spectres: Progressive Zerg Missile Attack
+Ghost of a Chance: Second Island Spectres: Maelstrom Rounds (Siege Tank)
+Ghost of a Chance: Third Island Spectres: Behemoth Plating (Battlecruiser)
+Beat Ghost of a Chance: Beat Ghost of a Chance
+The Great Train Robbery: Victory: Infested Banshees
+The Great Train Robbery: North Defiler: Missile Turret
+The Great Train Robbery: Mid Defiler: Power Overwhelming (Ascendant)
+The Great Train Robbery: South Defiler: Disintegrating Particles (Stalker/Instigator/Slayer)
+The Great Train Robbery: Close Diamondback: Progressive Terran Ship Armor
+The Great Train Robbery: Northwest Diamondback: G-4 Clusterbomb (Reaper)
+The Great Train Robbery: North Diamondback: Jackson's Revenge
+The Great Train Robbery: Northeast Diamondback: Khalai Ingenuity
+The Great Train Robbery: Southwest Diamondback: Progressive Terran Infantry Weapon
+The Great Train Robbery: Southeast Diamondback: Resource Efficiency (Ghost)
+The Great Train Robbery: Kill Team: Enduring Locusts (Swarm Host)
+The Great Train Robbery: Flawless: Nyx-Class Cloaking Module (Spectre)
+The Great Train Robbery: 2 Trains Destroyed: Hallucination (High Templar/Signifier)
+The Great Train Robbery: 4 Trains Destroyed: High Impact Phase Disruptor (Dragoon)
+The Great Train Robbery: 6 Trains Destroyed: Swarm Host
+Beat The Great Train Robbery: Beat The Great Train Robbery
+Cutthroat: Victory: Amplified Assimilators
+Cutthroat: Mira Han: Laser Targeting System (Marine)
+Cutthroat: North Relic: Resource Efficiency (Ultralisk)
+Cutthroat: Mid Relic: Rapid Deployment Tube (Medivac)
+Cutthroat: Southwest Relic: Combat Drugs (Reaper)
+Cutthroat: North Command Center: Siege Breakers
+Cutthroat: South Command Center: Displacement Field (Wraith)
+Cutthroat: West Command Center: Time Stop (Spear of Adun Calldown)
+Beat Cutthroat: Beat Cutthroat
+Engine of Destruction: Victory: Porous Cartilage (Brood Lord)
+Engine of Destruction: Odin: Disruptor
+Engine of Destruction: Loki: Resource Efficiency (Scourge)
+Engine of Destruction: Lab Devourer: Resource Efficiency (Dark Templar/Avenger/Blood Hunter)
+Engine of Destruction: North Devourer: Anti-Mechanical Munition (Viking)
+Engine of Destruction: Southeast Devourer: Impaler Aspect (Hydralisk)
+Engine of Destruction: West Base: Tech Reactor
+Engine of Destruction: Northwest Base: Additional Starting Vespene
+Engine of Destruction: Northeast Base: Afterburners (Valkyrie)
+Engine of Destruction: Southeast Base: Hull of Past Glories (Carrier)
+Beat Engine of Destruction: Beat Engine of Destruction
+Media Blitz: Victory: Juggernaut Plating (Marauder)
+Media Blitz: Tower 1: Brood Queen
+Media Blitz: Tower 2: EMP Rounds (Ghost)
+Media Blitz: Tower 3: Brynhilds
+Media Blitz: Science Facility: Progressive Terran Infantry Armor
+Media Blitz: All Barracks: Advanced Construction (SCV)
+Media Blitz: All Factories: Progressive Tri-Lithium Power Cell (Diamondback)
+Media Blitz: All Starports: Scourge
+Media Blitz: Odin Not Trashed: Optimized Ordnance
+Media Blitz: Surprise Attack Ends: Multi-Lock Weapons System (Goliath)
+Beat Media Blitz: Beat Media Blitz
+Piercing the Shroud: Victory: Scatter Veil (Medivac)
+Piercing the Shroud: Holding Cell Relic: Progressive Terran Ship Weapon
+Piercing the Shroud: Brutalisk Relic: Advanced Photon Blasters (Scout)
+Piercing the Shroud: First Escape Relic: Interference Matrix (Raven)
+Piercing the Shroud: Second Escape Relic: Additional Starting Supply
+Piercing the Shroud: Brutalisk: Shredding Claws (Zergling)
+Piercing the Shroud: Fusion Reactor: Deep Tunnel (Ravager)
+Piercing the Shroud: Entrance Holding Pen: Infernal Plating (Hellion)
+Piercing the Shroud: Cargo Bay Warbot: Rapid Metamorph (Baneling)
+Piercing the Shroud: Escape Warbot: High Archon (Archon)
+Beat Piercing the Shroud: Beat Piercing the Shroud
+Gates of Hell: Victory: 6 Kerrigan Levels
+Gates of Hell: Large Army: Blink (Nova Ability)
+Gates of Hell: 2 Drop Pods: Infested Medics
+Gates of Hell: 4 Drop Pods: 8 Kerrigan Levels
+Gates of Hell: 6 Drop Pods: Siege Tank
+Gates of Hell: 8 Drop Pods: Brood Lord Aspect (Mutalisk/Corruptor)
+Gates of Hell: Southwest Spore Cannon: Temporal Acceleration Beam (Oracle)
+Gates of Hell: Northwest Spore Cannon: Combat Sensor Array (Scout)
+Gates of Hell: Northeast Spore Cannon: Progressive Terran Ship Armor
+Gates of Hell: East Spore Cannon: ATX Laser Battery (Battlecruiser)
+Gates of Hell: Southeast Spore Cannon: Internal Tech Module (Siege Tank)
+Gates of Hell: Expansion Spore Cannon: War Configuration (Warp Prism)
+Beat Gates of Hell: Beat Gates of Hell
+Belly of the Beast: Victory: Progressive Stimpack (Hellion)
+Belly of the Beast: First Charge: Neutron Shields (Corsair)
+Belly of the Beast: Second Charge: Adaptive Plating (Roach)
+Belly of the Beast: Third Charge: Ravager Aspect (Roach)
+Belly of the Beast: First Group Rescued: Stalker
+Belly of the Beast: Second Group Rescued: Phase Bulwark (Adept)
+Belly of the Beast: Third Group Rescued: Additional Starting Supply
+Beat Belly of the Beast: Beat Belly of the Beast
+Shatter the Sky: Victory: 330mm Barrage Cannon (Thor)
+Shatter the Sky: Close Coolant Tower: Hercules
+Shatter the Sky: Northwest Coolant Tower: Stealth Drive (Corsair)
+Shatter the Sky: Southeast Coolant Tower: Anabolic Synthesis (Ultralisk)
+Shatter the Sky: Southwest Coolant Tower: Optimized Logistics (Battlecruiser)
+Shatter the Sky: Leviathan: Psionic Shift (Kerrigan Tier 2)
+Shatter the Sky: East Hatchery: Infest Broodlings (Kerrigan Tier 6)
+Shatter the Sky: North Hatchery: Juggernaut Plating (HERC)
+Shatter the Sky: Mid Hatchery: Particle Reflection (Stalker/Instigator/Slayer)
+Beat Shatter the Sky: Beat Shatter the Sky
+All-In: Victory: Command Center Reactor
+All-In: First Kerrigan Attack: Splitter Mitosis (Brood Lord)
+All-In: Second Kerrigan Attack: Resource Efficiency (Swarm Queen)
+All-In: Third Kerrigan Attack: Vicious Glaive (Mutalisk)
+All-In: Fourth Kerrigan Attack: Restoration (Medic)
+All-In: Fifth Kerrigan Attack: Improved Overlords (Kerrigan Tier 3)
+Beat All-In: Beat All-In
+Whispers of Doom: Victory: Additional Starting Vespene
+Whispers of Doom: First Hatchery: EMP Shockwave (Science Vessel)
+Whispers of Doom: Second Hatchery: Hammer Securities
+Whispers of Doom: Third Hatchery: Ascendant
+Whispers of Doom: First Prophecy Fragment: Vile Strain (Roach)
+Whispers of Doom: Second Prophecy Fragment: Energy Suit Module (Nova Suit Module)
+Whispers of Doom: Third Prophecy Fragment: Progressive Augmented Thrusters (Planetary Fortress)
+Beat Whispers of Doom: Beat Whispers of Doom
+A Sinister Turn: Victory: Tunneling Jaws (Baneling)
+A Sinister Turn: Robotics Facility: Optical Flare (Medic)
+A Sinister Turn: Dark Shrine: Shaped Hull (Siege Tank)
+A Sinister Turn: Templar Archives: Devil Dogs
+A Sinister Turn: Northeast Base: Resource Efficiency (Arbiter)
+A Sinister Turn: Southwest Base: Cerberus Mine (Spider Mine)
+A Sinister Turn: Maar: Reinforced Plating (Warhound)
+A Sinister Turn: Northwest Preserver: Graviton Catapult (Carrier)
+A Sinister Turn: Southwest Preserver: Bloated Bile Ducts (Ravager)
+A Sinister Turn: East Preserver: Laser Targeting System (Siege Tank)
+Beat A Sinister Turn: Beat A Sinister Turn
+Echoes of the Future: Victory: War Pigs
+Echoes of the Future: Close Obelisk: Additional Starting Minerals
+Echoes of the Future: West Obelisk: Neosteel Bunker (Bunker)
+Echoes of the Future: Base: Button With a Skull on It (Thor)
+Echoes of the Future: Southwest Tendril: High Explosive Munition (Spider Mine)
+Echoes of the Future: Southeast Tendril: Twin-Linked Flamethrower (Hellion)
+Echoes of the Future: Northeast Tendril: Organic Carapace (Ultralisk)
+Echoes of the Future: Northwest Tendril: Banshee
+Beat Echoes of the Future: Beat Echoes of the Future
+In Utter Darkness: Defeat: Impaler Rounds (Spectre)
+In Utter Darkness: Protoss Archive: Quatro
+In Utter Darkness: Kills: Progressive Terran Vehicle Armor
+In Utter Darkness: Urun: Raid Artillery (Liberator)
+In Utter Darkness: Mohandar: Resource Efficiency (Firebat)
+In Utter Darkness: Selendis: Vanguard
+In Utter Darkness: Artanis: Additional Starting Minerals
+Beat In Utter Darkness: Beat In Utter Darkness
+Lab Rat: Victory: Projectile Accelerator (Bunker)
+Lab Rat: Gather Minerals: Progressive Missile Pods (Battlecruiser)
+Lab Rat: South Zergling Group: Internal Tech Module (Banshee)
+Lab Rat: East Zergling Group: Swarm Queen
+Lab Rat: West Zergling Group: Jump Jets (Goliath)
+Lab Rat: Hatchery: Ghost
+Lab Rat: Overlord: Soronan Acid (Guardian)
+Lab Rat: Gas Turrets: Railgun Turret (Raven)
+Beat Lab Rat: Beat Lab Rat
+Back in the Saddle: Victory: Purifier Beam (Spear of Adun Calldown)
+Back in the Saddle: Defend the Tram: Solar Lance (Spear of Adun Calldown)
+Back in the Saddle: Kinetic Blast: Warp Harmonization
+Back in the Saddle: Crushing Grip: Burst Capacitors (Diamondback)
+Back in the Saddle: Reach the Sublevel: Roach
+Back in the Saddle: Door Section Cleared: Eye of Wrath (Wrathwalker)
+Beat Back in the Saddle: Beat Back in the Saddle
+Rendezvous: Victory: Additional Starting Supply
+Rendezvous: Right Queen: Gravitic Boosters (Observer)
+Rendezvous: Center Queen: Titanium Housing (Missile Turret)
+Rendezvous: Left Queen: Leaping Strike (Kerrigan Tier 1)
+Rendezvous: Hold Out Finished: Hyperfluxor (Diamondback)
+Beat Rendezvous: Beat Rendezvous
+Harvest of Screams: Victory: Advanced Healing AI (Medivac)
+Harvest of Screams: First Ursadon Matriarch: Stealth Drive (Oracle)
+Harvest of Screams: North Ursadon Matriarch: Resource Efficiency (Cyclone)
+Harvest of Screams: West Ursadon Matriarch: Blazefire Gunblade (Nova Weapon)
+Harvest of Screams: Lost Brood: Chaotic Attunement (Ascendant)
+Harvest of Screams: Northeast Psi-link Spire: Potent Bile (Ravager)
+Harvest of Screams: Northwest Psi-link Spire: Locust Metabolic Boost (Swarm Host)
+Harvest of Screams: Southwest Psi-link Spire: Prolonged Dispersion (Guardian)
+Harvest of Screams: Nafash: Ionic Wavelength Flux (Phoenix/Mirage)
+Beat Harvest of Screams: Beat Harvest of Screams
+Shoot the Messenger: Victory: Reaper
+Shoot the Messenger: East Stasis Chamber: Plasma Rifle (Nova Weapon)
+Shoot the Messenger: Center Stasis Chamber: Planetary Fortress
+Shoot the Messenger: West Stasis Chamber: Kinetic Foam (Firebat)
+Shoot the Messenger: Destroy 4 Shuttles: Afterburners (Medivac)
+Shoot the Messenger: Frozen Expansion: Mutalisk
+Shoot the Messenger: Southwest Frozen Zerg: Singularity Charge (Dragoon)
+Shoot the Messenger: Southeast Frozen Zerg: Internal Tech Module (Raven)
+Shoot the Messenger: West Frozen Zerg: Progressive Protoss Ground Weapon
+Shoot the Messenger: East Frozen Zerg: Progressive Tomahawk Power Cells (Wraith)
+Beat Shoot the Messenger: Beat Shoot the Messenger
+Enemy Within: Victory: Unshackled Psionic Storm (High Templar/Signifier)
+Enemy Within: Infest Giant Ursadon: Progressive Cross-Spectrum Dampeners (Banshee)
+Enemy Within: First Niadra Evolution: Cloak (Liberator)
+Enemy Within: Second Niadra Evolution: Maelstrom (Dark Archon)
+Enemy Within: Third Niadra Evolution: Hel's Angels
+Enemy Within: Warp Drive: Advanced Laser Technology (Wraith)
+Enemy Within: Stasis Quadrant: Resource Efficiency (Goliath)
+Beat Enemy Within: Beat Enemy Within
+Domination: Victory: Advanced Targeting Mechanics (Immortal/Annihilator)
+Domination: Center Infested Command Center: Argus Talisman (Dark Archon)
+Domination: North Infested Command Center: Ocular Implants (Ghost)
+Domination: Repel Zagara: Charge (Predator)
+Domination: Close Baneling Nest: Internal Tech Module (Marauder)
+Domination: South Baneling Nest: Additional Starting Vespene
+Domination: Southwest Baneling Nest: Rangefinder Oculus (Nova Equipment)
+Domination: Southeast Baneling Nest: Micro-Filtering
+Domination: North Baneling Nest: Expanded Hull (Medivac)
+Domination: Northeast Baneling Nest: Additional Starting Minerals
+Beat Domination: Beat Domination
+Fire in the Sky: Victory: Advanced Cloaking Field (Medivac)
+Fire in the Sky: West Biomass: Resource Efficiency (Medic)
+Fire in the Sky: North Biomass: Resource Efficiency (Brood Lord)
+Fire in the Sky: South Biomass: Adaptive Talons (Impaler)
+Fire in the Sky: Destroy 3 Gorgons: Progressive High Impact Payload (Thor)
+Fire in the Sky: Close Zerg Rescue: Sentry
+Fire in the Sky: South Zerg Rescue: Annihilator
+Fire in the Sky: North Zerg Rescue: Adept
+Fire in the Sky: West Queen Rescue: Laser Targeting System (Liberator)
+Fire in the Sky: East Queen Rescue: Leg Enhancements (Zealot/Sentinel/Centurion)
+Beat Fire in the Sky: Beat Fire in the Sky
+Old Soldiers: Victory: Virulent Microbes (Viper)
+Old Soldiers: East Science Lab: Zergling
+Old Soldiers: North Science Lab: Wild Mutation (Kerrigan Tier 4)
+Old Soldiers: Get Nuked: Smart Servos (Hellion)
+Old Soldiers: Entrance Gate: Tectonic Destabilizers (Tempest)
+Old Soldiers: Citadel Gate: Resource Efficiency (Raven)
+Old Soldiers: South Expansion: Hallucination (Sentry)
+Old Soldiers: Rich Mineral Expansion: Viper Aspect (Mutalisk/Corruptor)
+Beat Old Soldiers: Beat Old Soldiers
+Waking the Ancient: Victory: Shaped Hull (Banshee)
+Waking the Ancient: Center Essence Pool: Improved Osmosis (Devourer)
+Waking the Ancient: East Essence Pool: Incinerator Gauntlets (Firebat)
+Waking the Ancient: South Essence Pool: Pulse Grenades (Nova Gadget)
+Waking the Ancient: Finish Feeding: Additional Starting Vespene
+Waking the Ancient: South Proxy Primal Hive: Resource Efficiency (Swarm Host)
+Waking the Ancient: East Proxy Primal Hive: Hunter Strain (Baneling)
+Waking the Ancient: South Main Primal Hive: Parasitic Bomb (Viper)
+Waking the Ancient: East Main Primal Hive: Rapid Fire Launchers (Cyclone)
+Beat Waking the Ancient: Beat Waking the Ancient
+The Crucible: Victory: Progressive Protoss Air Weapon
+The Crucible: Tyrannozor: Shaped Hull (Valkyrie)
+The Crucible: Reach the Pool: Seismic Spines (Lurker)
+The Crucible: 15 Minutes Remaining: Gaping Maw (Devourer)
+The Crucible: 5 Minutes Remaining: Progressive Regenerative Bio-Steel
+The Crucible: Pincer Attack: Laser Targeting System (Reaper)
+The Crucible: Yagdra Claims Brakk's Pack: Flashbang Grenades (Nova Gadget)
+Beat The Crucible: Beat The Crucible
+Supreme: Victory: Diamondback
+Supreme: First Relic: Fortified Bunker (Bunker)
+Supreme: Second Relic: Smart Servos (Viking)
+Supreme: Third Relic: Apocalypse (Kerrigan Tier 7)
+Supreme: Fourth Relic: Shrike Turret (Bunker)
+Supreme: Yagdra: Chain Reaction (Kerrigan Tier 2)
+Supreme: Kraith: Pylon Overcharge (Spear of Adun Calldown)
+Supreme: Slivan: Infested Terran (Infestor)
+Beat Supreme: Beat Supreme
+Infested: Victory: Additional Starting Minerals
+Infested: East Science Facility: Microbial Shroud (Infestor)
+Infested: Center Science Facility: Reaver Capacity (Reaver)
+Infested: West Science Facility: Blood Amulet (Ascendant)
+Infested: First Intro Garrison: Adrenal Overload (Zergling)
+Infested: Second Intro Garrison: Nano Projector (Medic)
+Infested: Base Garrison: Progressive Augmented Thrusters (Planetary Fortress)
+Infested: East Garrison: Orbital Strike
+Infested: Mid Garrison: Pressurized Glands (Swarm Host)
+Infested: North Garrison: Severing Glaive (Mutalisk)
+Infested: Close Southwest Garrison: Caustic Spray (Corruptor)
+Infested: Far Southwest Garrison: Resource Efficiency (Liberator)
+Beat Infested: Beat Infested
+Hand of Darkness: Victory: Marauder
+Hand of Darkness: North Brutalisk: Automated Refinery
+Hand of Darkness: South Brutalisk: Defiler
+Hand of Darkness: Kill 1 Hybrid: Spider Mines (Reaper)
+Hand of Darkness: Kill 2 Hybrid: Additional Starting Vespene
+Hand of Darkness: Kill 3 Hybrid: Progressive Proxy Pylon (Spear of Adun Calldown)
+Hand of Darkness: Kill 4 Hybrid: Advanced Ballistics (Liberator)
+Hand of Darkness: Kill 5 Hybrid: Additional Starting Minerals
+Hand of Darkness: Kill 6 Hybrid: Rapid Power Cycling (Wrathwalker)
+Hand of Darkness: Kill 7 Hybrid: Smart Servos (Siege Tank)
+Beat Hand of Darkness: Beat Hand of Darkness
+Phantoms of the Void: Victory: 8 Kerrigan Levels
+Phantoms of the Void: Northwest Crystal: Enhanced Mitochondria (Brood Queen)
+Phantoms of the Void: Northeast Crystal: Armored Suit Module (Nova Suit Module)
+Phantoms of the Void: South Crystal: Feedback (Dark Archon)
+Phantoms of the Void: Base Established: Progressive Protoss Ground Weapon
+Phantoms of the Void: Close Temple: Dark Archon
+Phantoms of the Void: Mid Temple: Progressive Terran Vehicle Weapon
+Phantoms of the Void: Southeast Temple: Hellbat Aspect (Hellion)
+Phantoms of the Void: Northeast Temple: Dark Archon Meld (Dark Templar)
+Phantoms of the Void: Northwest Temple: Jump Jets (Siege Tank)
+Beat Phantoms of the Void: Beat Phantoms of the Void
+With Friends Like These: Victory: Cyclone
+With Friends Like These: Pirate Capital Ship: Organic Carapace (Swarm Queen)
+With Friends Like These: First Mineral Patch: Vanadium Plating
+With Friends Like These: Second Mineral Patch: Progressive Stimpack (Firebat)
+With Friends Like These: Third Mineral Patch: Superior Warp Gates
+Beat With Friends Like These: Beat With Friends Like These
+Conviction: Victory: Progressive Fire-Suppression System
+Conviction: First Secret Documents: Kinetic Foam (HERC)
+Conviction: Second Secret Documents: Additional Starting Minerals
+Conviction: Power Coupling: Progressive Zerg Ground Carapace
+Conviction: Door Blasted: Singularity Charge (Immortal/Annihilator)
+Beat Conviction: Beat Conviction
+Planetfall: Victory: Progressive Replenishable Magazine (Vulture)
+Planetfall: East Gate: Laser Targeting System (Banshee)
+Planetfall: Northwest Gate: Ability Efficiency (Kerrigan Tier 6)
+Planetfall: North Gate: 10 Kerrigan Levels
+Planetfall: 1 Bile Launcher Deployed: Goliath
+Planetfall: 2 Bile Launchers Deployed: Enhanced Cluster Launchers (Valkyrie)
+Planetfall: 3 Bile Launchers Deployed: Spider Mines (Siege Tank)
+Planetfall: 4 Bile Launchers Deployed: Progressive Stimpack (Marine)
+Planetfall: 5 Bile Launchers Deployed: Warhound
+Planetfall: Sons of Korhal: 4 Kerrigan Levels
+Planetfall: Night Wolves: Advanced Siege Tech (Siege Tank)
+Planetfall: West Expansion: Supplicant
+Planetfall: Mid Expansion: Internal Fusion Module (Hercules)
+Beat Planetfall: Beat Planetfall
+Death From Above: Victory: Scout
+Death From Above: First Power Link: Progressive Cross-Spectrum Dampeners (Banshee)
+Death From Above: Second Power Link: Ghost Visor (Nova Equipment)
+Death From Above: Third Power Link: Hellion
+Death From Above: Expansion Command Center: Resource Efficiency (Wraith)
+Death From Above: Main Path Command Center: Thermite Filaments (Hellion)
+Beat Death From Above: Beat Death From Above
+The Reckoning: Victory: Burrow Charge (Ultralisk)
+The Reckoning: South Lane: Progressive Stimpack (Marauder)
+The Reckoning: North Lane: Additional Starting Supply
+The Reckoning: East Lane: Gravity Sling (Tempest)
+The Reckoning: Odin: Sensor Array (Observer)
+Beat The Reckoning: Beat The Reckoning
+Dark Whispers: Victory: Bio Mechanical Repair Drone (Raven)
+Dark Whispers: First Prisoner Group: Additional Starting Supply
+Dark Whispers: Second Prisoner Group: Advanced Optics
+Dark Whispers: First Pylon: Resource Efficiency (Diamondback)
+Dark Whispers: Second Pylon: Internal Tech Module (Cyclone)
+Beat Dark Whispers: Beat Dark Whispers
+Ghosts in the Fog: Victory: Heroic Fortitude (Kerrigan Tier 1)
+Ghosts in the Fog: South Rock Formation: Jump Suit Module (Nova Suit Module)
+Ghosts in the Fog: West Rock Formation: Internal Tech Module (Wraith)
+Ghosts in the Fog: East Rock Formation: Firebat
+Beat Ghosts in the Fog: Beat Ghosts in the Fog
+Evil Awoken: Victory: Additional Starting Supply
+Evil Awoken: Temple Investigated: Flechette Missiles (Valkyrie)
+Evil Awoken: Void Catalyst: Launching Vector Compensator (Valkyrie)
+Evil Awoken: First Particle Cannon: Signifier
+Evil Awoken: Second Particle Cannon: Graduating Range (Siege Tank)
+Evil Awoken: Third Particle Cannon: Progressive Protoss Ground Armor
+Beat Evil Awoken: Beat Evil Awoken
+For Aiur!: Victory: Internal Tech Module (Battlecruiser)
+For Aiur!: Southwest Hive: Centurion
+For Aiur!: Northwest Hive: Hostile Environment Adaptation (SCV)
+For Aiur!: Northeast Hive: Progressive Tomahawk Power Cells (Wraith)
+For Aiur!: East Hive: Spine Crawler
+For Aiur!: West Conduit: Optimized Logistics (Liberator)
+For Aiur!: Middle Conduit: Progressive Protoss Air Armor
+For Aiur!: Northeast Conduit: Progressive Protoss Ground Weapon
+Beat For Aiur!: Beat For Aiur!
+The Growing Shadow: Victory: Organic Carapace (Roach)
+The Growing Shadow: Close Pylon: Predator's Fury (Predator)
+The Growing Shadow: East Pylon: Additional Starting Minerals
+The Growing Shadow: West Pylon: Hive Mind Emulator
+The Growing Shadow: Nexus: Shredder Rounds (Viking)
+The Growing Shadow: Templar Base: Burrow (Swarm Host)
+Beat The Growing Shadow: Beat The Growing Shadow
+The Spear of Adun: Victory: Energizer
+The Spear of Adun: Close Warp Gate: Progressive Protoss Air Weapon
+The Spear of Adun: West Warp Gate: Corrosive Acid (Baneling)
+The Spear of Adun: North Warp Gate: Progressive Defensive Matrix (Battlecruiser)
+The Spear of Adun: North Power Cell: Creeper Strain (Swarm Host)
+The Spear of Adun: East Power Cell: Incubator Chamber (Swarm Queen)
+The Spear of Adun: South Power Cell: Spacetime Anchor (Arbiter)
+The Spear of Adun: Southeast Power Cell: Corruption (Corruptor)
+Beat The Spear of Adun: Beat The Spear of Adun
+Sky Shield: Victory: Progressive Stimpack (Reaper)
+Sky Shield: Mid EMP Scrambler: Spawn Banelings (Kerrigan Tier 4)
+Sky Shield: Southeast EMP Scrambler: 7 Kerrigan Levels
+Sky Shield: North EMP Scrambler: Glial Reconstitution (Roach)
+Sky Shield: Mid Stabilizer: Structure Armor
+Sky Shield: Southwest Stabilizer: Tissue Assimilation (Ultralisk)
+Sky Shield: Northwest Stabilizer: Lockdown (Ghost)
+Sky Shield: Northeast Stabilizer: Liberator
+Sky Shield: Southeast Stabilizer: Stasis Calibration (Oracle)
+Sky Shield: West Raynor Base: Swarmling Strain (Zergling)
+Sky Shield: East Raynor Base: Optimized Logistics (Hellion)
+Beat Sky Shield: Beat Sky Shield
+Brothers in Arms: Victory: Resource Efficiency (Reaver)
+Brothers in Arms: Mid Science Facility: Shaped Hull (Diamondback)
+Brothers in Arms: North Science Facility: Progressive Stimpack (Firebat)
+Brothers in Arms: South Science Facility: Additional Starting Minerals
+Beat Brothers in Arms: Beat Brothers in Arms
+Amon's Reach: Victory: Wrathwalker
+Amon's Reach: Close Solarite Reserve: Psi Disrupter
+Amon's Reach: North Solarite Reserve: Progressive Proxy Pylon (Spear of Adun Calldown)
+Amon's Reach: East Solarite Reserve: Optimized Logistics (Goliath)
+Amon's Reach: West Launch Bay: Ripwave Missiles (Viking)
+Amon's Reach: South Launch Bay: Photon Cannon
+Amon's Reach: Northwest Launch Bay: Magrail Munitions (Marine)
+Amon's Reach: East Launch Bay: Magrail Munitions (Marauder)
+Beat Amon's Reach: Beat Amon's Reach
+Last Stand: Victory: Warp Prism
+Last Stand: West Zenith Stone: Marine
+Last Stand: North Zenith Stone: Solarite Payload (Reaver)
+Last Stand: East Zenith Stone: Vulture
+Last Stand: 1 Billion Zerg: Progressive Stealth Suit Module (Nova Suit Module)
+Last Stand: 1.5 Billion Zerg: Force Field (Sentry)
+Beat Last Stand: Beat Last Stand
+Forbidden Weapon: Victory: Progressive Zerg Missile Attack
+Forbidden Weapon: South Solarite: Tac Nuke Strike (Nova Ability)
+Forbidden Weapon: North Solarite: Agony Launchers (Vanguard)
+Forbidden Weapon: Northwest Solarite: Organic Carapace (Swarm Host)
+Beat Forbidden Weapon: Beat Forbidden Weapon
+Temple of Unification: Victory: Additional Starting Minerals
+Temple of Unification: Mid Celestial Lock: Medic
+Temple of Unification: West Celestial Lock: Regenerative Acid (Baneling)
+Temple of Unification: South Celestial Lock: Progressive Terran Infantry Armor
+Temple of Unification: East Celestial Lock: Additional Starting Vespene
+Temple of Unification: North Celestial Lock: Arbiter
+Temple of Unification: Titanic Warp Prism: Pacification Protocol (Colossus)
+Beat Temple of Unification: Beat Temple of Unification
+The Infinite Cycle: Victory: Progressive Defensive Matrix (Battlecruiser)
+The Infinite Cycle: First Hall of Revelation: Mend (Kerrigan Tier 4)
+The Infinite Cycle: Second Hall of Revelation: Juggernaut Plating (Firebat)
+The Infinite Cycle: First Xel'Naga Device: Progressive Terran Infantry Weapon
+The Infinite Cycle: Second Xel'Naga Device: Drilling Claws (Widow Mine)
+The Infinite Cycle: Third Xel'Naga Device: Additional Starting Minerals
+Beat The Infinite Cycle: Beat The Infinite Cycle
+Harbinger of Oblivion: Victory: Domination (Nova Ability)
+Harbinger of Oblivion: Artanis: Metabolic Boost (Zergling)
+Harbinger of Oblivion: Northwest Void Crystal: Aberration
+Harbinger of Oblivion: Northeast Void Crystal: Progressive Orbital Command
+Harbinger of Oblivion: Southwest Void Crystal: Shaped Blast (Siege Tank)
+Harbinger of Oblivion: Southeast Void Crystal: Stim Infusion (Nova Gadget)
+Harbinger of Oblivion: South Xel'Naga Vessel: Anti-Armor Missile (Raven)
+Harbinger of Oblivion: Mid Xel'Naga Vessel: Tunneling Claws (Roach)
+Harbinger of Oblivion: North Xel'Naga Vessel: Soul Augmentation (Supplicant)
+Beat Harbinger of Oblivion: Beat Harbinger of Oblivion
+Unsealing the Past: Victory: Hunter-Seeker Weapon (Raven)
+Unsealing the Past: Zerg Cleared: Rocket Barrage (Banshee)
+Unsealing the Past: First Stasis Lock: Jump Jets (Hellion)
+Unsealing the Past: Second Stasis Lock: Laser Targeting System (Marauder)
+Unsealing the Past: Third Stasis Lock: Laser Targeting System (Thor)
+Unsealing the Past: Fourth Stasis Lock: Midnight Riders
+Unsealing the Past: South Power Core: Cellular Reactor
+Unsealing the Past: East Power Core: Ventral Sacs (Overlord)
+Beat Unsealing the Past: Beat Unsealing the Past
+Purification: Victory: Matrix Overload
+Purification: North Sector: West Null Circuit: Rapid Recharging (Sentry/Energizer/Havoc/Shield Battery)
+Purification: North Sector: Northeast Null Circuit: Progressive Immortality Protocol (Thor)
+Purification: North Sector: Southeast Null Circuit: Adaptive Medpacks (Medic)
+Purification: South Sector: West Null Circuit: Advanced Medic Facilities (Medic)
+Purification: South Sector: North Null Circuit: Thor
+Purification: South Sector: East Null Circuit: Jet Pack Overdrive (Reaper)
+Purification: West Sector: West Null Circuit: Tactical Jump (Hercules)
+Purification: West Sector: Mid Null Circuit: HERC
+Purification: West Sector: East Null Circuit: Raven
+Purification: East Sector: North Null Circuit: C20A Canister Rifle (Nova Weapon)
+Purification: East Sector: West Null Circuit: Progressive Protoss Shields
+Purification: East Sector: South Null Circuit: Internal Tech Module (Goliath)
+Purification: Purifier Warden: Secretion Glands (Impaler)
+Beat Purification: Beat Purification
+Steps of the Rite: Victory: Paralytic Barbs (Viper)
+Steps of the Rite: First Terrazine Fog: Additional Starting Minerals
+Steps of the Rite: Southwest Guardian: Blink (Dark Templar/Avenger/Blood Hunter)
+Steps of the Rite: West Guardian: Dark Templar
+Steps of the Rite: Northwest Guardian: Infestor
+Steps of the Rite: Northeast Guardian: Dual-Fusion Welders (SCV)
+Steps of the Rite: North Mothership: Enhanced Strider Servos (Dragoon)
+Steps of the Rite: South Mothership: Automated Extractors (Kerrigan Tier 3)
+Beat Steps of the Rite: Beat Steps of the Rite
+Rak'Shir: Victory: Smart Servos (Liberator)
+Rak'Shir: North Slayn Elemental: Spider Mines (Raven)
+Rak'Shir: Southwest Slayn Elemental: Sundering Glaive (Mutalisk)
+Rak'Shir: East Slayn Elemental: Reaver
+Beat Rak'Shir: Beat Rak'Shir
+Templar's Charge: Victory: Anion Pulse-Crystals (Phoenix/Mirage)
+Templar's Charge: Northwest Power Core: Spawn Larvae (Swarm Queen)
+Templar's Charge: Northeast Power Core: Havoc
+Templar's Charge: Southeast Power Core: Reclamation (Energizer)
+Templar's Charge: West Hybrid Stasis Chamber: Corruptor
+Templar's Charge: Southeast Hybrid Stasis Chamber: Colossus
+Beat Templar's Charge: Beat Templar's Charge
+Templar's Return: Victory: Blood Hunter
+Templar's Return: Citadel: First Gate: Progressive Protoss Ground Armor
+Templar's Return: Citadel: Second Gate: Progressive Missile Pods (Battlecruiser)
+Templar's Return: Citadel: Power Structure: Sustaining Disruption (Corsair)
+Templar's Return: Temple Grounds: Gather Army: Science Vessel
+Templar's Return: Temple Grounds: Power Structure: Progressive Orbital Command
+Templar's Return: Caverns: Purifier: Forged Chassis (Energizer)
+Templar's Return: Caverns: Dark Templar: Shield Overcharge (Spear of Adun Calldown)
+Beat Templar's Return: Beat Templar's Return
+The Host: Victory: Orbital Depots
+The Host: Southeast Void Shard: Hellfire Shotgun (Nova Weapon)
+The Host: South Void Shard: Progressive Zerg Melee Attack
+The Host: Southwest Void Shard: Defensive Matrix (Science Vessel)
+The Host: North Void Shard: Tactical Jump (Battlecruiser)
+The Host: Northwest Void Shard: Kinetic Foam (Marauder)
+The Host: Nerazim Warp in Zone: Raptor Strain (Zergling)
+The Host: Tal'darim Warp in Zone: Khaydarin Amulet (High Templar/Signifier)
+The Host: Purifier Warp in Zone: Mag-Field Launchers (Cyclone)
+Beat The Host: Beat The Host
+Salvation: Victory: Progressive Zerg Flyer Carapace
+Salvation: Fabrication Matrix: Gravitic Drive (Warp Prism)
+Salvation: Assault Cluster: Skibi's Angels
+Salvation: Hull Breach: Progressive Terran Vehicle Armor
+Salvation: Core Critical: Centrifugal Hooks (Baneling)
+Beat Salvation: Beat Salvation
+Into the Void: Victory: Devourer Aspect (Mutalisk/Corruptor)
+Into the Void: Corruption Source: Shaped Hull (Goliath)
+Into the Void: Southwest Forward Position: Phobos-Class Weapons System (Viking)
+Into the Void: Northwest Forward Position: Jotun
+Into the Void: Southeast Forward Position: Death Heads
+Into the Void: Northeast Forward Position: Hardened Tentacle Spines (Impaler)
+Beat Into the Void: Beat Into the Void
+The Essence of Eternity: Victory: Progressive Terran Vehicle Weapon
+The Essence of Eternity: Void Trashers: Progressive Zerg Flyer Carapace
+Beat The Essence of Eternity: Beat The Essence of Eternity
+Amon's Fall: Victory: Amon's Fall: Victory
+Beat Amon's Fall: Beat Amon's Fall
+The Escape: Victory: Trigger Override (Wraith)
+The Escape: Rifle: Detect Weakness (Havoc)
+The Escape: Grenades: Shield Regeneration (Supplicant)
+The Escape: Agent Delta: Mass Recall (Spear of Adun Calldown)
+The Escape: Agent Pierce: Progressive Zerg Melee Attack
+The Escape: Agent Stone: Ares-Class Targeting System (Goliath)
+Beat The Escape: Beat The Escape
+Sudden Strike: Victory: Cloaking Module (Sentry/Energizer/Havoc)
+Sudden Strike: Research Center: Monarch Blades (Ultralisk)
+Sudden Strike: Weaponry Labs: Carrion Strain (Swarm Host)
+Sudden Strike: Brutalisk: Mothership
+Beat Sudden Strike: Beat Sudden Strike
+Enemy Intelligence: Victory: Spectre
+Enemy Intelligence: West Garrison: Additional Starting Supply
+Enemy Intelligence: Close Garrison: Resource Efficiency (Predator)
+Enemy Intelligence: Northeast Garrison: Ion Thrusters (Diamondback)
+Enemy Intelligence: Southeast Garrison: Instigator
+Enemy Intelligence: South Garrison: Malignant Creep (Kerrigan Tier 5)
+Enemy Intelligence: All Garrisons: Optimized Logistics (Marine)
+Enemy Intelligence: Forces Rescued: Shield Battery
+Enemy Intelligence: Communications Hub: Overwatch (Spear of Adun Auto-Cast)
+Beat Enemy Intelligence: Beat Enemy Intelligence
+Trouble In Paradise: Victory: Guardian Shell
+Trouble In Paradise: North Base: West Hatchery: Kinetic Blast (Kerrigan Tier 1)
+Trouble In Paradise: North Base: North Hatchery: Bio-Mechanical Transfusion (Swarm Queen)
+Trouble In Paradise: North Base: East Hatchery: Progressive Zerg Missile Attack
+Trouble In Paradise: South Base: Northwest Hatchery: Spartan Company
+Trouble In Paradise: South Base: Southwest Hatchery: Scarab Damage (Reaver)
+Trouble In Paradise: South Base: East Hatchery: Quantic Reactor (Tempest)
+Trouble In Paradise: North Shield Projector: Dragoon
+Trouble In Paradise: East Shield Projector: Progressive Stimpack (Reaper)
+Trouble In Paradise: South Shield Projector: Additional Starting Minerals
+Trouble In Paradise: West Shield Projector: Additional Starting Minerals
+Trouble In Paradise: Fleet Beacon: Monomolecular Blade (Nova Weapon)
+Beat Trouble In Paradise: Beat Trouble In Paradise
+Night Terrors: Victory: Progressive High Impact Payload (Thor)
+Night Terrors: 1 Terrazine Node Collected: Progressive Terran Infantry Weapon
+Night Terrors: 2 Terrazine Nodes Collected: Cloak (Battlecruiser)
+Night Terrors: 3 Terrazine Nodes Collected: Prescient Spores (Devourer)
+Night Terrors: 4 Terrazine Nodes Collected: Noxious Strain (Ultralisk)
+Night Terrors: 5 Terrazine Nodes Collected: Progressive Tri-Lithium Power Cell (Diamondback)
+Night Terrors: HERC Outpost: Additional Starting Minerals
+Night Terrors: Umojan Mine: Black Market Launchers (Widow Mine)
+Night Terrors: Blightbringer: Shockwave (Adept)
+Night Terrors: Science Facility: Khaydarin Monolith
+Night Terrors: Eradicators: Progressive Stealth Suit Module (Nova Suit Module)
+Beat Night Terrors: Beat Night Terrors
+Flashpoint: Victory: Enhanced Cloak Field (Arbiter)
+Flashpoint: Close North Evidence Coordinates: Progressive Terran Ship Weapon
+Flashpoint: Close East Evidence Coordinates: Perdition Turret
+Flashpoint: Far North Evidence Coordinates: Large Scale Field Construction (Thor)
+Flashpoint: Far East Evidence Coordinates: Drop-Pods (Kerrigan Tier 7)
+Flashpoint: Experimental Weapon: Corpser Strain (Roach)
+Flashpoint: Northwest Subway Entrance: Ensnare (Brood Queen)
+Flashpoint: Southeast Subway Entrance: Progressive Zerg Melee Attack
+Flashpoint: Northeast Subway Entrance: Bunker
+Flashpoint: Expansion Hatchery: Avenger
+Flashpoint: Baneling Spawns: U-238 Rounds (Reaper)
+Flashpoint: Mutalisk Spawns: Progressive Zerg Flyer Attack
+Flashpoint: Nydus Worm Spawns: Blood Shield (Supplicant)
+Flashpoint: Lurker Spawns: Muscular Augments (Hydralisk)
+Flashpoint: Brood Lord Spawns: Concussive Shells (Marauder)
+Flashpoint: Ultralisk Spawns: Progressive Stimpack (Marine)
+Beat Flashpoint: Beat Flashpoint
+In the Enemy's Shadow: Victory: Spore Crawler
+In the Enemy's Shadow: Sewers: Domination Visor: Combat Shield (Marine)
+In the Enemy's Shadow: Sewers: Resupply Crate: Progressive Zerg Flyer Attack
+In the Enemy's Shadow: Sewers: Facility Access: Void Ray
+In the Enemy's Shadow: Facility: Northwest Door Lock: Distortion Blasters (Banshee)
+In the Enemy's Shadow: Facility: Southeast Door Lock: Advanced Targeting Optics (Banshee)
+In the Enemy's Shadow: Facility: Blazefire Gunblade: Guardian Aspect (Mutalisk/Corruptor)
+In the Enemy's Shadow: Facility: Blink Suit: Crius Suit (Ghost)
+In the Enemy's Shadow: Facility: Advanced Weaponry: Nano Projectors (Firebat)
+In the Enemy's Shadow: Facility: Entrance Resupply Crate: Zergling Reconstitution (Kerrigan Tier 3)
+In the Enemy's Shadow: Facility: West Resupply Crate: Battlecruiser
+In the Enemy's Shadow: Facility: North Resupply Crate: Medivac
+In the Enemy's Shadow: Facility: East Resupply Crate: Shadow Guard Training (Dark Templar/Avenger/Blood Hunter)
+In the Enemy's Shadow: Facility: South Resupply Crate: Advanced Cloaking Field (Reaper)
+Beat In the Enemy's Shadow: Beat In the Enemy's Shadow
+Dark Skies: Victory: Valkyrie
+Dark Skies: First Squadron of Dominion Fleet: Enhanced Targeting
+Dark Skies: Remainder of Dominion Fleet: Progressive Terran Infantry Armor
+Dark Skies: Ji'nara: Grooved Spines (Hydralisk)
+Dark Skies: Science Facility: Progressive Immortality Protocol (Thor)
+Beat Dark Skies: Beat Dark Skies
+End Game: Victory: Progressive Protoss Air Armor
+End Game: Xanthos: Temporal Field (Spear of Adun Calldown)
+Beat End Game: Beat End Game
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Beat For Aiur!: Beat For Aiur!
+  Beat Liberation Day: Beat Liberation Day
+  For Aiur!: East Hive: Spine Crawler
+  For Aiur!: Southwest Hive: Centurion
+  Lab Rat: Hatchery: Ghost
+  Liberation Day: Fifth Statue: Phoenix
+  Liberation Day: Sixth Statue: Ionic Force Field (Nova Gadget)
+}
+2: {
+  Beat Dark Whispers: Beat Dark Whispers
+  Beat The Growing Shadow: Beat The Growing Shadow
+  Dark Whispers: Victory: Bio Mechanical Repair Drone (Raven)
+  The Growing Shadow: Nexus: Shredder Rounds (Viking)
+  The Growing Shadow: West Pylon: Hive Mind Emulator
+}
+3: {
+  Beat The Spear of Adun: Beat The Spear of Adun
+  The Spear of Adun: Victory: Energizer
+}
+4: {
+  Amon's Reach: Close Solarite Reserve: Psi Disrupter
+  Amon's Reach: Northwest Launch Bay: Magrail Munitions (Marine)
+  Amon's Reach: South Launch Bay: Photon Cannon
+  Amon's Reach: Victory: Wrathwalker
+  Beat Amon's Reach: Beat Amon's Reach
+  Beat Sky Shield: Beat Sky Shield
+  Sky Shield: Mid EMP Scrambler: Spawn Banelings (Kerrigan Tier 4)
+  Sky Shield: Northeast Stabilizer: Liberator
+  Sky Shield: Southeast EMP Scrambler: 7 Kerrigan Levels
+}
+5: {
+  Beat Brothers in Arms: Beat Brothers in Arms
+  Beat Ghosts in the Fog: Beat Ghosts in the Fog
+  Ghosts in the Fog: South Rock Formation: Jump Suit Module (Nova Suit Module)
+  Ghosts in the Fog: Victory: Heroic Fortitude (Kerrigan Tier 1)
+}
+6: {
+  Beat Forbidden Weapon: Beat Forbidden Weapon
+  Evil Awoken: First Particle Cannon: Signifier
+  Evil Awoken: Second Particle Cannon: Graduating Range (Siege Tank)
+  Forbidden Weapon: South Solarite: Tac Nuke Strike (Nova Ability)
+}
+7: {
+  Beat Last Stand: Beat Last Stand
+  Last Stand: 1 Billion Zerg: Progressive Stealth Suit Module (Nova Suit Module)
+  Last Stand: East Zenith Stone: Vulture
+  Last Stand: Victory: Warp Prism
+  Last Stand: West Zenith Stone: Marine
+}
+8: {
+  Beat Temple of Unification: Beat Temple of Unification
+  Beat The Outlaws: Beat The Outlaws
+  Ghosts in the Fog: East Rock Formation: Firebat
+  Temple of Unification: Mid Celestial Lock: Medic
+  Temple of Unification: North Celestial Lock: Arbiter
+  The Outlaws: North Resource Pickups: Progressive Regenerative Bio-Steel
+}
+9: {
+  Beat Zero Hour: Beat Zero Hour
+  Zero Hour: Cavalry's on the Way: Crushing Grip (Kerrigan Tier 2)
+  Zero Hour: Ride's on its Way: Spawn Leviathan (Kerrigan Tier 7)
+}
+10: {
+  Beat Evacuation: Beat Evacuation
+  Beat Smash and Grab: Beat Smash and Grab
+  Beat The Infinite Cycle: Beat The Infinite Cycle
+  Smash and Grab: Third Relic: Deploy Fenix (Spear of Adun Calldown)
+  The Infinite Cycle: First Hall of Revelation: Mend (Kerrigan Tier 4)
+}
+11: {
+  Beat Devil's Playground: Beat Devil's Playground
+  Beat Harbinger of Oblivion: Beat Harbinger of Oblivion
+  Beat Outbreak: Beat Outbreak
+  Devil's Playground: Brutalisk: Phase Blaster (Warp Prism)
+  Devil's Playground: Middle Reapers: Fury (Kerrigan Tier 6)
+  Devil's Playground: Southeast Reapers: Psionic Lash (Spectre)
+  Devil's Playground: Tosh's Miners: Oracle
+  Harbinger of Oblivion: Northeast Void Crystal: Progressive Orbital Command
+  Harbinger of Oblivion: Northwest Void Crystal: Aberration
+  Harbinger of Oblivion: Southeast Void Crystal: Stim Infusion (Nova Gadget)
+  Harbinger of Oblivion: Victory: Domination (Nova Ability)
+  Outbreak: North Infested Command Center: Concealment (Widow Mine)
+  Outbreak: Northwest Bar: Hydralisk
+  Outbreak: Right Infestor: 7 Kerrigan Levels
+  Outbreak: South Bar: Winged Nightmares
+}
+12: {
+  Beat Haven's Fall: Beat Haven's Fall
+  Beat Lab Rat: Beat Lab Rat
+  Beat Safe Haven: Beat Safe Haven
+  Beat Steps of the Rite: Beat Steps of the Rite
+  Beat Unsealing the Past: Beat Unsealing the Past
+  Beat Welcome to the Jungle: Beat Welcome to the Jungle
+  Lab Rat: East Zergling Group: Swarm Queen
+  Lab Rat: West Zergling Group: Jump Jets (Goliath)
+  Safe Haven: First Terror Fleet: Wraith
+  Safe Haven: Second Terror Fleet: 5 Kerrigan Levels
+  Safe Haven: South Nexus: Ultralisk
+  Safe Haven: Victory: Mirage
+  Steps of the Rite: Northwest Guardian: Infestor
+  Steps of the Rite: Southwest Guardian: Blink (Dark Templar/Avenger/Blood Hunter)
+  Steps of the Rite: West Guardian: Dark Templar
+  The Great Train Robbery: North Defiler: Missile Turret
+  The Great Train Robbery: Northwest Diamondback: G-4 Clusterbomb (Reaper)
+  The Great Train Robbery: South Defiler: Disintegrating Particles (Stalker/Instigator/Slayer)
+  Unsealing the Past: Victory: Hunter-Seeker Weapon (Raven)
+  Welcome to the Jungle: Close Relic: Tempest
+  Welcome to the Jungle: Up to 3 Terrazine Nodes Sealed: Viking
+  Welcome to the Jungle: Up to 4 Terrazine Nodes Sealed: High Templar
+  Welcome to the Jungle: Up to 5 Terrazine Nodes Sealed: 9 Kerrigan Levels
+  Welcome to the Jungle: West Relic: Stabilizer Medpacks (Medic)
+}
+13: {
+  Back in the Saddle: Defend the Tram: Solar Lance (Spear of Adun Calldown)
+  Back in the Saddle: Reach the Sublevel: Roach
+  Beat Back in the Saddle: Beat Back in the Saddle
+  Beat Breakout: Beat Breakout
+  Beat Evil Awoken: Beat Evil Awoken
+  Beat Ghost of a Chance: Beat Ghost of a Chance
+  Beat Purification: Beat Purification
+  Beat Rak'Shir: Beat Rak'Shir
+  Beat The Dig: Beat The Dig
+  Breakout: Second Checkpoint: Progressive Regenerative Bio-Steel
+  Ghost of a Chance: Jorium Stockpile: Slayer
+  Ghost of a Chance: Second Island Spectres: Maelstrom Rounds (Siege Tank)
+  Purification: East Sector: North Null Circuit: C20A Canister Rifle (Nova Weapon)
+  Purification: North Sector: Southeast Null Circuit: Adaptive Medpacks (Medic)
+  Purification: South Sector: North Null Circuit: Thor
+  Purification: West Sector: East Null Circuit: Raven
+  Purification: West Sector: Mid Null Circuit: HERC
+  Rak'Shir: East Slayn Elemental: Reaver
+  The Dig: Door Thermal Barrier: Carrier
+  The Dig: Left Relic: Destroyer
+  The Dig: Right Ground Relic: Immortal
+  Welcome to the Jungle: Up to 1 Terrazine Node Sealed: Sentinel
+  Welcome to the Jungle: Up to 2 Terrazine Nodes Sealed: Reconstruction Beam (Spear of Adun Auto-Cast)
+}
+14: {
+  Beat Rendezvous: Beat Rendezvous
+  Beat Templar's Charge: Beat Templar's Charge
+  Beat The Moebius Factor: Beat The Moebius Factor
+  Beat Whispers of Doom: Beat Whispers of Doom
+  Rendezvous: Left Queen: Leaping Strike (Kerrigan Tier 1)
+  Templar's Charge: Southeast Hybrid Stasis Chamber: Colossus
+  Templar's Charge: West Hybrid Stasis Chamber: Corruptor
+  The Moebius Factor: 1st Data Core: Shockwave Missile Battery (Banshee)
+  Whispers of Doom: Third Hatchery: Ascendant
+}
+15: {
+  Beat A Sinister Turn: Beat A Sinister Turn
+  Beat Domination: Beat Domination
+  Beat Harvest of Screams: Beat Harvest of Screams
+  Beat Supernova: Beat Supernova
+  Beat Templar's Return: Beat Templar's Return
+  Domination: Victory: Advanced Targeting Mechanics (Immortal/Annihilator)
+  Harvest of Screams: West Ursadon Matriarch: Blazefire Gunblade (Nova Weapon)
+  Supernova: East Relic: Widow Mine
+  Supernova: North Relic: Baneling Aspect (Zergling)
+  Templar's Return: Temple Grounds: Gather Army: Science Vessel
+  Templar's Return: Temple Grounds: Power Structure: Progressive Orbital Command
+  Templar's Return: Victory: Blood Hunter
+}
+16: {
+  Beat Echoes of the Future: Beat Echoes of the Future
+  Beat Fire in the Sky: Beat Fire in the Sky
+  Beat Maw of the Void: Beat Maw of the Void
+  Beat Shoot the Messenger: Beat Shoot the Messenger
+  Beat The Escape: Beat The Escape
+  Beat The Host: Beat The Host
+  Echoes of the Future: Base: Button With a Skull on It (Thor)
+  Echoes of the Future: Northwest Tendril: Banshee
+  Echoes of the Future: Victory: War Pigs
+  Fire in the Sky: Close Zerg Rescue: Sentry
+  Fire in the Sky: North Zerg Rescue: Adept
+  Fire in the Sky: South Zerg Rescue: Annihilator
+  Maw of the Void: Expansion Rip Field Generator: Lurker Aspect (Hydralisk)
+  Maw of the Void: North Prisoners: Holo Decoy (Nova Gadget)
+  Maw of the Void: Southwest Rip Field Generator: Zealot
+  Maw of the Void: Victory: Corsair
+  Shoot the Messenger: Center Stasis Chamber: Planetary Fortress
+  Shoot the Messenger: East Stasis Chamber: Plasma Rifle (Nova Weapon)
+  Shoot the Messenger: Frozen Expansion: Mutalisk
+  Shoot the Messenger: Victory: Reaper
+  The Host: Southeast Void Shard: Hellfire Shotgun (Nova Weapon)
+}
+17: {
+  Beat Enemy Within: Beat Enemy Within
+  Beat Gates of Hell: Beat Gates of Hell
+  Beat In Utter Darkness: Beat In Utter Darkness
+  Beat Old Soldiers: Beat Old Soldiers
+  Beat Salvation: Beat Salvation
+  Beat Sudden Strike: Beat Sudden Strike
+  Beat The Great Train Robbery: Beat The Great Train Robbery
+  Enemy Within: Third Niadra Evolution: Hel's Angels
+  Enemy Within: Warp Drive: Advanced Laser Technology (Wraith)
+  Gates of Hell: 4 Drop Pods: 8 Kerrigan Levels
+  Gates of Hell: 6 Drop Pods: Siege Tank
+  Gates of Hell: 8 Drop Pods: Brood Lord Aspect (Mutalisk/Corruptor)
+  Gates of Hell: East Spore Cannon: ATX Laser Battery (Battlecruiser)
+  Gates of Hell: Large Army: Blink (Nova Ability)
+  Gates of Hell: Victory: 6 Kerrigan Levels
+  In Utter Darkness: Selendis: Vanguard
+  In Utter Darkness: Urun: Raid Artillery (Liberator)
+  Old Soldiers: East Science Lab: Zergling
+  Old Soldiers: North Science Lab: Wild Mutation (Kerrigan Tier 4)
+  Old Soldiers: Rich Mineral Expansion: Viper Aspect (Mutalisk/Corruptor)
+  Sudden Strike: Brutalisk: Mothership
+  The Great Train Robbery: 6 Trains Destroyed: Swarm Host
+}
+18: {
+  Beat Belly of the Beast: Beat Belly of the Beast
+  Beat Cutthroat: Beat Cutthroat
+  Beat Enemy Intelligence: Beat Enemy Intelligence
+  Beat Shatter the Sky: Beat Shatter the Sky
+  Beat Waking the Ancient: Beat Waking the Ancient
+  Belly of the Beast: First Group Rescued: Stalker
+  Cutthroat: West Command Center: Time Stop (Spear of Adun Calldown)
+  Enemy Intelligence: Forces Rescued: Shield Battery
+  Enemy Intelligence: Southeast Garrison: Instigator
+  Enemy Intelligence: Victory: Spectre
+  Shatter the Sky: Close Coolant Tower: Hercules
+  Shatter the Sky: East Hatchery: Infest Broodlings (Kerrigan Tier 6)
+  Shatter the Sky: Leviathan: Psionic Shift (Kerrigan Tier 2)
+  Shatter the Sky: Mid Hatchery: Particle Reflection (Stalker/Instigator/Slayer)
+  Waking the Ancient: South Essence Pool: Pulse Grenades (Nova Gadget)
+  Welcome to the Jungle: Main Base: 6 Kerrigan Levels
+}
+19: {
+  Beat All-In: Beat All-In
+  Beat Engine of Destruction: Beat Engine of Destruction
+  Beat The Crucible: Beat The Crucible
+  Beat Trouble In Paradise: Beat Trouble In Paradise
+  Engine of Destruction: Loki: Resource Efficiency (Scourge)
+  Engine of Destruction: Odin: Disruptor
+  Engine of Destruction: Southeast Devourer: Impaler Aspect (Hydralisk)
+  The Crucible: 5 Minutes Remaining: Progressive Regenerative Bio-Steel
+  The Crucible: Yagdra Claims Brakk's Pack: Flashbang Grenades (Nova Gadget)
+  Trouble In Paradise: Fleet Beacon: Monomolecular Blade (Nova Weapon)
+  Trouble In Paradise: North Base: West Hatchery: Kinetic Blast (Kerrigan Tier 1)
+  Trouble In Paradise: North Shield Projector: Dragoon
+  Trouble In Paradise: South Base: Northwest Hatchery: Spartan Company
+}
+20: {
+  Beat Media Blitz: Beat Media Blitz
+  Beat Night Terrors: Beat Night Terrors
+  Beat Supreme: Beat Supreme
+  Media Blitz: All Starports: Scourge
+  Media Blitz: Tower 1: Brood Queen
+  Media Blitz: Tower 3: Brynhilds
+  Night Terrors: Eradicators: Progressive Stealth Suit Module (Nova Suit Module)
+  Night Terrors: Science Facility: Khaydarin Monolith
+  Supreme: Third Relic: Apocalypse (Kerrigan Tier 7)
+  Supreme: Victory: Diamondback
+  Supreme: Yagdra: Chain Reaction (Kerrigan Tier 2)
+}
+21: {
+  Beat Flashpoint: Beat Flashpoint
+  Beat Infested: Beat Infested
+  Beat Piercing the Shroud: Beat Piercing the Shroud
+  Beat With Friends Like These: Beat With Friends Like These
+  Flashpoint: Close East Evidence Coordinates: Perdition Turret
+  Flashpoint: Expansion Hatchery: Avenger
+  Flashpoint: Far East Evidence Coordinates: Drop-Pods (Kerrigan Tier 7)
+  Flashpoint: Northeast Subway Entrance: Bunker
+  Flashpoint: Ultralisk Spawns: Progressive Stimpack (Marine)
+  Infested: Mid Garrison: Pressurized Glands (Swarm Host)
+  With Friends Like These: Victory: Cyclone
+}
+22: {
+  Beat Conviction: Beat Conviction
+  Beat Hand of Darkness: Beat Hand of Darkness
+  Beat In the Enemy's Shadow: Beat In the Enemy's Shadow
+  Hand of Darkness: South Brutalisk: Defiler
+  Hand of Darkness: Victory: Marauder
+  In the Enemy's Shadow: Facility: North Resupply Crate: Medivac
+  In the Enemy's Shadow: Facility: Southeast Door Lock: Advanced Targeting Optics (Banshee)
+  In the Enemy's Shadow: Facility: West Resupply Crate: Battlecruiser
+  In the Enemy's Shadow: Sewers: Domination Visor: Combat Shield (Marine)
+  In the Enemy's Shadow: Sewers: Facility Access: Void Ray
+  In the Enemy's Shadow: Victory: Spore Crawler
+}
+23: {
+  Beat Dark Skies: Beat Dark Skies
+  Beat Phantoms of the Void: Beat Phantoms of the Void
+  Dark Skies: Victory: Valkyrie
+  Phantoms of the Void: Close Temple: Dark Archon
+  Phantoms of the Void: Northeast Crystal: Armored Suit Module (Nova Suit Module)
+  Phantoms of the Void: Northwest Temple: Jump Jets (Siege Tank)
+  Phantoms of the Void: Southeast Temple: Hellbat Aspect (Hellion)
+  Phantoms of the Void: Victory: 8 Kerrigan Levels
+}
+24: {
+  Beat End Game: Beat End Game
+  Beat Planetfall: Beat Planetfall
+  Planetfall: 1 Bile Launcher Deployed: Goliath
+  Planetfall: 4 Bile Launchers Deployed: Progressive Stimpack (Marine)
+  Planetfall: 5 Bile Launchers Deployed: Warhound
+  Planetfall: North Gate: 10 Kerrigan Levels
+  Planetfall: Sons of Korhal: 4 Kerrigan Levels
+}
+25: {
+  Beat Death From Above: Beat Death From Above
+  Death From Above: Third Power Link: Hellion
+  Death From Above: Victory: Scout
+}
+26: {
+  Beat The Reckoning: Beat The Reckoning
+}
+27: {
+  Beat Into the Void: Beat Into the Void
+}
+28: {
+  Beat The Essence of Eternity: Beat The Essence of Eternity
+}
+29: {
+  Amon's Fall: Victory: Amon's Fall: Victory
+  Beat Amon's Fall: Beat Amon's Fall
+}

@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-26 04:17:36
+**Generated:** 2025-11-26 05:22:08
 
 **Source Data Created:** 2025-11-26T04:17:36.751623
 
-**Source Data Last Updated:** 2025-11-26T04:17:36.751629
+**Source Data Last Updated:** 2025-11-26T05:22:08.270964
 
 ## Summary
 
 - **Total Games:** 76
-- **Passed:** 69 (90.8%)
-- **Failed:** 7 (9.2%)
+- **Passed:** 70 (92.1%)
+- **Failed:** 6 (7.9%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
@@ -76,7 +76,7 @@
 | Secret of Evermore | ✅ Passed seeds 1-10 | 0 | 5.2 | 5.2 | 🟢 Complete | ✅ | ✅ |
 | Shivers | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed seeds 1-10 | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ⚫ |
-| Starcraft 2 | ❌ Failed seed 2 | 0 | 3.3 | 32.2 | 🟡 10.2% | ✅ | ✅ |
+| Starcraft 2 | ✅ Passed seeds 1-10 | 0 | 32.2 | 32.2 | 🟢 Complete | ✅ | ✅ |
 | Stardew Valley | ❌ Failed seed 2 | 0 | 0.2 | 25.6 | 🟠 0.8% | ✅ | ⚫ |
 | Subnautica | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed seeds 1-10 | 0 | 5.4 | 5.4 | 🟢 Complete | ✅ | ✅ |
