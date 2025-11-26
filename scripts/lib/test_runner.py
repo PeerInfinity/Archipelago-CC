@@ -270,8 +270,10 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
 
         multiclient_env['TEST_GAME'] = test_game
         multiclient_env['TEST_SEED'] = seed
-        # Disable --single-process flag for multiclient tests (incompatible with multi-context tests)
-        multiclient_env['DISABLE_SINGLE_PROCESS'] = 'true'
+        # Only disable --single-process for dual-client tests (incompatible with multi-context)
+        # Single-client tests NEED --single-process to work correctly
+        if not single_client:
+            multiclient_env['DISABLE_SINGLE_PROCESS'] = 'true'
 
         # Show the command being run
         print(f"  Command: {' '.join(multiclient_cmd)}")

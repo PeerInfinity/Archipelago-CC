@@ -113,11 +113,59 @@ function is_girl(snapshot, staticData) {
 }
 
 function current_chapter(snapshot, staticData, chapter) {
-    return hasItem(snapshot, 'Chapter Completed', chapter - 1);
+    // Check inventory for "Chapter Completed" (from progressionMapping or direct)
+    const inventoryChapters = getItemCount(snapshot, 'Chapter Completed');
+    if (inventoryChapters >= chapter - 1) {
+        return true;
+    }
+
+    // Fallback: check prog_items structure
+    const progChapters = snapshot?.prog_items?.['1']?.['Chapter Completed'] ||
+                         snapshot?.prog_items?.[1]?.['Chapter Completed'] || 0;
+    if (progChapters >= chapter - 1) {
+        return true;
+    }
+
+    // Check events array (if events are tracked separately)
+    const events = snapshot?.events || [];
+    let chaptersCompleted = 0;
+    for (const event of events) {
+        if (event.includes('Chapter') && event.includes('Complete')) {
+            chaptersCompleted++;
+        }
+    }
+
+    return chaptersCompleted >= chapter - 1;
 }
 
 function rep(snapshot, staticData, required) {
-    return hasItem(snapshot, 'rep', required);
+    // The progressionMapping in rules should aggregate "8 REP", "16 REP", etc.
+    // into inventory["rep"]. This is handled by stateManager.addItemToInventory().
+    // We check both the aggregated "rep" counter and fall back to manual aggregation
+    // for spoiler tests that may use prog_items directly.
+
+    // First check the aggregated "rep" counter (from progressionMapping)
+    const aggregatedRep = getItemCount(snapshot, 'rep');
+    if (aggregatedRep >= required) {
+        return true;
+    }
+
+    // Fallback: check prog_items structure (used by spoiler tests)
+    const progRep = snapshot?.prog_items?.['1']?.rep || snapshot?.prog_items?.[1]?.rep || 0;
+    if (progRep >= required) {
+        return true;
+    }
+
+    // Second fallback: manually aggregate REP items (for cases where progressionMapping hasn't run)
+    const repItemAmounts = [8, 16, 24, 32, 48];
+    let totalRep = 0;
+    for (const amount of repItemAmounts) {
+        const itemName = `${amount} REP`;
+        const count = getItemCount(snapshot, itemName);
+        totalRep += amount * count;
+    }
+
+    return totalRep >= required;
 }
 
 // Progression functions
