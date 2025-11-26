@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-26T07:22:33.003108",
-    "last_updated": "2025-11-26T07:22:33.003114",
+    "last_updated": "2025-11-26T20:23:04.162420",
     "script_version": "1.0.0"
   },
   "results": {
@@ -328,7 +328,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.86,
+        "processing_time_seconds": 6.94,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -339,14 +339,15 @@
         "client1_passed": false,
         "client2_locations_received": 0,
         "client2_passed": false,
-        "client2_total_locations": 252,
-        "error_count": 9,
-        "locations_checked": 0,
-        "processing_time_seconds": 74.73,
+        "client2_total_locations": 0,
+        "error_count": 2,
+        "locations_checked": 116,
+        "processing_time_seconds": 35.98,
         "return_code": 1,
+        "single_client_mode": true,
         "success": false,
-        "total_locations": 252,
-        "warning_count": 4
+        "total_locations": 247,
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/bomb_rush_cyberfunk/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -356,7 +357,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Bomb Rush Cyberfunk.yaml",
-      "timestamp": "2025-11-26T07:13:04.656029",
+      "timestamp": "2025-11-26T20:22:21.028197",
       "world_info": {
         "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
         "game_logic_path": null,

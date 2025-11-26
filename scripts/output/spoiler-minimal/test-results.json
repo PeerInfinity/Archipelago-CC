@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-26T06:10:19.808816",
-    "last_updated": "2025-11-26T06:10:19.808826",
+    "last_updated": "2025-11-26T20:09:59.266083",
     "script_version": "1.0.0"
   },
   "results": {
@@ -5252,26 +5252,14 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "1": {
-              "new_rules_hash": "2eeab162e5b8fec2713bc132ca2a01470a082764b85e760cf24c980db88a4ca8",
-              "new_spheres_hash": "52f5bc3d0fb51a4daba7e12a7ee60244ce2b1c4c7de0832841ff3f46ed4a46d2",
-              "original_rules_hash": "2eeab162e5b8fec2713bc132ca2a01470a082764b85e760cf24c980db88a4ca8",
-              "original_spheres_hash": "52f5bc3d0fb51a4daba7e12a7ee60244ce2b1c4c7de0832841ff3f46ed4a46d2",
-              "rules_identical": true,
-              "seed": "1",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T06:03:33.379683"
-            }
-          },
           "game_name_from_filename": "bomb_rush_cyberfunk",
           "game_name_from_yaml": "Bomb Rush Cyberfunk",
           "generation": {
             "error_count": 0,
-            "error_type": null,
-            "processing_time_seconds": 4.73,
-            "return_code": 0,
-            "success": true,
+            "note": "Skipped in test-only mode",
+            "processing_time_seconds": 0,
+            "return_code": null,
+            "success": false,
             "warning_count": 0
           },
           "rules_file": {
@@ -5284,7 +5272,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 19.9,
+            "processing_time_seconds": 25.21,
             "return_code": 0,
             "sphere_reached": 10.9,
             "success": true,
@@ -5292,7 +5280,7 @@
             "warning_count": 0
           },
           "template_filename": "Bomb Rush Cyberfunk.yaml",
-          "timestamp": "2025-11-26T05:38:08.189498",
+          "timestamp": "2025-11-26T20:09:33.562491",
           "world_info": {
             "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
             "game_logic_path": null,
@@ -5843,7 +5831,7 @@
         "failure_rate": 0.0
       },
       "template_filename": "Bomb Rush Cyberfunk.yaml",
-      "timestamp": "2025-11-26T05:38:08.189498",
+      "timestamp": "2025-11-26T20:09:33.562491",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
