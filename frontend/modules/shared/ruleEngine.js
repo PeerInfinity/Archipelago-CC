@@ -529,14 +529,19 @@ export const evaluateRule = (rule, context, depth = 0) => {
       case 'and': {
         result = true; // Assume true initially
         let hasUndefined = false;
+        let hasSMBool = false;
+        let totalDifficulty = 0;
         for (const condition of rule.conditions || []) {
           const conditionResult = evaluateRule(condition, context, depth + 1);
 
           // Handle SMBool objects from Super Metroid
+          // Track difficulty to properly check against maxDiff at depth 0
           let boolValue = conditionResult;
           if (conditionResult && typeof conditionResult === 'object' && 'bool' in conditionResult) {
-            // SMBool object - extract the boolean value (ignore difficulty for and/or)
+            // SMBool object - extract the boolean value and accumulate difficulty
             boolValue = conditionResult.bool === true;
+            hasSMBool = true;
+            totalDifficulty += conditionResult.difficulty || 0;
           }
 
           // Check for falsiness (but not undefined, which is handled separately)
@@ -553,27 +558,42 @@ export const evaluateRule = (rule, context, depth = 0) => {
         if (result === true && hasUndefined) {
           result = undefined;
         }
+        // If any condition was an SMBool, return an SMBool with accumulated difficulty
+        // This allows proper difficulty checking at depth 0
+        if (result === true && hasSMBool) {
+          result = { bool: true, difficulty: totalDifficulty };
+        }
         break;
       }
 
       case 'or': {
         result = false; // Assume false initially
         let hasUndefined = false;
+        let hasSMBool = false;
+        let minDifficulty = Infinity;
         for (const condition of rule.conditions || []) {
           const conditionResult = evaluateRule(condition, context, depth + 1);
 
           // Handle SMBool objects from Super Metroid
+          // Track minimum difficulty among passing conditions for proper maxDiff check
           let boolValue = conditionResult;
+          let difficulty = 0;
           if (conditionResult && typeof conditionResult === 'object' && 'bool' in conditionResult) {
-            // SMBool object - extract the boolean value (ignore difficulty for and/or)
+            // SMBool object - extract the boolean value and difficulty
             boolValue = conditionResult.bool === true;
+            difficulty = conditionResult.difficulty || 0;
+            hasSMBool = true;
           }
 
           // Check for truthiness (but not undefined, which is handled separately)
           if (boolValue && boolValue !== undefined) {
             result = true;
-            hasUndefined = false; // Definitively true
-            break;
+            // For OR, we want the minimum difficulty among passing conditions
+            if (difficulty < minDifficulty) {
+              minDifficulty = difficulty;
+            }
+            // Don't break early - continue to find the lowest difficulty option
+            hasUndefined = false; // Definitively true (at least one path)
           }
           if (conditionResult === undefined) {
             hasUndefined = true; // Potential undefined result
@@ -582,6 +602,10 @@ export const evaluateRule = (rule, context, depth = 0) => {
         // Only set to undefined if not definitively true and encountered an undefined condition
         if (result === false && hasUndefined) {
           result = undefined;
+        }
+        // If any condition was an SMBool and result is true, return SMBool with min difficulty
+        if (result === true && hasSMBool) {
+          result = { bool: true, difficulty: minDifficulty === Infinity ? 0 : minDifficulty };
         }
         break;
       }
@@ -1942,6 +1966,21 @@ export const evaluateRule = (rule, context, depth = 0) => {
       isSnapshot: isValidContext,
     });
     result = undefined;
+  }
+
+  // At depth 0 (top-level rule), convert SMBool to boolean with difficulty check
+  // This ensures difficulty is properly checked against maxDiff for SM games
+  // when the top-level rule is 'and', 'or', or any rule type returning SMBool
+  if (depth === 0 && result && typeof result === 'object' && 'bool' in result && 'difficulty' in result) {
+    let maxDiff = 50; // Default to hardcore for Super Metroid
+    if (typeof context?.getPlayerId === 'function' && typeof context?.resolveName === 'function') {
+      const playerId = context.getPlayerId();
+      const state = context.resolveName('state');
+      if (state?.smbm?.[playerId]?.maxDiff !== undefined) {
+        maxDiff = state.smbm[playerId].maxDiff;
+      }
+    }
+    result = result.bool === true && result.difficulty <= maxDiff;
   }
 
   return result;
