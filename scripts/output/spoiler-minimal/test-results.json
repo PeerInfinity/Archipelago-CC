@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-26T06:10:19.808816",
-    "last_updated": "2025-11-26T06:10:19.808826",
+    "last_updated": "2025-11-26T20:35:50.153519",
     "script_version": "1.0.0"
   },
   "results": {
@@ -21334,26 +21334,14 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "1": {
-              "new_rules_hash": "862c1a2d2b7a9168c5dc793399121201906cd3ad92b6370eea0367de01a1e6db",
-              "new_spheres_hash": "9e4f71ee2832e7e436a41485c474f01c398fb978379f4d1612c046aea045ec46",
-              "original_rules_hash": "862c1a2d2b7a9168c5dc793399121201906cd3ad92b6370eea0367de01a1e6db",
-              "original_spheres_hash": "9e4f71ee2832e7e436a41485c474f01c398fb978379f4d1612c046aea045ec46",
-              "rules_identical": true,
-              "seed": "1",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T06:04:38.198412"
-            }
-          },
           "game_name_from_filename": "kdl3",
           "game_name_from_yaml": "Kirby's Dream Land 3",
           "generation": {
             "error_count": 0,
-            "error_type": null,
-            "processing_time_seconds": 3.58,
-            "return_code": 0,
-            "success": true,
+            "note": "Skipped in test-only mode",
+            "processing_time_seconds": 0,
+            "return_code": null,
+            "success": false,
             "warning_count": 0
           },
           "rules_file": {
@@ -21366,7 +21354,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 42.69,
+            "processing_time_seconds": 54.02,
             "return_code": 0,
             "sphere_reached": 11.1,
             "success": true,
@@ -21374,7 +21362,7 @@
             "warning_count": 0
           },
           "template_filename": "Kirby's Dream Land 3.yaml",
-          "timestamp": "2025-11-26T05:43:27.054049",
+          "timestamp": "2025-11-26T20:34:55.602946",
           "world_info": {
             "exporter_path": "exporter/games/kdl3.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js",
@@ -21925,7 +21913,7 @@
         "failure_rate": 0.0
       },
       "template_filename": "Kirby's Dream Land 3.yaml",
-      "timestamp": "2025-11-26T05:43:27.054049",
+      "timestamp": "2025-11-26T20:34:55.602946",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/kdl3.py",
