@@ -100,8 +100,78 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
             func_name = rule_func.__name__
             if func_name in boss_mapping:
                 boss_name = boss_mapping[func_name]
-                # Parse the function source using AST to properly extract the AND/OR structure
-                return self._parse_boss_method_ast(rule_func, boss_name)
+                # For boss methods, manually construct the rule with the boss name
+                # Most boss methods follow the pattern:
+                # has_boss_strength(state, "boss_name") AND (region1 OR region2)
+                #
+                # Inspect the function to extract any region requirements
+                import inspect
+                source = inspect.getsource(rule_func)
+
+                # Extract region names from can_reach_region calls
+                import re
+                region_matches = re.findall(r'can_reach_region\(["\']([^"\']+)["\']', source)
+
+                # Build the rule conditions
+                conditions = [
+                    {
+                        'type': 'helper',
+                        'name': 'has_boss_strength',
+                        'args': [{'type': 'constant', 'value': boss_name}]
+                    }
+                ]
+
+                # Add region requirements as OR condition (boss fights can be entered from multiple doors)
+                if len(region_matches) > 1:
+                    # Multiple regions are ORed together (can enter boss from either side)
+                    region_conditions = []
+                    for region in region_matches:
+                        region_conditions.append({
+                            'type': 'state_method',
+                            'method': 'can_reach_region',
+                            'args': [{'type': 'constant', 'value': region}]
+                        })
+                    conditions.append({
+                        'type': 'or',
+                        'conditions': region_conditions
+                    })
+                elif len(region_matches) == 1:
+                    # Single region - add directly
+                    conditions.append({
+                        'type': 'state_method',
+                        'method': 'can_reach_region',
+                        'args': [{'type': 'constant', 'value': region_matches[0]}]
+                    })
+
+                # Add wall_climb or double_jump requirement if found in source
+                # Note: These are also ORed in the source (wall_climb OR double_jump)
+                if 'wall_climb' in source or 'double_jump' in source:
+                    movement_conditions = []
+                    if 'wall_climb' in source:
+                        movement_conditions.append({
+                            'type': 'helper',
+                            'name': 'wall_climb',
+                            'args': []
+                        })
+                    if 'double_jump' in source:
+                        movement_conditions.append({
+                            'type': 'helper',
+                            'name': 'double_jump',
+                            'args': []
+                        })
+                    if len(movement_conditions) > 1:
+                        conditions.append({
+                            'type': 'or',
+                            'conditions': movement_conditions
+                        })
+                    else:
+                        conditions.append(movement_conditions[0])
+
+                # Return AND of all conditions
+                if len(conditions) == 1:
+                    return conditions[0]
+                else:
+                    return {'type': 'and', 'conditions': conditions}
 
         # First try to extract from closure variables if this is a lambda with clauses
         closure_result = self._try_extract_from_closure(rule_func)
@@ -125,119 +195,6 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
                         return self._convert_logic_data_to_rule(logic_data)
 
         return None  # Let normal analysis proceed
-
-    def _parse_boss_method_ast(self, rule_func, boss_name: str) -> Dict[str, Any]:
-        """Parse boss method source code using AST to extract correct AND/OR structure."""
-        import ast
-        import inspect
-        import textwrap
-
-        try:
-            source = inspect.getsource(rule_func)
-            # Dedent to handle class method indentation
-            source = textwrap.dedent(source)
-            tree = ast.parse(source)
-
-            # Find the return statement
-            for node in ast.walk(tree):
-                if isinstance(node, ast.Return):
-                    return self._ast_to_rule(node.value, boss_name)
-
-            # Fallback: just has_boss_strength
-            return {
-                'type': 'helper',
-                'name': 'has_boss_strength',
-                'args': [{'type': 'constant', 'value': boss_name}]
-            }
-        except Exception as e:
-            logger.debug(f"Could not parse boss method AST: {e}")
-            # Fallback to simple boss strength check
-            return {
-                'type': 'helper',
-                'name': 'has_boss_strength',
-                'args': [{'type': 'constant', 'value': boss_name}]
-            }
-
-    def _ast_to_rule(self, node, boss_name: str) -> Dict[str, Any]:
-        """Convert AST node to rule dictionary, preserving AND/OR structure."""
-        import ast
-
-        if isinstance(node, ast.BoolOp):
-            # AND or OR operation
-            if isinstance(node.op, ast.And):
-                conditions = [self._ast_to_rule(val, boss_name) for val in node.values]
-                # Flatten nested ANDs
-                flattened = []
-                for cond in conditions:
-                    if cond.get('type') == 'and':
-                        flattened.extend(cond.get('conditions', []))
-                    else:
-                        flattened.append(cond)
-                if len(flattened) == 1:
-                    return flattened[0]
-                return {'type': 'and', 'conditions': flattened}
-            elif isinstance(node.op, ast.Or):
-                conditions = [self._ast_to_rule(val, boss_name) for val in node.values]
-                # Flatten nested ORs
-                flattened = []
-                for cond in conditions:
-                    if cond.get('type') == 'or':
-                        flattened.extend(cond.get('conditions', []))
-                    else:
-                        flattened.append(cond)
-                if len(flattened) == 1:
-                    return flattened[0]
-                return {'type': 'or', 'conditions': flattened}
-
-        elif isinstance(node, ast.Call):
-            # Method call - check what's being called
-            if isinstance(node.func, ast.Attribute):
-                method_name = node.func.attr
-
-                # Check if it's self.has_boss_strength
-                if method_name == 'has_boss_strength':
-                    # Extract boss name from args
-                    if len(node.args) >= 2:
-                        boss_arg = node.args[1]
-                        if isinstance(boss_arg, ast.Constant):
-                            return {
-                                'type': 'helper',
-                                'name': 'has_boss_strength',
-                                'args': [{'type': 'constant', 'value': boss_arg.value}]
-                            }
-                    # Default to provided boss name
-                    return {
-                        'type': 'helper',
-                        'name': 'has_boss_strength',
-                        'args': [{'type': 'constant', 'value': boss_name}]
-                    }
-
-                # Check if it's state.can_reach_region
-                if method_name == 'can_reach_region':
-                    if len(node.args) >= 1:
-                        region_arg = node.args[0]
-                        if isinstance(region_arg, ast.Constant):
-                            return {
-                                'type': 'state_method',
-                                'method': 'can_reach_region',
-                                'args': [{'type': 'constant', 'value': region_arg.value}]
-                            }
-
-                # Other self.method calls - convert to helper
-                if isinstance(node.func.value, ast.Name) and node.func.value.id == 'self':
-                    return {
-                        'type': 'helper',
-                        'name': method_name,
-                        'args': []
-                    }
-
-        elif isinstance(node, ast.Compare):
-            # Handle comparisons (e.g., self.world.options.difficulty >= 2)
-            # For now, simplify to True (these are typically difficulty checks)
-            return {'type': 'constant', 'value': True}
-
-        # Default fallback
-        return {'type': 'constant', 'value': True}
 
     def _try_extract_from_closure(self, rule_func) -> Optional[Dict[str, Any]]:
         """Try to extract clauses from closure variables or function defaults."""
