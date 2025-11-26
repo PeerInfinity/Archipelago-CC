@@ -3,7 +3,19 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-26T04:17:36.751623",
-    "last_updated": "2025-11-26T04:17:36.751629",
+    "intermittent_tracking": {
+      "failures": [
+        {
+          "now_passing": true,
+          "previously_failed": true,
+          "seed": 4,
+          "template": "Kingdom Hearts 2.yaml",
+          "timestamp": "2025-11-26T04:45:32.421519"
+        }
+      ],
+      "last_updated": "2025-11-26T04:45:48.722983"
+    },
+    "last_updated": "2025-11-26T04:45:48.723103",
     "script_version": "1.0.0"
   },
   "results": {
@@ -19750,7 +19762,7 @@
         "success": true,
         "warning_count": 0
       },
-      "consecutive_passes_before_failure": 3,
+      "consecutive_passes_before_failure": 10,
       "consistency_tests": {
         "1": {
           "new_rules_hash": "828fadbbcbf5d5b5b7de5e661c97296a3ef7fb3277b4ec95bd84a1a52b28b353",
@@ -19853,8 +19865,8 @@
           "timestamp": "2025-11-26T04:11:10.597557"
         }
       },
-      "first_failure_reason": "Test failed at sphere 5.15",
-      "first_failure_seed": 4,
+      "first_failure_reason": null,
+      "first_failure_seed": null,
       "game_name_from_filename": "kh2",
       "game_name_from_yaml": "Kingdom Hearts 2",
       "generation": {
@@ -19929,24 +19941,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "10": {
-              "new_rules_hash": "8714e34d99ab86e66133cb5230c3214da4594acd7d1146828e46ae1b5546a23e",
-              "new_spheres_hash": "10e5a14f38ce2ab66f88d467838631a3a273c449116699cc05c0be7dd9196fc9",
-              "original_rules_hash": "8714e34d99ab86e66133cb5230c3214da4594acd7d1146828e46ae1b5546a23e",
-              "original_spheres_hash": "10e5a14f38ce2ab66f88d467838631a3a273c449116699cc05c0be7dd9196fc9",
-              "rules_identical": true,
-              "seed": "10",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:11:54.138596"
-            }
-          },
           "game_name_from_filename": "kh2",
           "game_name_from_yaml": "Kingdom Hearts 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 3.78,
+            "processing_time_seconds": 5.71,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -19961,7 +19961,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 30.72,
+            "processing_time_seconds": 36.79,
             "return_code": 0,
             "sphere_reached": 18.5,
             "success": true,
@@ -19969,7 +19969,7 @@
             "warning_count": 0
           },
           "template_filename": "Kingdom Hearts 2.yaml",
-          "timestamp": "2025-11-26T03:44:42.378055",
+          "timestamp": "2025-11-26T04:44:49.479480",
           "world_info": {
             "exporter_path": "exporter/games/kh2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
@@ -20100,24 +20100,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "4": {
-              "new_rules_hash": "b15514167c85c5939a3c7cdd8f304e29191b54207e0a70e72cca780b91a80a6c",
-              "new_spheres_hash": "2a4f807a00662d3dfe274d9dc0568b68d65238f00265663cc435966bfba58761",
-              "original_rules_hash": "b15514167c85c5939a3c7cdd8f304e29191b54207e0a70e72cca780b91a80a6c",
-              "original_spheres_hash": "2a4f807a00662d3dfe274d9dc0568b68d65238f00265663cc435966bfba58761",
-              "rules_identical": true,
-              "seed": "4",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:09:38.683008"
-            }
-          },
           "game_name_from_filename": "kh2",
           "game_name_from_yaml": "Kingdom Hearts 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 3.36,
+            "processing_time_seconds": 6.06,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -20130,17 +20118,17 @@
           "seed": "4",
           "seed_id": "AP_05594871498841892311",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 35.94,
-            "return_code": 1,
-            "sphere_reached": 5.15,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 36.93,
+            "return_code": 0,
+            "sphere_reached": 19.2,
+            "success": true,
             "total_spheres": 19.2,
             "warning_count": 0
           },
           "template_filename": "Kingdom Hearts 2.yaml",
-          "timestamp": "2025-11-26T04:05:40.924370",
+          "timestamp": "2025-11-26T04:40:29.595415",
           "world_info": {
             "exporter_path": "exporter/games/kh2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
@@ -20157,24 +20145,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "5": {
-              "new_rules_hash": "375c965a13bebc5d65b4e437ffea31e0ace79e9f24b695ced920d05ad2da8963",
-              "new_spheres_hash": "ede1009f7c65360f4b9c3690aee732a83449b496c89726e3991f77b14581d692",
-              "original_rules_hash": "375c965a13bebc5d65b4e437ffea31e0ace79e9f24b695ced920d05ad2da8963",
-              "original_spheres_hash": "ede1009f7c65360f4b9c3690aee732a83449b496c89726e3991f77b14581d692",
-              "rules_identical": true,
-              "seed": "5",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:12:17.249245"
-            }
-          },
           "game_name_from_filename": "kh2",
           "game_name_from_yaml": "Kingdom Hearts 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 3.84,
+            "processing_time_seconds": 5.92,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -20189,7 +20165,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 32.23,
+            "processing_time_seconds": 36.83,
             "return_code": 0,
             "sphere_reached": 20.1,
             "success": true,
@@ -20197,7 +20173,7 @@
             "warning_count": 0
           },
           "template_filename": "Kingdom Hearts 2.yaml",
-          "timestamp": "2025-11-26T03:44:56.904200",
+          "timestamp": "2025-11-26T04:41:13.050239",
           "world_info": {
             "exporter_path": "exporter/games/kh2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
@@ -20214,24 +20190,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "6": {
-              "new_rules_hash": "ad32995bb57835e9bb92078225e2ee8f571a32cebfa5f0ca9b193d97a04efe73",
-              "new_spheres_hash": "95a703852200a1168651b8556330d55e4e70c18bcaa1c6d24c41639c10c11991",
-              "original_rules_hash": "ad32995bb57835e9bb92078225e2ee8f571a32cebfa5f0ca9b193d97a04efe73",
-              "original_spheres_hash": "95a703852200a1168651b8556330d55e4e70c18bcaa1c6d24c41639c10c11991",
-              "rules_identical": true,
-              "seed": "6",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:07:20.037112"
-            }
-          },
           "game_name_from_filename": "kh2",
           "game_name_from_yaml": "Kingdom Hearts 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 3.63,
+            "processing_time_seconds": 6.21,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -20246,7 +20210,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 31.12,
+            "processing_time_seconds": 36.57,
             "return_code": 0,
             "sphere_reached": 14.3,
             "success": true,
@@ -20254,7 +20218,7 @@
             "warning_count": 0
           },
           "template_filename": "Kingdom Hearts 2.yaml",
-          "timestamp": "2025-11-26T03:44:37.038843",
+          "timestamp": "2025-11-26T04:41:56.261648",
           "world_info": {
             "exporter_path": "exporter/games/kh2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
@@ -20271,24 +20235,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "7": {
-              "new_rules_hash": "e5da773575945bd4fac2178cf8303791fc09a05d6150f88aed03c911fb56c05a",
-              "new_spheres_hash": "dfd7e51fd08ec17de515f7e354c3b718ac9bc6dfb49473611285f7d326a1d003",
-              "original_rules_hash": "e5da773575945bd4fac2178cf8303791fc09a05d6150f88aed03c911fb56c05a",
-              "original_spheres_hash": "dfd7e51fd08ec17de515f7e354c3b718ac9bc6dfb49473611285f7d326a1d003",
-              "rules_identical": true,
-              "seed": "7",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:06:27.279791"
-            }
-          },
           "game_name_from_filename": "kh2",
           "game_name_from_yaml": "Kingdom Hearts 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 3.58,
+            "processing_time_seconds": 6.04,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -20303,7 +20255,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 30.1,
+            "processing_time_seconds": 36.87,
             "return_code": 0,
             "sphere_reached": 17.13,
             "success": true,
@@ -20311,7 +20263,7 @@
             "warning_count": 0
           },
           "template_filename": "Kingdom Hearts 2.yaml",
-          "timestamp": "2025-11-26T03:44:59.948780",
+          "timestamp": "2025-11-26T04:42:39.525053",
           "world_info": {
             "exporter_path": "exporter/games/kh2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
@@ -20328,24 +20280,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "8": {
-              "new_rules_hash": "4fc7e83c979bf9ea6bfb18b831f73356e2e57d8add72a5f5d3b83ee82dce4c83",
-              "new_spheres_hash": "f4df3f62e708130ee6a6d54490c7bb8ad97e1baf0c622b61b11d3f317f8596ae",
-              "original_rules_hash": "4fc7e83c979bf9ea6bfb18b831f73356e2e57d8add72a5f5d3b83ee82dce4c83",
-              "original_spheres_hash": "f4df3f62e708130ee6a6d54490c7bb8ad97e1baf0c622b61b11d3f317f8596ae",
-              "rules_identical": true,
-              "seed": "8",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:10:10.750960"
-            }
-          },
           "game_name_from_filename": "kh2",
           "game_name_from_yaml": "Kingdom Hearts 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 3.64,
+            "processing_time_seconds": 6.02,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -20358,17 +20298,17 @@
           "seed": "8",
           "seed_id": "AP_20777137877808592492",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 37.56,
-            "return_code": 1,
-            "sphere_reached": 7.7,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 36.96,
+            "return_code": 0,
+            "sphere_reached": 16.4,
+            "success": true,
             "total_spheres": 16.4,
             "warning_count": 0
           },
           "template_filename": "Kingdom Hearts 2.yaml",
-          "timestamp": "2025-11-26T04:04:24.868543",
+          "timestamp": "2025-11-26T04:43:22.911958",
           "world_info": {
             "exporter_path": "exporter/games/kh2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
@@ -20385,24 +20325,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "9": {
-              "new_rules_hash": "92020e5d5046fc8c4de470f1ae6c14cea21ad2183007b5c3cd76296ad1b1351c",
-              "new_spheres_hash": "f9aec842f041b16083f066d20fd91b46497d62565d5cadfe5d12e6385435de69",
-              "original_rules_hash": "92020e5d5046fc8c4de470f1ae6c14cea21ad2183007b5c3cd76296ad1b1351c",
-              "original_spheres_hash": "f9aec842f041b16083f066d20fd91b46497d62565d5cadfe5d12e6385435de69",
-              "rules_identical": true,
-              "seed": "9",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:11:10.597557"
-            }
-          },
           "game_name_from_filename": "kh2",
           "game_name_from_yaml": "Kingdom Hearts 2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 3.67,
+            "processing_time_seconds": 5.95,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -20415,17 +20343,17 @@
           "seed": "9",
           "seed_id": "AP_48205312626925217390",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 39.68,
-            "return_code": 1,
-            "sphere_reached": 12.2,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 36.71,
+            "return_code": 0,
+            "sphere_reached": 23.1,
+            "success": true,
             "total_spheres": 23.1,
             "warning_count": 0
           },
           "template_filename": "Kingdom Hearts 2.yaml",
-          "timestamp": "2025-11-26T04:06:03.725146",
+          "timestamp": "2025-11-26T04:44:06.338709",
           "world_info": {
             "exporter_path": "exporter/games/kh2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
@@ -20445,8 +20373,8 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 3,
-      "seeds_passed": 7,
+      "seeds_failed": 0,
+      "seeds_passed": 10,
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
@@ -20458,12 +20386,12 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": false,
-        "any_failed": true,
-        "failure_rate": 0.3
+        "all_passed": true,
+        "any_failed": false,
+        "failure_rate": 0.0
       },
       "template_filename": "Kingdom Hearts 2.yaml",
-      "timestamp": "2025-11-26T03:45:13.836917",
+      "timestamp": "2025-11-26T04:40:29.555572",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/kh2.py",
@@ -27467,24 +27395,12 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "5": {
-              "new_rules_hash": "64bb0947949673346a9f0d30103daebf723662527b9b5616a130491c92cbc75c",
-              "new_spheres_hash": "b4cb43377d2a50ca4364c847ce97796318931fe614de966eaf9537ee5eaf13c3",
-              "original_rules_hash": "64bb0947949673346a9f0d30103daebf723662527b9b5616a130491c92cbc75c",
-              "original_spheres_hash": "b4cb43377d2a50ca4364c847ce97796318931fe614de966eaf9537ee5eaf13c3",
-              "rules_identical": true,
-              "seed": "5",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-26T04:12:54.811417"
-            }
-          },
           "game_name_from_filename": "mmbn3",
           "game_name_from_yaml": "MegaMan Battle Network 3",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.84,
+            "processing_time_seconds": 4.9,
             "return_code": 0,
             "success": true,
             "warning_count": 2
@@ -27499,7 +27415,7 @@
           "spoiler_test": {
             "error_count": 9,
             "pass_fail": "failed",
-            "processing_time_seconds": 18.18,
+            "processing_time_seconds": 10.64,
             "return_code": 1,
             "sphere_reached": 3.2,
             "success": false,
@@ -27507,7 +27423,7 @@
             "warning_count": 0
           },
           "template_filename": "MegaMan Battle Network 3.yaml",
-          "timestamp": "2025-11-26T04:07:52.504577",
+          "timestamp": "2025-11-26T04:45:32.750929",
           "world_info": {
             "exporter_path": "exporter/games/mmbn3.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js",
@@ -27773,7 +27689,7 @@
         "failure_rate": 0.2
       },
       "template_filename": "MegaMan Battle Network 3.yaml",
-      "timestamp": "2025-11-26T03:48:28.702309",
+      "timestamp": "2025-11-26T04:45:32.743184",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/mmbn3.py",

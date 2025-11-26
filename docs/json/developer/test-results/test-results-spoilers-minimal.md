@@ -4,19 +4,19 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-26 04:17:36
+**Generated:** 2025-11-26 04:45:49
 
 **Source Data Created:** 2025-11-26T04:17:36.751623
 
-**Source Data Last Updated:** 2025-11-26T04:17:36.751629
+**Source Data Last Updated:** 2025-11-26T04:45:48.723103
 
 ## Summary
 
 - **Total Games:** 76
-- **Passed:** 69 (90.8%)
-- **Failed:** 7 (9.2%)
-- **Games with Intermittent Failures:** 0
-- **Total Intermittent Failures:** 0
+- **Passed:** 70 (92.1%)
+- **Failed:** 6 (7.9%)
+- **Games with Intermittent Failures:** 1
+- **Total Intermittent Failures:** 1
 
 ## Test Results
 
@@ -50,7 +50,7 @@
 | Inscryption | ✅ Passed seeds 1-10 | 0 | 9.2 | 9.2 | 🟢 Complete | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed seeds 1-10 | 0 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
 | Kingdom Hearts | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
-| Kingdom Hearts 2 | ❌ Failed seed 4 | 0 | 5.15 | 19.2 | 🟡 26.8% | ✅ | ✅ |
+| Kingdom Hearts 2 | ✅ Passed seeds 1-10 | 0 | 15.1 | 15.1 | 🟢 Complete | ✅ | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Lingo | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
@@ -98,6 +98,15 @@
 | Yoshi's Island | ✅ Passed seeds 1-10 | 0 | 12.4 | 12.4 | 🟢 Complete | ✅ | ✅ |
 | Yu-Gi-Oh! 2006 | ❌ Failed seed 8 | 0 | 2.32 | 20.11 | 🟡 11.5% | ✅ | ✅ |
 | shapez | ✅ Passed seeds 1-10 | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
+
+## Intermittent Failures
+
+These seeds were previously failing but passed during a retest run:
+
+| Template | Seed | Timestamp | Notes |
+|----------|------|-----------|-------|
+| Kingdom Hearts 2 | 4 | 2025-11-26 04:45 | Previously failed, now passing |
+
 
 ## Notes
 

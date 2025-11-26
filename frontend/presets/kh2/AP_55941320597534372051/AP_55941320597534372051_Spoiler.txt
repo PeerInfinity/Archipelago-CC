@@ -1,0 +1,1084 @@
+﻿Archipelago Version 0.6.4  -  Seed: 10
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Kingdom Hearts 2
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory from Pool:       
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              (AT) Musical Blizzard Element, (AT) Musical Orichalcum+, (AT) Mysterious Abyss, (AT) Undersea Kingdom Map, Fatal Crest Goddess of Fate Cup, Genji Shield Titan Cup, Hades Cup Trophy Paradox Cups, Orichalcum+ Goddess of Fate Cup, Protect Belt Pain and Panic Cup, Rising Dragon Cerberus Cup, Serenity Crystal Cerberus Cup, Serenity Gem Pain and Panic Cup, Skillful Ring Titan Cup
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Level Depth:                     Level 50
+Sora Level EXP:                  5
+Valor Form EXP:                  3
+Wisdom Form EXP:                 3
+Limit Form EXP:                  3
+Master Form EXP:                 3
+Final Form EXP:                  3
+Summon level EXP:                5
+Schmovement:                     Level 1
+Random Starting Growth:          0
+Anti Form:                       No
+Promise Charm:                   No
+Goal:                            Lucky Emblem Hunt
+Final Xemnas:                    Yes
+Lucky Emblems Available:         40
+Lucky Emblems Required:          35
+Bounties Available:              10
+Bounties Required:               7
+Start with Bounties Hinted:      No
+Keyblade Minimum Stats:          3
+Keyblade Max Stats:              7
+Start with Weapon Slots Hinted:  No
+Fight Logic:                     Normal
+Final Form Logic:                Light And Darkness
+Auto Form Logic:                 No
+Donald & Goofy Statsanity:       Yes
+Local Filler Items:              Yes
+Visit locking:                   First And Second Visit Locking
+Random Visit Locking Item:       0
+Super Bosses:                    Yes
+Olympus Cups:                    No Cups
+Summon Level Locations:          No
+Atlantica Toggle:                No
+CoR Skip Toggle:                 No
+Custom Item Pool:                Aerial Dodge: 4, Anti Form: 1, Battlefields of War: 2, Beast's Claw: 2, Blizzard Element: 3, Bone Fist: 2, Chicken Little: 1, Cure Element: 3, Disney Castle Key: 2, Dodge Roll: 4, Final Form: 1, Fire Element: 3, Genie: 1, Glide: 4, High Jump: 4, Ice Cream: 3, Identity Disk: 2, Limit Form: 1, Magnet Element: 3, Master Form: 1, Membership Card: 2, Namine Sketches: 1, Peter Pan: 1, Promise Charm: 1, Proof of Connection: 1, Proof of Nonexistence: 1, Proof of Peace: 1, Proud Fang: 2, Quick Run: 4, Reflect Element: 3, Scimitar: 2, Skill and Crossbones: 2, Stitch: 1, Sword of the Ancestor: 2, Thunder Element: 3, Torn Page: 5, Valor Form: 1, Way to the Dawn: 2, Wisdom Form: 1
+
+
+Starting Items:
+
+High Jump
+Quick Run
+Dodge Roll
+Aerial Dodge
+Glide
+
+Locations:
+
+Garden of Assemblage Map: Photon Debugger
+GoA Lost Illusion: Lucky Lucky
+Proof of Nonexistence Location: Tourmaline Ring
+(LoD) Bamboo Grove Dark Shard: Megalixir
+(LoD) Bamboo Grove Ether: Teamwork
+(LoD) Bamboo Grove Mythril Shard: AP Boost
+(LoD) Bamboo Grove Encampment Area Map: Centurion+
+(LoD) Mission 3: Ogre Shield
+(LoD) Checkpoint Hi-Potion: Magic Boost
+(LoD) Checkpoint Mythril Shard: Jackpot
+(LoD) Mountain Trail Lightning Shard: Aerial Sweep
+(LoD) Mountain Trail Recovery Recipe: Magnet Element
+(LoD) Mountain Trail Ether: Champion Belt
+(LoD) Mountain Trail Mythril Shard: Defense Boost
+(LoD) Village Cave Area Map: Limit Form
+(LoD) Village Cave AP Boost: Goofy Protega
+(LoD) Village Cave Dark Shard: Potion
+(LoD) Village Cave Bonus: Sora Slot 1: Torn Page
+(LoD) Ridge Frost Shard: Rising Dragon
+(LoD) Ridge AP Boost: Drive Recovery
+(LoD) Shan-Yu Bonus: Sora Slot 1: Max HP Up
+(LoD) Shan-Yu Bonus: Sora Slot 2: Power Boost
+(LoD) Hidden Dragon: Lucky Emblem
+(LoD) Shan-Yu Bonus: Goofy Slot 1: Star Charm
+Shan Yu Event Location: Shan Yu Event
+(LoD2) Throne Room Torn Pages: Defense Boost
+(LoD2) Throne Room Palace Map: Defense Boost
+(LoD2) Throne Room AP Boost: Tent
+(LoD2) Throne Room Queen Recipe: Elixir
+(LoD2) Throne Room AP Boost 2: Aerial Finish
+(LoD2) Throne Room Ogre Shield: Scimitar
+(LoD2) Throne Room Mythril Crystal: Magic Lock-On
+(LoD2) Throne Room Orichalcum: Power Boost
+Ansem Riku Event Location: Ansem Riku Event
+(LoD2) Storm Rider Bonus: Sora Slot 1: Cosmic Chain
+(LoD2) Storm Rider Bonus: Goofy Slot 1: Ether
+Storm Rider Event Location: Storm Rider Event
+(Post LoD2: Summit) Data Xigbar: Potion
+Data Xigbar Event Location: Data Xigbar Event
+(AG) Agrabah Map: Finishing Plus
+(AG) Agrabah Dark Shard: Drive Gauge Up
+(AG) Agrabah Mythril Shard: Upper Slash
+(AG) Agrabah Hi-Potion: Item Slot Up
+(AG) Agrabah AP Boost: Battlefields of War
+(AG) Agrabah Mythril Stone: Elixir
+(AG) Agrabah Mythril Shard 2: Valor Form
+(AG) Agrabah Serenity Shard: Elixir
+(AG) Bazaar Mythril Gem: Genie
+(AG) Bazaar Power Shard: Rumbling Rose
+(AG) Bazaar Hi-Potion: High Drive Recovery
+(AG) Bazaar AP Boost: Torn Page
+(AG) Bazaar Mythril Shard: Secret Ansem's Report 12
+(AG) Palace Walls Skill Ring: Akashic Record
+(AG) Palace Walls Mythril Stone: Tent
+(AG) Cave Entrance Power Stone: Secret Ansem's Report 4
+(AG) Cave Entrance Mythril Shard: Medal
+(AG) Valley of Stone Mythril Stone: Drive Recovery
+(AG) Valley of Stone AP Boost: Membership Card
+(AG) Valley of Stone Mythril Shard: Way to the Dawn
+(AG) Valley of Stone Hi-Potion: Proud Fang
+(AG) Abu Escort Bonus: Sora Slot 1: Drive Recovery
+(AG) Chasm of Challenges Cave of Wonders Map: Jackpot
+(AG) Chasm of Challenges AP Boost: Frozen Pride+
+(AG) Treasure Room: Donald MP Hastera
+(AG) Treasure Room AP Boost: Donald Lucky Lucky
+(AG) Treasure Room Serenity Gem: Potion
+(AG) Treasure Room Heartless Bonus: Goofy Slot 1: Elixir
+(AG) Abu Escort Bonus: Donald Slot 1: Goofy Hyper Healing
+(AG) Elemental Lords Bonus: Sora Slot 1: Lucky Emblem
+(AG) Lamp Charm: Experience Boost
+Twin Lords Event Location: Twin Lords Event
+(AG2) Ruined Chamber Torn Pages: Slayer Earring
+(AG2) Ruined Chamber Ruins Map: Sleeping Lion
+(AG2) Genie Jafar: Ether
+(AG2) Wishing Lamp: Gull Wing
+Genie Jafar Event Location: Genie Jafar Event
+(Post AG2: Peddler's Shop) Lexaeus Bonus: Sora Slot 1: Goofy Hyper Healing
+(Post AG2: Peddler's Shop) AS Lexaeus: AP Boost
+(Post AG2: Peddler's Shop) Data Lexaeus: Torn Page
+Data Lexaeus Event Location: Data Lexaeus Event
+(DC) Courtyard Mythril Shard: Ether
+(DC) Courtyard Star Recipe: Secret Ansem's Report 6
+(DC) Courtyard AP Boost: Second Chance
+(DC) Courtyard Mythril Stone: Elixir
+(DC) Courtyard Blazing Stone: Reflect Element
+(DC) Courtyard Blazing Shard: Precious Mushroom+
+(DC) Courtyard Mythril Shard 2: Lucky Emblem
+(DC) Library Torn Pages: AP Boost
+(DC) Disney Castle Map: Ice Cream
+(DC) Minnie Escort Bonus: Sora Slot 1: Second Chance
+(DC) Minnie Escort Bonus: Sora Slot 2: Majestic Mushroom+
+(TR) Cornerstone Hill Map: Dodge Roll
+(TR) Cornerstone Hill Frost Shard: Glide
+(TR) Pier Mythril Shard: Full Bloom
+(TR) Pier Hi-Potion: High Drive Recovery
+(TR) Waterway Mythril Stone: AP Boost
+(TR) Waterway AP Boost: Drive Recovery
+(TR) Waterway Frost Stone: High Drive Recovery
+(TR) Window of Time Map: Firagun Bangle
+(TR) Boat Pete Bonus: Sora Slot 1: Berserk Charge
+(TR) Boat Pete Bonus: Donald Slot 1: Lucky Emblem
+(TR) Boat Pete Bonus: Donald Slot 2: Gaia Belt
+Old Pete Event Location: Old Pete Event
+(TR) Future Pete Bonus: Sora Slot 1: Goofy Bash
+(TR) Future Pete Bonus: Sora Slot 2: Ether
+(TR) Monochrome: Goofy Second Chance
+(TR) Wisdom Form: Follow the Wind
+(TR) Future Pete Bonus: Goofy Slot 1: Proof of Connection
+Future Pete Event Location: Future Pete Event
+(Post TR:Hall of the Cornerstone) Marluxia Bonus: Sora Slot 1: Drive Recovery
+(Post TR:Hall of the Cornerstone) AS Marluxia: High Jump
+(Post TR:Hall of the Cornerstone) Data Marluxia: Technician's Ring
+Data Marluxia Event Location: Data Marluxia Event
+(Post TR:Hall of the Cornerstone) Lingering Will Bonus: Sora Slot 1: Stitch
+(Post TR:Hall of the Cornerstone) Lingering Will Proof of Connection: Glide
+(Post TR:Hall of the Cornerstone) Lingering Will Manifest Illusion: Drive Recovery
+Terra Event Location: Terra Event
+(100Acre) Pooh's House 100 Acre Wood Map: Namine Sketches
+(100Acre) Pooh's House AP Boost: Nobody Guard
+(100Acre) Pooh's House Mythril Stone: Olette Munny Pouch
+(100Acre) Piglet's House Defense Boost: Defense Boost
+(100Acre) Piglet's House AP Boost: Accessory Slot Up
+(100Acre) Piglet's House Mythril Gem: Lucky Emblem
+(100Acre) Rabbit's House Draw Ring: MP Hastera
+(100Acre) Rabbit's House Mythril Crystal: Fire Element
+(100Acre) Rabbit's House AP Boost: Bone Fist
+(100Acre) Kanga's House Magic Boost: Tent
+(100Acre) Kanga's House AP Boost: Thunder Element
+(100Acre) Kanga's House Orichalcum: Megalixir
+(100Acre) Spooky Cave Mythril Gem: Membership Card
+(100Acre) Spooky Cave AP Boost: Potion
+(100Acre) Spooky Cave Orichalcum: Goofy Protect
+(100Acre) Spooky Cave Guard Recipe: Bond of Flame
+(100Acre) Spooky Cave Mythril Crystal: Secret Ansem's Report 7
+(100Acre) Spooky Cave AP Boost 2: Drive Gauge Up
+(100Acre) Sweet Memories: Potion
+(100Acre) Spooky Cave Map: Secret Ansem's Report 11
+(100Acre) Starry Hill Cosmic Ring: Lucky Emblem
+(100Acre) Starry Hill Style Recipe: Potion
+(100Acre) Starry Hill Cure Element: Air Combo Plus
+(100Acre) Starry Hill Orichalcum+: Identity Disk
+(PR) Rampart Naval Map: Potion
+(PR) Rampart Mythril Stone: Aquamarine Ring
+(PR) Rampart Dark Shard: Blizzard Boost
+(PR) Town Dark Stone: Shaman's Relic
+(PR) Town AP Boost: Armor Slot Up
+(PR) Town Mythril Shard: Precious Mushroom
+(PR) Town Mythril Gem: Auto Valor
+(PR) Cave Mouth Bright Shard: Olympus Stone
+(PR) Cave Mouth Mythril Shard: Magic Boost
+(PR) Isla de Muerta Map: Hi-Potion
+(PR) Boat Fight Bonus: Sora Slot 1: AP Boost
+(PR) Interceptor Barrels Bonus: Sora Slot 1: Aerial Recovery
+(PR) Powder Store AP Boost 1: Max HP Up
+(PR) Powder Store AP Boost 2: Max HP Up
+(PR) Moonlight Nook Mythril Shard: Combo Plus
+(PR) Moonlight Nook Serenity Gem: Secret Ansem's Report 2
+(PR) Moonlight Nook Power Stone: Ether
+(PR) Boat Fight Bonus: Donald Slot 1: Magic Boost
+(PR) Interceptor Barrels Bonus: Goofy Slot 1: Max HP Up
+(PR) Barbossa Bonus: Sora Slot 1: Power Boost
+(PR) Barbossa Bonus: Sora Slot 2: Shadow Anklet
+(PR) Follow the Wind: Potion
+(PR) Barbossa Bonus: Goofy Slot 1: Max HP Up
+(PR) Barbossa Bonus: Goofy Slot 2: High Drive Recovery
+Barbosa Event Location: Barbosa Event
+(PR2) Grim Reaper 1 Bonus: Sora Slot 1: Defender
+(PR2) Interceptor's Hold Feather Charm: Cosmic Arts
+(PR2) Seadrift Keep AP Boost: Combo Plus
+(PR2) Seadrift Keep Orichalcum: Premium Mushroom
+(PR2) Seadrift Keep Meteor Staff: Proof of Peace
+(PR2) Seadrift Row Serenity Gem: Elixir
+(PR2) Seadrift Row King Recipe: Aerial Dodge
+(PR2) Seadrift Row Mythril Crystal: Lucky Emblem
+(PR2) Seadrift Row Cursed Medallion: Defense Boost
+(PR2) Seadrift Row Ship Graveyard Map: Olette Munny Pouch
+(PR2) Grim Reaper 1 Bonus: Goofy Slot 1: High Drive Recovery
+Grim Reaper 1 Event Location: Grim Reaper 1 Event
+(PR2) Grim Reaper 2 Bonus: Donald Slot 1: Cure Element
+(PR2) Grim Reaper 2 Bonus: Sora Slot 1: Cure Element
+(PR2) Secret Ansem Report 6 (Grim Reaper 2): Dark Anklet
+Grim Reaper 2 Event Location: Grim Reaper 2 Event
+(Post PR2: Treasure Heap) Data Luxord: MP Hastera
+Data Luxord Event Location: Data Luxord Event
+(OC) Passage Mythril Shard: Potion
+(OC) Passage Mythril Stone: Ether
+(OC) Passage Ether: Finishing Leap
+(OC) Passage AP Boost: Elixir
+(OC) Passage Hi-Potion: Petite Ribbon
+(OC) Inner Chamber Underworld Map: Lucky Emblem
+(OC) Inner Chamber Mythril Shard: Leaf Bracer
+(OC) Cerberus Bonus: Sora Slot 1: Item Slot Up
+(OC) Coliseum Map: Megalixir
+(OC) Urns Bonus: Sora Slot 1: Lucky Emblem
+(OC) Underworld Entrance Power Boost: Defense Boost
+(OC) Caverns Entrance Lucid Shard: Power Boost
+(OC) Caverns Entrance AP Boost: Megalixir
+(OC) Caverns Entrance Mythril Shard: Drive Gauge Up
+(OC) The Lost Road Bright Shard: Item Boost
+(OC) The Lost Road Ether: Hi-Potion
+(OC) The Lost Road Mythril Shard: Ultima Weapon
+(OC) The Lost Road Mythril Stone: Drive Recovery
+(OC) Atrium Lucid Stone: Max HP Up
+(OC) Atrium AP Boost: Goofy Lucky Lucky
+(OC) Demyx Bonus: Sora Slot 1: Tent
+(OC) Secret Ansem Report 5 (Demyx): Hi-Potion
+(OC) Olympus Stone: Lucky Emblem
+(OC) The Lock Caverns Map: Secret Ansem's Report 1
+(OC) The Lock Mythril Shard: Magic Boost
+(OC) The Lock AP Boost: Fatal Crest
+Cerberus Event Location: Cerberus Event
+(OC) Pete OC Bonus: Sora Slot 1: Defense Boost
+(OC) Demyx Bonus: Donald Slot 1: Megalixir
+(OC) Pete Bonus: Goofy Slot 1: Guard
+Olympus Pete Event Location: Olympus Pete Event
+(OC) Hydra Bonus: Sora Slot 1: Megalixir
+(OC) Hydra Bonus: Sora Slot 2: Divine Bandana
+(OC) Hero's Crest: Genji Shield
+Hydra Event Location: Hydra Event
+(OC2) Auron's Statue: Lucky Emblem
+(OC2) Hades Bonus: Sora Slot 1: Dodge Roll
+(OC2) Hades Bonus: Sora Slot 2: Shadow Archive
+(OC2) Guardian Soul: Counterguard
+Hades Event Location: Hades Event
+Protect Belt Pain and Panic Cup: AP Boost
+Serenity Gem Pain and Panic Cup: Megalixir
+Pain and Panic Cup Event Location: Pain and Panic Cup Event
+Rising Dragon Cerberus Cup: Defense Boost
+Serenity Crystal Cerberus Cup: Tent
+Cerberus Cup Event Location: Cerberus Cup Event
+Genji Shield Titan Cup: Magic Boost
+Skillful Ring Titan Cup: Goofy Protega
+Titan Cup Event Location: Titan Cup Event
+Fatal Crest Goddess of Fate Cup: Power Boost
+Orichalcum+ Goddess of Fate Cup: Power Boost
+Goddess of Fate Cup Event Location: Goddess of Fate Cup Event
+Hades Cup Trophy Paradox Cups: Ether
+Olympus Coliseum Hade's Paradox Event Location: Olympus Coliseum Hade's Paradox Event
+(Post OC2: Cave of the Dead Inner Chamber) Zexion Bonus: Sora Slot 1: Disney Castle Key
+(Post OC2: Cave of the Dead Inner Chamber) AS Zexion: Power Boost
+(Post OC2: Cave of the Dead Inner Chamber) Data Zexion: Potion
+(Post OC2: Cave of the Dead Inner Chamber) Zexion Bonus: Goofy Slot 1: Trinity Limit
+Data Zexion Event Location: Data Zexion Event
+(BC) Courtyard AP Boost: Scimitar
+(BC) Courtyard Hi-Potion: Form Boost
+(BC) Courtyard Mythril Shard: Ether
+(BC) Belle's Room Castle Map: Lucky Emblem
+(BC) Belle's Room Mega-Recipe: Elixir
+(BC) The East Wing Mythril Shard: Max HP Up
+(BC) The East Wing Tent: Grand Ribbon
+(BC) The West Hall Hi-Potion: Magic Boost
+(BC) The West Hall Power Shard: Orichalcum Ring
+(BC) The West Hall Mythril Shard 2: Magic Boost
+(BC) The West Hall Bright Stone: Megalixir
+(BC) The West Hall Mythril Shard: Potion
+(BC) Thresholder Bonus: Sora Slot 1: Tent
+(BC) Dungeon Basement Map: Garnet Ring
+(BC) Dungeon AP Boost: Elixir
+(BC) Secret Passage Mythril Shard: Megalixir
+(BC) Secret Passage Hi-Potion: Oathkeeper
+(BC) Secret Passage Lucid Shard: Circle of Life
+(BC) The West Hall AP Boost Post Dungeon: Drive Recovery
+(BC) The West Wing Mythril Shard: Elven Bandana
+(BC) The West Wing Tent: Save The Queen+
+(BC) Thresholder Bonus: Donald Slot 1: Drive Recovery
+Thresholder Event Location: Thresholder Event
+(BC) Beast Bonus: Sora Slot 1: Drive Converter
+(BC) The Beast's Room Blazing Shard: Power Boost
+(BC) Beast Bonus: Goofy Slot 1: Lucky Emblem
+Beast Event Location: Beast Event
+(BC) Dark Thorn Bonus: Sora Slot 1: Lucky Emblem
+(BC) Dark Thorn Bonus: Sora Slot 2: Elixir
+(BC) Dark Thorn Cure Element: Elixir
+Dark Thorn Event Location: Dark Thorn Event
+(BC2) Rumbling Rose: Engineer's Ring
+(BC2) Castle Walls Map: Dodge Roll
+(BC2) Xaldin Bonus: Sora Slot 1: Donald Thunder
+(BC2) Xaldin Bonus: Sora Slot 2: Max HP Up
+(BC2) Xaldin Bonus: Donald Slot 1: Hero's Crest
+(BC2) Secret Ansem Report 4 (Xaldin): Ether
+Xaldin Event Location: Xaldin Event
+(Post BC2: Ballroom) Data Xaldin: Ether
+Data Xaldin Event Location: Data Xaldin Event
+(SP) Pit Cell Area Map: Tent
+(SP) Pit Cell Mythril Crystal: Lucky Emblem
+(SP) Canyon Dark Crystal: Aegis Chain
+(SP) Canyon Mythril Stone: Lucky Emblem
+(SP) Canyon Mythril Gem: Secret Ansem's Report 10
+(SP) Canyon Frost Crystal: Potion
+(SP) Screens Bonus: Sora Slot 1: Thunder Element
+(SP) Hallway Power Crystal: Elixir
+(SP) Hallway AP Boost: Goofy Auto Change
+(SP) Communications Room I/O Tower Map: High Drive Recovery
+(SP) Communications Room Gaia Belt: Chaos Anklet
+(SP) Screens Bonus: Donald Slot 1: Elixir
+(SP) Hostile Program Bonus: Sora Slot 1: Magic Boost
+(SP) Hostile Program Bonus: Sora Slot 2: Thundaga Trinket
+(SP) Photon Debugger: Save The King+
+(SP) Hostile Program Bonus: Goofy Slot 1: Combo Plus
+Hostile Program Event Location: Hostile Program Event
+(SP2) Solar Sailer: Elixir
+(SP2) Central Computer Core AP Boost: Magic Boost
+(SP2) Central Computer Core Orichalcum+: Armor Slot Up
+(SP2) Central Computer Core Cosmic Arts: Max HP Up
+(SP2) Central Computer Core Map: Lucky Emblem
+(SP2) Solar Sailer Bonus: Donald Slot 1: Hades Cup Trophy
+(SP2) MCP Bonus: Sora Slot 1: Lucky Emblem
+(SP2) MCP Bonus: Sora Slot 2: Megalixir
+Master Control Program Event Location: Master Control Program Event
+(Post SP2: Central Computer Core) Larxene Bonus: Sora Slot 1: Donald Lucky Lucky
+(Post SP2: Central Computer Core) AS Larxene: Lucky Ring
+(Post SP2: Central Computer Core) Data Larxene: Drive Recovery
+Data Larxene Event Location: Data Larxene Event
+(HT) Graveyard Mythril Shard: Item Slot Up
+(HT) Graveyard Serenity Gem: Elixir
+(HT) Finklestein's Lab Halloween Town Map: Max HP Up
+(HT) Town Square Mythril Stone: Accessory Slot Up
+(HT) Town Square Energy Shard: Blizzaga Armlet
+(HT) Hinterlands Lightning Shard: Goofy MP Rage
+(HT) Hinterlands Mythril Stone: AP Boost
+(HT) Hinterlands AP Boost: MP Rage
+(HT) Candy Cane Lane Mega-Potion: Ether
+(HT) Candy Cane Lane Mythril Gem: Torn Page
+(HT) Candy Cane Lane Lightning Stone: Power Boost
+(HT) Candy Cane Lane Mythril Stone: Flash Step
+(HT) Santa's House Christmas Town Map: Thunder Element
+(HT) Santa's House AP Boost: AP Boost
+(HT) Prison Keeper Bonus: Sora Slot 1: Once More
+(HT) Prison Keeper Bonus: Donald Slot 1: High Drive Recovery
+Prison Keeper Event Location: Prison Keeper Event
+(HT) Oogie Boogie Bonus: Sora Slot 1: Aerial Dodge
+(HT) Oogie Boogie Magnet Element: Negative Combo
+(HT) Oogie Boogie Bonus: Goofy Slot 1: Hi-Potion
+Oogie Boogie Event Location: Oogie Boogie Event
+(HT2) Lock, Shock and Barrel Bonus: Sora Slot 1: Lucky Emblem
+(HT2) Present: Ice Cream
+(HT2) Decoy Presents: Lucky Emblem
+(HT2) Lock, Shock and Barrel Bonus: Goofy Slot 1: Aerial Dive
+(HT2) Experiment Bonus: Sora Slot 1: Blizzard Armlet
+(HT2) Decisive Pumpkin: Beast's Claw
+(HT2) Experiment Bonus: Donald Slot 1: Way to the Dawn
+The Experiment Event Location: The Experiment Event
+(Post HT2: Yuletide Hill) Vexen Bonus: Sora Slot 1: Lucky Emblem
+(Post HT2: Yuletide Hill) AS Vexen: Cosmic Ring
+(Post HT2: Yuletide Hill) Data Vexen: Ability Ring
+Data Vexen Event Location: Data Vexen Event
+(HB) Marketplace Map: Donald Damage Control
+(HB) Borough Drive Recovery: AP Boost
+(HB) Borough AP Boost: High Drive Recovery
+(HB) Borough Hi-Potion: Skill and Crossbones
+(HB) Borough Mythril Shard: Secret Ansem's Report 9
+(HB) Borough Dark Shard: Star Seeker
+(HB) Merlin's House Membership Card: High Drive Recovery
+(HB) Merlin's House Blizzard Element: Lucky Emblem
+(HB) Bailey Bonus: Sora Slot 1: Proud Fang
+(HB) Bailey Secret Ansem Report 7: Drive Gauge Up
+(HB) Baseball Charm: Midnight Anklet
+(HB2) Postern Castle Perimeter Map: Firaga Bangle
+(HB2) Postern Mythril Gem: Magic Boost
+(HB2) Postern AP Boost: Lucky Emblem
+(HB2) Corridors Mythril Stone: Potion
+(HB2) Corridors Mythril Crystal: Buster Band
+(HB2) Corridors Dark Crystal: Lucky Emblem
+(HB2) Corridors AP Boost: Ether
+(HB2) Ansem's Study Master Form: Retaliating Slash
+(HB2) Ansem's Study Sleeping Lion: Secret Ansem's Report 5
+(HB2) Ansem's Study Skill Recipe: Sardonyx Ring
+(HB2) Ansem's Study Ukulele Charm: Lucky Emblem
+(HB2) Restoration Site Moon Recipe: Power Boost
+(HB2) Restoration Site AP Boost: Mage Earring
+(HB2) Demyx Bonus: Donald Slot 1: Thunder Boost
+(HB2) Demyx Bonus: Sora Slot 1: Blizzagun Armlet
+(HB2) Demyx Bonus: Sora Slot 2: Slapshot
+(HB2) FF Fights Cure Element: Identity Disk
+(HB2) Crystal Fissure Torn Pages: Lucky Emblem
+(HB2) Crystal Fissure The Great Maw Map: Defense Boost
+(HB2) Crystal Fissure Energy Crystal: Power Boost
+(HB2) Crystal Fissure AP Boost: Aerial Dodge
+Hollow Bastion Demyx Event Location: Hollow Bastion Demyx Event
+(HB2) 1000 Heartless: Glide
+(HB2) 1000 Heartless Secret Ansem Report 1: Mythril Ring
+(HB2) 1000 Heartless Ice Cream: Dodge Slash
+(HB2) 1000 Heartless Picture: Defense Boost
+(HB2) Postern Gull Wing: Donald MP Hastega
+(HB2) Heartless Manufactory Cosmic Chain: Power Boost
+Thousand Heartless Event Location: Thousand Heartless Event
+(Post HB2: Restoration Site) Data Demyx: Power Band
+Data Demyx Event Location: Data Demyx Event
+(HB2) Winner's Proof: Donald Damage Control
+(HB2) Proof of Peace: High Drive Recovery
+Mushroom 13 Event Location: Mushroom 13 Event
+Sephiroth Bonus: Sora Slot 1: Berserk Charge
+Sephiroth Fenrir: Skillful Ring
+Sephiroth Event Location: Sephiroth Event
+(CoR) Depths AP Boost: Scan
+(CoR) Depths Power Crystal: Auto Wisdom
+(CoR) Depths Frost Crystal: Defense Boost
+(CoR) Depths Manifest Illusion: Goofy Damage Control
+(CoR) Depths AP Boost 2: Defense Boost
+(CoR) Mineshaft Lower Level Depths of Remembrance Map: Reaction Boost
+(CoR) Mineshaft Lower Level AP Boost: Reaction Boost
+(CoR) Depths Upper Level Remembrance Gem: Item Boost
+(CoR) Mining Area Serenity Gem: Lucky Emblem
+(CoR) Mining Area AP Boost: MP Haste
+(CoR) Mining Area Serenity Crystal: Power Boost
+(CoR) Mining Area Manifest Illusion: Megalixir
+(CoR) Mining Area Serenity Gem 2: Armor Slot Up
+(CoR) Mining Area Dark Remembrance Map: Vicinity Break
+Cavern of Rememberance:Fight 1 Event Location: Cavern of Rememberance:Fight 1 Event
+(CoR) Mineshaft Mid Level Power Boost: Shock Charm+
+(CoR) Engine Chamber Serenity Crystal: Megalixir
+(CoR) Engine Chamber Remembrance Crystal: Reflect Element
+(CoR) Engine Chamber AP Boost: Max HP Up
+(CoR) Engine Chamber Manifest Illusion: Horizontal Slash
+(CoR) Mineshaft Upper Level Magic Boost: Negative Combo
+Cavern of Rememberance:Fight 2 Event Location: Cavern of Rememberance:Fight 2 Event
+(CoR) Mineshaft Upper Level AP Boost: Gold Ring
+Transport to Remembrance: Magic Boost
+Transport to Rememberance Event Location: Transport to Rememberance Event
+(PL) Gorge Savannah Map: Ultimate Mushroom
+(PL) Gorge Dark Gem: Drive Recovery
+(PL) Gorge Mythril Stone: Lucky Emblem
+(PL) Elephant Graveyard Frost Gem: Lucky Emblem
+(PL) Elephant Graveyard Mythril Stone: Drive Recovery
+(PL) Elephant Graveyard Bright Stone: Goofy Auto Limit
+(PL) Elephant Graveyard AP Boost: Blizzara Armlet
+(PL) Elephant Graveyard Mythril Shard: Defense Boost
+(PL) Pride Rock Map: Reflect Element
+(PL) Pride Rock Mythril Stone: Disney Castle Key
+(PL) Pride Rock Serenity Crystal: AP Boost
+(PL) Wildebeest Valley Energy Stone: Wisdom Form
+(PL) Wildebeest Valley AP Boost: Drive Gauge Up
+(PL) Wildebeest Valley Mythril Gem: Fire Element
+(PL) Wildebeest Valley Mythril Stone: Max MP Up
+(PL) Wildebeest Valley Lucid Gem: Megalixir
+(PL) Wastelands Mythril Shard: Protect Belt
+(PL) Wastelands Serenity Gem: Lucky Emblem
+(PL) Wastelands Mythril Stone: Power Boost
+(PL) Jungle Serenity Gem: Magic Boost
+(PL) Jungle Mythril Stone: Item Boost
+(PL) Jungle Serenity Crystal: Elixir
+(PL) Oasis Map: Magic Boost
+(PL) Oasis Torn Pages: Ether
+(PL) Oasis AP Boost: Max HP Up
+(PL) Circle of Life: Max HP Up
+(PL) Hyenas 1 Bonus: Sora Slot 1: Blizzard Element
+(PL) Hyenas 1 Bonus: Goofy Slot 1: Item Slot Up
+(PL) Scar Bonus: Sora Slot 1: Hidden Dragon
+(PL) Scar Fire Element: Magic Boost
+(PL) Scar Bonus: Donald Slot 1: Master Form
+Scar Event Location: Scar Event
+(PL2) Hyenas 2 Bonus: Sora Slot 1: Lucky Emblem
+(PL2) Hyenas 2 Bonus: Goofy Slot 1: High Jump
+(PL2) Groundshaker Bonus: Sora Slot 1: Auto Master
+(PL2) Groundshaker Bonus: Sora Slot 2: Secret Ansem's Report 13
+Groundshaker Event Location: Groundshaker Event
+(Post PL2: Peak) Data Saix: Sword of the Ancestor
+Data Saix Event Location: Data Saix Event
+(STT) Twilight Town Map: Draw Ring
+(STT) Munny Pouch Olette: Cosmic Belt
+(STT) Station Dusks: AP Boost
+(STT) Station of Serenity Potion: Donald Flare Force
+(STT) Station of Calling Potion: Lucky Emblem
+(STT) Twilight Thorn: Magnet Element
+Twilight Thorn Event Location: Twilight Thorn Event
+(STT) Axel 1: Finishing Plus
+(STT) Junk Champion Belt: Sword of the Ancestor
+(STT) Junk Medal: Fire Element
+(STT) The Struggle Trophy: Moon Amulet
+(STT) Central Station Potion 1: Ribbon
+(STT) Central Station Hi-Potion: Lucky Emblem
+(STT) Central Station Potion 2: Donald MP Hastera
+(STT) Sunset Terrace Ability Ring: Lucky Emblem
+(STT) Sunset Terrace Hi-Potion: Cure Element
+(STT) Sunset Terrace Potion 1: Max HP Up
+(STT) Sunset Terrace Potion 2: Donald Thunder Boost
+(STT) Mansion Foyer Hi-Potion: AP Boost
+(STT) Mansion Foyer Potion 1: Max HP Up
+(STT) Mansion Foyer Potion 2: Drive Recovery
+(STT) Mansion Dining Room Elven Bandanna: Air Combo Plus
+(STT) Mansion Dining Room Potion: Megalixir
+(STT) Namine's Sketches: High Jump
+(STT) Mansion Map: Magnet Burst
+(STT) Mansion Library Hi-Potion: Combo Master
+Axel 1 Event Location: Axel 1 Event
+(STT) Axel 2: Max HP Up
+(STT) Mansion Basement Corridor Hi-Potion: Elixir
+Axel 2 Event Location: Axel 2 Event
+(Post STT: Mansion Pod Room) Data Roxas: Expert's Ring
+Data Roxas Event Location: Data Roxas Event
+(TT) Old Mansion Potion: Elixir
+(TT) Old Mansion Mythril Shard: Lucky Lucky
+(TT) The Woods Potion: Blizzard Element
+(TT) The Woods Mythril Shard: Ether
+(TT) The Woods Hi-Potion: Megalixir
+(TT) Tram Common Hi-Potion: Quick Run
+(TT) Tram Common AP Boost: Max MP Up
+(TT) Tram Common Tent: Skill Ring
+(TT) Tram Common Mythril Shard 1: Drive Recovery
+(TT) Tram Common Potion 1: Magic Boost
+(TT) Tram Common Mythril Shard 2: Aerial Spiral
+(TT) Tram Common Potion 2: Drive Gauge Up
+(TT) Station Plaza Secret Ansem Report 2: Battlefields of War
+(TT) Munny Pouch Mickey: Fire Bangle
+(TT) Crystal Orb: Lucky Emblem
+(TT) Central Station Tent: Drive Recovery
+(TT) Central Station Hi-Potion: Guard Break
+(TT) Central Station Mythril Shard: Elixir
+(TT) The Tower Potion: Thundagun Trinket
+(TT) The Tower Hi-Potion: Auto Final
+(TT) The Tower Ether: Potion
+(TT) Tower Entryway Ether: Potion
+(TT) Tower Entryway Mythril Shard: Ether
+(TT) Sorcerer's Loft Tower Map: Max MP Up
+(TT) Tower Wardrobe Mythril Stone: Accessory Slot Up
+(TT) Star Seeker: Thundara Trinket
+(TT) Valor Form: Item Slot Up
+(TT2) Seifer's Trophy: Chicken Little
+(TT2) Oathkeeper: Ether
+(TT2) Limit Form: Elixir
+(TT3) Underground Concourse Mythril Gem: Sweet Memories
+(TT3) Underground Concourse AP Boost: Winner's Proof
+(TT3) Underground Concourse Mythril Crystal: Auto Limit
+(TT3) Underground Concourse Orichalcum: Silver Ring
+(TT3) Tunnelway Orichalcum: Goofy Draw
+(TT3) Tunnelway Mythril Crystal: Unknown Disk
+(TT3) Sunset Terrace Orichalcum+: Quick Run
+(TT3) Sunset Terrace Mythril Shard: AP Boost
+(TT3) Sunset Terrace Mythril Crystal: Hi-Potion
+(TT3) Sunset Terrace AP Boost: Power Boost
+(TT3) Mansion Nobodies Bonus: Sora Slot 1: Diamond Ring
+(TT3) Mansion Foyer Mythril Crystal: Max HP Up
+(TT3) Mansion Foyer Mythril Stone: AP Boost
+(TT3) Mansion Foyer Serenity Crystal: Potion
+(TT3) Mansion Dining Room Mythril Crystal: Soldier Earring
+(TT3) Mansion Dining Room Mythril Stone: Max HP Up
+(TT3) Mansion Library Orichalcum: Defense Boost
+(TT3) Beam Secret Ansem Report 10: Megalixir
+(TT3) Mansion Basement Corridor Ultimate Recipe: Lucky Emblem
+(TT3) Betwixt and Between: Defense Boost
+(TT3) Betwixt and Between Bond of Flame: Elixir
+(TT3) Mansion Nobodies Bonus: Donald Slot 1: Quick Run
+(Post TT3: Betwixt and Between) Data Axel: Lucky Emblem
+Data Axel Event Location: Data Axel Event
+(TWTNW) Fragment Crossing Mythril Stone: Power Boost
+(TWTNW) Fragment Crossing Mythril Crystal: High Drive Recovery
+(TWTNW) Fragment Crossing AP Boost: Potion
+(TWTNW) Fragment Crossing Orichalcum: Skill and Crossbones
+(TWTNW2) Roxas Bonus: Sora Slot 1: Donald Cure
+(TWTNW2) Roxas Bonus: Sora Slot 2: Experience Boost
+(TWTNW2) Roxas Secret Ansem Report 8: Fenrir
+(TWTNW2) Two Become One: Full Bloom+
+(TWTNW2) Memory's Skyscaper Mythril Crystal: Guardian Soul
+(TWTNW2) Memory's Skyscaper AP Boost: Explosion
+(TWTNW2) Memory's Skyscaper Mythril Stone: Combo Master
+(TWTNW2) The Brink of Despair Dark City Map: Donald Auto Healing
+(TWTNW2) The Brink of Despair Orichalcum+: Monochrome
+(TWTNW2) Nothing's Call Mythril Gem: Torn Page
+(TWTNW2) Nothing's Call Orichalcum: Executive's Ring
+(TWTNW2) Twilight's View Cosmic Belt: Elixir
+Roxas Event Location: Roxas Event
+(TWTNW2) Xigbar Bonus: Sora Slot 1: Master's Ring
+(TWTNW2) Xigbar Secret Ansem Report 3: Tent
+(TWTNW2) Naught's Skyway Mythril Gem: Hi-Potion
+(TWTNW2) Naught's Skyway Orichalcum: Defense Boost
+(TWTNW2) Naught's Skyway Mythril Crystal: Form Boost
+(TWTNW2) Oblivion: Goofy MP Haste
+(TWTNW2) Castle That Never Was Map: Max MP Up
+Xigbar Event Location: Xigbar Event
+(TWTNW2) Luxord Bonus: Sora Slot 2: Wishing Lamp
+(TWTNW2) Luxord Bonus: Sora Slot 1: Lucky Emblem
+(TWTNW2) Luxord Secret Ansem Report 9: Pureblood
+Luxord Event Location: Luxord Event
+(TWTNW2) Saix Bonus: Sora Slot 1: Power Boost
+(TWTNW2) Saix Secret Ansem Report 12: Abas Chain
+Saix Event Location: Saix Event
+(TWTNW3) Secret Ansem Report 11 (Pre-Xemnas 1): Elixir
+(TWTNW3) Ruin and Creation's Passage Mythril Stone: Decisive Pumpkin
+(TWTNW3) Ruin and Creation's Passage AP Boost: Mysterious Abyss
+(TWTNW3) Ruin and Creation's Passage Mythril Crystal: Blizzard Element
+(TWTNW3) Ruin and Creation's Passage Orichalcum: Potion
+(TWTNW3) Xemnas 1 Bonus: Sora Slot 1: Max HP Up
+(TWTNW3) Xemnas 1 Bonus: Sora Slot 2: Majestic Mushroom
+(TWTNW3) Xemnas 1 Secret Ansem Report 13: Ether
+Xemnas Event Location: Xemnas Event
+Armored Xemnas Event Location: Armored Xemnas Event
+Armored Xemnas 2 Event Location: Armored Xemnas 2 Event
+Final Xemnas Event Location: Victory
+(Post TWTNW3: The Altar of Naught) Data Xemnas: Lucky Emblem
+Data Xemnas Event Location: Data Xemnas Event
+(AT) Undersea Kingdom Map: Drive Recovery
+(AT) Mysterious Abyss: Elixir
+(AT) Musical Blizzard Element: Ether
+(AT) Musical Orichalcum+: Potion
+Valor level 2: Two Become One
+Valor level 3: Donald Fantasia
+Valor level 4: Max HP Up
+Valor level 5: Platinum Ring
+Valor level 6: Thunder Trinket
+Valor level 7: Fira Bangle
+Wisdom level 2: Donald MP Haste
+Wisdom level 3: Ice Cream
+Wisdom level 4: Auto Summon
+Wisdom level 5: Acrisius+
+Wisdom level 6: Acrisius
+Wisdom level 7: Drive Boost
+Limit level 2: Beast's Claw
+Limit level 3: Potion
+Limit level 4: Tornado Fusion
+Limit level 5: Finishing Plus
+Limit level 6: Defense Boost
+Limit level 7: Lucky Emblem
+Master level 2: Drive Recovery
+Master level 3: Tent
+Master level 4: Hi-Potion
+Master level 5: Secret Ansem's Report 3
+Master level 6: Hi-Potion
+Master level 7: Hi-Potion
+Final level 2: Megalixir
+Final level 3: Mickey Munny Pouch
+Final level 4: Air Combo Plus
+Final level 5: Shadow Archive+
+Final level 6: Tent
+Final level 7: Magnet Element
+FAKE Slot: Drive Boost
+Detection Saber Slot: Draw
+Edge of Ultima Slot: Damage Control
+Kingdom Key Slot: Damage Control
+Oathkeeper Slot: Combination Boost
+Oblivion Slot: Draw
+Star Seeker Slot: Scan
+Hidden Dragon Slot: Damage Drive
+Hero's Crest Slot: MP Rage
+Monochrome Slot: Draw
+Follow the Wind Slot: Lucky Lucky
+Circle of Life Slot: Summon Boost
+Photon Debugger Slot: Fire Boost
+Gull Wing Slot: Combo Boost
+Rumbling Rose Slot: Defender
+Guardian Soul Slot: Blizzard Boost
+Wishing Lamp Slot: MP Rage
+Decisive Pumpkin Slot: Damage Drive
+Sweet Memories Slot: Combo Boost
+Mysterious Abyss Slot: Draw
+Sleeping Lion Slot: Reaction Boost
+Bond of Flame Slot: Air Combo Boost
+Two Become One Slot: MP Hastega
+Fatal Crest Slot: Jackpot
+Fenrir Slot: Fire Boost
+Ultima Weapon Slot: MP Haste
+Winner's Proof Slot: MP Hastera
+Pureblood Slot: Thunder Boost
+Centurion+ Slot: Donald Thunder Boost
+Comet Staff Slot: Donald Fire Boost
+Hammer Staff Slot: Donald Hyper Healing
+Lord's Broom Slot: Donald Blizzard
+Mages Staff Slot: Donald Lucky Lucky
+Meteor Staff Slot: Donald Auto Limit
+Nobody Lance Slot: Donald Hyper Healing
+Precious Mushroom Slot: Donald Draw
+Precious Mushroom+ Slot: Donald MP Hastega
+Premium Mushroom Slot: Donald Fire Boost
+Rising Dragon Slot: Donald MP Rage
+Save The Queen+ Slot: Donald Item Boost
+Shaman's Relic Slot: Donald Jackpot
+Victory Bell Slot: Donald Blizzard Boost
+Wisdom Wand Slot: Donald Fire
+Adamant Shield Slot: Goofy MP Rage
+Akashic Record Slot: Goofy Jackpot
+Chain Gear Slot: Goofy Defender
+Dream Cloud Slot: Goofy Turbo
+Falling Star Slot: Goofy Tornado
+Frozen Pride+ Slot: Goofy Defender
+Genji Shield Slot: Goofy Protera
+Knight Defender Slot: Goofy Once More
+Knight's Shield Slot: Goofy MP Hastera
+Majestic Mushroom Slot: Goofy Protera
+Majestic Mushroom+ Slot: Goofy Protect
+Nobody Guard Slot: Goofy Item Boost
+Ogre Shield Slot: Goofy Item Boost
+Save The King+ Slot: Goofy MP Hastega
+Ultimate Mushroom Slot: Goofy Auto Healing
+Level 02: Light & Darkness
+Level 04: Drive Converter
+Level 07: Power Boost
+Level 09: Shock Charm
+Level 10: Secret Ansem's Report 8
+Level 12: Drive Recovery
+Level 14: Drive Recovery
+Level 15: Final Form
+Level 17: Drive Recovery
+Level 20: Peter Pan
+Level 23: Defense Boost
+Level 25: Tent
+Level 28: Bone Fist
+Level 30: Air Combo Boost
+Level 32: Form Boost
+Level 34: Meteor Staff
+Level 36: AP Boost
+Level 39: Donald Blizzard Boost
+Level 41: Oblivion
+Level 44: Nobody Lance
+Level 46: Hi-Potion
+Level 48: Slide Dash
+Level 50: Fencer Earring
+
+Playthrough:
+
+0: {
+  Aerial Dodge
+  Dodge Roll
+  Glide
+  High Jump
+  Quick Run
+}
+1: {
+  (100Acre) Pooh's House 100 Acre Wood Map: Namine Sketches
+  (100Acre) Pooh's House AP Boost: Nobody Guard
+  (TWTNW) Fragment Crossing Orichalcum: Skill and Crossbones
+  Garden of Assemblage Map: Photon Debugger
+}
+2: {
+  (PR) Interceptor Barrels Bonus: Sora Slot 1: Aerial Recovery
+  (PR) Moonlight Nook Mythril Shard: Combo Plus
+  (PR) Town Dark Stone: Shaman's Relic
+  (PR) Town Mythril Gem: Auto Valor
+  (PR) Town Mythril Shard: Precious Mushroom
+  (STT) Axel 1: Finishing Plus
+  (STT) Central Station Hi-Potion: Lucky Emblem
+  (STT) Junk Champion Belt: Sword of the Ancestor
+  (STT) Junk Medal: Fire Element
+  (STT) Mansion Dining Room Elven Bandanna: Air Combo Plus
+  (STT) Mansion Library Hi-Potion: Combo Master
+  (STT) Namine's Sketches: High Jump
+  (STT) Station of Calling Potion: Lucky Emblem
+  (STT) Station of Serenity Potion: Donald Flare Force
+  (STT) Sunset Terrace Ability Ring: Lucky Emblem
+  (STT) Sunset Terrace Hi-Potion: Cure Element
+  (STT) Twilight Thorn: Magnet Element
+  Axel 1 Event Location: Axel 1 Event
+  Axel 2 Event Location: Axel 2 Event
+  Level 02: Light & Darkness
+  Level 04: Drive Converter
+  Twilight Thorn Event Location: Twilight Thorn Event
+}
+3: {
+  (LoD) Bamboo Grove Encampment Area Map: Centurion+
+  (LoD) Bamboo Grove Ether: Teamwork
+  (LoD) Mission 3: Ogre Shield
+  (LoD) Mountain Trail Lightning Shard: Aerial Sweep
+  (LoD) Mountain Trail Recovery Recipe: Magnet Element
+  (LoD) Ridge Frost Shard: Rising Dragon
+  (LoD) Village Cave Area Map: Limit Form
+  (LoD) Village Cave Bonus: Sora Slot 1: Torn Page
+  Level 15: Final Form
+  Level 20: Peter Pan
+}
+4: {
+  (100Acre) Piglet's House Mythril Gem: Lucky Emblem
+  Limit level 2: Beast's Claw
+  Limit level 4: Tornado Fusion
+}
+5: {
+  (BC) Beast Bonus: Goofy Slot 1: Lucky Emblem
+  (BC) Beast Bonus: Sora Slot 1: Drive Converter
+  (BC) Belle's Room Castle Map: Lucky Emblem
+  (BC) Courtyard AP Boost: Scimitar
+  (BC) Courtyard Hi-Potion: Form Boost
+  (BC) Secret Passage Hi-Potion: Oathkeeper
+  (BC) Secret Passage Lucid Shard: Circle of Life
+  (BC) The West Wing Tent: Save The Queen+
+  Beast Event Location: Beast Event
+  Thresholder Event Location: Thresholder Event
+}
+6: {
+  (AG) Agrabah AP Boost: Battlefields of War
+  (AG) Agrabah Map: Finishing Plus
+  (AG) Agrabah Mythril Shard 2: Valor Form
+  (AG) Bazaar AP Boost: Torn Page
+  (AG) Bazaar Mythril Gem: Genie
+  (AG) Bazaar Power Shard: Rumbling Rose
+  (AG) Chasm of Challenges AP Boost: Frozen Pride+
+  (AG) Elemental Lords Bonus: Sora Slot 1: Lucky Emblem
+  (AG) Palace Walls Skill Ring: Akashic Record
+  (AG) Valley of Stone AP Boost: Membership Card
+  (AG) Valley of Stone Hi-Potion: Proud Fang
+  (AG) Valley of Stone Mythril Shard: Way to the Dawn
+  Twin Lords Event Location: Twin Lords Event
+}
+7: {
+  (100Acre) Rabbit's House AP Boost: Bone Fist
+  (100Acre) Rabbit's House Mythril Crystal: Fire Element
+  (HB) Bailey Bonus: Sora Slot 1: Proud Fang
+  (HB) Borough Dark Shard: Star Seeker
+  (HB) Borough Hi-Potion: Skill and Crossbones
+  (HB) Merlin's House Blizzard Element: Lucky Emblem
+  (OC) Inner Chamber Underworld Map: Lucky Emblem
+  (OC) Passage Ether: Finishing Leap
+  (PL) Elephant Graveyard Frost Gem: Lucky Emblem
+  (PL) Gorge Mythril Stone: Lucky Emblem
+  (PL) Gorge Savannah Map: Ultimate Mushroom
+  (PL) Hyenas 1 Bonus: Sora Slot 1: Blizzard Element
+  (PL) Pride Rock Map: Reflect Element
+  (PL) Pride Rock Mythril Stone: Disney Castle Key
+  (PL) Wastelands Serenity Gem: Lucky Emblem
+  (PL) Wildebeest Valley Energy Stone: Wisdom Form
+  (PL) Wildebeest Valley Mythril Gem: Fire Element
+  Level 28: Bone Fist
+  Level 32: Form Boost
+  Level 34: Meteor Staff
+  Level 41: Oblivion
+  Limit level 5: Finishing Plus
+  Valor level 2: Two Become One
+  Valor level 3: Donald Fantasia
+}
+8: {
+  (BC) Dark Thorn Bonus: Sora Slot 1: Lucky Emblem
+  (DC) Courtyard AP Boost: Second Chance
+  (DC) Courtyard Blazing Shard: Precious Mushroom+
+  (DC) Courtyard Blazing Stone: Reflect Element
+  (DC) Courtyard Mythril Shard 2: Lucky Emblem
+  (DC) Disney Castle Map: Ice Cream
+  (DC) Minnie Escort Bonus: Sora Slot 1: Second Chance
+  (DC) Minnie Escort Bonus: Sora Slot 2: Majestic Mushroom+
+  (HT) Candy Cane Lane Mythril Gem: Torn Page
+  (HT) Candy Cane Lane Mythril Stone: Flash Step
+  (HT) Oogie Boogie Bonus: Sora Slot 1: Aerial Dodge
+  (HT) Oogie Boogie Magnet Element: Negative Combo
+  (HT) Prison Keeper Bonus: Sora Slot 1: Once More
+  (HT) Santa's House Christmas Town Map: Thunder Element
+  (HT2) Decisive Pumpkin: Beast's Claw
+  (HT2) Decoy Presents: Lucky Emblem
+  (HT2) Experiment Bonus: Donald Slot 1: Way to the Dawn
+  (HT2) Lock, Shock and Barrel Bonus: Goofy Slot 1: Aerial Dive
+  (HT2) Lock, Shock and Barrel Bonus: Sora Slot 1: Lucky Emblem
+  (HT2) Present: Ice Cream
+  (LoD) Hidden Dragon: Lucky Emblem
+  (OC) Hero's Crest: Genji Shield
+  (OC) Olympus Stone: Lucky Emblem
+  (OC) Pete Bonus: Goofy Slot 1: Guard
+  (OC) The Lock AP Boost: Fatal Crest
+  (OC) The Lost Road Mythril Shard: Ultima Weapon
+  (OC) Urns Bonus: Sora Slot 1: Lucky Emblem
+  (PL) Scar Bonus: Donald Slot 1: Master Form
+  (PL) Scar Bonus: Sora Slot 1: Hidden Dragon
+  (PL2) Hyenas 2 Bonus: Goofy Slot 1: High Jump
+  (PL2) Hyenas 2 Bonus: Sora Slot 1: Lucky Emblem
+  (PR2) Seadrift Keep AP Boost: Combo Plus
+  (PR2) Seadrift Keep Meteor Staff: Proof of Peace
+  (PR2) Seadrift Keep Orichalcum: Premium Mushroom
+  (PR2) Seadrift Row King Recipe: Aerial Dodge
+  (PR2) Seadrift Row Mythril Crystal: Lucky Emblem
+  Barbosa Event Location: Barbosa Event
+  Cerberus Event Location: Cerberus Event
+  Dark Thorn Event Location: Dark Thorn Event
+  Grim Reaper 1 Event Location: Grim Reaper 1 Event
+  Hydra Event Location: Hydra Event
+  Level 44: Nobody Lance
+  Level 48: Slide Dash
+  Olympus Pete Event Location: Olympus Pete Event
+  Oogie Boogie Event Location: Oogie Boogie Event
+  Prison Keeper Event Location: Prison Keeper Event
+  Scar Event Location: Scar Event
+  Shan Yu Event Location: Shan Yu Event
+  The Experiment Event Location: The Experiment Event
+  Wisdom level 3: Ice Cream
+}
+9: {
+  (100Acre) Kanga's House AP Boost: Thunder Element
+  (BC2) Castle Walls Map: Dodge Roll
+  (BC2) Xaldin Bonus: Donald Slot 1: Hero's Crest
+  (PR2) Grim Reaper 2 Bonus: Donald Slot 1: Cure Element
+  (PR2) Grim Reaper 2 Bonus: Sora Slot 1: Cure Element
+  (TT) Central Station Hi-Potion: Guard Break
+  (TT) Crystal Orb: Lucky Emblem
+  (TT) Station Plaza Secret Ansem Report 2: Battlefields of War
+  (TT) The Tower Hi-Potion: Auto Final
+  (TT) The Woods Potion: Blizzard Element
+  (TT) Tram Common Hi-Potion: Quick Run
+  (TT) Tram Common Mythril Shard 2: Aerial Spiral
+  (TT2) Seifer's Trophy: Chicken Little
+  (TT3) Mansion Basement Corridor Ultimate Recipe: Lucky Emblem
+  (TT3) Mansion Nobodies Bonus: Donald Slot 1: Quick Run
+  (TT3) Sunset Terrace Orichalcum+: Quick Run
+  (TT3) Underground Concourse AP Boost: Winner's Proof
+  (TT3) Underground Concourse Mythril Crystal: Auto Limit
+  (TT3) Underground Concourse Mythril Gem: Sweet Memories
+  Cerberus Cup Event Location: Cerberus Cup Event
+  Data Luxord Event Location: Data Luxord Event
+  Final level 4: Air Combo Plus
+  Final level 7: Magnet Element
+  Grim Reaper 2 Event Location: Grim Reaper 2 Event
+  Limit level 7: Lucky Emblem
+  Xaldin Event Location: Xaldin Event
+}
+10: {
+  (OC2) Auron's Statue: Lucky Emblem
+  (OC2) Hades Bonus: Sora Slot 1: Dodge Roll
+  (TWTNW2) Memory's Skyscaper AP Boost: Explosion
+  (TWTNW2) Memory's Skyscaper Mythril Crystal: Guardian Soul
+  (TWTNW2) Memory's Skyscaper Mythril Stone: Combo Master
+  (TWTNW2) Nothing's Call Mythril Gem: Torn Page
+  (TWTNW2) Roxas Secret Ansem Report 8: Fenrir
+  (TWTNW2) The Brink of Despair Orichalcum+: Monochrome
+  Hades Event Location: Hades Event
+  Roxas Event Location: Roxas Event
+}
+11: {
+  (100Acre) Spooky Cave Guard Recipe: Bond of Flame
+  (100Acre) Spooky Cave Mythril Gem: Membership Card
+  Data Roxas Event Location: Data Roxas Event
+  Titan Cup Event Location: Titan Cup Event
+}
+12: {
+  (CoR) Depths Power Crystal: Auto Wisdom
+  (CoR) Engine Chamber Manifest Illusion: Horizontal Slash
+  (CoR) Engine Chamber Remembrance Crystal: Reflect Element
+  (CoR) Mineshaft Upper Level Magic Boost: Negative Combo
+  (CoR) Mining Area Serenity Gem: Lucky Emblem
+  (HB2) 1000 Heartless: Glide
+  (HB2) Ansem's Study Ukulele Charm: Lucky Emblem
+  (HB2) Corridors Dark Crystal: Lucky Emblem
+  (HB2) Crystal Fissure AP Boost: Aerial Dodge
+  (HB2) Crystal Fissure Torn Pages: Lucky Emblem
+  (HB2) Demyx Bonus: Sora Slot 2: Slapshot
+  (HB2) FF Fights Cure Element: Identity Disk
+  (HB2) Postern AP Boost: Lucky Emblem
+  Cavern of Rememberance:Fight 1 Event Location: Cavern of Rememberance:Fight 1 Event
+  Cavern of Rememberance:Fight 2 Event Location: Cavern of Rememberance:Fight 2 Event
+  Data Demyx Event Location: Data Demyx Event
+  Hollow Bastion Demyx Event Location: Hollow Bastion Demyx Event
+  Mushroom 13 Event Location: Mushroom 13 Event
+  Sephiroth Bonus: Sora Slot 1: Berserk Charge
+  Sephiroth Event Location: Sephiroth Event
+  Thousand Heartless Event Location: Thousand Heartless Event
+}
+13: {
+  (PL2) Groundshaker Bonus: Sora Slot 1: Auto Master
+  (Post OC2: Cave of the Dead Inner Chamber) Zexion Bonus: Goofy Slot 1: Trinity Limit
+  (Post OC2: Cave of the Dead Inner Chamber) Zexion Bonus: Sora Slot 1: Disney Castle Key
+  (Post TWTNW3: The Altar of Naught) Data Xemnas: Lucky Emblem
+  (SP) Canyon Mythril Stone: Lucky Emblem
+  (SP) Hostile Program Bonus: Goofy Slot 1: Combo Plus
+  (SP) Photon Debugger: Save The King+
+  (SP) Pit Cell Mythril Crystal: Lucky Emblem
+  (SP) Screens Bonus: Sora Slot 1: Thunder Element
+  (TWTNW2) Luxord Bonus: Sora Slot 1: Lucky Emblem
+  (TWTNW2) Luxord Bonus: Sora Slot 2: Wishing Lamp
+  (TWTNW2) Luxord Secret Ansem Report 9: Pureblood
+  (TWTNW2) Naught's Skyway Mythril Crystal: Form Boost
+  (TWTNW3) Ruin and Creation's Passage AP Boost: Mysterious Abyss
+  (TWTNW3) Ruin and Creation's Passage Mythril Crystal: Blizzard Element
+  (TWTNW3) Ruin and Creation's Passage Mythril Stone: Decisive Pumpkin
+  (TWTNW3) Xemnas 1 Bonus: Sora Slot 2: Majestic Mushroom
+  Armored Xemnas 2 Event Location: Armored Xemnas 2 Event
+  Armored Xemnas Event Location: Armored Xemnas Event
+  Data Xemnas Event Location: Data Xemnas Event
+  Data Zexion Event Location: Data Zexion Event
+  Groundshaker Event Location: Groundshaker Event
+  Hostile Program Event Location: Hostile Program Event
+  Luxord Event Location: Luxord Event
+  Saix Event Location: Saix Event
+  Xemnas Event Location: Xemnas Event
+  Xigbar Event Location: Xigbar Event
+}
+14: {
+  (Post TR:Hall of the Cornerstone) AS Marluxia: High Jump
+  (Post TT3: Betwixt and Between) Data Axel: Lucky Emblem
+  (TR) Boat Pete Bonus: Donald Slot 1: Lucky Emblem
+  (TR) Boat Pete Bonus: Sora Slot 1: Berserk Charge
+  (TR) Cornerstone Hill Frost Shard: Glide
+  (TR) Cornerstone Hill Map: Dodge Roll
+  (TR) Future Pete Bonus: Goofy Slot 1: Proof of Connection
+  (TR) Wisdom Form: Follow the Wind
+  Data Axel Event Location: Data Axel Event
+  Data Marluxia Event Location: Data Marluxia Event
+  Future Pete Event Location: Future Pete Event
+  Old Pete Event Location: Old Pete Event
+}
+15: {
+  (Post HT2: Yuletide Hill) Vexen Bonus: Sora Slot 1: Lucky Emblem
+  (Post PL2: Peak) Data Saix: Sword of the Ancestor
+  (Post TR:Hall of the Cornerstone) Lingering Will Bonus: Sora Slot 1: Stitch
+  (Post TR:Hall of the Cornerstone) Lingering Will Proof of Connection: Glide
+  Data Saix Event Location: Data Saix Event
+  Data Vexen Event Location: Data Vexen Event
+  Data Xaldin Event Location: Data Xaldin Event
+  Final Xemnas Event Location: Victory
+  Pain and Panic Cup Event Location: Pain and Panic Cup Event
+  Terra Event Location: Terra Event
+  Transport to Rememberance Event Location: Transport to Rememberance Event
+}
+16: {
+  (LoD2) Throne Room AP Boost 2: Aerial Finish
+  (LoD2) Throne Room Ogre Shield: Scimitar
+  Ansem Riku Event Location: Ansem Riku Event
+  Data Xigbar Event Location: Data Xigbar Event
+  Goddess of Fate Cup Event Location: Goddess of Fate Cup Event
+  Storm Rider Event Location: Storm Rider Event
+}
+17: {
+  (AG2) Ruined Chamber Ruins Map: Sleeping Lion
+  (AG2) Wishing Lamp: Gull Wing
+  (Post AG2: Peddler's Shop) Data Lexaeus: Torn Page
+  Data Lexaeus Event Location: Data Lexaeus Event
+  Genie Jafar Event Location: Genie Jafar Event
+  Olympus Coliseum Hade's Paradox Event Location: Olympus Coliseum Hade's Paradox Event
+}
+18: {
+  (100Acre) Starry Hill Cosmic Ring: Lucky Emblem
+  (100Acre) Starry Hill Cure Element: Air Combo Plus
+  (100Acre) Starry Hill Orichalcum+: Identity Disk
+}
+19: {
+  (SP2) Central Computer Core Map: Lucky Emblem
+  (SP2) MCP Bonus: Sora Slot 1: Lucky Emblem
+  (SP2) Solar Sailer Bonus: Donald Slot 1: Hades Cup Trophy
+  Data Larxene Event Location: Data Larxene Event
+  Master Control Program Event Location: Master Control Program Event
+}
