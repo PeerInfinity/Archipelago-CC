@@ -265,25 +265,35 @@ export function computeReachableRegions(sm) {
         for (const loc of sm.eventLocations.values()) {
           if (sm.knownReachableRegions.has(loc.region)) {
             const canAccessLoc = isLocationAccessible(sm, loc);
-            // Check if location hasn't been checked yet AND item isn't already collected
-            if (canAccessLoc && !sm.checkedLocations.has(loc.name) && !sm._hasItem(loc.item.name)) {
-              sm._addItemToInventory(loc.item.name, 1);
+            // Mark location as checked if accessible (even if we already have the item)
+            // This handles cases where multiple locations place the same event item
+            // (e.g., Pokemon catch locations for the same species)
+            if (canAccessLoc && !sm.checkedLocations.has(loc.name)) {
               sm.checkedLocations.add(loc.name);
-              newEventCollected = true;
-              continueSearching = true;
-              sm._logDebug(
-                `[ReachabilityEngine] Auto-collected event item: ${loc.item.name} from ${loc.name}`
-              );
 
-              // Process event item to update gameStateModule.events
-              if (sm.gameStateModule && sm.logicModule && typeof sm.logicModule.processEventItem === 'function') {
-                const updatedState = sm.logicModule.processEventItem(sm.gameStateModule, loc.item.name);
-                if (updatedState) {
-                  sm.gameStateModule = updatedState;
-                  sm._logDebug(
-                    `[ReachabilityEngine] Processed event item: ${loc.item.name}`
-                  );
+              // Only add item to inventory if we don't already have it
+              if (!sm._hasItem(loc.item.name)) {
+                sm._addItemToInventory(loc.item.name, 1);
+                newEventCollected = true;
+                continueSearching = true;
+                sm._logDebug(
+                  `[ReachabilityEngine] Auto-collected event item: ${loc.item.name} from ${loc.name}`
+                );
+
+                // Process event item to update gameStateModule.events
+                if (sm.gameStateModule && sm.logicModule && typeof sm.logicModule.processEventItem === 'function') {
+                  const updatedState = sm.logicModule.processEventItem(sm.gameStateModule, loc.item.name);
+                  if (updatedState) {
+                    sm.gameStateModule = updatedState;
+                    sm._logDebug(
+                      `[ReachabilityEngine] Processed event item: ${loc.item.name}`
+                    );
+                  }
                 }
+              } else {
+                sm._logDebug(
+                  `[ReachabilityEngine] Marked duplicate event location as checked: ${loc.name} (already have ${loc.item.name})`
+                );
               }
             }
           }

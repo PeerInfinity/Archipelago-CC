@@ -248,11 +248,25 @@ export async function timerSendTest(testController) {
 
     testController.reportCondition('Timer completed all checks', true);
 
-    // Wait for final ping and recalculation to complete
-    // The timer does a final ping after stopping to catch event locations
-    // This can take up to ~1 second (500ms for pingWorker + 500ms for propagation)
-    testController.log('Waiting for final recalculation to complete...');
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    // Wait for all items to be received from server and processed
+    // Games with complex progression (like Pokemon Emerald) need time for:
+    // - Server to send ReceivedItems for all 200+ locations
+    // - Worker to process each batch and recalculate reachability
+    // - Event auto-collection to cascade through multiple rounds
+    testController.log('Waiting for items to be received and processed...');
+    await new Promise(resolve => setTimeout(resolve, 5000));
+
+    // Do multiple ping cycles to ensure worker has processed all pending updates
+    // Each ping waits for worker response, ensuring prior commands are processed
+    testController.log('Triggering final recalculation cycles...');
+    for (let i = 0; i < 3; i++) {
+      try {
+        await stateManager.pingWorker(`test_final_cycle_${i}`, 5000);
+        await new Promise(resolve => setTimeout(resolve, 500));
+      } catch (error) {
+        testController.log(`Warning: Recalculation cycle ${i} failed: ${error.message}`);
+      }
+    }
 
     // Verify that locations were actually checked
     const finalSnapshot = stateManager.getSnapshot();
@@ -262,6 +276,12 @@ export async function timerSendTest(testController) {
     }
 
     const checkedCount = finalSnapshot.checkedLocations?.length || 0;
+
+    // Debug: Log eventLocations count and inventory info
+    // Note: eventLocations is a plain object from worker, not a Map, so use Object.keys
+    const eventLocationsCount = staticData?.eventLocations ? Object.keys(staticData.eventLocations).length : 0;
+    testController.log(`DEBUG: eventLocations count: ${eventLocationsCount}`);
+    testController.log(`DEBUG: Fishing rods in inventory: Old Rod=${finalSnapshot.inventory?.['Old Rod'] || 0}, Good Rod=${finalSnapshot.inventory?.['Good Rod'] || 0}, Super Rod=${finalSnapshot.inventory?.['Super Rod'] || 0}`);
 
     // staticData was already loaded at the start of the test
     if (staticData && staticData.locations) {
