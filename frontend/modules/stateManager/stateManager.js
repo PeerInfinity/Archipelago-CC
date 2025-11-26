@@ -693,6 +693,10 @@ export class StateManager {
     return ReachabilityModule.can_reach_region(this, region, playerId);
   }
 
+  can_reach_location(location, playerId = null) {
+    return ReachabilityModule.can_reach_location(this, location, playerId);
+  }
+
   /**
    * Set debug mode for detailed logging
    * @param {boolean|string} mode - true for basic debug, 'ultra' for verbose, false to disable
