@@ -412,6 +412,9 @@ export function only_zombie(snapshot, staticData) {
 }
 
 export function only_dragon(snapshot, staticData) {
+  // Note: The Python code has a bug where "Cave Dragon" and "Armed Dragon LV3" are
+  // concatenated due to a missing comma (Python string literal concatenation).
+  // We match this behavior to ensure test parity with the Python generator.
   return has_any(snapshot, staticData, [
     "Luster Dragon",
     "Spear Dragon",
@@ -420,8 +423,7 @@ export function only_dragon(snapshot, staticData) {
   (count_from_list_unique(snapshot, staticData, [
     "Luster Dragon",
     "Spear Dragon",
-    "Cave Dragon",
-    "Armed Dragon LV3",
+    "Cave DragonArmed Dragon LV3",  // Matches Python bug: missing comma causes string concatenation
     "Masked Dragon",
     "Twin-Headed Behemoth",
     "Element Dragon",
