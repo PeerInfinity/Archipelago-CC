@@ -1460,6 +1460,23 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
+      },
+      "AP_05594871498841892311": {
+        "seed": 4,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Kingdom Hearts 2"
+          }
+        ],
+        "files": [
+          "AP-05594871498841892311-P1-Player1_0.6.4.zip",
+          "AP_05594871498841892311.archipelago",
+          "AP_05594871498841892311_Spoiler.txt",
+          "AP_05594871498841892311_rules.json",
+          "AP_05594871498841892311_spheres_log.jsonl"
+        ]
       }
     },
     "test_result": {
@@ -3497,6 +3514,23 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
+        ]
+      },
+      "AP_20777137877808592492": {
+        "seed": 8,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Yu-Gi-Oh! 2006"
+          }
+        ],
+        "files": [
+          "AP_20777137877808592492.archipelago",
+          "AP_20777137877808592492_P1_Player1.apygo06",
+          "AP_20777137877808592492_Spoiler.txt",
+          "AP_20777137877808592492_rules.json",
+          "AP_20777137877808592492_spheres_log.jsonl"
         ]
       }
     },
