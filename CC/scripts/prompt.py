@@ -146,10 +146,6 @@ Your first priority is to fix the exporter issues. Your second priority is to fi
 
 After choosing an issue to work on, run the generation script and spoiler test to confirm that the issue still exists, and then begin working on fixing it.
 
-If the spoiler test passes, then run this command:
-
-python scripts/test/test-all-templates.py --retest --retest-continue 10 -p
-
 Please make as much progress as you can without supervision."""
 
 # Removed:
