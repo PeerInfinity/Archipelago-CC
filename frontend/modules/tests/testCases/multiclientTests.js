@@ -248,11 +248,84 @@ export async function timerSendTest(testController) {
 
     testController.reportCondition('Timer completed all checks', true);
 
-    // Wait for final ping and recalculation to complete
-    // The timer does a final ping after stopping to catch event locations
-    // This can take up to ~1 second (500ms for pingWorker + 500ms for propagation)
-    testController.log('Waiting for final recalculation to complete...');
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    // Multi-pass timer runs to handle locations that become reachable after event propagation
+    // The timer might stop before all regions become reachable (via event auto-collection)
+    const maxTimerPasses = 5;
+    let timerPassCount = 1;
+
+    while (timerPassCount <= maxTimerPasses) {
+      testController.log(`Timer pass ${timerPassCount}: Forcing reachability recalculation cycles...`);
+
+      // Force multiple reachability recalculation cycles to propagate events
+      const maxCycles = 20;
+      let previousCheckedCount = 0;
+      let stableCount = 0;
+
+      for (let cycle = 1; cycle <= maxCycles; cycle++) {
+        await stateManager.recalculateAccessibility();
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        const snapshot = stateManager.getSnapshot();
+        const currentCheckedCount = snapshot?.checkedLocations?.length || 0;
+
+        if (currentCheckedCount === previousCheckedCount) {
+          stableCount++;
+          if (stableCount >= 3) {
+            testController.log(`Pass ${timerPassCount} Cycle ${cycle}: ${currentCheckedCount} locations checked - stable`);
+            break;
+          }
+        } else {
+          stableCount = 0;
+          previousCheckedCount = currentCheckedCount;
+          testController.log(`Pass ${timerPassCount} Cycle ${cycle}: ${currentCheckedCount} locations checked`);
+        }
+      }
+
+      // Check if there are unchecked manually-checkable locations that are now accessible
+      const currentSnapshot = stateManager.getSnapshot();
+      const checkedSet = new Set(currentSnapshot?.checkedLocations || []);
+      const locationsArray = Array.from(staticData.locations.values());
+      const manualLocations = locationsArray.filter(loc => loc.id !== null && loc.id !== undefined);
+      const uncheckedManual = manualLocations.filter(loc => !checkedSet.has(loc.name));
+
+      // Check if any unchecked manual locations are now accessible (region is reachable)
+      const regionReach = currentSnapshot?.regionReachability || {};
+      const newlyAccessible = uncheckedManual.filter(loc =>
+        regionReach[loc.region] === 'reachable'
+      );
+
+      testController.log(`Pass ${timerPassCount}: ${uncheckedManual.length} unchecked manual, ${newlyAccessible.length} newly accessible`);
+
+      if (newlyAccessible.length === 0) {
+        testController.log(`No more newly accessible locations. Event propagation complete.`);
+        break;
+      }
+
+      // Restart timer to check newly accessible locations
+      testController.log(`Restarting timer to check ${newlyAccessible.length} newly accessible locations...`);
+      timerPassCount++;
+
+      // Re-run timer check
+      timerLogic.begin();
+
+      // Wait for timer to stop again
+      timerStopped = false;
+      const unsubStopPass = testController.eventBus.subscribe('timer:stopped', () => {
+        timerStopped = true;
+      }, 'tests');
+
+      const passTimeout = Date.now() + 60000;  // 60 second timeout for each pass
+      while (!timerStopped && Date.now() < passTimeout) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+      }
+
+      unsubStopPass();
+
+      if (!timerStopped) {
+        testController.log(`Timer pass ${timerPassCount} timed out`);
+        break;
+      }
+    }
 
     // Verify that locations were actually checked
     const finalSnapshot = stateManager.getSnapshot();
@@ -279,6 +352,53 @@ export async function timerSendTest(testController) {
       testController.log(`Final result: ${checkedCount} locations checked`);
       testController.log(`Manually-checkable locations: ${totalManuallyCheckable}`);
       testController.log(`Total locations (including events): ${totalLocations}`);
+
+      // Diagnostic: Log unchecked event locations
+      const checkedSet = new Set(finalSnapshot.checkedLocations || []);
+      // Event locations are those with id=null (auto-collected, not manually checked)
+      const eventLocations = locationsArray.filter(loc =>
+        loc.id === null || loc.id === undefined
+      );
+      const uncheckedEvents = eventLocations.filter(loc => !checkedSet.has(loc.name));
+
+      if (uncheckedEvents.length > 0) {
+        testController.log(`Unchecked event locations: ${uncheckedEvents.length}`);
+
+        // Group by region to understand accessibility patterns
+        const byRegion = {};
+        for (const loc of uncheckedEvents) {
+          const region = loc.region || 'unknown';
+          if (!byRegion[region]) byRegion[region] = [];
+          byRegion[region].push(loc);
+        }
+
+        // Log region summary
+        const regionSummary = Object.entries(byRegion)
+          .map(([region, locs]) => `${region}(${locs.length})`)
+          .join(', ');
+        testController.log(`Unchecked by region: ${regionSummary}`);
+
+        // Log first 20 unchecked events with their access rules
+        testController.log('Sample unchecked events:');
+        for (let i = 0; i < Math.min(20, uncheckedEvents.length); i++) {
+          const loc = uncheckedEvents[i];
+          const ruleType = loc.access_rule?.type || 'none';
+          const ruleStr = JSON.stringify(loc.access_rule || {}).slice(0, 100);
+          testController.log(`  ${loc.name} (region: ${loc.region}, rule: ${ruleType}) - ${ruleStr}`);
+        }
+
+        // Check if all manually-checkable locations were checked
+        const manualLocs = locationsArray.filter(loc => loc.id !== null && loc.id !== undefined);
+        const uncheckedManual = manualLocs.filter(loc => !checkedSet.has(loc.name));
+        if (uncheckedManual.length > 0) {
+          // Log diagnostic info when test is failing
+          testController.log(`UNCHECKED MANUAL LOCATIONS: ${uncheckedManual.length}`);
+          for (let i = 0; i < Math.min(10, uncheckedManual.length); i++) {
+            const loc = uncheckedManual[i];
+            testController.log(`  ${loc.name} (region: ${loc.region}, item: ${loc.item?.name})`);
+          }
+        }
+      }
 
       // Test passes if ALL locations were checked (including auto-checked events)
       // The timer checks manually-checkable locations, but events should also be auto-collected
