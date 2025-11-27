@@ -97,7 +97,7 @@ def get_accesspoint_traverse_funcs(world) -> Dict[str, Any]:
             traverse_funcs[ap_name] = traverse_func
             logger.debug(f"SM: Extracted traverse function for AccessPoint '{ap_name}'")
 
-        logger.info(f"SM: Extracted traverse functions for {len(traverse_funcs)} AccessPoints")
+        logger.debug(f"SM: Extracted traverse functions for {len(traverse_funcs)} AccessPoints")
 
     except Exception as e:
         logger.error(f"SM: Failed to extract AccessPoint traverse functions: {e}", exc_info=True)
@@ -150,7 +150,7 @@ def get_all_transitions() -> Dict[str, Dict[str, Callable]]:
             all_transitions[ap_name] = transitions
             logger.debug(f"SM: Extracted {len(transitions)} transitions for AccessPoint '{ap_name}'")
 
-        logger.info(f"SM: Extracted transitions for {len(all_transitions)} AccessPoints")
+        logger.debug(f"SM: Extracted transitions for {len(all_transitions)} AccessPoints")
 
     except Exception as e:
         logger.error(f"SM: Failed to extract all transitions: {e}", exc_info=True)
@@ -190,7 +190,7 @@ def get_transition_lambda(source_ap_name: str, dest_ap_name: str, unwrap: bool =
                 if unwrap and is_cache_ldeco_wrapped(transition_func):
                     unwrapped = unwrap_cache_ldeco(transition_func)
                     if unwrapped:
-                        logger.info(f"SM: Unwrapped Cache.ldeco for transition '{source_ap_name}' -> '{dest_ap_name}'")
+                        logger.debug(f"SM: Unwrapped Cache.ldeco for transition '{source_ap_name}' -> '{dest_ap_name}'")
                         return unwrapped
                     else:
                         logger.warning(f"SM: Failed to unwrap transition '{source_ap_name}' -> '{dest_ap_name}'")

@@ -39,13 +39,7 @@ def get_location_accessfrom_data(world) -> Dict[str, Dict[str, Any]]:
                     'post_available': post_available
                 }
 
-        logger.info(f"SM: Extracted AccessFrom data for {len(accessfrom_data)} locations")
-
-        # Log the 3 problematic locations specifically
-        for loc_name in ["Screw Attack", "Space Jump", "Missile (green Brinstar below super missile)"]:
-            if loc_name in accessfrom_data:
-                regions = list(accessfrom_data[loc_name]['regions'].keys())
-                logger.info(f"SM: Location '{loc_name}' AccessFrom regions: {regions}")
+        logger.debug(f"SM: Extracted AccessFrom data for {len(accessfrom_data)} locations")
 
         return accessfrom_data
 
@@ -94,7 +88,7 @@ def get_simple_accessfrom_locations(world) -> Set[str]:
             if is_simple:
                 simple_locations.add(loc_name)
 
-        logger.info(f"SM: Found {len(simple_locations)} locations with simple AccessFrom")
+        logger.debug(f"SM: Found {len(simple_locations)} locations with simple AccessFrom")
         return simple_locations
 
     except Exception as e:
@@ -151,7 +145,7 @@ def extract_all_accessfrom_info(world_module_path: str) -> Dict[str, Dict[str, s
             if region_lambdas:
                 accessfrom_info[loc_name] = region_lambdas
 
-        logger.info(f"SM: Extracted AccessFrom source for {len(accessfrom_info)} locations")
+        logger.debug(f"SM: Extracted AccessFrom source for {len(accessfrom_info)} locations")
         return accessfrom_info
 
     except Exception as e:

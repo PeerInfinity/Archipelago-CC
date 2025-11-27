@@ -691,6 +691,24 @@ export class StateManagerProxy {
     const pending = this.pendingQueries.get(queryId);
 
     if (pending) {
+      // Check if this query already timed out - handle late response gracefully
+      if (pending.timedOut) {
+        const latencyMs = Date.now() - pending.timedOutAt;
+        log('debug', `[StateManagerProxy] Late response arrived for timed-out queryId ${queryId} (${latencyMs}ms after timeout)`, {
+          command: pending.command,
+          hasResult: !!result,
+          hasError: !!error
+        });
+        // Clean up the entry now that we've received the response
+        this._deleteQueryId(queryId, 'late_response_after_timeout', {
+          latencyMs,
+          command: pending.command,
+          hasResult: !!result,
+          hasError: !!error
+        });
+        return;
+      }
+
       if (error) {
         log('error', `[stateManagerProxy] Query ${queryId} failed:`, error);
         this._storeErroredQuery(queryId, {
@@ -740,6 +758,22 @@ export class StateManagerProxy {
       log('debug', `[StateManagerProxy] _handlePingResponse called for queryId ${queryId}, pending exists: ${!!pending}`);
 
       if (pending) {
+        // Check if this ping already timed out - handle late response gracefully
+        if (pending.timedOut) {
+          const latencyMs = Date.now() - pending.timedOutAt;
+          log('debug', `[StateManagerProxy] Late ping response arrived for timed-out queryId ${queryId} (${latencyMs}ms after timeout)`, {
+            command: pending.command,
+            payload: message.payload
+          });
+          // Clean up the entry now that we've received the response
+          this._deleteQueryId(queryId, 'late_response_after_timeout', {
+            latencyMs,
+            command: pending.command,
+            messageType: 'pingResponse'
+          });
+          return;
+        }
+
         // Success path - ping response arrived while queryId still pending
         pending.resolve(message.payload);
         this._deleteQueryId(queryId, 'success', {
@@ -1065,11 +1099,16 @@ export class StateManagerProxy {
   }
 
   /**
-   * Start periodic cleanup of old buffered responses
+   * Start periodic cleanup of old buffered responses and timed-out queries
    */
   _startBufferCleanup() {
+    // Grace period for timed-out queries before cleanup (60 seconds)
+    const timedOutQueryGracePeriod = 60000;
+
     setInterval(() => {
       const now = Date.now();
+
+      // Clean up old buffered responses
       for (const [queryId, bufferEntry] of this.unknownResponseBuffer.entries()) {
         if (now - bufferEntry.receivedAt > this.responseBufferGracePeriod) {
           log('debug', `[StateManagerProxy] Removing expired buffered response for queryId ${queryId}`, {
@@ -1077,6 +1116,21 @@ export class StateManagerProxy {
             type: bufferEntry.type
           });
           this.unknownResponseBuffer.delete(queryId);
+        }
+      }
+
+      // Clean up old timed-out queries that never received a response
+      for (const [queryId, pending] of this.pendingQueries.entries()) {
+        if (pending.timedOut && (now - pending.timedOutAt > timedOutQueryGracePeriod)) {
+          log('debug', `[StateManagerProxy] Cleaning up stale timed-out queryId ${queryId} (no response after ${timedOutQueryGracePeriod}ms)`, {
+            command: pending.command,
+            timedOutAt: pending.timedOutAt
+          });
+          this._deleteQueryId(queryId, 'stale_timeout_cleanup', {
+            timedOutAt: pending.timedOutAt,
+            command: pending.command,
+            ageAfterTimeout: now - pending.timedOutAt
+          });
         }
       }
     }, 10000); // Cleanup every 10 seconds
@@ -1160,18 +1214,26 @@ export class StateManagerProxy {
 
       if (timeoutMs > 0) {
         timeoutId = setTimeout(() => {
-          if (this.pendingQueries.has(queryId)) {
-            log(
-              'error',
-              `[stateManagerProxy] Query ${queryId} (${message.command}) timed out after ${timeoutMs}ms.`
-            );
-            this.pendingQueries.delete(queryId);
+          const pending = this.pendingQueries.get(queryId);
+          if (pending && !pending.timedOut) {
+            // Mark as timed out but keep in pendingQueries to handle late responses gracefully
+            pending.timedOut = true;
+            pending.timedOutAt = Date.now();
+            pending.resolve = null; // Clear to avoid resolving after rejection
+            pending.reject = null;  // Clear to avoid double rejection
+
+            log('warn', `[StateManagerProxy] Query timed out but keeping queryId for late response handling`, {
+              queryId,
+              command: message.command,
+              timeoutMs
+            });
+
             reject(new Error(`Query timed out: ${message.command}`));
           }
         }, timeoutMs);
       }
 
-      this.pendingQueries.set(queryId, { resolve, reject, timeoutId });
+      this.pendingQueries.set(queryId, { resolve, reject, timeoutId, command: message.command });
 
       try {
         this.worker.postMessage({ ...message, queryId });
@@ -1601,7 +1663,7 @@ export class StateManagerProxy {
     command,
     payload = null,
     expectResponse = false,
-    timeout = 5000
+    timeout = 10000
   ) {
     if (!this.worker) {
       // MODIFIED: Direct call to imported function
@@ -1640,30 +1702,29 @@ export class StateManagerProxy {
 
       if (expectResponse) {
         const timeoutId = setTimeout(() => {
-          if (this.pendingQueries.has(messageId)) {
+          const pending = this.pendingQueries.get(messageId);
+          if (pending && !pending.timedOut) {
             const queryError = new Error(
               `Timeout waiting for response to command: ${command} (ID: ${messageId}, Correlation: ${correlationId})`
             );
 
-            // Store timeout metadata
-            this.timedOutPings.set(messageId, {
-              payload,
-              timeoutMs: timeout,
-              timedOutAt: Date.now(),
-              correlationId,
-              command
-            });
+            // Mark as timed out but keep in pendingQueries to handle late responses gracefully
+            pending.timedOut = true;
+            pending.timedOutAt = Date.now();
+            pending.resolve = null; // Clear to avoid resolving after rejection
+            pending.reject = null;  // Clear to avoid double rejection
 
-            // MODIFIED: Direct call to imported logWorkerCommunication
-            if (typeof logWorkerCommunication === 'function') {
-              logWorkerCommunication(
-                `[Proxy -> Worker] ${queryError.message}`,
-                'error'
-              );
+            // Update command state
+            if (pending.correlationId) {
+              this._updateCommandState(pending.correlationId, StateManagerProxy.COMMAND_STATES.TIMED_OUT, {
+                queryId: messageId,
+                command,
+                timeout
+              });
             }
 
-            // Use centralized deletion
-            this._deleteQueryId(messageId, 'timeout', {
+            log('warn', `[StateManagerProxy] Command timed out but keeping queryId for late response handling`, {
+              queryId: messageId,
               command,
               timeout,
               correlationId
@@ -2053,7 +2114,7 @@ export class StateManagerProxy {
   }
   // --- END ADDED ---
 
-  async pingWorker(dataToEcho, timeoutMs = 2000) {
+  async pingWorker(dataToEcho, timeoutMs = 5000) {
     const queryId = this.nextQueryId++;
     const correlationId = this._generateCorrelationId();
     const command = StateManagerProxy.COMMANDS.PING;
@@ -2071,26 +2132,31 @@ export class StateManagerProxy {
 
     const promise = new Promise((resolve, reject) => {
       const timeoutId = setTimeout(() => {
-        // Store timeout metadata for later analysis
-        this.timedOutPings.set(queryId, {
-          payload: dataToEcho,
-          timeoutMs: timeoutMs,
-          timedOutAt: Date.now(),
-          correlationId
-        });
+        const pending = this.pendingQueries.get(queryId);
+        if (pending && !pending.timedOut) {
+          // Mark as timed out but keep in pendingQueries to handle late responses gracefully
+          pending.timedOut = true;
+          pending.timedOutAt = Date.now();
+          pending.resolve = null; // Clear to avoid resolving after rejection
+          pending.reject = null;  // Clear to avoid double rejection
 
-        this._logDebug(`[StateManagerProxy] Ping timeout fired for queryId ${queryId}, correlationId ${correlationId}, stored metadata`);
+          // Update command state
+          this._updateCommandState(correlationId, StateManagerProxy.COMMAND_STATES.TIMED_OUT, {
+            queryId,
+            command,
+            timeoutMs
+          });
 
-        // Use centralized deletion with tracking
-        this._deleteQueryId(queryId, 'timeout', {
-          payload: dataToEcho,
-          timeoutMs,
-          correlationId
-        });
+          log('warn', `[StateManagerProxy] Ping timed out but keeping queryId for late response handling`, {
+            queryId,
+            correlationId,
+            timeoutMs
+          });
 
-        reject(
-          new Error(`Timeout waiting for ping response (queryId: ${queryId}, correlationId: ${correlationId})`)
-        );
+          reject(
+            new Error(`Timeout waiting for ping response (queryId: ${queryId}, correlationId: ${correlationId})`)
+          );
+        }
       }, timeoutMs);
 
       this.pendingQueries.set(queryId, {

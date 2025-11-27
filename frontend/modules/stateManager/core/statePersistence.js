@@ -290,9 +290,13 @@ export function _createSelfSnapshotInterface(sm) {
             events: sm.gameStateModule?.events || [],
             player: { id: sm.playerId, slot: sm.playerId }
           };
+          // Include all game-specific data needed by helpers (e.g., Pokemon local_poke_data)
           const staticData = {
             progressionMapping: sm.progressionMapping,
-            items: sm.itemData
+            items: sm.itemData,
+            game_info: sm.gameInfo,
+            settings: sm.settings,
+            playerId: sm.playerId
           };
           return sm.helperFunctions.has(snapshot, staticData, itemName);
         } catch (e) {
@@ -314,9 +318,13 @@ export function _createSelfSnapshotInterface(sm) {
             events: sm.gameStateModule?.events || [],
             player: { id: sm.playerId, slot: sm.playerId }
           };
+          // Include all game-specific data needed by helpers (e.g., Pokemon local_poke_data)
           const staticData = {
             progressionMapping: sm.progressionMapping,
-            items: sm.itemData
+            items: sm.itemData,
+            game_info: sm.gameInfo,
+            settings: sm.settings,
+            playerId: sm.playerId
           };
           return sm.helperFunctions.count(snapshot, staticData, itemName);
         } catch (e) {
@@ -924,6 +932,19 @@ export function clearState(sm, options = { recomputeAndSendUpdate: true }) {
     if (sm.progressionMapping) {
       for (const virtualItemName in sm.progressionMapping) {
         sm.inventory[virtualItemName] = 0;
+      }
+    }
+
+    // Also clear prog_items accumulator values (for games like DLCQuest that track coins)
+    if (sm.prog_items) {
+      for (const playerId in sm.prog_items) {
+        if (Object.hasOwn(sm.prog_items, playerId)) {
+          for (const itemName in sm.prog_items[playerId]) {
+            if (Object.hasOwn(sm.prog_items[playerId], itemName)) {
+              sm.prog_items[playerId][itemName] = 0;
+            }
+          }
+        }
       }
     }
   } else if (!sm.inventory) {

@@ -299,6 +299,16 @@ export function createStateSnapshotInterface(
         case 'flags':
           return snapshot?.flags;
         case 'state':
+          // Return snapshot, optionally wrapped by game-specific logic
+          if (!snapshot) return {};
+
+          // Check if the game has a custom wrapState function
+          const gameLogicForState = getGameLogic(gameName);
+          if (gameLogicForState.wrapState) {
+            return gameLogicForState.wrapState(snapshot);
+          }
+
+          // Default: return snapshot as-is
           return snapshot;
         case 'self':
           // In Python rules, 'self' refers to the game's rules class instance

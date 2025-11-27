@@ -304,7 +304,7 @@ export class TestController {
           try {
             const pongPayload = await this.stateManager.pingWorker(
               actionDetails.payload,
-              2000
+              5000
             );
             this.log(`Received pong from worker with payload: ${pongPayload}`);
             return pongPayload;

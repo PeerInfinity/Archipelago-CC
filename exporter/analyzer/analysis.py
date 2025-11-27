@@ -81,7 +81,7 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
                     f'Recursion detected: Already analyzing function {rule_func} '
                     f'{current_seen_count+1} times'
                 )
-                logging.warning(
+                logging.debug(
                     f"analyze_rule: Function {rule_func} (id={func_id}) seen "
                     f"{current_seen_count+1} times, stopping recursion."
                 )

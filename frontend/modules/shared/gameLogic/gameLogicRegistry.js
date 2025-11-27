@@ -231,7 +231,7 @@ import * as civ6Logic from './civ_6/civ6Logic.js';
 import { civ6StateModule } from './civ_6/civ6Logic.js';
 import { helperFunctions as cvcotmHelperFunctions } from './cvcotm/cvcotmLogic.js';
 import * as dlcquestLogic from './dlcquest/dlcquestLogic.js';
-import { dlcquestStateModule } from './dlcquest/dlcquestLogic.js';
+import { dlcquestStateModule, wrapState as dlcquestWrapState } from './dlcquest/dlcquestLogic.js';
 import * as factorioLogic from './factorio/factorioLogic.js';
 import { factorioStateModule } from './factorio/factorioLogic.js';
 import * as hkLogic from './hk/hkLogic.js';
@@ -368,6 +368,7 @@ const GAME_REGISTRY = {
   'DLCQuest': {
     logicModule: dlcquestLogic.dlcquestStateModule,
     helperFunctions: dlcquestLogic.helperFunctions,
+    wrapState: dlcquestWrapState,
     worldClasses: ['DLCqworld'],
     aliases: ['DLCQuest', 'DLC Quest']
   },
@@ -689,7 +690,8 @@ export function getGameLogic(gameName) {
       helperFunctions: GAME_REGISTRY['Generic'].helperFunctions,
       stateMethods: GAME_REGISTRY['Generic'].stateMethods,
       stateModule: GAME_REGISTRY['Generic'].logicModule,
-      constants: GAME_REGISTRY['Generic'].constants
+      constants: GAME_REGISTRY['Generic'].constants,
+      wrapState: GAME_REGISTRY['Generic'].wrapState
     };
   }
 
@@ -698,7 +700,8 @@ export function getGameLogic(gameName) {
     helperFunctions: config.helperFunctions,
     stateMethods: config.stateMethods,
     stateModule: config.logicModule, // Expose stateModule for hooks
-    constants: config.constants
+    constants: config.constants,
+    wrapState: config.wrapState
   };
 }
 

@@ -122,6 +122,12 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 item_data[prog_item]['advancement'] = True
                 logger.info(f"Marked {prog_item} as advancement item")
 
+        # Mark Bottle as advancement - it gates access to locations like "Sick Kid"
+        # and may be placed as non-advancement (filler) by the item pool
+        if 'Bottle' in item_data:
+            item_data['Bottle']['advancement'] = True
+            logger.info("Marked Bottle as advancement item")
+
         return item_data
 
     def post_process_location_data(self, location_data: Dict[str, Any], location_name: str) -> Dict[str, Any]:
@@ -135,7 +141,7 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         # Items that should always be marked as advancement regardless of placement
         always_advancement_items = {
             'ProgressiveSword', 'ProgressiveGlove', 'ProgressiveShield',
-            'ProgressiveBow', 'ProgressiveTunic'
+            'ProgressiveBow', 'ProgressiveTunic', 'Bottle'
         }
 
         if location_data.get('item'):
@@ -386,28 +392,19 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
         Returns None to fall back to standard analysis, or a dict with the analyzed rule.
         """
-        # Debug output to see if this is being called
-        with open('/tmp/smz3_debug.log', 'a') as f:
-            f.write(f"[SMZ3] override_rule_analysis called for: {rule_target_name}\n")
-        print(f"[SMZ3] override_rule_analysis called for: {rule_target_name}", flush=True)
-
         # Only handle rules with a target name
         if not rule_target_name:
-            print(f"[SMZ3] No rule_target_name, returning None")
             return None
 
         # Skip item rules
         if "Item Rule" in str(rule_target_name):
-            print(f"[SMZ3] Skipping item rule")
             return None
 
         # Handle entrance rules (contain "->")
         if "->" in str(rule_target_name):
-            print(f"[SMZ3] Handling entrance rule")
             return self._handle_entrance_rule(rule_func, rule_target_name)
 
         logger.info(f"Processing location: {rule_target_name}")
-        print(f"[SMZ3] Processing location: {rule_target_name}")
 
         # Try to extract the 'loc' object from default arguments (SMZ3 uses lambda state, loc=loc: ...)
         loc_object = None
@@ -416,10 +413,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             arg_names = rule_func.__code__.co_varnames[:rule_func.__code__.co_argcount]
             defaults = rule_func.__defaults__ or ()
 
-            print(f"[SMZ3] Function has __code__ and __defaults__")
-            print(f"[SMZ3]   arg_names: {arg_names}")
-            print(f"[SMZ3]   num defaults: {len(defaults)}")
-
             # SMZ3 location rules have signature: lambda state, loc=loc: ...
             # So 'loc' should be the second parameter with a default value
             if len(arg_names) >= 2 and 'loc' in arg_names:
@@ -427,13 +420,10 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 # Defaults are aligned to the end of the parameter list
                 # If we have 2 params and 1 default, the default is for the last param
                 defaults_offset = len(arg_names) - len(defaults)
-                print(f"[SMZ3]   loc_index: {loc_index}, defaults_offset: {defaults_offset}")
                 if loc_index >= defaults_offset:
                     loc_object = defaults[loc_index - defaults_offset]
-                    print(f"[SMZ3]   Found 'loc' object: {type(loc_object)}")
 
         if not loc_object:
-            print(f"[SMZ3] No 'loc' object found, returning None")
             return None
 
         # Check if this looks like a TotalSMZ3 Location object
@@ -539,6 +529,8 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                         'value': 0
                     }
                 # For other self attributes, log a warning and return constant True
+                # Note: self.world is also converted to constant True, and the
+                # GetLocation().Available() pattern is detected later at the function_call level
                 logger.debug(f"Converting self.{attr} to constant True (unknown attribute)")
                 return {
                     'type': 'constant',
@@ -664,6 +656,43 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             if isinstance(func, dict) and func.get('type') == 'attribute':
                 obj = func.get('object')
                 method_name = func.get('attr')
+
+                # Handle world.GetLocation(location).Available() pattern
+                # Pattern: self.world.GetLocation("Space Jump").Available(items)
+                # This checks if a specific location is accessible with current items
+                # Convert to a location_accessible rule for runtime evaluation
+                if method_name == 'Available':
+                    # Check if this is world.GetLocation().Available() or GetLocation().Available()
+                    inner_func = None
+                    inner_obj = None
+                    if isinstance(obj, dict) and obj.get('type') == 'function_call':
+                        inner_func = obj.get('function', {})
+                        if inner_func.get('type') == 'attribute' and inner_func.get('attr') == 'GetLocation':
+                            inner_obj = inner_func.get('object', {})
+
+                    # Match world_reference.GetLocation() or constant(true).GetLocation()
+                    if (inner_obj and (inner_obj.get('type') == 'world_reference' or
+                        (inner_obj.get('type') == 'constant' and inner_obj.get('value') == True))):
+
+                        # Extract the location name from GetLocation args
+                        get_location_args = obj.get('args', [])
+                        location_name = None
+                        if get_location_args and len(get_location_args) > 0:
+                            location_name_arg = get_location_args[0]
+                            if isinstance(location_name_arg, dict) and location_name_arg.get('type') == 'constant':
+                                location_name = location_name_arg.get('value')
+                            elif isinstance(location_name_arg, str):
+                                location_name = location_name_arg
+
+                        if location_name:
+                            logger.info(f"Converting world.GetLocation('{location_name}').Available() to location_check")
+                            return {
+                                'type': 'location_check',
+                                'location': location_name
+                            }
+                        else:
+                            logger.warning("GetLocation().Available() pattern without location name, returning true")
+                            return {'type': 'constant', 'value': True}
 
                 # Handle GetLocation().ItemIs() pattern - evaluate at export time
                 # Pattern: GetLocation("location_name").ItemIs(ItemType.KeyPD, world)
