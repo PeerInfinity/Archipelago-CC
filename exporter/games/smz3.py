@@ -544,6 +544,12 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                         'type': 'constant',
                         'value': 0
                     }
+                # Preserve self.world as a marker for GetLocation().Available() patterns
+                if attr == 'world':
+                    logger.debug(f"Preserving self.world as world_reference marker")
+                    return {
+                        'type': 'world_reference'
+                    }
                 # For other self attributes, log a warning and return constant True
                 logger.debug(f"Converting self.{attr} to constant True (unknown attribute)")
                 return {
@@ -670,6 +676,43 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             if isinstance(func, dict) and func.get('type') == 'attribute':
                 obj = func.get('object')
                 method_name = func.get('attr')
+
+                # Handle world.GetLocation(location).Available() pattern
+                # Pattern: self.world.GetLocation("Space Jump").Available(items)
+                # This checks if a specific location is accessible with current items
+                # Convert to a location_accessible rule for runtime evaluation
+                if method_name == 'Available':
+                    # Check if this is world.GetLocation().Available() or GetLocation().Available()
+                    inner_func = None
+                    inner_obj = None
+                    if isinstance(obj, dict) and obj.get('type') == 'function_call':
+                        inner_func = obj.get('function', {})
+                        if inner_func.get('type') == 'attribute' and inner_func.get('attr') == 'GetLocation':
+                            inner_obj = inner_func.get('object', {})
+
+                    # Match world_reference.GetLocation() or constant(true).GetLocation()
+                    if (inner_obj and (inner_obj.get('type') == 'world_reference' or
+                        (inner_obj.get('type') == 'constant' and inner_obj.get('value') == True))):
+
+                        # Extract the location name from GetLocation args
+                        get_location_args = obj.get('args', [])
+                        location_name = None
+                        if get_location_args and len(get_location_args) > 0:
+                            location_name_arg = get_location_args[0]
+                            if isinstance(location_name_arg, dict) and location_name_arg.get('type') == 'constant':
+                                location_name = location_name_arg.get('value')
+                            elif isinstance(location_name_arg, str):
+                                location_name = location_name_arg
+
+                        if location_name:
+                            logger.info(f"Converting world.GetLocation('{location_name}').Available() to location_check")
+                            return {
+                                'type': 'location_check',
+                                'location': location_name
+                            }
+                        else:
+                            logger.warning("GetLocation().Available() pattern without location name, returning true")
+                            return {'type': 'constant', 'value': True}
 
                 # Handle GetLocation().ItemIs() pattern - evaluate at export time
                 # Pattern: GetLocation("location_name").ItemIs(ItemType.KeyPD, world)
