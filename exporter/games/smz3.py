@@ -544,13 +544,9 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                         'type': 'constant',
                         'value': 0
                     }
-                # Preserve self.world as a marker for GetLocation().Available() patterns
-                if attr == 'world':
-                    logger.debug(f"Preserving self.world as world_reference marker")
-                    return {
-                        'type': 'world_reference'
-                    }
                 # For other self attributes, log a warning and return constant True
+                # Note: self.world is also converted to constant True, and the
+                # GetLocation().Available() pattern is detected later at the function_call level
                 logger.debug(f"Converting self.{attr} to constant True (unknown attribute)")
                 return {
                     'type': 'constant',

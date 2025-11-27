@@ -910,29 +910,8 @@
                             ]
                           },
                           {
-                            "type": "function_call",
-                            "function": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "function_call",
-                                "function": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "constant",
-                                    "value": true
-                                  },
-                                  "attr": "GetLocation"
-                                },
-                                "args": [
-                                  {
-                                    "type": "constant",
-                                    "value": "Space Jump"
-                                  }
-                                ]
-                              },
-                              "attr": "Available"
-                            },
-                            "args": []
+                            "type": "location_check",
+                            "location": "Space Jump"
                           }
                         ]
                       },
@@ -1035,29 +1014,8 @@
                             "type": "and",
                             "conditions": [
                               {
-                                "type": "function_call",
-                                "function": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "function_call",
-                                    "function": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "constant",
-                                        "value": true
-                                      },
-                                      "attr": "GetLocation"
-                                    },
-                                    "args": [
-                                      {
-                                        "type": "constant",
-                                        "value": "Space Jump"
-                                      }
-                                    ]
-                                  },
-                                  "attr": "Available"
-                                },
-                                "args": []
+                                "type": "location_check",
+                                "location": "Space Jump"
                               },
                               {
                                 "type": "item_check",
@@ -1661,29 +1619,8 @@
                                 ]
                               },
                               {
-                                "type": "function_call",
-                                "function": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "function_call",
-                                    "function": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "constant",
-                                        "value": true
-                                      },
-                                      "attr": "GetLocation"
-                                    },
-                                    "args": [
-                                      {
-                                        "type": "constant",
-                                        "value": "Space Jump"
-                                      }
-                                    ]
-                                  },
-                                  "attr": "Available"
-                                },
-                                "args": []
+                                "type": "location_check",
+                                "location": "Space Jump"
                               }
                             ]
                           },
@@ -1826,29 +1763,8 @@
                                         ]
                                       },
                                       {
-                                        "type": "function_call",
-                                        "function": {
-                                          "type": "attribute",
-                                          "object": {
-                                            "type": "function_call",
-                                            "function": {
-                                              "type": "attribute",
-                                              "object": {
-                                                "type": "constant",
-                                                "value": true
-                                              },
-                                              "attr": "GetLocation"
-                                            },
-                                            "args": [
-                                              {
-                                                "type": "constant",
-                                                "value": "Space Jump"
-                                              }
-                                            ]
-                                          },
-                                          "attr": "Available"
-                                        },
-                                        "args": []
+                                        "type": "location_check",
+                                        "location": "Space Jump"
                                       }
                                     ]
                                   },
