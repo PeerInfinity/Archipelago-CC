@@ -280,9 +280,10 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         print(f"  Environment: TEST_GAME={test_game} TEST_SEED={seed}")
 
         # Time the multiclient test process
+        # Note: timeout needs to be long enough for large games like Stardew Valley (500+ locations)
         test_start_time = time.time()
         test_return_code, test_stdout, test_stderr = run_command(
-            multiclient_cmd, cwd=project_root, timeout=180, env=multiclient_env
+            multiclient_cmd, cwd=project_root, timeout=600, env=multiclient_env
         )
         test_end_time = time.time()
         test_processing_time = round(test_end_time - test_start_time, 2)
