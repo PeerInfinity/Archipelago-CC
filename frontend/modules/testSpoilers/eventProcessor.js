@@ -220,11 +220,12 @@ export class EventProcessor {
         }
 
         try {
-          // Only clear event items for sphere 0
+          // For sphere 0, clear ALL inventory and prog_items to ensure clean start
+          // This is critical for games like DLCQuest that use prog_items accumulators
           if (context.sphere_number === 0) {
-            await stateManager.clearEventItems();
+            await stateManager.clearStateAndReset();
             if (this.verboseMode) {
-              this.logCallback('debug', 'Event items cleared for sphere 0.');
+              this.logCallback('debug', 'Full state cleared for sphere 0 (inventory, prog_items, and event items).');
             }
           } else {
             if (this.verboseMode) {

@@ -926,6 +926,19 @@ export function clearState(sm, options = { recomputeAndSendUpdate: true }) {
         sm.inventory[virtualItemName] = 0;
       }
     }
+
+    // Also clear prog_items accumulator values (for games like DLCQuest that track coins)
+    if (sm.prog_items) {
+      for (const playerId in sm.prog_items) {
+        if (Object.hasOwn(sm.prog_items, playerId)) {
+          for (const itemName in sm.prog_items[playerId]) {
+            if (Object.hasOwn(sm.prog_items[playerId], itemName)) {
+              sm.prog_items[playerId][itemName] = 0;
+            }
+          }
+        }
+      }
+    }
   } else if (!sm.inventory) {
     // If inventory doesn't exist, create it
     sm.inventory = sm._createInventoryInstance(

@@ -299,7 +299,84 @@ export function createStateSnapshotInterface(
         case 'flags':
           return snapshot?.flags;
         case 'state':
-          return snapshot;
+          // Return a wrapper around snapshot that ensures prog_items is accessible
+          // with proper fallback to manual aggregation for games like DLCQuest
+          if (!snapshot) return {};
+
+          // Create a prog_items Proxy that handles subscript access with fallback
+          const createProgItemsProxy = () => {
+            const rawProgItems = snapshot.prog_items || {};
+            return new Proxy(rawProgItems, {
+              get(target, prop) {
+                // Handle player ID access (e.g., prog_items[1] or prog_items["1"])
+                const playerId = String(prop);
+                if (target[playerId]) {
+                  // Return a proxy for the player's accumulator object
+                  return new Proxy(target[playerId], {
+                    get(playerTarget, accumKey) {
+                      // First try direct access
+                      const directValue = playerTarget[accumKey];
+                      if (directValue !== undefined) {
+                        return directValue;
+                      }
+
+                      // Fallback: manually aggregate items for coin-like accumulators
+                      // This handles cases like " coins" in DLCQuest
+                      if (accumKey === ' coins' || accumKey === ' coins freemium') {
+                        const inventory = snapshot.inventory || {};
+                        const coinItemPattern = accumKey === ' coins'
+                          ? /^(\d+) coins?$/  // DLC Quest coins
+                          : /^(\d+) coins? freemium$/;  // LFOD coins (if applicable)
+
+                        let totalCoins = 0;
+                        for (const [itemName, count] of Object.entries(inventory)) {
+                          const match = itemName.match(coinItemPattern);
+                          if (match) {
+                            const coinValue = parseInt(match[1], 10);
+                            totalCoins += coinValue * count;
+                          }
+                        }
+                        return totalCoins;
+                      }
+
+                      // Return 0 as default for missing accumulators
+                      return 0;
+                    }
+                  });
+                }
+
+                // If player not found, return an empty proxy that returns 0 for any access
+                return new Proxy({}, {
+                  get(_, accumKey) {
+                    // Fallback: manually aggregate items
+                    if (accumKey === ' coins' || accumKey === ' coins freemium') {
+                      const inventory = snapshot.inventory || {};
+                      const coinItemPattern = accumKey === ' coins'
+                        ? /^(\d+) coins?$/
+                        : /^(\d+) coins? freemium$/;
+
+                      let totalCoins = 0;
+                      for (const [itemName, count] of Object.entries(inventory)) {
+                        const match = itemName.match(coinItemPattern);
+                        if (match) {
+                          const coinValue = parseInt(match[1], 10);
+                          totalCoins += coinValue * count;
+                        }
+                      }
+                      return totalCoins;
+                    }
+                    return 0;
+                  }
+                });
+              }
+            });
+          };
+
+          // Return a wrapper that includes snapshot properties with enhanced prog_items
+          return {
+            ...snapshot,
+            prog_items: createProgItemsProxy()
+          };
         case 'self':
           // In Python rules, 'self' refers to the game's rules class instance
           // which has attributes like nerf_roc_wing from the world options
