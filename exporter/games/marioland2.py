@@ -2,6 +2,7 @@
 
 from typing import Dict, Any
 from .generic import GenericGameExportHandler
+from BaseClasses import ItemClassification
 import logging
 
 logger = logging.getLogger(__name__)
@@ -108,6 +109,56 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
         to properly export the complex rule logic used in this game.
         """
         return True
+
+    def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
+        """
+        Return Mario Land 2-specific item table data including event items.
+
+        Mario Land 2 places golden coins as locked items with item.code = None
+        when shuffle_golden_coins is set to 'vanilla'. These need to be marked
+        as event items so the frontend handles them correctly.
+        """
+        # Get base item data from parent
+        item_data = super().get_item_data(world)
+
+        # Scan locations to find items that have been converted to events at runtime
+        # (items placed with item.code = None)
+        if hasattr(world, 'multiworld'):
+            for location in world.multiworld.get_locations(world.player):
+                if location.item and location.item.player == world.player:
+                    item_name = location.item.name
+                    item_classification = location.item.classification
+
+                    # Check if this is an event item (no code/ID)
+                    if location.item.code is None:
+                        if item_name not in item_data:
+                            # New event item not in item_name_to_id
+                            item_data[item_name] = {
+                                'name': item_name,
+                                'id': None,
+                                'groups': ['Event'],
+                                'advancement': item_classification == ItemClassification.progression,
+                                'useful': item_classification == ItemClassification.useful,
+                                'trap': item_classification == ItemClassification.trap,
+                                'event': True,
+                                'type': 'Event',
+                                'max_count': 1
+                            }
+                        else:
+                            # Update existing item to mark it as an event
+                            if not item_data[item_name]['event']:
+                                logger.info(f"Correcting {item_name} to event based on runtime placement (item.code=None)")
+                                item_data[item_name]['event'] = True
+                                item_data[item_name]['type'] = 'Event'
+                                item_data[item_name]['id'] = None
+                                item_data[item_name]['advancement'] = item_classification == ItemClassification.progression
+                                item_data[item_name]['useful'] = item_classification == ItemClassification.useful
+                                item_data[item_name]['trap'] = item_classification == ItemClassification.trap
+                                if 'Event' not in item_data[item_name]['groups']:
+                                    item_data[item_name]['groups'].append('Event')
+                                    item_data[item_name]['groups'].sort()
+
+        return item_data
 
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
