@@ -352,24 +352,39 @@ export async function timerSendTest(testController) {
       // staticData.locations is always a Map after initialization
       const locationsArray = Array.from(staticData.locations.values());
 
+      // Count total locations
+      const totalLocations = locationsArray.length;
+
       // Count manually-checkable locations (those with IDs > 0)
-      // Locations with id=0 are events that get checked automatically, not by the timer
+      // Locations with id=null are events that get checked automatically, not by the timer
       const manuallyCheckableLocations = locationsArray.filter(
         loc => loc.id !== null && loc.id !== undefined && loc.id !== 0
       );
       const totalManuallyCheckable = manuallyCheckableLocations.length;
-      const totalLocations = locationsArray.length; // All locations including events
+
+      // Count event locations (those with id=null)
+      const eventLocations = locationsArray.filter(
+        loc => loc.id === null || loc.id === undefined || loc.id === 0
+      );
+      const totalEventLocations = eventLocations.length;
+
+      // Count how many of each type were checked
+      const checkedSet = new Set(finalSnapshot.checkedLocations || []);
+      const checkedManualLocations = manuallyCheckableLocations.filter(
+        loc => checkedSet.has(loc.name)
+      ).length;
+      const checkedEventLocations = eventLocations.filter(
+        loc => checkedSet.has(loc.name)
+      ).length;
 
       testController.log(`Final result: ${checkedCount} locations checked`);
+      testController.log(`Total locations: ${totalLocations}`);
       testController.log(`Manually-checkable locations: ${totalManuallyCheckable}`);
-      testController.log(`Total locations (including events): ${totalLocations}`);
+      testController.log(`Manually-checkable locations checked: ${checkedManualLocations}`);
+      testController.log(`Event locations: ${totalEventLocations}`);
+      testController.log(`Event locations checked: ${checkedEventLocations}`);
 
       // Diagnostic: Log unchecked event locations
-      const checkedSet = new Set(finalSnapshot.checkedLocations || []);
-      // Event locations are those with id=null (auto-collected, not manually checked)
-      const eventLocations = locationsArray.filter(loc =>
-        loc.id === null || loc.id === undefined
-      );
       const uncheckedEvents = eventLocations.filter(loc => !checkedSet.has(loc.name));
 
       if (uncheckedEvents.length > 0) {

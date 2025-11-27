@@ -483,7 +483,11 @@ def parse_multiclient_test_results(test_results_dir: str, single_client: bool = 
         'client1_passed': False,
         'client2_passed': False,
         'client1_locations_checked': 0,
+        'client1_total_locations': 0,
         'client1_manually_checkable': 0,
+        'client1_manually_checkable_checked': 0,
+        'client1_event_locations': 0,
+        'client1_event_locations_checked': 0,
         'client2_locations_received': 0,
         'client2_total_locations': 0,
         'error_message': None,
@@ -521,7 +525,11 @@ def parse_multiclient_test_results(test_results_dir: str, single_client: bool = 
         if test_details:
             logs = test_details[0].get('logs', [])
             locations_checked_val = 0
+            total_locations_val = 0
             manually_checkable_val = 0
+            manually_checkable_checked_val = 0
+            event_locations_val = 0
+            event_locations_checked_val = 0
 
             for log_entry in logs:
                 message = log_entry.get('message', '')
@@ -532,14 +540,42 @@ def parse_multiclient_test_results(test_results_dir: str, single_client: bool = 
                     if match:
                         locations_checked_val = int(match.group(1))
 
-                # Look for "Manually-checkable locations: X"
-                if 'manually-checkable locations' in message.lower():
+                # Look for "Total locations: X"
+                if 'total locations:' in message.lower():
+                    match = re.search(r'total locations:\s*(\d+)', message, re.IGNORECASE)
+                    if match:
+                        total_locations_val = int(match.group(1))
+
+                # Look for "Manually-checkable locations: X" (total)
+                if 'manually-checkable locations:' in message.lower() and 'checked' not in message.lower():
                     match = re.search(r'manually-checkable locations:\s*(\d+)', message, re.IGNORECASE)
                     if match:
                         manually_checkable_val = int(match.group(1))
 
+                # Look for "Manually-checkable locations checked: X"
+                if 'manually-checkable locations checked:' in message.lower():
+                    match = re.search(r'manually-checkable locations checked:\s*(\d+)', message, re.IGNORECASE)
+                    if match:
+                        manually_checkable_checked_val = int(match.group(1))
+
+                # Look for "Event locations: X" (total)
+                if 'event locations:' in message.lower() and 'checked' not in message.lower():
+                    match = re.search(r'event locations:\s*(\d+)', message, re.IGNORECASE)
+                    if match:
+                        event_locations_val = int(match.group(1))
+
+                # Look for "Event locations checked: X"
+                if 'event locations checked:' in message.lower():
+                    match = re.search(r'event locations checked:\s*(\d+)', message, re.IGNORECASE)
+                    if match:
+                        event_locations_checked_val = int(match.group(1))
+
             result['client1_locations_checked'] = locations_checked_val
+            result['client1_total_locations'] = total_locations_val
             result['client1_manually_checkable'] = manually_checkable_val
+            result['client1_manually_checkable_checked'] = manually_checkable_checked_val
+            result['client1_event_locations'] = event_locations_val
+            result['client1_event_locations_checked'] = event_locations_checked_val
 
         # Parse Client 2 results if available
         if client2_files:
