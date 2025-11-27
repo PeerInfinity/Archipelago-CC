@@ -594,6 +594,7 @@ def parse_multiclient_test_results(test_results_dir: str, single_client: bool = 
                 logs2 = test_details2[0].get('logs', [])
                 expecting_val = 0
                 final_state_val = 0
+                last_received_val = 0
 
                 for log_entry in logs2:
                     message = log_entry.get('message', '')
@@ -604,6 +605,12 @@ def parse_multiclient_test_results(test_results_dir: str, single_client: bool = 
                         if match:
                             expecting_val = int(match.group(1))
 
+                    # Look for "Received X/Y location checks" progress messages
+                    if 'received' in message.lower() and 'location checks' in message.lower():
+                        match = re.search(r'received\s+(\d+)/\d+\s+location', message, re.IGNORECASE)
+                        if match:
+                            last_received_val = int(match.group(1))
+
                     # Look for "Final state: X locations marked as checked"
                     if 'final state' in message.lower() and 'locations marked as checked' in message.lower():
                         match = re.search(r'(\d+)\s+locations?\s+marked', message)
@@ -611,7 +618,8 @@ def parse_multiclient_test_results(test_results_dir: str, single_client: bool = 
                             final_state_val = int(match.group(1))
 
                 result['client2_total_locations'] = expecting_val
-                result['client2_locations_received'] = final_state_val
+                # Use final_state_val if available, otherwise fall back to last progress message
+                result['client2_locations_received'] = final_state_val if final_state_val > 0 else last_received_val
 
         # Test passes if:
         # - In single-client mode: Client 1 passed and checked all locations
