@@ -227,6 +227,22 @@ export class EventProcessor {
             if (this.verboseMode) {
               this.logCallback('debug', 'Full state cleared for sphere 0 (inventory, prog_items, and event items).');
             }
+
+            // Re-add starting items (precollected items) after clearing state
+            // These are items the player starts with (e.g., keycards when Keysanity is disabled in SMZ3)
+            const startingItems = staticData?.starting_items?.[this.playerIdKey] || [];
+            if (startingItems.length > 0) {
+              this.logCallback('info', `Adding ${startingItems.length} starting items to inventory...`);
+              for (const itemName of startingItems) {
+                await stateManager.addItemToInventory(itemName, 1);
+                if (this.verboseMode) {
+                  this.logCallback('debug', `  Added starting item: ${itemName}`);
+                }
+              }
+              // Wait for state to stabilize after adding starting items
+              await stateManager.pingWorker('sphere_0_starting_items_added', 10000);
+              this.logCallback('info', 'Starting items added successfully.');
+            }
           } else {
             if (this.verboseMode) {
               this.logCallback('debug', `Keeping accumulated state for sphere ${context.sphere_number}.`);

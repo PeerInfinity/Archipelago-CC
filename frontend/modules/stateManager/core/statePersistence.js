@@ -687,6 +687,8 @@ export function getStaticGameData(sm) {
     // Game-specific information
     game_info: sm.gameInfo,
     settings: sm.rules?.settings,
+    // Starting items (precollected items)
+    starting_items: sm.rules?.starting_items,
     // ID mappings
     locationNameToId: sm.locationNameToId,
     itemNameToId: sm.itemNameToId,
