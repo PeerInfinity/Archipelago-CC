@@ -248,83 +248,94 @@ export async function timerSendTest(testController) {
 
     testController.reportCondition('Timer completed all checks', true);
 
-    // Multi-pass timer runs to handle locations that become reachable after event propagation
-    // The timer might stop before all regions become reachable (via event auto-collection)
-    const maxTimerPasses = 5;
-    let timerPassCount = 1;
+    // Check if multi-pass timer is enabled for this game
+    const useMultipassTimer = staticData?.settings?.use_multipass_timer === true;
 
-    while (timerPassCount <= maxTimerPasses) {
-      testController.log(`Timer pass ${timerPassCount}: Forcing reachability recalculation cycles...`);
+    if (useMultipassTimer) {
+      // Multi-pass timer runs to handle locations that become reachable after event propagation
+      // The timer might stop before all regions become reachable (via event auto-collection)
+      const maxTimerPasses = 5;
+      let timerPassCount = 1;
 
-      // Force multiple reachability recalculation cycles to propagate events
-      const maxCycles = 20;
-      let previousCheckedCount = 0;
-      let stableCount = 0;
+      while (timerPassCount <= maxTimerPasses) {
+        testController.log(`Timer pass ${timerPassCount}: Forcing reachability recalculation cycles...`);
 
-      for (let cycle = 1; cycle <= maxCycles; cycle++) {
-        await stateManager.recalculateAccessibility();
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // Force multiple reachability recalculation cycles to propagate events
+        const maxCycles = 20;
+        let previousCheckedCount = 0;
+        let stableCount = 0;
 
-        const snapshot = stateManager.getSnapshot();
-        const currentCheckedCount = snapshot?.checkedLocations?.length || 0;
+        for (let cycle = 1; cycle <= maxCycles; cycle++) {
+          await stateManager.recalculateAccessibility();
+          await new Promise(resolve => setTimeout(resolve, 500));
 
-        if (currentCheckedCount === previousCheckedCount) {
-          stableCount++;
-          if (stableCount >= 3) {
-            testController.log(`Pass ${timerPassCount} Cycle ${cycle}: ${currentCheckedCount} locations checked - stable`);
-            break;
+          const snapshot = stateManager.getSnapshot();
+          const currentCheckedCount = snapshot?.checkedLocations?.length || 0;
+
+          if (currentCheckedCount === previousCheckedCount) {
+            stableCount++;
+            if (stableCount >= 3) {
+              testController.log(`Pass ${timerPassCount} Cycle ${cycle}: ${currentCheckedCount} locations checked - stable`);
+              break;
+            }
+          } else {
+            stableCount = 0;
+            previousCheckedCount = currentCheckedCount;
+            testController.log(`Pass ${timerPassCount} Cycle ${cycle}: ${currentCheckedCount} locations checked`);
           }
-        } else {
-          stableCount = 0;
-          previousCheckedCount = currentCheckedCount;
-          testController.log(`Pass ${timerPassCount} Cycle ${cycle}: ${currentCheckedCount} locations checked`);
+        }
+
+        // Check if there are unchecked manually-checkable locations that are now accessible
+        const currentSnapshot = stateManager.getSnapshot();
+        const checkedSet = new Set(currentSnapshot?.checkedLocations || []);
+        const locationsArray = Array.from(staticData.locations.values());
+        const manualLocations = locationsArray.filter(loc => loc.id !== null && loc.id !== undefined);
+        const uncheckedManual = manualLocations.filter(loc => !checkedSet.has(loc.name));
+
+        // Check if any unchecked manual locations are now accessible (region is reachable)
+        const regionReach = currentSnapshot?.regionReachability || {};
+        const newlyAccessible = uncheckedManual.filter(loc =>
+          regionReach[loc.region] === 'reachable'
+        );
+
+        testController.log(`Pass ${timerPassCount}: ${uncheckedManual.length} unchecked manual, ${newlyAccessible.length} newly accessible`);
+
+        if (newlyAccessible.length === 0) {
+          testController.log(`No more newly accessible locations. Event propagation complete.`);
+          break;
+        }
+
+        // Restart timer to check newly accessible locations
+        testController.log(`Restarting timer to check ${newlyAccessible.length} newly accessible locations...`);
+        timerPassCount++;
+
+        // Re-run timer check
+        timerLogic.begin();
+
+        // Wait for timer to stop again
+        timerStopped = false;
+        const unsubStopPass = testController.eventBus.subscribe('timer:stopped', () => {
+          timerStopped = true;
+        }, 'tests');
+
+        const passTimeout = Date.now() + 60000;  // 60 second timeout for each pass
+        while (!timerStopped && Date.now() < passTimeout) {
+          await new Promise(resolve => setTimeout(resolve, 200));
+        }
+
+        unsubStopPass();
+
+        if (!timerStopped) {
+          testController.log(`Timer pass ${timerPassCount} timed out`);
+          break;
         }
       }
-
-      // Check if there are unchecked manually-checkable locations that are now accessible
-      const currentSnapshot = stateManager.getSnapshot();
-      const checkedSet = new Set(currentSnapshot?.checkedLocations || []);
-      const locationsArray = Array.from(staticData.locations.values());
-      const manualLocations = locationsArray.filter(loc => loc.id !== null && loc.id !== undefined);
-      const uncheckedManual = manualLocations.filter(loc => !checkedSet.has(loc.name));
-
-      // Check if any unchecked manual locations are now accessible (region is reachable)
-      const regionReach = currentSnapshot?.regionReachability || {};
-      const newlyAccessible = uncheckedManual.filter(loc =>
-        regionReach[loc.region] === 'reachable'
-      );
-
-      testController.log(`Pass ${timerPassCount}: ${uncheckedManual.length} unchecked manual, ${newlyAccessible.length} newly accessible`);
-
-      if (newlyAccessible.length === 0) {
-        testController.log(`No more newly accessible locations. Event propagation complete.`);
-        break;
-      }
-
-      // Restart timer to check newly accessible locations
-      testController.log(`Restarting timer to check ${newlyAccessible.length} newly accessible locations...`);
-      timerPassCount++;
-
-      // Re-run timer check
-      timerLogic.begin();
-
-      // Wait for timer to stop again
-      timerStopped = false;
-      const unsubStopPass = testController.eventBus.subscribe('timer:stopped', () => {
-        timerStopped = true;
-      }, 'tests');
-
-      const passTimeout = Date.now() + 60000;  // 60 second timeout for each pass
-      while (!timerStopped && Date.now() < passTimeout) {
-        await new Promise(resolve => setTimeout(resolve, 200));
-      }
-
-      unsubStopPass();
-
-      if (!timerStopped) {
-        testController.log(`Timer pass ${timerPassCount} timed out`);
-        break;
-      }
+    } else {
+      // Simple wait for final ping and recalculation to complete
+      // The timer does a final ping after stopping to catch event locations
+      // This can take up to ~1 second (500ms for pingWorker + 500ms for propagation)
+      testController.log('Waiting for final recalculation to complete...');
+      await new Promise(resolve => setTimeout(resolve, 1500));
     }
 
     // Verify that locations were actually checked
