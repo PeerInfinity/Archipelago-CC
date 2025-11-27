@@ -197,6 +197,10 @@ class PokemonRBGameExportHandler(BaseGameExportHandler):
                     else:
                         settings_dict[option_name] = option_value
 
+        # Enable multi-pass timer for tests - Pokemon RB has event locations
+        # that become reachable only after other events propagate
+        settings_dict['use_multipass_timer'] = True
+
         return settings_dict
 
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:

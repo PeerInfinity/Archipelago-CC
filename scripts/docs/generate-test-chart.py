@@ -125,11 +125,12 @@ def extract_spoiler_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, 
     return chart_data
 
 
-def extract_multiclient_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, int, int, int, int, int, int, int, bool, bool, bool]]:
+def extract_multiclient_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, int, int, int, int, int, int, int, int, int, bool, int, int, bool, bool, bool]]:
     """
     Extract multiclient test chart data from results.
     Returns list of tuples: (game_name, pass_fail, gen_error_count,
-                            client1_checked, client1_manually_checkable, client1_passed,
+                            client1_checked, client1_total, client1_manually_checkable, client1_manually_checkable_checked,
+                            client1_event_locations, client1_event_locations_checked, client1_passed,
                             client2_received, client2_total, client2_passed,
                             has_custom_exporter, has_custom_game_logic)
     """
@@ -160,7 +161,11 @@ def extract_multiclient_chart_data(results: Dict[str, Any]) -> List[Tuple[str, s
 
             # Extract new client-specific fields
             client1_checked = multiclient_test.get('client1_locations_checked', 0)
+            client1_total = multiclient_test.get('client1_total_locations', 0)
             client1_manually_checkable = multiclient_test.get('client1_manually_checkable', 0)
+            client1_manually_checkable_checked = multiclient_test.get('client1_manually_checkable_checked', 0)
+            client1_event_locations = multiclient_test.get('client1_event_locations', 0)
+            client1_event_locations_checked = multiclient_test.get('client1_event_locations_checked', 0)
             client1_passed = multiclient_test.get('client1_passed', False)
 
             client2_received = multiclient_test.get('client2_locations_received', 0)
@@ -173,7 +178,8 @@ def extract_multiclient_chart_data(results: Dict[str, Any]) -> List[Tuple[str, s
                 pass_fail = 'Failed'
 
             chart_data.append((game_name, pass_fail, gen_error_count,
-                             client1_checked, client1_manually_checkable, client1_passed,
+                             client1_checked, client1_total, client1_manually_checkable, client1_manually_checkable_checked,
+                             client1_event_locations, client1_event_locations_checked, client1_passed,
                              client2_received, client2_total, client2_passed,
                              has_custom_exporter, has_custom_game_logic))
     else:
@@ -191,7 +197,11 @@ def extract_multiclient_chart_data(results: Dict[str, Any]) -> List[Tuple[str, s
 
             # Extract new client-specific fields (with fallback to legacy fields)
             client1_checked = multiclient_test.get('client1_locations_checked', 0)
+            client1_total = multiclient_test.get('client1_total_locations', 0)
             client1_manually_checkable = multiclient_test.get('client1_manually_checkable', 0)
+            client1_manually_checkable_checked = multiclient_test.get('client1_manually_checkable_checked', 0)
+            client1_event_locations = multiclient_test.get('client1_event_locations', 0)
+            client1_event_locations_checked = multiclient_test.get('client1_event_locations_checked', 0)
             client1_passed = multiclient_test.get('client1_passed', False)
 
             client2_received = multiclient_test.get('client2_locations_received',
@@ -206,7 +216,8 @@ def extract_multiclient_chart_data(results: Dict[str, Any]) -> List[Tuple[str, s
                 pass_fail = 'Failed'
 
             chart_data.append((game_name, pass_fail, gen_error_count,
-                             client1_checked, client1_manually_checkable, client1_passed,
+                             client1_checked, client1_total, client1_manually_checkable, client1_manually_checkable_checked,
+                             client1_event_locations, client1_event_locations_checked, client1_passed,
                              client2_received, client2_total, client2_passed,
                              has_custom_exporter, has_custom_game_logic))
 
@@ -333,7 +344,7 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
     return md_content
 
 
-def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int, bool, int, int, bool, bool, bool]],
+def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int, int, int, int, int, bool, int, int, bool, bool, bool]],
                                  metadata: Dict[str, Any], top_level_metadata: Optional[Dict[str, Any]] = None) -> str:
     """Generate a markdown table for multiclient test data."""
     md_content = "# Archipelago Template Test Results Chart\n\n"
@@ -372,11 +383,12 @@ def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int
         md_content += f"- **Failed:** {total_games - passed} ({(total_games-passed)/total_games*100:.1f}%)\n\n"
 
     md_content += "## Test Results\n\n"
-    md_content += "| Game Name | Test Result | Gen Errors | Client 1 Status | C1 Checked | C1 Checkable | Client 2 Status | C2 Received | C2 Total | Custom Exporter | Custom GameLogic |\n"
-    md_content += "|-----------|-------------|------------|-----------------|------------|--------------|-----------------|-------------|----------|-----------------|------------------|\n"
+    md_content += "| Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Custom Exporter | Custom GameLogic |\n"
+    md_content += "|-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|-----------------|------------------|\n"
 
     for (game_name, pass_fail, gen_error_count,
-         client1_checked, client1_manually_checkable, client1_passed,
+         client1_checked, client1_total, client1_manually_checkable, client1_manually_checkable_checked,
+         client1_event_locations, client1_event_locations_checked, client1_passed,
          client2_received, client2_total, client2_passed,
          has_custom_exporter, has_custom_game_logic) in chart_data:
 
@@ -386,7 +398,13 @@ def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int
         exporter_indicator = "✅" if has_custom_exporter else "⚫"
         game_logic_indicator = "✅" if has_custom_game_logic else "⚫"
 
-        md_content += f"| {game_name} | {result_display} | {gen_error_count} | {client1_status} | {client1_checked} | {client1_manually_checkable} | {client2_status} | {client2_received} | {client2_total} | {exporter_indicator} | {game_logic_indicator} |\n"
+        # Format location counts as "checked/total"
+        c1_total_str = f"{client1_checked}/{client1_total}"
+        c1_nonevent_str = f"{client1_manually_checkable_checked}/{client1_manually_checkable}"
+        c1_event_str = f"{client1_event_locations_checked}/{client1_event_locations}"
+        c2_locations_str = f"{client2_received}/{client2_total}"
+
+        md_content += f"| {game_name} | {result_display} | {gen_error_count} | {client1_status} | {c1_total_str} | {c1_nonevent_str} | {c1_event_str} | {client2_status} | {c2_locations_str} | {exporter_indicator} | {game_logic_indicator} |\n"
 
     if not chart_data:
         md_content += "| No data available | - | - | - | - | - | - | - | - | - | - |\n"
@@ -394,12 +412,12 @@ def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int
     md_content += "\n## Notes\n\n"
     md_content += "- **Gen Errors:** Number of errors during world generation\n"
     md_content += "- **Client 1 (Send Test):** Tests sending location checks from Client 1\n"
-    md_content += "  - **C1 Checked:** Total locations checked by Client 1 (includes auto-checked events with id=0)\n"
-    md_content += "  - **C1 Checkable:** Manually-checkable locations (excludes auto-checked events with id=0)\n"
+    md_content += "  - **C1 Total:** Total locations checked / total locations (checked/total)\n"
+    md_content += "  - **C1 Non-event:** Non-event locations checked / total non-event locations (manually-checkable)\n"
+    md_content += "  - **C1 Event:** Event locations checked / total event locations (auto-checked)\n"
     md_content += "  - Client 1 passes if all manually-checkable locations are checked\n"
     md_content += "- **Client 2 (Receive Test):** Tests receiving location checks at Client 2\n"
-    md_content += "  - **C2 Received:** Number of location checks received by Client 2\n"
-    md_content += "  - **C2 Total:** Total locations expected to be received (includes all events)\n"
+    md_content += "  - **C2 Locations:** Locations received / total expected (received/total)\n"
     md_content += "  - Client 2 passes if all expected locations are received\n"
     md_content += "- **Custom Exporter:** ✅ Has custom Python exporter script, ⚫ Uses generic exporter\n"
     md_content += "- **Custom GameLogic:** ✅ Has custom JavaScript game logic, ⚫ Uses generic logic\n\n"

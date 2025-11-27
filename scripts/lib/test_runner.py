@@ -332,7 +332,11 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
             'client1_passed': test_results['client1_passed'],
             'client2_passed': test_results['client2_passed'],
             'client1_locations_checked': test_results['client1_locations_checked'],
+            'client1_total_locations': test_results['client1_total_locations'],
             'client1_manually_checkable': test_results['client1_manually_checkable'],
+            'client1_manually_checkable_checked': test_results['client1_manually_checkable_checked'],
+            'client1_event_locations': test_results['client1_event_locations'],
+            'client1_event_locations_checked': test_results['client1_event_locations_checked'],
             'client2_locations_received': test_results['client2_locations_received'],
             'client2_total_locations': test_results['client2_total_locations'],
             'single_client_mode': test_results.get('single_client_mode', False),
@@ -457,10 +461,15 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         }
 
     if multiclient:
+        mc = result['multiclient_test']
+        # Show three-way breakdown: Total, Non-event, Event
+        total_str = f"{mc['client1_locations_checked']}/{mc['client1_total_locations']}"
+        nonevent_str = f"{mc['client1_manually_checkable_checked']}/{mc['client1_manually_checkable']}"
+        event_str = f"{mc['client1_event_locations_checked']}/{mc['client1_event_locations']}"
         print(f"Completed {template_filename}: Generation={'[PASS]' if result['generation']['success'] else '[FAIL]'}, "
-              f"Test={'[PASS]' if result['multiclient_test']['success'] else '[FAIL]'}, "
+              f"Test={'[PASS]' if mc['success'] else '[FAIL]'}, "
               f"Gen Errors={result['generation']['error_count']}, "
-              f"Locations Checked={result['multiclient_test']['locations_checked']}/{result['multiclient_test']['total_locations']}")
+              f"Locations: Total={total_str}, Non-event={nonevent_str}, Event={event_str}")
     else:
         print(f"Completed {template_filename}: Generation={'[PASS]' if result['generation']['success'] else '[FAIL]'}, "
               f"Test={'[PASS]' if result['spoiler_test']['pass_fail'] == 'passed' else '[FAIL]'}, "

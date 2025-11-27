@@ -248,21 +248,21 @@ export async function timerSendTest(testController) {
 
     testController.reportCondition('Timer completed all checks', true);
 
-    // Multi-pass timer runs to handle locations that become reachable after event propagation
+    // Multi-pass timer logic to handle locations that become reachable after event propagation
     // The timer might stop before all regions become reachable (via event auto-collection)
+    // This is needed for games like Pokemon RB with complex event dependency chains
     const maxTimerPasses = 5;
     let timerPassCount = 1;
 
     while (timerPassCount <= maxTimerPasses) {
-      testController.log(`Timer pass ${timerPassCount}: Forcing reachability recalculation cycles...`);
+      testController.log(`Timer pass ${timerPassCount}: Waiting for event propagation to stabilize...`);
 
-      // Force multiple reachability recalculation cycles to propagate events
+      // Wait for location checks to stabilize
       const maxCycles = 20;
       let previousCheckedCount = 0;
       let stableCount = 0;
 
       for (let cycle = 1; cycle <= maxCycles; cycle++) {
-        await stateManager.recalculateAccessibility();
         await new Promise(resolve => setTimeout(resolve, 500));
 
         const snapshot = stateManager.getSnapshot();
@@ -341,24 +341,39 @@ export async function timerSendTest(testController) {
       // staticData.locations is always a Map after initialization
       const locationsArray = Array.from(staticData.locations.values());
 
+      // Count total locations
+      const totalLocations = locationsArray.length;
+
       // Count manually-checkable locations (those with IDs > 0)
-      // Locations with id=0 are events that get checked automatically, not by the timer
+      // Locations with id=null are events that get checked automatically, not by the timer
       const manuallyCheckableLocations = locationsArray.filter(
         loc => loc.id !== null && loc.id !== undefined && loc.id !== 0
       );
       const totalManuallyCheckable = manuallyCheckableLocations.length;
-      const totalLocations = locationsArray.length; // All locations including events
+
+      // Count event locations (those with id=null)
+      const eventLocations = locationsArray.filter(
+        loc => loc.id === null || loc.id === undefined || loc.id === 0
+      );
+      const totalEventLocations = eventLocations.length;
+
+      // Count how many of each type were checked
+      const checkedSet = new Set(finalSnapshot.checkedLocations || []);
+      const checkedManualLocations = manuallyCheckableLocations.filter(
+        loc => checkedSet.has(loc.name)
+      ).length;
+      const checkedEventLocations = eventLocations.filter(
+        loc => checkedSet.has(loc.name)
+      ).length;
 
       testController.log(`Final result: ${checkedCount} locations checked`);
+      testController.log(`Total locations: ${totalLocations}`);
       testController.log(`Manually-checkable locations: ${totalManuallyCheckable}`);
-      testController.log(`Total locations (including events): ${totalLocations}`);
+      testController.log(`Manually-checkable locations checked: ${checkedManualLocations}`);
+      testController.log(`Event locations: ${totalEventLocations}`);
+      testController.log(`Event locations checked: ${checkedEventLocations}`);
 
       // Diagnostic: Log unchecked event locations
-      const checkedSet = new Set(finalSnapshot.checkedLocations || []);
-      // Event locations are those with id=null (auto-collected, not manually checked)
-      const eventLocations = locationsArray.filter(loc =>
-        loc.id === null || loc.id === undefined
-      );
       const uncheckedEvents = eventLocations.filter(loc => !checkedSet.has(loc.name));
 
       if (uncheckedEvents.length > 0) {
