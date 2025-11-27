@@ -4,13 +4,13 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-27 03:52:52
+**Generated:** 2025-11-27 08:13:55
 
 ## Summary
 
-- **Total Games:** 69
-- **Passed:** 65 (94.2%)
-- **Failed:** 4 (5.8%)
+- **Total Games:** 76
+- **Passed:** 74 (97.4%)
+- **Failed:** 2 (2.6%)
 
 ## Test Results
 
@@ -22,6 +22,7 @@
 | Adventure | ✅ Passed | 0 | ✅ | 25 | 24 | ✅ | 25 | 25 | ✅ | ⚫ |
 | Aquaria | ✅ Passed | 0 | ✅ | 237 | 218 | ✅ | 237 | 237 | ✅ | ✅ |
 | ArchipIDLE | ✅ Passed | 0 | ✅ | 200 | 200 | ✅ | 200 | 200 | ✅ | ✅ |
+| Blasphemous | ✅ Passed | 0 | ✅ | 305 | 304 | ✅ | 305 | 305 | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | 0 | ✅ | 252 | 247 | ✅ | 252 | 252 | ✅ | ⚫ |
 | Bumper Stickers | ✅ Passed | 0 | ✅ | 100 | 100 | ✅ | 100 | 100 | ✅ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed | 0 | ✅ | 125 | 124 | ✅ | 125 | 125 | ✅ | ✅ |
@@ -31,6 +32,7 @@
 | ChocolateChipCookies | ✅ Passed | 0 | ✅ | 16 | 15 | ✅ | 16 | 16 | ✅ | ⚫ |
 | Civilization VI | ✅ Passed | 0 | ✅ | 149 | 148 | ✅ | 149 | 149 | ✅ | ⚫ |
 | DLCQuest | ✅ Passed | 0 | ✅ | 42 | 29 | ✅ | 42 | 42 | ✅ | ✅ |
+| DOOM 1993 | ✅ Passed | 0 | ✅ | 348 | 348 | ✅ | 348 | 348 | ✅ | ⚫ |
 | DOOM II | ✅ Passed | 0 | ✅ | 453 | 453 | ✅ | 453 | 453 | ✅ | ⚫ |
 | Dark Souls III | ✅ Passed | 0 | ✅ | 100 | 100 | ✅ | 100 | 100 | ✅ | ⚫ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | ✅ | 180 | 180 | ✅ | 180 | 180 | ✅ | ⚫ |
@@ -40,6 +42,7 @@
 | Heretic | ✅ Passed | 0 | ✅ | 502 | 502 | ✅ | 502 | 502 | ⚫ | ⚫ |
 | Hylics 2 | ✅ Passed | 0 | ✅ | 134 | 133 | ✅ | 134 | 134 | ✅ | ✅ |
 | Inscryption | ✅ Passed | 0 | ✅ | 100 | 100 | ✅ | 100 | 100 | ✅ | ✅ |
+| Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | ✅ | 239 | 239 | ✅ | 239 | 239 | ✅ | ✅ |
 | Kingdom Hearts | ✅ Passed | 0 | ✅ | 440 | 440 | ✅ | 440 | 440 | ✅ | ✅ |
 | Kingdom Hearts 2 | ✅ Passed | 0 | ✅ | 705 | 643 | ✅ | 705 | 705 | ✅ | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | ✅ | 567 | 65 | ✅ | 567 | 567 | ✅ | ✅ |
@@ -49,6 +52,7 @@
 | Lufia II Ancient Cave | ✅ Passed | 0 | ✅ | 40 | 35 | ✅ | 40 | 40 | ⚫ | ⚫ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | ✅ | 557 | 556 | ✅ | 557 | 557 | ✅ | ✅ |
 | MathProof2p2e4 | ✅ Passed | 0 | ✅ | 11 | 10 | ✅ | 11 | 11 | ⚫ | ⚫ |
+| Mega Man 2 | ✅ Passed | 0 | ✅ | 50 | 44 | ✅ | 50 | 50 | ✅ | ✅ |
 | MegaMan Battle Network 3 | ✅ Passed | 0 | ✅ | 264 | 263 | ✅ | 264 | 264 | ✅ | ✅ |
 | Meritous | ✅ Passed | 0 | ✅ | 109 | 104 | ✅ | 109 | 109 | ⚫ | ⚫ |
 | Metamath | ✅ Passed | 0 | ✅ | 9 | 9 | ✅ | 9 | 9 | ✅ | ⚫ |
@@ -57,7 +61,8 @@
 | Old School Runescape | ✅ Passed | 0 | ✅ | 76 | 76 | ✅ | 76 | 76 | ✅ | ✅ |
 | Overcooked! 2 | ✅ Passed | 0 | ✅ | 215 | 43 | ✅ | 215 | 215 | ✅ | ✅ |
 | Paint | ✅ Passed | 0 | ✅ | 130 | 130 | ✅ | 130 | 130 | ✅ | ✅ |
-| Pokemon Emerald | ❌ Failed | 0 | ❌ | 669 | 203 | ❌ | 0 | 1061 | ✅ | ✅ |
+| Pokemon Emerald | ✅ Passed | 0 | ✅ | 1061 | 203 | ✅ | 1061 | 1061 | ✅ | ✅ |
+| Pokemon Red and Blue | ❌ Failed | 0 | ❌ | 505 | 161 | ❌ | 0 | 1010 | ✅ | ✅ |
 | Raft | ✅ Passed | 0 | ✅ | 155 | 154 | ✅ | 155 | 155 | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | ✅ | 223 | 221 | ✅ | 223 | 223 | ⚫ | ⚫ |
 | SMZ3 | ❌ Failed | 0 | ❌ | 238 | 316 | ❌ | 0 | 316 | ✅ | ✅ |
@@ -65,10 +70,11 @@
 | Secret of Evermore | ✅ Passed | 0 | ✅ | 340 | 339 | ✅ | 340 | 340 | ✅ | ✅ |
 | Shivers | ✅ Passed | 0 | ✅ | 114 | 76 | ✅ | 114 | 114 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | ✅ | 207 | 206 | ✅ | 207 | 207 | ✅ | ⚫ |
-| Starcraft 2 | ✅ Passed | 0 | ✅ | 130 | 130 | ✅ | 130 | 130 | ✅ | ✅ |
-| Stardew Valley | ❌ Failed | 0 | ❌ | 669 | 203 | ❌ | 0 | 1061 | ✅ | ⚫ |
+| Starcraft 2 | ✅ Passed | 0 | ✅ | 746 | 663 | ✅ | 746 | 746 | ✅ | ✅ |
+| Stardew Valley | ✅ Passed | 0 | ✅ | 500 | 491 | ✅ | 500 | 500 | ✅ | ⚫ |
+| Subnautica | ✅ Passed | 0 | ✅ | 135 | 131 | ✅ | 135 | 135 | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | ✅ | 149 | 149 | ✅ | 149 | 149 | ✅ | ✅ |
-| Super Mario Land 2 | ❌ Failed | 0 | ❌ | 53 | 59 | ❌ | 0 | 60 | ✅ | ✅ |
+| Super Mario Land 2 | ✅ Passed | 0 | ✅ | 60 | 59 | ✅ | 60 | 60 | ✅ | ✅ |
 | Super Mario World | ✅ Passed | 0 | ✅ | 108 | 108 | ✅ | 108 | 108 | ✅ | ⚫ |
 | Super Metroid | ✅ Passed | 0 | ✅ | 109 | 101 | ✅ | 109 | 109 | ✅ | ✅ |
 | TUNIC | ✅ Passed | 0 | ✅ | 303 | 302 | ✅ | 303 | 303 | ✅ | ⚫ |
@@ -76,6 +82,7 @@
 | The Legend of Zelda | ✅ Passed | 0 | ✅ | 165 | 155 | ✅ | 165 | 165 | ✅ | ✅ |
 | The Messenger | ✅ Passed | 0 | ✅ | 113 | 106 | ✅ | 113 | 113 | ✅ | ✅ |
 | The Wind Waker | ✅ Passed | 0 | ✅ | 109 | 108 | ✅ | 109 | 109 | ✅ | ✅ |
+| The Witness | ✅ Passed | 0 | ✅ | 147 | 132 | ✅ | 147 | 147 | ✅ | ✅ |
 | Timespinner | ✅ Passed | 0 | ✅ | 185 | 180 | ✅ | 185 | 185 | ✅ | ✅ |
 | Undertale | ✅ Passed | 0 | ✅ | 51 | 48 | ✅ | 51 | 51 | ✅ | ⚫ |
 | VVVVVV | ✅ Passed | 0 | ✅ | 20 | 20 | ✅ | 20 | 20 | ✅ | ✅ |

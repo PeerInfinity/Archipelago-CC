@@ -4,11 +4,11 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-27 03:52:52
+**Generated:** 2025-11-27 08:13:55
 
-**Source Data Created:** 2025-11-27T01:18:56.956590
+**Source Data Created:** 2025-11-27T05:25:21.422010
 
-**Source Data Last Updated:** 2025-11-27T01:18:56.956596
+**Source Data Last Updated:** 2025-11-27T05:25:21.422018
 
 ## Summary
 
@@ -82,7 +82,7 @@
 | Super Mario 64 | ✅ Passed seeds 1-10 | 0 | 5.4 | 5.4 | 🟢 Complete | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
 | Super Mario World | ✅ Passed seeds 1-10 | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ⚫ |
-| Super Metroid | ❌ Failed seed 7 | 0 | 5.8 | 9.2 | 🟡 63.0% | ✅ | ✅ |
+| Super Metroid | ❌ Failed seed 8 | 0 | 2.1 | 11.1 | 🟡 18.9% | ✅ | ✅ |
 | TUNIC | ✅ Passed seeds 1-10 | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ⚫ |
 | Terraria | ✅ Passed seeds 1-10 | 0 | 9.5 | 9.5 | 🟢 Complete | ✅ | ✅ |
 | The Legend of Zelda | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
