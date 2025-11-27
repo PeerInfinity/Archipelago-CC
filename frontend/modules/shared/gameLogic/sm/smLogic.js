@@ -772,14 +772,44 @@ export function enoughStuffsPhantoon(snapshot, staticData) {
 }
 
 export function enoughStuffsRidley(snapshot, staticData) {
-  // Ridley boss - tougher, needs Morph or Screw Attack + good weapons
-  return wand(snapshot, staticData,
-    wor(snapshot, staticData,
-      haveItem(snapshot, staticData, 'Morph'),
-      haveItem(snapshot, staticData, 'ScrewAttack')),
-    wor(snapshot, staticData,
-      haveItem(snapshot, staticData, 'Super'),
-      haveItem(snapshot, staticData, 'Charge')));
+  // Ridley has 18000 HP and gives NO drops (givesDrops=False)
+  // Python: canInflictEnoughDamages(18000, doubleSuper=True, power=True, givesDrops=False)
+  //
+  // Must have Morph OR ScrewAttack to fight
+  const canFight = wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Morph'),
+    haveItem(snapshot, staticData, 'ScrewAttack'));
+  if (!canFight.bool) {
+    return { bool: false, difficulty: 0 };
+  }
+
+  // With Charge Beam, we have infinite damage potential (charged shots)
+  const hasCharge = haveItem(snapshot, staticData, 'Charge');
+  if (hasCharge.bool) {
+    return { bool: true, difficulty: hasCharge.difficulty || 0 };
+  }
+
+  // Without Charge, need enough ammo to deal 18000 damage
+  // Damage values (with doubleSuper=True):
+  // - Missile: 100 damage each, 5 per pack = 500 damage per pack
+  // - Super Missile: 600 damage each (doubled for Ridley), 5 per pack = 3000 damage per pack
+  // - Power Bomb: 200 damage each, 5 per pack = 1000 damage per pack
+  const missileCount = count(snapshot, staticData, 'Missile');
+  const superCount = count(snapshot, staticData, 'Super');
+  const powerBombCount = count(snapshot, staticData, 'Power Bomb');
+
+  const missileDamage = missileCount * 5 * 100;       // 500 per pack
+  const superDamage = superCount * 5 * 600;           // 3000 per pack (doubleSuper)
+  const powerDamage = powerBombCount * 5 * 200;       // 1000 per pack
+  const totalDamage = missileDamage + superDamage + powerDamage;
+
+  // Need 18000 damage to defeat Ridley
+  if (totalDamage >= 18000) {
+    return { bool: true, difficulty: 0 };
+  }
+
+  // Not enough damage
+  return { bool: false, difficulty: 0 };
 }
 
 export function enoughStuffCroc(snapshot, staticData) {
