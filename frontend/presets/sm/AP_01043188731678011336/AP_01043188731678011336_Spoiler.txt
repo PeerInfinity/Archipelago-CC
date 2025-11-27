@@ -1,0 +1,840 @@
+﻿Archipelago Version 0.6.4  -  Seed: 2
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Super Metroid
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+StartItems Removes From Item Pool:No
+Preset:                          Regular
+Maximum Difficulty:              Hardcore
+Start Location:                  Landing Site
+Remote Items:                    No
+Death Link:                      Disable
+Morph Placement:                 Early
+Hide half the items:             No
+Strict Minors:                   No
+Missile Quantity:                30
+Super Quantity:                  20
+Power Bomb Quantity:             10
+Minor Quantity:                  100
+Energy Quantity:                 Vanilla
+Area Randomization:              Off
+Area Layout:                     No
+Doors Colors Rando:              No
+Allow Grey Doors:                No
+Boss Randomization:              No
+Randomize the escape sequence:   No
+Remove enemies during escape:    No
+Fun Combat:                      No
+Fun Movement:                    No
+Fun Suits:                       No
+Layout Patches:                  Yes
+Varia Tweaks:                    No
+Nerfed Charge:                   No
+Gravity Behaviour:               Balanced
+Elevators speed:                 Yes
+Doors speed:                     Yes
+Spin Jump Restart:               No
+Momentum conservation (a.k.a. Speedkeep):No
+Infinite Space Jump:             No
+Refill Before Save:              No
+Hud:                             No
+Animals:                         No
+No Music:                        No
+Random Music:                    No
+Custom Preset:                   controller: {}, knows: {}, settings: {}
+Varia Custom Preset:             
+Endgame behavior with Tourian:   Vanilla
+Custom objectives:               No
+Custom objective list:           random
+Custom objective count:          4
+Objectives:                      kill all G4
+Relaxed round robin Crystal Flash:No
+
+
+Locations:
+
+Energy Tank, Gauntlet: Missile
+Bomb: Missile
+Energy Tank, Terminator: Super Missile
+Reserve Tank, Brinstar: Missile
+Charge Beam: Super Missile
+Morphing Ball: Morph Ball
+Energy Tank, Brinstar Ceiling: Missile
+Energy Tank, Etecoons: Missile
+Energy Tank, Waterway: Energy Tank
+Energy Tank, Brinstar Gate: Gravity Suit
+X-Ray Scope: Power Bomb
+Spazer: Missile
+Energy Tank, Kraid: Energy Tank
+Kraid: Kraid
+Varia Suit: Super Missile
+Ice Beam: Missile
+Energy Tank, Crocomire: Energy Tank
+Hi-Jump Boots: Reserve Tank
+Grapple Beam: Energy Tank
+Reserve Tank, Norfair: Reserve Tank
+Speed Booster: Power Bomb
+Wave Beam: Super Missile
+Ridley: Ridley
+Energy Tank, Ridley: Missile
+Screw Attack: Missile
+Energy Tank, Firefleas: Super Missile
+Reserve Tank, Wrecked Ship: Energy Tank
+Energy Tank, Wrecked Ship: Super Missile
+Phantoon: Phantoon
+Right Super, Wrecked Ship: Super Missile
+Gravity Suit: Missile
+Energy Tank, Mama turtle: Energy Tank
+Plasma Beam: Power Bomb
+Reserve Tank, Maridia: Missile
+Spring Ball: Missile
+Energy Tank, Botwoon: Reserve Tank
+Draygon: Draygon
+Space Jump: Missile
+Mother Brain: Mother Brain
+Spore Spawn: Spore Spawn
+Botwoon: Botwoon
+Crocomire: Crocomire
+Golden Torizo: Golden Torizo
+Power Bomb (Crateria surface): Power Bomb
+Missile (outside Wrecked Ship bottom): Super Missile
+Missile (outside Wrecked Ship top): Missile
+Missile (outside Wrecked Ship middle): Missile
+Missile (Crateria moat): Missile
+Missile (Crateria bottom): Missile
+Missile (Crateria gauntlet right): Super Missile
+Missile (Crateria gauntlet left): Super Missile
+Super Missile (Crateria): Wave Beam
+Missile (Crateria middle): Super Missile
+Power Bomb (green Brinstar bottom): X-Ray Scope
+Super Missile (pink Brinstar): Missile
+Missile (green Brinstar below super missile): Missile
+Super Missile (green Brinstar top): Super Missile
+Missile (green Brinstar behind missile): Space Jump
+Missile (green Brinstar behind reserve tank): Super Missile
+Missile (pink Brinstar top): Spazer
+Missile (pink Brinstar bottom): Speed Booster
+Power Bomb (pink Brinstar): Energy Tank
+Missile (green Brinstar pipe): Missile
+Power Bomb (blue Brinstar): Charge Beam
+Missile (blue Brinstar middle): Missile
+Super Missile (green Brinstar bottom): Power Bomb
+Missile (blue Brinstar bottom): Power Bomb
+Missile (blue Brinstar top): Energy Tank
+Missile (blue Brinstar behind missile): Varia Suit
+Power Bomb (red Brinstar sidehopper room): Missile
+Power Bomb (red Brinstar spike room): Missile
+Missile (red Brinstar spike room): Power Bomb
+Missile (Kraid): Plasma Beam
+Missile (lava room): Energy Tank
+Missile (below Ice Beam): Power Bomb
+Missile (above Crocomire): Grappling Beam
+Missile (Hi-Jump Boots): Missile
+Energy Tank (Hi-Jump Boots): Super Missile
+Power Bomb (Crocomire): Missile
+Missile (below Crocomire): Missile
+Missile (Grapple Beam): Missile
+Missile (Norfair Reserve Tank): Missile
+Missile (bubble Norfair green door): Missile
+Missile (bubble Norfair): Super Missile
+Missile (Speed Booster): Missile
+Missile (Wave Beam): Super Missile
+Missile (Gold Torizo): Power Bomb
+Super Missile (Gold Torizo): Bomb
+Missile (Mickey Mouse room): Energy Tank
+Missile (lower Norfair above fire flea room): Energy Tank
+Power Bomb (lower Norfair above fire flea room): Super Missile
+Power Bomb (Power Bombs of shame): Hi-Jump Boots
+Missile (lower Norfair near Wave Beam): Super Missile
+Missile (Wrecked Ship middle): Super Missile
+Missile (Gravity Suit): Screw Attack
+Missile (Wrecked Ship top): Power Bomb
+Super Missile (Wrecked Ship left): Missile
+Missile (green Maridia shinespark): Missile
+Super Missile (green Maridia): Reserve Tank
+Missile (green Maridia tatori): Missile
+Super Missile (yellow Maridia): Missile
+Missile (yellow Maridia super missile): Super Missile
+Missile (yellow Maridia false wall): Spring Ball
+Missile (left Maridia sand pit room): Ice Beam
+Missile (right Maridia sand pit room): Missile
+Power Bomb (right Maridia sand pit room): Energy Tank
+Missile (pink Maridia): Energy Tank
+Super Missile (pink Maridia): Missile
+Missile (Draygon): Energy Tank
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Energy Tank, Brinstar Ceiling: Missile
+  Morphing Ball: Morph Ball
+}
+2: {
+  Missile (blue Brinstar bottom): Power Bomb
+}
+3: {
+  Missile (Crateria middle): Super Missile
+  Missile (blue Brinstar behind missile): Varia Suit
+  Missile (blue Brinstar top): Energy Tank
+  Missile (green Brinstar behind missile): Space Jump
+  Missile (pink Brinstar bottom): Speed Booster
+  Missile (pink Brinstar top): Spazer
+  Power Bomb (blue Brinstar): Charge Beam
+  Power Bomb (green Brinstar bottom): X-Ray Scope
+  Spore Spawn: Spore Spawn
+}
+4: {
+  Crocomire: Crocomire
+  Energy Tank, Waterway: Energy Tank
+  Hi-Jump Boots: Reserve Tank
+  Kraid: Kraid
+  Missile (Kraid): Plasma Beam
+  Missile (above Crocomire): Grappling Beam
+  Missile (lava room): Energy Tank
+  Missile (red Brinstar spike room): Power Bomb
+  Phantoon: Phantoon
+  Power Bomb (pink Brinstar): Energy Tank
+  Reserve Tank, Norfair: Reserve Tank
+  Super Missile (Crateria): Wave Beam
+  Super Missile (green Brinstar bottom): Power Bomb
+}
+5: {
+  Energy Tank, Brinstar Gate: Gravity Suit
+  Energy Tank, Crocomire: Energy Tank
+  Energy Tank, Gauntlet: Missile
+  Energy Tank, Kraid: Energy Tank
+  Grapple Beam: Energy Tank
+  Missile (Gravity Suit): Screw Attack
+  Reserve Tank, Wrecked Ship: Energy Tank
+}
+6: {
+  Botwoon: Botwoon
+  Energy Tank, Mama turtle: Energy Tank
+  Golden Torizo: Golden Torizo
+  Missile (Mickey Mouse room): Energy Tank
+  Missile (left Maridia sand pit room): Ice Beam
+  Missile (lower Norfair above fire flea room): Energy Tank
+  Missile (lower Norfair near Wave Beam): Super Missile
+  Missile (pink Maridia): Energy Tank
+  Missile (right Maridia sand pit room): Missile
+  Missile (yellow Maridia false wall): Spring Ball
+  Power Bomb (Power Bombs of shame): Hi-Jump Boots
+  Power Bomb (right Maridia sand pit room): Energy Tank
+  Ridley: Ridley
+  Super Missile (Gold Torizo): Bomb
+  Super Missile (green Maridia): Reserve Tank
+}
+7: {
+  Draygon: Draygon
+  Energy Tank, Botwoon: Reserve Tank
+  Missile (Draygon): Energy Tank
+}
+8: {
+  Mother Brain: Mother Brain
+}
+
+Paths:
+
+Botwoon
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Glass Tunnel Top
+   =>   Glass Tunnel Top -> Glass Tunnel Top->Main Street Bottom
+   =>   Main Street Bottom -> Main Street Bottom->Crab Shaft Left
+   =>   Crab Shaft Left -> Crab Shaft Left->Crab Shaft Right
+   =>   Crab Shaft Right -> Crab Shaft Right->Aqueduct Top Left
+   =>   Aqueduct Top Left -> Aqueduct Top Left->Aqueduct Bottom
+   =>   Aqueduct Bottom -> Aqueduct Bottom->Botwoon
+   =>   Botwoon
+Crocomire
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
+   =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
+   =>   Business Center -> Business Center->Crocomire Speedway Bottom
+   =>   Crocomire Speedway Bottom -> Crocomire Speedway Bottom->Crocomire Room Top
+   =>   Crocomire Room Top -> Crocomire Room Top->Crocomire
+   =>   Crocomire
+Draygon
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Glass Tunnel Top
+   =>   Glass Tunnel Top -> Glass Tunnel Top->Main Street Bottom
+   =>   Main Street Bottom -> Main Street Bottom->Crab Shaft Left
+   =>   Crab Shaft Left -> Crab Shaft Left->Crab Shaft Right
+   =>   Crab Shaft Right -> Crab Shaft Right->Aqueduct Top Left
+   =>   Aqueduct Top Left -> Aqueduct Top Left->Aqueduct Bottom
+   =>   Aqueduct Bottom -> Aqueduct Bottom->Post Botwoon
+   =>   Post Botwoon -> Post Botwoon->Colosseum Top Right
+   =>   Colosseum Top Right -> Colosseum Top Right->Precious Room Top
+   =>   Precious Room Top -> Precious Room Top->DraygonRoomOut
+   =>   DraygonRoomOut -> DraygonRoomOut->DraygonRoomIn
+   =>   DraygonRoomIn -> DraygonRoomIn->Draygon Room Bottom
+   =>   Draygon Room Bottom -> Draygon Room Bottom->Draygon
+   =>   Draygon
+Energy Tank, Botwoon
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Glass Tunnel Top
+   =>   Glass Tunnel Top -> Glass Tunnel Top->Main Street Bottom
+   =>   Main Street Bottom -> Main Street Bottom->Crab Shaft Left
+   =>   Crab Shaft Left -> Crab Shaft Left->Crab Shaft Right
+   =>   Crab Shaft Right -> Crab Shaft Right->Aqueduct Top Left
+   =>   Aqueduct Top Left -> Aqueduct Top Left->Aqueduct Bottom
+   =>   Aqueduct Bottom -> Aqueduct Bottom->Post Botwoon
+   =>   Post Botwoon -> Post Botwoon->Energy Tank, Botwoon
+   =>   Energy Tank, Botwoon
+Energy Tank, Brinstar Ceiling
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Energy Tank, Brinstar Ceiling
+   =>   Energy Tank, Brinstar Ceiling
+Energy Tank, Brinstar Gate
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Big Pink
+   =>   Big Pink -> Big Pink->Energy Tank, Brinstar Gate
+   =>   Energy Tank, Brinstar Gate
+Energy Tank, Crocomire
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
+   =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
+   =>   Business Center -> Business Center->Crocomire Speedway Bottom
+   =>   Crocomire Speedway Bottom -> Crocomire Speedway Bottom->Crocomire Room Top
+   =>   Crocomire Room Top -> Crocomire Room Top->Energy Tank, Crocomire
+   =>   Energy Tank, Crocomire
+Energy Tank, Gauntlet
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Energy Tank, Gauntlet
+   =>   Energy Tank, Gauntlet
+Energy Tank, Kraid
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
+   =>   Warehouse Entrance Left -> Warehouse Entrance Left->Warehouse Entrance Right
+   =>   Warehouse Entrance Right -> Warehouse Entrance Right->Warehouse Zeela Room Left
+   =>   Warehouse Zeela Room Left -> Warehouse Zeela Room Left->Energy Tank, Kraid
+   =>   Energy Tank, Kraid
+Energy Tank, Mama turtle
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Glass Tunnel Top
+   =>   Glass Tunnel Top -> Glass Tunnel Top->Main Street Bottom
+   =>   Main Street Bottom -> Main Street Bottom->Energy Tank, Mama turtle
+   =>   Energy Tank, Mama turtle
+Energy Tank, Waterway
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Big Pink
+   =>   Big Pink -> Big Pink->Energy Tank, Waterway
+   =>   Energy Tank, Waterway
+Golden Torizo
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
+   =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
+   =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
+   =>   Lava Dive Right -> Lava Dive Right->LN Entrance
+   =>   LN Entrance -> LN Entrance->Screw Attack Bottom
+   =>   Screw Attack Bottom -> Screw Attack Bottom->Golden Torizo
+   =>   Golden Torizo
+Grapple Beam
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
+   =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
+   =>   Business Center -> Business Center->Crocomire Speedway Bottom
+   =>   Crocomire Speedway Bottom -> Crocomire Speedway Bottom->Crocomire Room Top
+   =>   Crocomire Room Top -> Crocomire Room Top->Grapple Beam
+   =>   Grapple Beam
+Hi-Jump Boots
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
+   =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
+   =>   Business Center -> Business Center->Hi-Jump Boots
+   =>   Hi-Jump Boots
+Kraid
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
+   =>   Warehouse Entrance Left -> Warehouse Entrance Left->Warehouse Entrance Right
+   =>   Warehouse Entrance Right -> Warehouse Entrance Right->Warehouse Zeela Room Left
+   =>   Warehouse Zeela Room Left -> Warehouse Zeela Room Left->KraidRoomOut
+   =>   KraidRoomOut -> KraidRoomOut->KraidRoomIn
+   =>   KraidRoomIn -> KraidRoomIn->Kraid
+   =>   Kraid
+Missile (Crateria middle)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Missile (Crateria middle)
+   =>   Missile (Crateria middle)
+Missile (Draygon)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Glass Tunnel Top
+   =>   Glass Tunnel Top -> Glass Tunnel Top->Main Street Bottom
+   =>   Main Street Bottom -> Main Street Bottom->Crab Shaft Left
+   =>   Crab Shaft Left -> Crab Shaft Left->Crab Shaft Right
+   =>   Crab Shaft Right -> Crab Shaft Right->Aqueduct Top Left
+   =>   Aqueduct Top Left -> Aqueduct Top Left->Aqueduct Bottom
+   =>   Aqueduct Bottom -> Aqueduct Bottom->Post Botwoon
+   =>   Post Botwoon -> Post Botwoon->Colosseum Top Right
+   =>   Colosseum Top Right -> Colosseum Top Right->Precious Room Top
+   =>   Precious Room Top -> Precious Room Top->Missile (Draygon)
+   =>   Missile (Draygon)
+Missile (Gravity Suit)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Keyhunter Room Bottom
+   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Right
+   =>   Moat Right -> Moat Right->West Ocean Left
+   =>   West Ocean Left -> West Ocean Left->Wrecked Ship Main
+   =>   Wrecked Ship Main -> Wrecked Ship Main->Missile (Gravity Suit)
+   =>   Missile (Gravity Suit)
+Missile (Kraid)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
+   =>   Warehouse Entrance Left -> Warehouse Entrance Left->Warehouse Entrance Right
+   =>   Warehouse Entrance Right -> Warehouse Entrance Right->Warehouse Zeela Room Left
+   =>   Warehouse Zeela Room Left -> Warehouse Zeela Room Left->Missile (Kraid)
+   =>   Missile (Kraid)
+Missile (Mickey Mouse room)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
+   =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
+   =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
+   =>   Lava Dive Right -> Lava Dive Right->LN Entrance
+   =>   LN Entrance -> LN Entrance->Missile (Mickey Mouse room)
+   =>   Missile (Mickey Mouse room)
+Missile (above Crocomire)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
+   =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
+   =>   Business Center -> Business Center->Crocomire Speedway Bottom
+   =>   Crocomire Speedway Bottom -> Crocomire Speedway Bottom->Grapple Escape
+   =>   Grapple Escape -> Grapple Escape->Missile (above Crocomire)
+   =>   Missile (above Crocomire)
+Missile (blue Brinstar behind missile)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Missile (blue Brinstar behind missile)
+   =>   Missile (blue Brinstar behind missile)
+Missile (blue Brinstar bottom)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Missile (blue Brinstar bottom)
+   =>   Missile (blue Brinstar bottom)
+Missile (blue Brinstar top)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Missile (blue Brinstar top)
+   =>   Missile (blue Brinstar top)
+Missile (green Brinstar behind missile)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Lower Mushrooms Left
+   =>   Lower Mushrooms Left -> Lower Mushrooms Left->Green Brinstar Elevator
+   =>   Green Brinstar Elevator -> Green Brinstar Elevator->Missile (green Brinstar behind missile)
+   =>   Missile (green Brinstar behind missile)
+Missile (lava room)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
+   =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
+   =>   Business Center -> Business Center->Cathedral
+   =>   Cathedral -> Cathedral->Missile (lava room)
+   =>   Missile (lava room)
+Missile (left Maridia sand pit room)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Glass Tunnel Top
+   =>   Glass Tunnel Top -> Glass Tunnel Top->Main Street Bottom
+   =>   Main Street Bottom -> Main Street Bottom->Crab Shaft Left
+   =>   Crab Shaft Left -> Crab Shaft Left->Crab Shaft Right
+   =>   Crab Shaft Right -> Crab Shaft Right->Aqueduct Top Left
+   =>   Aqueduct Top Left -> Aqueduct Top Left->Aqueduct Bottom
+   =>   Aqueduct Bottom -> Aqueduct Bottom->Left Sandpit
+   =>   Left Sandpit -> Left Sandpit->Missile (left Maridia sand pit room)
+   =>   Missile (left Maridia sand pit room)
+Missile (lower Norfair above fire flea room)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
+   =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
+   =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
+   =>   Lava Dive Right -> Lava Dive Right->LN Entrance
+   =>   LN Entrance -> LN Entrance->Firefleas
+   =>   Firefleas -> Firefleas->Missile (lower Norfair above fire flea room)
+   =>   Missile (lower Norfair above fire flea room)
+Missile (lower Norfair near Wave Beam)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
+   =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
+   =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
+   =>   Lava Dive Right -> Lava Dive Right->LN Entrance
+   =>   LN Entrance -> LN Entrance->Firefleas
+   =>   Firefleas -> Firefleas->Missile (lower Norfair near Wave Beam)
+   =>   Missile (lower Norfair near Wave Beam)
+Missile (pink Brinstar bottom)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Big Pink
+   =>   Big Pink -> Big Pink->Missile (pink Brinstar bottom)
+   =>   Missile (pink Brinstar bottom)
+Missile (pink Brinstar top)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Big Pink
+   =>   Big Pink -> Big Pink->Missile (pink Brinstar top)
+   =>   Missile (pink Brinstar top)
+Missile (pink Maridia)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Glass Tunnel Top
+   =>   Glass Tunnel Top -> Glass Tunnel Top->Main Street Bottom
+   =>   Main Street Bottom -> Main Street Bottom->Crab Shaft Left
+   =>   Crab Shaft Left -> Crab Shaft Left->Crab Shaft Right
+   =>   Crab Shaft Right -> Crab Shaft Right->Aqueduct Top Left
+   =>   Aqueduct Top Left -> Aqueduct Top Left->Aqueduct Bottom
+   =>   Aqueduct Bottom -> Aqueduct Bottom->Aqueduct
+   =>   Aqueduct -> Aqueduct->Missile (pink Maridia)
+   =>   Missile (pink Maridia)
+Missile (red Brinstar spike room)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Keyhunter Room Bottom
+   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Red Brinstar Elevator
+   =>   Red Brinstar Elevator -> Red Brinstar Elevator->Missile (red Brinstar spike room)
+   =>   Missile (red Brinstar spike room)
+Missile (right Maridia sand pit room)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Glass Tunnel Top
+   =>   Glass Tunnel Top -> Glass Tunnel Top->Main Street Bottom
+   =>   Main Street Bottom -> Main Street Bottom->Crab Shaft Left
+   =>   Crab Shaft Left -> Crab Shaft Left->Crab Shaft Right
+   =>   Crab Shaft Right -> Crab Shaft Right->Aqueduct Top Left
+   =>   Aqueduct Top Left -> Aqueduct Top Left->Aqueduct Bottom
+   =>   Aqueduct Bottom -> Aqueduct Bottom->Right Sandpit
+   =>   Right Sandpit -> Right Sandpit->Missile (right Maridia sand pit room)
+   =>   Missile (right Maridia sand pit room)
+Missile (yellow Maridia false wall)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Glass Tunnel Top
+   =>   Glass Tunnel Top -> Glass Tunnel Top->Main Street Bottom
+   =>   Main Street Bottom -> Main Street Bottom->Crab Shaft Left
+   =>   Crab Shaft Left -> Crab Shaft Left->Beach
+   =>   Beach -> Beach->Missile (yellow Maridia false wall)
+   =>   Missile (yellow Maridia false wall)
+Morphing Ball
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morphing Ball
+   =>   Morphing Ball
+Mother Brain
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Lower Mushrooms Left
+   =>   Lower Mushrooms Left -> Lower Mushrooms Left->Green Pirates Shaft Bottom Right
+   =>   Green Pirates Shaft Bottom Right -> Green Pirates Shaft Bottom Right->Golden Four
+   =>   Golden Four -> Golden Four->Mother Brain
+   =>   Mother Brain
+Phantoon
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Keyhunter Room Bottom
+   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Right
+   =>   Moat Right -> Moat Right->West Ocean Left
+   =>   West Ocean Left -> West Ocean Left->Wrecked Ship Main
+   =>   Wrecked Ship Main -> Wrecked Ship Main->PhantoonRoomOut
+   =>   PhantoonRoomOut -> PhantoonRoomOut->PhantoonRoomIn
+   =>   PhantoonRoomIn -> PhantoonRoomIn->Phantoon
+   =>   Phantoon
+Power Bomb (Power Bombs of shame)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
+   =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
+   =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
+   =>   Lava Dive Right -> Lava Dive Right->LN Entrance
+   =>   LN Entrance -> LN Entrance->Firefleas
+   =>   Firefleas -> Firefleas->Ridley Zone
+   =>   Ridley Zone -> Ridley Zone->Wasteland
+   =>   Wasteland -> Wasteland->Power Bomb (Power Bombs of shame)
+   =>   Power Bomb (Power Bombs of shame)
+Power Bomb (blue Brinstar)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Power Bomb (blue Brinstar)
+   =>   Power Bomb (blue Brinstar)
+Power Bomb (green Brinstar bottom)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Lower Mushrooms Left
+   =>   Lower Mushrooms Left -> Lower Mushrooms Left->Green Brinstar Elevator
+   =>   Green Brinstar Elevator -> Green Brinstar Elevator->Etecoons Bottom
+   =>   Etecoons Bottom -> Etecoons Bottom->Power Bomb (green Brinstar bottom)
+   =>   Power Bomb (green Brinstar bottom)
+Power Bomb (pink Brinstar)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Big Pink
+   =>   Big Pink -> Big Pink->Power Bomb (pink Brinstar)
+   =>   Power Bomb (pink Brinstar)
+Power Bomb (right Maridia sand pit room)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Glass Tunnel Top
+   =>   Glass Tunnel Top -> Glass Tunnel Top->Main Street Bottom
+   =>   Main Street Bottom -> Main Street Bottom->Crab Shaft Left
+   =>   Crab Shaft Left -> Crab Shaft Left->Crab Shaft Right
+   =>   Crab Shaft Right -> Crab Shaft Right->Aqueduct Top Left
+   =>   Aqueduct Top Left -> Aqueduct Top Left->Aqueduct Bottom
+   =>   Aqueduct Bottom -> Aqueduct Bottom->Right Sandpit
+   =>   Right Sandpit -> Right Sandpit->Power Bomb (right Maridia sand pit room)
+   =>   Power Bomb (right Maridia sand pit room)
+Reserve Tank, Norfair
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
+   =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
+   =>   Business Center -> Business Center->Bubble Mountain
+   =>   Bubble Mountain -> Bubble Mountain->Reserve Tank, Norfair
+   =>   Reserve Tank, Norfair
+Reserve Tank, Wrecked Ship
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Keyhunter Room Bottom
+   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Right
+   =>   Moat Right -> Moat Right->West Ocean Left
+   =>   West Ocean Left -> West Ocean Left->Wrecked Ship Main
+   =>   Wrecked Ship Main -> Wrecked Ship Main->Reserve Tank, Wrecked Ship
+   =>   Reserve Tank, Wrecked Ship
+Ridley
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
+   =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
+   =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
+   =>   Lava Dive Right -> Lava Dive Right->LN Entrance
+   =>   LN Entrance -> LN Entrance->Firefleas
+   =>   Firefleas -> Firefleas->Ridley Zone
+   =>   Ridley Zone -> Ridley Zone->RidleyRoomOut
+   =>   RidleyRoomOut -> RidleyRoomOut->RidleyRoomIn
+   =>   RidleyRoomIn -> RidleyRoomIn->Ridley
+   =>   Ridley
+Spore Spawn
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Big Pink
+   =>   Big Pink -> Big Pink->Spore Spawn
+   =>   Spore Spawn
+Super Missile (Crateria)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Super Missile (Crateria)
+   =>   Super Missile (Crateria)
+Super Missile (Gold Torizo)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
+   =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
+   =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
+   =>   Lava Dive Right -> Lava Dive Right->LN Entrance
+   =>   LN Entrance -> LN Entrance->Screw Attack Bottom
+   =>   Screw Attack Bottom -> Screw Attack Bottom->Super Missile (Gold Torizo)
+   =>   Super Missile (Gold Torizo)
+Super Missile (green Brinstar bottom)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Lower Mushrooms Left
+   =>   Lower Mushrooms Left -> Lower Mushrooms Left->Green Brinstar Elevator
+   =>   Green Brinstar Elevator -> Green Brinstar Elevator->Etecoons Bottom
+   =>   Etecoons Bottom -> Etecoons Bottom->Etecoons Supers
+   =>   Etecoons Supers -> Etecoons Supers->Super Missile (green Brinstar bottom)
+   =>   Super Missile (green Brinstar bottom)
+Super Missile (green Maridia)
+        Menu -> StartAP
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Glass Tunnel Top
+   =>   Glass Tunnel Top -> Glass Tunnel Top->Main Street Bottom
+   =>   Main Street Bottom -> Main Street Bottom->Super Missile (green Maridia)
+   =>   Super Missile (green Maridia)
