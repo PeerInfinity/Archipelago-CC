@@ -290,9 +290,16 @@ export function _createSelfSnapshotInterface(sm) {
             events: sm.gameStateModule?.events || [],
             player: { id: sm.playerId, slot: sm.playerId }
           };
+          // Include all game-specific data needed by helpers (e.g., Pokemon local_poke_data)
           const staticData = {
             progressionMapping: sm.progressionMapping,
-            items: sm.itemData
+            items: sm.itemData,
+            game_info: sm.gameInfo,
+            settings: sm.settings,
+            playerId: sm.playerId,
+            // Include top-level game data for getGameData fallback
+            local_poke_data: sm.rules?.local_poke_data,
+            extra_badges: sm.rules?.extra_badges
           };
           return sm.helperFunctions.has(snapshot, staticData, itemName);
         } catch (e) {
@@ -314,9 +321,16 @@ export function _createSelfSnapshotInterface(sm) {
             events: sm.gameStateModule?.events || [],
             player: { id: sm.playerId, slot: sm.playerId }
           };
+          // Include all game-specific data needed by helpers (e.g., Pokemon local_poke_data)
           const staticData = {
             progressionMapping: sm.progressionMapping,
-            items: sm.itemData
+            items: sm.itemData,
+            game_info: sm.gameInfo,
+            settings: sm.settings,
+            playerId: sm.playerId,
+            // Include top-level game data for getGameData fallback
+            local_poke_data: sm.rules?.local_poke_data,
+            extra_badges: sm.rules?.extra_badges
           };
           return sm.helperFunctions.count(snapshot, staticData, itemName);
         } catch (e) {

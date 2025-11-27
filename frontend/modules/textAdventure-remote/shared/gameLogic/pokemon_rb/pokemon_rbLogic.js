@@ -92,6 +92,11 @@ function getGameData(staticData, key) {
     return staticData.game_info[playerId][key];
   }
 
+  // Try top-level with player ID nesting (e.g., local_poke_data[playerId])
+  if (staticData?.[key]?.[playerId]) {
+    return staticData[key][playerId];
+  }
+
   // Fallback to top-level (for backward compatibility)
   if (staticData?.[key]) {
     return staticData[key];
@@ -300,8 +305,11 @@ export function oaks_aide(snapshot, staticData, pokemonCount) {
  * Count how many different Pokemon the player has obtained
  */
 export function has_pokemon(snapshot, staticData, pokemonCount) {
-  // Get the list of all Pokemon from poke_data
-  const poke_data = getGameData(staticData, 'poke_data');
+  // Get the list of all Pokemon from local_poke_data (exported rules) or poke_data (legacy)
+  let poke_data = getGameData(staticData, 'local_poke_data');
+  if (!poke_data) {
+    poke_data = getGameData(staticData, 'poke_data');
+  }
   if (!poke_data) {
     // Fallback: just count Pokemon-like items in inventory
     // This isn't perfect but better than nothing
