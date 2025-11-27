@@ -307,6 +307,10 @@ function loadLocations(sm, selectedPlayerId) {
           const fullItemData = sm.itemData[locationDataItem.item.name];
           if (fullItemData && fullItemData.event === true) {
             sm.eventLocations.set(descriptiveName, locationObject);
+          } else if (locationDataItem.id === null || locationDataItem.id === 0) {
+            // Track local item locations (id: null or 0, but NOT events)
+            // These are items like coins in DLCQuest that are auto-collected when region is accessible
+            sm.localItemLocations.set(descriptiveName, locationObject);
           }
         }
 
