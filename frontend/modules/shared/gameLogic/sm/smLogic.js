@@ -994,7 +994,16 @@ export function knowsMaridiaWallJumps(snapshot, staticData) {
 }
 
 export function knowsOldMBWithSpeed(snapshot, staticData) {
-  return { bool: true, difficulty: 0 };
+  // Check exported knows settings for OldMBWithSpeed technique
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('OldMBWithSpeed' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.OldMBWithSpeed;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  // Default: disabled (technique not commonly known)
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsRonPopeilScrew(snapshot, staticData) {
