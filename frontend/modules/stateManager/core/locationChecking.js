@@ -133,15 +133,21 @@ export function checkLocation(sm, locationName, addItems = true) {
               `[StateManager Class] Skipping ${location.item.name} - cross-player item for Player ${itemPlayerId} (current player is ${currentPlayerId}).`
             );
           } else {
-            // Add all items to inventory regardless of advancement status
-            // Python's CollectionState.collect() adds ALL items - the advancement flag only
-            // indicates whether an item can unlock new checks, not whether it should be tracked.
-            // Items like "Bottle" may have advancement=false but are still required for logic
-            // checks (e.g., "Sick Kid" location requires a Bottle).
-            sm._addItemToInventory(location.item.name, 1);
-            sm._logDebug(
-              `[StateManager Class] Added ${location.item.name} to inventory.`
-            );
+            // In spoiler test mode, only add advancement items to inventory (matching Python's CollectionState behavior)
+            // Python's state.count() only counts items where location.item.advancement is true
+            // In normal gameplay, add all items
+            const shouldAddItem = !sm.spoilerTestMode || location.item.advancement !== false;
+
+            if (shouldAddItem) {
+              sm._addItemToInventory(location.item.name, 1);
+              sm._logDebug(
+                `[StateManager Class] Added ${location.item.name} to inventory.`
+              );
+            } else {
+              sm._logDebug(
+                `[StateManager Class] Skipping ${location.item.name} - non-advancement item in spoiler test mode (advancement=${location.item.advancement}).`
+              );
+            }
           }
           // Potentially trigger an event for item acquisition if needed by other systems
           // sm._publishEvent('itemAcquired', { itemName: location.item.name, locationName });
