@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-26 23:16:22
+**Generated:** 2025-11-27 01:18:57
 
-**Source Data Created:** 2025-11-26T20:38:57.571229
+**Source Data Created:** 2025-11-27T01:18:56.956590
 
-**Source Data Last Updated:** 2025-11-26T20:38:57.571237
+**Source Data Last Updated:** 2025-11-27T01:18:56.956596
 
 ## Summary
 
 - **Total Games:** 76
-- **Passed:** 75 (98.7%)
-- **Failed:** 1 (1.3%)
+- **Passed:** 74 (97.4%)
+- **Failed:** 2 (2.6%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
@@ -37,7 +37,7 @@
 | ChecksFinder | ✅ Passed seeds 1-10 | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ⚫ |
 | ChocolateChipCookies | ✅ Passed seeds 1-10 | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ⚫ |
 | Civilization VI | ✅ Passed seeds 1-10 | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ⚫ |
-| DLCQuest | ✅ Passed seeds 1-10 | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
+| DLCQuest | ❌ Failed seed 1 | 0 | 0 | 8.1 | 🔴 0.0% | ✅ | ✅ |
 | DOOM 1993 | ✅ Passed seeds 1-10 | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ⚫ |
 | DOOM II | ✅ Passed seeds 1-10 | 0 | 21.2 | 21.2 | 🟢 Complete | ✅ | ⚫ |
 | Dark Souls III | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ⚫ |
