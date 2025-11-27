@@ -6,7 +6,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-print("[SM MODULE] Loading Super Metroid exporter handler")
 
 class SMGameExportHandler(GenericGameExportHandler):
     """Export handler for Super Metroid.
@@ -20,7 +19,6 @@ class SMGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'Super Metroid'
 
     def __init__(self, world=None):
-        print(f"[SM] SMGameExportHandler initialized for {self.GAME_NAME}")
         super().__init__()  # Base class doesn't take arguments
         self.world = world
         self._simple_accessfrom_locations: Optional[Set[str]] = None
@@ -144,15 +142,15 @@ class SMGameExportHandler(GenericGameExportHandler):
         Overrides the base class to add VARIA Type field to items.
         Follows the same pattern as ALTTP exporter.
         """
-        logger.info("SM: get_item_data called")
+        logger.debug("SM: get_item_data called")
         # Get base item data from parent class
         item_data = super().get_item_data(world)
-        logger.info(f"SM: Got {len(item_data)} items from parent")
+        logger.debug(f"SM: Got {len(item_data)} items from parent")
 
         # Add VARIA type information
         try:
             varia_types = self._get_varia_item_types()
-            logger.info(f"SM: Retrieved {len(varia_types)} VARIA type mappings")
+            logger.debug(f"SM: Retrieved {len(varia_types)} VARIA type mappings")
 
             type_count = 0
             for item_name, item_info in item_data.items():
@@ -249,7 +247,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                             return None
 
                         accessfrom_dict = all_accessfrom[location_name]
-                        logger.info(f"SM: Building AccessFrom rule for '{location_name}' with {len(accessfrom_dict)} regions")
+                        logger.debug(f"SM: Building AccessFrom rule for '{location_name}' with {len(accessfrom_dict)} regions")
 
                         # Parse each AccessFrom lambda and build the OR structure
                         accessfrom_conditions = []
@@ -285,10 +283,10 @@ class SMGameExportHandler(GenericGameExportHandler):
                         # Build the final rule: AccessFrom AND Available
                         # If Available is SMBool(True), just use AccessFrom
                         if self._is_always_true_smbool(available_rule):
-                            logger.info(f"SM: Location '{location_name}' has Available=SMBool(True), using only AccessFrom")
+                            logger.debug(f"SM: Location '{location_name}' has Available=SMBool(True), using only AccessFrom")
                             return accessfrom_rule
                         else:
-                            logger.info(f"SM: Location '{location_name}' has both AccessFrom and Available requirements")
+                            logger.debug(f"SM: Location '{location_name}' has both AccessFrom and Available requirements")
                             return {
                                 'type': 'and',
                                 'conditions': [accessfrom_rule, available_rule]
@@ -585,7 +583,7 @@ class SMGameExportHandler(GenericGameExportHandler):
         # Second condition should be evalSMBool(SMBool(True), ...)
         second = conditions[1]
         if self._is_always_true_smbool(second):
-            logger.info("SM: _is_simple_accessFrom: DETECTED SIMPLE PATTERN (rare!)")
+            logger.debug("SM: _is_simple_accessFrom: DETECTED SIMPLE PATTERN (rare!)")
             return True
 
         return False
@@ -773,7 +771,7 @@ class SMGameExportHandler(GenericGameExportHandler):
 
             # If only one region, return that rule directly
             if len(region_rules) == 1:
-                logger.info(f"SM: Single AccessFrom region for '{location_name}'")
+                logger.debug(f"SM: Single AccessFrom region for '{location_name}'")
                 return region_rules[0]
 
             # Multiple regions: create OR rule
@@ -781,7 +779,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                 'type': 'or',
                 'conditions': region_rules
             }
-            logger.info(f"SM: Created OR rule with {len(region_rules)} AccessFrom regions for '{location_name}'")
+            logger.debug(f"SM: Created OR rule with {len(region_rules)} AccessFrom regions for '{location_name}'")
             return result
 
         except Exception as e:
@@ -830,7 +828,7 @@ class SMGameExportHandler(GenericGameExportHandler):
             accessfrom_data = self._get_accessfrom_data()
             if dest_ap_name in accessfrom_data:
                 # This is an exit to a location-region - return None to use default (no rule)
-                logger.info(f"SM: Exit '{exit_name}' goes to location-region, skipping traverse (always accessible)")
+                logger.debug(f"SM: Exit '{exit_name}' goes to location-region, skipping traverse (always accessible)")
                 return None
 
             # Try to get the unwrapped transition lambda directly from AccessPoint
@@ -838,7 +836,7 @@ class SMGameExportHandler(GenericGameExportHandler):
             unwrapped = get_transition_lambda(source_ap_name, dest_ap_name, unwrap=True)
 
             if unwrapped:
-                logger.info(f"SM: Providing unwrapped transition lambda for exit '{exit_name}'")
+                logger.debug(f"SM: Providing unwrapped transition lambda for exit '{exit_name}'")
                 return unwrapped
 
             # If no transition found, this might be an inter-area connection
@@ -851,11 +849,11 @@ class SMGameExportHandler(GenericGameExportHandler):
                 # Try to unwrap it if it's wrapped
                 unwrapped_traverse = unwrap_cache_ldeco(traverse_func)
                 if unwrapped_traverse:
-                    logger.info(f"SM: Providing unwrapped traverse lambda for inter-area exit '{exit_name}'")
+                    logger.debug(f"SM: Providing unwrapped traverse lambda for inter-area exit '{exit_name}'")
                     return unwrapped_traverse
                 else:
                     # Not wrapped, return as-is
-                    logger.info(f"SM: Providing traverse lambda (not wrapped) for inter-area exit '{exit_name}'")
+                    logger.debug(f"SM: Providing traverse lambda (not wrapped) for inter-area exit '{exit_name}'")
                     return traverse_func
 
             return None
@@ -931,7 +929,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                 # Parse exit name: "Source->Destination"
                 if '->' in self._current_exit_context:
                     source_ap_name = self._current_exit_context.split('->')[0]
-                    logger.info(f"SM: Found 'ret' variable in exit '{self._current_exit_context}', extracting traverse lambda")
+                    logger.debug(f"SM: Found 'ret' variable in exit '{self._current_exit_context}', extracting traverse lambda")
 
                     # Get traverse function for this AccessPoint
                     traverse_funcs = self._get_accesspoint_traverse_funcs()
@@ -941,7 +939,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                         # Parse the traverse lambda
                         parsed_traverse = self._parse_traverse_lambda(traverse_func, source_ap_name)
                         if parsed_traverse:
-                            logger.info(f"SM: Successfully replaced 'ret' with parsed traverse lambda for '{source_ap_name}'")
+                            logger.debug(f"SM: Successfully replaced 'ret' with parsed traverse lambda for '{source_ap_name}'")
                             return parsed_traverse
                         else:
                             logger.warning(f"SM: Failed to parse traverse lambda for '{source_ap_name}', using conservative False")
@@ -950,10 +948,12 @@ class SMGameExportHandler(GenericGameExportHandler):
                 else:
                     logger.warning(f"SM: Exit context '{self._current_exit_context}' does not contain '->'")
             else:
-                logger.warning("SM: Found 'ret' variable but no exit context set")
+                # This can happen when parsing AccessFrom lambdas or other non-exit rules
+                # that somehow contain 'ret' references (rare but possible with nested decorators)
+                logger.debug("SM: Found 'ret' variable but no exit context set")
 
             # Conservative fallback
-            logger.warning("SM: Found unresolved 'ret' variable, replacing with SMBool(False)")
+            logger.debug("SM: Found unresolved 'ret' variable, replacing with SMBool(False)")
             return {'type': 'constant', 'value': {'bool': False, 'difficulty': 0}}
 
         # Handle RomPatches.has() calls - resolve to constants since patches are fixed at generation time
@@ -983,7 +983,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                                 # Get the patch ID by accessing the class attribute
                                 patch_id = getattr(RomPatches, patch_name, None)
                                 if patch_id is not None:
-                                    logger.info(f"SM: Resolved RomPatches.{patch_name} to {patch_id}")
+                                    logger.debug(f"SM: Resolved RomPatches.{patch_name} to {patch_id}")
                             except Exception as e:
                                 logger.error(f"SM: Failed to resolve RomPatches.{patch_name}: {e}")
 
@@ -993,7 +993,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                             from worlds.sm.variaRandomizer.rom.rom_patches import RomPatches
                             player_id = self.world.player if self.world else 1
                             is_active = patch_id in RomPatches.ActivePatches.get(player_id, [])
-                            logger.info(f"SM: Resolved RomPatches.has({patch_id}) to {is_active}")
+                            logger.debug(f"SM: Resolved RomPatches.has({patch_id}) to {is_active}")
                             return {'type': 'constant', 'value': is_active}
                         except Exception as e:
                             logger.error(f"SM: Failed to resolve RomPatches.has({patch_id}): {e}")
@@ -1014,7 +1014,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                 if len(args) >= 2:
                     boss_arg = args[1]  # Second arg is the boss name
                     expanded_boss_arg = self.expand_rule(boss_arg)
-                    logger.info(f"SM: Converted Bosses.bossDead to helper call with boss={expanded_boss_arg}")
+                    logger.debug(f"SM: Converted Bosses.bossDead to helper call with boss={expanded_boss_arg}")
                     return {'type': 'helper', 'name': 'bossDead', 'args': [expanded_boss_arg]}
 
         # Check for AND rules that combine accessFrom and Available
@@ -1028,7 +1028,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                 second = conditions[1]
                 # If first condition is accessFrom pattern, skip it and use only second
                 if self._check_accessFrom_pattern(first) or self._check_deeply_nested_any_of(first):
-                    logger.info("SM: Found AND rule with accessFrom, checking Available part")
+                    logger.debug("SM: Found AND rule with accessFrom, checking Available part")
 
                     # Recursively expand the second condition (the Available part)
                     expanded = self.expand_rule(second)
@@ -1042,7 +1042,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                         if self._is_simple_accessFrom(first):
                             # Simple case: accessFrom returns SMBool(True) for all regions
                             # This means the location is accessible from the region with no item requirements
-                            logger.info("SM: Simple accessFrom detected (SMBool(True)) - exporting as True")
+                            logger.debug("SM: Simple accessFrom detected (SMBool(True)) - exporting as True")
                             return {'type': 'constant', 'value': True}
 
                         # Complex accessFrom - try to extract the actual requirements
@@ -1050,15 +1050,15 @@ class SMGameExportHandler(GenericGameExportHandler):
                         if self._current_location_context:
                             extracted_rule = self._extract_accessfrom_requirements(self._current_location_context)
                             if extracted_rule:
-                                logger.info(f"SM: Extracted AccessFrom requirements for {self._current_location_context}")
+                                logger.debug(f"SM: Extracted AccessFrom requirements for {self._current_location_context}")
                                 return extracted_rule
 
                         # Fallback: Conservative approach
-                        logger.info("SM: Complex accessFrom with SMBool(True) Available - exporting as False (conservative)")
+                        logger.debug("SM: Complex accessFrom with SMBool(True) Available - exporting as False (conservative)")
                         return {'type': 'constant', 'value': False}
 
                     # If Available has actual requirements, combine with AccessFrom
-                    logger.info("SM: Available part has actual requirements, checking for AccessFrom")
+                    logger.debug("SM: Available part has actual requirements, checking for AccessFrom")
 
                     # Try to extract AccessFrom requirements
                     accessfrom_rule = None
@@ -1067,14 +1067,14 @@ class SMGameExportHandler(GenericGameExportHandler):
 
                     if accessfrom_rule:
                         # Combine Available AND AccessFrom
-                        logger.info(f"SM: Combining Available AND AccessFrom for {self._current_location_context}")
+                        logger.debug(f"SM: Combining Available AND AccessFrom for {self._current_location_context}")
                         return {
                             'type': 'and',
                             'conditions': [expanded, accessfrom_rule]
                         }
                     else:
                         # No AccessFrom or extraction failed, just use Available
-                        logger.info("SM: Using Available part only (no AccessFrom extracted)")
+                        logger.debug("SM: Using Available part only (no AccessFrom extracted)")
                         return expanded
 
         # Check for accessFrom patterns that hit recursion limits
@@ -1082,13 +1082,13 @@ class SMGameExportHandler(GenericGameExportHandler):
         # Conservative: Export as False to prevent incorrect accessibility
         # TODO: Improve detection to distinguish simple vs complex patterns
         if self._check_accessFrom_pattern(rule):
-            logger.info("SM: Found accessFrom comprehension pattern, exporting as constant False")
+            logger.debug("SM: Found accessFrom comprehension pattern, exporting as constant False")
             return {'type': 'constant', 'value': False}
 
         # Also check for deeply nested any_of structures (result of recursion limits)
         # Conservative: Export as False
         if self._check_deeply_nested_any_of(rule):
-            logger.info("SM: Found deeply nested any_of pattern (recursion artifact), exporting as constant False")
+            logger.debug("SM: Found deeply nested any_of pattern (recursion artifact), exporting as constant False")
             return {'type': 'constant', 'value': False}
 
         # Handle helper nodes with name='evalSMBool' (analyzer converts self.evalSMBool to helper)
@@ -1100,7 +1100,6 @@ class SMGameExportHandler(GenericGameExportHandler):
             # 3. It makes the exported rules more consistent and debuggable
 
             # Preserve the evalSMBool helper call and expand its arguments
-            print("[SM] Preserving evalSMBool helper (will be evaluated by frontend)")
             if 'args' in rule:
                 expanded_args = []
                 for i, arg in enumerate(rule['args']):
@@ -1127,7 +1126,6 @@ class SMGameExportHandler(GenericGameExportHandler):
                 if obj.get('type') == 'name' and obj.get('name') == 'self' and attr == 'evalSMBool':
                     # Convert to helper call and expand arguments
                     # Don't simplify SMBool(True) - preserve the structure
-                    print("[SM] Converting evalSMBool function_call to helper (preserving structure)")
                     expanded_args = [self.expand_rule(arg) for arg in rule.get('args', [])]
                     return {'type': 'helper', 'name': 'evalSMBool', 'args': expanded_args}
 
@@ -1135,7 +1133,6 @@ class SMGameExportHandler(GenericGameExportHandler):
                 # These are VARIA logic methods like sm.wor, sm.wand, sm.haveItem, etc.
                 if obj.get('type') == 'name' and obj.get('name') == 'sm':
                     # Convert to helper call
-                    print(f"[SM] Converting sm.{attr}(...) to helper call")
                     expanded_args = [self.expand_rule(arg) for arg in rule.get('args', [])]
 
                     # Special handling for canHellRun with no args - add default arguments
@@ -1186,7 +1183,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                             elif 'bubble' in exit_name and ('bottom' in exit_name or 'top' in exit_name):
                                 mult = 0.357
                                 minE = 2
-                            logger.info(f"SM: canHellRun() converted with type={hellrun_type}, mult={mult}, minE={minE} for exit '{self._current_exit_context}'")
+                            logger.debug(f"SM: canHellRun() converted with type={hellrun_type}, mult={mult}, minE={minE} for exit '{self._current_exit_context}'")
                         elif self._current_location_context:
                             loc_name = self._current_location_context.lower()
                             # Lower Norfair locations use 'LowerNorfair' type with minE=8
@@ -1207,9 +1204,9 @@ class SMGameExportHandler(GenericGameExportHandler):
                             elif 'reserve' in loc_name and 'norfair' in loc_name:
                                 mult = 1.0
                                 minE = 2
-                            logger.info(f"SM: canHellRun() converted with type={hellrun_type}, mult={mult}, minE={minE} for location '{self._current_location_context}'")
+                            logger.debug(f"SM: canHellRun() converted with type={hellrun_type}, mult={mult}, minE={minE} for location '{self._current_location_context}'")
                         else:
-                            logger.info(f"SM: canHellRun() converted with default type={hellrun_type}")
+                            logger.debug(f"SM: canHellRun() converted with default type={hellrun_type}")
 
                         expanded_args = [
                             {'type': 'constant', 'value': hellrun_type},
@@ -1281,7 +1278,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                     elif 'bubble' in exit_name and ('bottom' in exit_name or 'top' in exit_name):
                         mult = 0.357
                         minE = 2
-                    logger.info(f"SM: canHellRun with no args in exit '{self._current_exit_context}', using type={hellrun_type}, mult={mult}, minE={minE}")
+                    logger.debug(f"SM: canHellRun with no args in exit '{self._current_exit_context}', using type={hellrun_type}, mult={mult}, minE={minE}")
                 elif self._current_location_context:
                     loc_name = self._current_location_context.lower()
                     # Lower Norfair locations use 'LowerNorfair' type with minE=8
@@ -1302,9 +1299,9 @@ class SMGameExportHandler(GenericGameExportHandler):
                     elif 'reserve' in loc_name and 'norfair' in loc_name:
                         mult = 1.0
                         minE = 2
-                    logger.info(f"SM: canHellRun with no args in location '{self._current_location_context}', using type={hellrun_type}, mult={mult}, minE={minE}")
+                    logger.debug(f"SM: canHellRun with no args in location '{self._current_location_context}', using type={hellrun_type}, mult={mult}, minE={minE}")
                 else:
-                    logger.info(f"SM: canHellRun with no args, no context, using type={hellrun_type}")
+                    logger.debug(f"SM: canHellRun with no args, no context, using type={hellrun_type}")
 
                 rule['args'] = [
                     {'type': 'constant', 'value': hellrun_type},

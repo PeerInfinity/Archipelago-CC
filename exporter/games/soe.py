@@ -18,7 +18,6 @@ class SoEGameExportHandler(BaseGameExportHandler):
 
     def __init__(self):
         super().__init__()
-        print(f"[SOE] Initializing SOE exporter")
         # Import pyevermizer to get progress constants
         try:
             import pyevermizer
@@ -27,7 +26,6 @@ class SoEGameExportHandler(BaseGameExportHandler):
             self.progress_id_to_name = self._build_progress_map()
             # Get location mapping
             self.location_id_to_raw = self._get_location_mapping()
-            print(f"[SOE] SOE exporter initialized with {len(self.location_id_to_raw)} evermizer locations")
             logger.info(f"SOE exporter initialized with {len(self.location_id_to_raw)} evermizer locations")
         except ImportError:
             logger.warning("Could not import pyevermizer - SOE export may be incomplete")
@@ -177,7 +175,6 @@ class SoEGameExportHandler(BaseGameExportHandler):
                 'rules': logic_rules
             }
 
-        print(f"[SOE] Exported {len(item_data)} items with provides data")
         logger.info(f"Exported {len(item_data)} SOE items with provides data")
 
         return item_data

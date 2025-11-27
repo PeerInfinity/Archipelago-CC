@@ -13,6 +13,7 @@ This module contains the main test execution logic for:
 
 import json
 import os
+import shlex
 import shutil
 import time
 from datetime import datetime
@@ -127,13 +128,14 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
             print(f"[DRY RUN] Would run Generate.py for {template_filename}...")
             template_file = template_filename if template_filename.endswith(('.yaml', '.yml')) else f"{template_filename}.yaml"
             template_path = os.path.join(templates_dir, template_file)
-            generate_cmd = [
-                "python", "Generate.py",
-                "--weights_file_path", template_path,
-                "--multi", "1",
-                "--seed", seed
-            ]
-            print(f"  [DRY RUN] Command: {' '.join(generate_cmd)}")
+            # Show relative path for readability
+            players_dir = os.path.join(project_root, 'Players')
+            if template_path.startswith(players_dir):
+                display_path = os.path.relpath(template_path, players_dir)
+            else:
+                display_path = template_path
+            display_cmd = ["python", "Generate.py", "--weights_file_path", display_path, "--multi", "1", "--seed", seed]
+            print(f"  [DRY RUN] Command: {shlex.join(display_cmd)}")
             result['generation']['note'] = 'Skipped in dry-run mode'
             result['dry_run'] = True
             return result
@@ -150,8 +152,15 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
             "--seed", seed
         ]
 
-        # Show the command being run
-        print(f"  Command: {' '.join(generate_cmd)}")
+        # Show the command being run with relative path for readability
+        # Convert absolute template_path to relative (from Players/ directory)
+        players_dir = os.path.join(project_root, 'Players')
+        if template_path.startswith(players_dir):
+            display_path = os.path.relpath(template_path, players_dir)
+        else:
+            display_path = template_path
+        display_cmd = ["python", "Generate.py", "--weights_file_path", display_path, "--multi", "1", "--seed", seed]
+        print(f"  Command: {shlex.join(display_cmd)}")
 
         # Time the generation process
         gen_start_time = time.time()
@@ -275,8 +284,8 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         if not single_client:
             multiclient_env['DISABLE_SINGLE_PROCESS'] = 'true'
 
-        # Show the command being run
-        print(f"  Command: {' '.join(multiclient_cmd)}")
+        # Show the command being run (use shlex.join for proper quoting)
+        print(f"  Command: {shlex.join(multiclient_cmd)}")
         print(f"  Environment: TEST_GAME={test_game} TEST_SEED={seed}")
 
         # Time the multiclient test process
@@ -362,8 +371,8 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         if player is not None:
             spoiler_cmd.append(f"--player={player}")
 
-        # Show the command being run
-        print(f"  Command: {' '.join(spoiler_cmd)}")
+        # Show the command being run (use shlex.join for proper quoting)
+        print(f"  Command: {shlex.join(spoiler_cmd)}")
 
         spoiler_env = os.environ.copy()
 
@@ -1115,8 +1124,16 @@ def test_generation_consistency(template_file: str, templates_dir: str, project_
         "--seed", seed
     ]
 
+    # Show relative path for readability
+    players_dir = os.path.join(project_root, 'Players')
+    if template_path.startswith(players_dir):
+        display_path = os.path.relpath(template_path, players_dir)
+    else:
+        display_path = template_path
+    display_cmd = ["python", "Generate.py", "--weights_file_path", display_path, "--multi", "1", "--seed", seed]
+
     print(f"Re-running generation with same seed...")
-    print(f"  Command: {' '.join(generate_cmd)}")
+    print(f"  Command: {shlex.join(display_cmd)}")
 
     gen_return_code, gen_stdout, gen_stderr = run_command(generate_cmd, cwd=project_root, timeout=600)
 

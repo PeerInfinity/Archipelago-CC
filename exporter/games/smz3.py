@@ -392,28 +392,19 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
         Returns None to fall back to standard analysis, or a dict with the analyzed rule.
         """
-        # Debug output to see if this is being called
-        with open('/tmp/smz3_debug.log', 'a') as f:
-            f.write(f"[SMZ3] override_rule_analysis called for: {rule_target_name}\n")
-        print(f"[SMZ3] override_rule_analysis called for: {rule_target_name}", flush=True)
-
         # Only handle rules with a target name
         if not rule_target_name:
-            print(f"[SMZ3] No rule_target_name, returning None")
             return None
 
         # Skip item rules
         if "Item Rule" in str(rule_target_name):
-            print(f"[SMZ3] Skipping item rule")
             return None
 
         # Handle entrance rules (contain "->")
         if "->" in str(rule_target_name):
-            print(f"[SMZ3] Handling entrance rule")
             return self._handle_entrance_rule(rule_func, rule_target_name)
 
         logger.info(f"Processing location: {rule_target_name}")
-        print(f"[SMZ3] Processing location: {rule_target_name}")
 
         # Try to extract the 'loc' object from default arguments (SMZ3 uses lambda state, loc=loc: ...)
         loc_object = None
@@ -422,10 +413,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             arg_names = rule_func.__code__.co_varnames[:rule_func.__code__.co_argcount]
             defaults = rule_func.__defaults__ or ()
 
-            print(f"[SMZ3] Function has __code__ and __defaults__")
-            print(f"[SMZ3]   arg_names: {arg_names}")
-            print(f"[SMZ3]   num defaults: {len(defaults)}")
-
             # SMZ3 location rules have signature: lambda state, loc=loc: ...
             # So 'loc' should be the second parameter with a default value
             if len(arg_names) >= 2 and 'loc' in arg_names:
@@ -433,13 +420,10 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 # Defaults are aligned to the end of the parameter list
                 # If we have 2 params and 1 default, the default is for the last param
                 defaults_offset = len(arg_names) - len(defaults)
-                print(f"[SMZ3]   loc_index: {loc_index}, defaults_offset: {defaults_offset}")
                 if loc_index >= defaults_offset:
                     loc_object = defaults[loc_index - defaults_offset]
-                    print(f"[SMZ3]   Found 'loc' object: {type(loc_object)}")
 
         if not loc_object:
-            print(f"[SMZ3] No 'loc' object found, returning None")
             return None
 
         # Check if this looks like a TotalSMZ3 Location object
