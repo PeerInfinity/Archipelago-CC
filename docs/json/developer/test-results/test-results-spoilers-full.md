@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-26 08:43:55
+**Generated:** 2025-11-26 23:16:22
 
-**Source Data Created:** 2025-11-26T07:11:04.381485
+**Source Data Created:** 2025-11-26T21:32:38.746846
 
-**Source Data Last Updated:** 2025-11-26T07:11:04.381491
+**Source Data Last Updated:** 2025-11-26T21:32:38.746853
 
 ## Summary
 
 - **Total Games:** 76
-- **Passed:** 71 (93.4%)
-- **Failed:** 5 (6.6%)
+- **Passed:** 74 (97.4%)
+- **Failed:** 2 (2.6%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
@@ -28,7 +28,7 @@
 | Adventure | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ⚫ |
 | Aquaria | ✅ Passed seeds 1-10 | 0 | 5.19 | 5.19 | 🟢 Complete | ✅ | ✅ |
 | ArchipIDLE | ✅ Passed seeds 1-10 | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ✅ |
-| Blasphemous | ❌ Failed seed 1 | 0 | 4.35 | 13.1 | 🟡 33.2% | ✅ | ✅ |
+| Blasphemous | ✅ Passed seeds 1-10 | 0 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed seeds 1-10 | 0 | 10.18 | 10.18 | 🟢 Complete | ✅ | ⚫ |
 | Bumper Stickers | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed seeds 1-10 | 0 | 4.41 | 4.41 | 🟢 Complete | ✅ | ✅ |
@@ -71,24 +71,24 @@
 | Pokemon Red and Blue | ✅ Passed seeds 1-10 | 0 | 10.9 | 10.9 | 🟢 Complete | ✅ | ✅ |
 | Raft | ✅ Passed seeds 1-10 | 0 | 11.6 | 11.6 | 🟢 Complete | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed seeds 1-10 | 0 | 8.35 | 8.35 | 🟢 Complete | ⚫ | ⚫ |
-| SMZ3 | ❌ Failed seed 1 | 3 | 0 | 0 | 🔴 0.0% | ✅ | ✅ |
+| SMZ3 | ❌ Failed seed 1 | 0 | 5.3 | 16.1 | 🟡 32.9% | ✅ | ✅ |
 | Saving Princess | ✅ Passed seeds 1-10 | 0 | 5.3 | 5.3 | 🟢 Complete | ✅ | ⚫ |
 | Secret of Evermore | ✅ Passed seeds 1-10 | 0 | 5.19 | 5.19 | 🟢 Complete | ✅ | ✅ |
 | Shivers | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed seeds 1-10 | 0 | 7.18 | 7.18 | 🟢 Complete | ✅ | ⚫ |
-| Starcraft 2 | ❌ Failed seed 1 | 0 | 14.27 | 32.2 | 🟡 44.3% | ✅ | ✅ |
+| Starcraft 2 | ✅ Passed seeds 1-10 | 0 | 32.2 | 32.2 | 🟢 Complete | ✅ | ✅ |
 | Stardew Valley | ✅ Passed seeds 1-10 | 0 | 44.2 | 44.2 | 🟢 Complete | ✅ | ⚫ |
 | Subnautica | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed seeds 1-10 | 0 | 5.5 | 5.5 | 🟢 Complete | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
 | Super Mario World | ✅ Passed seeds 1-10 | 0 | 8.12 | 8.12 | 🟢 Complete | ✅ | ⚫ |
-| Super Metroid | ❌ Failed seed 1 | 1 | 0.2 | 7.3 | 🟠 2.7% | ✅ | ✅ |
+| Super Metroid | ❌ Failed seed 1 | 0 | 0.2 | 7.3 | 🟠 2.7% | ✅ | ✅ |
 | TUNIC | ✅ Passed seeds 1-10 | 0 | 4.12 | 4.12 | 🟢 Complete | ✅ | ⚫ |
 | Terraria | ✅ Passed seeds 1-10 | 0 | 9.6 | 9.6 | 🟢 Complete | ✅ | ✅ |
 | The Legend of Zelda | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | The Messenger | ✅ Passed seeds 1-10 | 0 | 7.1 | 7.1 | 🟢 Complete | ✅ | ✅ |
 | The Wind Waker | ✅ Passed seeds 1-10 | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ✅ |
-| The Witness | ❌ Failed seed 8 | 0 | 0.2 | 7.7 | 🟠 2.6% | ✅ | ✅ |
+| The Witness | ✅ Passed seeds 1-10 | 0 | 9.15 | 9.15 | 🟢 Complete | ✅ | ✅ |
 | Timespinner | ✅ Passed seeds 1-10 | 0 | 8.43 | 8.43 | 🟢 Complete | ✅ | ✅ |
 | Undertale | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ⚫ |
 | VVVVVV | ✅ Passed seeds 1-10 | 0 | 3.4 | 3.4 | 🟢 Complete | ✅ | ✅ |
