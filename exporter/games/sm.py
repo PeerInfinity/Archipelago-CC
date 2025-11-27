@@ -1172,8 +1172,19 @@ class SMGameExportHandler(GenericGameExportHandler):
                                     mult = 2.0  # Without Wave: 2.0, with Wave: 4.0 - use conservative
                                     minE = 1
                             # 'Bubble -> Kronic Boost Room': {'mult': 1.25, 'minE': 2}
+                            # 'Bubble -> Kronic Boost Room wo/Bomb': {'mult': 0.5, 'minE': 2} (from Top)
                             elif 'kronic' in exit_name:
-                                mult = 1.25
+                                # From Bubble Mountain Top, you go "all the way around" (wo/Bomb), mult=0.5
+                                # From Bubble Mountain (not Top), you have bombs available, mult=1.25
+                                if 'bubble mountain top' in exit_name:
+                                    mult = 0.5  # wo/Bomb - harder route
+                                else:
+                                    mult = 1.25  # with bomb available
+                                minE = 2
+                            # 'Bubble Top <-> Bubble Bottom': {'mult': 0.357, 'minE': 2}
+                            # Traversing between top and bottom of Bubble Mountain is very difficult
+                            elif 'bubble' in exit_name and ('bottom' in exit_name or 'top' in exit_name):
+                                mult = 0.357
                                 minE = 2
                             logger.info(f"SM: canHellRun() converted with type={hellrun_type}, mult={mult}, minE={minE} for exit '{self._current_exit_context}'")
                         elif self._current_location_context:
@@ -1256,8 +1267,19 @@ class SMGameExportHandler(GenericGameExportHandler):
                             mult = 2.0  # Without Wave: 2.0, with Wave: 4.0 - use conservative
                             minE = 1
                     # 'Bubble -> Kronic Boost Room': {'mult': 1.25, 'minE': 2}
+                    # 'Bubble -> Kronic Boost Room wo/Bomb': {'mult': 0.5, 'minE': 2} (from Top)
                     elif 'kronic' in exit_name:
-                        mult = 1.25
+                        # From Bubble Mountain Top, you go "all the way around" (wo/Bomb), mult=0.5
+                        # From Bubble Mountain (not Top), you have bombs available, mult=1.25
+                        if 'bubble mountain top' in exit_name:
+                            mult = 0.5  # wo/Bomb - harder route
+                        else:
+                            mult = 1.25  # with bomb available
+                        minE = 2
+                    # 'Bubble Top <-> Bubble Bottom': {'mult': 0.357, 'minE': 2}
+                    # Traversing between top and bottom of Bubble Mountain is very difficult
+                    elif 'bubble' in exit_name and ('bottom' in exit_name or 'top' in exit_name):
+                        mult = 0.357
                         minE = 2
                     logger.info(f"SM: canHellRun with no args in exit '{self._current_exit_context}', using type={hellrun_type}, mult={mult}, minE={minE}")
                 elif self._current_location_context:
@@ -1362,6 +1384,10 @@ class SMGameExportHandler(GenericGameExportHandler):
         # Super Metroid uses base_items (default), not resolved_items
         # All SM items appear in both base_items and resolved_items with identical values
         # Using the default (False) allows items to be added via location checks
+
+        # Super Metroid needs non-advancement items (Missiles, Supers, Power Bombs) for logic
+        # These items open colored doors and are essential for progression
+        settings['count_non_advancement_items'] = True
 
         # Add hardRooms settings
         try:

@@ -133,10 +133,12 @@ export function checkLocation(sm, locationName, addItems = true) {
               `[StateManager Class] Skipping ${location.item.name} - cross-player item for Player ${itemPlayerId} (current player is ${currentPlayerId}).`
             );
           } else {
-            // In spoiler test mode, only add advancement items to inventory (matching Python's CollectionState behavior)
-            // Python's state.count() only counts items where location.item.advancement is true
-            // In normal gameplay, add all items
-            const shouldAddItem = !sm.spoilerTestMode || location.item.advancement !== false;
+            // In spoiler test mode, determine whether to add non-advancement items
+            // Most games: only add advancement items (Python's state.count() behavior)
+            // Some games (e.g., Super Metroid): need non-advancement items for logic (Missiles open red doors)
+            // Check game setting 'count_non_advancement_items' to determine behavior
+            const countNonAdvancement = sm.rules?.settings?.[currentPlayerId]?.count_non_advancement_items ?? false;
+            const shouldAddItem = !sm.spoilerTestMode || location.item.advancement !== false || countNonAdvancement;
 
             if (shouldAddItem) {
               sm._addItemToInventory(location.item.name, 1);
