@@ -122,6 +122,12 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 item_data[prog_item]['advancement'] = True
                 logger.info(f"Marked {prog_item} as advancement item")
 
+        # Mark Bottle as advancement - it gates access to locations like "Sick Kid"
+        # and may be placed as non-advancement (filler) by the item pool
+        if 'Bottle' in item_data:
+            item_data['Bottle']['advancement'] = True
+            logger.info("Marked Bottle as advancement item")
+
         return item_data
 
     def post_process_location_data(self, location_data: Dict[str, Any], location_name: str) -> Dict[str, Any]:
@@ -135,7 +141,7 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         # Items that should always be marked as advancement regardless of placement
         always_advancement_items = {
             'ProgressiveSword', 'ProgressiveGlove', 'ProgressiveShield',
-            'ProgressiveBow', 'ProgressiveTunic'
+            'ProgressiveBow', 'ProgressiveTunic', 'Bottle'
         }
 
         if location_data.get('item'):
