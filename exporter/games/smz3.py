@@ -122,6 +122,12 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 item_data[prog_item]['advancement'] = True
                 logger.info(f"Marked {prog_item} as advancement item")
 
+        # Mark Bottle as advancement - it gates access to locations like "Sick Kid"
+        # and may be placed as non-advancement (filler) by the item pool
+        if 'Bottle' in item_data:
+            item_data['Bottle']['advancement'] = True
+            logger.info("Marked Bottle as advancement item")
+
         return item_data
 
     def post_process_location_data(self, location_data: Dict[str, Any], location_name: str) -> Dict[str, Any]:
@@ -135,7 +141,7 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         # Items that should always be marked as advancement regardless of placement
         always_advancement_items = {
             'ProgressiveSword', 'ProgressiveGlove', 'ProgressiveShield',
-            'ProgressiveBow', 'ProgressiveTunic'
+            'ProgressiveBow', 'ProgressiveTunic', 'Bottle'
         }
 
         if location_data.get('item'):
@@ -539,6 +545,8 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                         'value': 0
                     }
                 # For other self attributes, log a warning and return constant True
+                # Note: self.world is also converted to constant True, and the
+                # GetLocation().Available() pattern is detected later at the function_call level
                 logger.debug(f"Converting self.{attr} to constant True (unknown attribute)")
                 return {
                     'type': 'constant',
@@ -664,6 +672,43 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             if isinstance(func, dict) and func.get('type') == 'attribute':
                 obj = func.get('object')
                 method_name = func.get('attr')
+
+                # Handle world.GetLocation(location).Available() pattern
+                # Pattern: self.world.GetLocation("Space Jump").Available(items)
+                # This checks if a specific location is accessible with current items
+                # Convert to a location_accessible rule for runtime evaluation
+                if method_name == 'Available':
+                    # Check if this is world.GetLocation().Available() or GetLocation().Available()
+                    inner_func = None
+                    inner_obj = None
+                    if isinstance(obj, dict) and obj.get('type') == 'function_call':
+                        inner_func = obj.get('function', {})
+                        if inner_func.get('type') == 'attribute' and inner_func.get('attr') == 'GetLocation':
+                            inner_obj = inner_func.get('object', {})
+
+                    # Match world_reference.GetLocation() or constant(true).GetLocation()
+                    if (inner_obj and (inner_obj.get('type') == 'world_reference' or
+                        (inner_obj.get('type') == 'constant' and inner_obj.get('value') == True))):
+
+                        # Extract the location name from GetLocation args
+                        get_location_args = obj.get('args', [])
+                        location_name = None
+                        if get_location_args and len(get_location_args) > 0:
+                            location_name_arg = get_location_args[0]
+                            if isinstance(location_name_arg, dict) and location_name_arg.get('type') == 'constant':
+                                location_name = location_name_arg.get('value')
+                            elif isinstance(location_name_arg, str):
+                                location_name = location_name_arg
+
+                        if location_name:
+                            logger.info(f"Converting world.GetLocation('{location_name}').Available() to location_check")
+                            return {
+                                'type': 'location_check',
+                                'location': location_name
+                            }
+                        else:
+                            logger.warning("GetLocation().Available() pattern without location name, returning true")
+                            return {'type': 'constant', 'value': True}
 
                 # Handle GetLocation().ItemIs() pattern - evaluate at export time
                 # Pattern: GetLocation("location_name").ItemIs(ItemType.KeyPD, world)

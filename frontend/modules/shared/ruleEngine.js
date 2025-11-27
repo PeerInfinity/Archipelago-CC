@@ -610,6 +610,24 @@ export const evaluateRule = (rule, context, depth = 0) => {
         break;
       }
 
+      case 'conditional': {
+        // Conditional expression (ternary) - evaluates test and returns if_true or if_false branch
+        // Pattern: test ? if_true : if_false
+        const testResult = evaluateRule(rule.test, context, depth + 1);
+
+        // If test result is undefined, we can't determine which branch to take
+        if (testResult === undefined) {
+          result = undefined;
+        } else if (testResult) {
+          // Test is truthy - evaluate if_true branch
+          result = evaluateRule(rule.if_true, context, depth + 1);
+        } else {
+          // Test is falsy - evaluate if_false branch
+          result = evaluateRule(rule.if_false, context, depth + 1);
+        }
+        break;
+      }
+
       case 'count_true': {
         // Count how many conditions evaluate to true
         // Returns true if at least rule.count conditions are true
@@ -687,6 +705,13 @@ export const evaluateRule = (rule, context, depth = 0) => {
       case 'constant': {
         // Keep constant for backward compatibility
         result = rule.value;
+        break;
+      }
+
+      case 'world_reference': {
+        // SMZ3 exports self.world as world_reference - return null as a safe placeholder
+        // These are typically passed to helpers that don't actually use them in JavaScript
+        result = null;
         break;
       }
 
