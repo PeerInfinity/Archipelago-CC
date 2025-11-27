@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 9,
     "created": "2025-11-27T02:24:15.478035",
-    "last_updated": "2025-11-27T02:24:15.478040",
+    "last_updated": "2025-11-27T04:19:33.447331",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2313,25 +2313,25 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 5.13,
+        "processing_time_seconds": 8.03,
         "return_code": 0,
         "success": true,
         "warning_count": 0
       },
       "multiclient_test": {
-        "client1_locations_checked": 669,
-        "client1_manually_checkable": 203,
-        "client1_passed": false,
+        "client1_locations_checked": 500,
+        "client1_manually_checkable": 491,
+        "client1_passed": true,
         "client2_locations_received": 0,
         "client2_passed": false,
-        "client2_total_locations": 1061,
+        "client2_total_locations": 0,
         "error_count": 0,
-        "locations_checked": 0,
-        "processing_time_seconds": 180.02,
-        "return_code": -1,
-        "single_client_mode": false,
-        "success": false,
-        "total_locations": 1061,
+        "locations_checked": 500,
+        "processing_time_seconds": 327.56,
+        "return_code": 0,
+        "single_client_mode": true,
+        "success": true,
+        "total_locations": 491,
         "warning_count": 0
       },
       "rules_file": {
@@ -2342,7 +2342,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Stardew Valley.yaml",
-      "timestamp": "2025-11-27T02:19:43.604794",
+      "timestamp": "2025-11-27T04:13:57.843950",
       "world_info": {
         "exporter_path": "exporter/games/stardew_valley.py",
         "game_logic_path": null,
