@@ -267,17 +267,18 @@ class BombRushCyberfunkGameExportHandler(BaseGameExportHandler):
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """Return Bomb Rush Cyberfunk item definitions with classification flags."""
         from worlds.bomb_rush_cyberfunk.Items import item_table, BRCType
+        from worlds.bomb_rush_cyberfunk.Locations import event_table
         from BaseClasses import ItemClassification
-        
+
         item_data = {}
-        
+
         for item_dict in item_table:
             name = item_dict["name"]
             item_type = item_dict["type"]
-            
+
             # Get classification from the world instance
             classification = world.get_item_classification(item_type)
-            
+
             # Convert classification to string
             classification_str = "filler"
             if classification == ItemClassification.progression:
@@ -286,28 +287,75 @@ class BombRushCyberfunkGameExportHandler(BaseGameExportHandler):
                 classification_str = "progression_skip_balancing"
             elif classification == ItemClassification.useful:
                 classification_str = "useful"
-            
+
             # Map BRCType to readable category
             category_mapping = {
                 BRCType.Music: "music",
                 BRCType.GraffitiM: "graffiti_m",
-                BRCType.GraffitiL: "graffiti_l", 
+                BRCType.GraffitiL: "graffiti_l",
                 BRCType.GraffitiXL: "graffiti_xl",
                 BRCType.Skateboard: "skateboard",
-                BRCType.InlineSkates: "inline_skates", 
+                BRCType.InlineSkates: "inline_skates",
                 BRCType.BMX: "bmx",
                 BRCType.Character: "character",
                 BRCType.Outfit: "outfit",
                 BRCType.REP: "rep",
                 BRCType.Camera: "camera"
             }
-            
+
             item_data[name] = {
                 "classification": classification_str,
                 "category": category_mapping.get(item_type, "unknown"),
                 "type_value": item_type.value
             }
-        
+
+        # Process event items from event_table
+        # These are items like "Chapter Completed" and "Victory" that are placed at event locations
+        event_items_seen = set()
+        for event_dict in event_table:
+            event_item_name = event_dict.get("item")
+            if event_item_name and event_item_name not in event_items_seen:
+                event_items_seen.add(event_item_name)
+                item_data[event_item_name] = {
+                    'name': event_item_name,
+                    'id': None,  # Event items have no ID
+                    'groups': ['Event'],
+                    'advancement': True,  # Event items are progression
+                    'useful': False,
+                    'trap': False,
+                    'event': True,  # This is an event item
+                    'type': 'Event',
+                    'max_count': 1
+                }
+                logger.info(f"Added event item: {event_item_name}")
+
+        # Also scan locations for dynamically created event items
+        if hasattr(world, 'multiworld'):
+            multiworld = world.multiworld
+            player = world.player
+
+            for location in multiworld.get_locations(player):
+                if location.item and location.item.player == player:
+                    item_name = location.item.name
+                    # Check if this is an event item (no code/ID) that we haven't processed yet
+                    if (location.item.code is None and
+                        item_name not in item_data and
+                        hasattr(location.item, 'classification')):
+
+                        item_data[item_name] = {
+                            'name': item_name,
+                            'id': None,
+                            'groups': ['Event'],
+                            'advancement': location.item.classification == ItemClassification.progression or
+                                          location.item.classification == ItemClassification.progression_skip_balancing,
+                            'useful': location.item.classification == ItemClassification.useful,
+                            'trap': location.item.classification == ItemClassification.trap,
+                            'event': True,
+                            'type': 'Event',
+                            'max_count': 1
+                        }
+                        logger.info(f"Added dynamically created event item from location: {item_name}")
+
         return item_data
     
     def get_progression_mapping(self, world) -> Dict[str, Any]:

@@ -321,7 +321,10 @@ def main():
                 if args.promptfile:
                     if args.multiclient:
                         # Generate multiclient-specific prompt
-                        multiclient_prompt = f"""Please read CC/game-debugging-multiclient-CC.md
+                        multiclient_prompt = f"""First, please read CC/cloud-setup.md and complete the environment setup if you haven't already.
+
+Then, please read 
+CC/game-debugging-multiclient-CC.md
 
 The next game we want to work on is {game_name_from_yaml}.
 
