@@ -267,7 +267,8 @@ export function computeReachableRegions(sm) {
             const canAccessLoc = isLocationAccessible(sm, loc);
             // Check if location hasn't been checked yet
             // NOTE: We only check if the location has been checked, not if we have the item
-            // This allows multiple event locations to give the same item (e.g., BRC's chapter completions)
+            // This allows multiple event locations to give the same item (e.g., BRC's chapter completions,
+            // KDL3's 6 "Stage Completion" items from 6 different stage locations)
             if (canAccessLoc && !sm.checkedLocations.has(loc.name)) {
               sm._addItemToInventory(loc.item.name, 1);
               sm.checkedLocations.add(loc.name);
