@@ -105,6 +105,7 @@ export class StateManager {
     this.regions = new Map(); // Map of region name -> region data
     this.dungeons = new Map(); // Map of dungeon name -> dungeon data
     this.eventLocations = new Map(); // Map of location name -> event location data
+    this.localItemLocations = new Map(); // Map of location name -> location data for id:null non-event items (e.g., coins)
 
     // Enhance the indirectConnections to match Python implementation
     this.indirectConnections = new Map(); // Map of region name -> set of entrances affected by that region

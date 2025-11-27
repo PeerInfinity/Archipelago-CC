@@ -291,6 +291,25 @@ export function computeReachableRegions(sm) {
             }
           }
         }
+
+        // Auto-collect local item locations (id: null, non-events like DLCQuest coins)
+        // These are items that are automatically collected when their region is accessible
+        if (sm.localItemLocations) {
+          for (const loc of sm.localItemLocations.values()) {
+            if (sm.knownReachableRegions.has(loc.region)) {
+              const canAccessLoc = isLocationAccessible(sm, loc);
+              if (canAccessLoc && !sm.checkedLocations.has(loc.name)) {
+                sm._addItemToInventory(loc.item.name, 1);
+                sm.checkedLocations.add(loc.name);
+                newEventCollected = true;
+                continueSearching = true;
+                sm._logDebug(
+                  `[ReachabilityEngine] Auto-collected local item: ${loc.item.name} from ${loc.name}`
+                );
+              }
+            }
+          }
+        }
       }
 
       // If no new regions or events were found, we're done

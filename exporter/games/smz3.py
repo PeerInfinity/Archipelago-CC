@@ -84,11 +84,11 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """
-        Override to fix Card item classifications.
+        Override to fix item classifications.
 
-        Card items (security cards) are marked as filler when precollected,
-        but they're used in access rules and should be marked as advancement
-        so the frontend can properly track them.
+        Some items are marked as non-advancement (filler) by the game's ItemPool logic,
+        but they're still needed for progression and should be marked as advancement
+        so the frontend properly tracks them during spoiler tests.
         """
         # Get base item data from parent class
         item_data = super().get_item_data(world)
@@ -109,7 +109,43 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 item_data[card_name]['advancement'] = True
                 logger.info(f"Marked {card_name} as advancement item")
 
+        # Mark progressive items as advancement - these can be marked as non-advancement
+        # by the ItemPool when there are duplicates, but they're still progression items
+        # that gate access to regions (e.g., ProgressiveSword gates Castle Tower)
+        progressive_items = [
+            'ProgressiveSword', 'ProgressiveGlove', 'ProgressiveShield',
+            'ProgressiveBow', 'ProgressiveTunic'
+        ]
+
+        for prog_item in progressive_items:
+            if prog_item in item_data:
+                item_data[prog_item]['advancement'] = True
+                logger.info(f"Marked {prog_item} as advancement item")
+
         return item_data
+
+    def post_process_location_data(self, location_data: Dict[str, Any], location_name: str) -> Dict[str, Any]:
+        """
+        Post-process location data to fix advancement flags on placed items.
+
+        Some items like ProgressiveSword may be placed as non-advancement (filler)
+        in some locations, but they're still progression items that gate access.
+        This ensures the frontend correctly tracks these items during spoiler tests.
+        """
+        # Items that should always be marked as advancement regardless of placement
+        always_advancement_items = {
+            'ProgressiveSword', 'ProgressiveGlove', 'ProgressiveShield',
+            'ProgressiveBow', 'ProgressiveTunic'
+        }
+
+        if location_data.get('item'):
+            item_name = location_data['item'].get('name')
+            if item_name in always_advancement_items:
+                if not location_data['item'].get('advancement'):
+                    logger.info(f"Marking {item_name} at '{location_name}' as advancement")
+                    location_data['item']['advancement'] = True
+
+        return location_data
 
     def get_settings_data(self, world, multiworld, player: int) -> Dict[str, Any]:
         """
