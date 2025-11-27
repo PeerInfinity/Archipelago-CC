@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-27T05:25:21.422010",
-    "last_updated": "2025-11-27T05:25:21.422018",
+    "last_updated": "2025-11-27T18:32:42.651466",
     "script_version": "1.0.0"
   },
   "results": {
@@ -33761,39 +33761,27 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "1": {
-              "new_rules_hash": "096e592738641f50aa05939071fa5d2f492f8b472d22594b180c350c9a506f61",
-              "new_spheres_hash": "75ab17a9dcc682ec97e3e944c5d9181bc5d209502cf095a52af14657dccf9282",
-              "original_rules_hash": "096e592738641f50aa05939071fa5d2f492f8b472d22594b180c350c9a506f61",
-              "original_spheres_hash": "75ab17a9dcc682ec97e3e944c5d9181bc5d209502cf095a52af14657dccf9282",
-              "rules_identical": true,
-              "seed": "1",
-              "spoilers_identical": true,
-              "timestamp": "2025-11-27T05:20:47.124942"
-            }
-          },
           "game_name_from_filename": "pokemon_rb",
           "game_name_from_yaml": "Pokemon Red and Blue",
           "generation": {
             "error_count": 0,
-            "error_type": null,
-            "processing_time_seconds": 12.6,
-            "return_code": 0,
-            "success": true,
+            "note": "Skipped in test-only mode",
+            "processing_time_seconds": 0,
+            "return_code": null,
+            "success": false,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-            "size_bytes": 1063300,
-            "size_mb": 1.01
+            "size_bytes": 979041,
+            "size_mb": 0.93
           },
           "seed": "1",
           "seed_id": "AP_14089154938208861744",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 46.46,
+            "processing_time_seconds": 55.51,
             "return_code": 0,
             "sphere_reached": 10.2,
             "success": true,
@@ -33801,7 +33789,7 @@
             "warning_count": 0
           },
           "template_filename": "Pokemon Red and Blue.yaml",
-          "timestamp": "2025-11-27T05:05:24.816546",
+          "timestamp": "2025-11-27T18:31:46.643731",
           "world_info": {
             "exporter_path": "exporter/games/pokemon_rb.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js",
@@ -34352,7 +34340,7 @@
         "failure_rate": 0.0
       },
       "template_filename": "Pokemon Red and Blue.yaml",
-      "timestamp": "2025-11-27T05:05:24.816546",
+      "timestamp": "2025-11-27T18:31:46.643731",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/pokemon_rb.py",

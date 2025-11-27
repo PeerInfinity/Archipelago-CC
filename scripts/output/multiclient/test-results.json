@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-27T06:34:48.611645",
-    "last_updated": "2025-11-27T06:34:48.611651",
+    "last_updated": "2025-11-27T19:26:26.854167",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2129,36 +2129,36 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 13.06,
+        "processing_time_seconds": 15.28,
         "return_code": 0,
         "success": true,
         "warning_count": 0
       },
       "multiclient_test": {
-        "client1_locations_checked": 505,
+        "client1_locations_checked": 1010,
         "client1_manually_checkable": 161,
-        "client1_passed": false,
+        "client1_passed": true,
         "client2_locations_received": 0,
         "client2_passed": false,
-        "client2_total_locations": 1010,
-        "error_count": 375,
-        "locations_checked": 0,
-        "processing_time_seconds": 164.81,
-        "return_code": 1,
-        "single_client_mode": false,
-        "success": false,
-        "total_locations": 1010,
-        "warning_count": 1342
+        "client2_total_locations": 0,
+        "error_count": 0,
+        "locations_checked": 1010,
+        "processing_time_seconds": 57.26,
+        "return_code": 0,
+        "single_client_mode": true,
+        "success": true,
+        "total_locations": 161,
+        "warning_count": 190
       },
       "rules_file": {
         "path": "frontend/presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 1063300,
-        "size_mb": 1.01
+        "size_bytes": 979041,
+        "size_mb": 0.93
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Pokemon Red and Blue.yaml",
-      "timestamp": "2025-11-27T06:24:11.552915",
+      "timestamp": "2025-11-27T19:25:14.298846",
       "world_info": {
         "exporter_path": "exporter/games/pokemon_rb.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js",
