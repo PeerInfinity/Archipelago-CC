@@ -923,6 +923,19 @@ export function knowsFirefleasWalljump(snapshot, staticData) {
   return { bool: true, difficulty: 0 };
 }
 
+export function knowsBubbleMountainWallJump(snapshot, staticData) {
+  // Check exported knows settings for BubbleMountainWallJump technique
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('BubbleMountainWallJump' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.BubbleMountainWallJump;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  // Default: enabled with difficulty 5 (Regular preset value)
+  return { bool: true, difficulty: 5 };
+}
+
 export function knowsGetAroundWallJump(snapshot, staticData) {
   return { bool: true, difficulty: 0 };
 }
@@ -985,7 +998,16 @@ export function knowsOldMBWithSpeed(snapshot, staticData) {
 }
 
 export function knowsRonPopeilScrew(snapshot, staticData) {
-  return { bool: true, difficulty: 0 };
+  // Check exported knows settings for RonPopeilScrew technique
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('RonPopeilScrew' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.RonPopeilScrew;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  // Default: disabled (technique not commonly known)
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsSpringBallJumpFromWall(snapshot, staticData) {
@@ -1340,29 +1362,51 @@ export function canPassLavaPitReverse(snapshot, staticData) {
 }
 
 export function canGrappleEscape(snapshot, staticData) {
-  // Multiple ways to escape:
-  // 1. SpaceJump
-  // 2. InfiniteBombJump + (heatProof OR Gravity OR Ice)
-  // 3. Grapple
-  // 4. SpeedBooster + (HiJump OR knowsShortCharge)
+  // Multiple ways to escape + hell run requirement
+  // Python: wand(access, canHellRun('MainUpperNorfair', mult, minE))
+  // The escape requires both movement ability AND surviving the heated area
+  // Python dynamically adjusts mult based on escape method:
+  //   - IBJ/ShortCharge: mult *= 0.7 (harder, slower escape)
+  //   - SpaceJump: mult *= 1.5 (easier, faster escape)
+  //   - Grapple: mult *= 1.25 (middle)
+  //   - Base mult is 1.25 from 'Croc -> Norfair Entrance'
+
+  const baseMult = 1.25;  // 'Croc -> Norfair Entrance'
+  const minE = 2;
+
+  // Check each escape method with its adjusted hell run mult
   return wor(snapshot, staticData,
-    // SpaceJump
-    haveItem(snapshot, staticData, 'SpaceJump'),
-    // IBJ with heat protection or ice for the enemy
+    // SpaceJump (mult *= 1.5 -> 1.25 * 1.5 = 1.875)
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'SpaceJump'),
+      canHellRun(snapshot, staticData, 'MainUpperNorfair', baseMult * 1.5, minE)),
+    // IBJ with heat protection (mult *= 0.7 -> 1.25 * 0.7 = 0.875)
     wand(snapshot, staticData,
       canInfiniteBombJump(snapshot, staticData),
       wor(snapshot, staticData,
         heatProof(snapshot, staticData),
         haveItem(snapshot, staticData, 'Gravity'),
-        haveItem(snapshot, staticData, 'Ice'))),
-    // Grapple
-    haveItem(snapshot, staticData, 'Grapple'),
-    // SpeedBooster + vertical assist
+        haveItem(snapshot, staticData, 'Ice')),
+      canHellRun(snapshot, staticData, 'MainUpperNorfair', baseMult * 0.7, minE)),
+    // Grapple (mult *= 1.25 -> 1.25 * 1.25 = 1.5625)
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Grapple'),
+      canHellRun(snapshot, staticData, 'MainUpperNorfair', baseMult * 1.25, minE)),
+    // SpeedBooster + HiJump (uses base mult = 1.25)
     wand(snapshot, staticData,
       haveItem(snapshot, staticData, 'SpeedBooster'),
-      wor(snapshot, staticData,
-        haveItem(snapshot, staticData, 'HiJump'),
-        knowsShortCharge(snapshot, staticData))));
+      haveItem(snapshot, staticData, 'HiJump'),
+      canHellRun(snapshot, staticData, 'MainUpperNorfair', baseMult, minE)),
+    // SpeedBooster + ShortCharge (mult *= 0.7)
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'SpeedBooster'),
+      knowsShortCharge(snapshot, staticData),
+      canHellRun(snapshot, staticData, 'MainUpperNorfair', baseMult * 0.7, minE)),
+    // HiJump + SpringBall (uses base mult = 1.25)
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'HiJump'),
+      canSpringBallJump(snapshot, staticData),
+      canHellRun(snapshot, staticData, 'MainUpperNorfair', baseMult, minE)));
 }
 
 export function canClimbBottomRedTower(snapshot, staticData) {
@@ -1384,10 +1428,12 @@ export function canClimbRedTower(snapshot, staticData) {
 
 export function canClimbBubbleMountain(snapshot, staticData) {
   // Bubble Mountain (Norfair) - needs vertical movement
+  // Python: wor(haveItem('HiJump'), canFly(), haveItem('Ice'), knowsBubbleMountainWallJump())
   return wor(snapshot, staticData,
-    canFly(snapshot, staticData),
     haveItem(snapshot, staticData, 'HiJump'),
-    haveItem(snapshot, staticData, 'Ice'));
+    canFly(snapshot, staticData),
+    haveItem(snapshot, staticData, 'Ice'),
+    knowsBubbleMountainWallJump(snapshot, staticData));
 }
 
 export function canClimbColosseum(snapshot, staticData) {
@@ -1804,6 +1850,7 @@ export const helperFunctions = {
   knowsEarlyKraid,
   knowsGravLessLevel3,
   knowsFirefleasWalljump,
+  knowsBubbleMountainWallJump,
   knowsGetAroundWallJump,
   knowsIceEscape,
   knowsXrayDboost,

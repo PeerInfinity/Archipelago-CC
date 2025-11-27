@@ -2910,6 +2910,23 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
+      },
+      "AP_20777137877808592492": {
+        "seed": 8,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Super Metroid"
+          }
+        ],
+        "files": [
+          "AP_20777137877808592492.archipelago",
+          "AP_20777137877808592492_P1_Player1.apsm",
+          "AP_20777137877808592492_Spoiler.txt",
+          "AP_20777137877808592492_rules.json",
+          "AP_20777137877808592492_spheres_log.jsonl"
+        ]
       }
     },
     "test_result": {
