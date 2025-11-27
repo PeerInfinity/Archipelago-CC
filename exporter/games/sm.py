@@ -1385,6 +1385,10 @@ class SMGameExportHandler(GenericGameExportHandler):
         # All SM items appear in both base_items and resolved_items with identical values
         # Using the default (False) allows items to be added via location checks
 
+        # Super Metroid needs non-advancement items (Missiles, Supers, Power Bombs) for logic
+        # These items open colored doors and are essential for progression
+        settings['count_non_advancement_items'] = True
+
         # Add hardRooms settings
         try:
             from worlds.sm.variaRandomizer.utils.parameters import Settings as SMSettings
