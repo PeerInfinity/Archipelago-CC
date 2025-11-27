@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.4  -  Seed: 1
+﻿Archipelago Version 0.6.4  -  Seed: 5
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -65,114 +65,114 @@ Relaxed round robin Crystal Flash:No
 
 Locations:
 
-Energy Tank, Gauntlet: Super Missile
-Bomb: Spazer
-Energy Tank, Terminator: Reserve Tank
-Reserve Tank, Brinstar: Charge Beam
-Charge Beam: Ice Beam
-Morphing Ball: Morph Ball
-Energy Tank, Brinstar Ceiling: Missile
-Energy Tank, Etecoons: Energy Tank
-Energy Tank, Waterway: Energy Tank
-Energy Tank, Brinstar Gate: Grappling Beam
+Energy Tank, Gauntlet: Energy Tank
+Bomb: Missile
+Energy Tank, Terminator: Super Missile
+Reserve Tank, Brinstar: Missile
+Charge Beam: Missile
+Morphing Ball: Space Jump
+Energy Tank, Brinstar Ceiling: Morph Ball
+Energy Tank, Etecoons: Super Missile
+Energy Tank, Waterway: Power Bomb
+Energy Tank, Brinstar Gate: Missile
 X-Ray Scope: Super Missile
-Spazer: Super Missile
-Energy Tank, Kraid: Missile
+Spazer: Energy Tank
+Energy Tank, Kraid: Super Missile
 Kraid: Kraid
-Varia Suit: Power Bomb
-Ice Beam: Missile
-Energy Tank, Crocomire: Reserve Tank
-Hi-Jump Boots: Missile
-Grapple Beam: Reserve Tank
-Reserve Tank, Norfair: Spring Ball
-Speed Booster: Missile
-Wave Beam: Missile
+Varia Suit: Super Missile
+Ice Beam: Power Bomb
+Energy Tank, Crocomire: Energy Tank
+Hi-Jump Boots: Super Missile
+Grapple Beam: Super Missile
+Reserve Tank, Norfair: Missile
+Speed Booster: Energy Tank
+Wave Beam: Power Bomb
 Ridley: Ridley
-Energy Tank, Ridley: Missile
-Screw Attack: Super Missile
+Energy Tank, Ridley: Super Missile
+Screw Attack: Energy Tank
 Energy Tank, Firefleas: Super Missile
-Reserve Tank, Wrecked Ship: Super Missile
-Energy Tank, Wrecked Ship: Screw Attack
+Reserve Tank, Wrecked Ship: Energy Tank
+Energy Tank, Wrecked Ship: Charge Beam
 Phantoon: Phantoon
 Right Super, Wrecked Ship: Missile
-Gravity Suit: X-Ray Scope
-Energy Tank, Mama turtle: Gravity Suit
-Plasma Beam: Energy Tank
-Reserve Tank, Maridia: Energy Tank
-Spring Ball: Super Missile
-Energy Tank, Botwoon: Super Missile
+Gravity Suit: Missile
+Energy Tank, Mama turtle: Reserve Tank
+Plasma Beam: Missile
+Reserve Tank, Maridia: Power Bomb
+Spring Ball: Speed Booster
+Energy Tank, Botwoon: Missile
 Draygon: Draygon
-Space Jump: Energy Tank
+Space Jump: Missile
 Mother Brain: Mother Brain
 Spore Spawn: Spore Spawn
 Botwoon: Botwoon
 Crocomire: Crocomire
 Golden Torizo: Golden Torizo
-Power Bomb (Crateria surface): Varia Suit
-Missile (outside Wrecked Ship bottom): Hi-Jump Boots
-Missile (outside Wrecked Ship top): Speed Booster
-Missile (outside Wrecked Ship middle): Super Missile
-Missile (Crateria moat): Power Bomb
-Missile (Crateria bottom): Super Missile
-Missile (Crateria gauntlet right): Wave Beam
+Power Bomb (Crateria surface): Missile
+Missile (outside Wrecked Ship bottom): Super Missile
+Missile (outside Wrecked Ship top): Power Bomb
+Missile (outside Wrecked Ship middle): Missile
+Missile (Crateria moat): Energy Tank
+Missile (Crateria bottom): Energy Tank
+Missile (Crateria gauntlet right): Power Bomb
 Missile (Crateria gauntlet left): Power Bomb
 Super Missile (Crateria): Missile
-Missile (Crateria middle): Missile
-Power Bomb (green Brinstar bottom): Power Bomb
+Missile (Crateria middle): Energy Tank
+Power Bomb (green Brinstar bottom): Missile
 Super Missile (pink Brinstar): Missile
-Missile (green Brinstar below super missile): Energy Tank
-Super Missile (green Brinstar top): Super Missile
-Missile (green Brinstar behind missile): Super Missile
-Missile (green Brinstar behind reserve tank): Missile
-Missile (pink Brinstar top): Super Missile
-Missile (pink Brinstar bottom): Missile
-Power Bomb (pink Brinstar): Missile
-Missile (green Brinstar pipe): Space Jump
-Power Bomb (blue Brinstar): Power Bomb
+Missile (green Brinstar below super missile): Spazer
+Super Missile (green Brinstar top): Power Bomb
+Missile (green Brinstar behind missile): Missile
+Missile (green Brinstar behind reserve tank): Power Bomb
+Missile (pink Brinstar top): Missile
+Missile (pink Brinstar bottom): Screw Attack
+Power Bomb (pink Brinstar): Power Bomb
+Missile (green Brinstar pipe): Missile
+Power Bomb (blue Brinstar): Super Missile
 Missile (blue Brinstar middle): Bomb
 Super Missile (green Brinstar bottom): Super Missile
-Missile (blue Brinstar bottom): Energy Tank
+Missile (blue Brinstar bottom): Gravity Suit
 Missile (blue Brinstar top): Missile
-Missile (blue Brinstar behind missile): Super Missile
-Power Bomb (red Brinstar sidehopper room): Missile
-Power Bomb (red Brinstar spike room): Super Missile
-Missile (red Brinstar spike room): Power Bomb
-Missile (Kraid): Energy Tank
+Missile (blue Brinstar behind missile): Power Bomb
+Power Bomb (red Brinstar sidehopper room): Reserve Tank
+Power Bomb (red Brinstar spike room): Ice Beam
+Missile (red Brinstar spike room): Spring Ball
+Missile (Kraid): Super Missile
 Missile (lava room): Missile
-Missile (below Ice Beam): Power Bomb
+Missile (below Ice Beam): Super Missile
 Missile (above Crocomire): Super Missile
 Missile (Hi-Jump Boots): Energy Tank
-Energy Tank (Hi-Jump Boots): Missile
-Power Bomb (Crocomire): Energy Tank
-Missile (below Crocomire): Power Bomb
-Missile (Grapple Beam): Super Missile
-Missile (Norfair Reserve Tank): Super Missile
-Missile (bubble Norfair green door): Missile
+Energy Tank (Hi-Jump Boots): Reserve Tank
+Power Bomb (Crocomire): Varia Suit
+Missile (below Crocomire): Missile
+Missile (Grapple Beam): Missile
+Missile (Norfair Reserve Tank): Energy Tank
+Missile (bubble Norfair green door): Super Missile
 Missile (bubble Norfair): Super Missile
-Missile (Speed Booster): Missile
-Missile (Wave Beam): Reserve Tank
-Missile (Gold Torizo): Super Missile
-Super Missile (Gold Torizo): Super Missile
-Missile (Mickey Mouse room): Energy Tank
-Missile (lower Norfair above fire flea room): Missile
+Missile (Speed Booster): Energy Tank
+Missile (Wave Beam): Plasma Beam
+Missile (Gold Torizo): X-Ray Scope
+Super Missile (Gold Torizo): Grappling Beam
+Missile (Mickey Mouse room): Missile
+Missile (lower Norfair above fire flea room): Power Bomb
 Power Bomb (lower Norfair above fire flea room): Missile
 Power Bomb (Power Bombs of shame): Power Bomb
 Missile (lower Norfair near Wave Beam): Super Missile
-Missile (Wrecked Ship middle): Missile
-Missile (Gravity Suit): Missile
-Missile (Wrecked Ship top): Missile
-Super Missile (Wrecked Ship left): Power Bomb
-Missile (green Maridia shinespark): Super Missile
-Super Missile (green Maridia): Missile
-Missile (green Maridia tatori): Plasma Beam
-Super Missile (yellow Maridia): Missile
-Missile (yellow Maridia super missile): Energy Tank
-Missile (yellow Maridia false wall): Power Bomb
-Missile (left Maridia sand pit room): Missile
+Missile (Wrecked Ship middle): Super Missile
+Missile (Gravity Suit): Energy Tank
+Missile (Wrecked Ship top): Hi-Jump Boots
+Super Missile (Wrecked Ship left): Wave Beam
+Missile (green Maridia shinespark): Missile
+Super Missile (green Maridia): Super Missile
+Missile (green Maridia tatori): Missile
+Super Missile (yellow Maridia): Super Missile
+Missile (yellow Maridia super missile): Missile
+Missile (yellow Maridia false wall): Super Missile
+Missile (left Maridia sand pit room): Reserve Tank
 Missile (right Maridia sand pit room): Energy Tank
-Power Bomb (right Maridia sand pit room): Energy Tank
-Missile (pink Maridia): Missile
-Super Missile (pink Maridia): Super Missile
+Power Bomb (right Maridia sand pit room): Missile
+Missile (pink Maridia): Super Missile
+Super Missile (pink Maridia): Missile
 Missile (Draygon): Missile
 
 Playthrough:
@@ -181,129 +181,131 @@ Playthrough:
 
 }
 1: {
-  Energy Tank, Brinstar Ceiling: Missile
-  Morphing Ball: Morph Ball
+  Energy Tank, Brinstar Ceiling: Morph Ball
+  Morphing Ball: Space Jump
 }
 2: {
-  Bomb: Spazer
-  Missile (blue Brinstar bottom): Energy Tank
+  Missile (blue Brinstar bottom): Gravity Suit
   Missile (blue Brinstar middle): Bomb
 }
 3: {
-  Charge Beam: Ice Beam
-  Energy Tank, Terminator: Reserve Tank
-  Missile (Crateria bottom): Super Missile
-  Missile (Crateria middle): Missile
-  Missile (green Brinstar behind missile): Super Missile
-  Missile (green Brinstar behind reserve tank): Missile
-  Missile (green Brinstar below super missile): Energy Tank
-  Missile (pink Brinstar bottom): Missile
-  Missile (pink Brinstar top): Super Missile
-  Reserve Tank, Brinstar: Charge Beam
-  Spore Spawn: Spore Spawn
-  Super Missile (green Brinstar top): Super Missile
+  Energy Tank, Terminator: Super Missile
+  Missile (Crateria bottom): Energy Tank
+  Missile (Crateria middle): Energy Tank
 }
 4: {
-  Energy Tank (Hi-Jump Boots): Missile
-  Energy Tank, Gauntlet: Super Missile
-  Hi-Jump Boots: Missile
+  Bomb: Missile
+  Charge Beam: Missile
+  Energy Tank (Hi-Jump Boots): Reserve Tank
+  Energy Tank, Gauntlet: Energy Tank
+  Hi-Jump Boots: Super Missile
   Kraid: Kraid
   Missile (Crateria gauntlet left): Power Bomb
-  Missile (Crateria gauntlet right): Wave Beam
+  Missile (Crateria gauntlet right): Power Bomb
   Missile (Hi-Jump Boots): Energy Tank
-  Missile (green Brinstar pipe): Space Jump
-  Power Bomb (red Brinstar spike room): Super Missile
-  Spazer: Super Missile
+  Missile (green Brinstar behind missile): Missile
+  Missile (green Brinstar behind reserve tank): Power Bomb
+  Missile (green Brinstar below super missile): Spazer
+  Missile (green Brinstar pipe): Missile
+  Missile (pink Brinstar bottom): Screw Attack
+  Missile (pink Brinstar top): Missile
+  Power Bomb (red Brinstar spike room): Ice Beam
+  Reserve Tank, Brinstar: Missile
+  Spazer: Energy Tank
+  Spore Spawn: Spore Spawn
+  Super Missile (green Brinstar top): Power Bomb
   Super Missile (pink Brinstar): Missile
 }
 5: {
-  Energy Tank, Brinstar Gate: Grappling Beam
-  Energy Tank, Etecoons: Energy Tank
-  Energy Tank, Kraid: Missile
-  Missile (Crateria moat): Power Bomb
-  Missile (Kraid): Energy Tank
-  Missile (Wrecked Ship middle): Missile
-  Missile (blue Brinstar behind missile): Super Missile
+  Botwoon: Botwoon
+  Crocomire: Crocomire
+  Energy Tank, Etecoons: Super Missile
+  Energy Tank, Kraid: Super Missile
+  Energy Tank, Mama turtle: Reserve Tank
+  Ice Beam: Power Bomb
+  Missile (Crateria moat): Energy Tank
+  Missile (Kraid): Super Missile
+  Missile (Norfair Reserve Tank): Energy Tank
+  Missile (Speed Booster): Energy Tank
+  Missile (Wrecked Ship middle): Super Missile
+  Missile (above Crocomire): Super Missile
+  Missile (below Ice Beam): Super Missile
+  Missile (blue Brinstar behind missile): Power Bomb
   Missile (blue Brinstar top): Missile
-  Missile (outside Wrecked Ship bottom): Hi-Jump Boots
-  Missile (red Brinstar spike room): Power Bomb
+  Missile (bubble Norfair green door): Super Missile
+  Missile (bubble Norfair): Super Missile
+  Missile (green Maridia tatori): Missile
+  Missile (left Maridia sand pit room): Reserve Tank
+  Missile (outside Wrecked Ship bottom): Super Missile
+  Missile (red Brinstar spike room): Spring Ball
+  Missile (right Maridia sand pit room): Energy Tank
+  Missile (yellow Maridia false wall): Super Missile
+  Missile (yellow Maridia super missile): Missile
   Phantoon: Phantoon
-  Power Bomb (Crateria surface): Varia Suit
-  Power Bomb (blue Brinstar): Power Bomb
-  Power Bomb (green Brinstar bottom): Power Bomb
-  Power Bomb (pink Brinstar): Missile
-  Power Bomb (red Brinstar sidehopper room): Missile
+  Power Bomb (Crateria surface): Missile
+  Power Bomb (blue Brinstar): Super Missile
+  Power Bomb (green Brinstar bottom): Missile
+  Power Bomb (pink Brinstar): Power Bomb
+  Power Bomb (red Brinstar sidehopper room): Reserve Tank
+  Power Bomb (right Maridia sand pit room): Missile
+  Reserve Tank, Maridia: Power Bomb
+  Reserve Tank, Norfair: Missile
+  Speed Booster: Energy Tank
   Super Missile (green Brinstar bottom): Super Missile
-  Varia Suit: Power Bomb
+  Super Missile (green Maridia): Super Missile
+  Super Missile (yellow Maridia): Super Missile
+  Varia Suit: Super Missile
   X-Ray Scope: Super Missile
 }
 6: {
-  Botwoon: Botwoon
-  Crocomire: Crocomire
-  Energy Tank, Firefleas: Super Missile
-  Energy Tank, Mama turtle: Gravity Suit
-  Energy Tank, Wrecked Ship: Screw Attack
-  Golden Torizo: Golden Torizo
-  Gravity Suit: X-Ray Scope
-  Ice Beam: Missile
-  Missile (Gold Torizo): Super Missile
-  Missile (Gravity Suit): Missile
-  Missile (Mickey Mouse room): Energy Tank
-  Missile (Norfair Reserve Tank): Super Missile
-  Missile (Speed Booster): Missile
-  Missile (Wave Beam): Reserve Tank
-  Missile (Wrecked Ship top): Missile
-  Missile (above Crocomire): Super Missile
-  Missile (below Ice Beam): Power Bomb
-  Missile (bubble Norfair green door): Missile
-  Missile (bubble Norfair): Super Missile
-  Missile (green Maridia tatori): Plasma Beam
+  Draygon: Draygon
+  Energy Tank, Botwoon: Missile
+  Energy Tank, Crocomire: Energy Tank
+  Energy Tank, Wrecked Ship: Charge Beam
+  Grapple Beam: Super Missile
+  Gravity Suit: Missile
+  Missile (Draygon): Missile
+  Missile (Grapple Beam): Missile
+  Missile (Gravity Suit): Energy Tank
+  Missile (Wave Beam): Plasma Beam
+  Missile (Wrecked Ship top): Hi-Jump Boots
+  Missile (below Crocomire): Missile
   Missile (lava room): Missile
-  Missile (lower Norfair above fire flea room): Missile
-  Missile (lower Norfair near Wave Beam): Super Missile
-  Missile (outside Wrecked Ship middle): Super Missile
-  Missile (outside Wrecked Ship top): Speed Booster
-  Missile (yellow Maridia false wall): Power Bomb
-  Missile (yellow Maridia super missile): Energy Tank
-  Power Bomb (Power Bombs of shame): Power Bomb
-  Power Bomb (lower Norfair above fire flea room): Missile
-  Reserve Tank, Norfair: Spring Ball
-  Ridley: Ridley
+  Missile (outside Wrecked Ship middle): Missile
+  Missile (outside Wrecked Ship top): Power Bomb
+  Power Bomb (Crocomire): Varia Suit
   Right Super, Wrecked Ship: Missile
-  Screw Attack: Super Missile
-  Speed Booster: Missile
-  Super Missile (Gold Torizo): Super Missile
-  Super Missile (Wrecked Ship left): Power Bomb
-  Super Missile (green Maridia): Missile
-  Super Missile (yellow Maridia): Missile
-  Wave Beam: Missile
+  Super Missile (Wrecked Ship left): Wave Beam
+  Wave Beam: Power Bomb
 }
 7: {
-  Draygon: Draygon
-  Energy Tank, Botwoon: Super Missile
-  Energy Tank, Crocomire: Reserve Tank
-  Energy Tank, Ridley: Missile
-  Energy Tank, Waterway: Energy Tank
-  Grapple Beam: Reserve Tank
-  Missile (Draygon): Missile
-  Missile (Grapple Beam): Super Missile
-  Missile (below Crocomire): Power Bomb
-  Missile (green Maridia shinespark): Super Missile
-  Missile (left Maridia sand pit room): Missile
-  Missile (pink Maridia): Missile
-  Missile (right Maridia sand pit room): Energy Tank
-  Power Bomb (Crocomire): Energy Tank
-  Power Bomb (right Maridia sand pit room): Energy Tank
-  Reserve Tank, Maridia: Energy Tank
-  Reserve Tank, Wrecked Ship: Super Missile
-  Spring Ball: Super Missile
-  Super Missile (Crateria): Missile
-  Super Missile (pink Maridia): Super Missile
+  Energy Tank, Brinstar Gate: Missile
+  Energy Tank, Firefleas: Super Missile
+  Golden Torizo: Golden Torizo
+  Missile (Gold Torizo): X-Ray Scope
+  Missile (Mickey Mouse room): Missile
+  Missile (lower Norfair above fire flea room): Power Bomb
+  Missile (lower Norfair near Wave Beam): Super Missile
+  Plasma Beam: Missile
+  Power Bomb (Power Bombs of shame): Power Bomb
+  Power Bomb (lower Norfair above fire flea room): Missile
+  Ridley: Ridley
+  Screw Attack: Energy Tank
+  Space Jump: Missile
+  Super Missile (Gold Torizo): Grappling Beam
 }
 8: {
+  Energy Tank, Ridley: Super Missile
   Mother Brain: Mother Brain
-  Plasma Beam: Energy Tank
-  Space Jump: Energy Tank
+  Spring Ball: Speed Booster
+}
+9: {
+  Energy Tank, Waterway: Power Bomb
+  Missile (green Maridia shinespark): Missile
+  Missile (pink Maridia): Super Missile
+  Reserve Tank, Wrecked Ship: Energy Tank
+  Super Missile (Crateria): Missile
+  Super Missile (pink Maridia): Missile
 }
 
 Paths:
@@ -528,11 +530,20 @@ Energy Tank, Waterway
    =>   Energy Tank, Waterway
 Energy Tank, Wrecked Ship
         Menu -> StartAP
-   =>   Landing Site -> Landing Site->Keyhunter Room Bottom
-   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Right
-   =>   Moat Right -> Moat Right->West Ocean Left
-   =>   West Ocean Left -> West Ocean Left->Wrecked Ship Main
-   =>   Wrecked Ship Main -> Wrecked Ship Main->Wrecked Ship Back
+   =>   Landing Site -> Landing Site->Lower Mushrooms Left
+   =>   Lower Mushrooms Left -> Lower Mushrooms Left->Green Brinstar Elevator
+   =>   Green Brinstar Elevator -> Green Brinstar Elevator->Big Pink
+   =>   Big Pink -> Big Pink->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Glass Tunnel Top
+   =>   Glass Tunnel Top -> Glass Tunnel Top->Main Street Bottom
+   =>   Main Street Bottom -> Main Street Bottom->Oasis Bottom
+   =>   Oasis Bottom -> Oasis Bottom->Toilet Top
+   =>   Toilet Top -> Toilet Top->Le Coude Right
+   =>   Le Coude Right -> Le Coude Right->Crab Maze Left
+   =>   Crab Maze Left -> Crab Maze Left->Wrecked Ship Back
    =>   Wrecked Ship Back -> Wrecked Ship Back->Energy Tank, Wrecked Ship
    =>   Energy Tank, Wrecked Ship
 Golden Torizo
@@ -1169,14 +1180,17 @@ Phantoon
    =>   Phantoon
 Plasma Beam
         Menu -> StartAP
-   =>   Landing Site -> Landing Site->Keyhunter Room Bottom
-   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Right
-   =>   Moat Right -> Moat Right->West Ocean Left
-   =>   West Ocean Left -> West Ocean Left->Wrecked Ship Main
-   =>   Wrecked Ship Main -> Wrecked Ship Main->Wrecked Ship Back
-   =>   Wrecked Ship Back -> Wrecked Ship Back->Crab Maze Left
-   =>   Crab Maze Left -> Crab Maze Left->Le Coude Right
-   =>   Le Coude Right -> Le Coude Right->Toilet Top
+   =>   Landing Site -> Landing Site->Lower Mushrooms Left
+   =>   Lower Mushrooms Left -> Lower Mushrooms Left->Green Brinstar Elevator
+   =>   Green Brinstar Elevator -> Green Brinstar Elevator->Big Pink
+   =>   Big Pink -> Big Pink->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Glass Tunnel Top
+   =>   Glass Tunnel Top -> Glass Tunnel Top->Main Street Bottom
+   =>   Main Street Bottom -> Main Street Bottom->Oasis Bottom
+   =>   Oasis Bottom -> Oasis Bottom->Toilet Top
    =>   Toilet Top -> Toilet Top->Plasma Beam
    =>   Plasma Beam
 Power Bomb (Crateria surface)
@@ -1453,15 +1467,16 @@ Spore Spawn
    =>   Spore Spawn
 Spring Ball
         Menu -> StartAP
-   =>   Landing Site -> Landing Site->Keyhunter Room Bottom
-   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Right
-   =>   Moat Right -> Moat Right->West Ocean Left
-   =>   West Ocean Left -> West Ocean Left->Wrecked Ship Main
-   =>   Wrecked Ship Main -> Wrecked Ship Main->Wrecked Ship Back
-   =>   Wrecked Ship Back -> Wrecked Ship Back->Crab Maze Left
-   =>   Crab Maze Left -> Crab Maze Left->Le Coude Right
-   =>   Le Coude Right -> Le Coude Right->Toilet Top
-   =>   Toilet Top -> Toilet Top->Oasis Bottom
+   =>   Landing Site -> Landing Site->Lower Mushrooms Left
+   =>   Lower Mushrooms Left -> Lower Mushrooms Left->Green Brinstar Elevator
+   =>   Green Brinstar Elevator -> Green Brinstar Elevator->Big Pink
+   =>   Big Pink -> Big Pink->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Glass Tunnel Top
+   =>   Glass Tunnel Top -> Glass Tunnel Top->Main Street Bottom
+   =>   Main Street Bottom -> Main Street Bottom->Oasis Bottom
    =>   Oasis Bottom -> Oasis Bottom->Spring Ball
    =>   Spring Ball
 Super Missile (Crateria)

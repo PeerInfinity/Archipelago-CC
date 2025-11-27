@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.4  -  Seed: 1
+﻿Archipelago Version 0.6.4  -  Seed: 9
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -65,115 +65,115 @@ Relaxed round robin Crystal Flash:No
 
 Locations:
 
-Energy Tank, Gauntlet: Super Missile
-Bomb: Spazer
-Energy Tank, Terminator: Reserve Tank
-Reserve Tank, Brinstar: Charge Beam
-Charge Beam: Ice Beam
+Energy Tank, Gauntlet: Hi-Jump Boots
+Bomb: Super Missile
+Energy Tank, Terminator: Missile
+Reserve Tank, Brinstar: Power Bomb
+Charge Beam: Power Bomb
 Morphing Ball: Morph Ball
 Energy Tank, Brinstar Ceiling: Missile
-Energy Tank, Etecoons: Energy Tank
-Energy Tank, Waterway: Energy Tank
-Energy Tank, Brinstar Gate: Grappling Beam
-X-Ray Scope: Super Missile
-Spazer: Super Missile
-Energy Tank, Kraid: Missile
+Energy Tank, Etecoons: Super Missile
+Energy Tank, Waterway: Super Missile
+Energy Tank, Brinstar Gate: Power Bomb
+X-Ray Scope: Energy Tank
+Spazer: Missile
+Energy Tank, Kraid: Power Bomb
 Kraid: Kraid
-Varia Suit: Power Bomb
-Ice Beam: Missile
-Energy Tank, Crocomire: Reserve Tank
-Hi-Jump Boots: Missile
-Grapple Beam: Reserve Tank
-Reserve Tank, Norfair: Spring Ball
-Speed Booster: Missile
-Wave Beam: Missile
+Varia Suit: Super Missile
+Ice Beam: Gravity Suit
+Energy Tank, Crocomire: Power Bomb
+Hi-Jump Boots: Space Jump
+Grapple Beam: Super Missile
+Reserve Tank, Norfair: Energy Tank
+Speed Booster: Energy Tank
+Wave Beam: Power Bomb
 Ridley: Ridley
-Energy Tank, Ridley: Missile
-Screw Attack: Super Missile
+Energy Tank, Ridley: Power Bomb
+Screw Attack: Energy Tank
 Energy Tank, Firefleas: Super Missile
-Reserve Tank, Wrecked Ship: Super Missile
-Energy Tank, Wrecked Ship: Screw Attack
+Reserve Tank, Wrecked Ship: Missile
+Energy Tank, Wrecked Ship: Missile
 Phantoon: Phantoon
 Right Super, Wrecked Ship: Missile
-Gravity Suit: X-Ray Scope
-Energy Tank, Mama turtle: Gravity Suit
+Gravity Suit: Energy Tank
+Energy Tank, Mama turtle: Missile
 Plasma Beam: Energy Tank
-Reserve Tank, Maridia: Energy Tank
-Spring Ball: Super Missile
-Energy Tank, Botwoon: Super Missile
+Reserve Tank, Maridia: Bomb
+Spring Ball: Missile
+Energy Tank, Botwoon: Reserve Tank
 Draygon: Draygon
-Space Jump: Energy Tank
+Space Jump: Screw Attack
 Mother Brain: Mother Brain
 Spore Spawn: Spore Spawn
 Botwoon: Botwoon
 Crocomire: Crocomire
 Golden Torizo: Golden Torizo
-Power Bomb (Crateria surface): Varia Suit
-Missile (outside Wrecked Ship bottom): Hi-Jump Boots
-Missile (outside Wrecked Ship top): Speed Booster
-Missile (outside Wrecked Ship middle): Super Missile
-Missile (Crateria moat): Power Bomb
-Missile (Crateria bottom): Super Missile
-Missile (Crateria gauntlet right): Wave Beam
-Missile (Crateria gauntlet left): Power Bomb
-Super Missile (Crateria): Missile
-Missile (Crateria middle): Missile
-Power Bomb (green Brinstar bottom): Power Bomb
+Power Bomb (Crateria surface): Super Missile
+Missile (outside Wrecked Ship bottom): Super Missile
+Missile (outside Wrecked Ship top): Missile
+Missile (outside Wrecked Ship middle): Missile
+Missile (Crateria moat): Plasma Beam
+Missile (Crateria bottom): Missile
+Missile (Crateria gauntlet right): Super Missile
+Missile (Crateria gauntlet left): Charge Beam
+Super Missile (Crateria): Power Bomb
+Missile (Crateria middle): Super Missile
+Power Bomb (green Brinstar bottom): Spazer
 Super Missile (pink Brinstar): Missile
-Missile (green Brinstar below super missile): Energy Tank
-Super Missile (green Brinstar top): Super Missile
-Missile (green Brinstar behind missile): Super Missile
-Missile (green Brinstar behind reserve tank): Missile
-Missile (pink Brinstar top): Super Missile
-Missile (pink Brinstar bottom): Missile
-Power Bomb (pink Brinstar): Missile
-Missile (green Brinstar pipe): Space Jump
-Power Bomb (blue Brinstar): Power Bomb
-Missile (blue Brinstar middle): Bomb
-Super Missile (green Brinstar bottom): Super Missile
-Missile (blue Brinstar bottom): Energy Tank
-Missile (blue Brinstar top): Missile
+Missile (green Brinstar below super missile): Missile
+Super Missile (green Brinstar top): Power Bomb
+Missile (green Brinstar behind missile): X-Ray Scope
+Missile (green Brinstar behind reserve tank): Super Missile
+Missile (pink Brinstar top): Missile
+Missile (pink Brinstar bottom): Varia Suit
+Power Bomb (pink Brinstar): Super Missile
+Missile (green Brinstar pipe): Power Bomb
+Power Bomb (blue Brinstar): Missile
+Missile (blue Brinstar middle): Speed Booster
+Super Missile (green Brinstar bottom): Reserve Tank
+Missile (blue Brinstar bottom): Super Missile
+Missile (blue Brinstar top): Energy Tank
 Missile (blue Brinstar behind missile): Super Missile
 Power Bomb (red Brinstar sidehopper room): Missile
-Power Bomb (red Brinstar spike room): Super Missile
-Missile (red Brinstar spike room): Power Bomb
-Missile (Kraid): Energy Tank
-Missile (lava room): Missile
-Missile (below Ice Beam): Power Bomb
+Power Bomb (red Brinstar spike room): Energy Tank
+Missile (red Brinstar spike room): Super Missile
+Missile (Kraid): Super Missile
+Missile (lava room): Super Missile
+Missile (below Ice Beam): Super Missile
 Missile (above Crocomire): Super Missile
-Missile (Hi-Jump Boots): Energy Tank
+Missile (Hi-Jump Boots): Reserve Tank
 Energy Tank (Hi-Jump Boots): Missile
-Power Bomb (Crocomire): Energy Tank
-Missile (below Crocomire): Power Bomb
-Missile (Grapple Beam): Super Missile
-Missile (Norfair Reserve Tank): Super Missile
-Missile (bubble Norfair green door): Missile
+Power Bomb (Crocomire): Super Missile
+Missile (below Crocomire): Missile
+Missile (Grapple Beam): Energy Tank
+Missile (Norfair Reserve Tank): Missile
+Missile (bubble Norfair green door): Super Missile
 Missile (bubble Norfair): Super Missile
-Missile (Speed Booster): Missile
-Missile (Wave Beam): Reserve Tank
-Missile (Gold Torizo): Super Missile
+Missile (Speed Booster): Wave Beam
+Missile (Wave Beam): Missile
+Missile (Gold Torizo): Missile
 Super Missile (Gold Torizo): Super Missile
-Missile (Mickey Mouse room): Energy Tank
-Missile (lower Norfair above fire flea room): Missile
-Power Bomb (lower Norfair above fire flea room): Missile
-Power Bomb (Power Bombs of shame): Power Bomb
-Missile (lower Norfair near Wave Beam): Super Missile
-Missile (Wrecked Ship middle): Missile
-Missile (Gravity Suit): Missile
+Missile (Mickey Mouse room): Missile
+Missile (lower Norfair above fire flea room): Energy Tank
+Power Bomb (lower Norfair above fire flea room): Energy Tank
+Power Bomb (Power Bombs of shame): Energy Tank
+Missile (lower Norfair near Wave Beam): Power Bomb
+Missile (Wrecked Ship middle): Reserve Tank
+Missile (Gravity Suit): Power Bomb
 Missile (Wrecked Ship top): Missile
-Super Missile (Wrecked Ship left): Power Bomb
-Missile (green Maridia shinespark): Super Missile
-Super Missile (green Maridia): Missile
-Missile (green Maridia tatori): Plasma Beam
+Super Missile (Wrecked Ship left): Missile
+Missile (green Maridia shinespark): Power Bomb
+Super Missile (green Maridia): Energy Tank
+Missile (green Maridia tatori): Power Bomb
 Super Missile (yellow Maridia): Missile
-Missile (yellow Maridia super missile): Energy Tank
-Missile (yellow Maridia false wall): Power Bomb
-Missile (left Maridia sand pit room): Missile
-Missile (right Maridia sand pit room): Energy Tank
-Power Bomb (right Maridia sand pit room): Energy Tank
-Missile (pink Maridia): Missile
-Super Missile (pink Maridia): Super Missile
-Missile (Draygon): Missile
+Missile (yellow Maridia super missile): Super Missile
+Missile (yellow Maridia false wall): Super Missile
+Missile (left Maridia sand pit room): Super Missile
+Missile (right Maridia sand pit room): Grappling Beam
+Power Bomb (right Maridia sand pit room): Spring Ball
+Missile (pink Maridia): Ice Beam
+Super Missile (pink Maridia): Energy Tank
+Missile (Draygon): Power Bomb
 
 Playthrough:
 
@@ -185,125 +185,123 @@ Playthrough:
   Morphing Ball: Morph Ball
 }
 2: {
-  Bomb: Spazer
-  Missile (blue Brinstar bottom): Energy Tank
-  Missile (blue Brinstar middle): Bomb
+  Bomb: Super Missile
+  Missile (blue Brinstar bottom): Super Missile
+  Missile (blue Brinstar middle): Speed Booster
 }
 3: {
-  Charge Beam: Ice Beam
-  Energy Tank, Terminator: Reserve Tank
-  Missile (Crateria bottom): Super Missile
-  Missile (Crateria middle): Missile
-  Missile (green Brinstar behind missile): Super Missile
-  Missile (green Brinstar behind reserve tank): Missile
-  Missile (green Brinstar below super missile): Energy Tank
-  Missile (pink Brinstar bottom): Missile
-  Missile (pink Brinstar top): Super Missile
-  Reserve Tank, Brinstar: Charge Beam
+  Energy Tank (Hi-Jump Boots): Missile
+  Energy Tank, Terminator: Missile
+  Hi-Jump Boots: Space Jump
+  Missile (Hi-Jump Boots): Reserve Tank
+  Missile (green Brinstar behind reserve tank): Super Missile
+  Missile (green Brinstar below super missile): Missile
+  Missile (green Brinstar pipe): Power Bomb
+  Missile (pink Brinstar bottom): Varia Suit
+  Missile (pink Brinstar top): Missile
+  Power Bomb (red Brinstar spike room): Energy Tank
+  Reserve Tank, Brinstar: Power Bomb
+  Spazer: Missile
   Spore Spawn: Spore Spawn
-  Super Missile (green Brinstar top): Super Missile
+  Super Missile (green Brinstar top): Power Bomb
 }
 4: {
-  Energy Tank (Hi-Jump Boots): Missile
-  Energy Tank, Gauntlet: Super Missile
-  Hi-Jump Boots: Missile
+  Charge Beam: Power Bomb
+  Crocomire: Crocomire
+  Energy Tank, Etecoons: Super Missile
+  Energy Tank, Gauntlet: Hi-Jump Boots
+  Energy Tank, Waterway: Super Missile
+  Ice Beam: Gravity Suit
   Kraid: Kraid
-  Missile (Crateria gauntlet left): Power Bomb
-  Missile (Crateria gauntlet right): Wave Beam
-  Missile (Hi-Jump Boots): Energy Tank
-  Missile (green Brinstar pipe): Space Jump
-  Power Bomb (red Brinstar spike room): Super Missile
-  Spazer: Super Missile
+  Missile (Crateria bottom): Missile
+  Missile (Crateria gauntlet left): Charge Beam
+  Missile (Crateria gauntlet right): Super Missile
+  Missile (Crateria middle): Super Missile
+  Missile (Crateria moat): Plasma Beam
+  Missile (Kraid): Super Missile
+  Missile (Norfair Reserve Tank): Missile
+  Missile (Speed Booster): Wave Beam
+  Missile (Wave Beam): Missile
+  Missile (Wrecked Ship middle): Reserve Tank
+  Missile (above Crocomire): Super Missile
+  Missile (below Ice Beam): Super Missile
+  Missile (blue Brinstar behind missile): Super Missile
+  Missile (blue Brinstar top): Energy Tank
+  Missile (bubble Norfair green door): Super Missile
+  Missile (bubble Norfair): Super Missile
+  Missile (green Brinstar behind missile): X-Ray Scope
+  Missile (lava room): Super Missile
+  Missile (outside Wrecked Ship bottom): Super Missile
+  Missile (red Brinstar spike room): Super Missile
+  Phantoon: Phantoon
+  Power Bomb (Crateria surface): Super Missile
+  Power Bomb (blue Brinstar): Missile
+  Power Bomb (green Brinstar bottom): Spazer
+  Power Bomb (pink Brinstar): Super Missile
+  Power Bomb (red Brinstar sidehopper room): Missile
+  Reserve Tank, Norfair: Energy Tank
+  Speed Booster: Energy Tank
+  Super Missile (Crateria): Power Bomb
+  Super Missile (green Brinstar bottom): Reserve Tank
   Super Missile (pink Brinstar): Missile
+  Wave Beam: Power Bomb
+  X-Ray Scope: Energy Tank
 }
 5: {
-  Energy Tank, Brinstar Gate: Grappling Beam
-  Energy Tank, Etecoons: Energy Tank
-  Energy Tank, Kraid: Missile
-  Missile (Crateria moat): Power Bomb
-  Missile (Kraid): Energy Tank
-  Missile (Wrecked Ship middle): Missile
-  Missile (blue Brinstar behind missile): Super Missile
-  Missile (blue Brinstar top): Missile
-  Missile (outside Wrecked Ship bottom): Hi-Jump Boots
-  Missile (red Brinstar spike room): Power Bomb
-  Phantoon: Phantoon
-  Power Bomb (Crateria surface): Varia Suit
-  Power Bomb (blue Brinstar): Power Bomb
-  Power Bomb (green Brinstar bottom): Power Bomb
-  Power Bomb (pink Brinstar): Missile
-  Power Bomb (red Brinstar sidehopper room): Missile
-  Super Missile (green Brinstar bottom): Super Missile
-  Varia Suit: Power Bomb
-  X-Ray Scope: Super Missile
-}
-6: {
   Botwoon: Botwoon
-  Crocomire: Crocomire
+  Energy Tank, Brinstar Gate: Power Bomb
+  Energy Tank, Crocomire: Power Bomb
   Energy Tank, Firefleas: Super Missile
-  Energy Tank, Mama turtle: Gravity Suit
-  Energy Tank, Wrecked Ship: Screw Attack
+  Energy Tank, Kraid: Power Bomb
+  Energy Tank, Mama turtle: Missile
+  Energy Tank, Wrecked Ship: Missile
   Golden Torizo: Golden Torizo
-  Gravity Suit: X-Ray Scope
-  Ice Beam: Missile
-  Missile (Gold Torizo): Super Missile
-  Missile (Gravity Suit): Missile
-  Missile (Mickey Mouse room): Energy Tank
-  Missile (Norfair Reserve Tank): Super Missile
-  Missile (Speed Booster): Missile
-  Missile (Wave Beam): Reserve Tank
+  Grapple Beam: Super Missile
+  Gravity Suit: Energy Tank
+  Missile (Gold Torizo): Missile
+  Missile (Grapple Beam): Energy Tank
+  Missile (Gravity Suit): Power Bomb
+  Missile (Mickey Mouse room): Missile
   Missile (Wrecked Ship top): Missile
-  Missile (above Crocomire): Super Missile
-  Missile (below Ice Beam): Power Bomb
-  Missile (bubble Norfair green door): Missile
-  Missile (bubble Norfair): Super Missile
-  Missile (green Maridia tatori): Plasma Beam
-  Missile (lava room): Missile
-  Missile (lower Norfair above fire flea room): Missile
-  Missile (lower Norfair near Wave Beam): Super Missile
-  Missile (outside Wrecked Ship middle): Super Missile
-  Missile (outside Wrecked Ship top): Speed Booster
-  Missile (yellow Maridia false wall): Power Bomb
-  Missile (yellow Maridia super missile): Energy Tank
-  Power Bomb (Power Bombs of shame): Power Bomb
-  Power Bomb (lower Norfair above fire flea room): Missile
-  Reserve Tank, Norfair: Spring Ball
+  Missile (below Crocomire): Missile
+  Missile (green Maridia shinespark): Power Bomb
+  Missile (green Maridia tatori): Power Bomb
+  Missile (left Maridia sand pit room): Super Missile
+  Missile (lower Norfair above fire flea room): Energy Tank
+  Missile (lower Norfair near Wave Beam): Power Bomb
+  Missile (outside Wrecked Ship middle): Missile
+  Missile (outside Wrecked Ship top): Missile
+  Missile (pink Maridia): Ice Beam
+  Missile (right Maridia sand pit room): Grappling Beam
+  Missile (yellow Maridia false wall): Super Missile
+  Missile (yellow Maridia super missile): Super Missile
+  Power Bomb (Crocomire): Super Missile
+  Power Bomb (Power Bombs of shame): Energy Tank
+  Power Bomb (lower Norfair above fire flea room): Energy Tank
+  Power Bomb (right Maridia sand pit room): Spring Ball
+  Reserve Tank, Maridia: Bomb
+  Reserve Tank, Wrecked Ship: Missile
   Ridley: Ridley
   Right Super, Wrecked Ship: Missile
-  Screw Attack: Super Missile
-  Speed Booster: Missile
+  Screw Attack: Energy Tank
   Super Missile (Gold Torizo): Super Missile
-  Super Missile (Wrecked Ship left): Power Bomb
-  Super Missile (green Maridia): Missile
+  Super Missile (Wrecked Ship left): Missile
+  Super Missile (green Maridia): Energy Tank
+  Super Missile (pink Maridia): Energy Tank
   Super Missile (yellow Maridia): Missile
-  Wave Beam: Missile
+  Varia Suit: Super Missile
+}
+6: {
+  Draygon: Draygon
+  Energy Tank, Botwoon: Reserve Tank
+  Energy Tank, Ridley: Power Bomb
+  Missile (Draygon): Power Bomb
+  Spring Ball: Missile
 }
 7: {
-  Draygon: Draygon
-  Energy Tank, Botwoon: Super Missile
-  Energy Tank, Crocomire: Reserve Tank
-  Energy Tank, Ridley: Missile
-  Energy Tank, Waterway: Energy Tank
-  Grapple Beam: Reserve Tank
-  Missile (Draygon): Missile
-  Missile (Grapple Beam): Super Missile
-  Missile (below Crocomire): Power Bomb
-  Missile (green Maridia shinespark): Super Missile
-  Missile (left Maridia sand pit room): Missile
-  Missile (pink Maridia): Missile
-  Missile (right Maridia sand pit room): Energy Tank
-  Power Bomb (Crocomire): Energy Tank
-  Power Bomb (right Maridia sand pit room): Energy Tank
-  Reserve Tank, Maridia: Energy Tank
-  Reserve Tank, Wrecked Ship: Super Missile
-  Spring Ball: Super Missile
-  Super Missile (Crateria): Missile
-  Super Missile (pink Maridia): Super Missile
-}
-8: {
   Mother Brain: Mother Brain
   Plasma Beam: Energy Tank
-  Space Jump: Energy Tank
+  Space Jump: Screw Attack
 }
 
 Paths:
@@ -347,8 +345,7 @@ Crocomire
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Bottom
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
    =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Crocomire Speedway Bottom
    =>   Crocomire Speedway Bottom -> Crocomire Speedway Bottom->Crocomire Room Top
    =>   Crocomire Room Top -> Crocomire Room Top->Crocomire
@@ -430,8 +427,7 @@ Energy Tank, Crocomire
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Bottom
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
    =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Crocomire Speedway Bottom
    =>   Crocomire Speedway Bottom -> Crocomire Speedway Bottom->Crocomire Room Top
    =>   Crocomire Room Top -> Crocomire Room Top->Energy Tank, Crocomire
@@ -454,8 +450,7 @@ Energy Tank, Firefleas
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Bottom
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
    =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
    =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
    =>   Lava Dive Right -> Lava Dive Right->LN Entrance
@@ -504,8 +499,7 @@ Energy Tank, Ridley
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Bottom
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
    =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
    =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
    =>   Lava Dive Right -> Lava Dive Right->LN Entrance
@@ -546,8 +540,7 @@ Golden Torizo
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Bottom
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
    =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
    =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
    =>   Lava Dive Right -> Lava Dive Right->LN Entrance
@@ -565,8 +558,7 @@ Grapple Beam
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Bottom
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
    =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Crocomire Speedway Bottom
    =>   Crocomire Speedway Bottom -> Crocomire Speedway Bottom->Crocomire Room Top
    =>   Crocomire Room Top -> Crocomire Room Top->Grapple Beam
@@ -674,8 +666,7 @@ Missile (Gold Torizo)
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Bottom
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
    =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
    =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
    =>   Lava Dive Right -> Lava Dive Right->LN Entrance
@@ -693,8 +684,7 @@ Missile (Grapple Beam)
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Bottom
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
    =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Crocomire Speedway Bottom
    =>   Crocomire Speedway Bottom -> Crocomire Speedway Bottom->Crocomire Room Top
    =>   Crocomire Room Top -> Crocomire Room Top->Missile (Grapple Beam)
@@ -745,8 +735,7 @@ Missile (Mickey Mouse room)
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Bottom
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
    =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
    =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
    =>   Lava Dive Right -> Lava Dive Right->LN Entrance
@@ -763,8 +752,9 @@ Missile (Norfair Reserve Tank)
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Missile (Norfair Reserve Tank)
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Bubble Mountain Top
+   =>   Bubble Mountain Top -> Bubble Mountain Top->Missile (Norfair Reserve Tank)
    =>   Missile (Norfair Reserve Tank)
 Missile (Speed Booster)
         Menu -> StartAP
@@ -777,8 +767,8 @@ Missile (Speed Booster)
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Top
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Bubble Mountain Top
    =>   Bubble Mountain Top -> Bubble Mountain Top->Missile (Speed Booster)
    =>   Missile (Speed Booster)
 Missile (Wave Beam)
@@ -792,8 +782,8 @@ Missile (Wave Beam)
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Top
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Bubble Mountain Top
    =>   Bubble Mountain Top -> Bubble Mountain Top->Missile (Wave Beam)
    =>   Missile (Wave Beam)
 Missile (Wrecked Ship middle)
@@ -823,8 +813,7 @@ Missile (above Crocomire)
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Bottom
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
    =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Crocomire Speedway Bottom
    =>   Crocomire Speedway Bottom -> Crocomire Speedway Bottom->Grapple Escape
    =>   Grapple Escape -> Grapple Escape->Missile (above Crocomire)
@@ -840,8 +829,7 @@ Missile (below Crocomire)
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Bottom
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
    =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Crocomire Speedway Bottom
    =>   Crocomire Speedway Bottom -> Crocomire Speedway Bottom->Crocomire Room Top
    =>   Crocomire Room Top -> Crocomire Room Top->Missile (below Crocomire)
@@ -890,8 +878,9 @@ Missile (bubble Norfair green door)
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Missile (bubble Norfair green door)
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Bubble Mountain Top
+   =>   Bubble Mountain Top -> Bubble Mountain Top->Missile (bubble Norfair green door)
    =>   Missile (bubble Norfair green door)
 Missile (bubble Norfair)
         Menu -> StartAP
@@ -904,7 +893,8 @@ Missile (bubble Norfair)
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Bubble Mountain
    =>   Bubble Mountain -> Bubble Mountain->Missile (bubble Norfair)
    =>   Missile (bubble Norfair)
 Missile (green Brinstar behind missile)
@@ -1002,8 +992,7 @@ Missile (lower Norfair above fire flea room)
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Bottom
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
    =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
    =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
    =>   Lava Dive Right -> Lava Dive Right->LN Entrance
@@ -1021,8 +1010,7 @@ Missile (lower Norfair near Wave Beam)
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Bottom
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
    =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
    =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
    =>   Lava Dive Right -> Lava Dive Right->LN Entrance
@@ -1194,8 +1182,7 @@ Power Bomb (Crocomire)
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Bottom
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
    =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Crocomire Speedway Bottom
    =>   Crocomire Speedway Bottom -> Crocomire Speedway Bottom->Crocomire Room Top
    =>   Crocomire Room Top -> Crocomire Room Top->Power Bomb (Crocomire)
@@ -1211,8 +1198,7 @@ Power Bomb (Power Bombs of shame)
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Bottom
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
    =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
    =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
    =>   Lava Dive Right -> Lava Dive Right->LN Entrance
@@ -1244,8 +1230,7 @@ Power Bomb (lower Norfair above fire flea room)
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Bottom
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
    =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
    =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
    =>   Lava Dive Right -> Lava Dive Right->LN Entrance
@@ -1335,8 +1320,9 @@ Reserve Tank, Norfair
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Reserve Tank, Norfair
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Bubble Mountain Top
+   =>   Bubble Mountain Top -> Bubble Mountain Top->Reserve Tank, Norfair
    =>   Reserve Tank, Norfair
 Reserve Tank, Wrecked Ship
         Menu -> StartAP
@@ -1357,8 +1343,7 @@ Ridley
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Bottom
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
    =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
    =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
    =>   Lava Dive Right -> Lava Dive Right->LN Entrance
@@ -1387,8 +1372,7 @@ Screw Attack
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Bottom
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
    =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
    =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
    =>   Lava Dive Right -> Lava Dive Right->LN Entrance
@@ -1440,8 +1424,8 @@ Speed Booster
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Top
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Bubble Mountain Top
    =>   Bubble Mountain Top -> Bubble Mountain Top->Speed Booster
    =>   Speed Booster
 Spore Spawn
@@ -1453,15 +1437,16 @@ Spore Spawn
    =>   Spore Spawn
 Spring Ball
         Menu -> StartAP
-   =>   Landing Site -> Landing Site->Keyhunter Room Bottom
-   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Right
-   =>   Moat Right -> Moat Right->West Ocean Left
-   =>   West Ocean Left -> West Ocean Left->Wrecked Ship Main
-   =>   Wrecked Ship Main -> Wrecked Ship Main->Wrecked Ship Back
-   =>   Wrecked Ship Back -> Wrecked Ship Back->Crab Maze Left
-   =>   Crab Maze Left -> Crab Maze Left->Le Coude Right
-   =>   Le Coude Right -> Le Coude Right->Toilet Top
-   =>   Toilet Top -> Toilet Top->Oasis Bottom
+   =>   Landing Site -> Landing Site->Lower Mushrooms Left
+   =>   Lower Mushrooms Left -> Lower Mushrooms Left->Green Brinstar Elevator
+   =>   Green Brinstar Elevator -> Green Brinstar Elevator->Big Pink
+   =>   Big Pink -> Big Pink->Green Hill Zone Top Right
+   =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Noob Bridge Right
+   =>   Noob Bridge Right -> Noob Bridge Right->Red Tower Top Left
+   =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
+   =>   East Tunnel Right -> East Tunnel Right->Glass Tunnel Top
+   =>   Glass Tunnel Top -> Glass Tunnel Top->Main Street Bottom
+   =>   Main Street Bottom -> Main Street Bottom->Oasis Bottom
    =>   Oasis Bottom -> Oasis Bottom->Spring Ball
    =>   Spring Ball
 Super Missile (Crateria)
@@ -1479,8 +1464,7 @@ Super Missile (Gold Torizo)
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Bottom
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
    =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Kronic Boost Room Bottom Left
    =>   Kronic Boost Room Bottom Left -> Kronic Boost Room Bottom Left->Lava Dive Right
    =>   Lava Dive Right -> Lava Dive Right->LN Entrance
@@ -1591,8 +1575,8 @@ Wave Beam
    =>   Red Tower Top Left -> Red Tower Top Left->East Tunnel Right
    =>   East Tunnel Right -> East Tunnel Right->Warehouse Entrance Left
    =>   Warehouse Entrance Left -> Warehouse Entrance Left->Business Center
-   =>   Business Center -> Business Center->Bubble Mountain
-   =>   Bubble Mountain -> Bubble Mountain->Bubble Mountain Top
+   =>   Business Center -> Business Center->Bubble Mountain Bottom
+   =>   Bubble Mountain Bottom -> Bubble Mountain Bottom->Bubble Mountain Top
    =>   Bubble Mountain Top -> Bubble Mountain Top->Wave Beam
    =>   Wave Beam
 X-Ray Scope

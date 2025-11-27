@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-27T20:14:32.083632",
-    "last_updated": "2025-11-27T20:14:32.083639",
+    "last_updated": "2025-11-27T23:56:20.852757",
     "script_version": "1.0.0"
   },
   "results": {
@@ -30578,7 +30578,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 10.5,
+            "processing_time_seconds": 18.4,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -30593,7 +30593,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 15.82,
+            "processing_time_seconds": 19.66,
             "return_code": 0,
             "sphere_reached": 7.3,
             "success": true,
@@ -30601,7 +30601,7 @@
             "warning_count": 0
           },
           "template_filename": "Super Metroid.yaml",
-          "timestamp": "2025-11-27T19:44:39.093636",
+          "timestamp": "2025-11-27T23:37:10.169734",
           "world_info": {
             "exporter_path": "exporter/games/sm.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
@@ -30623,7 +30623,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 10.95,
+            "processing_time_seconds": 19.24,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -30638,7 +30638,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 14.93,
+            "processing_time_seconds": 19.06,
             "return_code": 0,
             "sphere_reached": 12.3,
             "success": true,
@@ -30646,7 +30646,7 @@
             "warning_count": 0
           },
           "template_filename": "Super Metroid.yaml",
-          "timestamp": "2025-11-27T19:48:15.917510",
+          "timestamp": "2025-11-27T23:55:41.712852",
           "world_info": {
             "exporter_path": "exporter/games/sm.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
@@ -30713,7 +30713,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 10.7,
+            "processing_time_seconds": 17.69,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -30728,7 +30728,7 @@
           "spoiler_test": {
             "error_count": 8,
             "pass_fail": "failed",
-            "processing_time_seconds": 27.17,
+            "processing_time_seconds": 12.65,
             "return_code": 1,
             "sphere_reached": 3.6,
             "success": false,
@@ -30736,7 +30736,7 @@
             "warning_count": 0
           },
           "template_filename": "Super Metroid.yaml",
-          "timestamp": "2025-11-27T20:08:28.094328",
+          "timestamp": "2025-11-27T23:38:10.450163",
           "world_info": {
             "exporter_path": "exporter/games/sm.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
@@ -30758,7 +30758,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 10.67,
+            "processing_time_seconds": 19.25,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -30773,7 +30773,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 15.83,
+            "processing_time_seconds": 19.87,
             "return_code": 0,
             "sphere_reached": 10.3,
             "success": true,
@@ -30781,7 +30781,7 @@
             "warning_count": 0
           },
           "template_filename": "Super Metroid.yaml",
-          "timestamp": "2025-11-27T19:45:31.982831",
+          "timestamp": "2025-11-27T23:43:17.066224",
           "world_info": {
             "exporter_path": "exporter/games/sm.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
@@ -30803,7 +30803,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 10.62,
+            "processing_time_seconds": 18.51,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -30818,7 +30818,7 @@
           "spoiler_test": {
             "error_count": 8,
             "pass_fail": "failed",
-            "processing_time_seconds": 21.03,
+            "processing_time_seconds": 10.79,
             "return_code": 1,
             "sphere_reached": 3.16,
             "success": false,
@@ -30826,7 +30826,7 @@
             "warning_count": 0
           },
           "template_filename": "Super Metroid.yaml",
-          "timestamp": "2025-11-27T20:06:01.543896",
+          "timestamp": "2025-11-27T23:44:15.513755",
           "world_info": {
             "exporter_path": "exporter/games/sm.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
@@ -30848,7 +30848,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 10.48,
+            "processing_time_seconds": 18.09,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -30863,7 +30863,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 15.85,
+            "processing_time_seconds": 19.86,
             "return_code": 0,
             "sphere_reached": 6.6,
             "success": true,
@@ -30871,7 +30871,7 @@
             "warning_count": 0
           },
           "template_filename": "Super Metroid.yaml",
-          "timestamp": "2025-11-27T19:44:06.889089",
+          "timestamp": "2025-11-27T23:48:32.723441",
           "world_info": {
             "exporter_path": "exporter/games/sm.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
@@ -30893,7 +30893,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 10.77,
+            "processing_time_seconds": 18.51,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -30906,17 +30906,17 @@
           "seed": "7",
           "seed_id": "AP_35931773795037525048",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 25.22,
-            "return_code": 1,
-            "sphere_reached": 3.2,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 19.8,
+            "return_code": 0,
+            "sphere_reached": 6.3,
+            "success": true,
             "total_spheres": 6.3,
             "warning_count": 0
           },
           "template_filename": "Super Metroid.yaml",
-          "timestamp": "2025-11-27T20:12:04.763304",
+          "timestamp": "2025-11-27T23:49:20.307366",
           "world_info": {
             "exporter_path": "exporter/games/sm.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
@@ -30938,7 +30938,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 10.57,
+            "processing_time_seconds": 18.33,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -30953,7 +30953,7 @@
           "spoiler_test": {
             "error_count": 8,
             "pass_fail": "failed",
-            "processing_time_seconds": 20.07,
+            "processing_time_seconds": 10.84,
             "return_code": 1,
             "sphere_reached": 4.2,
             "success": false,
@@ -30961,7 +30961,7 @@
             "warning_count": 0
           },
           "template_filename": "Super Metroid.yaml",
-          "timestamp": "2025-11-27T20:06:21.104062",
+          "timestamp": "2025-11-27T23:50:08.925741",
           "world_info": {
             "exporter_path": "exporter/games/sm.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
@@ -30983,7 +30983,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 10.69,
+            "processing_time_seconds": 18.11,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -30998,7 +30998,7 @@
           "spoiler_test": {
             "error_count": 8,
             "pass_fail": "failed",
-            "processing_time_seconds": 21.1,
+            "processing_time_seconds": 10.97,
             "return_code": 1,
             "sphere_reached": 3.4,
             "success": false,
@@ -31006,7 +31006,7 @@
             "warning_count": 0
           },
           "template_filename": "Super Metroid.yaml",
-          "timestamp": "2025-11-27T20:06:01.298422",
+          "timestamp": "2025-11-27T23:52:03.172360",
           "world_info": {
             "exporter_path": "exporter/games/sm.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
@@ -31026,8 +31026,8 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 5,
-      "seeds_passed": 5,
+      "seeds_failed": 4,
+      "seeds_passed": 6,
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
@@ -31041,10 +31041,10 @@
       "summary": {
         "all_passed": false,
         "any_failed": true,
-        "failure_rate": 0.5
+        "failure_rate": 0.4
       },
       "template_filename": "Super Metroid.yaml",
-      "timestamp": "2025-11-27T19:44:39.093636",
+      "timestamp": "2025-11-27T23:55:41.712852",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/sm.py",
