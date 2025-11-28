@@ -67,8 +67,8 @@ jobs:
       - name: Run generate script
         run: |
           source .venv/bin/activate
-          chmod +x scripts/utils/generate_test_templates.sh
-          scripts/utils/generate_test_templates.sh
+          chmod +x scripts/utils/generate_all_templates.sh
+          scripts/utils/generate_all_templates.sh
 
       - name: Commit and push generated presets
         run: |

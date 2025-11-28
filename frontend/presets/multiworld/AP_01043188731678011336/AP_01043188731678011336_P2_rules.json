@@ -36,7 +36,10 @@
             "connected_region": "YellowCastle",
             "access_rule": {
               "type": "item_check",
-              "item": "Yellow Key"
+              "item": {
+                "type": "constant",
+                "value": "Yellow Key"
+              }
             }
           },
           {
@@ -44,7 +47,10 @@
             "connected_region": "WhiteCastle",
             "access_rule": {
               "type": "item_check",
-              "item": "White Key"
+              "item": {
+                "type": "constant",
+                "value": "White Key"
+              }
             }
           },
           {
@@ -52,7 +58,10 @@
             "connected_region": "BlackCastle",
             "access_rule": {
               "type": "item_check",
-              "item": "Black Key"
+              "item": {
+                "type": "constant",
+                "value": "Black Key"
+              }
             }
           },
           {
@@ -63,11 +72,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Black Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Bridge"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Bridge"
+                  "item": {
+                    "type": "constant",
+                    "value": "Black Key"
+                  }
                 }
               ]
             }
@@ -222,11 +237,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Right Difficulty Switch"
+                  "item": {
+                    "type": "constant",
+                    "value": "Sword"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Sword"
+                  "item": {
+                    "type": "constant",
+                    "value": "Right Difficulty Switch"
+                  }
                 }
               ]
             },
@@ -274,11 +295,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Chalice"
+                  "item": {
+                    "type": "constant",
+                    "value": "Chalice"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Yellow Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Yellow Key"
+                  }
                 }
               ]
             },
@@ -307,7 +334,10 @@
             "connected_region": "WhiteCastleVault",
             "access_rule": {
               "type": "item_check",
-              "item": "Bridge"
+              "item": {
+                "type": "constant",
+                "value": "Bridge"
+              }
             }
           },
           {
@@ -318,11 +348,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Bridge"
+                  "item": {
+                    "type": "constant",
+                    "value": "Bridge"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Magnet"
+                  "item": {
+                    "type": "constant",
+                    "value": "Magnet"
+                  }
                 }
               ]
             }
@@ -423,11 +459,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Right Difficulty Switch"
+                  "item": {
+                    "type": "constant",
+                    "value": "Sword"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Sword"
+                  "item": {
+                    "type": "constant",
+                    "value": "Right Difficulty Switch"
+                  }
                 }
               ]
             },
@@ -459,11 +501,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Bridge"
+                  "item": {
+                    "type": "constant",
+                    "value": "Bridge"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Magnet"
+                  "item": {
+                    "type": "constant",
+                    "value": "Magnet"
+                  }
                 }
               ]
             }
@@ -520,11 +568,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Right Difficulty Switch"
+                  "item": {
+                    "type": "constant",
+                    "value": "Sword"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Sword"
+                  "item": {
+                    "type": "constant",
+                    "value": "Right Difficulty Switch"
+                  }
                 }
               ]
             },
@@ -582,7 +636,10 @@
             "connected_region": "CreditsRoomFarSide",
             "access_rule": {
               "type": "item_check",
-              "item": "Magnet"
+              "item": {
+                "type": "constant",
+                "value": "Magnet"
+              }
             }
           }
         ],
@@ -851,149 +908,6 @@
         "event": true,
         "type": "Event",
         "max_count": 1
-      },
-      "Golden Feather": {
-        "name": "Golden Feather",
-        "id": 82003,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Pickaxe": {
-        "name": "Pickaxe",
-        "id": 82015,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Running Shoes": {
-        "name": "Running Shoes",
-        "id": 82025,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Seashell": {
-        "name": "Seashell",
-        "id": 82002,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Stick": {
-        "name": "Stick",
-        "id": 82001,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "27 Coins": {
-        "name": "27 Coins",
-        "id": 82033,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Compass": {
-        "name": "Compass",
-        "id": 82010,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "13 Coins": {
-        "name": "13 Coins",
-        "id": 82037,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "21 Coins": {
-        "name": "21 Coins",
-        "id": 82031,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "7 Coins": {
-        "name": "7 Coins",
-        "id": 82028,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Motorboat Key": {
-        "name": "Motorboat Key",
-        "id": 82014,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "33 Coins": {
-        "name": "33 Coins",
-        "id": 82035,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Baseball Cap": {
-        "name": "Baseball Cap",
-        "id": 82022,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
       }
     }
   },
@@ -1029,8 +943,7 @@
   "settings": {
     "2": {
       "game": "Adventure",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

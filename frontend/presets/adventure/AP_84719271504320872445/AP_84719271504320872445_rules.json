@@ -34,7 +34,10 @@
             "connected_region": "YellowCastle",
             "access_rule": {
               "type": "item_check",
-              "item": "Yellow Key"
+              "item": {
+                "type": "constant",
+                "value": "Yellow Key"
+              }
             }
           },
           {
@@ -42,7 +45,10 @@
             "connected_region": "WhiteCastle",
             "access_rule": {
               "type": "item_check",
-              "item": "White Key"
+              "item": {
+                "type": "constant",
+                "value": "White Key"
+              }
             }
           },
           {
@@ -50,7 +56,10 @@
             "connected_region": "BlackCastle",
             "access_rule": {
               "type": "item_check",
-              "item": "Black Key"
+              "item": {
+                "type": "constant",
+                "value": "Black Key"
+              }
             }
           },
           {
@@ -61,11 +70,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Black Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Bridge"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Bridge"
+                  "item": {
+                    "type": "constant",
+                    "value": "Black Key"
+                  }
                 }
               ]
             }
@@ -220,11 +235,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Right Difficulty Switch"
+                  "item": {
+                    "type": "constant",
+                    "value": "Sword"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Sword"
+                  "item": {
+                    "type": "constant",
+                    "value": "Right Difficulty Switch"
+                  }
                 }
               ]
             },
@@ -272,11 +293,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Chalice"
+                  "item": {
+                    "type": "constant",
+                    "value": "Chalice"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Yellow Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Yellow Key"
+                  }
                 }
               ]
             },
@@ -305,7 +332,10 @@
             "connected_region": "WhiteCastleVault",
             "access_rule": {
               "type": "item_check",
-              "item": "Bridge"
+              "item": {
+                "type": "constant",
+                "value": "Bridge"
+              }
             }
           },
           {
@@ -316,11 +346,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Bridge"
+                  "item": {
+                    "type": "constant",
+                    "value": "Bridge"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Magnet"
+                  "item": {
+                    "type": "constant",
+                    "value": "Magnet"
+                  }
                 }
               ]
             }
@@ -421,11 +457,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Right Difficulty Switch"
+                  "item": {
+                    "type": "constant",
+                    "value": "Sword"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Sword"
+                  "item": {
+                    "type": "constant",
+                    "value": "Right Difficulty Switch"
+                  }
                 }
               ]
             },
@@ -457,11 +499,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Bridge"
+                  "item": {
+                    "type": "constant",
+                    "value": "Bridge"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Magnet"
+                  "item": {
+                    "type": "constant",
+                    "value": "Magnet"
+                  }
                 }
               ]
             }
@@ -518,11 +566,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Right Difficulty Switch"
+                  "item": {
+                    "type": "constant",
+                    "value": "Sword"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Sword"
+                  "item": {
+                    "type": "constant",
+                    "value": "Right Difficulty Switch"
+                  }
                 }
               ]
             },
@@ -580,7 +634,10 @@
             "connected_region": "CreditsRoomFarSide",
             "access_rule": {
               "type": "item_check",
-              "item": "Magnet"
+              "item": {
+                "type": "constant",
+                "value": "Magnet"
+              }
             }
           }
         ],
@@ -884,8 +941,7 @@
   "settings": {
     "1": {
       "game": "Adventure",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {
