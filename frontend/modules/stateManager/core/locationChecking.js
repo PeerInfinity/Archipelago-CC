@@ -14,11 +14,12 @@
  *   Input: Location name and options
  *     ├─> locationName: string (name of location to check)
  *     ├─> addItems: boolean (whether to add location's item to inventory)
+ *     ├─> forceCheck: boolean (whether to bypass accessibility check)
  *
  *   Validation:
  *     ├─> Check if location already checked (reject if so)
  *     ├─> Check if location exists in locations map
- *     ├─> Check if location is accessible (reachable)
+ *     ├─> Check if location is accessible (reachable) - skipped if forceCheck=true
  *
  *   Processing (if accessible):
  *     ├─> Add location to checkedLocations set
@@ -73,8 +74,9 @@ export function isLocationChecked(sm, locationName) {
  * @param {Object} sm - StateManager instance
  * @param {string} locationName - Name of the location to check
  * @param {boolean} addItems - Whether to add the location's item to inventory (default: true)
+ * @param {boolean} forceCheck - Whether to bypass accessibility check (default: false)
  */
-export function checkLocation(sm, locationName, addItems = true) {
+export function checkLocation(sm, locationName, addItems = true, forceCheck = false) {
   let locationWasActuallyChecked = false;
   let rejectionReason = null;
 
@@ -101,8 +103,9 @@ export function checkLocation(sm, locationName, addItems = true) {
         reason: 'location_not_found'
       });
     } else {
-      // Validate that the location is accessible before checking
-      if (!sm.isLocationAccessible(location)) {
+      // Validate that the location is accessible before checking (unless forceCheck is true)
+      const isAccessible = sm.isLocationAccessible(location);
+      if (!isAccessible && !forceCheck) {
         sm._logDebug(`[StateManager Class] Location ${locationName} is not accessible, cannot check.`);
         rejectionReason = 'not_accessible';
 
@@ -112,7 +115,10 @@ export function checkLocation(sm, locationName, addItems = true) {
           reason: 'not_accessible'
         });
       } else {
-        // Location is accessible, proceed with checking
+        // Location is accessible (or forceCheck is true), proceed with checking
+        if (!isAccessible && forceCheck) {
+          sm._logDebug(`[StateManager Class] Location ${locationName} force-checked despite being inaccessible.`);
+        }
         sm.checkedLocations.add(locationName);
         sm._logDebug(`[StateManager Class] Checked location: ${locationName}`);
         locationWasActuallyChecked = true;

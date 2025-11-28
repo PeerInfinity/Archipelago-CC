@@ -1517,10 +1517,10 @@ export class StateManagerProxy {
     );
   }
 
-  async checkLocation(locationName, addItems = true) {
+  async checkLocation(locationName, addItems = true, forceCheck = false) {
     return this._sendCommand(
       StateManagerProxy.COMMANDS.CHECK_LOCATION,
-      { locationName, addItems },
+      { locationName, addItems, forceCheck },
       true
     );
   }
