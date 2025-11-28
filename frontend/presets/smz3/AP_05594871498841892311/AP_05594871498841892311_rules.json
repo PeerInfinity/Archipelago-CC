@@ -3,7 +3,7 @@
   "game_name": "SMZ3",
   "game_directory": "smz3",
   "archipelago_version": "0.6.4",
-  "generation_seed": 1,
+  "generation_seed": 4,
   "player_names": {
     "1": "Player1"
   },
@@ -263,15 +263,15 @@
                 },
                 {
                   "type": "item_check",
+                  "item": "Ether"
+                },
+                {
+                  "type": "item_check",
                   "item": "MoonPearl"
                 },
                 {
                   "type": "item_check",
                   "item": "ProgressiveSword"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Quake"
                 }
               ]
             }
@@ -293,7 +293,7 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Ether"
+                  "item": "Bombos"
                 },
                 {
                   "type": "item_check",
@@ -3507,10 +3507,10 @@
               "value": true
             },
             "item": {
-              "name": "Missile",
+              "name": "BigKeyEP",
               "player": 1,
-              "advancement": false,
-              "type": 194
+              "advancement": true,
+              "type": 157
             }
           },
           {
@@ -3521,10 +3521,10 @@
               "value": true
             },
             "item": {
-              "name": "BigKeyEP",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": 157
+              "advancement": false,
+              "type": 194
             }
           },
           {
@@ -3535,10 +3535,10 @@
               "value": true
             },
             "item": {
-              "name": "MoonPearl",
+              "name": "TwentyRupees",
               "player": 1,
-              "advancement": true,
-              "type": 31
+              "advancement": false,
+              "type": 54
             }
           },
           {
@@ -3563,10 +3563,10 @@
               "item": "Lamp"
             },
             "item": {
-              "name": "Missile",
+              "name": "ThreeHundredRupees",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 70
             }
           },
           {
@@ -3633,10 +3633,10 @@
               "item": "Boots"
             },
             "item": {
-              "name": "HeartPiece",
+              "name": "PowerBomb",
               "player": 1,
               "advancement": false,
-              "type": 23
+              "type": 196
             }
           },
           {
@@ -3661,10 +3661,10 @@
               "item": "KeyDP"
             },
             "item": {
-              "name": "BigKeyDP",
+              "name": "MapDP",
               "player": 1,
               "advancement": true,
-              "type": 156
+              "type": 124
             }
           },
           {
@@ -3675,10 +3675,10 @@
               "item": "KeyDP"
             },
             "item": {
-              "name": "Missile",
+              "name": "BigKeyDP",
               "player": 1,
-              "advancement": false,
-              "type": 194
+              "advancement": true,
+              "type": 156
             }
           },
           {
@@ -3737,10 +3737,10 @@
               ]
             },
             "item": {
-              "name": "MapDP",
+              "name": "TwentyRupees",
               "player": 1,
-              "advancement": true,
-              "type": 124
+              "advancement": false,
+              "type": 54
             }
           }
         ]
@@ -3766,10 +3766,10 @@
               "value": true
             },
             "item": {
-              "name": "KeyTH",
+              "name": "ReserveTank",
               "player": 1,
               "advancement": true,
-              "type": 170
+              "type": 193
             }
           },
           {
@@ -3780,10 +3780,10 @@
               "value": true
             },
             "item": {
-              "name": "ReserveTank",
+              "name": "KeyTH",
               "player": 1,
               "advancement": true,
-              "type": 193
+              "type": 170
             }
           },
           {
@@ -3818,10 +3818,10 @@
               "item": "BigKeyTH"
             },
             "item": {
-              "name": "Hammer",
+              "name": "MapTH",
               "player": 1,
               "advancement": true,
-              "type": 9
+              "type": 117
             }
           },
           {
@@ -3864,10 +3864,10 @@
               ]
             },
             "item": {
-              "name": "MapTH",
+              "name": "ThreeBombs",
               "player": 1,
-              "advancement": true,
-              "type": 117
+              "advancement": false,
+              "type": 40
             }
           }
         ]
@@ -3915,10 +3915,10 @@
               }
             },
             "item": {
-              "name": "ThreeHundredRupees",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 70
+              "type": 194
             }
           },
           {
@@ -3995,10 +3995,10 @@
               ]
             },
             "item": {
-              "name": "BigKeyPD",
+              "name": "KeyPD",
               "player": 1,
               "advancement": true,
-              "type": 153
+              "type": 166
             }
           },
           {
@@ -4009,10 +4009,10 @@
               "item": "Bow"
             },
             "item": {
-              "name": "KeyPD",
+              "name": "BigKeyPD",
               "player": 1,
               "advancement": true,
-              "type": 166
+              "type": 153
             }
           },
           {
@@ -4098,10 +4098,10 @@
               ]
             },
             "item": {
-              "name": "ThreeBombs",
+              "name": "CompassPD",
               "player": 1,
-              "advancement": false,
-              "type": 40
+              "advancement": true,
+              "type": 137
             }
           },
           {
@@ -4129,10 +4129,10 @@
               ]
             },
             "item": {
-              "name": "HeartContainer",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 62
+              "type": 194
             }
           },
           {
@@ -4160,10 +4160,10 @@
               ]
             },
             "item": {
-              "name": "CompassPD",
+              "name": "ArrowUpgrade5",
               "player": 1,
-              "advancement": true,
-              "type": 137
+              "advancement": false,
+              "type": 83
             }
           },
           {
@@ -4191,10 +4191,10 @@
               ]
             },
             "item": {
-              "name": "MapPD",
+              "name": "ProgressiveTunic",
               "player": 1,
               "advancement": true,
-              "type": 121
+              "type": 96
             }
           },
           {
@@ -4226,10 +4226,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "SilverArrows",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 88
             }
           },
           {
@@ -4269,10 +4269,10 @@
               ]
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "MapPD",
               "player": 1,
-              "advancement": false,
-              "type": 54
+              "advancement": true,
+              "type": 121
             }
           }
         ]
@@ -4312,10 +4312,10 @@
               "item": "KeySP"
             },
             "item": {
-              "name": "Missile",
+              "name": "MapSP",
               "player": 1,
-              "advancement": false,
-              "type": 194
+              "advancement": true,
+              "type": 122
             }
           },
           {
@@ -4339,10 +4339,10 @@
               ]
             },
             "item": {
-              "name": "BigKeySP",
+              "name": "CompassSP",
               "player": 1,
-              "advancement": false,
-              "type": 154
+              "advancement": true,
+              "type": 138
             }
           },
           {
@@ -4385,10 +4385,10 @@
               ]
             },
             "item": {
-              "name": "Cape",
+              "name": "BigKeySP",
               "player": 1,
               "advancement": true,
-              "type": 25
+              "type": 154
             }
           },
           {
@@ -4408,10 +4408,10 @@
               ]
             },
             "item": {
-              "name": "MapSP",
+              "name": "HeartPiece",
               "player": 1,
-              "advancement": true,
-              "type": 122
+              "advancement": false,
+              "type": 23
             }
           },
           {
@@ -4435,10 +4435,10 @@
               ]
             },
             "item": {
-              "name": "CompassSP",
+              "name": "PowerBomb",
               "player": 1,
-              "advancement": true,
-              "type": 138
+              "advancement": false,
+              "type": 196
             }
           },
           {
@@ -4462,10 +4462,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Gravity",
               "player": 1,
               "advancement": true,
-              "type": 194
+              "type": 182
             }
           },
           {
@@ -4489,10 +4489,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "ProgressiveSword",
               "player": 1,
-              "advancement": false,
-              "type": 194
+              "advancement": true,
+              "type": 94
             }
           },
           {
@@ -4516,10 +4516,10 @@
               ]
             },
             "item": {
-              "name": "SpaceJump",
+              "name": "HeartPiece",
               "player": 1,
-              "advancement": true,
-              "type": 184
+              "advancement": false,
+              "type": 23
             }
           }
         ]
@@ -4545,10 +4545,10 @@
               "value": true
             },
             "item": {
-              "name": "CompassSW",
+              "name": "HeartPiece",
               "player": 1,
-              "advancement": true,
-              "type": 135
+              "advancement": false,
+              "type": 23
             }
           },
           {
@@ -4559,10 +4559,10 @@
               "value": true
             },
             "item": {
-              "name": "KeySW",
+              "name": "MapSW",
               "player": 1,
               "advancement": true,
-              "type": 168
+              "type": 119
             }
           },
           {
@@ -4587,10 +4587,10 @@
               "value": true
             },
             "item": {
-              "name": "PowerBomb",
+              "name": "KeySW",
               "player": 1,
-              "advancement": false,
-              "type": 196
+              "advancement": true,
+              "type": 168
             }
           },
           {
@@ -4615,10 +4615,10 @@
               "value": true
             },
             "item": {
-              "name": "Bottle",
+              "name": "KeySW",
               "player": 1,
               "advancement": true,
-              "type": 22
+              "type": 168
             }
           },
           {
@@ -4629,10 +4629,10 @@
               "item": "Firerod"
             },
             "item": {
-              "name": "KeySW",
+              "name": "CompassSW",
               "player": 1,
               "advancement": true,
-              "type": 168
+              "type": 135
             }
           },
           {
@@ -4664,10 +4664,10 @@
               ]
             },
             "item": {
-              "name": "MapSW",
+              "name": "TwentyRupees",
               "player": 1,
-              "advancement": true,
-              "type": 119
+              "advancement": false,
+              "type": 54
             }
           }
         ]
@@ -4707,10 +4707,10 @@
               "value": true
             },
             "item": {
-              "name": "MapTT",
+              "name": "ThreeHundredRupees",
               "player": 1,
-              "advancement": true,
-              "type": 116
+              "advancement": false,
+              "type": 70
             }
           },
           {
@@ -4735,10 +4735,10 @@
               "value": true
             },
             "item": {
-              "name": "HeartPiece",
+              "name": "TwentyRupees",
               "player": 1,
               "advancement": false,
-              "type": 23
+              "type": 54
             }
           },
           {
@@ -4772,10 +4772,10 @@
               "item": "BigKeyTT"
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "FiftyRupees",
               "player": 1,
               "advancement": false,
-              "type": 54
+              "type": 65
             }
           },
           {
@@ -4808,10 +4808,10 @@
               ]
             },
             "item": {
-              "name": "TenArrows",
+              "name": "ProgressiveShield",
               "player": 1,
-              "advancement": false,
-              "type": 68
+              "advancement": true,
+              "type": 95
             }
           },
           {
@@ -4852,10 +4852,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "MapTT",
               "player": 1,
-              "advancement": false,
-              "type": 194
+              "advancement": true,
+              "type": 116
             }
           }
         ]
@@ -4881,10 +4881,10 @@
               "value": true
             },
             "item": {
-              "name": "MapIP",
+              "name": "FiftyRupees",
               "player": 1,
-              "advancement": true,
-              "type": 118
+              "advancement": false,
+              "type": 65
             }
           },
           {
@@ -5029,10 +5029,10 @@
               ]
             },
             "item": {
-              "name": "KeyIP",
+              "name": "BigKeyIP",
               "player": 1,
               "advancement": true,
-              "type": 169
+              "type": 150
             }
           },
           {
@@ -5110,10 +5110,10 @@
               ]
             },
             "item": {
-              "name": "BigKeyIP",
+              "name": "CompassIP",
               "player": 1,
               "advancement": true,
-              "type": 150
+              "type": 134
             }
           },
           {
@@ -5124,10 +5124,10 @@
               "value": true
             },
             "item": {
-              "name": "CompassIP",
+              "name": "Boots",
               "player": 1,
               "advancement": true,
-              "type": 134
+              "type": 75
             }
           },
           {
@@ -5138,10 +5138,10 @@
               "value": true
             },
             "item": {
-              "name": "Missile",
+              "name": "TwentyRupees",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 54
             }
           },
           {
@@ -5152,10 +5152,10 @@
               "item": "BigKeyIP"
             },
             "item": {
-              "name": "Grapple",
+              "name": "KeyIP",
               "player": 1,
               "advancement": true,
-              "type": 176
+              "type": 169
             }
           },
           {
@@ -5203,10 +5203,10 @@
               ]
             },
             "item": {
-              "name": "FiveRupees",
+              "name": "MapIP",
               "player": 1,
-              "advancement": false,
-              "type": 53
+              "advancement": true,
+              "type": 118
             }
           }
         ]
@@ -5249,10 +5249,10 @@
               ]
             },
             "item": {
-              "name": "ETank",
+              "name": "TwentyRupees",
               "player": 1,
               "advancement": false,
-              "type": 192
+              "type": 54
             }
           },
           {
@@ -5280,10 +5280,10 @@
               ]
             },
             "item": {
-              "name": "BigKeyMM",
+              "name": "KeyMM",
               "player": 1,
               "advancement": true,
-              "type": 152
+              "type": 167
             }
           },
           {
@@ -5294,10 +5294,10 @@
               "value": true
             },
             "item": {
-              "name": "CompassMM",
+              "name": "KeyMM",
               "player": 1,
               "advancement": true,
-              "type": 136
+              "type": 167
             }
           },
           {
@@ -5308,10 +5308,10 @@
               "value": true
             },
             "item": {
-              "name": "KeyMM",
+              "name": "HeartPiece",
               "player": 1,
-              "advancement": true,
-              "type": 167
+              "advancement": false,
+              "type": 23
             }
           },
           {
@@ -5340,10 +5340,10 @@
               ]
             },
             "item": {
-              "name": "MapMM",
+              "name": "BigKeyMM",
               "player": 1,
               "advancement": true,
-              "type": 120
+              "type": 152
             }
           },
           {
@@ -5361,7 +5361,7 @@
                   "op": ">=",
                   "right": {
                     "type": "constant",
-                    "value": 3
+                    "value": 2
                   }
                 },
                 {
@@ -5372,10 +5372,10 @@
               ]
             },
             "item": {
-              "name": "ThreeBombs",
+              "name": "KeyMM",
               "player": 1,
-              "advancement": false,
-              "type": 40
+              "advancement": true,
+              "type": 167
             }
           },
           {
@@ -5386,10 +5386,10 @@
               "item": "BigKeyMM"
             },
             "item": {
-              "name": "KeyMM",
+              "name": "CompassMM",
               "player": 1,
               "advancement": true,
-              "type": 167
+              "type": 136
             }
           },
           {
@@ -5413,10 +5413,10 @@
               ]
             },
             "item": {
-              "name": "KeyMM",
+              "name": "MapMM",
               "player": 1,
               "advancement": true,
-              "type": 167
+              "type": 120
             }
           }
         ]
@@ -5442,10 +5442,10 @@
               "value": true
             },
             "item": {
-              "name": "Quake",
+              "name": "TwentyRupees",
               "player": 1,
-              "advancement": true,
-              "type": 17
+              "advancement": false,
+              "type": 54
             }
           },
           {
@@ -5470,10 +5470,10 @@
               "item": "Firerod"
             },
             "item": {
-              "name": "KeyTR",
+              "name": "BigKeyTR",
               "player": 1,
               "advancement": true,
-              "type": 172
+              "type": 147
             }
           },
           {
@@ -5492,10 +5492,10 @@
               }
             },
             "item": {
-              "name": "BigKeyTR",
+              "name": "KeyTR",
               "player": 1,
               "advancement": true,
-              "type": 147
+              "type": 172
             }
           },
           {
@@ -5514,10 +5514,10 @@
               }
             },
             "item": {
-              "name": "HeartPiece",
+              "name": "ETank",
               "player": 1,
               "advancement": false,
-              "type": 23
+              "type": 192
             }
           },
           {
@@ -5545,10 +5545,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "KeyTR",
               "player": 1,
-              "advancement": false,
-              "type": 194
+              "advancement": true,
+              "type": 172
             }
           },
           {
@@ -5576,10 +5576,10 @@
               ]
             },
             "item": {
-              "name": "KeyTR",
+              "name": "CompassTR",
               "player": 1,
               "advancement": true,
-              "type": 172
+              "type": 131
             }
           },
           {
@@ -5628,10 +5628,10 @@
               ]
             },
             "item": {
-              "name": "KeyTR",
+              "name": "Mushroom",
               "player": 1,
               "advancement": true,
-              "type": 172
+              "type": 41
             }
           },
           {
@@ -5680,10 +5680,10 @@
               ]
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 54
+              "type": 194
             }
           },
           {
@@ -5732,10 +5732,10 @@
               ]
             },
             "item": {
-              "name": "TenArrows",
+              "name": "ETank",
               "player": 1,
               "advancement": false,
-              "type": 68
+              "type": 192
             }
           },
           {
@@ -5784,10 +5784,10 @@
               ]
             },
             "item": {
-              "name": "MapTR",
+              "name": "KeyTR",
               "player": 1,
               "advancement": true,
-              "type": 115
+              "type": 172
             }
           },
           {
@@ -5832,10 +5832,10 @@
               ]
             },
             "item": {
-              "name": "CompassTR",
+              "name": "MapTR",
               "player": 1,
               "advancement": true,
-              "type": 131
+              "type": 115
             }
           }
         ]
@@ -5861,61 +5861,15 @@
               "item": "Boots"
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "PowerBomb",
               "player": 1,
               "advancement": false,
-              "type": 54
+              "type": 196
             }
           },
           {
             "name": "Ganon's Tower - DMs Room - Top Left",
             "id": 85446,
-            "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Hammer"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Hookshot"
-                }
-              ]
-            },
-            "item": {
-              "name": "ArrowUpgrade5",
-              "player": 1,
-              "advancement": false,
-              "type": 83
-            }
-          },
-          {
-            "name": "Ganon's Tower - DMs Room - Top Right",
-            "id": 85447,
-            "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Hammer"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Hookshot"
-                }
-              ]
-            },
-            "item": {
-              "name": "TwentyRupees",
-              "player": 1,
-              "advancement": false,
-              "type": 54
-            }
-          },
-          {
-            "name": "Ganon's Tower - DMs Room - Bottom Left",
-            "id": 85448,
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -5937,6 +5891,52 @@
             }
           },
           {
+            "name": "Ganon's Tower - DMs Room - Top Right",
+            "id": 85447,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Hammer"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Hookshot"
+                }
+              ]
+            },
+            "item": {
+              "name": "KeyGT",
+              "player": 1,
+              "advancement": true,
+              "type": 173
+            }
+          },
+          {
+            "name": "Ganon's Tower - DMs Room - Bottom Left",
+            "id": 85448,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Hammer"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Hookshot"
+                }
+              ]
+            },
+            "item": {
+              "name": "BigKeyGT",
+              "player": 1,
+              "advancement": true,
+              "type": 146
+            }
+          },
+          {
             "name": "Ganon's Tower - DMs Room - Bottom Right",
             "id": 85449,
             "access_rule": {
@@ -5953,10 +5953,10 @@
               ]
             },
             "item": {
-              "name": "FiftyRupees",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 65
+              "type": 194
             }
           },
           {
@@ -6032,10 +6032,10 @@
               ]
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "TenArrows",
               "player": 1,
               "advancement": false,
-              "type": 54
+              "type": 68
             }
           },
           {
@@ -6083,10 +6083,10 @@
               ]
             },
             "item": {
-              "name": "CompassGT",
+              "name": "MapGT",
               "player": 1,
               "advancement": true,
-              "type": 130
+              "type": 114
             }
           },
           {
@@ -6134,10 +6134,10 @@
               ]
             },
             "item": {
-              "name": "MapGT",
+              "name": "ThreeBombs",
               "player": 1,
-              "advancement": true,
-              "type": 114
+              "advancement": false,
+              "type": 40
             }
           },
           {
@@ -6185,10 +6185,10 @@
               ]
             },
             "item": {
-              "name": "HeartPiece",
+              "name": "CompassGT",
               "player": 1,
-              "advancement": false,
-              "type": 23
+              "advancement": true,
+              "type": 130
             }
           },
           {
@@ -6236,10 +6236,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "PowerBomb",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 196
             }
           },
           {
@@ -6264,10 +6264,10 @@
               "value": true
             },
             "item": {
-              "name": "HeartPiece",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 23
+              "type": 194
             }
           },
           {
@@ -6278,10 +6278,10 @@
               "item": "Somaria"
             },
             "item": {
-              "name": "KeyGT",
+              "name": "Arrow",
               "player": 1,
-              "advancement": true,
-              "type": 173
+              "advancement": false,
+              "type": 67
             }
           },
           {
@@ -6329,10 +6329,10 @@
               ]
             },
             "item": {
-              "name": "PowerBomb",
+              "name": "OneRupee",
               "player": 1,
               "advancement": false,
-              "type": 196
+              "type": 52
             }
           },
           {
@@ -6380,10 +6380,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Super",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 195
             }
           },
           {
@@ -6540,10 +6540,10 @@
               ]
             },
             "item": {
-              "name": "FiveRupees",
+              "name": "ETank",
               "player": 1,
               "advancement": false,
-              "type": 53
+              "type": 192
             }
           },
           {
@@ -6602,10 +6602,10 @@
               ]
             },
             "item": {
-              "name": "ThreeHundredRupees",
+              "name": "Super",
               "player": 1,
               "advancement": false,
-              "type": 70
+              "type": 195
             }
           },
           {
@@ -6665,10 +6665,10 @@
               ]
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "FiveRupees",
               "player": 1,
               "advancement": false,
-              "type": 54
+              "type": 53
             }
           },
           {
@@ -6728,10 +6728,10 @@
               ]
             },
             "item": {
-              "name": "HeartPiece",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 23
+              "type": 194
             }
           },
           {
@@ -6791,10 +6791,10 @@
               ]
             },
             "item": {
-              "name": "BigKeyGT",
+              "name": "FiveRupees",
               "player": 1,
-              "advancement": true,
-              "type": 146
+              "advancement": false,
+              "type": 53
             }
           },
           {
@@ -6871,10 +6871,10 @@
               ]
             },
             "item": {
-              "name": "ArrowUpgrade5",
+              "name": "FiftyRupees",
               "player": 1,
               "advancement": false,
-              "type": 83
+              "type": 65
             }
           },
           {
@@ -6960,10 +6960,10 @@
               ]
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "FiveRupees",
               "player": 1,
               "advancement": false,
-              "type": 54
+              "type": 53
             }
           }
         ]
@@ -7020,10 +7020,10 @@
               ]
             },
             "item": {
-              "name": "Super",
+              "name": "ThreeBombs",
               "player": 1,
               "advancement": false,
-              "type": 195
+              "type": 40
             }
           },
           {
@@ -7034,10 +7034,10 @@
               "item": "Mirror"
             },
             "item": {
-              "name": "ETank",
+              "name": "BombUpgrade5",
               "player": 1,
               "advancement": false,
-              "type": 192
+              "type": 81
             }
           },
           {
@@ -7048,10 +7048,10 @@
               "value": true
             },
             "item": {
-              "name": "Missile",
+              "name": "Super",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 195
             }
           },
           {
@@ -7062,10 +7062,10 @@
               "item": "Lamp"
             },
             "item": {
-              "name": "Super",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 195
+              "type": 194
             }
           }
         ]
@@ -7105,29 +7105,15 @@
               ]
             },
             "item": {
-              "name": "ThreeBombs",
+              "name": "HeartPiece",
               "player": 1,
               "advancement": false,
-              "type": 40
+              "type": 23
             }
           },
           {
             "name": "Spiral Cave",
             "id": 85261,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "TwentyRupees",
-              "player": 1,
-              "advancement": false,
-              "type": 54
-            }
-          },
-          {
-            "name": "Paradox Cave Upper - Left",
-            "id": 85262,
             "access_rule": {
               "type": "constant",
               "value": true
@@ -7140,50 +7126,22 @@
             }
           },
           {
-            "name": "Paradox Cave Upper - Right",
-            "id": 85263,
+            "name": "Paradox Cave Upper - Left",
+            "id": 85262,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "ScrewAttack",
-              "player": 1,
-              "advancement": true,
-              "type": 181
-            }
-          },
-          {
-            "name": "Paradox Cave Lower - Far Left",
-            "id": 85264,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "ProgressiveGlove",
-              "player": 1,
-              "advancement": true,
-              "type": 97
-            }
-          },
-          {
-            "name": "Paradox Cave Lower - Left",
-            "id": 85265,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "HeartPiece",
+              "name": "RedBoomerang",
               "player": 1,
               "advancement": false,
-              "type": 23
+              "type": 42
             }
           },
           {
-            "name": "Paradox Cave Lower - Middle",
-            "id": 85266,
+            "name": "Paradox Cave Upper - Right",
+            "id": 85263,
             "access_rule": {
               "type": "constant",
               "value": true
@@ -7196,6 +7154,48 @@
             }
           },
           {
+            "name": "Paradox Cave Lower - Far Left",
+            "id": 85264,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Bow",
+              "player": 1,
+              "advancement": true,
+              "type": 11
+            }
+          },
+          {
+            "name": "Paradox Cave Lower - Left",
+            "id": 85265,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "ThreeBombs",
+              "player": 1,
+              "advancement": false,
+              "type": 40
+            }
+          },
+          {
+            "name": "Paradox Cave Lower - Middle",
+            "id": 85266,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "HeartContainer",
+              "player": 1,
+              "advancement": false,
+              "type": 62
+            }
+          },
+          {
             "name": "Paradox Cave Lower - Right",
             "id": 85267,
             "access_rule": {
@@ -7203,10 +7203,10 @@
               "value": true
             },
             "item": {
-              "name": "Super",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 195
+              "type": 194
             }
           },
           {
@@ -7217,10 +7217,10 @@
               "value": true
             },
             "item": {
-              "name": "Lamp",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": 18
+              "advancement": false,
+              "type": 194
             }
           },
           {
@@ -7252,10 +7252,10 @@
               ]
             },
             "item": {
-              "name": "TenArrows",
+              "name": "TwentyRupees",
               "player": 1,
               "advancement": false,
-              "type": 68
+              "type": 54
             }
           }
         ]
@@ -7287,10 +7287,10 @@
               ]
             },
             "item": {
-              "name": "ETank",
+              "name": "Super",
               "player": 1,
               "advancement": false,
-              "type": 192
+              "type": 195
             }
           },
           {
@@ -7301,10 +7301,10 @@
               "value": true
             },
             "item": {
-              "name": "HeartPiece",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 23
+              "type": 194
             }
           },
           {
@@ -7315,10 +7315,10 @@
               "value": true
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 54
+              "type": 194
             }
           },
           {
@@ -7344,10 +7344,10 @@
               ]
             },
             "item": {
-              "name": "ThreeBombs",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 40
+              "type": 194
             }
           },
           {
@@ -7358,10 +7358,10 @@
               "item": "Boots"
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "ThreeBombs",
               "player": 1,
               "advancement": false,
-              "type": 54
+              "type": 40
             }
           },
           {
@@ -7431,10 +7431,10 @@
               ]
             },
             "item": {
-              "name": "TenArrows",
+              "name": "ScrewAttack",
               "player": 1,
-              "advancement": false,
-              "type": 68
+              "advancement": true,
+              "type": 181
             }
           },
           {
@@ -7445,10 +7445,10 @@
               "value": true
             },
             "item": {
-              "name": "Super",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": 195
+              "advancement": false,
+              "type": 194
             }
           },
           {
@@ -7459,10 +7459,10 @@
               "value": true
             },
             "item": {
-              "name": "HeartPiece",
+              "name": "TwentyRupees",
               "player": 1,
               "advancement": false,
-              "type": 23
+              "type": 54
             }
           },
           {
@@ -7473,43 +7473,15 @@
               "value": true
             },
             "item": {
-              "name": "Spazer",
+              "name": "ThreeHundredRupees",
               "player": 1,
               "advancement": false,
-              "type": 190
+              "type": 70
             }
           },
           {
             "name": "Kakariko Well - Right",
             "id": 85280,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "ThreeBombs",
-              "player": 1,
-              "advancement": false,
-              "type": 40
-            }
-          },
-          {
-            "name": "Kakariko Well - Bottom",
-            "id": 85281,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Super",
-              "player": 1,
-              "advancement": false,
-              "type": 195
-            }
-          },
-          {
-            "name": "Blind's Hideout - Top",
-            "id": 85282,
             "access_rule": {
               "type": "constant",
               "value": true
@@ -7522,6 +7494,34 @@
             }
           },
           {
+            "name": "Kakariko Well - Bottom",
+            "id": 85281,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "TwentyRupees",
+              "player": 1,
+              "advancement": false,
+              "type": 54
+            }
+          },
+          {
+            "name": "Blind's Hideout - Top",
+            "id": 85282,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "MoonPearl",
+              "player": 1,
+              "advancement": true,
+              "type": 31
+            }
+          },
+          {
             "name": "Blind's Hideout - Far Left",
             "id": 85283,
             "access_rule": {
@@ -7529,10 +7529,10 @@
               "value": true
             },
             "item": {
-              "name": "Missile",
+              "name": "TwentyRupees",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 54
             }
           },
           {
@@ -7557,10 +7557,10 @@
               "value": true
             },
             "item": {
-              "name": "Missile",
+              "name": "HeartContainer",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 62
             }
           },
           {
@@ -7571,10 +7571,10 @@
               "value": true
             },
             "item": {
-              "name": "Somaria",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": 21
+              "advancement": false,
+              "type": 194
             }
           },
           {
@@ -7585,10 +7585,10 @@
               "value": true
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "ProgressiveSword",
               "player": 1,
-              "advancement": false,
-              "type": 54
+              "advancement": true,
+              "type": 94
             }
           },
           {
@@ -7599,10 +7599,10 @@
               "value": true
             },
             "item": {
-              "name": "Flute",
+              "name": "TwentyRupees",
               "player": 1,
-              "advancement": true,
-              "type": 20
+              "advancement": false,
+              "type": 54
             }
           },
           {
@@ -7613,10 +7613,10 @@
               "item": "Bottle"
             },
             "item": {
-              "name": "HeartPiece",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 23
+              "type": 194
             }
           },
           {
@@ -7627,10 +7627,10 @@
               "value": true
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "PowerBomb",
               "player": 1,
-              "advancement": false,
-              "type": 54
+              "advancement": true,
+              "type": 196
             }
           },
           {
@@ -7673,10 +7673,10 @@
               ]
             },
             "item": {
-              "name": "PowerBomb",
+              "name": "ETank",
               "player": 1,
-              "advancement": false,
-              "type": 196
+              "advancement": true,
+              "type": 192
             }
           }
         ]
@@ -7712,10 +7712,10 @@
               ]
             },
             "item": {
-              "name": "SpeedBooster",
+              "name": "HeartPiece",
               "player": 1,
-              "advancement": true,
-              "type": 186
+              "advancement": false,
+              "type": 23
             }
           },
           {
@@ -7726,15 +7726,29 @@
               "item": "Flippers"
             },
             "item": {
-              "name": "Hookshot",
+              "name": "SpaceJump",
               "player": 1,
               "advancement": true,
-              "type": 10
+              "type": 184
             }
           },
           {
             "name": "Waterfall Fairy - Left",
             "id": 85510,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Flippers"
+            },
+            "item": {
+              "name": "ProgressiveGlove",
+              "player": 1,
+              "advancement": true,
+              "type": 97
+            }
+          },
+          {
+            "name": "Waterfall Fairy - Right",
+            "id": 85295,
             "access_rule": {
               "type": "item_check",
               "item": "Flippers"
@@ -7747,20 +7761,6 @@
             }
           },
           {
-            "name": "Waterfall Fairy - Right",
-            "id": 85295,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Flippers"
-            },
-            "item": {
-              "name": "HeartPiece",
-              "player": 1,
-              "advancement": false,
-              "type": 23
-            }
-          },
-          {
             "name": "Potion Shop",
             "id": 85296,
             "access_rule": {
@@ -7768,10 +7768,10 @@
               "item": "Mushroom"
             },
             "item": {
-              "name": "Arrow",
+              "name": "BombUpgrade5",
               "player": 1,
               "advancement": false,
-              "type": 67
+              "type": 81
             }
           },
           {
@@ -7782,10 +7782,10 @@
               "value": true
             },
             "item": {
-              "name": "ProgressiveShield",
+              "name": "ThreeBombs",
               "player": 1,
-              "advancement": true,
-              "type": 95
+              "advancement": false,
+              "type": 40
             }
           },
           {
@@ -7796,10 +7796,10 @@
               "value": true
             },
             "item": {
-              "name": "ProgressiveSword",
+              "name": "HeartPiece",
               "player": 1,
-              "advancement": true,
-              "type": 94
+              "advancement": false,
+              "type": 23
             }
           },
           {
@@ -7810,10 +7810,10 @@
               "value": true
             },
             "item": {
-              "name": "TenArrows",
+              "name": "Mirror",
               "player": 1,
-              "advancement": false,
-              "type": 68
+              "advancement": true,
+              "type": 26
             }
           },
           {
@@ -7830,10 +7830,10 @@
               ]
             },
             "item": {
-              "name": "Varia",
+              "name": "HeartContainer",
               "player": 1,
-              "advancement": true,
-              "type": 178
+              "advancement": false,
+              "type": 62
             }
           }
         ]
@@ -7859,10 +7859,10 @@
               "value": true
             },
             "item": {
-              "name": "Boots",
+              "name": "TwentyRupees",
               "player": 1,
-              "advancement": true,
-              "type": 75
+              "advancement": false,
+              "type": 54
             }
           },
           {
@@ -7873,10 +7873,10 @@
               "item": "Boots"
             },
             "item": {
-              "name": "HeartContainerRefill",
+              "name": "ArrowUpgrade5",
               "player": 1,
               "advancement": false,
-              "type": 63
+              "type": 83
             }
           },
           {
@@ -7887,10 +7887,10 @@
               "item": "Shovel"
             },
             "item": {
-              "name": "HalfMagic",
+              "name": "Cape",
               "player": 1,
               "advancement": true,
-              "type": 78
+              "type": 25
             }
           },
           {
@@ -7910,10 +7910,10 @@
               ]
             },
             "item": {
-              "name": "FiftyRupees",
+              "name": "Icerod",
               "player": 1,
-              "advancement": false,
-              "type": 65
+              "advancement": true,
+              "type": 8
             }
           },
           {
@@ -7938,10 +7938,10 @@
               "value": true
             },
             "item": {
-              "name": "Mirror",
+              "name": "OneRupee",
               "player": 1,
-              "advancement": true,
-              "type": 26
+              "advancement": false,
+              "type": 52
             }
           },
           {
@@ -7952,10 +7952,10 @@
               "value": true
             },
             "item": {
-              "name": "Super",
+              "name": "BombUpgrade5",
               "player": 1,
               "advancement": false,
-              "type": 195
+              "type": 81
             }
           },
           {
@@ -7966,10 +7966,10 @@
               "value": true
             },
             "item": {
-              "name": "Missile",
+              "name": "PowerBomb",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 196
             }
           },
           {
@@ -7980,10 +7980,10 @@
               "value": true
             },
             "item": {
-              "name": "Bugnet",
+              "name": "PowerBomb",
               "player": 1,
-              "advancement": true,
-              "type": 33
+              "advancement": false,
+              "type": 196
             }
           },
           {
@@ -7994,10 +7994,10 @@
               "value": true
             },
             "item": {
-              "name": "Super",
+              "name": "Morph",
               "player": 1,
-              "advancement": false,
-              "type": 195
+              "advancement": true,
+              "type": 180
             }
           },
           {
@@ -8008,10 +8008,10 @@
               "value": true
             },
             "item": {
-              "name": "Missile",
+              "name": "Super",
               "player": 1,
-              "advancement": false,
-              "type": 194
+              "advancement": true,
+              "type": 195
             }
           },
           {
@@ -8022,10 +8022,10 @@
               "region": "Desert Palace"
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "ETank",
               "player": 1,
-              "advancement": false,
-              "type": 54
+              "advancement": true,
+              "type": 192
             }
           },
           {
@@ -8075,10 +8075,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "ThreeHundredRupees",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 70
             }
           },
           {
@@ -8106,10 +8106,10 @@
               ]
             },
             "item": {
-              "name": "Ice",
+              "name": "ETank",
               "player": 1,
-              "advancement": true,
-              "type": 188
+              "advancement": false,
+              "type": 192
             }
           },
           {
@@ -8120,10 +8120,10 @@
               "value": true
             },
             "item": {
-              "name": "PowerBomb",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": 196
+              "advancement": false,
+              "type": 194
             }
           },
           {
@@ -8134,10 +8134,10 @@
               "value": true
             },
             "item": {
-              "name": "ETank",
+              "name": "HeartContainer",
               "player": 1,
-              "advancement": true,
-              "type": 192
+              "advancement": false,
+              "type": 62
             }
           },
           {
@@ -8174,10 +8174,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "ETank",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 192
             }
           },
           {
@@ -8188,10 +8188,10 @@
               "item": "Flippers"
             },
             "item": {
-              "name": "Missile",
+              "name": "TenArrows",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 68
             }
           },
           {
@@ -8202,10 +8202,10 @@
               "value": true
             },
             "item": {
-              "name": "HeartPiece",
+              "name": "Super",
               "player": 1,
               "advancement": false,
-              "type": 23
+              "type": 195
             }
           }
         ]
@@ -8231,81 +8231,15 @@
               "value": true
             },
             "item": {
-              "name": "SpringBall",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": 179
+              "advancement": false,
+              "type": 194
             }
           },
           {
             "name": "Sewers - Secret Room - Left",
             "id": 85348,
-            "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "KeyHC"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Lamp"
-                    }
-                  ]
-                },
-                {
-                  "type": "helper",
-                  "name": "smz3_CanLiftLight",
-                  "args": []
-                }
-              ]
-            },
-            "item": {
-              "name": "ETank",
-              "player": 1,
-              "advancement": false,
-              "type": 192
-            }
-          },
-          {
-            "name": "Sewers - Secret Room - Middle",
-            "id": 85349,
-            "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "KeyHC"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Lamp"
-                    }
-                  ]
-                },
-                {
-                  "type": "helper",
-                  "name": "smz3_CanLiftLight",
-                  "args": []
-                }
-              ]
-            },
-            "item": {
-              "name": "ReserveTank",
-              "player": 1,
-              "advancement": true,
-              "type": 193
-            }
-          },
-          {
-            "name": "Sewers - Secret Room - Right",
-            "id": 85350,
             "access_rule": {
               "type": "or",
               "conditions": [
@@ -8337,6 +8271,72 @@
             }
           },
           {
+            "name": "Sewers - Secret Room - Middle",
+            "id": 85349,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "KeyHC"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Lamp"
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "smz3_CanLiftLight",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Missile",
+              "player": 1,
+              "advancement": false,
+              "type": 194
+            }
+          },
+          {
+            "name": "Sewers - Secret Room - Right",
+            "id": 85350,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "KeyHC"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Lamp"
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "smz3_CanLiftLight",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "ThreeBombs",
+              "player": 1,
+              "advancement": false,
+              "type": 40
+            }
+          },
+          {
             "name": "Sewers - Dark Cross",
             "id": 85351,
             "access_rule": {
@@ -8344,10 +8344,10 @@
               "item": "Lamp"
             },
             "item": {
-              "name": "Plasma",
+              "name": "Bugnet",
               "player": 1,
               "advancement": true,
-              "type": 191
+              "type": 33
             }
           },
           {
@@ -8358,10 +8358,10 @@
               "value": true
             },
             "item": {
-              "name": "Flippers",
+              "name": "ProgressiveGlove",
               "player": 1,
               "advancement": true,
-              "type": 30
+              "type": 97
             }
           },
           {
@@ -8386,10 +8386,10 @@
               "item": "KeyHC"
             },
             "item": {
-              "name": "HeartContainer",
+              "name": "Varia",
               "player": 1,
-              "advancement": false,
-              "type": 62
+              "advancement": true,
+              "type": 178
             }
           },
           {
@@ -8400,10 +8400,10 @@
               "value": true
             },
             "item": {
-              "name": "ThreeBombs",
+              "name": "HeartPiece",
               "player": 1,
               "advancement": false,
-              "type": 40
+              "type": 23
             }
           },
           {
@@ -8414,10 +8414,10 @@
               "value": true
             },
             "item": {
-              "name": "BombUpgrade5",
+              "name": "FiftyRupees",
               "player": 1,
               "advancement": false,
-              "type": 81
+              "type": 65
             }
           }
         ]
@@ -8484,10 +8484,10 @@
               ]
             },
             "item": {
-              "name": "Super",
+              "name": "HeartContainer",
               "player": 1,
               "advancement": false,
-              "type": 195
+              "type": 62
             }
           }
         ]
@@ -8522,10 +8522,10 @@
               ]
             },
             "item": {
-              "name": "Bow",
+              "name": "ThreeBombs",
               "player": 1,
-              "advancement": true,
-              "type": 11
+              "advancement": false,
+              "type": 40
             }
           },
           {
@@ -8545,10 +8545,10 @@
               ]
             },
             "item": {
-              "name": "XRay",
+              "name": "Shovel",
               "player": 1,
-              "advancement": false,
-              "type": 177
+              "advancement": true,
+              "type": 19
             }
           },
           {
@@ -8568,10 +8568,10 @@
               ]
             },
             "item": {
-              "name": "ThreeBombs",
+              "name": "SpringBall",
               "player": 1,
-              "advancement": false,
-              "type": 40
+              "advancement": true,
+              "type": 179
             }
           },
           {
@@ -8600,10 +8600,10 @@
               ]
             },
             "item": {
-              "name": "HeartContainer",
+              "name": "ReserveTank",
               "player": 1,
-              "advancement": false,
-              "type": 62
+              "advancement": true,
+              "type": 193
             }
           },
           {
@@ -8614,10 +8614,10 @@
               "item": "MoonPearl"
             },
             "item": {
-              "name": "FiveRupees",
+              "name": "Wave",
               "player": 1,
-              "advancement": false,
-              "type": 53
+              "advancement": true,
+              "type": 189
             }
           },
           {
@@ -8628,10 +8628,10 @@
               "item": "MoonPearl"
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "HeartPiece",
               "player": 1,
               "advancement": false,
-              "type": 54
+              "type": 23
             }
           }
         ]
@@ -8667,10 +8667,10 @@
               ]
             },
             "item": {
-              "name": "RedBoomerang",
+              "name": "SpeedBooster",
               "player": 1,
-              "advancement": false,
-              "type": 42
+              "advancement": true,
+              "type": 186
             }
           },
           {
@@ -8681,10 +8681,10 @@
               "value": true
             },
             "item": {
-              "name": "Missile",
+              "name": "TwentyRupees",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 54
             }
           },
           {
@@ -8695,10 +8695,10 @@
               "value": true
             },
             "item": {
-              "name": "Missile",
+              "name": "TenArrows",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 68
             }
           },
           {
@@ -8709,10 +8709,10 @@
               "value": true
             },
             "item": {
-              "name": "ETank",
+              "name": "ThreeBombs",
               "player": 1,
               "advancement": false,
-              "type": 192
+              "type": 40
             }
           },
           {
@@ -8733,10 +8733,10 @@
               ]
             },
             "item": {
-              "name": "PowerBomb",
+              "name": "Ether",
               "player": 1,
-              "advancement": false,
-              "type": 196
+              "advancement": true,
+              "type": 16
             }
           },
           {
@@ -8748,10 +8748,10 @@
               "args": []
             },
             "item": {
-              "name": "Super",
+              "name": "HeartPiece",
               "player": 1,
               "advancement": false,
-              "type": 195
+              "type": 23
             }
           },
           {
@@ -8763,10 +8763,10 @@
               "args": []
             },
             "item": {
-              "name": "HeartContainer",
+              "name": "ETank",
               "player": 1,
-              "advancement": false,
-              "type": 62
+              "advancement": true,
+              "type": 192
             }
           }
         ]
@@ -8802,10 +8802,10 @@
               ]
             },
             "item": {
-              "name": "ProgressiveSword",
+              "name": "ETank",
               "player": 1,
-              "advancement": true,
-              "type": 94
+              "advancement": false,
+              "type": 192
             }
           },
           {
@@ -8816,10 +8816,10 @@
               "value": true
             },
             "item": {
-              "name": "ThreeBombs",
+              "name": "Hookshot",
               "player": 1,
-              "advancement": false,
-              "type": 40
+              "advancement": true,
+              "type": 10
             }
           },
           {
@@ -8877,10 +8877,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "OneHundredRupees",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 64
             }
           },
           {
@@ -8938,10 +8938,10 @@
               ]
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "ThreeBombs",
               "player": 1,
               "advancement": false,
-              "type": 54
+              "type": 40
             }
           }
         ]
@@ -8967,10 +8967,10 @@
               "value": true
             },
             "item": {
-              "name": "ThreeBombs",
+              "name": "Book",
               "player": 1,
-              "advancement": false,
-              "type": 40
+              "advancement": true,
+              "type": 29
             }
           },
           {
@@ -8981,15 +8981,29 @@
               "value": true
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "TenArrows",
               "player": 1,
               "advancement": false,
-              "type": 54
+              "type": 68
             }
           },
           {
             "name": "Hype Cave - Top",
             "id": 85340,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "ETank",
+              "player": 1,
+              "advancement": false,
+              "type": 192
+            }
+          },
+          {
+            "name": "Hype Cave - Middle Right",
+            "id": 85341,
             "access_rule": {
               "type": "constant",
               "value": true
@@ -9002,20 +9016,6 @@
             }
           },
           {
-            "name": "Hype Cave - Middle Right",
-            "id": 85341,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "HeartContainer",
-              "player": 1,
-              "advancement": false,
-              "type": 62
-            }
-          },
-          {
             "name": "Hype Cave - Middle Left",
             "id": 85342,
             "access_rule": {
@@ -9023,10 +9023,10 @@
               "value": true
             },
             "item": {
-              "name": "ProgressiveGlove",
+              "name": "Bombos",
               "player": 1,
               "advancement": true,
-              "type": 97
+              "type": 15
             }
           },
           {
@@ -9037,10 +9037,10 @@
               "value": true
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "HiJump",
               "player": 1,
-              "advancement": false,
-              "type": 54
+              "advancement": true,
+              "type": 183
             }
           },
           {
@@ -9051,10 +9051,10 @@
               "value": true
             },
             "item": {
-              "name": "HiJump",
+              "name": "HeartPiece",
               "player": 1,
-              "advancement": true,
-              "type": 183
+              "advancement": false,
+              "type": 23
             }
           }
         ]
@@ -9080,10 +9080,10 @@
               "item": "MoonPearl"
             },
             "item": {
-              "name": "HeartPiece",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 23
+              "type": 194
             }
           },
           {
@@ -9094,10 +9094,10 @@
               "item": "MoonPearl"
             },
             "item": {
-              "name": "OneRupee",
+              "name": "Super",
               "player": 1,
               "advancement": false,
-              "type": 52
+              "type": 195
             }
           }
         ]
@@ -9123,10 +9123,10 @@
               "value": true
             },
             "item": {
-              "name": "ThreeBombs",
+              "name": "Quake",
               "player": 1,
-              "advancement": false,
-              "type": 40
+              "advancement": true,
+              "type": 17
             }
           },
           {
@@ -9173,10 +9173,10 @@
               }
             },
             "item": {
-              "name": "OneRupee",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 52
+              "type": 194
             }
           },
           {
@@ -9238,10 +9238,10 @@
               }
             },
             "item": {
-              "name": "BlueBoomerang",
+              "name": "ETank",
               "player": 1,
-              "advancement": false,
-              "type": 12
+              "advancement": true,
+              "type": 192
             }
           },
           {
@@ -9303,10 +9303,10 @@
               }
             },
             "item": {
-              "name": "ThreeBombs",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 40
+              "type": 194
             }
           }
         ]
@@ -9352,10 +9352,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "PowerBomb",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 196
             }
           },
           {
@@ -9367,10 +9367,10 @@
               "args": []
             },
             "item": {
-              "name": "Missile",
+              "name": "Super",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 195
             }
           },
           {
@@ -9382,10 +9382,10 @@
               "args": []
             },
             "item": {
-              "name": "FiftyRupees",
+              "name": "TwentyRupees",
               "player": 1,
               "advancement": false,
-              "type": 65
+              "type": 54
             }
           },
           {
@@ -9418,7 +9418,7 @@
             "item": {
               "name": "ETank",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": 192
             }
           },
@@ -9470,10 +9470,10 @@
               }
             },
             "item": {
-              "name": "Super",
+              "name": "TwentyRupees",
               "player": 1,
               "advancement": false,
-              "type": 195
+              "type": 54
             }
           }
         ]
@@ -9567,15 +9567,43 @@
               }
             },
             "item": {
-              "name": "Missile",
+              "name": "Plasma",
               "player": 1,
-              "advancement": false,
-              "type": 194
+              "advancement": true,
+              "type": 191
             }
           },
           {
             "name": "Missile (outside Wrecked Ship top)",
             "id": 85002,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "smz3_CanPassBombPassages",
+                  "args": []
+                },
+                {
+                  "type": "region_check",
+                  "region": "Wrecked Ship"
+                },
+                {
+                  "type": "item_check",
+                  "item": "CardWreckedShipBoss"
+                }
+              ]
+            },
+            "item": {
+              "name": "ArrowUpgrade5",
+              "player": 1,
+              "advancement": false,
+              "type": 83
+            }
+          },
+          {
+            "name": "Missile (outside Wrecked Ship middle)",
+            "id": 85003,
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -9602,34 +9630,6 @@
             }
           },
           {
-            "name": "Missile (outside Wrecked Ship middle)",
-            "id": 85003,
-            "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "smz3_CanPassBombPassages",
-                  "args": []
-                },
-                {
-                  "type": "region_check",
-                  "region": "Wrecked Ship"
-                },
-                {
-                  "type": "item_check",
-                  "item": "CardWreckedShipBoss"
-                }
-              ]
-            },
-            "item": {
-              "name": "ProgressiveShield",
-              "player": 1,
-              "advancement": true,
-              "type": 95
-            }
-          },
-          {
             "name": "Missile (Crateria moat)",
             "id": 85004,
             "access_rule": {
@@ -9637,10 +9637,10 @@
               "value": true
             },
             "item": {
-              "name": "Book",
+              "name": "ProgressiveSword",
               "player": 1,
               "advancement": true,
-              "type": 29
+              "type": 94
             }
           }
         ]
@@ -9666,10 +9666,10 @@
               "value": true
             },
             "item": {
-              "name": "ETank",
+              "name": "Somaria",
               "player": 1,
               "advancement": true,
-              "type": 192
+              "type": 21
             }
           },
           {
@@ -9681,10 +9681,10 @@
               "args": []
             },
             "item": {
-              "name": "ProgressiveShield",
+              "name": "Super",
               "player": 1,
-              "advancement": true,
-              "type": 95
+              "advancement": false,
+              "type": 195
             }
           },
           {
@@ -9764,10 +9764,10 @@
               }
             },
             "item": {
-              "name": "Missile",
+              "name": "HeartPiece",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 23
             }
           },
           {
@@ -9778,10 +9778,10 @@
               "item": "Morph"
             },
             "item": {
-              "name": "ProgressiveTunic",
+              "name": "TwentyRupees",
               "player": 1,
-              "advancement": true,
-              "type": 96
+              "advancement": false,
+              "type": 54
             }
           },
           {
@@ -9802,10 +9802,10 @@
               ]
             },
             "item": {
-              "name": "ReserveTank",
+              "name": "ProgressiveShield",
               "player": 1,
               "advancement": true,
-              "type": 193
+              "type": 95
             }
           },
           {
@@ -9865,10 +9865,10 @@
               ]
             },
             "item": {
-              "name": "ProgressiveSword",
+              "name": "ETank",
               "player": 1,
-              "advancement": true,
-              "type": 94
+              "advancement": false,
+              "type": 192
             }
           },
           {
@@ -9890,10 +9890,10 @@
               ]
             },
             "item": {
-              "name": "Gravity",
+              "name": "Charge",
               "player": 1,
               "advancement": true,
-              "type": 182
+              "type": 187
             }
           },
           {
@@ -9952,10 +9952,10 @@
               }
             },
             "item": {
-              "name": "PowerBomb",
+              "name": "FiftyRupees",
               "player": 1,
-              "advancement": true,
-              "type": 196
+              "advancement": false,
+              "type": 65
             }
           },
           {
@@ -10014,10 +10014,10 @@
               }
             },
             "item": {
-              "name": "ThreeHundredRupees",
+              "name": "XRay",
               "player": 1,
               "advancement": false,
-              "type": 70
+              "type": 177
             }
           },
           {
@@ -10091,10 +10091,10 @@
               }
             },
             "item": {
-              "name": "HeartPiece",
+              "name": "ReserveTank",
               "player": 1,
-              "advancement": false,
-              "type": 23
+              "advancement": true,
+              "type": 193
             }
           },
           {
@@ -10148,10 +10148,10 @@
               }
             },
             "item": {
-              "name": "Bombs",
+              "name": "ThreeHundredRupees",
               "player": 1,
-              "advancement": true,
-              "type": 185
+              "advancement": false,
+              "type": 70
             }
           },
           {
@@ -10172,10 +10172,10 @@
               ]
             },
             "item": {
-              "name": "HeartPiece",
+              "name": "Bottle",
               "player": 1,
-              "advancement": false,
-              "type": 23
+              "advancement": true,
+              "type": 22
             }
           },
           {
@@ -10200,10 +10200,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "TwentyRupees",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 54
             }
           }
         ]
@@ -10285,10 +10285,10 @@
               }
             },
             "item": {
-              "name": "Super",
+              "name": "ProgressiveShield",
               "player": 1,
-              "advancement": false,
-              "type": 195
+              "advancement": true,
+              "type": 95
             }
           },
           {
@@ -10299,10 +10299,10 @@
               "value": true
             },
             "item": {
-              "name": "BombUpgrade5",
+              "name": "TwentyRupees",
               "player": 1,
               "advancement": false,
-              "type": 81
+              "type": 54
             }
           },
           {
@@ -10313,10 +10313,10 @@
               "value": true
             },
             "item": {
-              "name": "Bottle",
+              "name": "TwentyRupees",
               "player": 1,
-              "advancement": true,
-              "type": 22
+              "advancement": false,
+              "type": 54
             }
           },
           {
@@ -10328,10 +10328,10 @@
               "args": []
             },
             "item": {
-              "name": "Ether",
+              "name": "TenArrows",
               "player": 1,
-              "advancement": true,
-              "type": 16
+              "advancement": false,
+              "type": 68
             }
           },
           {
@@ -10391,10 +10391,10 @@
               }
             },
             "item": {
-              "name": "ProgressiveSword",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": 94
+              "advancement": false,
+              "type": 194
             }
           },
           {
@@ -10428,10 +10428,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "ProgressiveTunic",
               "player": 1,
-              "advancement": false,
-              "type": 194
+              "advancement": true,
+              "type": 96
             }
           },
           {
@@ -10476,10 +10476,10 @@
               ]
             },
             "item": {
-              "name": "Charge",
+              "name": "Bottle",
               "player": 1,
               "advancement": true,
-              "type": 187
+              "type": 22
             }
           },
           {
@@ -10556,10 +10556,10 @@
               }
             },
             "item": {
-              "name": "OneHundredRupees",
+              "name": "Powder",
               "player": 1,
-              "advancement": false,
-              "type": 64
+              "advancement": true,
+              "type": 13
             }
           }
         ]
@@ -10719,10 +10719,10 @@
               }
             },
             "item": {
-              "name": "ETank",
+              "name": "HeartContainer",
               "player": 1,
-              "advancement": true,
-              "type": 192
+              "advancement": false,
+              "type": 62
             }
           },
           {
@@ -10743,10 +10743,10 @@
               ]
             },
             "item": {
-              "name": "Firerod",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": 7
+              "advancement": false,
+              "type": 194
             }
           },
           {
@@ -10795,10 +10795,10 @@
               }
             },
             "item": {
-              "name": "BombUpgrade5",
+              "name": "Bottle",
               "player": 1,
-              "advancement": false,
-              "type": 81
+              "advancement": true,
+              "type": 22
             }
           },
           {
@@ -10819,10 +10819,10 @@
               ]
             },
             "item": {
-              "name": "BombUpgrade5",
+              "name": "Flippers",
               "player": 1,
-              "advancement": false,
-              "type": 81
+              "advancement": true,
+              "type": 30
             }
           },
           {
@@ -10843,10 +10843,10 @@
               ]
             },
             "item": {
-              "name": "TenArrows",
+              "name": "Missile",
               "player": 1,
-              "advancement": false,
-              "type": 68
+              "advancement": true,
+              "type": 194
             }
           }
         ]
@@ -10872,10 +10872,10 @@
               "item": "CardBrinstarBoss"
             },
             "item": {
-              "name": "Mushroom",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": 41
+              "advancement": false,
+              "type": 194
             }
           },
           {
@@ -10886,10 +10886,10 @@
               "item": "CardBrinstarBoss"
             },
             "item": {
-              "name": "ReserveTank",
+              "name": "Bombs",
               "player": 1,
               "advancement": true,
-              "type": 193
+              "type": 185
             }
           },
           {
@@ -10901,10 +10901,10 @@
               "args": []
             },
             "item": {
-              "name": "PowerBomb",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 196
+              "type": 194
             }
           }
         ]
@@ -10931,10 +10931,10 @@
               "args": []
             },
             "item": {
-              "name": "Bottle",
+              "name": "ThreeBombs",
               "player": 1,
-              "advancement": true,
-              "type": 22
+              "advancement": false,
+              "type": 40
             }
           },
           {
@@ -11177,10 +11177,10 @@
               }
             },
             "item": {
-              "name": "Missile",
+              "name": "HeartContainerRefill",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 63
             }
           },
           {
@@ -11192,10 +11192,10 @@
               "args": []
             },
             "item": {
-              "name": "FiveRupees",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 53
+              "type": 194
             }
           },
           {
@@ -11306,10 +11306,10 @@
               }
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "HeartPiece",
               "player": 1,
               "advancement": false,
-              "type": 54
+              "type": 23
             }
           },
           {
@@ -11321,10 +11321,10 @@
               "args": []
             },
             "item": {
-              "name": "Bottle",
+              "name": "HeartPiece",
               "player": 1,
-              "advancement": true,
-              "type": 22
+              "advancement": false,
+              "type": 23
             }
           },
           {
@@ -11450,10 +11450,10 @@
               }
             },
             "item": {
-              "name": "FiftyRupees",
+              "name": "HeartPiece",
               "player": 1,
               "advancement": false,
-              "type": 65
+              "type": 23
             }
           }
         ]
@@ -11507,10 +11507,10 @@
               }
             },
             "item": {
-              "name": "HeartPiece",
+              "name": "HeartContainer",
               "player": 1,
               "advancement": false,
-              "type": 23
+              "type": 62
             }
           },
           {
@@ -11521,10 +11521,10 @@
               "value": true
             },
             "item": {
-              "name": "FiftyRupees",
+              "name": "PowerBomb",
               "player": 1,
-              "advancement": false,
-              "type": 65
+              "advancement": true,
+              "type": 196
             }
           },
           {
@@ -11625,10 +11625,10 @@
               }
             },
             "item": {
-              "name": "SilverArrows",
+              "name": "ProgressiveSword",
               "player": 1,
-              "advancement": false,
-              "type": 88
+              "advancement": true,
+              "type": 94
             }
           },
           {
@@ -11640,10 +11640,10 @@
               "args": []
             },
             "item": {
-              "name": "Bombos",
+              "name": "HeartContainer",
               "player": 1,
-              "advancement": true,
-              "type": 15
+              "advancement": false,
+              "type": 62
             }
           }
         ]
@@ -11710,10 +11710,10 @@
               ]
             },
             "item": {
-              "name": "HeartContainer",
+              "name": "TwentyRupees",
               "player": 1,
               "advancement": false,
-              "type": 62
+              "type": 54
             }
           },
           {
@@ -11760,10 +11760,10 @@
               ]
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "HeartPiece",
               "player": 1,
               "advancement": false,
-              "type": 54
+              "type": 23
             }
           },
           {
@@ -11810,10 +11810,10 @@
               ]
             },
             "item": {
-              "name": "ProgressiveTunic",
+              "name": "Super",
               "player": 1,
-              "advancement": true,
-              "type": 96
+              "advancement": false,
+              "type": 195
             }
           },
           {
@@ -11941,10 +11941,10 @@
               }
             },
             "item": {
-              "name": "ETank",
+              "name": "HeartPiece",
               "player": 1,
               "advancement": false,
-              "type": 192
+              "type": 23
             }
           },
           {
@@ -12031,10 +12031,10 @@
               }
             },
             "item": {
-              "name": "HeartPiece",
+              "name": "TenArrows",
               "player": 1,
               "advancement": false,
-              "type": 23
+              "type": 68
             }
           },
           {
@@ -12121,10 +12121,10 @@
               }
             },
             "item": {
-              "name": "ThreeBombs",
+              "name": "Lamp",
               "player": 1,
-              "advancement": false,
-              "type": 40
+              "advancement": true,
+              "type": 18
             }
           },
           {
@@ -12145,10 +12145,10 @@
               ]
             },
             "item": {
-              "name": "ETank",
+              "name": "Super",
               "player": 1,
               "advancement": false,
-              "type": 192
+              "type": 195
             }
           },
           {
@@ -12169,10 +12169,10 @@
               ]
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "FiftyRupees",
               "player": 1,
               "advancement": false,
-              "type": 54
+              "type": 65
             }
           },
           {
@@ -12222,10 +12222,10 @@
               }
             },
             "item": {
-              "name": "Super",
+              "name": "TwentyRupees",
               "player": 1,
               "advancement": false,
-              "type": 195
+              "type": 54
             }
           },
           {
@@ -12275,10 +12275,10 @@
               }
             },
             "item": {
-              "name": "HeartPiece",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 23
+              "type": 194
             }
           },
           {
@@ -12399,10 +12399,10 @@
               }
             },
             "item": {
-              "name": "Missile",
+              "name": "HeartPiece",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 23
             }
           },
           {
@@ -12499,10 +12499,10 @@
               }
             },
             "item": {
-              "name": "Super",
+              "name": "HeartContainer",
               "player": 1,
               "advancement": false,
-              "type": 195
+              "type": 62
             }
           },
           {
@@ -12551,10 +12551,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Byrna",
               "player": 1,
-              "advancement": false,
-              "type": 194
+              "advancement": true,
+              "type": 24
             }
           },
           {
@@ -12566,10 +12566,10 @@
               "args": []
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "Spazer",
               "player": 1,
               "advancement": false,
-              "type": 54
+              "type": 190
             }
           }
         ]
@@ -12945,10 +12945,10 @@
               }
             },
             "item": {
-              "name": "HeartContainer",
+              "name": "Hammer",
               "player": 1,
-              "advancement": false,
-              "type": 62
+              "advancement": true,
+              "type": 9
             }
           },
           {
@@ -12970,10 +12970,10 @@
               ]
             },
             "item": {
-              "name": "Icerod",
+              "name": "ThreeBombs",
               "player": 1,
-              "advancement": true,
-              "type": 8
+              "advancement": false,
+              "type": 40
             }
           },
           {
@@ -12994,10 +12994,10 @@
               ]
             },
             "item": {
-              "name": "ETank",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": 192
+              "advancement": false,
+              "type": 194
             }
           },
           {
@@ -13009,10 +13009,10 @@
               "args": []
             },
             "item": {
-              "name": "HeartPiece",
+              "name": "Grapple",
               "player": 1,
-              "advancement": false,
-              "type": 23
+              "advancement": true,
+              "type": 176
             }
           }
         ]
@@ -13120,10 +13120,10 @@
               }
             },
             "item": {
-              "name": "HeartPiece",
+              "name": "Bottle",
               "player": 1,
-              "advancement": false,
-              "type": 23
+              "advancement": true,
+              "type": 22
             }
           },
           {
@@ -13216,10 +13216,10 @@
               }
             },
             "item": {
-              "name": "ArrowUpgrade5",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 83
+              "type": 194
             }
           },
           {
@@ -13308,10 +13308,10 @@
               }
             },
             "item": {
-              "name": "PowerBomb",
+              "name": "Ice",
               "player": 1,
-              "advancement": false,
-              "type": 196
+              "advancement": true,
+              "type": 188
             }
           },
           {
@@ -13322,10 +13322,10 @@
               "item": "CardNorfairL2"
             },
             "item": {
-              "name": "HeartContainer",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 62
+              "type": 194
             }
           },
           {
@@ -13410,10 +13410,10 @@
               }
             },
             "item": {
-              "name": "Shovel",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": 19
+              "advancement": false,
+              "type": 194
             }
           },
           {
@@ -13498,10 +13498,10 @@
               }
             },
             "item": {
-              "name": "ThreeHundredRupees",
+              "name": "TenArrows",
               "player": 1,
               "advancement": false,
-              "type": 70
+              "type": 68
             }
           },
           {
@@ -13612,10 +13612,10 @@
               }
             },
             "item": {
-              "name": "Powder",
+              "name": "ReserveTank",
               "player": 1,
               "advancement": true,
-              "type": 13
+              "type": 193
             }
           },
           {
@@ -13775,10 +13775,10 @@
               }
             },
             "item": {
-              "name": "Missile",
+              "name": "TwentyRupees",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 54
             }
           }
         ]
@@ -13853,10 +13853,10 @@
               }
             },
             "item": {
-              "name": "Wave",
+              "name": "TwentyRupees",
               "player": 1,
-              "advancement": true,
-              "type": 189
+              "advancement": false,
+              "type": 54
             }
           },
           {
@@ -13965,10 +13965,10 @@
               }
             },
             "item": {
-              "name": "ThreeHundredRupees",
+              "name": "HalfMagic",
               "player": 1,
-              "advancement": false,
-              "type": 70
+              "advancement": true,
+              "type": 78
             }
           },
           {
@@ -14023,10 +14023,10 @@
               }
             },
             "item": {
-              "name": "TenArrows",
+              "name": "BlueBoomerang",
               "player": 1,
               "advancement": false,
-              "type": 68
+              "type": 12
             }
           },
           {
@@ -14047,10 +14047,10 @@
               ]
             },
             "item": {
-              "name": "Byrna",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": 24
+              "advancement": false,
+              "type": 194
             }
           },
           {
@@ -14152,10 +14152,10 @@
               }
             },
             "item": {
-              "name": "Missile",
+              "name": "Flute",
               "player": 1,
-              "advancement": false,
-              "type": 194
+              "advancement": true,
+              "type": 20
             }
           },
           {
@@ -14255,10 +14255,10 @@
               }
             },
             "item": {
-              "name": "HeartContainer",
+              "name": "Missile",
               "player": 1,
               "advancement": false,
-              "type": 62
+              "type": 194
             }
           }
         ]
@@ -14377,10 +14377,10 @@
               }
             },
             "item": {
-              "name": "HeartContainer",
+              "name": "TenArrows",
               "player": 1,
               "advancement": false,
-              "type": 62
+              "type": 68
             }
           },
           {
@@ -14476,10 +14476,10 @@
               }
             },
             "item": {
-              "name": "Morph",
+              "name": "HeartContainer",
               "player": 1,
-              "advancement": true,
-              "type": 180
+              "advancement": false,
+              "type": 62
             }
           },
           {
@@ -14559,10 +14559,10 @@
               }
             },
             "item": {
-              "name": "PowerBomb",
+              "name": "BombUpgrade5",
               "player": 1,
               "advancement": false,
-              "type": 196
+              "type": 81
             }
           },
           {
@@ -14809,10 +14809,10 @@
               }
             },
             "item": {
-              "name": "FiftyRupees",
+              "name": "HeartPiece",
               "player": 1,
               "advancement": false,
-              "type": 65
+              "type": 23
             }
           }
         ]
@@ -14839,10 +14839,10 @@
               "args": []
             },
             "item": {
-              "name": "TenArrows",
+              "name": "Firerod",
               "player": 1,
-              "advancement": false,
-              "type": 68
+              "advancement": true,
+              "type": 7
             }
           },
           {
@@ -14854,10 +14854,10 @@
               "args": []
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "HeartPiece",
               "player": 1,
               "advancement": false,
-              "type": 54
+              "type": 23
             }
           },
           {
@@ -14879,10 +14879,10 @@
               ]
             },
             "item": {
-              "name": "Missile",
+              "name": "Super",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 195
             }
           },
           {
@@ -14894,10 +14894,10 @@
               "args": []
             },
             "item": {
-              "name": "Missile",
+              "name": "Super",
               "player": 1,
               "advancement": false,
-              "type": 194
+              "type": 195
             }
           },
           {
@@ -14927,10 +14927,10 @@
               ]
             },
             "item": {
-              "name": "TwentyRupees",
+              "name": "FiveRupees",
               "player": 1,
               "advancement": false,
-              "type": 54
+              "type": 53
             }
           },
           {
@@ -14942,10 +14942,10 @@
               "args": []
             },
             "item": {
-              "name": "ETank",
+              "name": "Missile",
               "player": 1,
-              "advancement": true,
-              "type": 192
+              "advancement": false,
+              "type": 194
             }
           }
         ]
@@ -15194,7 +15194,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 44
+        "max_count": 47
       },
       "Byrna": {
         "name": "Byrna",
@@ -15324,7 +15324,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 26
+        "max_count": 25
       },
       "Mushroom": {
         "name": "Mushroom",
@@ -15467,7 +15467,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 3
       },
       "FiveRupees": {
         "name": "FiveRupees",
@@ -15480,7 +15480,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 7
+        "max_count": 5
       },
       "TwentyRupees": {
         "name": "TwentyRupees",
@@ -15493,7 +15493,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 49
+        "max_count": 54
       },
       "BottleWithBee": {
         "name": "BottleWithBee",
@@ -15584,7 +15584,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "TenArrows": {
         "name": "TenArrows",
@@ -15597,7 +15597,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 16
+        "max_count": 15
       },
       "ThreeHundredRupees": {
         "name": "ThreeHundredRupees",
@@ -15610,7 +15610,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 9
+        "max_count": 10
       },
       "TwentyRupees2": {
         "name": "TwentyRupees2",
@@ -15701,7 +15701,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 8
       },
       "ArrowUpgrade10": {
         "name": "ArrowUpgrade10",
@@ -16203,7 +16203,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
@@ -16611,7 +16611,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 28
+        "max_count": 27
       },
       "ReserveTank": {
         "name": "ReserveTank",
@@ -16637,7 +16637,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 78
+        "max_count": 77
       },
       "Super": {
         "name": "Super",
@@ -16650,7 +16650,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 31
+        "max_count": 29
       },
       "PowerBomb": {
         "name": "PowerBomb",
@@ -16663,7 +16663,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 17
+        "max_count": 16
       },
       "SmMapBrinstar": {
         "name": "SmMapBrinstar",
@@ -16934,8 +16934,8 @@
   },
   "itempool_counts": {
     "1": {
-      "Arrow": 2,
-      "ArrowUpgrade5": 6,
+      "Arrow": 1,
+      "ArrowUpgrade5": 8,
       "BigKeyDP": 1,
       "BigKeyEP": 1,
       "BigKeyGT": 1,
@@ -16986,11 +16986,11 @@
       "CompassTH": 1,
       "CompassTR": 1,
       "CompassTT": 1,
-      "ETank": 28,
+      "ETank": 27,
       "Ether": 2,
       "FiftyRupees": 13,
       "Firerod": 2,
-      "FiveRupees": 7,
+      "FiveRupees": 5,
       "Flippers": 2,
       "Flute": 2,
       "Grapple": 2,
@@ -16999,7 +16999,7 @@
       "Hammer": 2,
       "HeartContainer": 20,
       "HeartContainerRefill": 2,
-      "HeartPiece": 44,
+      "HeartPiece": 47,
       "HiJump": 2,
       "Hookshot": 2,
       "Ice": 2,
@@ -17030,15 +17030,15 @@
       "MapTR": 1,
       "MapTT": 1,
       "Mirror": 2,
-      "Missile": 78,
+      "Missile": 77,
       "MoonPearl": 2,
       "Morph": 2,
       "Mushroom": 2,
       "OneHundredRupees": 2,
-      "OneRupee": 4,
+      "OneRupee": 3,
       "Plasma": 2,
       "Powder": 2,
-      "PowerBomb": 17,
+      "PowerBomb": 16,
       "ProgressiveGlove": 4,
       "ProgressiveShield": 6,
       "ProgressiveSword": 8,
@@ -17054,11 +17054,11 @@
       "Spazer": 2,
       "SpeedBooster": 2,
       "SpringBall": 2,
-      "Super": 31,
-      "TenArrows": 16,
-      "ThreeBombs": 26,
-      "ThreeHundredRupees": 9,
-      "TwentyRupees": 49,
+      "Super": 29,
+      "TenArrows": 15,
+      "ThreeBombs": 25,
+      "ThreeHundredRupees": 10,
+      "TwentyRupees": 54,
       "Varia": 2,
       "Wave": 2,
       "XRay": 2
@@ -17225,60 +17225,60 @@
           "reward_name": "Agahnim"
         },
         "Eastern Palace": {
-          "reward_type": 4,
-          "reward_name": "PendantNonGreen"
-        },
-        "Desert Palace": {
           "reward_type": 8,
           "reward_name": "CrystalBlue"
         },
-        "Tower of Hera": {
+        "Desert Palace": {
           "reward_type": 16,
           "reward_name": "CrystalRed"
+        },
+        "Tower of Hera": {
+          "reward_type": 8,
+          "reward_name": "CrystalBlue"
         },
         "Palace of Darkness": {
-          "reward_type": 16,
-          "reward_name": "CrystalRed"
+          "reward_type": 128,
+          "reward_name": "BossTokenDraygon"
         },
         "Swamp Palace": {
-          "reward_type": 2,
-          "reward_name": "PendantGreen"
+          "reward_type": 32,
+          "reward_name": "BossTokenKraid"
         },
         "Skull Woods": {
           "reward_type": 4,
           "reward_name": "PendantNonGreen"
         },
         "Thieves' Town": {
-          "reward_type": 256,
-          "reward_name": "BossTokenRidley"
+          "reward_type": 16,
+          "reward_name": "CrystalRed"
         },
         "Ice Palace": {
           "reward_type": 8,
           "reward_name": "CrystalBlue"
         },
         "Misery Mire": {
-          "reward_type": 128,
-          "reward_name": "BossTokenDraygon"
+          "reward_type": 2,
+          "reward_name": "PendantGreen"
         },
         "Turtle Rock": {
-          "reward_type": 8,
-          "reward_name": "CrystalBlue"
+          "reward_type": 4,
+          "reward_name": "PendantNonGreen"
         },
         "Brinstar Kraid": {
-          "reward_type": 32,
-          "reward_name": "BossTokenKraid"
+          "reward_type": 8,
+          "reward_name": "CrystalBlue"
         },
         "Wrecked Ship": {
           "reward_type": 8,
           "reward_name": "CrystalBlue"
         },
         "Maridia Inner": {
-          "reward_type": 64,
-          "reward_name": "BossTokenPhantoon"
+          "reward_type": 256,
+          "reward_name": "BossTokenRidley"
         },
         "Norfair Lower East": {
-          "reward_type": 8,
-          "reward_name": "CrystalBlue"
+          "reward_type": 64,
+          "reward_name": "BossTokenPhantoon"
         }
       }
     }

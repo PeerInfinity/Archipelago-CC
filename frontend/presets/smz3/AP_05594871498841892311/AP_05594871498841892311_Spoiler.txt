@@ -1,0 +1,746 @@
+﻿Archipelago Version 0.6.4  -  Seed: 4
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            SMZ3
+Progression Balancing:           50
+Accessibility:                   Items
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Start Inventory from Pool:       
+SMLogic:                         Normal
+Sword Location:                  Randomized
+Morph Location:                  Randomized
+Goal:                            Defeatboth
+Key Shuffle:                     None
+Open Tower:                      7
+Ganon Vulnerable:                7
+Open Tourian:                    4
+Spin Jumps Animation:            No
+Heart Beep Speed:                Normal
+Heart Color:                     Red
+Quick Swap:                      No
+Energy Beep:                     Yes
+
+
+Rewards:
+
+Castle Tower: Agahnim
+Eastern Palace: CrystalBlue
+Desert Palace: CrystalRed
+Tower of Hera: CrystalBlue
+Palace of Darkness: BossTokenDraygon
+Swamp Palace: BossTokenKraid
+Skull Woods: PendantNonGreen
+Thieves' Town: CrystalRed
+Ice Palace: CrystalBlue
+Misery Mire: PendantGreen
+Turtle Rock: PendantNonGreen
+Brinstar Kraid: CrystalBlue
+Wrecked Ship: CrystalBlue
+Maridia Inner: BossTokenRidley
+Norfair Lower East: BossTokenPhantoon
+
+Medallions:
+
+Misery Mire: Ether
+Turtle Rock: Bombos
+
+Starting Items:
+
+CardCrateriaL1
+CardCrateriaL2
+CardCrateriaBoss
+CardBrinstarL1
+CardBrinstarL2
+CardBrinstarBoss
+CardNorfairL1
+CardNorfairL2
+CardNorfairBoss
+CardMaridiaL1
+CardMaridiaL2
+CardMaridiaBoss
+CardWreckedShipL1
+CardWreckedShipBoss
+CardLowerNorfairL1
+CardLowerNorfairBoss
+
+Locations:
+
+Castle Tower - Foyer: KeyCT
+Castle Tower - Dark Maze: KeyCT
+Eastern Palace - Cannonball Chest: BigKeyEP
+Eastern Palace - Map Chest: Missile
+Eastern Palace - Compass Chest: TwentyRupees
+Eastern Palace - Big Chest: CompassEP
+Eastern Palace - Big Key Chest: ThreeHundredRupees
+Eastern Palace - Armos Knights: MapEP
+Desert Palace - Big Chest: CompassDP
+Desert Palace - Torch: PowerBomb
+Desert Palace - Map Chest: KeyDP
+Desert Palace - Big Key Chest: MapDP
+Desert Palace - Compass Chest: BigKeyDP
+Desert Palace - Lanmolas: TwentyRupees
+Tower of Hera - Basement Cage: ReserveTank
+Tower of Hera - Map Chest: KeyTH
+Tower of Hera - Big Key Chest: BigKeyTH
+Tower of Hera - Compass Chest: MapTH
+Tower of Hera - Big Chest: CompassTH
+Tower of Hera - Moldorm: ThreeBombs
+Palace of Darkness - Shooter Room: KeyPD
+Palace of Darkness - Big Key Chest: Missile
+Palace of Darkness - Stalfos Basement: KeyPD
+Palace of Darkness - The Arena - Bridge: KeyPD
+Palace of Darkness - The Arena - Ledge: BigKeyPD
+Palace of Darkness - Map Chest: KeyPD
+Palace of Darkness - Compass Chest: KeyPD
+Palace of Darkness - Harmless Hellway: KeyPD
+Palace of Darkness - Dark Basement - Left: CompassPD
+Palace of Darkness - Dark Basement - Right: Missile
+Palace of Darkness - Dark Maze - Top: ArrowUpgrade5
+Palace of Darkness - Dark Maze - Bottom: ProgressiveTunic
+Palace of Darkness - Big Chest: SilverArrows
+Palace of Darkness - Helmasaur King: MapPD
+Swamp Palace - Entrance: KeySP
+Swamp Palace - Map Chest: MapSP
+Swamp Palace - Big Chest: CompassSP
+Swamp Palace - Compass Chest: Super
+Swamp Palace - West Chest: BigKeySP
+Swamp Palace - Big Key Chest: HeartPiece
+Swamp Palace - Flooded Room - Left: PowerBomb
+Swamp Palace - Flooded Room - Right: Gravity
+Swamp Palace - Waterfall Room: ProgressiveSword
+Swamp Palace - Arrghus: HeartPiece
+Skull Woods - Pot Prison: HeartPiece
+Skull Woods - Compass Chest: MapSW
+Skull Woods - Big Chest: BigKeySW
+Skull Woods - Map Chest: KeySW
+Skull Woods - Pinball Room: KeySW
+Skull Woods - Big Key Chest: KeySW
+Skull Woods - Bridge Room: CompassSW
+Skull Woods - Mothula: TwentyRupees
+Thieves' Town - Map Chest: BigKeyTT
+Thieves' Town - Ambush Chest: ThreeHundredRupees
+Thieves' Town - Compass Chest: KeyTT
+Thieves' Town - Big Key Chest: TwentyRupees
+Thieves' Town - Attic: CompassTT
+Thieves' Town - Blind's Cell: FiftyRupees
+Thieves' Town - Big Chest: ProgressiveShield
+Thieves' Town - Blind: MapTT
+Ice Palace - Compass Chest: FiftyRupees
+Ice Palace - Spike Room: KeyIP
+Ice Palace - Map Chest: BigKeyIP
+Ice Palace - Big Key Chest: CompassIP
+Ice Palace - Iced T Room: Boots
+Ice Palace - Freezor Chest: TwentyRupees
+Ice Palace - Big Chest: KeyIP
+Ice Palace - Kholdstare: MapIP
+Misery Mire - Main Lobby: TwentyRupees
+Misery Mire - Map Chest: KeyMM
+Misery Mire - Bridge Chest: KeyMM
+Misery Mire - Spike Chest: HeartPiece
+Misery Mire - Compass Chest: BigKeyMM
+Misery Mire - Big Key Chest: KeyMM
+Misery Mire - Big Chest: CompassMM
+Misery Mire - Vitreous: MapMM
+Turtle Rock - Compass Chest: TwentyRupees
+Turtle Rock - Roller Room - Left: KeyTR
+Turtle Rock - Roller Room - Right: BigKeyTR
+Turtle Rock - Chain Chomps: KeyTR
+Turtle Rock - Big Key Chest: ETank
+Turtle Rock - Big Chest: KeyTR
+Turtle Rock - Crystaroller Room: CompassTR
+Turtle Rock - Eye Bridge - Top Right: Mushroom
+Turtle Rock - Eye Bridge - Top Left: Missile
+Turtle Rock - Eye Bridge - Bottom Right: ETank
+Turtle Rock - Eye Bridge - Bottom Left: KeyTR
+Turtle Rock - Trinexx: MapTR
+Ganon's Tower - Bob's Torch: PowerBomb
+Ganon's Tower - DMs Room - Top Left: KeyGT
+Ganon's Tower - DMs Room - Top Right: KeyGT
+Ganon's Tower - DMs Room - Bottom Left: BigKeyGT
+Ganon's Tower - DMs Room - Bottom Right: Missile
+Ganon's Tower - Map Chest: HeartPiece
+Ganon's Tower - Firesnake Room: TenArrows
+Ganon's Tower - Randomizer Room - Top Left: MapGT
+Ganon's Tower - Randomizer Room - Top Right: ThreeBombs
+Ganon's Tower - Randomizer Room - Bottom Left: CompassGT
+Ganon's Tower - Randomizer Room - Bottom Right: PowerBomb
+Ganon's Tower - Hope Room - Left: KeyGT
+Ganon's Tower - Hope Room - Right: Missile
+Ganon's Tower - Tile Room: Arrow
+Ganon's Tower - Compass Room - Top Left: OneRupee
+Ganon's Tower - Compass Room - Top Right: Super
+Ganon's Tower - Compass Room - Bottom Left: PowerBomb
+Ganon's Tower - Compass Room - Bottom Right: TwentyRupees
+Ganon's Tower - Bob's Chest: ETank
+Ganon's Tower - Big Chest: Super
+Ganon's Tower - Big Key Chest: FiveRupees
+Ganon's Tower - Big Key Room - Left: Missile
+Ganon's Tower - Big Key Room - Right: FiveRupees
+Ganon's Tower - Mini Helmasaur Room - Left: TwentyRupees
+Ganon's Tower - Mini Helmasaur Room - Right: FiftyRupees
+Ganon's Tower - Pre-Moldorm Chest: KeyGT
+Ganon's Tower - Moldorm Chest: FiveRupees
+Ether Tablet: ThreeBombs
+Spectacle Rock: BombUpgrade5
+Spectacle Rock Cave: Super
+Old Man: Missile
+Floating Island: HeartPiece
+Spiral Cave: Super
+Paradox Cave Upper - Left: RedBoomerang
+Paradox Cave Upper - Right: Missile
+Paradox Cave Lower - Far Left: Bow
+Paradox Cave Lower - Left: ThreeBombs
+Paradox Cave Lower - Middle: HeartContainer
+Paradox Cave Lower - Right: Missile
+Paradox Cave Lower - Far Right: Missile
+Mimic Cave: TwentyRupees
+Master Sword Pedestal: Super
+Mushroom: Missile
+Lost Woods Hideout: Missile
+Lumberjack Tree: Missile
+Pegasus Rocks: ThreeBombs
+Graveyard Ledge: Missile
+King's Tomb: ScrewAttack
+Kakariko Well - Top: Missile
+Kakariko Well - Left: TwentyRupees
+Kakariko Well - Middle: ThreeHundredRupees
+Kakariko Well - Right: ArrowUpgrade5
+Kakariko Well - Bottom: TwentyRupees
+Blind's Hideout - Top: MoonPearl
+Blind's Hideout - Far Left: TwentyRupees
+Blind's Hideout - Left: HeartPiece
+Blind's Hideout - Right: HeartContainer
+Blind's Hideout - Far Right: Missile
+Bottle Merchant: ProgressiveSword
+Chicken House: TwentyRupees
+Sick Kid: Missile
+Kakariko Tavern: PowerBomb
+Magic Bat: ETank
+King Zora: HeartPiece
+Zora's Ledge: SpaceJump
+Waterfall Fairy - Left: ProgressiveGlove
+Waterfall Fairy - Right: Missile
+Potion Shop: BombUpgrade5
+Sahasrahla's Hut - Left: ThreeBombs
+Sahasrahla's Hut - Middle: HeartPiece
+Sahasrahla's Hut - Right: Mirror
+Sahasrahla: HeartContainer
+Maze Race: TwentyRupees
+Library: ArrowUpgrade5
+Flute Spot: Cape
+South of Grove: Icerod
+Link's House: TwentyRupees
+Aginah's Cave: OneRupee
+Mini Moldorm Cave - Far Left: BombUpgrade5
+Mini Moldorm Cave - Left: PowerBomb
+Mini Moldorm Cave - NPC: PowerBomb
+Mini Moldorm Cave - Right: Morph
+Mini Moldorm Cave - Far Right: Super
+Desert Ledge: ETank
+Checkerboard Cave: ThreeHundredRupees
+Bombos Tablet: ETank
+Floodgate Chest: Missile
+Sunken Treasure: HeartContainer
+Lake Hylia Island: ETank
+Hobo: TenArrows
+Ice Rod Cave: Super
+Sanctuary: Missile
+Sewers - Secret Room - Left: KeyHC
+Sewers - Secret Room - Middle: Missile
+Sewers - Secret Room - Right: ThreeBombs
+Sewers - Dark Cross: Bugnet
+Hyrule Castle - Map Chest: ProgressiveGlove
+Hyrule Castle - Boomerang Chest: MapHC
+Hyrule Castle - Zelda's Cell: Varia
+Link's Uncle: HeartPiece
+Secret Passage: FiftyRupees
+Spike Cave: HeartContainer
+Hookshot Cave - Top Right: ThreeBombs
+Hookshot Cave - Top Left: Shovel
+Hookshot Cave - Bottom Left: SpringBall
+Hookshot Cave - Bottom Right: ReserveTank
+Superbunny Cave - Top: Wave
+Superbunny Cave - Bottom: HeartPiece
+Bumper Cave: SpeedBooster
+Chest Game: TwentyRupees
+C-Shaped House: TenArrows
+Brewery: ThreeBombs
+Hammer Pegs: Ether
+Blacksmith: HeartPiece
+Purple Chest: ETank
+Catfish: ETank
+Pyramid: Hookshot
+Pyramid Fairy - Left: OneHundredRupees
+Pyramid Fairy - Right: ThreeBombs
+Digging Game: Book
+Stumpy: TenArrows
+Hype Cave - Top: ETank
+Hype Cave - Middle Right: HeartPiece
+Hype Cave - Middle Left: Bombos
+Hype Cave - Bottom: HiJump
+Hype Cave - NPC: HeartPiece
+Mire Shed - Left: Missile
+Mire Shed - Right: Super
+Energy Tank, Terminator: Quake
+Energy Tank, Gauntlet: Missile
+Missile (Crateria gauntlet right): ETank
+Missile (Crateria gauntlet left): Missile
+Power Bomb (Crateria surface): PowerBomb
+Missile (Crateria middle): Super
+Missile (Crateria bottom): TwentyRupees
+Super Missile (Crateria): ETank
+Bombs: TwentyRupees
+Missile (outside Wrecked Ship bottom): Plasma
+Missile (outside Wrecked Ship top): ArrowUpgrade5
+Missile (outside Wrecked Ship middle): FiftyRupees
+Missile (Crateria moat): ProgressiveSword
+Morphing Ball: Somaria
+Power Bomb (blue Brinstar): Super
+Missile (blue Brinstar middle): Missile
+Energy Tank, Brinstar Ceiling: HeartPiece
+Missile (blue Brinstar bottom): TwentyRupees
+Missile (blue Brinstar top): ProgressiveShield
+Missile (blue Brinstar behind missile): ThreeBombs
+Power Bomb (green Brinstar bottom): ETank
+Missile (green Brinstar below super missile): Charge
+Super Missile (green Brinstar top): FiftyRupees
+Reserve Tank, Brinstar: XRay
+Missile (green Brinstar behind missile): ReserveTank
+Missile (green Brinstar behind reserve tank): ThreeHundredRupees
+Energy Tank, Etecoons: Bottle
+Super Missile (green Brinstar bottom): TwentyRupees
+Super Missile (pink Brinstar): ProgressiveShield
+Missile (pink Brinstar top): TwentyRupees
+Missile (pink Brinstar bottom): TwentyRupees
+Charge Beam: TenArrows
+Power Bomb (pink Brinstar): Missile
+Missile (green Brinstar pipe): ProgressiveTunic
+Energy Tank, Waterway: Bottle
+Energy Tank, Brinstar Gate: Powder
+X-Ray Scope: HeartContainer
+Power Bomb (red Brinstar sidehopper room): Missile
+Power Bomb (red Brinstar spike room): Bottle
+Missile (red Brinstar spike room): Flippers
+Spazer: Missile
+Energy Tank, Kraid: Missile
+Varia Suit: Bombs
+Missile (Kraid): Missile
+Missile (Wrecked Ship middle): ThreeBombs
+Reserve Tank, Wrecked Ship: HeartPiece
+Missile (Gravity Suit): HeartContainerRefill
+Missile (Wrecked Ship top): Missile
+Energy Tank, Wrecked Ship: HeartPiece
+Super Missile (Wrecked Ship left): HeartPiece
+Right Super, Wrecked Ship: TwentyRupees
+Gravity Suit: HeartPiece
+Missile (green Maridia shinespark): HeartContainer
+Super Missile (green Maridia): PowerBomb
+Energy Tank, Mama turtle: ProgressiveSword
+Missile (green Maridia tatori): HeartContainer
+Super Missile (yellow Maridia): TwentyRupees
+Missile (yellow Maridia super missile): HeartPiece
+Missile (yellow Maridia false wall): Super
+Plasma Beam: HeartPiece
+Missile (left Maridia sand pit room): TenArrows
+Reserve Tank, Maridia: Lamp
+Missile (right Maridia sand pit room): Super
+Power Bomb (right Maridia sand pit room): FiftyRupees
+Missile (pink Maridia): TwentyRupees
+Super Missile (pink Maridia): Missile
+Spring Ball: HeartPiece
+Missile (Draygon): HeartContainer
+Energy Tank, Botwoon: Byrna
+Space Jump: Spazer
+Missile (lava room): ETank
+Ice Beam: Super
+Missile (below Ice Beam): Hammer
+Hi-Jump Boots: ThreeBombs
+Missile (Hi-Jump Boots): Missile
+Energy Tank (Hi-Jump Boots): Grapple
+Reserve Tank, Norfair: Bottle
+Missile (Norfair Reserve Tank): Missile
+Missile (bubble Norfair green door): Ice
+Missile (bubble Norfair): Missile
+Missile (Speed Booster): Missile
+Speed Booster: TenArrows
+Missile (Wave Beam): ReserveTank
+Wave Beam: TwentyRupees
+Energy Tank, Crocomire: TwentyRupees
+Missile (above Crocomire): HalfMagic
+Power Bomb (Crocomire): BlueBoomerang
+Missile (below Crocomire): Missile
+Missile (Grappling Beam): Flute
+Grappling Beam: Missile
+Missile (Gold Torizo): TenArrows
+Super Missile (Gold Torizo): HeartContainer
+Screw Attack: BombUpgrade5
+Missile (Mickey Mouse room): HeartPiece
+Missile (lower Norfair above fire flea room): Firerod
+Power Bomb (lower Norfair above fire flea room): HeartPiece
+Power Bomb (Power Bombs of shame): Super
+Missile (lower Norfair near Wave Beam): Super
+Energy Tank, Ridley: FiveRupees
+Energy Tank, Firefleas: Missile
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Aginah's Cave: OneRupee
+  Blind's Hideout - Far Left: TwentyRupees
+  Blind's Hideout - Far Right: Missile
+  Blind's Hideout - Left: HeartPiece
+  Blind's Hideout - Right: HeartContainer
+  Blind's Hideout - Top: MoonPearl
+  Bottle Merchant: ProgressiveSword
+  Chicken House: TwentyRupees
+  Eastern Palace - Cannonball Chest: BigKeyEP
+  Eastern Palace - Compass Chest: TwentyRupees
+  Eastern Palace - Map Chest: Missile
+  Floodgate Chest: Missile
+  Hyrule Castle - Map Chest: ProgressiveGlove
+  Ice Rod Cave: Super
+  Kakariko Tavern: PowerBomb
+  Kakariko Well - Bottom: TwentyRupees
+  Kakariko Well - Left: TwentyRupees
+  Kakariko Well - Middle: ThreeHundredRupees
+  Kakariko Well - Right: ArrowUpgrade5
+  Kakariko Well - Top: Missile
+  Link's House: TwentyRupees
+  Link's Uncle: HeartPiece
+  Lost Woods Hideout: Missile
+  Maze Race: TwentyRupees
+  Mini Moldorm Cave - Far Left: BombUpgrade5
+  Mini Moldorm Cave - Far Right: Super
+  Mini Moldorm Cave - Left: PowerBomb
+  Mini Moldorm Cave - NPC: PowerBomb
+  Mini Moldorm Cave - Right: Morph
+  Morphing Ball: Somaria
+  Mushroom: Missile
+  Sahasrahla's Hut - Left: ThreeBombs
+  Sahasrahla's Hut - Middle: HeartPiece
+  Sahasrahla's Hut - Right: Mirror
+  Sanctuary: Missile
+  Secret Passage: FiftyRupees
+  Sunken Treasure: HeartContainer
+}
+2: {
+  Bombs: TwentyRupees
+  Charge Beam: TenArrows
+  Eastern Palace - Big Chest: CompassEP
+  Energy Tank (Hi-Jump Boots): Grapple
+  Energy Tank, Etecoons: Bottle
+  Energy Tank, Kraid: Missile
+  Energy Tank, Terminator: Quake
+  Hi-Jump Boots: ThreeBombs
+  King Zora: HeartPiece
+  Missile (Crateria bottom): TwentyRupees
+  Missile (Crateria middle): Super
+  Missile (Crateria moat): ProgressiveSword
+  Missile (Hi-Jump Boots): Missile
+  Missile (Kraid): Missile
+  Missile (blue Brinstar behind missile): ThreeBombs
+  Missile (blue Brinstar bottom): TwentyRupees
+  Missile (blue Brinstar middle): Missile
+  Missile (blue Brinstar top): ProgressiveShield
+  Missile (green Brinstar below super missile): Charge
+  Missile (green Brinstar pipe): ProgressiveTunic
+  Missile (pink Brinstar bottom): TwentyRupees
+  Missile (pink Brinstar top): TwentyRupees
+  Missile (red Brinstar spike room): Flippers
+  Power Bomb (blue Brinstar): Super
+  Power Bomb (green Brinstar bottom): ETank
+  Power Bomb (red Brinstar sidehopper room): Missile
+  Power Bomb (red Brinstar spike room): Bottle
+  Sewers - Secret Room - Left: KeyHC
+  Sewers - Secret Room - Middle: Missile
+  Sewers - Secret Room - Right: ThreeBombs
+  Spazer: Missile
+  Spectacle Rock: BombUpgrade5
+  Spectacle Rock Cave: Super
+  Super Missile (green Brinstar bottom): TwentyRupees
+  Super Missile (pink Brinstar): ProgressiveShield
+  Tower of Hera - Basement Cage: ReserveTank
+  Tower of Hera - Map Chest: KeyTH
+  Varia Suit: Bombs
+}
+3: {
+  Castle Tower - Foyer: KeyCT
+  Energy Tank, Brinstar Ceiling: HeartPiece
+  Energy Tank, Gauntlet: Missile
+  Gravity Suit: HeartPiece
+  Hobo: TenArrows
+  Hyrule Castle - Boomerang Chest: MapHC
+  Hyrule Castle - Zelda's Cell: Varia
+  Missile (Crateria gauntlet left): Missile
+  Missile (Crateria gauntlet right): ETank
+  Missile (Gravity Suit): HeartContainerRefill
+  Missile (Wrecked Ship middle): ThreeBombs
+  Missile (Wrecked Ship top): Missile
+  Missile (outside Wrecked Ship bottom): Plasma
+  Missile (outside Wrecked Ship middle): FiftyRupees
+  Missile (outside Wrecked Ship top): ArrowUpgrade5
+  Power Bomb (Crateria surface): PowerBomb
+  Power Bomb (pink Brinstar): Missile
+  Right Super, Wrecked Ship: TwentyRupees
+  Sick Kid: Missile
+  Super Missile (Wrecked Ship left): HeartPiece
+  Waterfall Fairy - Left: ProgressiveGlove
+  Waterfall Fairy - Right: Missile
+  X-Ray Scope: HeartContainer
+  Zora's Ledge: SpaceJump
+}
+4: {
+  Blacksmith: HeartPiece
+  Brewery: ThreeBombs
+  C-Shaped House: TenArrows
+  Catfish: ETank
+  Chest Game: TwentyRupees
+  Digging Game: Book
+  Energy Tank, Wrecked Ship: HeartPiece
+  Graveyard Ledge: Missile
+  Hype Cave - Bottom: HiJump
+  Hype Cave - Middle Left: Bombos
+  Hype Cave - Middle Right: HeartPiece
+  Hype Cave - NPC: HeartPiece
+  Hype Cave - Top: ETank
+  Lake Hylia Island: ETank
+  Missile (Norfair Reserve Tank): Missile
+  Missile (Speed Booster): Missile
+  Missile (Wave Beam): ReserveTank
+  Missile (bubble Norfair green door): Ice
+  Missile (bubble Norfair): Missile
+  Missile (lava room): ETank
+  Palace of Darkness - Shooter Room: KeyPD
+  Purple Chest: ETank
+  Pyramid: Hookshot
+  Reserve Tank, Norfair: Bottle
+  Skull Woods - Big Key Chest: KeySW
+  Skull Woods - Compass Chest: MapSW
+  Skull Woods - Map Chest: KeySW
+  Skull Woods - Pinball Room: KeySW
+  Skull Woods - Pot Prison: HeartPiece
+  South of Grove: Icerod
+  Speed Booster: TenArrows
+  Stumpy: TenArrows
+  Swamp Palace - Entrance: KeySP
+  Thieves' Town - Ambush Chest: ThreeHundredRupees
+  Thieves' Town - Big Key Chest: TwentyRupees
+  Thieves' Town - Compass Chest: KeyTT
+  Thieves' Town - Map Chest: BigKeyTT
+  Wave Beam: TwentyRupees
+}
+5: {
+  Bombos Tablet: ETank
+  Desert Ledge: ETank
+  Desert Palace - Map Chest: KeyDP
+  Ether Tablet: ThreeBombs
+  Floating Island: HeartPiece
+  Hookshot Cave - Bottom Left: SpringBall
+  Hookshot Cave - Bottom Right: ReserveTank
+  Hookshot Cave - Top Left: Shovel
+  Hookshot Cave - Top Right: ThreeBombs
+  Ice Palace - Compass Chest: FiftyRupees
+  Ice Palace - Freezor Chest: TwentyRupees
+  Ice Palace - Iced T Room: Boots
+  Ice Palace - Spike Room: KeyIP
+  Palace of Darkness - Stalfos Basement: KeyPD
+  Palace of Darkness - The Arena - Bridge: KeyPD
+  Paradox Cave Lower - Far Left: Bow
+  Paradox Cave Lower - Far Right: Missile
+  Paradox Cave Lower - Left: ThreeBombs
+  Paradox Cave Lower - Middle: HeartContainer
+  Paradox Cave Lower - Right: Missile
+  Paradox Cave Upper - Left: RedBoomerang
+  Paradox Cave Upper - Right: Missile
+  Spiral Cave: Super
+  Superbunny Cave - Bottom: HeartPiece
+  Superbunny Cave - Top: Wave
+  Swamp Palace - Map Chest: MapSP
+  Thieves' Town - Attic: CompassTT
+  Thieves' Town - Blind: MapTT
+  Thieves' Town - Blind's Cell: FiftyRupees
+}
+6: {
+  Desert Palace - Big Key Chest: MapDP
+  Desert Palace - Compass Chest: BigKeyDP
+  Desert Palace - Torch: PowerBomb
+  Energy Tank, Brinstar Gate: Powder
+  Energy Tank, Crocomire: TwentyRupees
+  Flute Spot: Cape
+  Grappling Beam: Missile
+  King's Tomb: ScrewAttack
+  Library: ArrowUpgrade5
+  Missile (Grappling Beam): Flute
+  Missile (above Crocomire): HalfMagic
+  Missile (below Crocomire): Missile
+  Palace of Darkness - Compass Chest: KeyPD
+  Palace of Darkness - Harmless Hellway: KeyPD
+  Palace of Darkness - Map Chest: KeyPD
+  Palace of Darkness - The Arena - Ledge: BigKeyPD
+  Pegasus Rocks: ThreeBombs
+  Power Bomb (Crocomire): BlueBoomerang
+}
+7: {
+  Bumper Cave: SpeedBooster
+  Checkerboard Cave: ThreeHundredRupees
+  Desert Palace - Big Chest: CompassDP
+  Energy Tank, Firefleas: Missile
+  Energy Tank, Ridley: FiveRupees
+  Magic Bat: ETank
+  Mire Shed - Left: Missile
+  Mire Shed - Right: Super
+  Missile (Gold Torizo): TenArrows
+  Missile (Mickey Mouse room): HeartPiece
+  Missile (lower Norfair above fire flea room): Firerod
+  Missile (lower Norfair near Wave Beam): Super
+  Palace of Darkness - Big Key Chest: Missile
+  Power Bomb (Power Bombs of shame): Super
+  Power Bomb (lower Norfair above fire flea room): HeartPiece
+  Screw Attack: BombUpgrade5
+  Super Missile (Gold Torizo): HeartContainer
+}
+8: {
+  Desert Palace - Lanmolas: TwentyRupees
+  Energy Tank, Waterway: Bottle
+  Ice Beam: Super
+  Missile (below Ice Beam): Hammer
+  Missile (green Brinstar behind missile): ReserveTank
+  Missile (green Brinstar behind reserve tank): ThreeHundredRupees
+  Reserve Tank, Brinstar: XRay
+  Reserve Tank, Wrecked Ship: HeartPiece
+  Skull Woods - Bridge Room: CompassSW
+  Skull Woods - Mothula: TwentyRupees
+  Super Missile (Crateria): ETank
+  Super Missile (green Brinstar top): FiftyRupees
+  Tower of Hera - Big Key Chest: BigKeyTH
+}
+9: {
+  Hammer Pegs: Ether
+  Ice Palace - Big Key Chest: CompassIP
+  Ice Palace - Map Chest: BigKeyIP
+  Pyramid Fairy - Left: OneHundredRupees
+  Pyramid Fairy - Right: ThreeBombs
+  Spike Cave: HeartContainer
+  Swamp Palace - Arrghus: HeartPiece
+  Swamp Palace - Big Key Chest: HeartPiece
+  Swamp Palace - Compass Chest: Super
+  Swamp Palace - Flooded Room - Left: PowerBomb
+  Swamp Palace - Flooded Room - Right: Gravity
+  Swamp Palace - Waterfall Room: ProgressiveSword
+  Swamp Palace - West Chest: BigKeySP
+  Thieves' Town - Big Chest: ProgressiveShield
+  Tower of Hera - Big Chest: CompassTH
+  Tower of Hera - Compass Chest: MapTH
+  Tower of Hera - Moldorm: ThreeBombs
+  Turtle Rock - Compass Chest: TwentyRupees
+  Turtle Rock - Roller Room - Left: KeyTR
+  Turtle Rock - Roller Room - Right: BigKeyTR
+}
+10: {
+  Energy Tank, Botwoon: Byrna
+  Energy Tank, Mama turtle: ProgressiveSword
+  Ice Palace - Big Chest: KeyIP
+  Ice Palace - Kholdstare: MapIP
+  Misery Mire - Bridge Chest: KeyMM
+  Misery Mire - Spike Chest: HeartPiece
+  Missile (Draygon): HeartContainer
+  Missile (green Maridia shinespark): HeartContainer
+  Missile (green Maridia tatori): HeartContainer
+  Missile (left Maridia sand pit room): TenArrows
+  Missile (pink Maridia): TwentyRupees
+  Missile (right Maridia sand pit room): Super
+  Missile (yellow Maridia false wall): Super
+  Missile (yellow Maridia super missile): HeartPiece
+  Plasma Beam: HeartPiece
+  Power Bomb (right Maridia sand pit room): FiftyRupees
+  Reserve Tank, Maridia: Lamp
+  Space Jump: Spazer
+  Spring Ball: HeartPiece
+  Super Missile (green Maridia): PowerBomb
+  Super Missile (pink Maridia): Missile
+  Super Missile (yellow Maridia): TwentyRupees
+  Swamp Palace - Big Chest: CompassSP
+  Turtle Rock - Chain Chomps: KeyTR
+}
+11: {
+  Castle Tower - Dark Maze: KeyCT
+  Eastern Palace - Armos Knights: MapEP
+  Eastern Palace - Big Key Chest: ThreeHundredRupees
+  Ganon's Tower - Bob's Torch: PowerBomb
+  Ganon's Tower - DMs Room - Bottom Left: BigKeyGT
+  Ganon's Tower - DMs Room - Bottom Right: Missile
+  Ganon's Tower - DMs Room - Top Left: KeyGT
+  Ganon's Tower - DMs Room - Top Right: KeyGT
+  Ganon's Tower - Hope Room - Left: KeyGT
+  Ganon's Tower - Hope Room - Right: Missile
+  Ganon's Tower - Tile Room: Arrow
+  Mimic Cave: TwentyRupees
+  Misery Mire - Main Lobby: TwentyRupees
+  Misery Mire - Map Chest: KeyMM
+  Old Man: Missile
+  Palace of Darkness - Big Chest: SilverArrows
+  Palace of Darkness - Dark Basement - Left: CompassPD
+  Palace of Darkness - Dark Basement - Right: Missile
+  Palace of Darkness - Dark Maze - Bottom: ProgressiveTunic
+  Palace of Darkness - Dark Maze - Top: ArrowUpgrade5
+  Palace of Darkness - Helmasaur King: MapPD
+  Sewers - Dark Cross: Bugnet
+  Turtle Rock - Big Chest: KeyTR
+  Turtle Rock - Big Key Chest: ETank
+  Turtle Rock - Crystaroller Room: CompassTR
+}
+12: {
+  Ganon's Tower - Big Chest: Super
+  Ganon's Tower - Big Key Chest: FiveRupees
+  Ganon's Tower - Big Key Room - Left: Missile
+  Ganon's Tower - Big Key Room - Right: FiveRupees
+  Ganon's Tower - Bob's Chest: ETank
+  Ganon's Tower - Firesnake Room: TenArrows
+  Ganon's Tower - Mini Helmasaur Room - Left: TwentyRupees
+  Ganon's Tower - Mini Helmasaur Room - Right: FiftyRupees
+  Ganon's Tower - Pre-Moldorm Chest: KeyGT
+  Lumberjack Tree: Missile
+  Misery Mire - Big Key Chest: KeyMM
+  Turtle Rock - Eye Bridge - Bottom Left: KeyTR
+  Turtle Rock - Eye Bridge - Bottom Right: ETank
+  Turtle Rock - Eye Bridge - Top Left: Missile
+  Turtle Rock - Eye Bridge - Top Right: Mushroom
+}
+13: {
+  Ganon's Tower - Compass Room - Bottom Left: PowerBomb
+  Ganon's Tower - Compass Room - Bottom Right: TwentyRupees
+  Ganon's Tower - Compass Room - Top Left: OneRupee
+  Ganon's Tower - Compass Room - Top Right: Super
+  Ganon's Tower - Map Chest: HeartPiece
+  Ganon's Tower - Moldorm Chest: FiveRupees
+  Ganon's Tower - Randomizer Room - Bottom Left: CompassGT
+  Ganon's Tower - Randomizer Room - Bottom Right: PowerBomb
+  Ganon's Tower - Randomizer Room - Top Left: MapGT
+  Ganon's Tower - Randomizer Room - Top Right: ThreeBombs
+  Misery Mire - Compass Chest: BigKeyMM
+  Potion Shop: BombUpgrade5
+  Turtle Rock - Trinexx: MapTR
+}
+14: {
+  Master Sword Pedestal: Super
+  Misery Mire - Big Chest: CompassMM
+  Misery Mire - Vitreous: MapMM
+  Sahasrahla: HeartContainer
+}
+
+Unreachable Progression Items:
+
+BigKeySW: Skull Woods - Big Chest
