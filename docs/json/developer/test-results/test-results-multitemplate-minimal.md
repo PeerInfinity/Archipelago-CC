@@ -4,23 +4,23 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-27 22:01:39
+**Generated:** 2025-11-28 02:55:43
 
-**Source Data Created:** 2025-11-27T21:30:25.129507
+**Source Data Created:** 2025-11-28T02:24:24.112322
 
-**Source Data Last Updated:** 2025-11-27T21:30:25.129512
+**Source Data Last Updated:** 2025-11-28T02:24:24.112327
 
 ## Summary
 
 - **Total Games:** 1
 - **Total Template Configurations:** 174
-- **Passed Configurations:** 134 (77.0%)
-- **Failed Configurations:** 36 (20.7%)
+- **Passed Configurations:** 136 (78.2%)
+- **Failed Configurations:** 34 (19.5%)
 - **Invalid Configurations:** 4 (2.3%)
 
 ## A Link to the Past
 
-**Results:** 134/174 passed (77.0%)  
+**Results:** 136/174 passed (78.2%)  
 **Custom Exporter:** ✅ Yes | **Custom GameLogic:** ✅ Yes
 
 | Template | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress |
@@ -36,7 +36,7 @@
 | big_key_shuffle_original_dungeon | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | big_key_shuffle_own_dungeons | ⚫ Invalid | 3 | 0 | 0 | N/A |
 | big_key_shuffle_own_world | ✅ Passed | 0 | 38.1 | 38.1 | 100.0% |
-| big_key_shuffle_start_with | ❌ Failed | 0 | 0 | 18.1 | 0.0% |
+| big_key_shuffle_start_with | ✅ Passed | 0 | 18.1 | 18.1 | 100.0% |
 | bombless_start_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | bombless_start_true | ❌ Failed | 0 | 0 | 31.1 | 0.0% |
 | boss_chaos | ❌ Failed | 0 | 0 | 18.1 | 0.0% |
@@ -84,12 +84,12 @@
 | fully_randomized | ❌ Failed | 0 | 0 | 14.1 | 0.0% |
 | glitch_boots_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | glitch_boots_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| glitched_logic | ❌ Failed | 0 | 0 | 15.1 | 0.0% |
-| glitches_required_hybrid_major_glitches | ❌ Failed | 0 | 0 | 14.1 | 0.0% |
+| glitched_logic | ❌ Failed | 0 | 0.1 | 15.1 | 0.7% |
+| glitches_required_hybrid_major_glitches | ❌ Failed | 0 | 0.1 | 14.1 | 0.7% |
 | glitches_required_minor_glitches | ❌ Failed | 0 | 0.3 | 22.1 | 1.4% |
 | glitches_required_no_glitches | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | glitches_required_no_logic | ✅ Passed | 0 | 0.131 | 0.131 | 100.0% |
-| glitches_required_overworld_glitches | ❌ Failed | 0 | 0 | 14.1 | 0.0% |
+| glitches_required_overworld_glitches | ❌ Failed | 0 | 0.1 | 14.1 | 0.7% |
 | goal_bosses | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | goal_crystals | ❌ Failed | 0 | 6.1 | 21.3 | 28.6% |
 | goal_ganon | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
@@ -178,7 +178,7 @@
 | small_key_shuffle_original_dungeon | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | small_key_shuffle_own_dungeons | ⚫ Invalid | 3 | 0 | 0 | N/A |
 | small_key_shuffle_own_world | ✅ Passed | 0 | 19.2 | 19.2 | 100.0% |
-| small_key_shuffle_start_with | ❌ Failed | 0 | 0 | 12.1 | 0.0% |
+| small_key_shuffle_start_with | ✅ Passed | 0 | 12.1 | 12.1 | 100.0% |
 | small_key_shuffle_universal | ❌ Failed | 0 | 0 | 10.1 | 0.0% |
 | swordless_challenge | ❌ Failed | 0 | 0 | 20.1 | 0.0% |
 | swordless_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
