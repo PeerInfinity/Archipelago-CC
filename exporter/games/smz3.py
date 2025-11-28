@@ -178,6 +178,13 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         # have regressive accessibility due to anti-softlock key requirements.
         settings['allow_regressive_accessibility_mismatches'] = True
 
+        # SMZ3's Python Progression class uses boolean flags for items like PowerBomb
+        # and TwoPowerBombs. The TwoPowerBombs flag is set to True when you've collected
+        # at least 2 PowerBomb items, regardless of whether they're marked as advancement.
+        # Since filler PowerBombs still contribute to the count for logic purposes,
+        # we need to count all items (not just advancement) in spoiler test mode.
+        settings['count_non_advancement_items'] = True
+
         logger.info(f"Getting settings data for SMZ3 world")
         logger.info(f"World type: {type(world)}")
         logger.info(f"World attributes: {dir(world)[:10]}")  # First 10 attributes
