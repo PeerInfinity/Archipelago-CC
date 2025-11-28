@@ -30,24 +30,32 @@ export function initializeGameLogic(context) {
         /**
          * Override item count retrieval to handle RUPEES currency.
          * RUPEES is computed from collected rupee items, not stored directly.
+         *
+         * Note: This function uses the legacy interface for backward compatibility
+         * with the initializeGameLogic context. The helperFunctions exported above
+         * use the standardized (snapshot, staticData, ...args) signature.
          */
-        getItemCount: function(state, itemName, player) {
+        getItemCount: function(snapshot, itemName, staticData) {
             if (itemName === 'RUPEES') {
-                return calculateRupees(state, player);
+                return calculateRupees(snapshot, staticData);
             }
             // For all other items, use default behavior
-            return state.count(itemName, player);
+            return snapshot?.inventory?.[itemName] || 0;
         },
 
         /**
          * Check if player has an item, with special handling for RUPEES.
+         *
+         * Note: This function uses the legacy interface for backward compatibility
+         * with the initializeGameLogic context. The helperFunctions exported above
+         * use the standardized (snapshot, staticData, ...args) signature.
          */
-        hasItem: function(state, itemName, player, count = 1) {
+        hasItem: function(snapshot, itemName, staticData, count = 1) {
             if (itemName === 'RUPEES') {
-                return hasRupees(state, player, count);
+                return hasRupees(snapshot, staticData, count);
             }
             // For all other items, use default behavior
-            return state.has(itemName, player, count);
+            return (snapshot?.inventory?.[itemName] || 0) >= count;
         }
     };
 }

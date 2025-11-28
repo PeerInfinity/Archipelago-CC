@@ -412,18 +412,41 @@ export const evaluateRule = (rule, context, depth = 0) => {
         const args = rule.args
           ? rule.args.map((arg) => evaluateRule(arg, context, depth + 1))
           : [];
-        if (args.some((arg) => arg === undefined)) {
+
+        // SM helpers like wor, wand can handle undefined args by treating them as false
+        // Don't fail early for these helpers - let them evaluate what they can
+        // Also include SMZ3 helpers that receive Config arguments which may be undefined
+        const helpersAllowingUndefinedArgs = new Set([
+          'wor', 'wand', 'evalSMBool', 'SMBool',
+          'smz3_CanAccessMiseryMirePortal'
+        ]);
+        const allowUndefinedArgs = helpersAllowingUndefinedArgs.has(rule.name);
+
+        if (!allowUndefinedArgs && args.some((arg) => arg === undefined)) {
           result = undefined;
         } else if (isValidContext) {
           if (typeof context.executeHelper === 'function') {
             result = context.executeHelper(rule.name, ...args);
 
-            // Auto-convert SMBool objects to booleans
-            // evalSMBool is the only helper that explicitly handles SMBool conversion,
-            // so it returns a boolean already and doesn't need this
+            // Handle SMBool objects from SM helpers
+            // For SM helpers that return SMBool objects {bool, difficulty}:
+            // - At depth 0 (top-level): check difficulty against maxDiff and convert to boolean
+            // - At depth > 0: preserve the SMBool object so parent helpers (wand, wor) can
+            //   work with difficulty values correctly
             if (result && typeof result === 'object' && 'bool' in result && 'difficulty' in result) {
-              // Convert to boolean with high difficulty threshold
-              result = result.bool === true && result.difficulty <= 999;
+              if (depth === 0) {
+                // Top-level: check difficulty against maxDiff
+                let maxDiff = 50; // Default to hardcore for Super Metroid
+                if (typeof context.getPlayerId === 'function' && typeof context.resolveName === 'function') {
+                  const playerId = context.getPlayerId();
+                  const state = context.resolveName('state');
+                  if (state?.smbm?.[playerId]?.maxDiff !== undefined) {
+                    maxDiff = state.smbm[playerId].maxDiff;
+                  }
+                }
+                result = result.bool === true && result.difficulty <= maxDiff;
+              }
+              // At depth > 0: leave result as SMBool object so parent helpers can use difficulty
             }
           } else {
             log(
@@ -448,9 +471,20 @@ export const evaluateRule = (rule, context, depth = 0) => {
           if (typeof context.executeHelper === 'function') {
             result = context.executeHelper(rule.name, ...args);
 
-            // Auto-convert SMBool objects to booleans
+            // Same SMBool handling as regular helpers - preserve at depth > 0
             if (result && typeof result === 'object' && 'bool' in result && 'difficulty' in result) {
-              result = result.bool === true && result.difficulty <= 999;
+              if (depth === 0) {
+                let maxDiff = 50;
+                if (typeof context.getPlayerId === 'function' && typeof context.resolveName === 'function') {
+                  const playerId = context.getPlayerId();
+                  const state = context.resolveName('state');
+                  if (state?.smbm?.[playerId]?.maxDiff !== undefined) {
+                    maxDiff = state.smbm[playerId].maxDiff;
+                  }
+                }
+                result = result.bool === true && result.difficulty <= maxDiff;
+              }
+              // At depth > 0: leave result as SMBool object
             }
           } else {
             log(
@@ -495,14 +529,19 @@ export const evaluateRule = (rule, context, depth = 0) => {
       case 'and': {
         result = true; // Assume true initially
         let hasUndefined = false;
+        let hasSMBool = false;
+        let totalDifficulty = 0;
         for (const condition of rule.conditions || []) {
           const conditionResult = evaluateRule(condition, context, depth + 1);
 
           // Handle SMBool objects from Super Metroid
+          // Track difficulty to properly check against maxDiff at depth 0
           let boolValue = conditionResult;
           if (conditionResult && typeof conditionResult === 'object' && 'bool' in conditionResult) {
-            // SMBool object - extract the boolean value (ignore difficulty for and/or)
+            // SMBool object - extract the boolean value and accumulate difficulty
             boolValue = conditionResult.bool === true;
+            hasSMBool = true;
+            totalDifficulty += conditionResult.difficulty || 0;
           }
 
           // Check for falsiness (but not undefined, which is handled separately)
@@ -519,27 +558,42 @@ export const evaluateRule = (rule, context, depth = 0) => {
         if (result === true && hasUndefined) {
           result = undefined;
         }
+        // If any condition was an SMBool, return an SMBool with accumulated difficulty
+        // This allows proper difficulty checking at depth 0
+        if (result === true && hasSMBool) {
+          result = { bool: true, difficulty: totalDifficulty };
+        }
         break;
       }
 
       case 'or': {
         result = false; // Assume false initially
         let hasUndefined = false;
+        let hasSMBool = false;
+        let minDifficulty = Infinity;
         for (const condition of rule.conditions || []) {
           const conditionResult = evaluateRule(condition, context, depth + 1);
 
           // Handle SMBool objects from Super Metroid
+          // Track minimum difficulty among passing conditions for proper maxDiff check
           let boolValue = conditionResult;
+          let difficulty = 0;
           if (conditionResult && typeof conditionResult === 'object' && 'bool' in conditionResult) {
-            // SMBool object - extract the boolean value (ignore difficulty for and/or)
+            // SMBool object - extract the boolean value and difficulty
             boolValue = conditionResult.bool === true;
+            difficulty = conditionResult.difficulty || 0;
+            hasSMBool = true;
           }
 
           // Check for truthiness (but not undefined, which is handled separately)
           if (boolValue && boolValue !== undefined) {
             result = true;
-            hasUndefined = false; // Definitively true
-            break;
+            // For OR, we want the minimum difficulty among passing conditions
+            if (difficulty < minDifficulty) {
+              minDifficulty = difficulty;
+            }
+            // Don't break early - continue to find the lowest difficulty option
+            hasUndefined = false; // Definitively true (at least one path)
           }
           if (conditionResult === undefined) {
             hasUndefined = true; // Potential undefined result
@@ -548,6 +602,28 @@ export const evaluateRule = (rule, context, depth = 0) => {
         // Only set to undefined if not definitively true and encountered an undefined condition
         if (result === false && hasUndefined) {
           result = undefined;
+        }
+        // If any condition was an SMBool and result is true, return SMBool with min difficulty
+        if (result === true && hasSMBool) {
+          result = { bool: true, difficulty: minDifficulty === Infinity ? 0 : minDifficulty };
+        }
+        break;
+      }
+
+      case 'conditional': {
+        // Conditional expression (ternary) - evaluates test and returns if_true or if_false branch
+        // Pattern: test ? if_true : if_false
+        const testResult = evaluateRule(rule.test, context, depth + 1);
+
+        // If test result is undefined, we can't determine which branch to take
+        if (testResult === undefined) {
+          result = undefined;
+        } else if (testResult) {
+          // Test is truthy - evaluate if_true branch
+          result = evaluateRule(rule.if_true, context, depth + 1);
+        } else {
+          // Test is falsy - evaluate if_false branch
+          result = evaluateRule(rule.if_false, context, depth + 1);
         }
         break;
       }
@@ -629,6 +705,13 @@ export const evaluateRule = (rule, context, depth = 0) => {
       case 'constant': {
         // Keep constant for backward compatibility
         result = rule.value;
+        break;
+      }
+
+      case 'world_reference': {
+        // SMZ3 exports self.world as world_reference - return null as a safe placeholder
+        // These are typically passed to helpers that don't actually use them in JavaScript
+        result = null;
         break;
       }
 
@@ -1908,6 +1991,21 @@ export const evaluateRule = (rule, context, depth = 0) => {
       isSnapshot: isValidContext,
     });
     result = undefined;
+  }
+
+  // At depth 0 (top-level rule), convert SMBool to boolean with difficulty check
+  // This ensures difficulty is properly checked against maxDiff for SM games
+  // when the top-level rule is 'and', 'or', or any rule type returning SMBool
+  if (depth === 0 && result && typeof result === 'object' && 'bool' in result && 'difficulty' in result) {
+    let maxDiff = 50; // Default to hardcore for Super Metroid
+    if (typeof context?.getPlayerId === 'function' && typeof context?.resolveName === 'function') {
+      const playerId = context.getPlayerId();
+      const state = context.resolveName('state');
+      if (state?.smbm?.[playerId]?.maxDiff !== undefined) {
+        maxDiff = state.smbm[playerId].maxDiff;
+      }
+    }
+    result = result.bool === true && result.difficulty <= maxDiff;
   }
 
   return result;

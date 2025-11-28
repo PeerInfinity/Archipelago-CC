@@ -299,6 +299,16 @@ export function createStateSnapshotInterface(
         case 'flags':
           return snapshot?.flags;
         case 'state':
+          // Return snapshot, optionally wrapped by game-specific logic
+          if (!snapshot) return {};
+
+          // Check if the game has a custom wrapState function
+          const gameLogicForState = getGameLogic(gameName);
+          if (gameLogicForState.wrapState) {
+            return gameLogicForState.wrapState(snapshot);
+          }
+
+          // Default: return snapshot as-is
           return snapshot;
         case 'self':
           // In Python rules, 'self' refers to the game's rules class instance
@@ -340,6 +350,35 @@ export function createStateSnapshotInterface(
               };
             }
             return logicObject;
+          }
+          return undefined;
+        case 'Bosses':
+          // SM-specific Bosses object for checking boss defeat status
+          // Used by rules like Bosses.bossDead(sm, "BossName")
+          const bossHelpers = getHelperFunctions(gameName);
+          if (bossHelpers?.bossDead) {
+            return {
+              bossDead: (sm, bossName) => {
+                // The 'sm' argument is the SMBoolManager reference from Python, which we don't need
+                // We just need the bossName to check if that boss item is in inventory
+                return bossHelpers.bossDead(snapshot, staticData, bossName);
+              }
+            };
+          }
+          return undefined;
+        case 'sm':
+        case 'smbm':
+          // SM-specific SMBoolManager reference used in rules like sm.getDmgReduction()
+          // Return an object with all helper functions wrapped for the current state
+          const smHelpers = getHelperFunctions(gameName);
+          if (smHelpers) {
+            const smObject = {};
+            for (const [helperName, helperFunction] of Object.entries(smHelpers)) {
+              smObject[helperName] = (...args) => {
+                return helperFunction(snapshot, staticData, ...args);
+              };
+            }
+            return smObject;
           }
           return undefined;
         default:
