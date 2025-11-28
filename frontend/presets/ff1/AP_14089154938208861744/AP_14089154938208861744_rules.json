@@ -1,6 +1,7 @@
 {
   "schema_version": 3,
   "game_name": "Final Fantasy",
+  "game_directory": "ff1",
   "archipelago_version": "0.6.4",
   "generation_seed": 1,
   "player_names": {
@@ -9,39 +10,24 @@
   "world_classes": {
     "1": "FF1World"
   },
-  "plando_options": [
-    "connections",
-    "texts",
-    "bosses"
-  ],
   "regions": {
     "1": {
       "Menu": {
         "name": "Menu",
-        "type": "Region",
-        "player": 1,
-        "entrances": [],
         "exits": [],
         "locations": [
           {
             "name": "Terminated Chaos",
             "id": null,
-            "crystal": null,
             "access_rule": null,
-            "progress_type": 1,
-            "locked": true,
             "item": {
               "name": "Terminated Chaos",
               "player": 1,
               "advancement": true,
-              "priority": null,
               "type": "None"
             }
           }
-        ],
-        "time_passes": true,
-        "provides_chest_count": true,
-        "region_rules": []
+        ]
       }
     }
   },
@@ -63,7 +49,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -78,7 +63,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -93,7 +77,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -108,7 +91,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -123,7 +105,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -138,7 +119,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -153,7 +133,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -168,7 +147,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -183,7 +161,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -198,7 +175,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -213,7 +189,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -228,7 +203,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -243,7 +217,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -258,7 +231,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -273,7 +245,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -288,7 +259,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -303,7 +273,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -318,7 +287,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -333,7 +301,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -348,7 +315,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -363,7 +329,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -378,7 +343,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -393,7 +357,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -408,7 +371,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -423,7 +385,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -438,7 +399,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -453,7 +413,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -468,7 +427,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -483,7 +441,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -498,7 +455,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -513,7 +469,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -528,7 +483,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -543,7 +497,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -558,7 +511,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -573,7 +525,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -588,7 +539,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -603,7 +553,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -618,7 +567,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -633,7 +581,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -648,7 +595,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -663,7 +609,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -678,7 +623,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -693,7 +637,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -708,7 +651,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -723,7 +665,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -738,7 +679,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -753,7 +693,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -768,7 +707,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -783,7 +721,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -798,7 +735,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -813,7 +749,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -828,7 +763,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -843,7 +777,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -858,7 +791,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -873,7 +805,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -888,7 +819,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -903,7 +833,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -918,7 +847,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -933,7 +861,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -948,7 +875,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -963,7 +889,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -978,7 +903,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -993,7 +917,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1008,7 +931,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1023,7 +945,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1038,7 +959,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1053,7 +973,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1068,7 +987,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1083,7 +1001,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1098,7 +1015,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1113,7 +1029,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1128,7 +1043,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1143,7 +1057,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1158,7 +1071,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1173,7 +1085,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1188,7 +1099,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1203,7 +1113,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1218,7 +1127,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1233,7 +1141,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1248,7 +1155,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1263,7 +1169,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1278,7 +1183,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1293,7 +1197,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1308,7 +1211,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1323,7 +1225,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1338,7 +1239,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1353,7 +1253,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1368,7 +1267,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1383,7 +1281,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1398,7 +1295,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1413,7 +1309,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1428,7 +1323,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1443,7 +1337,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1458,7 +1351,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1473,7 +1365,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1488,7 +1379,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1503,7 +1393,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1518,7 +1407,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1533,7 +1421,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1548,7 +1435,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1563,7 +1449,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1578,7 +1463,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1593,7 +1477,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1608,7 +1491,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1623,7 +1505,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1638,7 +1519,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1653,7 +1533,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1668,7 +1547,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1683,7 +1561,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1698,7 +1575,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1713,7 +1589,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1728,7 +1603,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1743,7 +1617,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1758,7 +1631,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1773,7 +1645,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1788,7 +1659,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1803,7 +1673,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1818,7 +1687,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1833,7 +1701,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1848,7 +1715,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1863,7 +1729,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1878,7 +1743,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1893,7 +1757,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1908,7 +1771,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1923,7 +1785,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1938,7 +1799,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1953,7 +1813,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1968,7 +1827,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1983,7 +1841,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -1998,7 +1855,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2013,7 +1869,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2028,7 +1883,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2043,7 +1897,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2058,7 +1911,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2073,7 +1925,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2088,7 +1939,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2103,7 +1953,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2118,7 +1967,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2133,7 +1981,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2148,7 +1995,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2163,7 +2009,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2178,7 +2023,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2193,7 +2037,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2208,7 +2051,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2223,7 +2065,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2238,7 +2079,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2253,7 +2093,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2268,7 +2107,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2283,7 +2121,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2298,7 +2135,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2313,7 +2149,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2328,7 +2163,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2343,7 +2177,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2358,7 +2191,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2373,7 +2205,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2388,7 +2219,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2403,7 +2233,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2418,7 +2247,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2433,7 +2261,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2448,7 +2275,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2463,7 +2289,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2478,7 +2303,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2493,7 +2317,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2508,7 +2331,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2523,7 +2345,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2538,7 +2359,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2553,7 +2373,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2568,7 +2387,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2583,7 +2401,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2598,7 +2415,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2613,7 +2429,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2628,7 +2443,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2643,7 +2457,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2658,7 +2471,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2673,7 +2485,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2688,22 +2499,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Smoke": {
-        "name": "Smoke",
-        "id": 435,
-        "groups": [
-          "Everything",
-          "FF1Item"
-        ],
-        "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2718,22 +2513,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Blast": {
-        "name": "Blast",
-        "id": 434,
-        "groups": [
-          "Everything",
-          "FF1Item"
-        ],
-        "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2748,37 +2527,34 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Flare": {
-        "name": "Flare",
-        "id": 437,
+      "Blast": {
+        "name": "Blast",
+        "id": 434,
         "groups": [
           "Everything",
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Black": {
-        "name": "Black",
-        "id": 438,
+      "Smoke": {
+        "name": "Smoke",
+        "id": 435,
         "groups": [
           "Everything",
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2793,7 +2569,34 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Flare": {
+        "name": "Flare",
+        "id": 437,
+        "groups": [
+          "Everything",
+          "FF1Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Black": {
+        "name": "Black",
+        "id": 438,
+        "groups": [
+          "Everything",
+          "FF1Item"
+        ],
+        "advancement": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2808,52 +2611,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Wizard": {
-        "name": "Wizard",
-        "id": 442,
-        "groups": [
-          "Everything",
-          "FF1Item"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "HighPotion": {
-        "name": "HighPotion",
-        "id": 441,
-        "groups": [
-          "Everything",
-          "FF1Item"
-        ],
-        "advancement": false,
-        "priority": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Cloak": {
-        "name": "Cloak",
-        "id": 443,
-        "groups": [
-          "Everything",
-          "FF1Item"
-        ],
-        "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2868,7 +2625,48 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "HighPotion": {
+        "name": "HighPotion",
+        "id": 441,
+        "groups": [
+          "Everything",
+          "FF1Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Wizard": {
+        "name": "Wizard",
+        "id": 442,
+        "groups": [
+          "Everything",
+          "FF1Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cloak": {
+        "name": "Cloak",
+        "id": 443,
+        "groups": [
+          "Everything",
+          "FF1Item"
+        ],
+        "advancement": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2883,7 +2681,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2898,7 +2695,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2913,7 +2709,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2928,7 +2723,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2943,7 +2737,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2958,7 +2751,6 @@
           "FF1Item"
         ],
         "advancement": false,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": false,
@@ -2972,7 +2764,6 @@
           "Event"
         ],
         "advancement": true,
-        "priority": false,
         "useful": false,
         "trap": false,
         "event": true,
@@ -3001,7 +2792,8 @@
   "settings": {
     "1": {
       "game": "Final Fantasy",
-      "assume_bidirectional_exits": false
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
     }
   },
   "game_info": {

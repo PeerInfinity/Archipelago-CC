@@ -1,0 +1,3996 @@
+{
+  "schema_version": 3,
+  "game_name": "Faxanadu",
+  "game_directory": "faxanadu",
+  "archipelago_version": "0.6.4",
+  "generation_seed": 1,
+  "player_names": {
+    "1": "Player1",
+    "2": "Player2",
+    "3": "Player3",
+    "4": "Player4",
+    "5": "Player5",
+    "6": "Player6",
+    "7": "Player7",
+    "8": "Player8",
+    "9": "Player9",
+    "10": "Player10",
+    "11": "Player11",
+    "12": "Player12",
+    "13": "Player13",
+    "14": "Player14",
+    "15": "Player15",
+    "16": "Player16",
+    "17": "Player17",
+    "18": "Player18",
+    "19": "Player19",
+    "20": "Player20",
+    "21": "Player21",
+    "22": "Player22",
+    "23": "Player23",
+    "24": "Player24",
+    "25": "Player25",
+    "26": "Player26",
+    "27": "Player27",
+    "28": "Player28",
+    "29": "Player29",
+    "30": "Player30",
+    "31": "Player31",
+    "32": "Player32",
+    "33": "Player33",
+    "34": "Player34",
+    "35": "Player35",
+    "36": "Player36",
+    "37": "Player37",
+    "38": "Player38",
+    "39": "Player39",
+    "40": "Player40",
+    "41": "Player41",
+    "42": "Player42",
+    "43": "Player43",
+    "44": "Player44",
+    "45": "Player45",
+    "46": "Player46",
+    "47": "Player47",
+    "48": "Player48",
+    "49": "Player49",
+    "50": "Player50",
+    "51": "Player51",
+    "52": "Player52",
+    "53": "Player53",
+    "54": "Player54",
+    "55": "Player55",
+    "56": "Player56",
+    "57": "Player57",
+    "58": "Player58",
+    "59": "Player59",
+    "60": "Player60",
+    "61": "Player61",
+    "62": "Player62",
+    "63": "Player63",
+    "64": "Player64",
+    "65": "Player65",
+    "66": "Player66",
+    "67": "Player67",
+    "68": "Player68",
+    "69": "Player69",
+    "70": "Player70",
+    "71": "Player71",
+    "72": "Player72",
+    "73": "Player73",
+    "74": "Player74",
+    "75": "Player75",
+    "76": "Player76",
+    "77": "Player77"
+  },
+  "world_classes": {
+    "1": "HatInTimeWorld",
+    "2": "ALTTPWorld",
+    "3": "ShortHikeWorld",
+    "4": "AdventureWorld",
+    "5": "AquariaWorld",
+    "6": "ArchipIDLEWorld",
+    "7": "BlasphemousWorld",
+    "8": "BombRushCyberfunkWorld",
+    "9": "BumpStikWorld",
+    "10": "CVCotMWorld",
+    "11": "CV64World",
+    "12": "Celeste64World",
+    "13": "ChecksFinderWorld",
+    "14": "ChocolateChipCookiesWorld",
+    "15": "CivVIWorld",
+    "16": "DarkSouls3World",
+    "17": "DLCqworld",
+    "18": "DKC3World",
+    "19": "DOOM1993World",
+    "20": "DOOM2World",
+    "21": "Factorio",
+    "22": "FaxanaduWorld",
+    "23": "FFMQWorld",
+    "24": "FF1World",
+    "25": "HereticWorld",
+    "26": "Hylics2World",
+    "27": "InscryptionWorld",
+    "28": "JakAndDaxterWorld",
+    "29": "KH2World",
+    "30": "KH1World",
+    "31": "KDL3World",
+    "32": "LandstalkerWorld",
+    "33": "LingoWorld",
+    "34": "LinksAwakeningWorld",
+    "35": "L2ACWorld",
+    "36": "MLSSWorld",
+    "37": "MathProof2p2e4World",
+    "38": "MM2World",
+    "39": "MMBN3World",
+    "40": "MeritousWorld",
+    "41": "MetamathWorld",
+    "42": "MuseDashWorld",
+    "43": "NoitaWorld",
+    "44": "OSRSWorld",
+    "45": "Overcooked2World",
+    "46": "PaintWorld",
+    "47": "PokemonEmeraldWorld",
+    "48": "PokemonRedBlueWorld",
+    "49": "RaftWorld",
+    "50": "RiskOfRainWorld",
+    "51": "SavingPrincessWorld",
+    "52": "SoEWorld",
+    "53": "ShapezWorld",
+    "54": "ShiversWorld",
+    "55": "SMZ3World",
+    "56": "SA2BWorld",
+    "57": "SC2World",
+    "58": "StardewValleyWorld",
+    "59": "SubnauticaWorld",
+    "60": "SM64World",
+    "61": "MarioLand2World",
+    "62": "SMWWorld",
+    "63": "SMWorld",
+    "64": "TerrariaWorld",
+    "65": "TLoZWorld",
+    "66": "MessengerWorld",
+    "67": "TWWWorld",
+    "68": "WitnessWorld",
+    "69": "TimespinnerWorld",
+    "70": "TunicWorld",
+    "71": "UndertaleWorld",
+    "72": "V6World",
+    "73": "WargrooveWorld",
+    "74": "WebDevJourneyWorld",
+    "75": "YachtDiceWorld",
+    "76": "YoshisIslandWorld",
+    "77": "Yugioh06World"
+  },
+  "regions": {
+    "22": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "Menu -> Eolis",
+            "connected_region": "Eolis",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Eolis": {
+        "name": "Eolis",
+        "exits": [
+          {
+            "name": "Eolis -> Path to Apolune",
+            "connected_region": "Path to Apolune",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Key Jack",
+                    "Progressive Sword"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Eolis Guru",
+            "id": 400100,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Music Sheet",
+              "player": 42,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Eolis Key Jack",
+            "id": 400101,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Deluge",
+                    "Progressive Sword",
+                    "Ring of Elf"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Blue Ring",
+              "player": 65,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Eolis Hand Dagger",
+            "id": 400102,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Deluge",
+                    "Progressive Sword",
+                    "Ring of Elf"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "effect-transmission",
+              "player": 21,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Eolis Red Potion",
+            "id": 400103,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Deluge",
+                    "Progressive Sword",
+                    "Ring of Elf"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Blazefire Gunblade (Nova Weapon)",
+              "player": 57,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Eolis Elixir",
+            "id": 400104,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Deluge",
+                    "Progressive Sword",
+                    "Ring of Elf"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Wingboots",
+              "player": 22,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Eolis Deluge",
+            "id": 400105,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Deluge",
+                    "Progressive Sword",
+                    "Ring of Elf"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Buster Band",
+              "player": 29,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Path to Apolune": {
+        "name": "Path to Apolune",
+        "exits": [
+          {
+            "name": "Path to Apolune -> Apolune",
+            "connected_region": "Apolune",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Path to Apolune Magic Shield",
+            "id": 400106,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Key King"
+            },
+            "item": {
+              "name": "Wingboots",
+              "player": 22,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Path to Apolune Death",
+            "id": 400107,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Key Ace"
+            },
+            "item": {
+              "name": "2-Up",
+              "player": 76,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Apolune": {
+        "name": "Apolune",
+        "exits": [
+          {
+            "name": "Apolune -> Tower of Trunk",
+            "connected_region": "Tower of Trunk",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Key Jack"
+            }
+          },
+          {
+            "name": "Apolune -> Path to Forepaw",
+            "connected_region": "Path to Forepaw",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Mattock"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Apolune Small Shield",
+            "id": 400108,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Clay",
+              "player": 52,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Apolune Hand Dagger",
+            "id": 400109,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "TM34 Bide",
+              "player": 48,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Apolune Deluge",
+            "id": 400110,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Torn Notebook",
+              "player": 71,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Apolune Red Potion",
+            "id": 400111,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "3-Up",
+              "player": 76,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Apolune Key Jack",
+            "id": 400112,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "LD19 All except E-Hero's forbidden Unlock",
+              "player": 77,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Tower of Trunk": {
+        "name": "Tower of Trunk",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Tower of Trunk Hidden Mattock",
+            "id": 400113,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Deluge",
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Progressive Sword",
+                  "count": {
+                    "type": "constant",
+                    "value": 2
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Cure Potion",
+              "player": 23,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Tower of Trunk Hidden Hourglass",
+            "id": 400114,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "WORM ROOM KEY",
+              "player": 26,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Tower of Trunk Boss Mattock",
+            "id": 400115,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Chuckle Bean",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Path to Forepaw": {
+        "name": "Path to Forepaw",
+        "exits": [
+          {
+            "name": "Path to Forepaw -> Forepaw",
+            "connected_region": "Forepaw",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Path to Forepaw Hidden Red Potion",
+            "id": 400116,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Bloodfalls (MAP25) - Blue skull key",
+              "player": 20,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Path to Forepaw Glove",
+            "id": 400117,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Deluge",
+                    "Unlock Wingboots"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Critical Plus",
+              "player": 30,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Forepaw": {
+        "name": "Forepaw",
+        "exits": [
+          {
+            "name": "Forepaw -> Trunk",
+            "connected_region": "Trunk",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Forepaw Long Sword",
+            "id": 400118,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Golden Ritual Spear",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Forepaw Studded Mail",
+            "id": 400119,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Unlock Wingboots"
+            },
+            "item": {
+              "name": "Wingboots",
+              "player": 22,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Forepaw Small Shield",
+            "id": 400120,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Shadowsphere",
+              "player": 25,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Forepaw Red Potion",
+            "id": 400121,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Mushroom",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Forepaw Wingboots",
+            "id": 400122,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Efficiency (Hydralisk)",
+              "player": 57,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Forepaw Key Jack",
+            "id": 400123,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 56,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Forepaw Key Queen",
+            "id": 400124,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 46,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Trunk": {
+        "name": "Trunk",
+        "exits": [
+          {
+            "name": "Trunk -> Joker Spring",
+            "connected_region": "Joker Spring",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Key Joker"
+            }
+          },
+          {
+            "name": "Trunk -> Tower of Fortress",
+            "connected_region": "Tower of Fortress",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Key Jack"
+            }
+          },
+          {
+            "name": "Trunk -> Path to Mascon",
+            "connected_region": "Path to Mascon",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Joker Spring Flow",
+                        "Key Queen",
+                        "Ring of Ruby",
+                        "Sky Spring Flow",
+                        "Tower of Fortress Spring Flow"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Progressive Sword",
+                  "count": {
+                    "type": "constant",
+                    "value": 2
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Trunk Hidden Ointment",
+            "id": 400125,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Big Belt Upgrade",
+              "player": 53,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Trunk Hidden Red Potion",
+            "id": 400126,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Laser Cutter Fragment",
+              "player": 59,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Trunk Red Potion",
+            "id": 400127,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Unlock Wingboots"
+            },
+            "item": {
+              "name": "Feather Badge",
+              "player": 47,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sky Spring",
+            "id": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Unlock Wingboots"
+            },
+            "item": {
+              "name": "Sky Spring Flow",
+              "player": 22,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Joker Spring": {
+        "name": "Joker Spring",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Joker Spring Ruby Ring",
+            "id": 400128,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Drakeblood Gauntlets",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Joker Spring",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Joker Spring Flow",
+              "player": 22,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Tower of Fortress": {
+        "name": "Tower of Fortress",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Tower of Fortress Poison 1",
+            "id": 400129,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Music (Bounce Upon A Time)",
+              "player": 8,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Tower of Fortress Poison 2",
+            "id": 400130,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Gauge",
+              "player": 52,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Tower of Fortress Hidden Wingboots",
+            "id": 400131,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "RegUP2",
+              "player": 39,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Tower of Fortress Ointment",
+            "id": 400132,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Oil Always Available in Prehistoric Room",
+              "player": 54,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Tower of Fortress Boss Wingboots",
+            "id": 400133,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Feedback (Dark Archon)",
+              "player": 57,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Tower of Fortress Elixir",
+            "id": 400134,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Heal Potion",
+              "player": 23,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Tower of Fortress Guru",
+            "id": 400135,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sky Spring Flow"
+            },
+            "item": {
+              "name": "Meyef",
+              "player": 69,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Tower of Fortress Spring",
+            "id": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Spring Elixir"
+            },
+            "item": {
+              "name": "Tower of Fortress Spring Flow",
+              "player": 22,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Path to Mascon": {
+        "name": "Path to Mascon",
+        "exits": [
+          {
+            "name": "Path to Mascon -> Tower of Red Potion",
+            "connected_region": "Tower of Red Potion",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Key Queen"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red Potion",
+                  "count": {
+                    "type": "constant",
+                    "value": 4
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Path to Mascon -> Mascon",
+            "connected_region": "Mascon",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Path to Mascon Hidden Wingboots",
+            "id": 400136,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Chuckle Bean",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Tower of Red Potion": {
+        "name": "Tower of Red Potion",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Tower of Red Potion",
+            "id": 400137,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Seashell",
+              "player": 3,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Mascon": {
+        "name": "Mascon",
+        "exits": [
+          {
+            "name": "Mascon -> Path to Victim",
+            "connected_region": "Path to Victim",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Mascon Large Shield",
+            "id": 400138,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-inserter",
+              "player": 21,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Mascon Thunder",
+            "id": 400139,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Progressive Color Depth (Red)",
+              "player": 46,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Mascon Mattock",
+            "id": 400140,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Seashell",
+              "player": 3,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Mascon Red Potion",
+            "id": 400141,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Puzzle Skip",
+              "player": 68,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Mascon Key Jack",
+            "id": 400142,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Neutron Shields (Corsair)",
+              "player": 57,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Mascon Key Queen",
+            "id": 400143,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Apron shield",
+              "player": 35,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Path to Victim": {
+        "name": "Path to Victim",
+        "exits": [
+          {
+            "name": "Path to Victim -> Tower of Suffer",
+            "connected_region": "Tower of Suffer",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Key Queen"
+            }
+          },
+          {
+            "name": "Path to Victim -> Victim",
+            "connected_region": "Victim",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Unlock Wingboots"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Misty Shop Death",
+            "id": 400144,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Relic (Burger Patty)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Misty Shop Hourglass",
+            "id": 400145,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Lupini: Red Eagle",
+              "player": 58,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Misty Shop Elixir",
+            "id": 400146,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Lightning Bolt x12",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Misty Shop Red Potion",
+            "id": 400147,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Mega Armor",
+              "player": 20,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Misty Doctor Office",
+            "id": 400148,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Death",
+                    "Deluge",
+                    "Fire",
+                    "Thunder",
+                    "Tilte"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Rupees (20)",
+              "player": 2,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Tower of Suffer": {
+        "name": "Tower of Suffer",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Tower of Suffer Hidden Wingboots",
+            "id": 400149,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Deluge"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Progressive Sword",
+                  "count": {
+                    "type": "constant",
+                    "value": 2
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Motivational Video",
+              "player": 6,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Tower of Suffer Hidden Hourglass",
+            "id": 400150,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Weapon Energy (L)",
+              "player": 38,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Tower of Suffer Pendant",
+            "id": 400151,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Fireball",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Victim": {
+        "name": "Victim",
+        "exits": [
+          {
+            "name": "Victim -> Mist",
+            "connected_region": "Mist",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Victim Full Plate",
+            "id": 400152,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Snatcher's Contract - Queen Vanessa's Manor",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Victim Mattock",
+            "id": 400153,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Moon card",
+              "player": 11,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Victim Red Potion",
+            "id": 400154,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "10 coins",
+              "player": 62,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Victim Key King",
+            "id": 400155,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Eastern Armor",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Victim Key Queen",
+            "id": 400156,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Leaf Poultice",
+              "player": 5,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Mist": {
+        "name": "Mist",
+        "exits": [
+          {
+            "name": "Mist -> Useless Tower",
+            "connected_region": "Useless Tower",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Key King",
+                    "Unlock Wingboots"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Mist -> Tower of Mist",
+            "connected_region": "Tower of Mist",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Key King"
+            }
+          },
+          {
+            "name": "Mist -> Path to Conflate",
+            "connected_region": "Path to Conflate",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Key Ace"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Victim Tavern",
+            "id": 400157,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Mega Armor",
+              "player": 20,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Mist Hidden Poison 1",
+            "id": 400158,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Bountiful Light",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Mist Hidden Poison 2",
+            "id": 400159,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Medikit",
+              "player": 20,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Mist Hidden Wingboots",
+            "id": 400160,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 50,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Misty Magic Hall",
+            "id": 400161,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "4 Ash",
+              "player": 52,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Misty House",
+            "id": 400162,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Black Onyx"
+            },
+            "item": {
+              "name": "Mushroom",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Useless Tower": {
+        "name": "Useless Tower",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Useless Tower",
+            "id": 400163,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "2 Gunpowder",
+              "player": 52,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Tower of Mist": {
+        "name": "Tower of Mist",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Tower of Mist Hidden Ointment",
+            "id": 400164,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Ballad of the Wind Fish",
+              "player": 34,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Tower of Mist Elixir",
+            "id": 400165,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "SKULL BOMB",
+              "player": 26,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Tower of Mist Black Onyx",
+            "id": 400166,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Hi-Sec Auto Tracking",
+              "player": 57,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Path to Conflate": {
+        "name": "Path to Conflate",
+        "exits": [
+          {
+            "name": "Path to Conflate -> Helm Branch",
+            "connected_region": "Helm Branch",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Key King"
+            }
+          },
+          {
+            "name": "Path to Conflate -> Conflate",
+            "connected_region": "Conflate",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Path to Conflate -> Branches",
+            "connected_region": "Branches",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Key King"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Path to Conflate Hidden Ointment",
+            "id": 400167,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Sand Bottle",
+              "player": 69,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Path to Conflate Poison",
+            "id": 400168,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "16 REP",
+              "player": 8,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Helm Branch": {
+        "name": "Helm Branch",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Helm Branch Hidden Glove",
+            "id": 400169,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Hammer Securities",
+              "player": 57,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Helm Branch Battle Helmet",
+            "id": 400170,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Squirrel Totem Head",
+              "player": 27,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Conflate": {
+        "name": "Conflate",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Conflate Giant Blade",
+            "id": 400171,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Conflate Magic Shield",
+            "id": 400172,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Embossed Mask of Crescente",
+              "player": 7,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Conflate Wingboots",
+            "id": 400173,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Progressive Trash Can",
+              "player": 58,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Conflate Red Potion",
+            "id": 400174,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Bonus Coin",
+              "player": 18,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Conflate Guru",
+            "id": 400175,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive Armor",
+              "count": {
+                "type": "constant",
+                "value": 3
+              }
+            },
+            "item": {
+              "name": "Dark Talisman",
+              "player": 58,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Branches": {
+        "name": "Branches",
+        "exits": [
+          {
+            "name": "Branches -> Path to Daybreak",
+            "connected_region": "Path to Daybreak",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Branches Hidden Ointment",
+            "id": 400176,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Progressive Watering Can",
+              "player": 58,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Branches Poison",
+            "id": 400177,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Gola's Eye",
+              "player": 32,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Branches Hidden Mattock",
+            "id": 400178,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Unlock Wingboots"
+            },
+            "item": {
+              "name": "Speed Boost",
+              "player": 68,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Branches Hidden Hourglass",
+            "id": 400179,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Progressive Terran Ship Weapon",
+              "player": 57,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Path to Daybreak": {
+        "name": "Path to Daybreak",
+        "exits": [
+          {
+            "name": "Path to Daybreak -> Daybreak",
+            "connected_region": "Daybreak",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Path to Daybreak Hidden Wingboots 1",
+            "id": 400180,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Progressive Mine Elevator",
+              "player": 58,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Path to Daybreak Magical Rod",
+            "id": 400181,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "1-Up Balloon",
+              "player": 18,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Path to Daybreak Hidden Wingboots 2",
+            "id": 400182,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Ember",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Path to Daybreak Poison",
+            "id": 400183,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Efficiency (Wraith)",
+              "player": 57,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Path to Daybreak Glove",
+            "id": 400184,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Unlock Wingboots"
+            },
+            "item": {
+              "name": "Relic (Cool Cow)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Path to Daybreak Battle Suit",
+            "id": 400185,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Traveler's Cloak",
+              "player": 69,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Daybreak": {
+        "name": "Daybreak",
+        "exits": [
+          {
+            "name": "Daybreak -> Dartmoor Castle",
+            "connected_region": "Dartmoor Castle",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Ring of Dworf"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Daybreak Tilte",
+            "id": 400186,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Boss Heart Container",
+              "player": 2,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Daybreak Giant Blade",
+            "id": 400187,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Twinkling Titanite",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Daybreak Red Potion",
+            "id": 400188,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Money x20",
+              "player": 70,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Daybreak Key King",
+            "id": 400189,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 56,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Daybreak Key Queen",
+            "id": 400190,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Defense Up",
+              "player": 30,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Dartmoor Castle": {
+        "name": "Dartmoor Castle",
+        "exits": [
+          {
+            "name": "Dartmoor Castle -> Dartmoor",
+            "connected_region": "Dartmoor",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Dartmoor Castle -> Fraternal Castle",
+            "connected_region": "Fraternal Castle",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Dartmoor Castle -> Evil Fortress",
+            "connected_region": "Evil Fortress",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Demons Ring"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Dartmoor Castle Hidden Hourglass",
+            "id": 400191,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Unlock Wingboots"
+            },
+            "item": {
+              "name": "Stop Arts",
+              "player": 30,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Dartmoor Castle Hidden Red Potion",
+            "id": 400192,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Death",
+                    "Deluge",
+                    "Fire",
+                    "Thunder",
+                    "Tilte"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Rare Candy",
+              "player": 47,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Dartmoor": {
+        "name": "Dartmoor",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Dartmoor Giant Blade",
+            "id": 400193,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Golem Card",
+              "player": 10,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Dartmoor Red Potion",
+            "id": 400194,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Unlock Wingboots"
+            },
+            "item": {
+              "name": "Wingboots",
+              "player": 22,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Dartmoor Key King",
+            "id": 400195,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Quicksilver",
+              "player": 7,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Fraternal Castle": {
+        "name": "Fraternal Castle",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Fraternal Castle Hidden Ointment",
+            "id": 400196,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Box of shotgun shells",
+              "player": 20,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Fraternal Castle Shop Hidden Ointment",
+            "id": 400197,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Death",
+                    "Deluge",
+                    "Fire",
+                    "Thunder",
+                    "Tilte"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "AntiNavi M",
+              "player": 39,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Fraternal Castle Poison 1",
+            "id": 400198,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Predictive Systems",
+              "player": 15,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Fraternal Castle Poison 2",
+            "id": 400199,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Item Boost",
+              "player": 29,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Fraternal Castle Poison 3",
+            "id": 400200,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "50 coins",
+              "player": 62,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Fraternal Castle Hidden Hourglass",
+            "id": 400202,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Deluxe Scarecrow Recipe",
+              "player": 58,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Fraternal Castle Dragon Slayer",
+            "id": 400203,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Progressive Pan",
+              "player": 58,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Fraternal Castle Guru",
+            "id": 400204,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive Sword",
+              "count": {
+                "type": "constant",
+                "value": 4
+              }
+            },
+            "item": {
+              "name": "8 REP",
+              "player": 8,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Evil Fortress": {
+        "name": "Evil Fortress",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Evil Fortress Ointment",
+            "id": 400205,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Tent",
+              "player": 30,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Evil Fortress Poison 1",
+            "id": 400206,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Blue Bug Pellet x2",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Evil Fortress Glove",
+            "id": 400207,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Medikit",
+              "player": 20,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Evil Fortress Poison 2",
+            "id": 400208,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Backpack",
+              "player": 20,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Evil Fortress Poison 3",
+            "id": 400209,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Red jewel(S)",
+              "player": 11,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Evil Fortress Hidden Glove",
+            "id": 400210,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Item Scrap, White",
+              "player": 50,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Evil One",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Killed Evil One",
+              "player": 22,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "22": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "22": {
+      "Progressive Sword": {
+        "name": "Progressive Sword",
+        "id": 400000,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "Progressive Armor": {
+        "name": "Progressive Armor",
+        "id": 400001,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "Progressive Shield": {
+        "name": "Progressive Shield",
+        "id": 400002,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "Spring Elixir": {
+        "name": "Spring Elixir",
+        "id": 400003,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mattock": {
+        "name": "Mattock",
+        "id": 400004,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Unlock Wingboots": {
+        "name": "Unlock Wingboots",
+        "id": 400005,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Key Jack": {
+        "name": "Key Jack",
+        "id": 400006,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Key Queen": {
+        "name": "Key Queen",
+        "id": 400007,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Key King": {
+        "name": "Key King",
+        "id": 400008,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Key Joker": {
+        "name": "Key Joker",
+        "id": 400009,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Key Ace": {
+        "name": "Key Ace",
+        "id": 400010,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ring of Ruby": {
+        "name": "Ring of Ruby",
+        "id": 400011,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ring of Dworf": {
+        "name": "Ring of Dworf",
+        "id": 400012,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Demons Ring": {
+        "name": "Demons Ring",
+        "id": 400013,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Black Onyx": {
+        "name": "Black Onyx",
+        "id": 400014,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Deluge": {
+        "name": "Deluge",
+        "id": 400015,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Thunder": {
+        "name": "Thunder",
+        "id": 400016,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Fire": {
+        "name": "Fire",
+        "id": 400017,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Death": {
+        "name": "Death",
+        "id": 400018,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Tilte": {
+        "name": "Tilte",
+        "id": 400019,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ring of Elf": {
+        "name": "Ring of Elf",
+        "id": 400020,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Magical Rod": {
+        "name": "Magical Rod",
+        "id": 400021,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Pendant": {
+        "name": "Pendant",
+        "id": 400022,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hourglass": {
+        "name": "Hourglass",
+        "id": 400023,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 8
+      },
+      "Red Potion": {
+        "name": "Red Potion",
+        "id": 400024,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 35
+      },
+      "Elixir": {
+        "name": "Elixir",
+        "id": 400025,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 7
+      },
+      "Glove": {
+        "name": "Glove",
+        "id": 400026,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 6
+      },
+      "Ointment": {
+        "name": "Ointment",
+        "id": 400027,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "Poison": {
+        "name": "Poison",
+        "id": 400028,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 17
+      },
+      "Wingboots": {
+        "name": "Wingboots",
+        "id": 400029,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "Music Sheet": {
+        "name": "Music Sheet",
+        "id": 2900000,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Blue Ring": {
+        "name": "Blue Ring",
+        "id": 7123,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "effect-transmission": {
+        "name": "effect-transmission",
+        "id": 131107,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Blazefire Gunblade (Nova Weapon)": {
+        "name": "Blazefire Gunblade (Nova Weapon)",
+        "id": 1912,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Buster Band": {
+        "name": "Buster Band",
+        "id": 1245236,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "2-Up": {
+        "name": "2-Up",
+        "id": 3154061,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Clay": {
+        "name": "Clay",
+        "id": 64126,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "TM34 Bide": {
+        "name": "TM34 Bide",
+        "id": 172000234,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Torn Notebook": {
+        "name": "Torn Notebook",
+        "id": 77045,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "3-Up": {
+        "name": "3-Up",
+        "id": 3154062,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "LD19 All except E-Hero's forbidden Unlock": {
+        "name": "LD19 All except E-Hero's forbidden Unlock",
+        "id": 5730070,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cure Potion": {
+        "name": "Cure Potion",
+        "id": 4325392,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "WORM ROOM KEY": {
+        "name": "WORM ROOM KEY",
+        "id": 200640,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Chuckle Bean": {
+        "name": "Chuckle Bean",
+        "id": 77771020,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Bloodfalls (MAP25) - Blue skull key": {
+        "name": "Bloodfalls (MAP25) - Blue skull key",
+        "id": 360249,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Critical Plus": {
+        "name": "Critical Plus",
+        "id": 2643008,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Golden Ritual Spear": {
+        "name": "Golden Ritual Spear",
+        "id": 100181,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Shadowsphere": {
+        "name": "Shadowsphere",
+        "id": 370012,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mushroom": {
+        "name": "Mushroom",
+        "id": 77771001,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Resource Efficiency (Hydralisk)": {
+        "name": "Resource Efficiency (Hydralisk)",
+        "id": 2230,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Emblem": {
+        "name": "Emblem",
+        "id": 16711680,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Additional Palette Color": {
+        "name": "Additional Palette Color",
+        "id": 198523,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Big Belt Upgrade": {
+        "name": "Big Belt Upgrade",
+        "id": 20010734,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Laser Cutter Fragment": {
+        "name": "Laser Cutter Fragment",
+        "id": 35024,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Feather Badge": {
+        "name": "Feather Badge",
+        "id": 3860231,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sky Spring Flow": {
+        "name": "Sky Spring Flow",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
+      },
+      "Drakeblood Gauntlets": {
+        "name": "Drakeblood Gauntlets",
+        "id": 100550,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Joker Spring Flow": {
+        "name": "Joker Spring Flow",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Bounce Upon A Time)": {
+        "name": "Music (Bounce Upon A Time)",
+        "id": 2308023,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Gauge": {
+        "name": "Gauge",
+        "id": 64157,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "RegUP2": {
+        "name": "RegUP2",
+        "id": 11735060,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Oil Always Available in Prehistoric Room": {
+        "name": "Oil Always Available in Prehistoric Room",
+        "id": 27098,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Feedback (Dark Archon)": {
+        "name": "Feedback (Dark Archon)",
+        "id": 3362,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Heal Potion": {
+        "name": "Heal Potion",
+        "id": 4325393,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Meyef": {
+        "name": "Meyef",
+        "id": 1337049,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Tower of Fortress Spring Flow": {
+        "name": "Tower of Fortress Spring Flow",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
+      },
+      "Seashell": {
+        "name": "Seashell",
+        "id": 82002,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "progressive-inserter": {
+        "name": "progressive-inserter",
+        "id": 131272,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Color Depth (Red)": {
+        "name": "Progressive Color Depth (Red)",
+        "id": 198503,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Puzzle Skip": {
+        "name": "Puzzle Skip",
+        "id": 158510,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Neutron Shields (Corsair)": {
+        "name": "Neutron Shields (Corsair)",
+        "id": 3324,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Apron shield": {
+        "name": "Apron shield",
+        "id": 11288845,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Relic (Burger Patty)": {
+        "name": "Relic (Burger Patty)",
+        "id": 2000300006,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Lupini: Red Eagle": {
+        "name": "Lupini: Red Eagle",
+        "id": 717219,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Lightning Bolt x12": {
+        "name": "Lightning Bolt x12",
+        "id": 100028,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mega Armor": {
+        "name": "Mega Armor",
+        "id": 360009,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rupees (20)": {
+        "name": "Rupees (20)",
+        "id": 54,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Motivational Video": {
+        "name": "Motivational Video",
+        "id": 9002,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Weapon Energy (L)": {
+        "name": "Weapon Energy (L)",
+        "id": 8912929,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Fireball": {
+        "name": "Fireball",
+        "id": 101014,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Snatcher's Contract - Queen Vanessa's Manor": {
+        "name": "Snatcher's Contract - Queen Vanessa's Manor",
+        "id": 2000300202,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Moon card": {
+        "name": "Moon card",
+        "id": 12992536,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "10 coins": {
+        "name": "10 coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 1
+      },
+      "Eastern Armor": {
+        "name": "Eastern Armor",
+        "id": 100525,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Leaf Poultice": {
+        "name": "Leaf Poultice",
+        "id": 698055,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Bountiful Light": {
+        "name": "Bountiful Light",
+        "id": 101049,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Medikit": {
+        "name": "Medikit",
+        "id": 360015,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Common Item": {
+        "name": "Common Item",
+        "id": 37002,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "4 Ash": {
+        "name": "4 Ash",
+        "id": 64153,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "2 Gunpowder": {
+        "name": "2 Gunpowder",
+        "id": 64248,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ballad of the Wind Fish": {
+        "name": "Ballad of the Wind Fish",
+        "id": 10000139,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "SKULL BOMB": {
+        "name": "SKULL BOMB",
+        "id": 200646,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hi-Sec Auto Tracking": {
+        "name": "Hi-Sec Auto Tracking",
+        "id": 1621,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sand Bottle": {
+        "name": "Sand Bottle",
+        "id": 1337060,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "16 REP": {
+        "name": "16 REP",
+        "id": 2308160,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hammer Securities": {
+        "name": "Hammer Securities",
+        "id": 1502,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Squirrel Totem Head": {
+        "name": "Squirrel Totem Head",
+        "id": 147006,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Embossed Mask of Crescente": {
+        "name": "Embossed Mask of Crescente",
+        "id": 1909107,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Trash Can": {
+        "name": "Progressive Trash Can",
+        "id": 717069,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Bonus Coin": {
+        "name": "Bonus Coin",
+        "id": 14430211,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Dark Talisman": {
+        "name": "Dark Talisman",
+        "id": 717282,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Watering Can": {
+        "name": "Progressive Watering Can",
+        "id": 717068,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Gola's Eye": {
+        "name": "Gola's Eye",
+        "id": 4043,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Speed Boost": {
+        "name": "Speed Boost",
+        "id": 158500,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Terran Ship Weapon": {
+        "name": "Progressive Terran Ship Weapon",
+        "id": 1105,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Mine Elevator": {
+        "name": "Progressive Mine Elevator",
+        "id": 717072,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "1-Up Balloon": {
+        "name": "1-Up Balloon",
+        "id": 14430209,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ember": {
+        "name": "Ember",
+        "id": 100863,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Resource Efficiency (Wraith)": {
+        "name": "Resource Efficiency (Wraith)",
+        "id": 1333,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Relic (Cool Cow)": {
+        "name": "Relic (Cool Cow)",
+        "id": 2000300012,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Traveler's Cloak": {
+        "name": "Traveler's Cloak",
+        "id": 1337021,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Boss Heart Container": {
+        "name": "Boss Heart Container",
+        "id": 62,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Twinkling Titanite": {
+        "name": "Twinkling Titanite",
+        "id": 100902,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Money x20": {
+        "name": "Money x20",
+        "id": 509342490,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Defense Up": {
+        "name": "Defense Up",
+        "id": 2641153,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Stop Arts": {
+        "name": "Stop Arts",
+        "id": 2641163,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rare Candy": {
+        "name": "Rare Candy",
+        "id": 3860068,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Golem Card": {
+        "name": "Golem Card",
+        "id": 3579635203,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Quicksilver": {
+        "name": "Quicksilver",
+        "id": 1909119,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Box of shotgun shells": {
+        "name": "Box of shotgun shells",
+        "id": 360018,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "AntiNavi M": {
+        "name": "AntiNavi M",
+        "id": 11735072,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Predictive Systems": {
+        "name": "Predictive Systems",
+        "id": 5041074,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Item Boost": {
+        "name": "Item Boost",
+        "id": 1245379,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "50 coins": {
+        "name": "50 coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 1
+      },
+      "Deluxe Scarecrow Recipe": {
+        "name": "Deluxe Scarecrow Recipe",
+        "id": 717286,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Pan": {
+        "name": "Progressive Pan",
+        "id": 717494,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "8 REP": {
+        "name": "8 REP",
+        "id": 2308159,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Tent": {
+        "name": "Tent",
+        "id": 2641142,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Blue Bug Pellet x2": {
+        "name": "Blue Bug Pellet x2",
+        "id": 100851,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Backpack": {
+        "name": "Backpack",
+        "id": 360007,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Red jewel(S)": {
+        "name": "Red jewel(S)",
+        "id": 12992514,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Item Scrap, White": {
+        "name": "Item Scrap, White",
+        "id": 37008,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Killed Evil One": {
+        "name": "Killed Evil One",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
+      },
+      " coins": {
+        "name": " coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 999999
+      },
+      " coins freemium": {
+        "name": " coins freemium",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 999999
+      }
+    }
+  },
+  "item_groups": {
+    "22": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "22": {
+      "Black Onyx": 1,
+      "Death": 1,
+      "Deluge": 1,
+      "Demons Ring": 1,
+      "Elixir": 7,
+      "Fire": 1,
+      "Glove": 6,
+      "Hourglass": 8,
+      "Joker Spring Flow": 1,
+      "Key Ace": 1,
+      "Key Jack": 1,
+      "Key Joker": 1,
+      "Key King": 1,
+      "Key Queen": 1,
+      "Killed Evil One": 1,
+      "Magical Rod": 1,
+      "Mattock": 1,
+      "Ointment": 3,
+      "Poison": 17,
+      "Progressive Armor": 3,
+      "Progressive Shield": 4,
+      "Progressive Sword": 4,
+      "Red Potion": 35,
+      "Ring of Dworf": 1,
+      "Ring of Elf": 1,
+      "Ring of Ruby": 1,
+      "Sky Spring Flow": 1,
+      "Spring Elixir": 1,
+      "Thunder": 1,
+      "Tilte": 1,
+      "Tower of Fortress Spring Flow": 1,
+      "Unlock Wingboots": 1,
+      "Wingboots": 4
+    }
+  },
+  "progression_mapping": {
+    "22": {}
+  },
+  "starting_items": {
+    "22": []
+  },
+  "settings": {
+    "22": {
+      "game": "Faxanadu",
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "22": {
+      "name": "Faxanadu",
+      "rule_format": {
+        "version": "1.0"
+      }
+    }
+  }
+}
