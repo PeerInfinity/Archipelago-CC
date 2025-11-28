@@ -351,10 +351,10 @@ export async function timerSendTest(testController) {
       );
       const totalManuallyCheckable = manuallyCheckableLocations.length;
 
-      // Count event locations (those with id=null)
-      const eventLocations = locationsArray.filter(
-        loc => loc.id === null || loc.id === undefined || loc.id === 0
-      );
+      // Get event locations from staticData (pre-computed Map for efficiency)
+      const eventLocations = staticData.eventLocations
+        ? Object.values(staticData.eventLocations)
+        : [];
       const totalEventLocations = eventLocations.length;
 
       // Count how many of each type were checked

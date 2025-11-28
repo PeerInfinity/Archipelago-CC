@@ -86,8 +86,8 @@
  *
  * Location Checking Commands:
  *   checkLocation:
- *     Input: { locationName: string, addItems: boolean }
- *     Processing: stateManager.checkLocation(locationName, addItems)
+ *     Input: { locationName: string, addItems: boolean, forceCheck: boolean }
+ *     Processing: stateManager.checkLocation(locationName, addItems, forceCheck)
  *     Output: Location checked, item granted, snapshot sent
  *
  * Batch Update Commands:
@@ -772,9 +772,10 @@ async function handleMessage(message) {
               log('info', `[SMW] checkLocation: try block entered.`);
               const locationName = message.payload.locationName;
               const addItems = message.payload.addItems !== undefined ? message.payload.addItems : true;
+              const forceCheck = message.payload.forceCheck !== undefined ? message.payload.forceCheck : false;
               log(
                 'info',
-                `[SMW] checkLocation: locationName extracted: "${locationName}" (type: ${typeof locationName}), addItems: ${addItems}`
+                `[SMW] checkLocation: locationName extracted: "${locationName}" (type: ${typeof locationName}), addItems: ${addItems}, forceCheck: ${forceCheck}`
               );
 
               if (typeof locationName !== 'string') {
@@ -790,9 +791,9 @@ async function handleMessage(message) {
               // LOG 5: Before calling instance.checkLocation
               log(
                 'info',
-                `[SMW] checkLocation: About to call stateManagerInstance.checkLocation("${locationName}", ${addItems})`
+                `[SMW] checkLocation: About to call stateManagerInstance.checkLocation("${locationName}", ${addItems}, ${forceCheck})`
               );
-              const result = stateManagerInstance.checkLocation(locationName, addItems);
+              const result = stateManagerInstance.checkLocation(locationName, addItems, forceCheck);
               // LOG 6: After calling instance.checkLocation
               log(
                 'info',

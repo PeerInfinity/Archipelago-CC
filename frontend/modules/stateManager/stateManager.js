@@ -563,9 +563,10 @@ export class StateManager {
    * Mark a location as checked
    * @param {string} locationName - Name of the location to check
    * @param {boolean} addItems - Whether to add the location's item to inventory (default: true)
+   * @param {boolean} forceCheck - Whether to bypass accessibility check (default: false)
    */
-  checkLocation(locationName, addItems = true) {
-    return LocationCheckingModule.checkLocation(this, locationName, addItems);
+  checkLocation(locationName, addItems = true, forceCheck = false) {
+    return LocationCheckingModule.checkLocation(this, locationName, addItems, forceCheck);
   }
 
   /**
