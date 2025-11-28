@@ -36,13 +36,7 @@ import { has as alttpHas, count as alttpCount } from '../alttp/alttpLogic.js';
  * @returns {boolean} True if player has the item
  */
 function hasItem(snapshot, staticData, itemName) {
-  const result = alttpHas(snapshot, staticData, itemName);
-  // Debug: log keycard checks when they fail
-  if (itemName.startsWith('Card') && !result) {
-    console.log(`[smz3 hasItem DEBUG] ${itemName} = ${result}, inventory Card* keys:`,
-      Object.keys(snapshot?.inventory || {}).filter(k => k.startsWith('Card')).join(', ') || 'NONE');
-  }
-  return result;
+  return alttpHas(snapshot, staticData, itemName);
 }
 
 /**
