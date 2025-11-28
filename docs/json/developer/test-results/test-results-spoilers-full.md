@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-28 02:55:43
+**Generated:** 2025-11-28 06:58:15
 
-**Source Data Created:** 2025-11-28T00:58:32.605844
+**Source Data Created:** 2025-11-28T04:59:04.753213
 
-**Source Data Last Updated:** 2025-11-28T00:58:32.605853
+**Source Data Last Updated:** 2025-11-28T04:59:04.753219
 
 ## Summary
 
 - **Total Games:** 76
-- **Passed:** 74 (97.4%)
-- **Failed:** 2 (2.6%)
+- **Passed:** 76 (100.0%)
+- **Failed:** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
@@ -71,7 +71,7 @@
 | Pokemon Red and Blue | ✅ Passed seeds 1-10 | 0 | 10.9 | 10.9 | 🟢 Complete | ✅ | ✅ |
 | Raft | ✅ Passed seeds 1-10 | 0 | 11.6 | 11.6 | 🟢 Complete | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed seeds 1-10 | 0 | 8.35 | 8.35 | 🟢 Complete | ⚫ | ⚫ |
-| SMZ3 | ❌ Failed seed 3 | 0 | 7.4 | 18.5 | 🟡 40.0% | ✅ | ✅ |
+| SMZ3 | ✅ Passed seeds 1-10 | 0 | 16.1 | 16.1 | 🟢 Complete | ✅ | ✅ |
 | Saving Princess | ✅ Passed seeds 1-10 | 0 | 5.3 | 5.3 | 🟢 Complete | ✅ | ⚫ |
 | Secret of Evermore | ✅ Passed seeds 1-10 | 0 | 5.19 | 5.19 | 🟢 Complete | ✅ | ✅ |
 | Shivers | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
@@ -82,7 +82,7 @@
 | Super Mario 64 | ✅ Passed seeds 1-10 | 0 | 5.5 | 5.5 | 🟢 Complete | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
 | Super Mario World | ✅ Passed seeds 1-10 | 0 | 8.12 | 8.12 | 🟢 Complete | ✅ | ⚫ |
-| Super Metroid | ❌ Failed seed 3 | 0 | 3.6 | 6.2 | 🟡 58.1% | ✅ | ✅ |
+| Super Metroid | ✅ Passed seeds 1-10 | 0 | 7.3 | 7.3 | 🟢 Complete | ✅ | ✅ |
 | TUNIC | ✅ Passed seeds 1-10 | 0 | 4.12 | 4.12 | 🟢 Complete | ✅ | ⚫ |
 | Terraria | ✅ Passed seeds 1-10 | 0 | 9.6 | 9.6 | 🟢 Complete | ✅ | ✅ |
 | The Legend of Zelda | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |

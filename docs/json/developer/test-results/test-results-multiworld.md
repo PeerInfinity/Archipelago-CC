@@ -4,14 +4,14 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-28 02:55:43
+**Generated:** 2025-11-28 06:58:15
 
 ## Summary
 
 - **Total Games:** 76
-- **Passed:** 74 (97.4%)
+- **Passed:** 75 (98.7%)
 - **Failed:** 0 (0.0%)
-- **Skipped (Prerequisites):** 2 (2.6%)
+- **Skipped (Prerequisites):** 1 (1.3%)
 
 ## Test Results
 
@@ -77,22 +77,22 @@
 | Super Mario 64 | ✅ Passed | 57 | 57 | 1 | 0 | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed | 58 | 58 | 1 | 0 | ✅ | ✅ |
 | Super Mario World | ✅ Passed | 59 | 59 | 1 | 0 | ✅ | ⚫ |
-| Super Metroid | ⚫ Skipped | 60 | N/A | N/A | N/A | ✅ | ✅ |
-| TUNIC | ✅ Passed | 60 | 60 | 1 | 0 | ✅ | ⚫ |
-| Terraria | ✅ Passed | 61 | 61 | 1 | 0 | ✅ | ✅ |
-| The Legend of Zelda | ✅ Passed | 62 | 62 | 1 | 0 | ✅ | ✅ |
-| The Messenger | ✅ Passed | 63 | 63 | 1 | 0 | ✅ | ✅ |
-| The Wind Waker | ✅ Passed | 64 | 64 | 1 | 0 | ✅ | ✅ |
-| The Witness | ✅ Passed | 65 | 65 | 1 | 0 | ✅ | ✅ |
-| Timespinner | ✅ Passed | 66 | 66 | 1 | 0 | ✅ | ✅ |
-| Undertale | ✅ Passed | 67 | 67 | 1 | 0 | ✅ | ⚫ |
-| VVVVVV | ✅ Passed | 68 | 68 | 1 | 0 | ✅ | ✅ |
-| Wargroove | ✅ Passed | 69 | 69 | 1 | 0 | ✅ | ✅ |
-| WebDevJourney | ✅ Passed | 70 | 70 | 1 | 0 | ⚫ | ⚫ |
-| Yacht Dice | ✅ Passed | 71 | 71 | 1 | 0 | ✅ | ✅ |
-| Yoshi's Island | ✅ Passed | 72 | 72 | 1 | 0 | ✅ | ✅ |
-| Yu-Gi-Oh! 2006 | ✅ Passed | 73 | 73 | 1 | 0 | ✅ | ✅ |
-| shapez | ✅ Passed | 74 | 74 | 1 | 0 | ✅ | ✅ |
+| Super Metroid | ✅ Passed | 60 | 60 | 1 | 0 | ✅ | ✅ |
+| TUNIC | ✅ Passed | 61 | 61 | 1 | 0 | ✅ | ⚫ |
+| Terraria | ✅ Passed | 62 | 62 | 1 | 0 | ✅ | ✅ |
+| The Legend of Zelda | ✅ Passed | 63 | 63 | 1 | 0 | ✅ | ✅ |
+| The Messenger | ✅ Passed | 64 | 64 | 1 | 0 | ✅ | ✅ |
+| The Wind Waker | ✅ Passed | 65 | 65 | 1 | 0 | ✅ | ✅ |
+| The Witness | ✅ Passed | 66 | 66 | 1 | 0 | ✅ | ✅ |
+| Timespinner | ✅ Passed | 67 | 67 | 1 | 0 | ✅ | ✅ |
+| Undertale | ✅ Passed | 68 | 68 | 1 | 0 | ✅ | ⚫ |
+| VVVVVV | ✅ Passed | 69 | 69 | 1 | 0 | ✅ | ✅ |
+| Wargroove | ✅ Passed | 70 | 70 | 1 | 0 | ✅ | ✅ |
+| WebDevJourney | ✅ Passed | 71 | 71 | 1 | 0 | ⚫ | ⚫ |
+| Yacht Dice | ✅ Passed | 72 | 72 | 1 | 0 | ✅ | ✅ |
+| Yoshi's Island | ✅ Passed | 73 | 73 | 1 | 0 | ✅ | ✅ |
+| Yu-Gi-Oh! 2006 | ✅ Passed | 74 | 74 | 1 | 0 | ✅ | ✅ |
+| shapez | ✅ Passed | 75 | 75 | 1 | 0 | ✅ | ✅ |
 
 ## Notes
 

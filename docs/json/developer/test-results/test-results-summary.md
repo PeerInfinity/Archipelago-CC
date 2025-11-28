@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-28 02:55:43
+**Generated:** 2025-11-28 06:58:15
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -13,9 +13,9 @@ This summary combines results from four types of tests:
 ### Individual Test Results
 
 - **Minimal Test:** 76/76 passed (100.0%)
-- **Full Test:** 74/76 passed (97.4%)
+- **Full Test:** 76/76 passed (100.0%)
 - **Multiclient Test:** 75/76 passed (98.7%)
-- **Multiworld Test:** 74/76 passed (97.4%)
+- **Multiworld Test:** 75/76 passed (98.7%)
 
 ### Intermittent Failures
 
@@ -24,10 +24,10 @@ This summary combines results from four types of tests:
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 74/76 (97.4%)
+- **Templates passing all 4 tests:** 75/76 (98.7%)
 - **Templates passing 3 tests:** 0/76 (0.0%)
 - **Templates passing 2 tests:** 1/76 (1.3%)
-- **Templates passing 1 test:** 1/76 (1.3%)
+- **Templates passing 1 test:** 0/76 (0.0%)
 - **Templates passing 0 tests:** 0/76 (0.0%)
 
 ## Test Results
@@ -83,7 +83,7 @@ This summary combines results from four types of tests:
 | Pokemon Red and Blue | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Raft | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ⚫ | ⚫ |
-| SMZ3 | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
+| SMZ3 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | Saving Princess | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
@@ -94,7 +94,7 @@ This summary combines results from four types of tests:
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Super Mario World | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
-| Super Metroid | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
+| Super Metroid | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | TUNIC | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Terraria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
