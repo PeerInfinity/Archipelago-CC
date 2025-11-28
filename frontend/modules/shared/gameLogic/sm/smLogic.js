@@ -585,16 +585,42 @@ export function enoughStuffGT(snapshot, staticData) {
   // Golden Torizo requires dealing ~9000 damage.
   // From Python: canInflictEnoughDamages(9000, ignoreMissiles=True, givesDrops=hasBeams)
   //
-  // CRITICAL: ignoreMissiles=True means Missiles/Super Missiles are NOT counted!
-  // Only damage sources are:
+  // ignoreMissiles=True only ignores regular Missiles - Super Missiles still count!
+  // Damage sources for GT:
   // - Charged shots: Requires Charge beam (base 60 damage per shot, more with beam combos)
-  // - Power Bombs: 200 damage each (need Morph + Power Bomb)
+  // - Super Missiles: 300 damage each (5 per Super Missile pack)
+  // - Power Bombs: NOT counted (power=False by default)
   //
-  // Without Charge beam, you need 45+ Power Bombs to deal 9000 damage!
-  // In practice, Charge beam is almost always required.
+  // hasBeams = Charge AND Plasma -> if true, givesDrops=true makes boss beatable
+  // canBeatBoss = chargeDamage > 0 OR givesDrops OR supersDamage >= 9000
   //
-  // Simple accurate rule: Charge beam is required (just like Python)
-  return haveItem(snapshot, staticData, 'Charge');
+  // With 6+ Super Missile packs (30+ supers = 9000 damage), GT is beatable without Charge
+
+  const hasCharge = haveItem(snapshot, staticData, 'Charge').bool;
+  const hasPlasma = haveItem(snapshot, staticData, 'Plasma').bool;
+  const hasBeams = hasCharge && hasPlasma;
+
+  // If player has Charge + Plasma, boss gives drops and is always beatable
+  if (hasBeams) {
+    return { bool: true, difficulty: 0 };
+  }
+
+  // Charged shot damage (only if have Charge)
+  let chargeDamage = 0;
+  if (hasCharge) {
+    // Base beam damage * 3 for charge = ~180+ damage per shot
+    // This is essentially infinite damage given time
+    chargeDamage = 180;
+  }
+
+  // Super Missile damage: packs * 5 missiles * 300 damage
+  const superCount = count(snapshot, staticData, 'Super');
+  const supersDamage = superCount * 5 * 300;
+
+  // Can beat boss if: charged shots available OR super damage >= 9000
+  const canBeatBoss = chargeDamage > 0 || supersDamage >= 9000;
+
+  return { bool: canBeatBoss, difficulty: 0 };
 }
 
 // High priority helpers (3+ uses)
@@ -982,11 +1008,29 @@ export function knowsReverseGateGlitchHiJumpLess(snapshot, staticData) {
 }
 
 export function knowsCrocPBsDBoost(snapshot, staticData) {
-  return { bool: true, difficulty: 0 };
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('CrocPBsDBoost' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.CrocPBsDBoost;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+
+  // Default: disabled in regular preset
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsCrocPBsIce(snapshot, staticData) {
-  return { bool: true, difficulty: 0 };
+  const playerId = snapshot?.playerId || '1';
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('CrocPBsIce' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.CrocPBsIce;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+
+  // Default: disabled in regular preset
+  return { bool: false, difficulty: 0 };
 }
 
 export function knowsMaridiaWallJumps(snapshot, staticData) {
@@ -1188,23 +1232,38 @@ export function canPassMtEverest(snapshot, staticData) {
 export function canDefeatBotwoon(snapshot, staticData) {
   // Botwoon boss - Python: wand(enoughStuffBotwoon(), canPassBotwoonHallway())
   // enoughStuffBotwoon uses canInflictEnoughDamages(6000, givesDrops=False)
-  // In Python: canBeatBoss = chargeDamage > 0 (Charge beam alone is sufficient)
-  // Charge beam does 20 base * 3 = 60 damage per shot, infinite shots = boss beatable
-  const enoughStuff = wor(snapshot, staticData,
-    // Charge beam alone can defeat Botwoon (infinite charged shots)
-    haveItem(snapshot, staticData, 'Charge'),
-    // Or enough missiles (60 missiles = 6000 damage, 12 packs minimum)
-    itemCountOk(snapshot, staticData, 'Missile', 12),
-    // Or enough supers (20 supers = 6000 damage, 4 packs minimum)
-    itemCountOk(snapshot, staticData, 'Super', 4),
-    // Or combo of missiles and supers (lowered requirements)
-    wand(snapshot, staticData,
-      itemCountOk(snapshot, staticData, 'Missile', 4),
-      itemCountOk(snapshot, staticData, 'Super', 2))
-  );
+  //
+  // canInflictEnoughDamages with givesDrops=False:
+  // - Needs to deal 6000 damage from ammo alone
+  // - Missiles: count * 5 * 100 damage
+  // - Supers: count * 5 * 300 damage
+  // - Charge beam: provides infinite damage over time
+  // - canBeatBoss = chargeDamage > 0 OR ammoDamage >= 6000
+
+  const hasCharge = haveItem(snapshot, staticData, 'Charge').bool;
+
+  // Charge beam alone is sufficient (infinite charged shots)
+  if (hasCharge) {
+    return wand(snapshot, staticData,
+      { bool: true, difficulty: 0 },
+      canPassBotwoonHallway(snapshot, staticData));
+  }
+
+  // Calculate total ammo damage
+  const missileCount = count(snapshot, staticData, 'Missile');
+  const superCount = count(snapshot, staticData, 'Super');
+
+  // Missiles: packs * 5 missiles * 100 damage
+  const missileDamage = missileCount * 5 * 100;
+  // Supers: packs * 5 supers * 300 damage
+  const superDamage = superCount * 5 * 300;
+  const totalDamage = missileDamage + superDamage;
+
+  // Need 6000 damage to defeat Botwoon
+  const enoughStuff = totalDamage >= 6000;
 
   return wand(snapshot, staticData,
-    enoughStuff,
+    { bool: enoughStuff, difficulty: 0 },
     canPassBotwoonHallway(snapshot, staticData));
 }
 
@@ -2675,6 +2734,9 @@ export function canPassNinjaPirates(snapshot, staticData) {
  */
 export function canPassRedKiHunters(snapshot, staticData) {
   // Match Python canKillRedKiHunters(3): need ways to kill 3 red kihunters
+  // Red Ki Hunter has 1800 health, need to kill 3 = 5400 total damage
+  // canGoThroughLowerNorfairEnemy: supers do 300 damage each
+  // Super packs * 5 * 300 >= 5400 => need 4+ super packs
   return wor(snapshot, staticData,
     haveItem(snapshot, staticData, 'Plasma'),
     haveItem(snapshot, staticData, 'ScrewAttack'),
@@ -2686,6 +2748,8 @@ export function canPassRedKiHunters(snapshot, staticData) {
         wand(snapshot, staticData,
           haveItem(snapshot, staticData, 'Charge'),
           haveItem(snapshot, staticData, 'Wave')))),
+    // canGoThroughLowerNorfairEnemy: Super packs * 5 * 300 >= 3 * 1800 (5400)
+    itemCountOk(snapshot, staticData, 'Super', 4),
     knowsDodgeLowerNorfairEnemies(snapshot, staticData)
   );
 }
@@ -2695,6 +2759,8 @@ export function canPassRedKiHunters(snapshot, staticData) {
  */
 export function canPassThreeMuskateers(snapshot, staticData) {
   // Match Python canKillRedKiHunters(6): need ways to kill 6 red kihunters
+  // Red Ki Hunter has 1800 health, need to kill 6 = 10800 total damage
+  // Super packs * 5 * 300 >= 10800 => need 8+ super packs
   return wor(snapshot, staticData,
     haveItem(snapshot, staticData, 'Plasma'),
     haveItem(snapshot, staticData, 'ScrewAttack'),
@@ -2706,6 +2772,8 @@ export function canPassThreeMuskateers(snapshot, staticData) {
         wand(snapshot, staticData,
           haveItem(snapshot, staticData, 'Charge'),
           haveItem(snapshot, staticData, 'Wave')))),
+    // canGoThroughLowerNorfairEnemy: Super packs * 5 * 300 >= 6 * 1800 (10800)
+    itemCountOk(snapshot, staticData, 'Super', 8),
     knowsDodgeLowerNorfairEnemies(snapshot, staticData)
   );
 }
