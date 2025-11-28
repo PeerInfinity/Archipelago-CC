@@ -97,6 +97,20 @@ export async function timerSendTest(testController) {
       throw new Error('Static data or locations not available');
     }
 
+    // Add starting items to inventory (workaround for items not being added during loadFromJSON)
+    // This matches what the spoiler test does in eventProcessor.js sphere 0
+    const playerId = stateManager.getPlayerId?.() || '1';
+    const startingItems = staticData?.starting_items?.[playerId] || [];
+    if (startingItems.length > 0) {
+      testController.log(`Adding ${startingItems.length} starting items to inventory...`);
+      for (const itemName of startingItems) {
+        await stateManager.addItemToInventory(itemName, 1);
+      }
+      // Wait for state to stabilize
+      await new Promise(resolve => setTimeout(resolve, 500));
+      testController.log('Starting items added successfully.');
+    }
+
     // Use Bounce messages to synchronize with Client 2
     // Get ready message functions from central registry
     const sendReadyMessage = window.centralRegistry.getPublicFunction('client', 'sendReadyMessage');
