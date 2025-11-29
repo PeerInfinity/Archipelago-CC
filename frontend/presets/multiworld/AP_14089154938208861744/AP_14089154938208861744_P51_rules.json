@@ -1,0 +1,1799 @@
+{
+  "schema_version": 3,
+  "game_name": "Saving Princess",
+  "game_directory": "saving_princess",
+  "archipelago_version": "0.6.4",
+  "generation_seed": 1,
+  "player_names": {
+    "1": "Player1",
+    "2": "Player2",
+    "3": "Player3",
+    "4": "Player4",
+    "5": "Player5",
+    "6": "Player6",
+    "7": "Player7",
+    "8": "Player8",
+    "9": "Player9",
+    "10": "Player10",
+    "11": "Player11",
+    "12": "Player12",
+    "13": "Player13",
+    "14": "Player14",
+    "15": "Player15",
+    "16": "Player16",
+    "17": "Player17",
+    "18": "Player18",
+    "19": "Player19",
+    "20": "Player20",
+    "21": "Player21",
+    "22": "Player22",
+    "23": "Player23",
+    "24": "Player24",
+    "25": "Player25",
+    "26": "Player26",
+    "27": "Player27",
+    "28": "Player28",
+    "29": "Player29",
+    "30": "Player30",
+    "31": "Player31",
+    "32": "Player32",
+    "33": "Player33",
+    "34": "Player34",
+    "35": "Player35",
+    "36": "Player36",
+    "37": "Player37",
+    "38": "Player38",
+    "39": "Player39",
+    "40": "Player40",
+    "41": "Player41",
+    "42": "Player42",
+    "43": "Player43",
+    "44": "Player44",
+    "45": "Player45",
+    "46": "Player46",
+    "47": "Player47",
+    "48": "Player48",
+    "49": "Player49",
+    "50": "Player50",
+    "51": "Player51",
+    "52": "Player52",
+    "53": "Player53",
+    "54": "Player54",
+    "55": "Player55",
+    "56": "Player56",
+    "57": "Player57",
+    "58": "Player58",
+    "59": "Player59",
+    "60": "Player60",
+    "61": "Player61",
+    "62": "Player62",
+    "63": "Player63",
+    "64": "Player64",
+    "65": "Player65",
+    "66": "Player66",
+    "67": "Player67",
+    "68": "Player68",
+    "69": "Player69",
+    "70": "Player70",
+    "71": "Player71",
+    "72": "Player72",
+    "73": "Player73",
+    "74": "Player74",
+    "75": "Player75",
+    "76": "Player76"
+  },
+  "world_classes": {
+    "1": "HatInTimeWorld",
+    "2": "ALTTPWorld",
+    "3": "ShortHikeWorld",
+    "4": "AdventureWorld",
+    "5": "AquariaWorld",
+    "6": "ArchipIDLEWorld",
+    "7": "BlasphemousWorld",
+    "8": "BombRushCyberfunkWorld",
+    "9": "BumpStikWorld",
+    "10": "CVCotMWorld",
+    "11": "CV64World",
+    "12": "Celeste64World",
+    "13": "ChecksFinderWorld",
+    "14": "ChocolateChipCookiesWorld",
+    "15": "CivVIWorld",
+    "16": "DarkSouls3World",
+    "17": "DLCqworld",
+    "18": "DKC3World",
+    "19": "DOOM1993World",
+    "20": "DOOM2World",
+    "21": "Factorio",
+    "22": "FaxanaduWorld",
+    "23": "FFMQWorld",
+    "24": "FF1World",
+    "25": "HereticWorld",
+    "26": "Hylics2World",
+    "27": "InscryptionWorld",
+    "28": "JakAndDaxterWorld",
+    "29": "KH2World",
+    "30": "KH1World",
+    "31": "KDL3World",
+    "32": "LandstalkerWorld",
+    "33": "LingoWorld",
+    "34": "LinksAwakeningWorld",
+    "35": "L2ACWorld",
+    "36": "MLSSWorld",
+    "37": "MathProof2p2e4World",
+    "38": "MM2World",
+    "39": "MMBN3World",
+    "40": "MeritousWorld",
+    "41": "MetamathWorld",
+    "42": "MuseDashWorld",
+    "43": "NoitaWorld",
+    "44": "OSRSWorld",
+    "45": "Overcooked2World",
+    "46": "PaintWorld",
+    "47": "PokemonEmeraldWorld",
+    "48": "PokemonRedBlueWorld",
+    "49": "RaftWorld",
+    "50": "RiskOfRainWorld",
+    "51": "SavingPrincessWorld",
+    "52": "SoEWorld",
+    "53": "ShapezWorld",
+    "54": "ShiversWorld",
+    "55": "SA2BWorld",
+    "56": "SC2World",
+    "57": "StardewValleyWorld",
+    "58": "SubnauticaWorld",
+    "59": "SM64World",
+    "60": "MarioLand2World",
+    "61": "SMWWorld",
+    "62": "SMWorld",
+    "63": "TerrariaWorld",
+    "64": "TLoZWorld",
+    "65": "MessengerWorld",
+    "66": "TWWWorld",
+    "67": "WitnessWorld",
+    "68": "TimespinnerWorld",
+    "69": "TunicWorld",
+    "70": "UndertaleWorld",
+    "71": "V6World",
+    "72": "WargrooveWorld",
+    "73": "WebDevJourneyWorld",
+    "74": "YachtDiceWorld",
+    "75": "YoshisIslandWorld",
+    "76": "Yugioh06World"
+  },
+  "regions": {
+    "51": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "Hub entrance",
+            "connected_region": "Hub",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Cave": {
+        "name": "Cave",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Cave: After Wallboss",
+            "id": 91630179862862,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Twinkling Titanite",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Cave: Balcony",
+            "id": 91630179862863,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Black Market Launchers (Widow Mine)",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Cave: Spike pit",
+            "id": 91630179862864,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Graffiti (XL - Web Spitter)",
+              "player": 8,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Cave: Powered Blaster chest",
+            "id": 91630179862865,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Clip Extension"
+            },
+            "item": {
+              "name": "Strawberry",
+              "player": 12,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Cave: Wallboss (Boss)",
+            "id": 91630179862886,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Projectile Refill",
+              "player": 23,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Cave: Guard (Boss)",
+            "id": 91630179862887,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Clip Extension"
+            },
+            "item": {
+              "name": "Laser Cutter Fragment",
+              "player": 58,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Volcanic": {
+        "name": "Volcanic",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Volcanic: Hot coals",
+            "id": 91630179862866,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Flamethrower",
+                            "Ice Spreadshot",
+                            "Volt Laser"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Faster Reload",
+                      "count": {
+                        "type": "constant",
+                        "value": 4
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ice Spreadshot"
+                }
+              ]
+            },
+            "item": {
+              "name": "Clay",
+              "player": 52,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Volcanic: Under bridge",
+            "id": 91630179862867,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Chuckle Bean",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Volcanic: Behind wall",
+            "id": 91630179862868,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Standard Arrow x8",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Volcanic: Flamethrower chest",
+            "id": 91630179862869,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Clip Extension"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Faster Reload",
+                  "count": {
+                    "type": "constant",
+                    "value": 2
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Life Extension"
+                }
+              ]
+            },
+            "item": {
+              "name": "Quad Painter",
+              "player": 53,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Volcanic: Cliff (Boss)",
+            "id": 91630179862888,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Clip Extension"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Faster Reload",
+                  "count": {
+                    "type": "constant",
+                    "value": 2
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Life Extension"
+                }
+              ]
+            },
+            "item": {
+              "name": "Eraser",
+              "player": 67,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Arctic": {
+        "name": "Arctic",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Arctic: Before pipes",
+            "id": 91630179862870,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Camu jewel",
+              "player": 35,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Arctic: After Guard",
+            "id": 91630179862871,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Cinders of a Lord - Lothric Prince",
+              "player": 16,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Arctic: Under snow",
+            "id": 91630179862872,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Flamethrower"
+            },
+            "item": {
+              "name": "+10 Stars",
+              "player": 75,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Arctic: Ice Spreadshot chest",
+            "id": 91630179862873,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Clip Extension"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Faster Reload",
+                  "count": {
+                    "type": "constant",
+                    "value": 2
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Life Extension"
+                }
+              ]
+            },
+            "item": {
+              "name": "The Abandoned Mines (MAP26) - Blue keycard",
+              "player": 20,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Arctic: Jacket chest",
+            "id": 91630179862874,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Flamethrower"
+            },
+            "item": {
+              "name": "Resource Pack: 2 Stone",
+              "player": 49,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Arctic: Ace (Boss)",
+            "id": 91630179862889,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Clip Extension"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Faster Reload",
+                  "count": {
+                    "type": "constant",
+                    "value": 2
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Life Extension"
+                }
+              ]
+            },
+            "item": {
+              "name": "Rare Candy",
+              "player": 48,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Hub": {
+        "name": "Hub",
+        "exits": [
+          {
+            "name": "Cave entrance",
+            "connected_region": "Cave",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Volcanic entrance",
+            "connected_region": "Volcanic",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Powered Blaster"
+            }
+          },
+          {
+            "name": "Arctic entrance",
+            "connected_region": "Arctic",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Powered Blaster"
+            }
+          },
+          {
+            "name": "Swamp entrance",
+            "connected_region": "Swamp",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Powered Blaster"
+            }
+          },
+          {
+            "name": "Electrical entrance",
+            "connected_region": "Electrical",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Flamethrower",
+                            "Ice Spreadshot",
+                            "Volt Laser"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Clip Extension",
+                      "count": {
+                        "type": "constant",
+                        "value": 2
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Faster Reload",
+                      "count": {
+                        "type": "constant",
+                        "value": 4
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Life Extension",
+                      "count": {
+                        "type": "constant",
+                        "value": 2
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Powered Blaster"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Arctic Key",
+                        "Cave Key",
+                        "Swamp Key",
+                        "Volcanic Key"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Hub: Hidden near Arctic",
+            "id": 91630179862875,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Powered Blaster"
+            },
+            "item": {
+              "name": "Chuckle Bean",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Hub: Hidden near Cave",
+            "id": 91630179862876,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Shadow Archive+",
+              "player": 29,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Hub: Hidden near Swamp",
+            "id": 91630179862877,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Box of shotgun shells",
+              "player": 19,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Hub: Console login",
+            "id": 91630179862890,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Sun Stone",
+              "player": 32,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Hub: Ninja scare (Boss?)",
+            "id": 91630179862891,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Cave Key"
+            },
+            "item": {
+              "name": "Heart Max Up",
+              "player": 10,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Swamp": {
+        "name": "Swamp",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Swamp: Bramble room",
+            "id": 91630179862878,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Flamethrower",
+                        "Ice Spreadshot",
+                        "Volt Laser"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Faster Reload",
+                  "count": {
+                    "type": "constant",
+                    "value": 4
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Power: Book of Mysteries",
+              "player": 57,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Swamp: Down the chimney",
+            "id": 91630179862879,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-rocketry",
+              "player": 21,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Swamp: Wall maze",
+            "id": 91630179862880,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Drive Converter",
+              "player": 29,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Swamp: Special Extension chest",
+            "id": 91630179862881,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Clip Extension"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Faster Reload",
+                  "count": {
+                    "type": "constant",
+                    "value": 2
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Life Extension"
+                }
+              ]
+            },
+            "item": {
+              "name": "Regenerative Acid (Baneling)",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Swamp: Snake (Boss)",
+            "id": 91630179862892,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Clip Extension"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Faster Reload",
+                  "count": {
+                    "type": "constant",
+                    "value": 2
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Life Extension"
+                }
+              ]
+            },
+            "item": {
+              "name": "Progressive Magic Spell",
+              "player": 44,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Electrical": {
+        "name": "Electrical",
+        "exits": [
+          {
+            "name": "Electrical (Power On) entrance",
+            "connected_region": "Electrical (Power On)",
+            "access_rule": {
+              "type": "item_check",
+              "item": "System Power"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Elevator: Ninja (Boss)",
+            "id": 91630179862893,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Genie",
+              "player": 30,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Electrical: Volt Laser chest",
+            "id": 91630179862885,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Crab Apple",
+              "player": 70,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Electrical: Generator (Boss)",
+            "id": 91630179862895,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Yellow Shard",
+              "player": 47,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Electrical: Tesla orb",
+            "id": 91630179862894,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Volt Laser"
+            },
+            "item": {
+              "name": "Knot of Rosary Rope",
+              "player": 7,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Electrical (Power On)": {
+        "name": "Electrical (Power On)",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Electrical: Near generator",
+            "id": 91630179862882,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Lightning Gem",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Electrical: Behind wall",
+            "id": 91630179862883,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 5 MetalOre",
+              "player": 49,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Electrical: Before Malakhov",
+            "id": 91630179862884,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Five Rupees",
+              "player": 64,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Electrical: Malakhov (Boss)",
+            "id": 91630179862896,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "War Pigs",
+              "player": 56,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Electrical: BRAINOS (Boss)",
+            "id": 91630179862897,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Flamethrower",
+                    "Ice Spreadshot",
+                    "Volt Laser"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Health Pon",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Mission objective",
+            "id": null,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Flamethrower",
+                    "Ice Spreadshot",
+                    "Volt Laser"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "PRINCESS",
+              "player": 51,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "51": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "51": {
+      "Powered Blaster": {
+        "name": "Powered Blaster",
+        "id": 91630179862862,
+        "groups": [
+          "Everything",
+          "Weapons"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Flamethrower": {
+        "name": "Flamethrower",
+        "id": 91630179862863,
+        "groups": [
+          "Everything",
+          "Weapons"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ice Spreadshot": {
+        "name": "Ice Spreadshot",
+        "id": 91630179862864,
+        "groups": [
+          "Everything",
+          "Weapons"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Volt Laser": {
+        "name": "Volt Laser",
+        "id": 91630179862865,
+        "groups": [
+          "Everything",
+          "Weapons"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Life Extension": {
+        "name": "Life Extension",
+        "id": 91630179862866,
+        "groups": [
+          "Everything",
+          "Upgrades"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 6
+      },
+      "Clip Extension": {
+        "name": "Clip Extension",
+        "id": 91630179862867,
+        "groups": [
+          "Everything",
+          "Upgrades"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 6
+      },
+      "Faster Reload": {
+        "name": "Faster Reload",
+        "id": 91630179862868,
+        "groups": [
+          "Everything",
+          "Upgrades"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 6
+      },
+      "Special Extension": {
+        "name": "Special Extension",
+        "id": 91630179862869,
+        "groups": [
+          "Everything",
+          "Upgrades"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Jacket": {
+        "name": "Jacket",
+        "id": 91630179862870,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cave Key": {
+        "name": "Cave Key",
+        "id": 91630179862871,
+        "groups": [
+          "Everything",
+          "Keys"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Volcanic Key": {
+        "name": "Volcanic Key",
+        "id": 91630179862872,
+        "groups": [
+          "Everything",
+          "Keys"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Arctic Key": {
+        "name": "Arctic Key",
+        "id": 91630179862873,
+        "groups": [
+          "Everything",
+          "Keys"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Swamp Key": {
+        "name": "Swamp Key",
+        "id": 91630179862874,
+        "groups": [
+          "Everything",
+          "Keys"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "System Power": {
+        "name": "System Power",
+        "id": 91630179862875,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Full Heal": {
+        "name": "Full Heal",
+        "id": 91630179862876,
+        "groups": [
+          "Everything",
+          "Filler"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Quick-fire Mode": {
+        "name": "Quick-fire Mode",
+        "id": 91630179862877,
+        "groups": [
+          "Everything",
+          "Filler"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "Active Camouflage": {
+        "name": "Active Camouflage",
+        "id": 91630179862878,
+        "groups": [
+          "Everything",
+          "Filler"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ice Trap": {
+        "name": "Ice Trap",
+        "id": 91630179862879,
+        "groups": [
+          "Everything",
+          "Traps"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Shake Trap": {
+        "name": "Shake Trap",
+        "id": 91630179862880,
+        "groups": [
+          "Everything",
+          "Traps"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ninja Trap": {
+        "name": "Ninja Trap",
+        "id": 91630179862881,
+        "groups": [
+          "Everything",
+          "Traps"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "PRINCESS": {
+        "name": "PRINCESS",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Twinkling Titanite": {
+        "name": "Twinkling Titanite",
+        "id": 100902,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Black Market Launchers (Widow Mine)": {
+        "name": "Black Market Launchers (Widow Mine)",
+        "id": 1377,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (XL - Web Spitter)": {
+        "name": "Graffiti (XL - Web Spitter)",
+        "id": 2308080,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Strawberry": {
+        "name": "Strawberry",
+        "id": 13238272,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Projectile Refill": {
+        "name": "Projectile Refill",
+        "id": 4325598,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Laser Cutter Fragment": {
+        "name": "Laser Cutter Fragment",
+        "id": 35024,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Clay": {
+        "name": "Clay",
+        "id": 64126,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Chuckle Bean": {
+        "name": "Chuckle Bean",
+        "id": 77771020,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Standard Arrow x8": {
+        "name": "Standard Arrow x8",
+        "id": 100002,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Quad Painter": {
+        "name": "Quad Painter",
+        "id": 20010715,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Eraser": {
+        "name": "Eraser",
+        "id": 158030,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Camu jewel": {
+        "name": "Camu jewel",
+        "id": 11288963,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cinders of a Lord - Lothric Prince": {
+        "name": "Cinders of a Lord - Lothric Prince",
+        "id": 100953,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "+10 Stars": {
+        "name": "+10 Stars",
+        "id": 3154058,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "The Abandoned Mines (MAP26) - Blue keycard": {
+        "name": "The Abandoned Mines (MAP26) - Blue keycard",
+        "id": 360250,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Resource Pack: 2 Stone": {
+        "name": "Resource Pack: 2 Stone",
+        "id": 47162,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rare Candy": {
+        "name": "Rare Candy",
+        "id": 172000040,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Shadow Archive+": {
+        "name": "Shadow Archive+",
+        "id": 1245340,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Box of shotgun shells": {
+        "name": "Box of shotgun shells",
+        "id": 350116,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sun Stone": {
+        "name": "Sun Stone",
+        "id": 4030,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Heart Max Up": {
+        "name": "Heart Max Up",
+        "id": 3579634688,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Power: Book of Mysteries": {
+        "name": "Power: Book of Mysteries",
+        "id": 717535,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "progressive-rocketry": {
+        "name": "progressive-rocketry",
+        "id": 131286,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Drive Converter": {
+        "name": "Drive Converter",
+        "id": 1245375,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Regenerative Acid (Baneling)": {
+        "name": "Regenerative Acid (Baneling)",
+        "id": 2211,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Magic Spell": {
+        "name": "Progressive Magic Spell",
+        "id": 458786,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Genie": {
+        "name": "Genie",
+        "id": 2645002,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Crab Apple": {
+        "name": "Crab Apple",
+        "id": 77037,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Yellow Shard": {
+        "name": "Yellow Shard",
+        "id": 3860050,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Knot of Rosary Rope": {
+        "name": "Knot of Rosary Rope",
+        "id": 1909101,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Lightning Gem": {
+        "name": "Lightning Gem",
+        "id": 100912,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Resource Pack: 5 MetalOre": {
+        "name": "Resource Pack: 5 MetalOre",
+        "id": 47270,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Five Rupees": {
+        "name": "Five Rupees",
+        "id": 7129,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "War Pigs": {
+        "name": "War Pigs",
+        "id": 1500,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Health Pon": {
+        "name": "Health Pon",
+        "id": 2000300037,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      " coins": {
+        "name": " coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 999999
+      },
+      " coins freemium": {
+        "name": " coins freemium",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 999999
+      }
+    }
+  },
+  "item_groups": {
+    "51": [
+      "Everything",
+      "Filler",
+      "Keys",
+      "Traps",
+      "Upgrades",
+      "Weapons"
+    ]
+  },
+  "itempool_counts": {
+    "51": {
+      "Arctic Key": 1,
+      "Cave Key": 1,
+      "Clip Extension": 6,
+      "Faster Reload": 6,
+      "Flamethrower": 1,
+      "Full Heal": 1,
+      "Ice Spreadshot": 1,
+      "Ice Trap": 2,
+      "Jacket": 1,
+      "Life Extension": 6,
+      "Ninja Trap": 1,
+      "PRINCESS": 1,
+      "Powered Blaster": 1,
+      "Quick-fire Mode": 3,
+      "Special Extension": 1,
+      "Swamp Key": 1,
+      "System Power": 1,
+      "Volcanic Key": 1,
+      "Volt Laser": 1
+    }
+  },
+  "progression_mapping": {
+    "51": {}
+  },
+  "starting_items": {
+    "51": []
+  },
+  "settings": {
+    "51": {
+      "game": "Saving Princess",
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "51": {
+      "name": "Saving Princess",
+      "rule_format": {
+        "version": "1.0"
+      }
+    }
+  }
+}
