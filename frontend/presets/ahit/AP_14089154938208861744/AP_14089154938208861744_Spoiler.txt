@@ -465,8 +465,8 @@ AFR Access
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam
 Act Completion (Contractual Obligations)
         Menu -> Save File -> Spaceship
@@ -507,8 +507,8 @@ Act Completion (The Birdhouse)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Birdhouse
    =>   The Birdhouse
@@ -530,8 +530,8 @@ Act Completion (The Lava Cake)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Lava Cake
    =>   The Lava Cake
@@ -548,8 +548,8 @@ Act Completion (The Twilight Bell)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Twilight Bell
    =>   The Twilight Bell
@@ -571,8 +571,8 @@ Act Completion (Time Rift - The Lab)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> Time Rift - The Twilight Bell Portal - Entrance 1
    =>   Time Rift - The Lab
 Act Completion (Time Rift - The Moon)
@@ -683,16 +683,16 @@ Alpine Skyline - Mystifying Time Mesa: Zipline
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area
 Alpine Skyline - The Birdhouse: Brewing Crate House
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Birdhouse
    =>   The Birdhouse
@@ -700,8 +700,8 @@ Alpine Skyline - The Birdhouse: Outer Edge
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Birdhouse
    =>   The Birdhouse
@@ -709,8 +709,8 @@ Alpine Skyline - The Lava Cake: Dweller Pillars
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Lava Cake
    =>   The Lava Cake
@@ -718,8 +718,8 @@ Alpine Skyline - The Lava Cake: Outer Island Chest
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Lava Cake
    =>   The Lava Cake
@@ -727,16 +727,16 @@ Alpine Skyline - The Purrloined Village: Chest Reward
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area
 Alpine Skyline - The Twilight Bell: Wide Purple Platform
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Twilight Bell
    =>   The Twilight Bell
@@ -744,16 +744,16 @@ Alpine Skyline - The Twilight Path
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area
 Alpine Skyline - The Windmill: Inside Pon Cluster
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Windmill
    =>   The Windmill
@@ -768,8 +768,8 @@ Birdhouse Cleared
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Birdhouse
    =>   The Birdhouse
@@ -777,40 +777,40 @@ Dead Bird Studio (Rift) - Page: Above Horse Picture
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> Time Rift - Alpine Skyline Portal - Entrance 1
    =>   Time Rift - Dead Bird Studio
 Dead Bird Studio (Rift) - Page: Above TV Room
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> Time Rift - Alpine Skyline Portal - Entrance 1
    =>   Time Rift - Dead Bird Studio
 Dead Bird Studio (Rift) - Page: In The Corner
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> Time Rift - Alpine Skyline Portal - Entrance 1
    =>   Time Rift - Dead Bird Studio
 Dead Bird Studio (Rift) - Page: Lava Lamp
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> Time Rift - Alpine Skyline Portal - Entrance 1
    =>   Time Rift - Dead Bird Studio
 Dead Bird Studio (Rift) - Page: Top of Metal Bar
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> Time Rift - Alpine Skyline Portal - Entrance 1
    =>   Time Rift - Dead Bird Studio
 Dead Bird Studio - Behind Water Tower
@@ -889,8 +889,8 @@ Lava Cake Cleared
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Lava Cake
    =>   The Lava Cake
@@ -1013,15 +1013,13 @@ Mafia of Cooks - Page: Below Dock
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
-   =>   She Came from Outer Space -> Time Rift - Mafia of Cooks Portal - Entrance 3
+   =>   Barrel Battle -> Time Rift - Mafia of Cooks Portal - Entrance 2
    =>   Time Rift - Mafia of Cooks
 Mafia of Cooks - Page: Top of Boat
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
-   =>   She Came from Outer Space -> Time Rift - Mafia of Cooks Portal - Entrance 3
+   =>   Barrel Battle -> Time Rift - Mafia of Cooks Portal - Entrance 2
    =>   Time Rift - Mafia of Cooks
 Murder on the Owl Express - Cafeteria
         Menu -> Save File -> Spaceship
@@ -1281,8 +1279,8 @@ Twilight Bell Cleared
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Twilight Bell
    =>   The Twilight Bell
@@ -1290,8 +1288,8 @@ Windmill Cleared
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
+   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
    =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
    =>   Alpine Skyline Area -> -> The Windmill
    =>   The Windmill

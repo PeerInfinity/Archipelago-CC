@@ -79,8 +79,7 @@
     "72": "Player72",
     "73": "Player73",
     "74": "Player74",
-    "75": "Player75",
-    "76": "Player76"
+    "75": "Player75"
   },
   "world_classes": {
     "1": "HatInTimeWorld",
@@ -106,59 +105,58 @@
     "21": "Factorio",
     "22": "FaxanaduWorld",
     "23": "FFMQWorld",
-    "24": "FF1World",
-    "25": "HereticWorld",
-    "26": "Hylics2World",
-    "27": "InscryptionWorld",
-    "28": "JakAndDaxterWorld",
-    "29": "KH2World",
-    "30": "KH1World",
-    "31": "KDL3World",
-    "32": "LandstalkerWorld",
-    "33": "LingoWorld",
-    "34": "LinksAwakeningWorld",
-    "35": "L2ACWorld",
-    "36": "MLSSWorld",
-    "37": "MathProof2p2e4World",
-    "38": "MM2World",
-    "39": "MMBN3World",
-    "40": "MeritousWorld",
-    "41": "MetamathWorld",
-    "42": "MuseDashWorld",
-    "43": "NoitaWorld",
-    "44": "OSRSWorld",
-    "45": "Overcooked2World",
-    "46": "PaintWorld",
-    "47": "PokemonEmeraldWorld",
-    "48": "PokemonRedBlueWorld",
-    "49": "RaftWorld",
-    "50": "RiskOfRainWorld",
-    "51": "SavingPrincessWorld",
-    "52": "SoEWorld",
-    "53": "ShapezWorld",
-    "54": "ShiversWorld",
-    "55": "SA2BWorld",
-    "56": "SC2World",
-    "57": "StardewValleyWorld",
-    "58": "SubnauticaWorld",
-    "59": "SM64World",
-    "60": "MarioLand2World",
-    "61": "SMWWorld",
-    "62": "SMWorld",
-    "63": "TerrariaWorld",
-    "64": "TLoZWorld",
-    "65": "MessengerWorld",
-    "66": "TWWWorld",
-    "67": "WitnessWorld",
-    "68": "TimespinnerWorld",
-    "69": "TunicWorld",
-    "70": "UndertaleWorld",
-    "71": "V6World",
-    "72": "WargrooveWorld",
-    "73": "WebDevJourneyWorld",
-    "74": "YachtDiceWorld",
-    "75": "YoshisIslandWorld",
-    "76": "Yugioh06World"
+    "24": "HereticWorld",
+    "25": "Hylics2World",
+    "26": "InscryptionWorld",
+    "27": "JakAndDaxterWorld",
+    "28": "KH2World",
+    "29": "KH1World",
+    "30": "KDL3World",
+    "31": "LandstalkerWorld",
+    "32": "LingoWorld",
+    "33": "LinksAwakeningWorld",
+    "34": "L2ACWorld",
+    "35": "MLSSWorld",
+    "36": "MathProof2p2e4World",
+    "37": "MM2World",
+    "38": "MMBN3World",
+    "39": "MeritousWorld",
+    "40": "MetamathWorld",
+    "41": "MuseDashWorld",
+    "42": "NoitaWorld",
+    "43": "OSRSWorld",
+    "44": "Overcooked2World",
+    "45": "PaintWorld",
+    "46": "PokemonEmeraldWorld",
+    "47": "PokemonRedBlueWorld",
+    "48": "RaftWorld",
+    "49": "RiskOfRainWorld",
+    "50": "SavingPrincessWorld",
+    "51": "SoEWorld",
+    "52": "ShapezWorld",
+    "53": "ShiversWorld",
+    "54": "SA2BWorld",
+    "55": "SC2World",
+    "56": "StardewValleyWorld",
+    "57": "SubnauticaWorld",
+    "58": "SM64World",
+    "59": "MarioLand2World",
+    "60": "SMWWorld",
+    "61": "SMWorld",
+    "62": "TerrariaWorld",
+    "63": "TLoZWorld",
+    "64": "MessengerWorld",
+    "65": "TWWWorld",
+    "66": "WitnessWorld",
+    "67": "TimespinnerWorld",
+    "68": "TunicWorld",
+    "69": "UndertaleWorld",
+    "70": "V6World",
+    "71": "WargrooveWorld",
+    "72": "WebDevJourneyWorld",
+    "73": "YachtDiceWorld",
+    "74": "YoshisIslandWorld",
+    "75": "Yugioh06World"
   },
   "regions": {
     "10": {
@@ -194,8 +192,8 @@
               "item": "Roc Wing"
             },
             "item": {
-              "name": "Lightning Urn x4",
-              "player": 16,
+              "name": "Optical Flare (Medic)",
+              "player": 55,
               "advancement": false,
               "type": "None"
             }
@@ -208,9 +206,9 @@
               "item": "Heavy Ring"
             },
             "item": {
-              "name": "Medikit",
-              "player": 19,
-              "advancement": false,
+              "name": "Golden Coin",
+              "player": 68,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -231,9 +229,9 @@
               ]
             },
             "item": {
-              "name": "1-Up Mushroom",
-              "player": 61,
-              "advancement": false,
+              "name": "Debla of the Lights",
+              "player": 7,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -266,9 +264,9 @@
               ]
             },
             "item": {
-              "name": "Propulsion Cannon Fragment",
-              "player": 58,
-              "advancement": true,
+              "name": "Token of Appreciation",
+              "player": 7,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -280,8 +278,8 @@
               "value": true
             },
             "item": {
-              "name": "The Crypts (E1M7)",
-              "player": 25,
+              "name": "Exp. All",
+              "player": 47,
               "advancement": true,
               "type": "None"
             }
@@ -294,9 +292,9 @@
               "item": "Tackle"
             },
             "item": {
-              "name": "Sentinel",
-              "player": 56,
-              "advancement": true,
+              "name": "Spider Cider",
+              "player": 69,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -308,8 +306,8 @@
               "value": true
             },
             "item": {
-              "name": "Bloodfalls (MAP25) - Blue skull key",
-              "player": 20,
+              "name": "Soul of a Crystal Sage",
+              "player": 16,
               "advancement": true,
               "type": "None"
             }
@@ -333,8 +331,8 @@
               ]
             },
             "item": {
-              "name": "Chuckle Bean",
-              "player": 36,
+              "name": "SpinRed",
+              "player": 38,
               "advancement": false,
               "type": "None"
             }
@@ -347,9 +345,9 @@
               "value": true
             },
             "item": {
-              "name": "Max Aura",
-              "player": 68,
-              "advancement": false,
+              "name": "Progressive Canvas Width",
+              "player": 45,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -361,8 +359,8 @@
               "value": true
             },
             "item": {
-              "name": "Category Pair",
-              "player": 74,
+              "name": "Area: West Varrock",
+              "player": 43,
               "advancement": true,
               "type": "None"
             }
@@ -375,8 +373,8 @@
               "value": true
             },
             "item": {
-              "name": "Hardmode",
-              "player": 63,
+              "name": "THE LOST MILLENIUM",
+              "player": 75,
               "advancement": true,
               "type": "None"
             }
@@ -389,9 +387,9 @@
               "value": true
             },
             "item": {
-              "name": "3000z",
-              "player": 39,
-              "advancement": false,
+              "name": "LD24 Refer to Sept 04 Banlist Unlock",
+              "player": 75,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -414,9 +412,9 @@
               ]
             },
             "item": {
-              "name": "Ash",
-              "player": 52,
-              "advancement": false,
+              "name": "Dark Templar",
+              "player": 55,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -428,9 +426,9 @@
               "value": true
             },
             "item": {
-              "name": "Book: The Art O' Crabbing",
-              "player": 57,
-              "advancement": true,
+              "name": "Slowness",
+              "player": 30,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -442,8 +440,8 @@
               "value": true
             },
             "item": {
-              "name": "Spangle",
-              "player": 36,
+              "name": "System Power",
+              "player": 50,
               "advancement": true,
               "type": "None"
             }
@@ -470,9 +468,9 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
-              "player": 11,
-              "advancement": false,
+              "name": "The Young Mason's Wheel",
+              "player": 7,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -493,8 +491,8 @@
               ]
             },
             "item": {
-              "name": "Tears of Atonement (10000)",
-              "player": 7,
+              "name": "DrillMan V2 D",
+              "player": 38,
               "advancement": false,
               "type": "None"
             }
@@ -531,9 +529,9 @@
               "value": true
             },
             "item": {
-              "name": "Soul of the Rotted Greatwood",
-              "player": 16,
-              "advancement": true,
+              "name": "Kinetic Foam (HERC)",
+              "player": 55,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -545,9 +543,9 @@
               "value": true
             },
             "item": {
-              "name": "Tiento to your Thorned Hairs",
-              "player": 7,
-              "advancement": true,
+              "name": "Karla's Pointed Hat",
+              "player": 16,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -699,8 +697,8 @@
               "item": "Roc Wing"
             },
             "item": {
-              "name": "Large Soul of a Deserted Corpse",
-              "player": 16,
+              "name": "Box of bullets",
+              "player": 20,
               "advancement": false,
               "type": "None"
             }
@@ -713,8 +711,8 @@
               "value": true
             },
             "item": {
-              "name": "Soul of a Deserted Corpse",
-              "player": 16,
+              "name": "Money x25",
+              "player": 68,
               "advancement": false,
               "type": "None"
             }
@@ -727,9 +725,9 @@
               "value": true
             },
             "item": {
-              "name": "Industrial Zone (MAP15) - Blue keycard",
-              "player": 20,
-              "advancement": true,
+              "name": "Life Stock",
+              "player": 31,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -741,9 +739,9 @@
               "value": true
             },
             "item": {
-              "name": "Sword of Gaia",
-              "player": 32,
-              "advancement": true,
+              "name": "Bundle of Twisted Cables",
+              "player": 6,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -755,8 +753,8 @@
               "value": true
             },
             "item": {
-              "name": "Birds nest",
-              "player": 49,
+              "name": "Graduating Range (Siege Tank)",
+              "player": 55,
               "advancement": true,
               "type": "None"
             }
@@ -769,8 +767,8 @@
               "item": "Heavy Ring"
             },
             "item": {
-              "name": "Old King's Great Hammer",
-              "player": 16,
+              "name": "Anti Paralyze",
+              "player": 31,
               "advancement": false,
               "type": "None"
             }
@@ -783,8 +781,8 @@
               "value": true
             },
             "item": {
-              "name": "Pixie Dust",
-              "player": 52,
+              "name": "MP Max Up",
+              "player": 10,
               "advancement": false,
               "type": "None"
             }
@@ -797,9 +795,9 @@
               "item": "Tackle"
             },
             "item": {
-              "name": "Box of shotgun shells",
-              "player": 20,
-              "advancement": false,
+              "name": "Gun",
+              "player": 68,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -811,9 +809,9 @@
               "value": true
             },
             "item": {
-              "name": "Green Blossom",
-              "player": 16,
-              "advancement": false,
+              "name": "Hunter-Seeker Weapon (Raven)",
+              "player": 55,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -825,9 +823,9 @@
               "item": "Roc Wing"
             },
             "item": {
-              "name": "Tome of Power",
-              "player": 25,
-              "advancement": false,
+              "name": "Coins",
+              "player": 12,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -839,8 +837,8 @@
               "value": true
             },
             "item": {
-              "name": "Hyper Potion",
-              "player": 48,
+              "name": "Faraam Helm",
+              "player": 16,
               "advancement": false,
               "type": "None"
             }
@@ -853,9 +851,9 @@
               "value": true
             },
             "item": {
-              "name": "Train Morph",
-              "player": 75,
-              "advancement": true,
+              "name": "Titanite Scale",
+              "player": 16,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -878,9 +876,9 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Snowy Mountain",
-              "player": 28,
-              "advancement": true,
+              "name": "Power: Horse: The Book",
+              "player": 56,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -892,9 +890,9 @@
               "value": true
             },
             "item": {
-              "name": "AlphaArm\u03a9 V",
-              "player": 39,
-              "advancement": false,
+              "name": "Advanced Laser Technology (Wraith)",
+              "player": 55,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -917,8 +915,8 @@
               ]
             },
             "item": {
-              "name": "Legendary Item",
-              "player": 50,
+              "name": "Display",
+              "player": 52,
               "advancement": false,
               "type": "None"
             }
@@ -931,8 +929,8 @@
               "value": true
             },
             "item": {
-              "name": "+20 Stars",
-              "player": 75,
+              "name": "Chaos Device",
+              "player": 24,
               "advancement": false,
               "type": "None"
             }
@@ -945,9 +943,9 @@
               "value": true
             },
             "item": {
-              "name": "Mt. Erebus (E3M6)",
-              "player": 19,
-              "advancement": true,
+              "name": "Adrenal Overload (Zergling)",
+              "player": 55,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -970,10 +968,10 @@
               ]
             },
             "item": {
-              "name": "Progressive Space Port",
-              "player": 15,
+              "name": "Reserve Tank",
+              "player": 61,
               "advancement": true,
-              "type": "None"
+              "type": "Reserve"
             }
           },
           {
@@ -995,8 +993,8 @@
               ]
             },
             "item": {
-              "name": "progressive-research-speed",
-              "player": 21,
+              "name": "Cure Potion",
+              "player": 23,
               "advancement": false,
               "type": "None"
             }
@@ -1030,8 +1028,8 @@
               ]
             },
             "item": {
-              "name": "Zombie Sheep",
-              "player": 17,
+              "name": "25 Coins",
+              "player": 3,
               "advancement": false,
               "type": "None"
             }
@@ -1065,8 +1063,8 @@
               ]
             },
             "item": {
-              "name": "Potion",
-              "player": 43,
+              "name": "Pocket Melon",
+              "player": 74,
               "advancement": false,
               "type": "None"
             }
@@ -1079,8 +1077,8 @@
               "item": "Roc Wing"
             },
             "item": {
-              "name": "Thunder Ring",
-              "player": 30,
+              "name": "Ointment",
+              "player": 22,
               "advancement": false,
               "type": "None"
             }
@@ -1104,8 +1102,8 @@
               ]
             },
             "item": {
-              "name": "1800z",
-              "player": 39,
+              "name": "Wand (Tier 2)",
+              "player": 42,
               "advancement": false,
               "type": "None"
             }
@@ -1118,8 +1116,8 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
-              "player": 20,
+              "name": "Claymore",
+              "player": 16,
               "advancement": false,
               "type": "None"
             }
@@ -1132,9 +1130,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Shard (100)",
-              "player": 65,
-              "advancement": true,
+              "name": "Fire Keeper Soul",
+              "player": 16,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1167,8 +1165,8 @@
               ]
             },
             "item": {
-              "name": "Box of bullets",
-              "player": 20,
+              "name": "RegUP2",
+              "player": 38,
               "advancement": false,
               "type": "None"
             }
@@ -1196,7 +1194,7 @@
               "value": true
             },
             "item": {
-              "name": "Murakumo",
+              "name": "Brass Gauntlets",
               "player": 16,
               "advancement": false,
               "type": "None"
@@ -1210,9 +1208,9 @@
               "value": true
             },
             "item": {
-              "name": "Golden Feather",
-              "player": 3,
-              "advancement": true,
+              "name": "Mercantilism",
+              "player": 15,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1235,8 +1233,8 @@
               ]
             },
             "item": {
-              "name": "Additional Palette Color",
-              "player": 46,
+              "name": "Purifying",
+              "player": 11,
               "advancement": false,
               "type": "None"
             }
@@ -1249,8 +1247,8 @@
               "value": true
             },
             "item": {
-              "name": "HP Offering",
-              "player": 69,
+              "name": "Porcine Shield",
+              "player": 16,
               "advancement": false,
               "type": "None"
             }
@@ -1274,9 +1272,9 @@
               ]
             },
             "item": {
-              "name": "Power Star",
-              "player": 59,
-              "advancement": true,
+              "name": "Spam E-Mails",
+              "player": 6,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1288,8 +1286,8 @@
               "value": true
             },
             "item": {
-              "name": "Paralytic Barbs (Viper)",
-              "player": 56,
+              "name": "Fresh Strawberries",
+              "player": 6,
               "advancement": false,
               "type": "None"
             }
@@ -1302,8 +1300,8 @@
               "value": true
             },
             "item": {
-              "name": "Twinkling Titanite x3",
-              "player": 16,
+              "name": "Berserk",
+              "player": 20,
               "advancement": false,
               "type": "None"
             }
@@ -1316,8 +1314,8 @@
               "value": true
             },
             "item": {
-              "name": "Rotten Meat x 2",
-              "player": 5,
+              "name": "Ribbon",
+              "player": 28,
               "advancement": false,
               "type": "None"
             }
@@ -1336,9 +1334,9 @@
               "value": true
             },
             "item": {
-              "name": "Divine Right",
-              "player": 15,
-              "advancement": true,
+              "name": "Big Miner Upgrade",
+              "player": 52,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1350,8 +1348,8 @@
               "item": "Tackle"
             },
             "item": {
-              "name": "Blizzara Ring",
-              "player": 30,
+              "name": "Dumbo Ice Cream",
+              "player": 5,
               "advancement": false,
               "type": "None"
             }
@@ -1364,8 +1362,8 @@
               "value": true
             },
             "item": {
-              "name": "Puppies 76-78",
-              "player": 30,
+              "name": "Special Summon Collection C",
+              "player": 75,
               "advancement": true,
               "type": "None"
             }
@@ -1378,8 +1376,8 @@
               "value": true
             },
             "item": {
-              "name": "Unicorn Card",
-              "player": 10,
+              "name": "Small Key",
+              "player": 63,
               "advancement": false,
               "type": "None"
             }
@@ -1443,9 +1441,9 @@
               "value": true
             },
             "item": {
-              "name": "Chuckle Bean",
-              "player": 36,
-              "advancement": false,
+              "name": "progressive-battery",
+              "player": 48,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -1499,9 +1497,9 @@
               "value": true
             },
             "item": {
-              "name": "Centered Mind",
-              "player": 65,
-              "advancement": false,
+              "name": "Gold Leaf",
+              "player": 33,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1513,8 +1511,8 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Spider Cave",
-              "player": 28,
+              "name": "Yoshi",
+              "player": 60,
               "advancement": true,
               "type": "None"
             }
@@ -1538,8 +1536,8 @@
               ]
             },
             "item": {
-              "name": "Refreshing Herb",
-              "player": 36,
+              "name": "Slowness",
+              "player": 66,
               "advancement": false,
               "type": "None"
             }
@@ -1552,10 +1550,10 @@
               "item": "Heavy Ring"
             },
             "item": {
-              "name": "Progressive Bow",
-              "player": 66,
-              "advancement": true,
-              "type": "Item"
+              "name": "Projectile Refill",
+              "player": 23,
+              "advancement": false,
+              "type": "None"
             }
           },
           {
@@ -1566,8 +1564,8 @@
               "value": true
             },
             "item": {
-              "name": "24 REP",
-              "player": 8,
+              "name": "Void Ray",
+              "player": 55,
               "advancement": true,
               "type": "None"
             }
@@ -1580,8 +1578,8 @@
               "value": true
             },
             "item": {
-              "name": "Titanite Shard",
-              "player": 16,
+              "name": "Seed Maker",
+              "player": 56,
               "advancement": false,
               "type": "None"
             }
@@ -1594,8 +1592,8 @@
               "value": true
             },
             "item": {
-              "name": ":)",
-              "player": 33,
+              "name": "Wok",
+              "player": 5,
               "advancement": false,
               "type": "None"
             }
@@ -1608,8 +1606,8 @@
               "value": true
             },
             "item": {
-              "name": "Lightning Urn x3",
-              "player": 16,
+              "name": "Additional Palette Color",
+              "player": 45,
               "advancement": false,
               "type": "None"
             }
@@ -1622,9 +1620,9 @@
               "item": "Heavy Ring"
             },
             "item": {
-              "name": "10 Coins",
-              "player": 48,
-              "advancement": false,
+              "name": "Military Base (E1M9) - Red keycard",
+              "player": 19,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1647,8 +1645,8 @@
               ]
             },
             "item": {
-              "name": "Cure Potion",
-              "player": 23,
+              "name": "Refinery (E2M3) - Computer area map",
+              "player": 19,
               "advancement": false,
               "type": "None"
             }
@@ -1661,8 +1659,8 @@
               "value": true
             },
             "item": {
-              "name": "The Gantlet (MAP03) - Computer area map",
-              "player": 20,
+              "name": "Red jewel(L)",
+              "player": 11,
               "advancement": false,
               "type": "None"
             }
@@ -1701,8 +1699,8 @@
               "value": true
             },
             "item": {
-              "name": "Titanite Shard",
-              "player": 16,
+              "name": "Additional Palette Color",
+              "player": 45,
               "advancement": false,
               "type": "None"
             }
@@ -1715,9 +1713,9 @@
               "value": true
             },
             "item": {
-              "name": "Drop-Pods (Kerrigan Tier 7)",
-              "player": 56,
-              "advancement": true,
+              "name": "Firebomb x2",
+              "player": 16,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1760,8 +1758,8 @@
               ]
             },
             "item": {
-              "name": "Red Bug Pellet x3",
-              "player": 16,
+              "name": "Adamant Shield",
+              "player": 29,
               "advancement": false,
               "type": "None"
             }
@@ -1801,7 +1799,7 @@
               ]
             },
             "item": {
-              "name": "Titanite Shard",
+              "name": "Faraam Armor",
               "player": 16,
               "advancement": false,
               "type": "None"
@@ -1836,9 +1834,9 @@
               ]
             },
             "item": {
-              "name": "Cranberry Seeds",
-              "player": 57,
-              "advancement": true,
+              "name": "Hoo Bean",
+              "player": 35,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -1873,8 +1871,8 @@
               "value": true
             },
             "item": {
-              "name": "Hoo Bean",
-              "player": 36,
+              "name": "Progressive Protoss Ground Weapon",
+              "player": 55,
               "advancement": false,
               "type": "None"
             }
@@ -1887,8 +1885,8 @@
               "item": "Heavy Ring"
             },
             "item": {
-              "name": "Speed Boost",
-              "player": 67,
+              "name": "The Labyrinth (E2M6) - Map Scroll",
+              "player": 24,
               "advancement": false,
               "type": "None"
             }
@@ -1901,9 +1899,9 @@
               "item": "Heavy Ring"
             },
             "item": {
-              "name": "Yarn",
-              "player": 1,
-              "advancement": true,
+              "name": "HP Max Up",
+              "player": 10,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1926,9 +1924,9 @@
               ]
             },
             "item": {
-              "name": "Additional Starting Minerals",
-              "player": 56,
-              "advancement": false,
+              "name": "Prawn Suit Fragment",
+              "player": 57,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1951,9 +1949,9 @@
               ]
             },
             "item": {
-              "name": "16 REP",
-              "player": 8,
-              "advancement": true,
+              "name": "Inflation Trap",
+              "player": 56,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -1980,8 +1978,8 @@
               "item": "Tackle"
             },
             "item": {
-              "name": "Movement Speed Bonus",
-              "player": 57,
+              "name": "Big Processors Upgrade",
+              "player": 52,
               "advancement": false,
               "type": "None"
             }
@@ -1994,9 +1992,9 @@
               "value": true
             },
             "item": {
-              "name": "The Enlightenment",
-              "player": 15,
-              "advancement": false,
+              "name": "Time Piece",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2008,9 +2006,9 @@
               "value": true
             },
             "item": {
-              "name": "Outfit (Solace - Winter)",
-              "player": 8,
-              "advancement": false,
+              "name": "Very Funny Joke",
+              "player": 6,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2022,9 +2020,9 @@
               "value": true
             },
             "item": {
-              "name": "300 GOLD",
-              "player": 11,
-              "advancement": false,
+              "name": "Emblem",
+              "player": 54,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2036,8 +2034,8 @@
               "value": true
             },
             "item": {
-              "name": "Mushroom",
-              "player": 36,
+              "name": "Quartz Flask",
+              "player": 24,
               "advancement": false,
               "type": "None"
             }
@@ -2065,8 +2063,8 @@
               "value": true
             },
             "item": {
-              "name": "Silver Shield",
-              "player": 25,
+              "name": "Statue of Gaia",
+              "player": 31,
               "advancement": false,
               "type": "None"
             }
@@ -2085,8 +2083,8 @@
               "value": true
             },
             "item": {
-              "name": "Collect",
-              "player": 39,
+              "name": "Medal",
+              "player": 28,
               "advancement": false,
               "type": "None"
             }
@@ -2099,9 +2097,9 @@
               "value": true
             },
             "item": {
-              "name": "Faster Condiment/Drink Switch",
-              "player": 45,
-              "advancement": true,
+              "name": "Ultra Nuts",
+              "player": 35,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2113,9 +2111,9 @@
               "value": true
             },
             "item": {
-              "name": "Titanite Scale",
-              "player": 16,
-              "advancement": false,
+              "name": "Mea Culpa Upgrade",
+              "player": 7,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2148,9 +2146,9 @@
               ]
             },
             "item": {
-              "name": "Titanite Chunk x2",
-              "player": 16,
-              "advancement": false,
+              "name": "Hammers",
+              "player": 35,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2162,9 +2160,9 @@
               "value": true
             },
             "item": {
-              "name": "Water",
-              "player": 52,
-              "advancement": false,
+              "name": "Funkotsu Saishin Casino",
+              "player": 41,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2187,8 +2185,8 @@
               ]
             },
             "item": {
-              "name": "Petal",
-              "player": 52,
+              "name": "Card Pack",
+              "player": 26,
               "advancement": false,
               "type": "None"
             }
@@ -2201,8 +2199,8 @@
               "value": true
             },
             "item": {
-              "name": "Sea Tea",
-              "player": 70,
+              "name": "Red jewel(L)",
+              "player": 11,
               "advancement": false,
               "type": "None"
             }
@@ -2236,8 +2234,8 @@
               ]
             },
             "item": {
-              "name": "Aura's Gem",
-              "player": 69,
+              "name": "Box of shotgun shells",
+              "player": 19,
               "advancement": false,
               "type": "None"
             }
@@ -2250,8 +2248,8 @@
               "value": true
             },
             "item": {
-              "name": "Magical Boomerang",
-              "player": 64,
+              "name": "Berry Pick-Mi-Up+",
+              "player": 67,
               "advancement": false,
               "type": "None"
             }
@@ -2264,8 +2262,8 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Sandover Village",
-              "player": 28,
+              "name": "Power Star",
+              "player": 58,
               "advancement": true,
               "type": "None"
             }
@@ -2278,8 +2276,8 @@
               "value": true
             },
             "item": {
-              "name": "Progressive Shield",
-              "player": 22,
+              "name": "Magnifying Glass",
+              "player": 74,
               "advancement": false,
               "type": "None"
             }
@@ -2292,8 +2290,8 @@
               "value": true
             },
             "item": {
-              "name": "Child of Moonlight",
-              "player": 7,
+              "name": "Industrial Zone (MAP15) - Blue keycard",
+              "player": 20,
               "advancement": true,
               "type": "None"
             }
@@ -2330,9 +2328,9 @@
               "value": true
             },
             "item": {
-              "name": "Salvage Badge",
-              "player": 36,
-              "advancement": false,
+              "name": "Twin Pyramid Key",
+              "player": 67,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -2359,9 +2357,9 @@
               "value": true
             },
             "item": {
-              "name": "Lucky Emblem",
-              "player": 29,
-              "advancement": true,
+              "name": "Resource Pack: 120 Calico Egg",
+              "player": 56,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2373,9 +2371,9 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Sandover Village",
-              "player": 28,
-              "advancement": true,
+              "name": "Hoo Bean",
+              "player": 35,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2387,8 +2385,8 @@
               "value": true
             },
             "item": {
-              "name": "Spring Falls",
-              "player": 69,
+              "name": "500 GOLD",
+              "player": 11,
               "advancement": false,
               "type": "None"
             }
@@ -2412,8 +2410,8 @@
               ]
             },
             "item": {
-              "name": "Speed Boost",
-              "player": 67,
+              "name": "Energy cell pack",
+              "player": 19,
               "advancement": false,
               "type": "None"
             }
@@ -2426,8 +2424,8 @@
               "value": true
             },
             "item": {
-              "name": "Speed Boost",
-              "player": 67,
+              "name": "Puzzle Skip",
+              "player": 66,
               "advancement": false,
               "type": "None"
             }
@@ -2440,8 +2438,8 @@
               "item": "Roc Wing"
             },
             "item": {
-              "name": "JotPK: Progressive Gun",
-              "player": 57,
+              "name": "Puppies 16-18",
+              "player": 29,
               "advancement": true,
               "type": "None"
             }
@@ -2454,8 +2452,8 @@
               "value": true
             },
             "item": {
-              "name": "Stasis Rifle Fragment",
-              "player": 58,
+              "name": "Relic (Red Crayon)",
+              "player": 1,
               "advancement": true,
               "type": "None"
             }
@@ -2468,9 +2466,9 @@
               "value": true
             },
             "item": {
-              "name": "Diamond Eye",
-              "player": 52,
-              "advancement": true,
+              "name": "EkeEke",
+              "player": 31,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2482,9 +2480,9 @@
               "value": true
             },
             "item": {
-              "name": "Tablet",
-              "player": 68,
-              "advancement": true,
+              "name": "LINK MOLLUSC",
+              "player": 25,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -2511,8 +2509,8 @@
               ]
             },
             "item": {
-              "name": "Donald Auto Healing",
-              "player": 29,
+              "name": "HP Max Up",
+              "player": 10,
               "advancement": false,
               "type": "None"
             }
@@ -2525,8 +2523,8 @@
               "item": "Roc Wing"
             },
             "item": {
-              "name": "Crystal Always Available in Lobby",
-              "player": 54,
+              "name": "Tunneling Claws (Roach)",
+              "player": 55,
               "advancement": false,
               "type": "None"
             }
@@ -2548,8 +2546,8 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
-              "player": 33,
+              "name": "Mega Armor",
+              "player": 19,
               "advancement": false,
               "type": "None"
             }
@@ -2562,8 +2560,8 @@
               "item": "Roc Wing"
             },
             "item": {
-              "name": "Steel Helm",
-              "player": 23,
+              "name": "Thundaga Trinket",
+              "player": 28,
               "advancement": false,
               "type": "None"
             }
@@ -2582,9 +2580,9 @@
               "value": true
             },
             "item": {
-              "name": "8 Ash",
-              "player": 52,
-              "advancement": false,
+              "name": "Auto Wisdom",
+              "player": 28,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2596,8 +2594,8 @@
               "value": true
             },
             "item": {
-              "name": "Free-Form Select",
-              "player": 46,
+              "name": "Bear Coin",
+              "player": 18,
               "advancement": false,
               "type": "None"
             }
@@ -2610,9 +2608,9 @@
               "value": true
             },
             "item": {
-              "name": "Rusted Gold Coin",
-              "player": 16,
-              "advancement": false,
+              "name": "Fortress of Mystery (E2M9) - Yellow skull key",
+              "player": 19,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2624,9 +2622,9 @@
               "value": true
             },
             "item": {
-              "name": "HPMemory",
-              "player": 39,
-              "advancement": false,
+              "name": "Gas Mask",
+              "player": 67,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2638,8 +2636,8 @@
               "value": true
             },
             "item": {
-              "name": "Long Life Soup",
-              "player": 5,
+              "name": "MP Max Up",
+              "player": 10,
               "advancement": false,
               "type": "None"
             }
@@ -2652,9 +2650,9 @@
               "value": true
             },
             "item": {
-              "name": "Civil Service",
-              "player": 15,
-              "advancement": false,
+              "name": "Dome Fossil",
+              "player": 47,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2666,9 +2664,9 @@
               "value": true
             },
             "item": {
-              "name": "Foraging Level",
-              "player": 57,
-              "advancement": true,
+              "name": "Atbash Trap",
+              "player": 32,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2680,9 +2678,9 @@
               "value": true
             },
             "item": {
-              "name": "50 Rupees",
-              "player": 34,
-              "advancement": true,
+              "name": "Stealth Technology",
+              "player": 15,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2694,8 +2692,8 @@
               "value": true
             },
             "item": {
-              "name": "Pitfall Trap",
-              "player": 6,
+              "name": "Hyper Potion",
+              "player": 46,
               "advancement": false,
               "type": "None"
             }
@@ -2708,9 +2706,9 @@
               "value": true
             },
             "item": {
-              "name": "Blue Bug Pellet x2",
-              "player": 16,
-              "advancement": false,
+              "name": "Spellcaster Collection A",
+              "player": 75,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -2739,8 +2737,8 @@
               ]
             },
             "item": {
-              "name": "progressive-rocketry",
-              "player": 21,
+              "name": "Hunter Strain (Baneling)",
+              "player": 55,
               "advancement": false,
               "type": "None"
             }
@@ -2811,7 +2809,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 34
+        "max_count": 36
       },
       "MP Max Up": {
         "name": "MP Max Up",
@@ -2824,7 +2822,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 31
+        "max_count": 33
       },
       "Salamander Card": {
         "name": "Salamander Card",
@@ -2977,11 +2975,11 @@
           "Everything"
         ],
         "advancement": false,
-        "useful": true,
+        "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Black Dog Card": {
         "name": "Black Dog Card",
@@ -3278,9 +3276,9 @@
         "type": null,
         "max_count": 2
       },
-      "Lightning Urn x4": {
-        "name": "Lightning Urn x4",
-        "id": 100763,
+      "Optical Flare (Medic)": {
+        "name": "Optical Flare (Medic)",
+        "id": 1224,
         "groups": [],
         "advancement": false,
         "useful": false,
@@ -3289,9 +3287,53 @@
         "type": null,
         "max_count": 1
       },
-      "Medikit": {
-        "name": "Medikit",
-        "id": 350113,
+      "Golden Coin": {
+        "name": "Golden Coin",
+        "id": 509342439,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Debla of the Lights": {
+        "name": "Debla of the Lights",
+        "id": 1909045,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Token of Appreciation": {
+        "name": "Token of Appreciation",
+        "id": 1909034,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Exp. All": {
+        "name": "Exp. All",
+        "id": 172000075,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Spider Cider": {
+        "name": "Spider Cider",
+        "id": 77010,
         "groups": [],
         "advancement": false,
         "useful": false,
@@ -3300,9 +3342,119 @@
         "type": null,
         "max_count": 1
       },
-      "1-Up Mushroom": {
-        "name": "1-Up Mushroom",
-        "id": 12320769,
+      "Soul of a Crystal Sage": {
+        "name": "Soul of a Crystal Sage",
+        "id": 100872,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "SpinRed": {
+        "name": "SpinRed",
+        "id": 11735052,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Canvas Width": {
+        "name": "Progressive Canvas Width",
+        "id": 198501,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Area: West Varrock": {
+        "name": "Area: West Varrock",
+        "id": 458760,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "THE LOST MILLENIUM": {
+        "name": "THE LOST MILLENIUM",
+        "id": 5730015,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "LD24 Refer to Sept 04 Banlist Unlock": {
+        "name": "LD24 Refer to Sept 04 Banlist Unlock",
+        "id": 5730075,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Dark Templar": {
+        "name": "Dark Templar",
+        "id": 1703,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Slowness": {
+        "name": "Slowness",
+        "id": 7798849,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": true,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "System Power": {
+        "name": "System Power",
+        "id": 91630179862875,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "The Young Mason's Wheel": {
+        "name": "The Young Mason's Wheel",
+        "id": 1909041,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "DrillMan V2 D": {
+        "name": "DrillMan V2 D",
+        "id": 11735252,
         "groups": [],
         "advancement": false,
         "useful": false,
@@ -3311,53 +3463,20 @@
         "type": null,
         "max_count": 1
       },
-      "Propulsion Cannon Fragment": {
-        "name": "Propulsion Cannon Fragment",
-        "id": 35043,
+      "Kinetic Foam (HERC)": {
+        "name": "Kinetic Foam (HERC)",
+        "id": 1286,
         "groups": [],
-        "advancement": true,
-        "useful": false,
+        "advancement": false,
+        "useful": true,
         "trap": false,
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "The Crypts (E1M7)": {
-        "name": "The Crypts (E1M7)",
-        "id": 370418,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Sentinel": {
-        "name": "Sentinel",
-        "id": 3002,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Bloodfalls (MAP25) - Blue skull key": {
-        "name": "Bloodfalls (MAP25) - Blue skull key",
-        "id": 360249,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Chuckle Bean": {
-        "name": "Chuckle Bean",
-        "id": 77771020,
+      "Karla's Pointed Hat": {
+        "name": "Karla's Pointed Hat",
+        "id": 100583,
         "groups": [],
         "advancement": false,
         "useful": false,
@@ -3366,9 +3485,9 @@
         "type": null,
         "max_count": 1
       },
-      "Max Aura": {
-        "name": "Max Aura",
-        "id": 1337180,
+      "Box of bullets": {
+        "name": "Box of bullets",
+        "id": 360016,
         "groups": [],
         "advancement": false,
         "useful": false,
@@ -3377,31 +3496,9 @@
         "type": null,
         "max_count": 1
       },
-      "Category Pair": {
-        "name": "Category Pair",
-        "id": 16871244111,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Hardmode": {
-        "name": "Hardmode",
-        "id": 8257552,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "3000z": {
-        "name": "3000z",
-        "id": 11735206,
+      "Money x25": {
+        "name": "Money x25",
+        "id": 509342491,
         "groups": [],
         "advancement": false,
         "useful": false,
@@ -3410,9 +3507,9 @@
         "type": null,
         "max_count": 1
       },
-      "Ash": {
-        "name": "Ash",
-        "id": 64210,
+      "Life Stock": {
+        "name": "Life Stock",
+        "id": 4062,
         "groups": [],
         "advancement": false,
         "useful": false,
@@ -3421,31 +3518,9 @@
         "type": null,
         "max_count": 1
       },
-      "Book: The Art O' Crabbing": {
-        "name": "Book: The Art O' Crabbing",
-        "id": 717510,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Spangle": {
-        "name": "Spangle",
-        "id": 77771062,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Red jewel(S)": {
-        "name": "Red jewel(S)",
-        "id": 12992514,
+      "Bundle of Twisted Cables": {
+        "name": "Bundle of Twisted Cables",
+        "id": 9162,
         "groups": [],
         "advancement": false,
         "useful": false,
@@ -3454,20 +3529,9 @@
         "type": null,
         "max_count": 1
       },
-      "Tears of Atonement (10000)": {
-        "name": "Tears of Atonement (10000)",
-        "id": 1909200,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Soul of the Rotted Greatwood": {
-        "name": "Soul of the Rotted Greatwood",
-        "id": 100882,
+      "Graduating Range (Siege Tank)": {
+        "name": "Graduating Range (Siege Tank)",
+        "id": 1271,
         "groups": [],
         "advancement": true,
         "useful": false,
@@ -3476,20 +3540,9 @@
         "type": null,
         "max_count": 1
       },
-      "Tiento to your Thorned Hairs": {
-        "name": "Tiento to your Thorned Hairs",
-        "id": 1909052,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Large Soul of a Deserted Corpse": {
-        "name": "Large Soul of a Deserted Corpse",
-        "id": 100821,
+      "Anti Paralyze": {
+        "name": "Anti Paralyze",
+        "id": 4028,
         "groups": [],
         "advancement": false,
         "useful": false,
@@ -3498,9 +3551,724 @@
         "type": null,
         "max_count": 1
       },
-      "Soul of a Deserted Corpse": {
-        "name": "Soul of a Deserted Corpse",
-        "id": 100820,
+      "Gun": {
+        "name": "Gun",
+        "id": 509342430,
+        "groups": [],
+        "advancement": true,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hunter-Seeker Weapon (Raven)": {
+        "name": "Hunter-Seeker Weapon (Raven)",
+        "id": 1366,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Coins": {
+        "name": "Coins",
+        "id": 13238276,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Faraam Helm": {
+        "name": "Faraam Helm",
+        "id": 100468,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Titanite Scale": {
+        "name": "Titanite Scale",
+        "id": 100899,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Power: Horse: The Book": {
+        "name": "Power: Horse: The Book",
+        "id": 717536,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Advanced Laser Technology (Wraith)": {
+        "name": "Advanced Laser Technology (Wraith)",
+        "id": 1278,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Display": {
+        "name": "Display",
+        "id": 20010728,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Chaos Device": {
+        "name": "Chaos Device",
+        "id": 370007,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Adrenal Overload (Zergling)": {
+        "name": "Adrenal Overload (Zergling)",
+        "id": 2201,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Reserve Tank": {
+        "name": "Reserve Tank",
+        "id": 83020,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Reserve",
+        "max_count": 1
+      },
+      "Cure Potion": {
+        "name": "Cure Potion",
+        "id": 4325392,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "25 Coins": {
+        "name": "25 Coins",
+        "id": 82032,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Pocket Melon": {
+        "name": "Pocket Melon",
+        "id": 3154054,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ointment": {
+        "name": "Ointment",
+        "id": 400027,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Wand (Tier 2)": {
+        "name": "Wand (Tier 2)",
+        "id": 110007,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Claymore": {
+        "name": "Claymore",
+        "id": 100078,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Fire Keeper Soul": {
+        "name": "Fire Keeper Soul",
+        "id": 100818,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "RegUP2": {
+        "name": "RegUP2",
+        "id": 11735060,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Brass Gauntlets": {
+        "name": "Brass Gauntlets",
+        "id": 100534,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mercantilism": {
+        "name": "Mercantilism",
+        "id": 5041102,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Purifying": {
+        "name": "Purifying",
+        "id": 12992521,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Porcine Shield": {
+        "name": "Porcine Shield",
+        "id": 100267,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Spam E-Mails": {
+        "name": "Spam E-Mails",
+        "id": 9282,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Fresh Strawberries": {
+        "name": "Fresh Strawberries",
+        "id": 9199,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Berserk": {
+        "name": "Berserk",
+        "id": 360010,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ribbon": {
+        "name": "Ribbon",
+        "id": 1245263,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Big Miner Upgrade": {
+        "name": "Big Miner Upgrade",
+        "id": 20010735,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Dumbo Ice Cream": {
+        "name": "Dumbo Ice Cream",
+        "id": 698045,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Special Summon Collection C": {
+        "name": "Special Summon Collection C",
+        "id": 5730038,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Small Key": {
+        "name": "Small Key",
+        "id": 7126,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "progressive-battery": {
+        "name": "progressive-battery",
+        "id": 47103,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Gold Leaf": {
+        "name": "Gold Leaf",
+        "id": 10000021,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Yoshi": {
+        "name": "Yoshi",
+        "id": 12320776,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Projectile Refill": {
+        "name": "Projectile Refill",
+        "id": 4325598,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Void Ray": {
+        "name": "Void Ray",
+        "id": 1707,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Seed Maker": {
+        "name": "Seed Maker",
+        "id": 722248,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Wok": {
+        "name": "Wok",
+        "id": 698099,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Additional Palette Color": {
+        "name": "Additional Palette Color",
+        "id": 198523,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Military Base (E1M9) - Red keycard": {
+        "name": "Military Base (E1M9) - Red keycard",
+        "id": 350031,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Refinery (E2M3) - Computer area map": {
+        "name": "Refinery (E2M3) - Computer area map",
+        "id": 350045,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Red jewel(L)": {
+        "name": "Red jewel(L)",
+        "id": 12992515,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Firebomb x2": {
+        "name": "Firebomb x2",
+        "id": 100745,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Adamant Shield": {
+        "name": "Adamant Shield",
+        "id": 2641124,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Faraam Armor": {
+        "name": "Faraam Armor",
+        "id": 100469,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hoo Bean": {
+        "name": "Hoo Bean",
+        "id": 77771019,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Protoss Ground Weapon": {
+        "name": "Progressive Protoss Ground Weapon",
+        "id": 3100,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "The Labyrinth (E2M6) - Map Scroll": {
+        "name": "The Labyrinth (E2M6) - Map Scroll",
+        "id": 370444,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Prawn Suit Fragment": {
+        "name": "Prawn Suit Fragment",
+        "id": 35032,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Inflation Trap": {
+        "name": "Inflation Trap",
+        "id": 721024,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": true,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Big Processors Upgrade": {
+        "name": "Big Processors Upgrade",
+        "id": 20010736,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Time Piece": {
+        "name": "Time Piece",
+        "id": 2000300002,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Very Funny Joke": {
+        "name": "Very Funny Joke",
+        "id": 9001,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Emblem": {
+        "name": "Emblem",
+        "id": 16711680,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Quartz Flask": {
+        "name": "Quartz Flask",
+        "id": 370010,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statue of Gaia": {
+        "name": "Statue of Gaia",
+        "id": 4019,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Medal": {
+        "name": "Medal",
+        "id": 1245335,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ultra Nuts": {
+        "name": "Ultra Nuts",
+        "id": 77771007,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mea Culpa Upgrade": {
+        "name": "Mea Culpa Upgrade",
+        "id": 1909181,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hammers": {
+        "name": "Hammers",
+        "id": 77771035,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Funkotsu Saishin Casino": {
+        "name": "Funkotsu Saishin Casino",
+        "id": 2900096,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Card Pack": {
+        "name": "Card Pack",
+        "id": 147041,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Box of shotgun shells": {
+        "name": "Box of shotgun shells",
+        "id": 350116,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Berry Pick-Mi-Up+": {
+        "name": "Berry Pick-Mi-Up+",
+        "id": 1337062,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Power Star": {
+        "name": "Power Star",
+        "id": 3626000,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Magnifying Glass": {
+        "name": "Magnifying Glass",
+        "id": 3154057,
         "groups": [],
         "advancement": false,
         "useful": false,
@@ -3520,9 +4288,9 @@
         "type": null,
         "max_count": 1
       },
-      "Sword of Gaia": {
-        "name": "Sword of Gaia",
-        "id": 4004,
+      "Twin Pyramid Key": {
+        "name": "Twin Pyramid Key",
+        "id": 1337112,
         "groups": [],
         "advancement": true,
         "useful": false,
@@ -3531,108 +4299,9 @@
         "type": null,
         "max_count": 1
       },
-      "Birds nest": {
-        "name": "Birds nest",
-        "id": 47053,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Old King's Great Hammer": {
-        "name": "Old King's Great Hammer",
-        "id": 100129,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Pixie Dust": {
-        "name": "Pixie Dust",
-        "id": 64229,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Box of shotgun shells": {
-        "name": "Box of shotgun shells",
-        "id": 360018,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Green Blossom": {
-        "name": "Green Blossom",
-        "id": 100712,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Tome of Power": {
-        "name": "Tome of Power",
-        "id": 370014,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Hyper Potion": {
-        "name": "Hyper Potion",
-        "id": 172000018,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Train Morph": {
-        "name": "Train Morph",
-        "id": 3154024,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Scout Fly - Snowy Mountain": {
-        "name": "Scout Fly - Snowy Mountain",
-        "id": 741001089,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "AlphaArm\u03a9 V": {
-        "name": "AlphaArm\u03a9 V",
-        "id": 11735171,
+      "Resource Pack: 120 Calico Egg": {
+        "name": "Resource Pack: 120 Calico Egg",
+        "id": 717504,
         "groups": [],
         "advancement": false,
         "useful": true,
@@ -3641,53 +4310,9 @@
         "type": null,
         "max_count": 1
       },
-      "Legendary Item": {
-        "name": "Legendary Item",
-        "id": 37004,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "+20 Stars": {
-        "name": "+20 Stars",
-        "id": 3154059,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Mt. Erebus (E3M6)": {
-        "name": "Mt. Erebus (E3M6)",
-        "id": 350086,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Space Port": {
-        "name": "Progressive Space Port",
-        "id": 5041150,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "progressive-research-speed": {
-        "name": "progressive-research-speed",
-        "id": 131285,
+      "500 GOLD": {
+        "name": "500 GOLD",
+        "id": 12992551,
         "groups": [],
         "advancement": false,
         "useful": false,
@@ -3696,702 +4321,9 @@
         "type": null,
         "max_count": 1
       },
-      "Zombie Sheep": {
-        "name": "Zombie Sheep",
-        "id": 120044,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Potion": {
-        "name": "Potion",
-        "id": 110003,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Thunder Ring": {
-        "name": "Thunder Ring",
-        "id": 2641026,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "1800z": {
-        "name": "1800z",
-        "id": 11735204,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Mega Armor": {
-        "name": "Mega Armor",
-        "id": 360009,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Time Shard (100)": {
-        "name": "Time Shard (100)",
-        "id": 11391002,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Box of bullets": {
-        "name": "Box of bullets",
-        "id": 360016,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Murakumo": {
-        "name": "Murakumo",
-        "id": 100082,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Golden Feather": {
-        "name": "Golden Feather",
-        "id": 82003,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Additional Palette Color": {
-        "name": "Additional Palette Color",
-        "id": 198523,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "HP Offering": {
-        "name": "HP Offering",
-        "id": 509342448,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Power Star": {
-        "name": "Power Star",
-        "id": 3626000,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Paralytic Barbs (Viper)": {
-        "name": "Paralytic Barbs (Viper)",
-        "id": 2260,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Twinkling Titanite x3": {
-        "name": "Twinkling Titanite x3",
-        "id": 100904,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Rotten Meat x 2": {
-        "name": "Rotten Meat x 2",
-        "id": 698110,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Divine Right": {
-        "name": "Divine Right",
-        "id": 5041097,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Blizzara Ring": {
-        "name": "Blizzara Ring",
-        "id": 2641024,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Puppies 76-78": {
-        "name": "Puppies 76-78",
-        "id": 2642226,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Centered Mind": {
-        "name": "Centered Mind",
-        "id": 11391014,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Scout Fly - Spider Cave": {
-        "name": "Scout Fly - Spider Cave",
-        "id": 741001109,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Refreshing Herb": {
-        "name": "Refreshing Herb",
-        "id": 77771016,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Bow": {
-        "name": "Progressive Bow",
-        "id": 2322489,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "Item",
-        "max_count": 1
-      },
-      "24 REP": {
-        "name": "24 REP",
-        "id": 2308161,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Titanite Shard": {
-        "name": "Titanite Shard",
-        "id": 100890,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      ":)": {
-        "name": ":)",
-        "id": 444409,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Lightning Urn x3": {
-        "name": "Lightning Urn x3",
-        "id": 100762,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "10 Coins": {
-        "name": "10 Coins",
-        "id": 172000059,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Cure Potion": {
-        "name": "Cure Potion",
-        "id": 4325392,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "The Gantlet (MAP03) - Computer area map": {
-        "name": "The Gantlet (MAP03) - Computer area map",
-        "id": 360408,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Drop-Pods (Kerrigan Tier 7)": {
-        "name": "Drop-Pods (Kerrigan Tier 7)",
-        "id": 2420,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Red Bug Pellet x3": {
-        "name": "Red Bug Pellet x3",
-        "id": 100854,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Cranberry Seeds": {
-        "name": "Cranberry Seeds",
-        "id": 717136,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Hoo Bean": {
-        "name": "Hoo Bean",
-        "id": 77771019,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Speed Boost": {
-        "name": "Speed Boost",
-        "id": 158500,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Yarn": {
-        "name": "Yarn",
-        "id": 2000300001,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Additional Starting Minerals": {
-        "name": "Additional Starting Minerals",
-        "id": 1800,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "16 REP": {
-        "name": "16 REP",
-        "id": 2308160,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Movement Speed Bonus": {
-        "name": "Movement Speed Bonus",
-        "id": 717109,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "The Enlightenment": {
-        "name": "The Enlightenment",
-        "id": 5041103,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Solace - Winter)": {
-        "name": "Outfit (Solace - Winter)",
-        "id": 2308128,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "300 GOLD": {
-        "name": "300 GOLD",
-        "id": 12992552,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Mushroom": {
-        "name": "Mushroom",
-        "id": 77771001,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Silver Shield": {
-        "name": "Silver Shield",
-        "id": 370016,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Collect": {
-        "name": "Collect",
-        "id": 11735178,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Faster Condiment/Drink Switch": {
-        "name": "Faster Condiment/Drink Switch",
-        "id": 213719,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Titanite Scale": {
-        "name": "Titanite Scale",
-        "id": 100899,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Titanite Chunk x2": {
-        "name": "Titanite Chunk x2",
-        "id": 100896,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Water": {
-        "name": "Water",
-        "id": 64110,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Petal": {
-        "name": "Petal",
-        "id": 64101,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Sea Tea": {
-        "name": "Sea Tea",
-        "id": 77041,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Aura's Gem": {
-        "name": "Aura's Gem",
-        "id": 509342471,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Magical Boomerang": {
-        "name": "Magical Boomerang",
-        "id": 7102,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Scout Fly - Sandover Village": {
-        "name": "Scout Fly - Sandover Village",
-        "id": 741001099,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Shield": {
-        "name": "Progressive Shield",
-        "id": 400002,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Child of Moonlight": {
-        "name": "Child of Moonlight",
-        "id": 1909178,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Salvage Badge": {
-        "name": "Salvage Badge",
-        "id": 77771098,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Lucky Emblem": {
-        "name": "Lucky Emblem",
-        "id": 1245422,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Spring Falls": {
-        "name": "Spring Falls",
-        "id": 509342479,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "JotPK: Progressive Gun": {
-        "name": "JotPK: Progressive Gun",
-        "id": 717101,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Stasis Rifle Fragment": {
-        "name": "Stasis Rifle Fragment",
-        "id": 35039,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Diamond Eye": {
-        "name": "Diamond Eye",
-        "id": 64064,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Tablet": {
-        "name": "Tablet",
-        "id": 1337124,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Donald Auto Healing": {
-        "name": "Donald Auto Healing",
-        "id": 1245441,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Crystal Always Available in Lobby": {
-        "name": "Crystal Always Available in Lobby",
-        "id": 27105,
+      "Energy cell pack": {
+        "name": "Energy cell pack",
+        "id": 350117,
         "groups": [],
         "advancement": false,
         "useful": false,
@@ -4402,7 +4334,7 @@
       },
       "Puzzle Skip": {
         "name": "Puzzle Skip",
-        "id": 444413,
+        "id": 158510,
         "groups": [],
         "advancement": false,
         "useful": true,
@@ -4411,86 +4343,9 @@
         "type": null,
         "max_count": 1
       },
-      "Steel Helm": {
-        "name": "Steel Helm",
-        "id": 4325423,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "8 Ash": {
-        "name": "8 Ash",
-        "id": 64325,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Free-Form Select": {
-        "name": "Free-Form Select",
-        "id": 198506,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Rusted Gold Coin": {
-        "name": "Rusted Gold Coin",
-        "id": 100847,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "HPMemory": {
-        "name": "HPMemory",
-        "id": 11735058,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Long Life Soup": {
-        "name": "Long Life Soup",
-        "id": 698059,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Civil Service": {
-        "name": "Civil Service",
-        "id": 5041093,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Foraging Level": {
-        "name": "Foraging Level",
-        "id": 717075,
+      "Puppies 16-18": {
+        "name": "Puppies 16-18",
+        "id": 2642206,
         "groups": [],
         "advancement": true,
         "useful": false,
@@ -4499,9 +4354,9 @@
         "type": null,
         "max_count": 1
       },
-      "50 Rupees": {
-        "name": "50 Rupees",
-        "id": 10000027,
+      "Relic (Red Crayon)": {
+        "name": "Relic (Red Crayon)",
+        "id": 2000300015,
         "groups": [],
         "advancement": true,
         "useful": false,
@@ -4510,9 +4365,9 @@
         "type": null,
         "max_count": 1
       },
-      "Pitfall Trap": {
-        "name": "Pitfall Trap",
-        "id": 9049,
+      "EkeEke": {
+        "name": "EkeEke",
+        "id": 4000,
         "groups": [],
         "advancement": false,
         "useful": false,
@@ -4521,9 +4376,20 @@
         "type": null,
         "max_count": 1
       },
-      "Blue Bug Pellet x2": {
-        "name": "Blue Bug Pellet x2",
-        "id": 100851,
+      "LINK MOLLUSC": {
+        "name": "LINK MOLLUSC",
+        "id": 200684,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Tunneling Claws (Roach)": {
+        "name": "Tunneling Claws (Roach)",
+        "id": 2205,
         "groups": [],
         "advancement": false,
         "useful": false,
@@ -4532,12 +4398,133 @@
         "type": null,
         "max_count": 1
       },
-      "progressive-rocketry": {
-        "name": "progressive-rocketry",
-        "id": 131286,
+      "Mega Armor": {
+        "name": "Mega Armor",
+        "id": 350108,
         "groups": [],
         "advancement": false,
         "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Thundaga Trinket": {
+        "name": "Thundaga Trinket",
+        "id": 1245248,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Auto Wisdom": {
+        "name": "Auto Wisdom",
+        "id": 1245412,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Bear Coin": {
+        "name": "Bear Coin",
+        "id": 14430210,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Fortress of Mystery (E2M9) - Yellow skull key": {
+        "name": "Fortress of Mystery (E2M9) - Yellow skull key",
+        "id": 350067,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Gas Mask": {
+        "name": "Gas Mask",
+        "id": 1337117,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Dome Fossil": {
+        "name": "Dome Fossil",
+        "id": 172000041,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Atbash Trap": {
+        "name": "Atbash Trap",
+        "id": 444412,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": true,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Stealth Technology": {
+        "name": "Stealth Technology",
+        "id": 5041063,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hyper Potion": {
+        "name": "Hyper Potion",
+        "id": 3860021,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Spellcaster Collection A": {
+        "name": "Spellcaster Collection A",
+        "id": 5730029,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hunter Strain (Baneling)": {
+        "name": "Hunter Strain (Baneling)",
+        "id": 2307,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
         "trap": false,
         "event": false,
         "type": null,
@@ -4606,13 +4593,13 @@
       "Double": 2,
       "Golem Card": 1,
       "Griffin Card": 1,
-      "HP Max Up": 34,
+      "HP Max Up": 36,
       "Heart Max Up": 30,
       "Heavy Ring": 1,
       "Jupiter Card": 1,
       "Kick Boots": 1,
       "Last Key": 1,
-      "MP Max Up": 31,
+      "MP Max Up": 33,
       "Maiden Detonator": 2,
       "Mandragora Card": 1,
       "Manticore Card": 1,
@@ -4627,7 +4614,7 @@
       "Tackle": 1,
       "The Count Downed": 1,
       "Thunderbird Card": 1,
-      "Unicorn Card": 2,
+      "Unicorn Card": 1,
       "Uranus Card": 1,
       "Venus Card": 1
     }

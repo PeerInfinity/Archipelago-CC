@@ -582,21 +582,23 @@ Act Completion (Train Rush)
    =>   Train Rush
 Alpine Skyline (Rift) - Page: Waterfall Wooden Pillar
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
-   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
-   =>   Dead Bird Studio Basement -> Mafia Town - Act 7: Connection 1
-   =>   The Golden Vault -> Time Rift - Mafia of Cooks Portal - Entrance 6
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   The Illness has Spread -> Battle of the Birds - Act 2: Connection 1
+   =>   Dead Bird Studio -> Battle of the Birds - Act 4: Connection 1
+   =>   The Big Parade -> Battle of the Birds - Finale A: Connection 1
+   =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
+   =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
    =>   Time Rift - Alpine Skyline
 Alpine Skyline (Rift) - Page: Windmill Island Ledge
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
-   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
-   =>   Dead Bird Studio Basement -> Mafia Town - Act 7: Connection 1
-   =>   The Golden Vault -> Time Rift - Mafia of Cooks Portal - Entrance 6
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   The Illness has Spread -> Battle of the Birds - Act 2: Connection 1
+   =>   Dead Bird Studio -> Battle of the Birds - Act 4: Connection 1
+   =>   The Big Parade -> Battle of the Birds - Finale A: Connection 1
+   =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
+   =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
    =>   Time Rift - Alpine Skyline
 Alpine Skyline - Bird Pass Fork
         Menu -> Save File -> Spaceship

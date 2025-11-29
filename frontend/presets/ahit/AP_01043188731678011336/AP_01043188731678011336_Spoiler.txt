@@ -585,9 +585,9 @@ Act Completion (Time Rift - Gallery)
    =>   Time Rift - Gallery
 Act Completion (Time Rift - Mafia of Cooks)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 4
-   =>   Cheating the Race -> Time Rift - Mafia of Cooks Portal - Entrance 5
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Act Completion (Time Rift - Pipe)
         Menu -> Save File -> Spaceship
@@ -953,27 +953,27 @@ Mafia Town - Top of Ruined Tower
    =>   Mafia Town Area (HUMT)
 Mafia of Cooks - Page: Behind Shipping Containers
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 4
-   =>   Cheating the Race -> Time Rift - Mafia of Cooks Portal - Entrance 5
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Mafia of Cooks - Page: Beside Red Building
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 4
-   =>   Cheating the Race -> Time Rift - Mafia of Cooks Portal - Entrance 5
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Mafia of Cooks - Page: Top of Boat
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 4
-   =>   Cheating the Race -> Time Rift - Mafia of Cooks Portal - Entrance 5
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Mafia of Cooks - Page: Trash Mound
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 4
-   =>   Cheating the Race -> Time Rift - Mafia of Cooks Portal - Entrance 5
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Murder on the Owl Express - Cafeteria
         Menu -> Save File -> Spaceship
