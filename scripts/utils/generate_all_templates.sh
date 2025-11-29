@@ -20,6 +20,7 @@ rm -f Players/presets/Multiworld/"Archipelago.yaml" \
       Players/presets/Multiworld/"Hollow Knight.yaml" \
       Players/presets/Multiworld/"Ocarina of Time.yaml" \
       Players/presets/Multiworld/"Sudoku.yaml" \
+      Players/presets/Multiworld/"SMZ3.yaml" \
       Players/presets/Multiworld/"Zillion.yaml"
 
 python Generate.py --player_files_path "Players/presets/Multiworld" --seed 1
