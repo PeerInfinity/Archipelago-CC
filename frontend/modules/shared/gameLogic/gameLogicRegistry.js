@@ -169,7 +169,6 @@
  * - A Link to the Past (ALTTP)
  * - A Hat in Time (AHIT)
  * - Aquaria
- * - ArchipIDLE
  * - Blasphemous
  * - Bomb Rush Cyberfunk
  * - Celeste 64
@@ -220,8 +219,6 @@ import * as genericLogic from './generic/genericLogic.js';
 import * as ahitLogic from './ahit/ahitLogic.js';
 import { ahitStateModule } from './ahit/ahitLogic.js';
 import * as aquariaLogic from './aquaria/aquariaLogic.js';
-import * as archipidleLogic from './archipidle/archipidleLogic.js';
-import { archipidleStateModule } from './archipidle/archipidleLogic.js';
 import * as blasphemousLogic from './blasphemous/blasphemousLogic.js';
 import { blasphemousStateModule } from './blasphemous/blasphemousLogic.js';
 import { helperFunctions as bombRushCyberfunkHelperFunctions } from './bomb_rush_cyberfunk/bombRushCyberfunkLogic.js';
@@ -316,12 +313,6 @@ const GAME_REGISTRY = {
     helperFunctions: aquariaLogic.helperFunctions,
     worldClasses: ['AquariaWorld'],
     aliases: ['Aquaria']
-  },
-  'ArchipIDLE': {
-    logicModule: archipidleLogic.archipidleStateModule,
-    helperFunctions: archipidleLogic.helperFunctions,
-    worldClasses: ['ArchipIDLEWorld'],
-    aliases: ['ArchipIDLE']
   },
   'Blasphemous': {
     logicModule: blasphemousLogic.blasphemousStateModule,
