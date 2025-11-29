@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "created": "2025-11-29T00:38:23.185165",
-    "last_updated": "2025-11-29T01:18:57.265724",
+    "created": "2025-11-28T05:16:59.253989",
+    "last_updated": "2025-11-28T05:57:55.480377",
     "script_version": "1.0.0"
   },
   "results": {
@@ -11,7 +11,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.65,
+        "processing_time_seconds": 3.71,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -33,7 +33,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 7.84,
+        "processing_time_seconds": 6.31,
         "success": true,
         "total_players_tested": 1
       },
@@ -46,7 +46,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "A Hat in Time.yaml",
-      "timestamp": "2025-11-29T00:38:23.541824",
+      "timestamp": "2025-11-28T05:16:59.607140",
       "world_info": {
         "exporter_path": "exporter/games/ahit.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/ahit/ahitLogic.js",
@@ -63,7 +63,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 9.96,
+        "processing_time_seconds": 10.01,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -85,7 +85,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 20.08,
+        "processing_time_seconds": 20.51,
         "success": true,
         "total_players_tested": 2
       },
@@ -98,7 +98,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "A Link to the Past.yaml",
-      "timestamp": "2025-11-29T00:38:35.224730",
+      "timestamp": "2025-11-28T05:17:09.819485",
       "world_info": {
         "exporter_path": "exporter/games/alttp.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -115,7 +115,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 10.0,
+        "processing_time_seconds": 10.2,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -137,7 +137,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 12.05,
+        "processing_time_seconds": 12.08,
         "success": true,
         "total_players_tested": 3
       },
@@ -150,7 +150,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "A Short Hike.yaml",
-      "timestamp": "2025-11-29T00:39:05.431900",
+      "timestamp": "2025-11-28T05:17:40.509423",
       "world_info": {
         "exporter_path": "exporter/games/shorthike.py",
         "game_logic_path": null,
@@ -167,7 +167,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 10.17,
+        "processing_time_seconds": 10.37,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -189,7 +189,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 9.03,
+        "processing_time_seconds": 9.05,
         "success": true,
         "total_players_tested": 4
       },
@@ -202,7 +202,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Adventure.yaml",
-      "timestamp": "2025-11-29T00:39:27.653353",
+      "timestamp": "2025-11-28T05:18:02.955249",
       "world_info": {
         "exporter_path": "exporter/games/adventure.py",
         "game_logic_path": null,
@@ -219,7 +219,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 13.91,
+        "processing_time_seconds": 14.0,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -241,7 +241,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 15.14,
+        "processing_time_seconds": 15.18,
         "success": true,
         "total_players_tested": 5
       },
@@ -254,7 +254,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Aquaria.yaml",
-      "timestamp": "2025-11-29T00:39:47.028459",
+      "timestamp": "2025-11-28T05:18:22.550549",
       "world_info": {
         "exporter_path": "exporter/games/aquaria.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/aquaria/aquariaLogic.js",
@@ -271,7 +271,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 14.33,
+        "processing_time_seconds": 15.0,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -293,7 +293,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 17.22,
+        "processing_time_seconds": 17.2,
         "success": true,
         "total_players_tested": 6
       },
@@ -306,7 +306,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "ArchipIDLE.yaml",
-      "timestamp": "2025-11-29T00:40:16.242988",
+      "timestamp": "2025-11-28T05:18:51.893362",
       "world_info": {
         "exporter_path": "exporter/games/archipidle.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/archipidle/archipidleLogic.js",
@@ -323,7 +323,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 53.83,
+        "processing_time_seconds": 53.64,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -345,7 +345,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 88.42,
+        "processing_time_seconds": 87.47,
         "success": true,
         "total_players_tested": 7
       },
@@ -358,7 +358,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Blasphemous.yaml",
-      "timestamp": "2025-11-29T00:40:47.952217",
+      "timestamp": "2025-11-28T05:19:24.258800",
       "world_info": {
         "exporter_path": "exporter/games/blasphemous.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
@@ -375,7 +375,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 57.77,
+        "processing_time_seconds": 57.76,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -397,7 +397,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 43.43,
+        "processing_time_seconds": 44.35,
         "success": true,
         "total_players_tested": 8
       },
@@ -410,7 +410,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Bomb Rush Cyberfunk.yaml",
-      "timestamp": "2025-11-29T00:43:10.367983",
+      "timestamp": "2025-11-28T05:21:45.520048",
       "world_info": {
         "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
         "game_logic_path": null,
@@ -427,7 +427,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 57.85,
+        "processing_time_seconds": 58.32,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -449,7 +449,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 34.13,
+        "processing_time_seconds": 33.05,
         "success": true,
         "total_players_tested": 9
       },
@@ -462,7 +462,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Bumper Stickers.yaml",
-      "timestamp": "2025-11-29T00:44:51.737847",
+      "timestamp": "2025-11-28T05:23:27.793167",
       "world_info": {
         "exporter_path": "exporter/games/bumpstik.py",
         "game_logic_path": null,
@@ -479,7 +479,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 58.22,
+        "processing_time_seconds": 58.66,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -501,7 +501,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 35.4,
+        "processing_time_seconds": 34.11,
         "success": true,
         "total_players_tested": 10
       },
@@ -514,7 +514,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Castlevania - Circle of the Moon.yaml",
-      "timestamp": "2025-11-29T00:46:23.890651",
+      "timestamp": "2025-11-28T05:24:59.339175",
       "world_info": {
         "exporter_path": "exporter/games/cvcotm.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js",
@@ -531,7 +531,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 60.24,
+        "processing_time_seconds": 61.12,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -553,7 +553,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.94,
+        "processing_time_seconds": 5.93,
         "success": true,
         "total_players_tested": 11
       },
@@ -566,7 +566,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Castlevania 64.yaml",
-      "timestamp": "2025-11-29T00:47:57.695811",
+      "timestamp": "2025-11-28T05:26:32.299771",
       "world_info": {
         "exporter_path": "exporter/games/cv64.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/cv64/cv64Logic.js",
@@ -583,7 +583,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 57.35,
+        "processing_time_seconds": 57.56,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -605,7 +605,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 6.02,
+        "processing_time_seconds": 5.98,
         "success": true,
         "total_players_tested": 12
       },
@@ -618,7 +618,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Celeste 64.yaml",
-      "timestamp": "2025-11-29T00:49:04.053540",
+      "timestamp": "2025-11-28T05:27:39.516489",
       "world_info": {
         "exporter_path": "exporter/games/celeste64.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/celeste64/celeste64Logic.js",
@@ -635,7 +635,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 49.66,
+        "processing_time_seconds": 50.57,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -657,7 +657,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.95,
+        "processing_time_seconds": 5.93,
         "success": true,
         "total_players_tested": 13
       },
@@ -670,7 +670,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "ChecksFinder.yaml",
-      "timestamp": "2025-11-29T00:50:07.579585",
+      "timestamp": "2025-11-28T05:28:43.219703",
       "world_info": {
         "exporter_path": "exporter/games/checksfinder.py",
         "game_logic_path": null,
@@ -687,7 +687,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 46.11,
+        "processing_time_seconds": 46.67,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -709,7 +709,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.9,
+        "processing_time_seconds": 5.95,
         "success": true,
         "total_players_tested": 14
       },
@@ -722,7 +722,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "ChocolateChipCookies.yaml",
-      "timestamp": "2025-11-29T00:51:03.345562",
+      "timestamp": "2025-11-28T05:29:39.877526",
       "world_info": {
         "exporter_path": "exporter/games/bakingadventure.py",
         "game_logic_path": null,
@@ -739,7 +739,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 47.34,
+        "processing_time_seconds": 46.94,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -774,7 +774,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Civilization VI.yaml",
-      "timestamp": "2025-11-29T00:51:55.517013",
+      "timestamp": "2025-11-28T05:30:32.662687",
       "world_info": {
         "exporter_path": "exporter/games/civ_6.py",
         "game_logic_path": null,
@@ -791,7 +791,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 46.69,
+        "processing_time_seconds": 47.67,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -813,7 +813,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.91,
+        "processing_time_seconds": 5.94,
         "success": true,
         "total_players_tested": 16
       },
@@ -826,7 +826,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "DLCQuest.yaml",
-      "timestamp": "2025-11-29T00:52:48.964760",
+      "timestamp": "2025-11-28T05:31:25.719458",
       "world_info": {
         "exporter_path": "exporter/games/dlcquest.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js",
@@ -843,7 +843,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 8.54,
+        "processing_time_seconds": 8.66,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -878,7 +878,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "DOOM 1993.yaml",
-      "timestamp": "2025-11-29T00:53:41.737449",
+      "timestamp": "2025-11-28T05:32:19.509953",
       "world_info": {
         "exporter_path": "exporter/games/doom_1993.py",
         "game_logic_path": null,
@@ -895,7 +895,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 5.44,
+        "processing_time_seconds": 5.52,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -917,7 +917,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.95,
+        "processing_time_seconds": 5.98,
         "success": true,
         "total_players_tested": 18
       },
@@ -930,7 +930,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "DOOM II.yaml",
-      "timestamp": "2025-11-29T00:53:56.380961",
+      "timestamp": "2025-11-28T05:32:34.276243",
       "world_info": {
         "exporter_path": "exporter/games/doom_ii.py",
         "game_logic_path": null,
@@ -947,7 +947,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 7.71,
+        "processing_time_seconds": 7.83,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -969,7 +969,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.9,
+        "processing_time_seconds": 5.94,
         "success": true,
         "total_players_tested": 19
       },
@@ -982,7 +982,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Dark Souls III.yaml",
-      "timestamp": "2025-11-29T00:54:07.940497",
+      "timestamp": "2025-11-28T05:32:45.946008",
       "world_info": {
         "exporter_path": "exporter/games/dark_souls_3.py",
         "game_logic_path": null,
@@ -999,7 +999,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 8.18,
+        "processing_time_seconds": 8.29,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -1034,7 +1034,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Donkey Kong Country 3.yaml",
-      "timestamp": "2025-11-29T00:54:21.722730",
+      "timestamp": "2025-11-28T05:32:59.888161",
       "world_info": {
         "exporter_path": "exporter/games/dkc3.py",
         "game_logic_path": null,
@@ -1051,7 +1051,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 9.65,
+        "processing_time_seconds": 9.67,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -1073,7 +1073,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.94,
+        "processing_time_seconds": 5.92,
         "success": true,
         "total_players_tested": 21
       },
@@ -1086,7 +1086,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Factorio.yaml",
-      "timestamp": "2025-11-29T00:54:36.009218",
+      "timestamp": "2025-11-28T05:33:14.287068",
       "world_info": {
         "exporter_path": "exporter/games/factorio.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/factorio/factorioLogic.js",
@@ -1103,7 +1103,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 9.23,
+        "processing_time_seconds": 9.28,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -1125,7 +1125,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.92,
+        "processing_time_seconds": 5.94,
         "success": true,
         "total_players_tested": 22
       },
@@ -1138,7 +1138,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Faxanadu.yaml",
-      "timestamp": "2025-11-29T00:54:51.764186",
+      "timestamp": "2025-11-28T05:33:30.048197",
       "world_info": {
         "exporter_path": "exporter/games/faxanadu.py",
         "game_logic_path": null,
@@ -1155,7 +1155,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 10.21,
+        "processing_time_seconds": 10.34,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -1190,7 +1190,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Final Fantasy Mystic Quest.yaml",
-      "timestamp": "2025-11-29T00:55:07.081458",
+      "timestamp": "2025-11-28T05:33:45.439915",
       "world_info": {
         "exporter_path": "exporter/games/ffmq.py",
         "game_logic_path": null,
@@ -1207,7 +1207,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 11.18,
+        "processing_time_seconds": 11.35,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -1229,7 +1229,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.93,
+        "processing_time_seconds": 5.96,
         "success": true,
         "total_players_tested": 24
       },
@@ -1242,7 +1242,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Heretic.yaml",
-      "timestamp": "2025-11-29T00:55:23.400210",
+      "timestamp": "2025-11-28T05:34:01.893347",
       "world_info": {
         "exporter_path": null,
         "game_logic_path": null,
@@ -1259,7 +1259,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 9.11,
+        "processing_time_seconds": 9.27,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -1281,7 +1281,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.93,
+        "processing_time_seconds": 5.95,
         "success": true,
         "total_players_tested": 25
       },
@@ -1294,7 +1294,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Hylics 2.yaml",
-      "timestamp": "2025-11-29T00:55:40.679507",
+      "timestamp": "2025-11-28T05:34:19.380404",
       "world_info": {
         "exporter_path": "exporter/games/hylics2.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/hylics2/hylics2Logic.js",
@@ -1311,7 +1311,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 8.65,
+        "processing_time_seconds": 8.73,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1346,7 +1346,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Inscryption.yaml",
-      "timestamp": "2025-11-29T00:55:55.885970",
+      "timestamp": "2025-11-28T05:34:34.768316",
       "world_info": {
         "exporter_path": "exporter/games/inscryption.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js",
@@ -1363,7 +1363,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 10.51,
+        "processing_time_seconds": 10.58,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1385,7 +1385,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.93,
+        "processing_time_seconds": 5.95,
         "success": true,
         "total_players_tested": 27
       },
@@ -1398,7 +1398,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Jak and Daxter The Precursor Legacy.yaml",
-      "timestamp": "2025-11-29T00:56:10.642573",
+      "timestamp": "2025-11-28T05:34:49.616429",
       "world_info": {
         "exporter_path": "exporter/games/jakanddaxter.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/jakanddaxter/jakanddaxterLogic.js",
@@ -1415,7 +1415,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 12.28,
+        "processing_time_seconds": 12.33,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1450,7 +1450,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Kingdom Hearts 2.yaml",
-      "timestamp": "2025-11-29T00:56:27.267667",
+      "timestamp": "2025-11-28T05:35:06.334282",
       "world_info": {
         "exporter_path": "exporter/games/kh2.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
@@ -1467,7 +1467,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 16.09,
+        "processing_time_seconds": 16.6,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1489,7 +1489,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.92,
+        "processing_time_seconds": 5.93,
         "success": true,
         "total_players_tested": 29
       },
@@ -1502,7 +1502,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Kingdom Hearts.yaml",
-      "timestamp": "2025-11-29T00:56:45.664220",
+      "timestamp": "2025-11-28T05:35:24.791007",
       "world_info": {
         "exporter_path": "exporter/games/kh1.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
@@ -1519,7 +1519,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 18.76,
+        "processing_time_seconds": 18.67,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1541,7 +1541,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.94,
+        "processing_time_seconds": 5.95,
         "success": true,
         "total_players_tested": 30
       },
@@ -1554,7 +1554,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Kirby's Dream Land 3.yaml",
-      "timestamp": "2025-11-29T00:57:07.848900",
+      "timestamp": "2025-11-28T05:35:47.490875",
       "world_info": {
         "exporter_path": "exporter/games/kdl3.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js",
@@ -1571,7 +1571,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 18.69,
+        "processing_time_seconds": 18.83,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1593,7 +1593,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.93,
+        "processing_time_seconds": 5.94,
         "success": true,
         "total_players_tested": 31
       },
@@ -1606,7 +1606,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Landstalker - The Treasures of King Nole.yaml",
-      "timestamp": "2025-11-29T00:57:32.727335",
+      "timestamp": "2025-11-28T05:36:12.286541",
       "world_info": {
         "exporter_path": "exporter/games/landstalker.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js",
@@ -1623,7 +1623,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 19.81,
+        "processing_time_seconds": 20.09,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1645,7 +1645,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.94,
+        "processing_time_seconds": 5.96,
         "success": true,
         "total_players_tested": 32
       },
@@ -1658,7 +1658,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Lingo.yaml",
-      "timestamp": "2025-11-29T00:57:57.518165",
+      "timestamp": "2025-11-28T05:36:37.230180",
       "world_info": {
         "exporter_path": "exporter/games/lingo.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
@@ -1675,7 +1675,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 23.92,
+        "processing_time_seconds": 24.13,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1697,7 +1697,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.97,
+        "processing_time_seconds": 5.95,
         "success": true,
         "total_players_tested": 33
       },
@@ -1710,7 +1710,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Links Awakening DX.yaml",
-      "timestamp": "2025-11-29T00:58:23.456299",
+      "timestamp": "2025-11-28T05:37:03.473832",
       "world_info": {
         "exporter_path": "exporter/games/ladx.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
@@ -1727,7 +1727,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 22.65,
+        "processing_time_seconds": 22.72,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -1749,7 +1749,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.92,
+        "processing_time_seconds": 5.96,
         "success": true,
         "total_players_tested": 34
       },
@@ -1762,7 +1762,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Lufia II Ancient Cave.yaml",
-      "timestamp": "2025-11-29T00:58:53.528589",
+      "timestamp": "2025-11-28T05:37:33.733487",
       "world_info": {
         "exporter_path": null,
         "game_logic_path": null,
@@ -1779,7 +1779,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 23.35,
+        "processing_time_seconds": 23.82,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -1814,7 +1814,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Mario & Luigi Superstar Saga.yaml",
-      "timestamp": "2025-11-29T00:59:22.279526",
+      "timestamp": "2025-11-28T05:38:02.592582",
       "world_info": {
         "exporter_path": "exporter/games/mlss.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/mlss/mlssLogic.js",
@@ -1831,7 +1831,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 21.87,
+        "processing_time_seconds": 22.03,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -1853,7 +1853,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.95,
+        "processing_time_seconds": 5.97,
         "success": true,
         "total_players_tested": 36
       },
@@ -1866,7 +1866,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "MathProof2p2e4.yaml",
-      "timestamp": "2025-11-29T00:59:51.742463",
+      "timestamp": "2025-11-28T05:38:32.530477",
       "world_info": {
         "exporter_path": null,
         "game_logic_path": null,
@@ -1883,7 +1883,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 18.24,
+        "processing_time_seconds": 18.23,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -1905,7 +1905,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.95,
+        "processing_time_seconds": 5.94,
         "success": true,
         "total_players_tested": 37
       },
@@ -1918,7 +1918,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Mega Man 2.yaml",
-      "timestamp": "2025-11-29T01:00:19.739731",
+      "timestamp": "2025-11-28T05:39:00.702686",
       "world_info": {
         "exporter_path": "exporter/games/mm2.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/mm2/mm2Logic.js",
@@ -1935,7 +1935,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 14.25,
+        "processing_time_seconds": 14.18,
         "return_code": 0,
         "success": true,
         "warning_count": 4
@@ -1957,7 +1957,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.93,
+        "processing_time_seconds": 5.96,
         "success": true,
         "total_players_tested": 38
       },
@@ -1970,7 +1970,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "MegaMan Battle Network 3.yaml",
-      "timestamp": "2025-11-29T01:00:44.106207",
+      "timestamp": "2025-11-28T05:39:25.043753",
       "world_info": {
         "exporter_path": "exporter/games/mmbn3.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js",
@@ -1987,7 +1987,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 11.29,
+        "processing_time_seconds": 11.12,
         "return_code": 0,
         "success": true,
         "warning_count": 4
@@ -2009,7 +2009,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.99,
+        "processing_time_seconds": 5.93,
         "success": true,
         "total_players_tested": 39
       },
@@ -2022,7 +2022,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Meritous.yaml",
-      "timestamp": "2025-11-29T01:01:04.461659",
+      "timestamp": "2025-11-28T05:39:45.353803",
       "world_info": {
         "exporter_path": null,
         "game_logic_path": null,
@@ -2039,7 +2039,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 14.22,
+        "processing_time_seconds": 14.58,
         "return_code": 0,
         "success": true,
         "warning_count": 4
@@ -2061,7 +2061,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.99,
+        "processing_time_seconds": 5.98,
         "success": true,
         "total_players_tested": 40
       },
@@ -2074,7 +2074,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Metamath.yaml",
-      "timestamp": "2025-11-29T01:01:21.922525",
+      "timestamp": "2025-11-28T05:40:02.582997",
       "world_info": {
         "exporter_path": "exporter/games/metamath.py",
         "game_logic_path": null,
@@ -2091,7 +2091,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 12.47,
+        "processing_time_seconds": 12.53,
         "return_code": 0,
         "success": true,
         "warning_count": 4
@@ -2113,7 +2113,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.95,
+        "processing_time_seconds": 5.97,
         "success": true,
         "total_players_tested": 41
       },
@@ -2126,7 +2126,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Muse Dash.yaml",
-      "timestamp": "2025-11-29T01:01:42.302274",
+      "timestamp": "2025-11-28T05:40:23.312305",
       "world_info": {
         "exporter_path": null,
         "game_logic_path": null,
@@ -2143,7 +2143,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 11.52,
+        "processing_time_seconds": 11.48,
         "return_code": 0,
         "success": true,
         "warning_count": 4
@@ -2165,7 +2165,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 6.01,
+        "processing_time_seconds": 5.95,
         "success": true,
         "total_players_tested": 42
       },
@@ -2178,7 +2178,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Noita.yaml",
-      "timestamp": "2025-11-29T01:02:00.890061",
+      "timestamp": "2025-11-28T05:40:41.986411",
       "world_info": {
         "exporter_path": null,
         "game_logic_path": null,
@@ -2195,7 +2195,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 12.85,
+        "processing_time_seconds": 12.98,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -2217,7 +2217,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.94,
+        "processing_time_seconds": 5.96,
         "success": true,
         "total_players_tested": 43
       },
@@ -2230,7 +2230,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Old School Runescape.yaml",
-      "timestamp": "2025-11-29T01:02:18.600666",
+      "timestamp": "2025-11-28T05:40:59.598867",
       "world_info": {
         "exporter_path": "exporter/games/osrs.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/osrs/osrsLogic.js",
@@ -2247,7 +2247,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 13.75,
+        "processing_time_seconds": 13.99,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -2269,7 +2269,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.94,
+        "processing_time_seconds": 5.96,
         "success": true,
         "total_players_tested": 44
       },
@@ -2282,7 +2282,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Overcooked! 2.yaml",
-      "timestamp": "2025-11-29T01:02:37.568898",
+      "timestamp": "2025-11-28T05:41:18.717645",
       "world_info": {
         "exporter_path": "exporter/games/overcooked2.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js",
@@ -2299,7 +2299,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 14.06,
+        "processing_time_seconds": 14.12,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -2321,7 +2321,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.98,
+        "processing_time_seconds": 5.96,
         "success": true,
         "total_players_tested": 45
       },
@@ -2334,7 +2334,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Paint.yaml",
-      "timestamp": "2025-11-29T01:02:57.417346",
+      "timestamp": "2025-11-28T05:41:38.833881",
       "world_info": {
         "exporter_path": "exporter/games/paint.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/paint/paintLogic.js",
@@ -2351,7 +2351,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 13.02,
+        "processing_time_seconds": 13.17,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -2373,7 +2373,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.95,
+        "processing_time_seconds": 5.97,
         "success": true,
         "total_players_tested": 46
       },
@@ -2386,7 +2386,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Pokemon Emerald.yaml",
-      "timestamp": "2025-11-29T01:03:17.655716",
+      "timestamp": "2025-11-28T05:41:59.117480",
       "world_info": {
         "exporter_path": "exporter/games/pokemon_emerald.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/pokemon_emerald/pokemon_emeraldLogic.js",
@@ -2403,7 +2403,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 25.02,
+        "processing_time_seconds": 25.72,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -2425,7 +2425,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.93,
+        "processing_time_seconds": 5.95,
         "success": true,
         "total_players_tested": 47
       },
@@ -2438,7 +2438,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Pokemon Red and Blue.yaml",
-      "timestamp": "2025-11-29T01:03:36.817462",
+      "timestamp": "2025-11-28T05:42:18.455121",
       "world_info": {
         "exporter_path": "exporter/games/pokemon_rb.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js",
@@ -2455,7 +2455,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 25.63,
+        "processing_time_seconds": 26.63,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -2477,7 +2477,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.93,
+        "processing_time_seconds": 5.98,
         "success": true,
         "total_players_tested": 48
       },
@@ -2490,7 +2490,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Raft.yaml",
-      "timestamp": "2025-11-29T01:04:07.929348",
+      "timestamp": "2025-11-28T05:42:50.287670",
       "world_info": {
         "exporter_path": "exporter/games/raft.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/raft/raftLogic.js",
@@ -2507,7 +2507,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 25.82,
+        "processing_time_seconds": 25.59,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2529,7 +2529,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.98,
+        "processing_time_seconds": 5.99,
         "success": true,
         "total_players_tested": 49
       },
@@ -2542,7 +2542,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Risk of Rain 2.yaml",
-      "timestamp": "2025-11-29T01:04:39.665234",
+      "timestamp": "2025-11-28T05:43:23.077010",
       "world_info": {
         "exporter_path": null,
         "game_logic_path": null,
@@ -2576,7 +2576,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "SMZ3.yaml",
-      "timestamp": "2025-11-29T01:05:11.624100",
+      "timestamp": "2025-11-28T05:43:54.816233",
       "world_info": {
         "exporter_path": "exporter/games/smz3.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
@@ -2593,7 +2593,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 25.05,
+        "processing_time_seconds": 25.77,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2615,7 +2615,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.94,
+        "processing_time_seconds": 5.98,
         "success": true,
         "total_players_tested": 50
       },
@@ -2628,7 +2628,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Saving Princess.yaml",
-      "timestamp": "2025-11-29T01:05:11.800335",
+      "timestamp": "2025-11-28T05:43:54.990582",
       "world_info": {
         "exporter_path": "exporter/games/saving_princess.py",
         "game_logic_path": null,
@@ -2645,7 +2645,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 29.13,
+        "processing_time_seconds": 29.56,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -2680,7 +2680,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Secret of Evermore.yaml",
-      "timestamp": "2025-11-29T01:05:42.969422",
+      "timestamp": "2025-11-28T05:44:26.930990",
       "world_info": {
         "exporter_path": "exporter/games/soe.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/soe/soeLogic.js",
@@ -2697,7 +2697,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 27.19,
+        "processing_time_seconds": 27.61,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -2719,7 +2719,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.94,
+        "processing_time_seconds": 5.98,
         "success": true,
         "total_players_tested": 52
       },
@@ -2732,7 +2732,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Shivers.yaml",
-      "timestamp": "2025-11-29T01:06:18.218739",
+      "timestamp": "2025-11-28T05:45:02.616322",
       "world_info": {
         "exporter_path": "exporter/games/shivers.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/shivers/shiversLogic.js",
@@ -2749,7 +2749,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 26.75,
+        "processing_time_seconds": 26.88,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -2771,7 +2771,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 6.0,
+        "processing_time_seconds": 6.01,
         "success": true,
         "total_players_tested": 53
       },
@@ -2784,7 +2784,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Sonic Adventure 2 Battle.yaml",
-      "timestamp": "2025-11-29T01:06:51.563424",
+      "timestamp": "2025-11-28T05:45:36.418972",
       "world_info": {
         "exporter_path": "exporter/games/sa2b.py",
         "game_logic_path": null,
@@ -2801,7 +2801,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 37.18,
+        "processing_time_seconds": 37.45,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -2823,7 +2823,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 6.01,
+        "processing_time_seconds": 5.95,
         "success": true,
         "total_players_tested": 54
       },
@@ -2836,7 +2836,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Starcraft 2.yaml",
-      "timestamp": "2025-11-29T01:07:24.505515",
+      "timestamp": "2025-11-28T05:46:09.503956",
       "world_info": {
         "exporter_path": "exporter/games/sc2.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -2853,7 +2853,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 37.08,
+        "processing_time_seconds": 38.16,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -2875,7 +2875,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.96,
+        "processing_time_seconds": 5.97,
         "success": true,
         "total_players_tested": 55
       },
@@ -2888,7 +2888,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Stardew Valley.yaml",
-      "timestamp": "2025-11-29T01:08:07.895337",
+      "timestamp": "2025-11-28T05:46:53.107132",
       "world_info": {
         "exporter_path": "exporter/games/stardew_valley.py",
         "game_logic_path": null,
@@ -2905,7 +2905,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 24.17,
+        "processing_time_seconds": 24.34,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -2927,7 +2927,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.93,
+        "processing_time_seconds": 5.97,
         "success": true,
         "total_players_tested": 56
       },
@@ -2940,7 +2940,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Subnautica.yaml",
-      "timestamp": "2025-11-29T01:08:51.107483",
+      "timestamp": "2025-11-28T05:47:37.406172",
       "world_info": {
         "exporter_path": "exporter/games/subnautica.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/subnautica/subnauticaLogic.js",
@@ -2957,7 +2957,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 24.94,
+        "processing_time_seconds": 25.1,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -2979,7 +2979,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.92,
+        "processing_time_seconds": 5.97,
         "success": true,
         "total_players_tested": 57
       },
@@ -2992,7 +2992,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Super Mario 64.yaml",
-      "timestamp": "2025-11-29T01:09:21.386254",
+      "timestamp": "2025-11-28T05:48:07.899420",
       "world_info": {
         "exporter_path": "exporter/games/sm64ex.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js",
@@ -3009,7 +3009,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 23.91,
+        "processing_time_seconds": 24.11,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -3031,7 +3031,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.95,
+        "processing_time_seconds": 5.97,
         "success": true,
         "total_players_tested": 58
       },
@@ -3044,7 +3044,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Super Mario Land 2.yaml",
-      "timestamp": "2025-11-29T01:09:52.422895",
+      "timestamp": "2025-11-28T05:48:39.139190",
       "world_info": {
         "exporter_path": "exporter/games/marioland2.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/marioland2/marioland2Logic.js",
@@ -3061,7 +3061,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 25.99,
+        "processing_time_seconds": 26.12,
         "return_code": 0,
         "success": true,
         "warning_count": 4
@@ -3083,7 +3083,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.93,
+        "processing_time_seconds": 5.97,
         "success": true,
         "total_players_tested": 59
       },
@@ -3096,7 +3096,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Super Mario World.yaml",
-      "timestamp": "2025-11-29T01:10:22.465694",
+      "timestamp": "2025-11-28T05:49:09.402760",
       "world_info": {
         "exporter_path": "exporter/games/smw.py",
         "game_logic_path": null,
@@ -3113,7 +3113,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 35.54,
+        "processing_time_seconds": 36.11,
         "return_code": 0,
         "success": true,
         "warning_count": 4
@@ -3135,7 +3135,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.92,
+        "processing_time_seconds": 5.96,
         "success": true,
         "total_players_tested": 60
       },
@@ -3148,7 +3148,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Super Metroid.yaml",
-      "timestamp": "2025-11-29T01:10:54.579282",
+      "timestamp": "2025-11-28T05:49:41.677126",
       "world_info": {
         "exporter_path": "exporter/games/sm.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
@@ -3165,7 +3165,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 39.03,
+        "processing_time_seconds": 40.01,
         "return_code": 0,
         "success": true,
         "warning_count": 4
@@ -3200,7 +3200,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "TUNIC.yaml",
-      "timestamp": "2025-11-29T01:11:36.216271",
+      "timestamp": "2025-11-28T05:50:23.919738",
       "world_info": {
         "exporter_path": "exporter/games/tunic.py",
         "game_logic_path": null,
@@ -3217,7 +3217,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 30.1,
+        "processing_time_seconds": 31.24,
         "return_code": 0,
         "success": true,
         "warning_count": 4
@@ -3239,7 +3239,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.95,
+        "processing_time_seconds": 6.01,
         "success": true,
         "total_players_tested": 62
       },
@@ -3252,7 +3252,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Terraria.yaml",
-      "timestamp": "2025-11-29T01:12:21.396947",
+      "timestamp": "2025-11-28T05:51:10.089205",
       "world_info": {
         "exporter_path": "exporter/games/terraria.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/terraria/terrariaLogic.js",
@@ -3269,7 +3269,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 31.36,
+        "processing_time_seconds": 32.32,
         "return_code": 0,
         "success": true,
         "warning_count": 6
@@ -3291,7 +3291,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.95,
+        "processing_time_seconds": 5.93,
         "success": true,
         "total_players_tested": 63
       },
@@ -3304,7 +3304,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "The Legend of Zelda.yaml",
-      "timestamp": "2025-11-29T01:12:57.624368",
+      "timestamp": "2025-11-28T05:51:47.518567",
       "world_info": {
         "exporter_path": "exporter/games/tloz.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/tloz/tlozLogic.js",
@@ -3321,7 +3321,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 32.25,
+        "processing_time_seconds": 33.12,
         "return_code": 0,
         "success": true,
         "warning_count": 6
@@ -3343,7 +3343,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.94,
+        "processing_time_seconds": 5.96,
         "success": true,
         "total_players_tested": 64
       },
@@ -3356,7 +3356,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "The Messenger.yaml",
-      "timestamp": "2025-11-29T01:13:35.100858",
+      "timestamp": "2025-11-28T05:52:25.943465",
       "world_info": {
         "exporter_path": "exporter/games/messenger.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/messenger/messengerLogic.js",
@@ -3373,7 +3373,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 32.98,
+        "processing_time_seconds": 33.36,
         "return_code": 0,
         "success": true,
         "warning_count": 6
@@ -3395,7 +3395,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.94,
+        "processing_time_seconds": 5.96,
         "success": true,
         "total_players_tested": 65
       },
@@ -3408,7 +3408,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "The Wind Waker.yaml",
-      "timestamp": "2025-11-29T01:14:13.474640",
+      "timestamp": "2025-11-28T05:53:05.195082",
       "world_info": {
         "exporter_path": "exporter/games/tww.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/tww/twwLogic.js",
@@ -3425,7 +3425,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 25.86,
+        "processing_time_seconds": 26.23,
         "return_code": 0,
         "success": true,
         "warning_count": 6
@@ -3460,7 +3460,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "The Witness.yaml",
-      "timestamp": "2025-11-29T01:14:52.573074",
+      "timestamp": "2025-11-28T05:53:44.708672",
       "world_info": {
         "exporter_path": "exporter/games/witness.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/witness/witnessLogic.js",
@@ -3477,7 +3477,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 26.69,
+        "processing_time_seconds": 27.01,
         "return_code": 0,
         "success": true,
         "warning_count": 6
@@ -3499,7 +3499,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.95,
+        "processing_time_seconds": 5.97,
         "success": true,
         "total_players_tested": 67
       },
@@ -3512,7 +3512,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Timespinner.yaml",
-      "timestamp": "2025-11-29T01:15:24.590619",
+      "timestamp": "2025-11-28T05:54:17.087158",
       "world_info": {
         "exporter_path": "exporter/games/timespinner.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/timespinner/timespinnerLogic.js",
@@ -3529,7 +3529,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 23.79,
+        "processing_time_seconds": 24.28,
         "return_code": 0,
         "success": true,
         "warning_count": 4
@@ -3551,7 +3551,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.95,
+        "processing_time_seconds": 5.98,
         "success": true,
         "total_players_tested": 68
       },
@@ -3564,7 +3564,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Undertale.yaml",
-      "timestamp": "2025-11-29T01:15:57.414957",
+      "timestamp": "2025-11-28T05:54:50.250916",
       "world_info": {
         "exporter_path": "exporter/games/undertale.py",
         "game_logic_path": null,
@@ -3581,7 +3581,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 20.05,
+        "processing_time_seconds": 20.43,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -3603,7 +3603,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.94,
+        "processing_time_seconds": 6.02,
         "success": true,
         "total_players_tested": 69
       },
@@ -3616,7 +3616,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "VVVVVV.yaml",
-      "timestamp": "2025-11-29T01:16:27.326452",
+      "timestamp": "2025-11-28T05:55:20.691778",
       "world_info": {
         "exporter_path": "exporter/games/v6.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/v6/v6Logic.js",
@@ -3633,7 +3633,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 13.76,
+        "processing_time_seconds": 14.24,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -3655,7 +3655,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.96,
+        "processing_time_seconds": 6.05,
         "success": true,
         "total_players_tested": 70
       },
@@ -3668,7 +3668,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Wargroove.yaml",
-      "timestamp": "2025-11-29T01:16:53.473607",
+      "timestamp": "2025-11-28T05:55:47.306828",
       "world_info": {
         "exporter_path": "exporter/games/wargroove.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/wargroove/wargrooveLogic.js",
@@ -3685,7 +3685,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 12.94,
+        "processing_time_seconds": 13.55,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -3707,7 +3707,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.92,
+        "processing_time_seconds": 6.03,
         "success": true,
         "total_players_tested": 71
       },
@@ -3720,7 +3720,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "WebDevJourney.yaml",
-      "timestamp": "2025-11-29T01:17:13.371210",
+      "timestamp": "2025-11-28T05:56:07.776198",
       "world_info": {
         "exporter_path": null,
         "game_logic_path": null,
@@ -3737,7 +3737,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 13.6,
+        "processing_time_seconds": 14.27,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -3759,7 +3759,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.95,
+        "processing_time_seconds": 6.02,
         "success": true,
         "total_players_tested": 72
       },
@@ -3772,7 +3772,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Yacht Dice.yaml",
-      "timestamp": "2025-11-29T01:17:32.411055",
+      "timestamp": "2025-11-28T05:56:27.543555",
       "world_info": {
         "exporter_path": "exporter/games/yachtdice.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js",
@@ -3789,7 +3789,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 13.36,
+        "processing_time_seconds": 14.16,
         "return_code": 0,
         "success": true,
         "warning_count": 4
@@ -3811,7 +3811,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.93,
+        "processing_time_seconds": 6.02,
         "success": true,
         "total_players_tested": 73
       },
@@ -3824,7 +3824,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Yoshi's Island.yaml",
-      "timestamp": "2025-11-29T01:17:52.142307",
+      "timestamp": "2025-11-28T05:56:48.017527",
       "world_info": {
         "exporter_path": "exporter/games/yoshisisland.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/yoshisisland/yoshisislandLogic.js",
@@ -3841,7 +3841,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 17.14,
+        "processing_time_seconds": 17.82,
         "return_code": 0,
         "success": true,
         "warning_count": 4
@@ -3863,7 +3863,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.93,
+        "processing_time_seconds": 6.05,
         "success": true,
         "total_players_tested": 74
       },
@@ -3876,7 +3876,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Yu-Gi-Oh! 2006.yaml",
-      "timestamp": "2025-11-29T01:18:11.607078",
+      "timestamp": "2025-11-28T05:57:08.377282",
       "world_info": {
         "exporter_path": "exporter/games/yugioh06.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/yugioh06/yugioh06Logic.js",
@@ -3893,7 +3893,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 16.27,
+        "processing_time_seconds": 16.86,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -3915,7 +3915,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 5.97,
+        "processing_time_seconds": 6.03,
         "success": true,
         "total_players_tested": 75
       },
@@ -3928,7 +3928,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "shapez.yaml",
-      "timestamp": "2025-11-29T01:18:34.859712",
+      "timestamp": "2025-11-28T05:57:32.430089",
       "world_info": {
         "exporter_path": "exporter/games/shapez.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/shapez/shapezLogic.js",

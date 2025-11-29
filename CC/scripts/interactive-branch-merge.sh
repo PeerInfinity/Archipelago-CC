@@ -311,7 +311,9 @@ perform_merge_only() {
             case "$conflict_choice" in
                 2)
                     echo -e "${YELLOW}Resolving conflicts by accepting theirs...${NC}"
-                    git diff --name-only --diff-filter=U | while read -r file; do
+                    # Collect conflict files first to avoid subshell/pipe issues with git index.lock
+                    mapfile -t conflict_files < <(git diff --name-only --diff-filter=U)
+                    for file in "${conflict_files[@]}"; do
                         git checkout --theirs "$file"
                         git add "$file"
                         echo "  Resolved: $file (accepted theirs)"
@@ -320,7 +322,9 @@ perform_merge_only() {
                     ;;
                 3)
                     echo -e "${YELLOW}Resolving conflicts by accepting ours...${NC}"
-                    git diff --name-only --diff-filter=U | while read -r file; do
+                    # Collect conflict files first to avoid subshell/pipe issues with git index.lock
+                    mapfile -t conflict_files < <(git diff --name-only --diff-filter=U)
+                    for file in "${conflict_files[@]}"; do
                         git checkout --ours "$file"
                         git add "$file"
                         echo "  Resolved: $file (kept ours)"
@@ -499,7 +503,9 @@ fetch_and_merge() {
             case "$conflict_choice" in
                 2)
                     echo -e "${YELLOW}Resolving conflicts by accepting theirs...${NC}"
-                    git diff --name-only --diff-filter=U | while read -r file; do
+                    # Collect conflict files first to avoid subshell/pipe issues with git index.lock
+                    mapfile -t conflict_files < <(git diff --name-only --diff-filter=U)
+                    for file in "${conflict_files[@]}"; do
                         git checkout --theirs "$file"
                         git add "$file"
                         echo "  Resolved: $file (accepted theirs)"
@@ -508,7 +514,9 @@ fetch_and_merge() {
                     ;;
                 3)
                     echo -e "${YELLOW}Resolving conflicts by accepting ours...${NC}"
-                    git diff --name-only --diff-filter=U | while read -r file; do
+                    # Collect conflict files first to avoid subshell/pipe issues with git index.lock
+                    mapfile -t conflict_files < <(git diff --name-only --diff-filter=U)
+                    for file in "${conflict_files[@]}"; do
                         git checkout --ours "$file"
                         git add "$file"
                         echo "  Resolved: $file (kept ours)"

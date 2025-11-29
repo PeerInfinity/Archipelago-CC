@@ -1,14 +1,14 @@
 # Module Info Status Report
 
-Generated: 2025-09-16T17:44:30.615Z
+Generated: 2025-11-29T07:18:22.949Z
 
 ## Summary
 
-- Total modules scanned: 47
+- Total modules scanned: 46
 - Modules with moduleInfo: 42
 - Modules without moduleInfo: 0
-- Modules with componentType (panels): 26
-- Modules without componentType (non-panels): 16
+- Modules with componentType (panels): 27
+- Modules without componentType (non-panels): 15
 
 ## Panel Modules (with componentType)
 
@@ -34,6 +34,7 @@ Generated: 2025-09-16T17:44:30.615Z
 | regionGraph | regionGraph | Region Graph | regionGraphPanel | 🌐 | Middle | Interactive visualization o... | ❌ | ❌ | ❌ |
 | regions | regions | Regions | regionsPanel | 🗺️ | Right | Regions display panel. | ❌ | ❌ | ❌ |
 | settings | settings | Settings | settingsPanel | ⚙️ | Middle | Settings editor panel. | ❌ | ❌ | ❌ |
+| spoilerChecklist | spoilerChecklist | Spoiler Checklist | spoilerChecklistPanel | 📋 | Middle | Displays sphere log data as... | ❌ | ❌ | ❌ |
 | tests | tests | Tests | testsPanel | ✅ | Left | Automated application featu... | ❌ | ❌ | ❌ |
 | testSpoilers | testSpoilers | Test Spoilers | testSpoilersPanel | 🔍 | Middle | Provides UI for loading and... | ❌ | ❌ | ❌ |
 | textAdventure | textAdventure | Text Adventure | textAdventurePanel | 📖 | Right | Text Adventure display panel. | ❌ | ❌ | ❌ |
@@ -54,9 +55,8 @@ Generated: 2025-09-16T17:44:30.615Z
 | pathAnalyzer | pathAnalyzer | ❌ | ❌ | ❌ | ❌ | Path analysis logic and UI ... | ✓ | ✓ | ✓ |
 | playerState | playerState | ❌ | ❌ | ❌ | ❌ | Manages player state includ... | ❌ | ❌ | ❌ |
 | progressBar | progressBar | ❌ | ❌ | ❌ | ❌ | Progress bar component for ... | ❌ | ❌ | ❌ |
-| regionGraph-new | regionGraph-new | ❌ | ❌ | ❌ | ❌ | Interactive visualization o... | ❌ | ❌ | ❌ |
-| regionGraph-old | regionGraph-old | ❌ | ❌ | ❌ | ❌ | Interactive visualization o... | ❌ | ❌ | ❌ |
 | settings-jsoneditor | settings-jsoneditor | ❌ | ❌ | ❌ | ❌ | Settings editor panel. | ❌ | ❌ | ❌ |
+| sphereState | sphereState | ❌ | ❌ | ❌ | ❌ | Manages sphere log data and... | ❌ | ❌ | ❌ |
 | stateManager | stateManager | ❌ | ❌ | ❌ | ❌ | Core game state management ... | ❌ | ❌ | ❌ |
 | testModule | testModule | ❌ | ❌ | ❌ | ❌ | A simple panel loaded dynam... | ❌ | ❌ | ❌ |
 | timer | timer | ❌ | ❌ | ❌ | ❌ | Manages the location check ... | ❌ | ❌ | ❌ |
@@ -72,7 +72,7 @@ Generated: 2025-09-16T17:44:30.615Z
 
 The following modules do not have moduleInfo exported:
 
-None - all modules have moduleInfo.
+None - all modules have moduleInfo!
 
 ## Recommendations
 
@@ -91,6 +91,6 @@ Based on the analysis, consider adding the following fields to modules that are 
 | Column | Count | Modules |
 |--------|-------|---------|
 | Left (1) | 5 | events, inventory, json, modules, tests |
-| Middle (2) | 13 | client, editor, iframeManagerPanel, metaGamePanel, pathAnalyzerPanel, playerStatePanel, presets, progressBarPanel, regionGraph, settings, testSpoilers, timerPanel, windowManagerPanel |
+| Middle (2) | 14 | client, editor, iframeManagerPanel, metaGamePanel, pathAnalyzerPanel, playerStatePanel, presets, progressBarPanel, regionGraph, settings, spoilerChecklist, testSpoilers, timerPanel, windowManagerPanel |
 | Right (3) | 8 | dungeons, exits, iframePanel, locations, loops, regions, textAdventure, windowPanel |
 | Unspecified | 0 | None |
