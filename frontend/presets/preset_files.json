@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "test_data_updated": "2025-11-27T19:57:09.983252",
+    "test_data_updated": "2025-11-29T08:48:29.317237",
     "test_data_source": {
       "average_time_per_template_seconds": 18.6,
       "batch_processing_time_minutes": 24.6,
@@ -2088,7 +2088,7 @@
       }
     }
   },
-  "donkey_kong_country_3": {
+  "dkc3": {
     "name": "Donkey Kong Country 3",
     "folders": {
       "AP_14089154938208861744": {
@@ -2106,30 +2106,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
-      }
-    },
-    "test_result": {
-      "status": "passed",
-      "generation_errors": 0,
-      "generation_warnings": 2,
-      "sphere_reached": 3.1,
-      "max_spheres": 3.1,
-      "progress_percent": 100.0,
-      "has_custom_exporter": true,
-      "has_custom_game_logic": false,
-      "timestamp": "2025-10-09T23:32:27.457810",
-      "processing_time": {
-        "generation_seconds": 6.18,
-        "spoiler_test_seconds": 8.23,
-        "total_seconds": 14.41
-      },
-      "seed_range_info": {
-        "seed_range": "1-10",
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "consecutive_passes_before_failure": 10,
-        "first_failure_seed": null,
-        "total_seeds_tested": 10
       }
     },
     "test_results": {
@@ -2674,7 +2650,7 @@
       }
     }
   },
-  "jak_and_daxter__the_precursor_legacy": {
+  "jakanddaxter": {
     "name": "Jak and Daxter: The Precursor Legacy",
     "folders": {
       "AP_14089154938208861744": {
@@ -3114,7 +3090,7 @@
       }
     }
   },
-  "links_awakening_dx": {
+  "ladx": {
     "name": "Links Awakening DX",
     "folders": {
       "AP_14089154938208861744": {
@@ -3133,30 +3109,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
-      }
-    },
-    "test_result": {
-      "status": "failed",
-      "generation_errors": 0,
-      "generation_warnings": 0,
-      "sphere_reached": 0.0,
-      "max_spheres": 14.1,
-      "progress_percent": 0.0,
-      "has_custom_exporter": false,
-      "has_custom_game_logic": false,
-      "timestamp": "2025-10-09T23:38:28.524253",
-      "processing_time": {
-        "generation_seconds": 7.36,
-        "spoiler_test_seconds": 5.06,
-        "total_seconds": 12.42
-      },
-      "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "consecutive_passes_before_failure": 0,
-        "first_failure_seed": 1,
-        "total_seeds_tested": 1
       }
     },
     "test_results": {
@@ -4374,11 +4326,11 @@
         "seed_range": "1-10"
       },
       "full_spoiler": {
-        "passed": false,
-        "seeds_passed": 4,
-        "seeds_failed": 6,
+        "passed": true,
+        "seeds_passed": 10,
+        "seeds_failed": 0,
         "total_seeds": 10,
-        "first_failure_seed": 3,
+        "first_failure_seed": null,
         "seed_range": "1-10"
       },
       "multiclient": {
@@ -4474,7 +4426,7 @@
       }
     }
   },
-  "secret_of_evermore": {
+  "soe": {
     "name": "Secret of Evermore",
     "folders": {
       "AP_14089154938208861744": {
@@ -4492,30 +4444,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
-      }
-    },
-    "test_result": {
-      "status": "failed",
-      "generation_errors": 339,
-      "generation_warnings": 2,
-      "sphere_reached": 0.0,
-      "max_spheres": 5.1,
-      "progress_percent": 0.0,
-      "has_custom_exporter": false,
-      "has_custom_game_logic": false,
-      "timestamp": "2025-10-09T23:44:49.725991",
-      "processing_time": {
-        "generation_seconds": 6.62,
-        "spoiler_test_seconds": 5.65,
-        "total_seconds": 12.27
-      },
-      "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "consecutive_passes_before_failure": 0,
-        "first_failure_seed": 1,
-        "total_seeds_tested": 1
       }
     },
     "test_results": {
@@ -4628,7 +4556,7 @@
       }
     }
   },
-  "sonic_adventure_2_battle": {
+  "sa2b": {
     "name": "Sonic Adventure 2 Battle",
     "folders": {
       "AP_14089154938208861744": {
@@ -4646,30 +4574,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
-      }
-    },
-    "test_result": {
-      "status": "passed",
-      "generation_errors": 0,
-      "generation_warnings": 0,
-      "sphere_reached": 7.1,
-      "max_spheres": 7.1,
-      "progress_percent": 100.0,
-      "has_custom_exporter": false,
-      "has_custom_game_logic": false,
-      "timestamp": "2025-10-09T23:45:12.452368",
-      "processing_time": {
-        "generation_seconds": 5.76,
-        "spoiler_test_seconds": 10.97,
-        "total_seconds": 16.73
-      },
-      "seed_range_info": {
-        "seed_range": "1-10",
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "consecutive_passes_before_failure": 10,
-        "first_failure_seed": null,
-        "total_seeds_tested": 10
       }
     },
     "test_results": {
@@ -4936,7 +4840,7 @@
       }
     }
   },
-  "super_mario_64": {
+  "sm64ex": {
     "name": "Super Mario 64",
     "folders": {
       "AP_14089154938208861744": {
@@ -4955,30 +4859,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
-      }
-    },
-    "test_result": {
-      "status": "failed",
-      "generation_errors": 2,
-      "generation_warnings": 0,
-      "sphere_reached": 0.1,
-      "max_spheres": 2.41,
-      "progress_percent": 4.1,
-      "has_custom_exporter": false,
-      "has_custom_game_logic": false,
-      "timestamp": "2025-10-09T23:46:31.937385",
-      "processing_time": {
-        "generation_seconds": 5.15,
-        "spoiler_test_seconds": 5.06,
-        "total_seconds": 10.21
-      },
-      "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "consecutive_passes_before_failure": 0,
-        "first_failure_seed": 1,
-        "total_seeds_tested": 1
       }
     },
     "test_results": {
@@ -5092,7 +4972,7 @@
       }
     }
   },
-  "super_mario_world": {
+  "smw": {
     "name": "Super Mario World",
     "folders": {
       "AP_14089154938208861744": {
@@ -5110,30 +4990,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
-      }
-    },
-    "test_result": {
-      "status": "passed",
-      "generation_errors": 0,
-      "generation_warnings": 2,
-      "sphere_reached": 8.1,
-      "max_spheres": 8.1,
-      "progress_percent": 100.0,
-      "has_custom_exporter": false,
-      "has_custom_game_logic": false,
-      "timestamp": "2025-10-09T23:46:50.697110",
-      "processing_time": {
-        "generation_seconds": 8.68,
-        "spoiler_test_seconds": 5.1,
-        "total_seconds": 13.78
-      },
-      "seed_range_info": {
-        "seed_range": "1-10",
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "consecutive_passes_before_failure": 10,
-        "first_failure_seed": null,
-        "total_seeds_tested": 10
       }
     },
     "test_results": {
@@ -5224,11 +5080,11 @@
         "seed_range": "1-10"
       },
       "full_spoiler": {
-        "passed": false,
-        "seeds_passed": 5,
-        "seeds_failed": 5,
+        "passed": true,
+        "seeds_passed": 10,
+        "seeds_failed": 0,
         "total_seeds": 10,
-        "first_failure_seed": 3,
+        "first_failure_seed": null,
         "seed_range": "1-10"
       },
       "multiclient": {
@@ -5239,10 +5095,10 @@
         "total_locations": 109
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
+        "passed": true,
+        "players_passed": 1,
         "players_failed": 0,
-        "total_players": 0,
+        "total_players": 60,
         "first_failure_player": null
       }
     }
@@ -5319,7 +5175,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 60,
+        "total_players": 61,
         "first_failure_player": null
       }
     }
@@ -5396,7 +5252,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 61,
+        "total_players": 62,
         "first_failure_player": null
       }
     }
@@ -5473,7 +5329,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 62,
+        "total_players": 63,
         "first_failure_player": null
       }
     }
@@ -5550,7 +5406,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 63,
+        "total_players": 64,
         "first_failure_player": null
       }
     }
@@ -5628,7 +5484,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 64,
+        "total_players": 65,
         "first_failure_player": null
       }
     }
@@ -5705,7 +5561,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 65,
+        "total_players": 66,
         "first_failure_player": null
       }
     }
@@ -5782,7 +5638,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 66,
+        "total_players": 67,
         "first_failure_player": null
       }
     }
@@ -5859,12 +5715,12 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 67,
+        "total_players": 68,
         "first_failure_player": null
       }
     }
   },
-  "vvvvvv": {
+  "v6": {
     "name": "VVVVVV",
     "folders": {
       "AP_14089154938208861744": {
@@ -5883,30 +5739,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
-      }
-    },
-    "test_result": {
-      "status": "failed",
-      "generation_errors": 0,
-      "generation_warnings": 0,
-      "sphere_reached": 0.4,
-      "max_spheres": 2.4,
-      "progress_percent": 16.7,
-      "has_custom_exporter": false,
-      "has_custom_game_logic": false,
-      "timestamp": "2025-10-09T23:48:43.212549",
-      "processing_time": {
-        "generation_seconds": 2.74,
-        "spoiler_test_seconds": 5.04,
-        "total_seconds": 7.78
-      },
-      "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "consecutive_passes_before_failure": 0,
-        "first_failure_seed": 1,
-        "total_seeds_tested": 1
       }
     },
     "test_results": {
@@ -5937,7 +5769,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 68,
+        "total_players": 69,
         "first_failure_player": null
       }
     }
@@ -6014,12 +5846,12 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 69,
+        "total_players": 70,
         "first_failure_player": null
       }
     }
   },
-  "yacht_dice": {
+  "yachtdice": {
     "name": "Yacht Dice",
     "folders": {
       "AP_14089154938208861744": {
@@ -6037,30 +5869,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
-      }
-    },
-    "test_result": {
-      "status": "failed",
-      "generation_errors": 0,
-      "generation_warnings": 0,
-      "sphere_reached": 0.0,
-      "max_spheres": 17.1,
-      "progress_percent": 0.0,
-      "has_custom_exporter": false,
-      "has_custom_game_logic": false,
-      "timestamp": "2025-10-09T23:49:07.908369",
-      "processing_time": {
-        "generation_seconds": 3.19,
-        "spoiler_test_seconds": 4.95,
-        "total_seconds": 8.14
-      },
-      "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "consecutive_passes_before_failure": 0,
-        "first_failure_seed": 1,
-        "total_seeds_tested": 1
       }
     },
     "test_results": {
@@ -6091,7 +5899,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 71,
+        "total_players": 72,
         "first_failure_player": null
       }
     }
@@ -6168,7 +5976,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 72,
+        "total_players": 73,
         "first_failure_player": null
       }
     }
@@ -6246,7 +6054,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 73,
+        "total_players": 74,
         "first_failure_player": null
       }
     }
@@ -6369,7 +6177,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 74,
+        "total_players": 75,
         "first_failure_player": null
       }
     }
@@ -6696,7 +6504,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 70,
+        "total_players": 71,
         "first_failure_player": null
       }
     }
@@ -6807,219 +6615,6 @@
         "players_failed": 0,
         "total_players": 40,
         "first_failure_player": null
-      }
-    }
-  },
-  "dkc3": {
-    "name": "Donkey Kong Country 3",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Donkey Kong Country 3"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_spheres_log.jsonl"
-        ]
-      }
-    }
-  },
-  "ff1": {
-    "name": "Final Fantasy",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Final Fantasy"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_spheres_log.jsonl"
-        ]
-      }
-    }
-  },
-  "jakanddaxter": {
-    "name": "Jak and Daxter: The Precursor Legacy",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Jak and Daxter: The Precursor Legacy"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_spheres_log.jsonl"
-        ]
-      }
-    }
-  },
-  "ladx": {
-    "name": "Links Awakening DX",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Links Awakening DX"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_P1_Player1.apladx",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_spheres_log.jsonl"
-        ]
-      }
-    }
-  },
-  "soe": {
-    "name": "Secret of Evermore",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Secret of Evermore"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_spheres_log.jsonl"
-        ]
-      }
-    }
-  },
-  "sa2b": {
-    "name": "Sonic Adventure 2 Battle",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Sonic Adventure 2 Battle"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_spheres_log.jsonl"
-        ]
-      }
-    }
-  },
-  "sm64ex": {
-    "name": "Super Mario 64",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Super Mario 64"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_P1_Player1.apsm64ex",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_spheres_log.jsonl"
-        ]
-      }
-    }
-  },
-  "smw": {
-    "name": "Super Mario World",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Super Mario World"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_spheres_log.jsonl"
-        ]
-      }
-    }
-  },
-  "v6": {
-    "name": "VVVVVV",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "VVVVVV"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_P1_Player1.apv6",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_spheres_log.jsonl"
-        ]
-      }
-    }
-  },
-  "yachtdice": {
-    "name": "Yacht Dice",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Yacht Dice"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_spheres_log.jsonl"
-        ]
       }
     }
   }
