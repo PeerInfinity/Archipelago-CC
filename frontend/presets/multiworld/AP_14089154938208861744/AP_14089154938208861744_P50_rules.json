@@ -1,0 +1,7118 @@
+{
+  "schema_version": 3,
+  "game_name": "Risk of Rain 2",
+  "game_directory": "ror2",
+  "archipelago_version": "0.6.4",
+  "generation_seed": 1,
+  "player_names": {
+    "1": "Player1",
+    "2": "Player2",
+    "3": "Player3",
+    "4": "Player4",
+    "5": "Player5",
+    "6": "Player6",
+    "7": "Player7",
+    "8": "Player8",
+    "9": "Player9",
+    "10": "Player10",
+    "11": "Player11",
+    "12": "Player12",
+    "13": "Player13",
+    "14": "Player14",
+    "15": "Player15",
+    "16": "Player16",
+    "17": "Player17",
+    "18": "Player18",
+    "19": "Player19",
+    "20": "Player20",
+    "21": "Player21",
+    "22": "Player22",
+    "23": "Player23",
+    "24": "Player24",
+    "25": "Player25",
+    "26": "Player26",
+    "27": "Player27",
+    "28": "Player28",
+    "29": "Player29",
+    "30": "Player30",
+    "31": "Player31",
+    "32": "Player32",
+    "33": "Player33",
+    "34": "Player34",
+    "35": "Player35",
+    "36": "Player36",
+    "37": "Player37",
+    "38": "Player38",
+    "39": "Player39",
+    "40": "Player40",
+    "41": "Player41",
+    "42": "Player42",
+    "43": "Player43",
+    "44": "Player44",
+    "45": "Player45",
+    "46": "Player46",
+    "47": "Player47",
+    "48": "Player48",
+    "49": "Player49",
+    "50": "Player50",
+    "51": "Player51",
+    "52": "Player52",
+    "53": "Player53",
+    "54": "Player54",
+    "55": "Player55",
+    "56": "Player56",
+    "57": "Player57",
+    "58": "Player58",
+    "59": "Player59",
+    "60": "Player60",
+    "61": "Player61",
+    "62": "Player62",
+    "63": "Player63",
+    "64": "Player64",
+    "65": "Player65",
+    "66": "Player66",
+    "67": "Player67",
+    "68": "Player68",
+    "69": "Player69",
+    "70": "Player70",
+    "71": "Player71",
+    "72": "Player72",
+    "73": "Player73",
+    "74": "Player74",
+    "75": "Player75",
+    "76": "Player76"
+  },
+  "world_classes": {
+    "1": "HatInTimeWorld",
+    "2": "ALTTPWorld",
+    "3": "ShortHikeWorld",
+    "4": "AdventureWorld",
+    "5": "AquariaWorld",
+    "6": "ArchipIDLEWorld",
+    "7": "BlasphemousWorld",
+    "8": "BombRushCyberfunkWorld",
+    "9": "BumpStikWorld",
+    "10": "CVCotMWorld",
+    "11": "CV64World",
+    "12": "Celeste64World",
+    "13": "ChecksFinderWorld",
+    "14": "ChocolateChipCookiesWorld",
+    "15": "CivVIWorld",
+    "16": "DarkSouls3World",
+    "17": "DLCqworld",
+    "18": "DKC3World",
+    "19": "DOOM1993World",
+    "20": "DOOM2World",
+    "21": "Factorio",
+    "22": "FaxanaduWorld",
+    "23": "FFMQWorld",
+    "24": "FF1World",
+    "25": "HereticWorld",
+    "26": "Hylics2World",
+    "27": "InscryptionWorld",
+    "28": "JakAndDaxterWorld",
+    "29": "KH2World",
+    "30": "KH1World",
+    "31": "KDL3World",
+    "32": "LandstalkerWorld",
+    "33": "LingoWorld",
+    "34": "LinksAwakeningWorld",
+    "35": "L2ACWorld",
+    "36": "MLSSWorld",
+    "37": "MathProof2p2e4World",
+    "38": "MM2World",
+    "39": "MMBN3World",
+    "40": "MeritousWorld",
+    "41": "MetamathWorld",
+    "42": "MuseDashWorld",
+    "43": "NoitaWorld",
+    "44": "OSRSWorld",
+    "45": "Overcooked2World",
+    "46": "PaintWorld",
+    "47": "PokemonEmeraldWorld",
+    "48": "PokemonRedBlueWorld",
+    "49": "RaftWorld",
+    "50": "RiskOfRainWorld",
+    "51": "SavingPrincessWorld",
+    "52": "SoEWorld",
+    "53": "ShapezWorld",
+    "54": "ShiversWorld",
+    "55": "SA2BWorld",
+    "56": "SC2World",
+    "57": "StardewValleyWorld",
+    "58": "SubnauticaWorld",
+    "59": "SM64World",
+    "60": "MarioLand2World",
+    "61": "SMWWorld",
+    "62": "SMWorld",
+    "63": "TerrariaWorld",
+    "64": "TLoZWorld",
+    "65": "MessengerWorld",
+    "66": "TWWWorld",
+    "67": "WitnessWorld",
+    "68": "TimespinnerWorld",
+    "69": "TunicWorld",
+    "70": "UndertaleWorld",
+    "71": "V6World",
+    "72": "WargrooveWorld",
+    "73": "WebDevJourneyWorld",
+    "74": "YachtDiceWorld",
+    "75": "YoshisIslandWorld",
+    "76": "Yugioh06World"
+  },
+  "regions": {
+    "50": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "Menu -> Distant Roost",
+            "connected_region": "Distant Roost",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Menu -> Distant Roost (2)",
+            "connected_region": "Distant Roost (2)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Menu -> Titanic Plains",
+            "connected_region": "Titanic Plains",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Menu -> Titanic Plains (2)",
+            "connected_region": "Titanic Plains (2)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Menu -> Verdant Falls",
+            "connected_region": "Verdant Falls",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Distant Roost": {
+        "name": "Distant Roost",
+        "exits": [
+          {
+            "name": "Distant Roost -> OrderedStage_1",
+            "connected_region": "OrderedStage_1",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Distant Roost: Chest 1",
+            "id": 38558,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost"
+            },
+            "item": {
+              "name": "Heartguard",
+              "player": 30,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost: Chest 2",
+            "id": 38559,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost"
+            },
+            "item": {
+              "name": "Gaia Belt",
+              "player": 29,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost: Chest 3",
+            "id": 38560,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost"
+            },
+            "item": {
+              "name": "Arcane Poultice",
+              "player": 5,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost: Chest 4",
+            "id": 38561,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost"
+            },
+            "item": {
+              "name": "Elite Knight Leggings",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost: Chest 5",
+            "id": 38562,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost"
+            },
+            "item": {
+              "name": "The Crater (E2M1) - Green key",
+              "player": 25,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost: Chest 6",
+            "id": 38563,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost"
+            },
+            "item": {
+              "name": "Dual-Fusion Welders (SCV)",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost: Chest 7",
+            "id": 38564,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost"
+            },
+            "item": {
+              "name": "Enchanted Shield",
+              "player": 25,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost: Chest 8",
+            "id": 38565,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost"
+            },
+            "item": {
+              "name": "Amulet of Annihilation",
+              "player": 52,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost: Chest 9",
+            "id": 38566,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost"
+            },
+            "item": {
+              "name": "Ash Always Available in Office",
+              "player": 54,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost: Chest 10",
+            "id": 38567,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost"
+            },
+            "item": {
+              "name": "Quartz Flask",
+              "player": 25,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost: Shrine 1",
+            "id": 38578,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost"
+            },
+            "item": {
+              "name": "Loading Screen",
+              "player": 17,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost: Shrine 2",
+            "id": 38579,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost"
+            },
+            "item": {
+              "name": "Mega Armor",
+              "player": 20,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost: Shrine 3",
+            "id": 38580,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost"
+            },
+            "item": {
+              "name": "Telecommunications",
+              "player": 15,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost: Shrine 4",
+            "id": 38581,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost"
+            },
+            "item": {
+              "name": "Medikit",
+              "player": 19,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost: Shrine 5",
+            "id": 38582,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost"
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 27,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost: Radio Scanner 1",
+            "id": 38599,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost"
+            },
+            "item": {
+              "name": "Jewelry Box",
+              "player": 68,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost: Newt Altar 1",
+            "id": 38600,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost"
+            },
+            "item": {
+              "name": "Area: West Varrock",
+              "player": 44,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Distant Roost (2)": {
+        "name": "Distant Roost (2)",
+        "exits": [
+          {
+            "name": "Distant Roost (2) -> OrderedStage_1",
+            "connected_region": "OrderedStage_1",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Distant Roost (2): Chest 1",
+            "id": 38602,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost (2)"
+            },
+            "item": {
+              "name": "Five Rupees",
+              "player": 64,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost (2): Chest 2",
+            "id": 38603,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost (2)"
+            },
+            "item": {
+              "name": "Heart Star",
+              "player": 31,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost (2): Chest 3",
+            "id": 38604,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost (2)"
+            },
+            "item": {
+              "name": "PP Up",
+              "player": 47,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost (2): Chest 4",
+            "id": 38605,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost (2)"
+            },
+            "item": {
+              "name": "Circuit Charge upgrade",
+              "player": 40,
+              "advancement": false,
+              "type": "Enhancement"
+            }
+          },
+          {
+            "name": "Distant Roost (2): Chest 5",
+            "id": 38606,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost (2)"
+            },
+            "item": {
+              "name": "Power Cell",
+              "player": 28,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost (2): Chest 6",
+            "id": 38607,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost (2)"
+            },
+            "item": {
+              "name": "Healing Poultice x 2",
+              "player": 5,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost (2): Chest 7",
+            "id": 38608,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost (2)"
+            },
+            "item": {
+              "name": "Progressive Glide",
+              "player": 30,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost (2): Chest 8",
+            "id": 38609,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost (2)"
+            },
+            "item": {
+              "name": "Crystal Geode",
+              "player": 25,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost (2): Chest 9",
+            "id": 38610,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost (2)"
+            },
+            "item": {
+              "name": "Water",
+              "player": 52,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost (2): Chest 10",
+            "id": 38611,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost (2)"
+            },
+            "item": {
+              "name": "Sun card",
+              "player": 11,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost (2): Shrine 1",
+            "id": 38622,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost (2)"
+            },
+            "item": {
+              "name": "Deluge",
+              "player": 22,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost (2): Shrine 2",
+            "id": 38623,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost (2)"
+            },
+            "item": {
+              "name": "Turtle Zone Progression",
+              "player": 60,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost (2): Shrine 3",
+            "id": 38624,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost (2)"
+            },
+            "item": {
+              "name": "Double Dash Refills",
+              "player": 12,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost (2): Shrine 4",
+            "id": 38625,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost (2)"
+            },
+            "item": {
+              "name": "Rupees (50)",
+              "player": 2,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost (2): Shrine 5",
+            "id": 38626,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost (2)"
+            },
+            "item": {
+              "name": "Shinsou Masui",
+              "player": 42,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost (2): Radio Scanner 1",
+            "id": 38643,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost (2)"
+            },
+            "item": {
+              "name": "Wax Pot Bottom",
+              "player": 54,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Distant Roost (2): Newt Altar 1",
+            "id": 38644,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Distant Roost (2)"
+            },
+            "item": {
+              "name": "Sage Ring",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Titanic Plains": {
+        "name": "Titanic Plains",
+        "exits": [
+          {
+            "name": "Titanic Plains -> OrderedStage_1",
+            "connected_region": "OrderedStage_1",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Titanic Plains: Chest 1",
+            "id": 38910,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains"
+            },
+            "item": {
+              "name": "Red Bug Pellet",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains: Chest 2",
+            "id": 38911,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains"
+            },
+            "item": {
+              "name": "Krematoa Cog",
+              "player": 18,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains: Chest 3",
+            "id": 38912,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains"
+            },
+            "item": {
+              "name": "Taranto to my Sister",
+              "player": 7,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains: Chest 4",
+            "id": 38913,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains"
+            },
+            "item": {
+              "name": "Greatshield of Glory",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains: Chest 5",
+            "id": 38914,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains"
+            },
+            "item": {
+              "name": "progressive-inserter",
+              "player": 21,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains: Chest 6",
+            "id": 38915,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains"
+            },
+            "item": {
+              "name": "Blueprint Shapes Bundle",
+              "player": 53,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains: Chest 7",
+            "id": 38916,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains"
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 46,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains: Chest 8",
+            "id": 38917,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains"
+            },
+            "item": {
+              "name": "Traveling Merchant Stock Size",
+              "player": 57,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains: Chest 9",
+            "id": 38918,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains"
+            },
+            "item": {
+              "name": "Homeward Bone x2",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains: Chest 10",
+            "id": 38919,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains"
+            },
+            "item": {
+              "name": "Timebomb of the Ancients",
+              "player": 25,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains: Shrine 1",
+            "id": 38930,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains"
+            },
+            "item": {
+              "name": "Starport Decal",
+              "player": 57,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains: Shrine 2",
+            "id": 38931,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains"
+            },
+            "item": {
+              "name": "Big Belt Upgrade",
+              "player": 53,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains: Shrine 3",
+            "id": 38932,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains"
+            },
+            "item": {
+              "name": "Pisiform of Hernandez, the Explorer",
+              "player": 7,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains: Shrine 4",
+            "id": 38933,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains"
+            },
+            "item": {
+              "name": "Solea of Excommunication",
+              "player": 7,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains: Shrine 5",
+            "id": 38934,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains"
+            },
+            "item": {
+              "name": "Sacred Flame",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains: Radio Scanner 1",
+            "id": 38951,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains"
+            },
+            "item": {
+              "name": "Bombs (3)",
+              "player": 2,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains: Newt Altar 1",
+            "id": 38952,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains"
+            },
+            "item": {
+              "name": "Argus Jewel (Corsair)",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Titanic Plains (2)": {
+        "name": "Titanic Plains (2)",
+        "exits": [
+          {
+            "name": "Titanic Plains (2) -> OrderedStage_1",
+            "connected_region": "OrderedStage_1",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Titanic Plains (2): Chest 1",
+            "id": 38954,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains (2)"
+            },
+            "item": {
+              "name": "Fire Keeper Robe",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains (2): Chest 2",
+            "id": 38955,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains (2)"
+            },
+            "item": {
+              "name": "Foraging Level",
+              "player": 57,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains (2): Chest 3",
+            "id": 38956,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains (2)"
+            },
+            "item": {
+              "name": "Special Monsters A",
+              "player": 76,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains (2): Chest 4",
+            "id": 38957,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains (2)"
+            },
+            "item": {
+              "name": "Progressive Defensive Matrix (Battlecruiser)",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains (2): Chest 5",
+            "id": 38958,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains (2)"
+            },
+            "item": {
+              "name": "Rooster",
+              "player": 34,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains (2): Chest 6",
+            "id": 38959,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains (2)"
+            },
+            "item": {
+              "name": "Progressive Mine Elevator",
+              "player": 57,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains (2): Chest 7",
+            "id": 38960,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains (2)"
+            },
+            "item": {
+              "name": "Hazard Bumper",
+              "player": 9,
+              "advancement": true,
+              "type": "Target"
+            }
+          },
+          {
+            "name": "Titanic Plains (2): Chest 8",
+            "id": 38961,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains (2)"
+            },
+            "item": {
+              "name": "Global Warming Mitigation",
+              "player": 15,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains (2): Chest 9",
+            "id": 38962,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains (2)"
+            },
+            "item": {
+              "name": "Child of Moonlight",
+              "player": 7,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains (2): Chest 10",
+            "id": 38963,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains (2)"
+            },
+            "item": {
+              "name": "Yarn",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains (2): Shrine 1",
+            "id": 38974,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains (2)"
+            },
+            "item": {
+              "name": "Dodge Enhancer",
+              "player": 40,
+              "advancement": true,
+              "type": "Important Artifact"
+            }
+          },
+          {
+            "name": "Titanic Plains (2): Shrine 2",
+            "id": 38975,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains (2)"
+            },
+            "item": {
+              "name": "progressive-engine",
+              "player": 21,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains (2): Shrine 3",
+            "id": 38976,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains (2)"
+            },
+            "item": {
+              "name": "Color Mixer",
+              "player": 53,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains (2): Shrine 4",
+            "id": 38977,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains (2)"
+            },
+            "item": {
+              "name": "Very Funny Joke",
+              "player": 6,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains (2): Shrine 5",
+            "id": 38978,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains (2)"
+            },
+            "item": {
+              "name": "World 2 Gate",
+              "player": 75,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains (2): Radio Scanner 1",
+            "id": 38995,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains (2)"
+            },
+            "item": {
+              "name": "Cervical vertebra of Zicher, the Brewmaster",
+              "player": 7,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Titanic Plains (2): Newt Altar 1",
+            "id": 38996,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Titanic Plains (2)"
+            },
+            "item": {
+              "name": "Computer Station (E1M7) - Yellow keycard",
+              "player": 19,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Verdant Falls": {
+        "name": "Verdant Falls",
+        "exits": [
+          {
+            "name": "Verdant Falls -> OrderedStage_1",
+            "connected_region": "OrderedStage_1",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Verdant Falls: Chest 1",
+            "id": 39482,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Verdant Falls"
+            },
+            "item": {
+              "name": "Heart of Oils",
+              "player": 7,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Verdant Falls: Chest 2",
+            "id": 39483,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Verdant Falls"
+            },
+            "item": {
+              "name": "Holo Decoy (Nova Gadget)",
+              "player": 56,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Verdant Falls: Chest 3",
+            "id": 39484,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Verdant Falls"
+            },
+            "item": {
+              "name": "Random Cosmetic",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Verdant Falls: Chest 4",
+            "id": 39485,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Verdant Falls"
+            },
+            "item": {
+              "name": "Very Funny Joke",
+              "player": 6,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Verdant Falls: Chest 5",
+            "id": 39486,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Verdant Falls"
+            },
+            "item": {
+              "name": "Seashell",
+              "player": 34,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Verdant Falls: Chest 6",
+            "id": 39487,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Verdant Falls"
+            },
+            "item": {
+              "name": "Midnight Riders",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Verdant Falls: Chest 7",
+            "id": 39488,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Verdant Falls"
+            },
+            "item": {
+              "name": "Developer Commentary",
+              "player": 6,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Verdant Falls: Chest 8",
+            "id": 39489,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Verdant Falls"
+            },
+            "item": {
+              "name": "Wing Cap",
+              "player": 59,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Verdant Falls: Chest 9",
+            "id": 39490,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Verdant Falls"
+            },
+            "item": {
+              "name": "Resource Pack: 2 MetalOre",
+              "player": 49,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Verdant Falls: Chest 10",
+            "id": 39491,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Verdant Falls"
+            },
+            "item": {
+              "name": "Money x100",
+              "player": 69,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Verdant Falls: Shrine 1",
+            "id": 39502,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Verdant Falls"
+            },
+            "item": {
+              "name": "Wanderlust",
+              "player": 33,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Verdant Falls: Shrine 2",
+            "id": 39503,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Verdant Falls"
+            },
+            "item": {
+              "name": "Jazz Seeds",
+              "player": 57,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Verdant Falls: Shrine 3",
+            "id": 39504,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Verdant Falls"
+            },
+            "item": {
+              "name": "BOMBO - GENESIS",
+              "player": 26,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Verdant Falls: Shrine 4",
+            "id": 39505,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Verdant Falls"
+            },
+            "item": {
+              "name": "Encouragement",
+              "player": 74,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Verdant Falls: Shrine 5",
+            "id": 39506,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Verdant Falls"
+            },
+            "item": {
+              "name": "Progressive Cross-Spectrum Dampeners (Banshee)",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Verdant Falls: Radio Scanner 1",
+            "id": 39523,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Verdant Falls"
+            },
+            "item": {
+              "name": "Torch",
+              "player": 25,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Verdant Falls: Newt Altar 1",
+            "id": 39524,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Verdant Falls"
+            },
+            "item": {
+              "name": "Bonus Coin",
+              "player": 18,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Abandoned Aqueduct": {
+        "name": "Abandoned Aqueduct",
+        "exits": [
+          {
+            "name": "Abandoned Aqueduct -> OrderedStage_2",
+            "connected_region": "OrderedStage_2",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Abandoned Aqueduct: Chest 1",
+            "id": 38998,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abandoned Aqueduct"
+            },
+            "item": {
+              "name": "Chuckle Bean",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abandoned Aqueduct: Chest 2",
+            "id": 38999,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abandoned Aqueduct"
+            },
+            "item": {
+              "name": "Cybernetics",
+              "player": 15,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abandoned Aqueduct: Chest 3",
+            "id": 39000,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abandoned Aqueduct"
+            },
+            "item": {
+              "name": "Cyclops Bridge Fragment",
+              "player": 58,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abandoned Aqueduct: Chest 4",
+            "id": 39001,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abandoned Aqueduct"
+            },
+            "item": {
+              "name": "Scout Fly - Lost Precursor City",
+              "player": 28,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abandoned Aqueduct: Chest 5",
+            "id": 39002,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abandoned Aqueduct"
+            },
+            "item": {
+              "name": "Power Bomb",
+              "player": 62,
+              "advancement": false,
+              "type": "PowerBomb"
+            }
+          },
+          {
+            "name": "Abandoned Aqueduct: Chest 6",
+            "id": 39003,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abandoned Aqueduct"
+            },
+            "item": {
+              "name": "Area: Karamja",
+              "player": 44,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abandoned Aqueduct: Chest 7",
+            "id": 39004,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abandoned Aqueduct"
+            },
+            "item": {
+              "name": "Bonus Coin",
+              "player": 18,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abandoned Aqueduct: Chest 8",
+            "id": 39005,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abandoned Aqueduct"
+            },
+            "item": {
+              "name": "Return Scepter",
+              "player": 57,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abandoned Aqueduct: Chest 9",
+            "id": 39006,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abandoned Aqueduct"
+            },
+            "item": {
+              "name": "Siege Breakers",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abandoned Aqueduct: Chest 10",
+            "id": 39007,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abandoned Aqueduct"
+            },
+            "item": {
+              "name": "SOUL CRISPER",
+              "player": 26,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abandoned Aqueduct: Shrine 1",
+            "id": 39018,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abandoned Aqueduct"
+            },
+            "item": {
+              "name": "Librarian Hat",
+              "player": 68,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abandoned Aqueduct: Shrine 2",
+            "id": 39019,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abandoned Aqueduct"
+            },
+            "item": {
+              "name": "Smough's Great Hammer",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abandoned Aqueduct: Shrine 3",
+            "id": 39020,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abandoned Aqueduct"
+            },
+            "item": {
+              "name": "Nuts",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abandoned Aqueduct: Shrine 4",
+            "id": 39021,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abandoned Aqueduct"
+            },
+            "item": {
+              "name": "Air Combo Plus",
+              "player": 29,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abandoned Aqueduct: Shrine 5",
+            "id": 39022,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abandoned Aqueduct"
+            },
+            "item": {
+              "name": "Floodlight",
+              "player": 58,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abandoned Aqueduct: Radio Scanner 1",
+            "id": 39039,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abandoned Aqueduct"
+            },
+            "item": {
+              "name": "Chuckle Bean",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abandoned Aqueduct: Newt Altar 1",
+            "id": 39040,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abandoned Aqueduct"
+            },
+            "item": {
+              "name": "Trinket 05",
+              "player": 71,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Wetland Aspect": {
+        "name": "Wetland Aspect",
+        "exits": [
+          {
+            "name": "Wetland Aspect -> OrderedStage_2",
+            "connected_region": "OrderedStage_2",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Wetland Aspect: Chest 1",
+            "id": 38778,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Wetland Aspect"
+            },
+            "item": {
+              "name": "progressive-fluid-handling",
+              "player": 21,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Wetland Aspect: Chest 2",
+            "id": 38779,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Wetland Aspect"
+            },
+            "item": {
+              "name": "Golden Coin",
+              "player": 69,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Wetland Aspect: Chest 3",
+            "id": 38780,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Wetland Aspect"
+            },
+            "item": {
+              "name": "Blessed Weapon",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Wetland Aspect: Chest 4",
+            "id": 38781,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Wetland Aspect"
+            },
+            "item": {
+              "name": "Twin Drones (Kerrigan Tier 5)",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Wetland Aspect: Chest 5",
+            "id": 38782,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Wetland Aspect"
+            },
+            "item": {
+              "name": "Missile",
+              "player": 62,
+              "advancement": false,
+              "type": "Missile"
+            }
+          },
+          {
+            "name": "Wetland Aspect: Chest 6",
+            "id": 38783,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Wetland Aspect"
+            },
+            "item": {
+              "name": "Soul of the Lords",
+              "player": 16,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Wetland Aspect: Chest 7",
+            "id": 38784,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Wetland Aspect"
+            },
+            "item": {
+              "name": "Herb",
+              "player": 68,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Wetland Aspect: Chest 8",
+            "id": 38785,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Wetland Aspect"
+            },
+            "item": {
+              "name": "Food",
+              "player": 64,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Wetland Aspect: Chest 9",
+            "id": 38786,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Wetland Aspect"
+            },
+            "item": {
+              "name": "Fairy Harp",
+              "player": 30,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Wetland Aspect: Chest 10",
+            "id": 38787,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Wetland Aspect"
+            },
+            "item": {
+              "name": "Abandoned Aqueduct",
+              "player": 50,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Wetland Aspect: Shrine 1",
+            "id": 38798,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Wetland Aspect"
+            },
+            "item": {
+              "name": "200 Rupees",
+              "player": 34,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Wetland Aspect: Shrine 2",
+            "id": 38799,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Wetland Aspect"
+            },
+            "item": {
+              "name": "Ballad of Gales",
+              "player": 66,
+              "advancement": true,
+              "type": "Item"
+            }
+          },
+          {
+            "name": "Wetland Aspect: Shrine 3",
+            "id": 38800,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Wetland Aspect"
+            },
+            "item": {
+              "name": "Inferno Orb",
+              "player": 25,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Wetland Aspect: Shrine 4",
+            "id": 38801,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Wetland Aspect"
+            },
+            "item": {
+              "name": "50 Pons",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Wetland Aspect: Shrine 5",
+            "id": 38802,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Wetland Aspect"
+            },
+            "item": {
+              "name": "Water",
+              "player": 52,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Wetland Aspect: Radio Scanner 1",
+            "id": 38819,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Wetland Aspect"
+            },
+            "item": {
+              "name": "Titanite Chunk",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Wetland Aspect: Newt Altar 1",
+            "id": 38820,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Wetland Aspect"
+            },
+            "item": {
+              "name": "Five Rupees",
+              "player": 64,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Rallypoint Delta": {
+        "name": "Rallypoint Delta",
+        "exits": [
+          {
+            "name": "Rallypoint Delta -> OrderedStage_3",
+            "connected_region": "OrderedStage_3",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Rallypoint Delta: Chest 1",
+            "id": 38822,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Rallypoint Delta"
+            },
+            "item": {
+              "name": "Pink Shoelaces",
+              "player": 6,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Rallypoint Delta: Chest 2",
+            "id": 38823,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Rallypoint Delta"
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 46,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Rallypoint Delta: Chest 3",
+            "id": 38824,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Rallypoint Delta"
+            },
+            "item": {
+              "name": "Statue of Gaia",
+              "player": 32,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Rallypoint Delta: Chest 4",
+            "id": 38825,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Rallypoint Delta"
+            },
+            "item": {
+              "name": "Ideology",
+              "player": 15,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Rallypoint Delta: Chest 5",
+            "id": 38826,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Rallypoint Delta"
+            },
+            "item": {
+              "name": "Torch",
+              "player": 25,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Rallypoint Delta: Chest 6",
+            "id": 38827,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Rallypoint Delta"
+            },
+            "item": {
+              "name": "Red Potion",
+              "player": 22,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Rallypoint Delta: Chest 7",
+            "id": 38828,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Rallypoint Delta"
+            },
+            "item": {
+              "name": "Reward: Red Counterweight",
+              "player": 63,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Rallypoint Delta: Chest 8",
+            "id": 38829,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Rallypoint Delta"
+            },
+            "item": {
+              "name": "HM02 Fly",
+              "player": 47,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Rallypoint Delta: Chest 9",
+            "id": 38830,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Rallypoint Delta"
+            },
+            "item": {
+              "name": "Mushroom",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Rallypoint Delta: Chest 10",
+            "id": 38831,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Rallypoint Delta"
+            },
+            "item": {
+              "name": "Fallen Knight Gauntlets",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Rallypoint Delta: Shrine 1",
+            "id": 38842,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Rallypoint Delta"
+            },
+            "item": {
+              "name": "Secret Legend",
+              "player": 69,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Rallypoint Delta: Shrine 2",
+            "id": 38843,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Rallypoint Delta"
+            },
+            "item": {
+              "name": "Containment Area (E2M2) - Computer area map",
+              "player": 19,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Rallypoint Delta: Shrine 3",
+            "id": 38844,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Rallypoint Delta"
+            },
+            "item": {
+              "name": "Progressive Mine Elevator",
+              "player": 57,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Rallypoint Delta: Shrine 4",
+            "id": 38845,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Rallypoint Delta"
+            },
+            "item": {
+              "name": "+10 Stars",
+              "player": 75,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Rallypoint Delta: Shrine 5",
+            "id": 38846,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Rallypoint Delta"
+            },
+            "item": {
+              "name": "Ars Arcanum",
+              "player": 30,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Rallypoint Delta: Radio Scanner 1",
+            "id": 38863,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Rallypoint Delta"
+            },
+            "item": {
+              "name": "Raw Gem",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Rallypoint Delta: Newt Altar 1",
+            "id": 38864,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Rallypoint Delta"
+            },
+            "item": {
+              "name": "Veggie Cake",
+              "player": 5,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Scorched Acres": {
+        "name": "Scorched Acres",
+        "exits": [
+          {
+            "name": "Scorched Acres -> OrderedStage_3",
+            "connected_region": "OrderedStage_3",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Scorched Acres: Chest 1",
+            "id": 40318,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Scorched Acres"
+            },
+            "item": {
+              "name": "5000DP",
+              "player": 76,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Scorched Acres: Chest 2",
+            "id": 40319,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Scorched Acres"
+            },
+            "item": {
+              "name": "Roast chicken",
+              "player": 11,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Scorched Acres: Chest 3",
+            "id": 40320,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Scorched Acres"
+            },
+            "item": {
+              "name": "Tent",
+              "player": 30,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Scorched Acres: Chest 4",
+            "id": 40321,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Scorched Acres"
+            },
+            "item": {
+              "name": "Spangle Seeds",
+              "player": 57,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Scorched Acres: Chest 5",
+            "id": 40322,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Scorched Acres"
+            },
+            "item": {
+              "name": "Undead Legion Gauntlet",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Scorched Acres: Chest 6",
+            "id": 40323,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Scorched Acres"
+            },
+            "item": {
+              "name": "Atbash Trap",
+              "player": 33,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Scorched Acres: Chest 7",
+            "id": 40324,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Scorched Acres"
+            },
+            "item": {
+              "name": "Traveling Merchant Stock Size",
+              "player": 57,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Scorched Acres: Chest 8",
+            "id": 40325,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Scorched Acres"
+            },
+            "item": {
+              "name": "SAGE TOKEN",
+              "player": 26,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Scorched Acres: Chest 9",
+            "id": 40326,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Scorched Acres"
+            },
+            "item": {
+              "name": "Chuckle Bean",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Scorched Acres: Chest 10",
+            "id": 40327,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Scorched Acres"
+            },
+            "item": {
+              "name": "Secret Ansem's Report 2",
+              "player": 29,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Scorched Acres: Shrine 1",
+            "id": 40338,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Scorched Acres"
+            },
+            "item": {
+              "name": "Wanderlust",
+              "player": 33,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Scorched Acres: Shrine 2",
+            "id": 40339,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Scorched Acres"
+            },
+            "item": {
+              "name": "50 coins",
+              "player": 61,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Scorched Acres: Shrine 3",
+            "id": 40340,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Scorched Acres"
+            },
+            "item": {
+              "name": "Key Ace",
+              "player": 22,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Scorched Acres: Shrine 4",
+            "id": 40341,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Scorched Acres"
+            },
+            "item": {
+              "name": "Flynn's Ring",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Scorched Acres: Shrine 5",
+            "id": 40342,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Scorched Acres"
+            },
+            "item": {
+              "name": "Crystals x1000",
+              "player": 40,
+              "advancement": false,
+              "type": "Crystals"
+            }
+          },
+          {
+            "name": "Scorched Acres: Radio Scanner 1",
+            "id": 40359,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Scorched Acres"
+            },
+            "item": {
+              "name": "Ether",
+              "player": 47,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Scorched Acres: Newt Altar 1",
+            "id": 40360,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Scorched Acres"
+            },
+            "item": {
+              "name": "Grave Key",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Abyssal Depths": {
+        "name": "Abyssal Depths",
+        "exits": [
+          {
+            "name": "Abyssal Depths -> OrderedStage_4",
+            "connected_region": "OrderedStage_4",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Abyssal Depths: Chest 1",
+            "id": 38690,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abyssal Depths"
+            },
+            "item": {
+              "name": "Inferno Orb",
+              "player": 25,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abyssal Depths: Chest 2",
+            "id": 38691,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abyssal Depths"
+            },
+            "item": {
+              "name": "Heart Max Up",
+              "player": 10,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abyssal Depths: Chest 3",
+            "id": 38692,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abyssal Depths"
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 46,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abyssal Depths: Chest 4",
+            "id": 38693,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abyssal Depths"
+            },
+            "item": {
+              "name": "Yarn",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abyssal Depths: Chest 5",
+            "id": 38694,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abyssal Depths"
+            },
+            "item": {
+              "name": "Coffee Maker",
+              "player": 57,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abyssal Depths: Chest 6",
+            "id": 38695,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abyssal Depths"
+            },
+            "item": {
+              "name": "Brigand Armor",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abyssal Depths: Chest 7",
+            "id": 38696,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abyssal Depths"
+            },
+            "item": {
+              "name": "Box of rockets",
+              "player": 20,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abyssal Depths: Chest 8",
+            "id": 38697,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abyssal Depths"
+            },
+            "item": {
+              "name": "Heart Max Up",
+              "player": 10,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abyssal Depths: Chest 9",
+            "id": 38698,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abyssal Depths"
+            },
+            "item": {
+              "name": "Red jewel(L)",
+              "player": 11,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abyssal Depths: Chest 10",
+            "id": 38699,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abyssal Depths"
+            },
+            "item": {
+              "name": "Ancient Obol",
+              "player": 27,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abyssal Depths: Shrine 1",
+            "id": 38710,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abyssal Depths"
+            },
+            "item": {
+              "name": "Ember",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abyssal Depths: Shrine 2",
+            "id": 38711,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abyssal Depths"
+            },
+            "item": {
+              "name": "Spicy Roll",
+              "player": 5,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abyssal Depths: Shrine 3",
+            "id": 38712,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abyssal Depths"
+            },
+            "item": {
+              "name": "Sun Princess Ring",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abyssal Depths: Shrine 4",
+            "id": 38713,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abyssal Depths"
+            },
+            "item": {
+              "name": "MP Berry x3",
+              "player": 69,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abyssal Depths: Shrine 5",
+            "id": 38714,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abyssal Depths"
+            },
+            "item": {
+              "name": "Pocket Fire Melon",
+              "player": 75,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Abyssal Depths: Radio Scanner 1",
+            "id": 38731,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abyssal Depths"
+            },
+            "item": {
+              "name": "Energy Tank",
+              "player": 62,
+              "advancement": true,
+              "type": "ETank"
+            }
+          },
+          {
+            "name": "Abyssal Depths: Newt Altar 1",
+            "id": 38732,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Abyssal Depths"
+            },
+            "item": {
+              "name": "Mega Armor",
+              "player": 20,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Siren's Call": {
+        "name": "Siren's Call",
+        "exits": [
+          {
+            "name": "Siren's Call -> OrderedStage_4",
+            "connected_region": "OrderedStage_4",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Siren's Call: Chest 1",
+            "id": 39878,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Siren's Call"
+            },
+            "item": {
+              "name": "Crystal Geode",
+              "player": 25,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Siren's Call: Chest 2",
+            "id": 39879,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Siren's Call"
+            },
+            "item": {
+              "name": "Smart Servos (Liberator)",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Siren's Call: Chest 3",
+            "id": 39880,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Siren's Call"
+            },
+            "item": {
+              "name": "Cloistered Sapphire",
+              "player": 7,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Siren's Call: Chest 4",
+            "id": 39881,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Siren's Call"
+            },
+            "item": {
+              "name": "Super Missile",
+              "player": 62,
+              "advancement": false,
+              "type": "Super"
+            }
+          },
+          {
+            "name": "Siren's Call: Chest 5",
+            "id": 39882,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Siren's Call"
+            },
+            "item": {
+              "name": "Banana Sapling",
+              "player": 57,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Siren's Call: Chest 6",
+            "id": 39883,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Siren's Call"
+            },
+            "item": {
+              "name": "Life Stock",
+              "player": 32,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Siren's Call: Chest 7",
+            "id": 39884,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Siren's Call"
+            },
+            "item": {
+              "name": "Spotlight",
+              "player": 58,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Siren's Call: Chest 8",
+            "id": 39885,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Siren's Call"
+            },
+            "item": {
+              "name": "Golden Coin",
+              "player": 69,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Siren's Call: Chest 9",
+            "id": 39886,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Siren's Call"
+            },
+            "item": {
+              "name": "Airshoes",
+              "player": 39,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Siren's Call: Chest 10",
+            "id": 39887,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Siren's Call"
+            },
+            "item": {
+              "name": "Heart Container",
+              "player": 64,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Siren's Call: Shrine 1",
+            "id": 39898,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Siren's Call"
+            },
+            "item": {
+              "name": "Green Blossom x3",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Siren's Call: Shrine 2",
+            "id": 39899,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Siren's Call"
+            },
+            "item": {
+              "name": "Hazard Bumper",
+              "player": 9,
+              "advancement": true,
+              "type": "Target"
+            }
+          },
+          {
+            "name": "Siren's Call: Shrine 3",
+            "id": 39900,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Siren's Call"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 55,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Siren's Call: Shrine 4",
+            "id": 39901,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Siren's Call"
+            },
+            "item": {
+              "name": "15 Qi Gems",
+              "player": 57,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Siren's Call: Shrine 5",
+            "id": 39902,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Siren's Call"
+            },
+            "item": {
+              "name": "Antiquated Skirt",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Siren's Call: Radio Scanner 1",
+            "id": 39919,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Siren's Call"
+            },
+            "item": {
+              "name": "Rare Candy",
+              "player": 48,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Siren's Call: Newt Altar 1",
+            "id": 39920,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Siren's Call"
+            },
+            "item": {
+              "name": "Northern Armor",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Sundered Grove": {
+        "name": "Sundered Grove",
+        "exits": [
+          {
+            "name": "Sundered Grove -> OrderedStage_4",
+            "connected_region": "OrderedStage_4",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Sundered Grove: Chest 1",
+            "id": 39790,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sundered Grove"
+            },
+            "item": {
+              "name": "Metatarsus of Rikusyo, the Traveller",
+              "player": 7,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sundered Grove: Chest 2",
+            "id": 39791,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sundered Grove"
+            },
+            "item": {
+              "name": "Perfume",
+              "player": 69,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sundered Grove: Chest 3",
+            "id": 39792,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sundered Grove"
+            },
+            "item": {
+              "name": "Rocket Barrage (Banshee)",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sundered Grove: Chest 4",
+            "id": 39793,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sundered Grove"
+            },
+            "item": {
+              "name": "Starting Paint Can",
+              "player": 9,
+              "advancement": false,
+              "type": "Helper"
+            }
+          },
+          {
+            "name": "Sundered Grove: Chest 5",
+            "id": 39794,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sundered Grove"
+            },
+            "item": {
+              "name": "Chuckle Bean",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sundered Grove: Chest 6",
+            "id": 39795,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sundered Grove"
+            },
+            "item": {
+              "name": "Witchtree Branch",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sundered Grove: Chest 7",
+            "id": 39796,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sundered Grove"
+            },
+            "item": {
+              "name": "Moon Stone",
+              "player": 47,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sundered Grove: Chest 8",
+            "id": 39797,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sundered Grove"
+            },
+            "item": {
+              "name": "4 Brimstone",
+              "player": 52,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sundered Grove: Chest 9",
+            "id": 39798,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sundered Grove"
+            },
+            "item": {
+              "name": "Sellsword Helm",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sundered Grove: Chest 10",
+            "id": 39799,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sundered Grove"
+            },
+            "item": {
+              "name": "Heal Potion",
+              "player": 23,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sundered Grove: Shrine 1",
+            "id": 39810,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sundered Grove"
+            },
+            "item": {
+              "name": "Greatsword of Judgment",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sundered Grove: Shrine 2",
+            "id": 39811,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sundered Grove"
+            },
+            "item": {
+              "name": "Continuous Spell/Trap A",
+              "player": 76,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sundered Grove: Shrine 3",
+            "id": 39812,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sundered Grove"
+            },
+            "item": {
+              "name": "Optimized Logistics (Battlecruiser)",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sundered Grove: Shrine 4",
+            "id": 39813,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sundered Grove"
+            },
+            "item": {
+              "name": "Tome of Power",
+              "player": 25,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sundered Grove: Shrine 5",
+            "id": 39814,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sundered Grove"
+            },
+            "item": {
+              "name": "Box of shotgun shells",
+              "player": 19,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sundered Grove: Radio Scanner 1",
+            "id": 39831,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sundered Grove"
+            },
+            "item": {
+              "name": "Berry Pick-Mi-Up",
+              "player": 68,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sundered Grove: Newt Altar 1",
+            "id": 39832,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sundered Grove"
+            },
+            "item": {
+              "name": "Gun Orb",
+              "player": 68,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Sky Meadow": {
+        "name": "Sky Meadow",
+        "exits": [
+          {
+            "name": "Sky Meadow -> Hidden Realm: Bulwark's Ambry",
+            "connected_region": "Hidden Realm: Bulwark's Ambry",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Sky Meadow -> OrderedStage_5",
+            "connected_region": "OrderedStage_5",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Sky Meadow: Chest 1",
+            "id": 39922,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sky Meadow"
+            },
+            "item": {
+              "name": "Circuit Refill upgrade",
+              "player": 40,
+              "advancement": false,
+              "type": "Enhancement"
+            }
+          },
+          {
+            "name": "Sky Meadow: Chest 2",
+            "id": 39923,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sky Meadow"
+            },
+            "item": {
+              "name": "Heart Max Up",
+              "player": 10,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sky Meadow: Chest 3",
+            "id": 39924,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sky Meadow"
+            },
+            "item": {
+              "name": "Postcard",
+              "player": 30,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sky Meadow: Chest 4",
+            "id": 39925,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sky Meadow"
+            },
+            "item": {
+              "name": "Partial invisibility",
+              "player": 19,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sky Meadow: Chest 5",
+            "id": 39926,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sky Meadow"
+            },
+            "item": {
+              "name": "Anti Paralyze",
+              "player": 32,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sky Meadow: Chest 6",
+            "id": 39927,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sky Meadow"
+            },
+            "item": {
+              "name": "Bouquet of Thyme",
+              "player": 7,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sky Meadow: Chest 7",
+            "id": 39928,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sky Meadow"
+            },
+            "item": {
+              "name": "Hawkwood's Shield",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sky Meadow: Chest 8",
+            "id": 39929,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sky Meadow"
+            },
+            "item": {
+              "name": "13 Coins",
+              "player": 3,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sky Meadow: Chest 9",
+            "id": 39930,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sky Meadow"
+            },
+            "item": {
+              "name": "Anytime Egg",
+              "player": 75,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sky Meadow: Chest 10",
+            "id": 39931,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sky Meadow"
+            },
+            "item": {
+              "name": "50 Rupees",
+              "player": 34,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sky Meadow: Shrine 1",
+            "id": 39942,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sky Meadow"
+            },
+            "item": {
+              "name": "Berry Ice Cream",
+              "player": 5,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sky Meadow: Shrine 2",
+            "id": 39943,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sky Meadow"
+            },
+            "item": {
+              "name": "Centrifugal Hooks (Baneling)",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sky Meadow: Shrine 3",
+            "id": 39944,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sky Meadow"
+            },
+            "item": {
+              "name": "Empty Gun",
+              "player": 70,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sky Meadow: Shrine 4",
+            "id": 39945,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sky Meadow"
+            },
+            "item": {
+              "name": "DK Coin",
+              "player": 18,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sky Meadow: Shrine 5",
+            "id": 39946,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sky Meadow"
+            },
+            "item": {
+              "name": "Life Stock",
+              "player": 32,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sky Meadow: Radio Scanner 1",
+            "id": 39963,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sky Meadow"
+            },
+            "item": {
+              "name": "Health Pon",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sky Meadow: Newt Altar 1",
+            "id": 39964,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sky Meadow"
+            },
+            "item": {
+              "name": "Angler Hook",
+              "player": 27,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Commencement": {
+        "name": "Commencement",
+        "exits": [
+          {
+            "name": "Commencement -> Victory",
+            "connected_region": "Victory",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Commencement -> Petrichor V",
+            "connected_region": "Petrichor V",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "OrderedStage_5": {
+        "name": "OrderedStage_5",
+        "exits": [
+          {
+            "name": "OrderedStage_5 -> Hidden Realm: A Moment, Fractured",
+            "connected_region": "Hidden Realm: A Moment, Fractured",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Hidden Realm: A Moment, Fractured"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Stage 5"
+                }
+              ]
+            }
+          },
+          {
+            "name": "OrderedStage_5 -> Commencement",
+            "connected_region": "Commencement",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Commencement"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Stage 5"
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Stage 5",
+            "id": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Sky Meadow"
+            },
+            "item": {
+              "name": "Stage 5",
+              "player": 50,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "OrderedStage_1": {
+        "name": "OrderedStage_1",
+        "exits": [
+          {
+            "name": "OrderedStage_1 -> Hidden Realm: Bazaar Between Time",
+            "connected_region": "Hidden Realm: Bazaar Between Time",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "compare",
+                      "left": {
+                        "type": "state_method",
+                        "method": "count",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Progressive Stage"
+                          }
+                        ]
+                      },
+                      "op": ">=",
+                      "right": {
+                        "type": "constant",
+                        "value": 1
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Stage 1"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Hidden Realm: Bazaar Between Time"
+                }
+              ]
+            }
+          },
+          {
+            "name": "OrderedStage_1 -> Hidden Realm: Gilded Coast",
+            "connected_region": "Hidden Realm: Gilded Coast",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "OrderedStage_1 -> Abandoned Aqueduct",
+            "connected_region": "Abandoned Aqueduct",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "compare",
+                      "left": {
+                        "type": "state_method",
+                        "method": "count",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Progressive Stage"
+                          }
+                        ]
+                      },
+                      "op": ">=",
+                      "right": {
+                        "type": "constant",
+                        "value": 1
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Stage 1"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Abandoned Aqueduct"
+                }
+              ]
+            }
+          },
+          {
+            "name": "OrderedStage_1 -> Wetland Aspect",
+            "connected_region": "Wetland Aspect",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "compare",
+                      "left": {
+                        "type": "state_method",
+                        "method": "count",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Progressive Stage"
+                          }
+                        ]
+                      },
+                      "op": ">=",
+                      "right": {
+                        "type": "constant",
+                        "value": 1
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Stage 1"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Wetland Aspect"
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "OrderedStage_2": {
+        "name": "OrderedStage_2",
+        "exits": [
+          {
+            "name": "OrderedStage_2 -> Rallypoint Delta",
+            "connected_region": "Rallypoint Delta",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "compare",
+                      "left": {
+                        "type": "state_method",
+                        "method": "count",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Progressive Stage"
+                          }
+                        ]
+                      },
+                      "op": ">=",
+                      "right": {
+                        "type": "constant",
+                        "value": 2
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Stage 2"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Rallypoint Delta"
+                }
+              ]
+            }
+          },
+          {
+            "name": "OrderedStage_2 -> Scorched Acres",
+            "connected_region": "Scorched Acres",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "compare",
+                      "left": {
+                        "type": "state_method",
+                        "method": "count",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Progressive Stage"
+                          }
+                        ]
+                      },
+                      "op": ">=",
+                      "right": {
+                        "type": "constant",
+                        "value": 2
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Stage 2"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Scorched Acres"
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "OrderedStage_3": {
+        "name": "OrderedStage_3",
+        "exits": [
+          {
+            "name": "OrderedStage_3 -> Abyssal Depths",
+            "connected_region": "Abyssal Depths",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "compare",
+                      "left": {
+                        "type": "state_method",
+                        "method": "count",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Progressive Stage"
+                          }
+                        ]
+                      },
+                      "op": ">=",
+                      "right": {
+                        "type": "constant",
+                        "value": 3
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Stage 3"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Abyssal Depths"
+                }
+              ]
+            }
+          },
+          {
+            "name": "OrderedStage_3 -> Siren's Call",
+            "connected_region": "Siren's Call",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "compare",
+                      "left": {
+                        "type": "state_method",
+                        "method": "count",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Progressive Stage"
+                          }
+                        ]
+                      },
+                      "op": ">=",
+                      "right": {
+                        "type": "constant",
+                        "value": 3
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Stage 3"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Siren's Call"
+                }
+              ]
+            }
+          },
+          {
+            "name": "OrderedStage_3 -> Sundered Grove",
+            "connected_region": "Sundered Grove",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "compare",
+                      "left": {
+                        "type": "state_method",
+                        "method": "count",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Progressive Stage"
+                          }
+                        ]
+                      },
+                      "op": ">=",
+                      "right": {
+                        "type": "constant",
+                        "value": 3
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Stage 3"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Sundered Grove"
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "OrderedStage_4": {
+        "name": "OrderedStage_4",
+        "exits": [
+          {
+            "name": "OrderedStage_4 -> Sky Meadow",
+            "connected_region": "Sky Meadow",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "compare",
+                      "left": {
+                        "type": "state_method",
+                        "method": "count",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Progressive Stage"
+                          }
+                        ]
+                      },
+                      "op": ">=",
+                      "right": {
+                        "type": "constant",
+                        "value": 4
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Stage 4"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Sky Meadow"
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Hidden Realm: A Moment, Fractured": {
+        "name": "Hidden Realm: A Moment, Fractured",
+        "exits": [
+          {
+            "name": "Hidden Realm: A Moment, Fractured -> Hidden Realm: A Moment, Whole",
+            "connected_region": "Hidden Realm: A Moment, Whole",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Beads of Fealty"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Hidden Realm: A Moment, Whole"
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Hidden Realm: A Moment, Whole": {
+        "name": "Hidden Realm: A Moment, Whole",
+        "exits": [
+          {
+            "name": "Hidden Realm: A Moment, Whole -> Victory",
+            "connected_region": "Victory",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Hidden Realm: A Moment, Whole -> Petrichor V",
+            "connected_region": "Petrichor V",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Void Fields": {
+        "name": "Void Fields",
+        "exits": [],
+        "locations": []
+      },
+      "Victory": {
+        "name": "Victory",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Victory",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Victory",
+              "player": 50,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Petrichor V": {
+        "name": "Petrichor V",
+        "exits": [],
+        "locations": []
+      },
+      "Hidden Realm: Bulwark's Ambry": {
+        "name": "Hidden Realm: Bulwark's Ambry",
+        "exits": [],
+        "locations": []
+      },
+      "Hidden Realm: Bazaar Between Time": {
+        "name": "Hidden Realm: Bazaar Between Time",
+        "exits": [
+          {
+            "name": "Hidden Realm: Bazaar Between Time -> Void Fields",
+            "connected_region": "Void Fields",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Hidden Realm: Bazaar Between Time"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Void Fields"
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Hidden Realm: Gilded Coast": {
+        "name": "Hidden Realm: Gilded Coast",
+        "exits": [],
+        "locations": []
+      }
+    }
+  },
+  "start_regions": {
+    "50": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "50": {
+      "Dio's Best Friend": {
+        "name": "Dio's Best Friend",
+        "id": 37001,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 8
+      },
+      "Common Item": {
+        "name": "Common Item",
+        "id": 37002,
+        "groups": [
+          "Everything",
+          "Upgrades"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 35
+      },
+      "Uncommon Item": {
+        "name": "Uncommon Item",
+        "id": 37003,
+        "groups": [
+          "Everything",
+          "Upgrades"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 12
+      },
+      "Legendary Item": {
+        "name": "Legendary Item",
+        "id": 37004,
+        "groups": [
+          "Everything",
+          "Upgrades"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 14
+      },
+      "Boss Item": {
+        "name": "Boss Item",
+        "id": 37005,
+        "groups": [
+          "Everything",
+          "Upgrades"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Lunar Item": {
+        "name": "Lunar Item",
+        "id": 37006,
+        "groups": [
+          "Everything",
+          "Traps"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 10
+      },
+      "Equipment": {
+        "name": "Equipment",
+        "id": 37007,
+        "groups": [
+          "Everything",
+          "Upgrades"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 25
+      },
+      "Item Scrap, White": {
+        "name": "Item Scrap, White",
+        "id": 37008,
+        "groups": [
+          "Everything",
+          "Upgrades"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 16
+      },
+      "Item Scrap, Green": {
+        "name": "Item Scrap, Green",
+        "id": 37009,
+        "groups": [
+          "Everything",
+          "Upgrades"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 9
+      },
+      "Item Scrap, Red": {
+        "name": "Item Scrap, Red",
+        "id": 37010,
+        "groups": [
+          "Everything",
+          "Upgrades"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "Item Scrap, Yellow": {
+        "name": "Item Scrap, Yellow",
+        "id": 37011,
+        "groups": [
+          "Everything",
+          "Upgrades"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Void Item": {
+        "name": "Void Item",
+        "id": 37012,
+        "groups": [
+          "Everything",
+          "Upgrades"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Beads of Fealty": {
+        "name": "Beads of Fealty",
+        "id": 37013,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Radar Scanner": {
+        "name": "Radar Scanner",
+        "id": 37014,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Money": {
+        "name": "Money",
+        "id": 37301,
+        "groups": [
+          "Everything",
+          "Fillers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 32
+      },
+      "Lunar Coin": {
+        "name": "Lunar Coin",
+        "id": 37302,
+        "groups": [
+          "Everything",
+          "Fillers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 13
+      },
+      "1000 Exp": {
+        "name": "1000 Exp",
+        "id": 37303,
+        "groups": [
+          "Everything",
+          "Fillers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 18
+      },
+      "Mountain Trap": {
+        "name": "Mountain Trap",
+        "id": 37401,
+        "groups": [
+          "Everything",
+          "Traps"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Time Warp Trap": {
+        "name": "Time Warp Trap",
+        "id": 37402,
+        "groups": [
+          "Everything",
+          "Traps"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Combat Trap": {
+        "name": "Combat Trap",
+        "id": 37403,
+        "groups": [
+          "Everything",
+          "Traps"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Teleport Trap": {
+        "name": "Teleport Trap",
+        "id": 37404,
+        "groups": [
+          "Everything",
+          "Traps"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Stage 1": {
+        "name": "Stage 1",
+        "id": 37501,
+        "groups": [
+          "Everything",
+          "Stages"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Stage 2": {
+        "name": "Stage 2",
+        "id": 37502,
+        "groups": [
+          "Everything",
+          "Stages"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Stage 3": {
+        "name": "Stage 3",
+        "id": 37503,
+        "groups": [
+          "Everything",
+          "Stages"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Stage 4": {
+        "name": "Stage 4",
+        "id": 37504,
+        "groups": [
+          "Everything",
+          "Stages"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Stage": {
+        "name": "Progressive Stage",
+        "id": 37505,
+        "groups": [
+          "Everything",
+          "Stages"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "Aphelian Sanctuary": {
+        "name": "Aphelian Sanctuary",
+        "id": 37703,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Void Fields": {
+        "name": "Void Fields",
+        "id": 37704,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hidden Realm: Bulwark's Ambry": {
+        "name": "Hidden Realm: Bulwark's Ambry",
+        "id": 37705,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hidden Realm: Bazaar Between Time": {
+        "name": "Hidden Realm: Bazaar Between Time",
+        "id": 37706,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Distant Roost": {
+        "name": "Distant Roost",
+        "id": 37707,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Distant Roost (2)": {
+        "name": "Distant Roost (2)",
+        "id": 37708,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Abyssal Depths": {
+        "name": "Abyssal Depths",
+        "id": 37710,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Wetland Aspect": {
+        "name": "Wetland Aspect",
+        "id": 37712,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rallypoint Delta": {
+        "name": "Rallypoint Delta",
+        "id": 37713,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hidden Realm: Gilded Coast": {
+        "name": "Hidden Realm: Gilded Coast",
+        "id": 37714,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Titanic Plains": {
+        "name": "Titanic Plains",
+        "id": 37715,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Titanic Plains (2)": {
+        "name": "Titanic Plains (2)",
+        "id": 37716,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Abandoned Aqueduct": {
+        "name": "Abandoned Aqueduct",
+        "id": 37717,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Hidden Realm: A Moment, Whole": {
+        "name": "Hidden Realm: A Moment, Whole",
+        "id": 37727,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Verdant Falls": {
+        "name": "Verdant Falls",
+        "id": 37728,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Commencement": {
+        "name": "Commencement",
+        "id": 37732,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hidden Realm: A Moment, Fractured": {
+        "name": "Hidden Realm: A Moment, Fractured",
+        "id": 37733,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sundered Grove": {
+        "name": "Sundered Grove",
+        "id": 37735,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Siren's Call": {
+        "name": "Siren's Call",
+        "id": 37737,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sky Meadow": {
+        "name": "Sky Meadow",
+        "id": 37738,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Siphoned Forest": {
+        "name": "Siphoned Forest",
+        "id": 37739,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sulfur Pools": {
+        "name": "Sulfur Pools",
+        "id": 37741,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "The Planetarium": {
+        "name": "The Planetarium",
+        "id": 37745,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Void Locus": {
+        "name": "Void Locus",
+        "id": 37746,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Scorched Acres": {
+        "name": "Scorched Acres",
+        "id": 37747,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Stage 5": {
+        "name": "Stage 5",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Heartguard": {
+        "name": "Heartguard",
+        "id": 2641045,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Gaia Belt": {
+        "name": "Gaia Belt",
+        "id": 1245234,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Arcane Poultice": {
+        "name": "Arcane Poultice",
+        "id": 698038,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Elite Knight Leggings": {
+        "name": "Elite Knight Leggings",
+        "id": 100467,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "The Crater (E2M1) - Green key": {
+        "name": "The Crater (E2M1) - Green key",
+        "id": 370220,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Dual-Fusion Welders (SCV)": {
+        "name": "Dual-Fusion Welders (SCV)",
+        "id": 1205,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Enchanted Shield": {
+        "name": "Enchanted Shield",
+        "id": 370017,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Amulet of Annihilation": {
+        "name": "Amulet of Annihilation",
+        "id": 64300,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ash Always Available in Office": {
+        "name": "Ash Always Available in Office",
+        "id": 27096,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Quartz Flask": {
+        "name": "Quartz Flask",
+        "id": 370010,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Loading Screen": {
+        "name": "Loading Screen",
+        "id": 120046,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": true,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mega Armor": {
+        "name": "Mega Armor",
+        "id": 360009,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Telecommunications": {
+        "name": "Telecommunications",
+        "id": 5041058,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Medikit": {
+        "name": "Medikit",
+        "id": 350113,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Card Pack": {
+        "name": "Card Pack",
+        "id": 147041,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Jewelry Box": {
+        "name": "Jewelry Box",
+        "id": 1337126,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Area: West Varrock": {
+        "name": "Area: West Varrock",
+        "id": 458760,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Five Rupees": {
+        "name": "Five Rupees",
+        "id": 7129,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Heart Star": {
+        "name": "Heart Star",
+        "id": 7798816,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "PP Up": {
+        "name": "PP Up",
+        "id": 3860069,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Circuit Charge upgrade": {
+        "name": "Circuit Charge upgrade",
+        "id": 593002,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Enhancement",
+        "max_count": 1
+      },
+      "Power Cell": {
+        "name": "Power Cell",
+        "id": 741000000,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Healing Poultice x 2": {
+        "name": "Healing Poultice x 2",
+        "id": 698104,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Glide": {
+        "name": "Progressive Glide",
+        "id": 2642003,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Crystal Geode": {
+        "name": "Crystal Geode",
+        "id": 370018,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Water": {
+        "name": "Water",
+        "id": 64110,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sun card": {
+        "name": "Sun card",
+        "id": 12992535,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Deluge": {
+        "name": "Deluge",
+        "id": 400015,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Turtle Zone Progression": {
+        "name": "Turtle Zone Progression",
+        "id": 16,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Double Dash Refills": {
+        "name": "Double Dash Refills",
+        "id": 13238274,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rupees (50)": {
+        "name": "Rupees (50)",
+        "id": 65,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Shinsou Masui": {
+        "name": "Shinsou Masui",
+        "id": 2900091,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Wax Pot Bottom": {
+        "name": "Wax Pot Bottom",
+        "id": 27001,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sage Ring": {
+        "name": "Sage Ring",
+        "id": 100654,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Red Bug Pellet": {
+        "name": "Red Bug Pellet",
+        "id": 100852,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Krematoa Cog": {
+        "name": "Krematoa Cog",
+        "id": 14430214,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Taranto to my Sister": {
+        "name": "Taranto to my Sister",
+        "id": 1909050,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Greatshield of Glory": {
+        "name": "Greatshield of Glory",
+        "id": 100278,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "progressive-inserter": {
+        "name": "progressive-inserter",
+        "id": 131272,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Blueprint Shapes Bundle": {
+        "name": "Blueprint Shapes Bundle",
+        "id": 20010760,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Additional Palette Color": {
+        "name": "Additional Palette Color",
+        "id": 198523,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Traveling Merchant Stock Size": {
+        "name": "Traveling Merchant Stock Size",
+        "id": 717120,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Homeward Bone x2": {
+        "name": "Homeward Bone x2",
+        "id": 100795,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Timebomb of the Ancients": {
+        "name": "Timebomb of the Ancients",
+        "id": 370013,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Starport Decal": {
+        "name": "Starport Decal",
+        "id": 717336,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Big Belt Upgrade": {
+        "name": "Big Belt Upgrade",
+        "id": 20010734,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Pisiform of Hernandez, the Explorer": {
+        "name": "Pisiform of Hernandez, the Explorer",
+        "id": 1909171,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Solea of Excommunication": {
+        "name": "Solea of Excommunication",
+        "id": 1909051,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sacred Flame": {
+        "name": "Sacred Flame",
+        "id": 101040,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Bombs (3)": {
+        "name": "Bombs (3)",
+        "id": 40,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Argus Jewel (Corsair)": {
+        "name": "Argus Jewel (Corsair)",
+        "id": 3322,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Fire Keeper Robe": {
+        "name": "Fire Keeper Robe",
+        "id": 100453,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Foraging Level": {
+        "name": "Foraging Level",
+        "id": 717075,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Special Monsters A": {
+        "name": "Special Monsters A",
+        "id": 5730032,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Defensive Matrix (Battlecruiser)": {
+        "name": "Progressive Defensive Matrix (Battlecruiser)",
+        "id": 1319,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rooster": {
+        "name": "Rooster",
+        "id": 10000150,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Mine Elevator": {
+        "name": "Progressive Mine Elevator",
+        "id": 717072,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hazard Bumper": {
+        "name": "Hazard Bumper",
+        "id": 595007,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Target",
+        "max_count": 1
+      },
+      "Global Warming Mitigation": {
+        "name": "Global Warming Mitigation",
+        "id": 5041133,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Child of Moonlight": {
+        "name": "Child of Moonlight",
+        "id": 1909178,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Yarn": {
+        "name": "Yarn",
+        "id": 2000300001,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Dodge Enhancer": {
+        "name": "Dodge Enhancer",
+        "id": 593009,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Important Artifact",
+        "max_count": 1
+      },
+      "progressive-engine": {
+        "name": "progressive-engine",
+        "id": 131267,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Color Mixer": {
+        "name": "Color Mixer",
+        "id": 20010716,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Very Funny Joke": {
+        "name": "Very Funny Joke",
+        "id": 9001,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "World 2 Gate": {
+        "name": "World 2 Gate",
+        "id": 3154031,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cervical vertebra of Zicher, the Brewmaster": {
+        "name": "Cervical vertebra of Zicher, the Brewmaster",
+        "id": 1909136,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Computer Station (E1M7) - Yellow keycard": {
+        "name": "Computer Station (E1M7) - Yellow keycard",
+        "id": 350023,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Heart of Oils": {
+        "name": "Heart of Oils",
+        "id": 1909073,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Holo Decoy (Nova Gadget)": {
+        "name": "Holo Decoy (Nova Gadget)",
+        "id": 1917,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Random Cosmetic": {
+        "name": "Random Cosmetic",
+        "id": 2000300044,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Seashell": {
+        "name": "Seashell",
+        "id": 10000032,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Midnight Riders": {
+        "name": "Midnight Riders",
+        "id": 1511,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Developer Commentary": {
+        "name": "Developer Commentary",
+        "id": 9268,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Wing Cap": {
+        "name": "Wing Cap",
+        "id": 3626181,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Resource Pack: 2 MetalOre": {
+        "name": "Resource Pack: 2 MetalOre",
+        "id": 47267,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Money x100": {
+        "name": "Money x100",
+        "id": 509342498,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Wanderlust": {
+        "name": "Wanderlust",
+        "id": 444576,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Jazz Seeds": {
+        "name": "Jazz Seeds",
+        "id": 717131,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BOMBO - GENESIS": {
+        "name": "BOMBO - GENESIS",
+        "id": 200685,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Encouragement": {
+        "name": "Encouragement",
+        "id": 16871244200,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Cross-Spectrum Dampeners (Banshee)": {
+        "name": "Progressive Cross-Spectrum Dampeners (Banshee)",
+        "id": 1316,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Torch": {
+        "name": "Torch",
+        "id": 370015,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Bonus Coin": {
+        "name": "Bonus Coin",
+        "id": 14430211,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Chuckle Bean": {
+        "name": "Chuckle Bean",
+        "id": 77771020,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cybernetics": {
+        "name": "Cybernetics",
+        "id": 5041072,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cyclops Bridge Fragment": {
+        "name": "Cyclops Bridge Fragment",
+        "id": 35020,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Scout Fly - Lost Precursor City": {
+        "name": "Scout Fly - Lost Precursor City",
+        "id": 741001073,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Power Bomb": {
+        "name": "Power Bomb",
+        "id": 83003,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "PowerBomb",
+        "max_count": 1
+      },
+      "Area: Karamja": {
+        "name": "Area: Karamja",
+        "id": 458771,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Return Scepter": {
+        "name": "Return Scepter",
+        "id": 717122,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Siege Breakers": {
+        "name": "Siege Breakers",
+        "id": 1504,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "SOUL CRISPER": {
+        "name": "SOUL CRISPER",
+        "id": 200679,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Librarian Hat": {
+        "name": "Librarian Hat",
+        "id": 1337009,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Smough's Great Hammer": {
+        "name": "Smough's Great Hammer",
+        "id": 100134,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Nuts": {
+        "name": "Nuts",
+        "id": 77771005,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Air Combo Plus": {
+        "name": "Air Combo Plus",
+        "id": 1245360,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Floodlight": {
+        "name": "Floodlight",
+        "id": 35066,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Trinket 05": {
+        "name": "Trinket 05",
+        "id": 2515004,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "progressive-fluid-handling": {
+        "name": "progressive-fluid-handling",
+        "id": 131269,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Golden Coin": {
+        "name": "Golden Coin",
+        "id": 509342439,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Blessed Weapon": {
+        "name": "Blessed Weapon",
+        "id": 101074,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Twin Drones (Kerrigan Tier 5)": {
+        "name": "Twin Drones (Kerrigan Tier 5)",
+        "id": 2412,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Missile": {
+        "name": "Missile",
+        "id": 83001,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Missile",
+        "max_count": 1
+      },
+      "Soul of the Lords": {
+        "name": "Soul of the Lords",
+        "id": 100887,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Herb": {
+        "name": "Herb",
+        "id": 1337090,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Food": {
+        "name": "Food",
+        "id": 7120,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Fairy Harp": {
+        "name": "Fairy Harp",
+        "id": 2641088,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "200 Rupees": {
+        "name": "200 Rupees",
+        "id": 10000030,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ballad of Gales": {
+        "name": "Ballad of Gales",
+        "id": 2322456,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Item",
+        "max_count": 1
+      },
+      "Inferno Orb": {
+        "name": "Inferno Orb",
+        "id": 370021,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "50 Pons": {
+        "name": "50 Pons",
+        "id": 2000300035,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Titanite Chunk": {
+        "name": "Titanite Chunk",
+        "id": 100895,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Pink Shoelaces": {
+        "name": "Pink Shoelaces",
+        "id": 9053,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statue of Gaia": {
+        "name": "Statue of Gaia",
+        "id": 4019,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ideology": {
+        "name": "Ideology",
+        "id": 5041116,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Red Potion": {
+        "name": "Red Potion",
+        "id": 400024,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Reward: Red Counterweight": {
+        "name": "Reward: Red Counterweight",
+        "id": 8257681,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "HM02 Fly": {
+        "name": "HM02 Fly",
+        "id": 3860340,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mushroom": {
+        "name": "Mushroom",
+        "id": 77771001,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Fallen Knight Gauntlets": {
+        "name": "Fallen Knight Gauntlets",
+        "id": 100284,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Secret Legend": {
+        "name": "Secret Legend",
+        "id": 509342474,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Containment Area (E2M2) - Computer area map": {
+        "name": "Containment Area (E2M2) - Computer area map",
+        "id": 350042,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "+10 Stars": {
+        "name": "+10 Stars",
+        "id": 3154058,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ars Arcanum": {
+        "name": "Ars Arcanum",
+        "id": 2643012,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Raw Gem": {
+        "name": "Raw Gem",
+        "id": 100917,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Veggie Cake": {
+        "name": "Veggie Cake",
+        "id": 698094,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "5000DP": {
+        "name": "5000DP",
+        "id": 5730254,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Roast chicken": {
+        "name": "Roast chicken",
+        "id": 12992518,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Tent": {
+        "name": "Tent",
+        "id": 2641142,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Spangle Seeds": {
+        "name": "Spangle Seeds",
+        "id": 717155,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Undead Legion Gauntlet": {
+        "name": "Undead Legion Gauntlet",
+        "id": 100427,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Atbash Trap": {
+        "name": "Atbash Trap",
+        "id": 444412,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": true,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "SAGE TOKEN": {
+        "name": "SAGE TOKEN",
+        "id": 200656,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Secret Ansem's Report 2": {
+        "name": "Secret Ansem's Report 2",
+        "id": 1245185,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "50 coins": {
+        "name": "50 coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 1
+      },
+      "Key Ace": {
+        "name": "Key Ace",
+        "id": 400010,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Flynn's Ring": {
+        "name": "Flynn's Ring",
+        "id": 100682,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Crystals x1000": {
+        "name": "Crystals x1000",
+        "id": 593020,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Crystals",
+        "max_count": 1
+      },
+      "Ether": {
+        "name": "Ether",
+        "id": 3860034,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Grave Key": {
+        "name": "Grave Key",
+        "id": 100925,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Heart Max Up": {
+        "name": "Heart Max Up",
+        "id": 3579634688,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Coffee Maker": {
+        "name": "Coffee Maker",
+        "id": 717240,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Brigand Armor": {
+        "name": "Brigand Armor",
+        "id": 100485,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Box of rockets": {
+        "name": "Box of rockets",
+        "id": 360017,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Red jewel(L)": {
+        "name": "Red jewel(L)",
+        "id": 12992515,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ancient Obol": {
+        "name": "Ancient Obol",
+        "id": 147025,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ember": {
+        "name": "Ember",
+        "id": 100863,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Spicy Roll": {
+        "name": "Spicy Roll",
+        "id": 698085,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sun Princess Ring": {
+        "name": "Sun Princess Ring",
+        "id": 100670,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "MP Berry x3": {
+        "name": "MP Berry x3",
+        "id": 509342420,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Pocket Fire Melon": {
+        "name": "Pocket Fire Melon",
+        "id": 3154055,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Energy Tank": {
+        "name": "Energy Tank",
+        "id": 83000,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "ETank",
+        "max_count": 1
+      },
+      "Smart Servos (Liberator)": {
+        "name": "Smart Servos (Liberator)",
+        "id": 1384,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cloistered Sapphire": {
+        "name": "Cloistered Sapphire",
+        "id": 1909037,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Super Missile": {
+        "name": "Super Missile",
+        "id": 83002,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Super",
+        "max_count": 1
+      },
+      "Banana Sapling": {
+        "name": "Banana Sapling",
+        "id": 717258,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Life Stock": {
+        "name": "Life Stock",
+        "id": 4062,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Spotlight": {
+        "name": "Spotlight",
+        "id": 35055,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Airshoes": {
+        "name": "Airshoes",
+        "id": 11735172,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Heart Container": {
+        "name": "Heart Container",
+        "id": 7115,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Green Blossom x3": {
+        "name": "Green Blossom x3",
+        "id": 100714,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Emblem": {
+        "name": "Emblem",
+        "id": 16711680,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "15 Qi Gems": {
+        "name": "15 Qi Gems",
+        "id": 722202,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Antiquated Skirt": {
+        "name": "Antiquated Skirt",
+        "id": 100582,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rare Candy": {
+        "name": "Rare Candy",
+        "id": 172000040,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Northern Armor": {
+        "name": "Northern Armor",
+        "id": 100317,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Metatarsus of Rikusyo, the Traveller": {
+        "name": "Metatarsus of Rikusyo, the Traveller",
+        "id": 1909158,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Perfume": {
+        "name": "Perfume",
+        "id": 509342469,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rocket Barrage (Banshee)": {
+        "name": "Rocket Barrage (Banshee)",
+        "id": 1339,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Starting Paint Can": {
+        "name": "Starting Paint Can",
+        "id": 595005,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": "Helper",
+        "max_count": 1
+      },
+      "Witchtree Branch": {
+        "name": "Witchtree Branch",
+        "id": 100186,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Moon Stone": {
+        "name": "Moon Stone",
+        "id": 3860094,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "4 Brimstone": {
+        "name": "4 Brimstone",
+        "id": 64277,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sellsword Helm": {
+        "name": "Sellsword Helm",
+        "id": 100294,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Heal Potion": {
+        "name": "Heal Potion",
+        "id": 4325393,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Greatsword of Judgment": {
+        "name": "Greatsword of Judgment",
+        "id": 100086,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Continuous Spell/Trap A": {
+        "name": "Continuous Spell/Trap A",
+        "id": 5730040,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Optimized Logistics (Battlecruiser)": {
+        "name": "Optimized Logistics (Battlecruiser)",
+        "id": 1356,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Tome of Power": {
+        "name": "Tome of Power",
+        "id": 370014,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Box of shotgun shells": {
+        "name": "Box of shotgun shells",
+        "id": 350116,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Berry Pick-Mi-Up": {
+        "name": "Berry Pick-Mi-Up",
+        "id": 1337061,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Gun Orb": {
+        "name": "Gun Orb",
+        "id": 1337138,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Circuit Refill upgrade": {
+        "name": "Circuit Refill upgrade",
+        "id": 593003,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Enhancement",
+        "max_count": 1
+      },
+      "Postcard": {
+        "name": "Postcard",
+        "id": 2641211,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Partial invisibility": {
+        "name": "Partial invisibility",
+        "id": 350111,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Anti Paralyze": {
+        "name": "Anti Paralyze",
+        "id": 4028,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Bouquet of Thyme": {
+        "name": "Bouquet of Thyme",
+        "id": 1909110,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hawkwood's Shield": {
+        "name": "Hawkwood's Shield",
+        "id": 100227,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "13 Coins": {
+        "name": "13 Coins",
+        "id": 82037,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Anytime Egg": {
+        "name": "Anytime Egg",
+        "id": 3154051,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "50 Rupees": {
+        "name": "50 Rupees",
+        "id": 10000027,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Berry Ice Cream": {
+        "name": "Berry Ice Cream",
+        "id": 698039,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Centrifugal Hooks (Baneling)": {
+        "name": "Centrifugal Hooks (Baneling)",
+        "id": 2231,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Empty Gun": {
+        "name": "Empty Gun",
+        "id": 77049,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "DK Coin": {
+        "name": "DK Coin",
+        "id": 14430212,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Health Pon": {
+        "name": "Health Pon",
+        "id": 2000300037,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Angler Hook": {
+        "name": "Angler Hook",
+        "id": 147015,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      " coins": {
+        "name": " coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 999999
+      },
+      " coins freemium": {
+        "name": " coins freemium",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 999999
+      }
+    }
+  },
+  "item_groups": {
+    "50": [
+      "Environments",
+      "Everything",
+      "Fillers",
+      "Stages",
+      "Traps",
+      "Upgrades"
+    ]
+  },
+  "itempool_counts": {
+    "50": {
+      "1000 Exp": 18,
+      "Abandoned Aqueduct": 2,
+      "Abyssal Depths": 1,
+      "Beads of Fealty": 1,
+      "Boss Item": 1,
+      "Commencement": 1,
+      "Common Item": 35,
+      "Dio's Best Friend": 8,
+      "Distant Roost": 1,
+      "Distant Roost (2)": 1,
+      "Equipment": 25,
+      "Hidden Realm: A Moment, Fractured": 1,
+      "Hidden Realm: A Moment, Whole": 1,
+      "Hidden Realm: Bazaar Between Time": 1,
+      "Hidden Realm: Bulwark's Ambry": 1,
+      "Hidden Realm: Gilded Coast": 1,
+      "Item Scrap, Green": 9,
+      "Item Scrap, Red": 4,
+      "Item Scrap, White": 16,
+      "Legendary Item": 14,
+      "Lunar Coin": 13,
+      "Lunar Item": 10,
+      "Money": 32,
+      "Progressive Stage": 4,
+      "Radar Scanner": 1,
+      "Rallypoint Delta": 1,
+      "Scorched Acres": 1,
+      "Siren's Call": 1,
+      "Sky Meadow": 1,
+      "Stage 5": 1,
+      "Sundered Grove": 1,
+      "Titanic Plains": 1,
+      "Titanic Plains (2)": 1,
+      "Uncommon Item": 12,
+      "Verdant Falls": 1,
+      "Victory": 1,
+      "Void Fields": 1,
+      "Wetland Aspect": 1
+    }
+  },
+  "progression_mapping": {
+    "50": {}
+  },
+  "starting_items": {
+    "50": [
+      "Dio's Best Friend",
+      "Titanic Plains (2)"
+    ]
+  },
+  "settings": {
+    "50": {
+      "game": "Risk of Rain 2",
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "50": {
+      "name": "Risk of Rain 2",
+      "rule_format": {
+        "version": "1.0"
+      }
+    }
+  }
+}

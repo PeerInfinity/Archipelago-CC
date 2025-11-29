@@ -1,0 +1,2765 @@
+{
+  "schema_version": 3,
+  "game_name": "Wargroove",
+  "game_directory": "wargroove",
+  "archipelago_version": "0.6.4",
+  "generation_seed": 1,
+  "player_names": {
+    "1": "Player1",
+    "2": "Player2",
+    "3": "Player3",
+    "4": "Player4",
+    "5": "Player5",
+    "6": "Player6",
+    "7": "Player7",
+    "8": "Player8",
+    "9": "Player9",
+    "10": "Player10",
+    "11": "Player11",
+    "12": "Player12",
+    "13": "Player13",
+    "14": "Player14",
+    "15": "Player15",
+    "16": "Player16",
+    "17": "Player17",
+    "18": "Player18",
+    "19": "Player19",
+    "20": "Player20",
+    "21": "Player21",
+    "22": "Player22",
+    "23": "Player23",
+    "24": "Player24",
+    "25": "Player25",
+    "26": "Player26",
+    "27": "Player27",
+    "28": "Player28",
+    "29": "Player29",
+    "30": "Player30",
+    "31": "Player31",
+    "32": "Player32",
+    "33": "Player33",
+    "34": "Player34",
+    "35": "Player35",
+    "36": "Player36",
+    "37": "Player37",
+    "38": "Player38",
+    "39": "Player39",
+    "40": "Player40",
+    "41": "Player41",
+    "42": "Player42",
+    "43": "Player43",
+    "44": "Player44",
+    "45": "Player45",
+    "46": "Player46",
+    "47": "Player47",
+    "48": "Player48",
+    "49": "Player49",
+    "50": "Player50",
+    "51": "Player51",
+    "52": "Player52",
+    "53": "Player53",
+    "54": "Player54",
+    "55": "Player55",
+    "56": "Player56",
+    "57": "Player57",
+    "58": "Player58",
+    "59": "Player59",
+    "60": "Player60",
+    "61": "Player61",
+    "62": "Player62",
+    "63": "Player63",
+    "64": "Player64",
+    "65": "Player65",
+    "66": "Player66",
+    "67": "Player67",
+    "68": "Player68",
+    "69": "Player69",
+    "70": "Player70",
+    "71": "Player71",
+    "72": "Player72",
+    "73": "Player73",
+    "74": "Player74",
+    "75": "Player75",
+    "76": "Player76"
+  },
+  "world_classes": {
+    "1": "HatInTimeWorld",
+    "2": "ALTTPWorld",
+    "3": "ShortHikeWorld",
+    "4": "AdventureWorld",
+    "5": "AquariaWorld",
+    "6": "ArchipIDLEWorld",
+    "7": "BlasphemousWorld",
+    "8": "BombRushCyberfunkWorld",
+    "9": "BumpStikWorld",
+    "10": "CVCotMWorld",
+    "11": "CV64World",
+    "12": "Celeste64World",
+    "13": "ChecksFinderWorld",
+    "14": "ChocolateChipCookiesWorld",
+    "15": "CivVIWorld",
+    "16": "DarkSouls3World",
+    "17": "DLCqworld",
+    "18": "DKC3World",
+    "19": "DOOM1993World",
+    "20": "DOOM2World",
+    "21": "Factorio",
+    "22": "FaxanaduWorld",
+    "23": "FFMQWorld",
+    "24": "FF1World",
+    "25": "HereticWorld",
+    "26": "Hylics2World",
+    "27": "InscryptionWorld",
+    "28": "JakAndDaxterWorld",
+    "29": "KH2World",
+    "30": "KH1World",
+    "31": "KDL3World",
+    "32": "LandstalkerWorld",
+    "33": "LingoWorld",
+    "34": "LinksAwakeningWorld",
+    "35": "L2ACWorld",
+    "36": "MLSSWorld",
+    "37": "MathProof2p2e4World",
+    "38": "MM2World",
+    "39": "MMBN3World",
+    "40": "MeritousWorld",
+    "41": "MetamathWorld",
+    "42": "MuseDashWorld",
+    "43": "NoitaWorld",
+    "44": "OSRSWorld",
+    "45": "Overcooked2World",
+    "46": "PaintWorld",
+    "47": "PokemonEmeraldWorld",
+    "48": "PokemonRedBlueWorld",
+    "49": "RaftWorld",
+    "50": "RiskOfRainWorld",
+    "51": "SavingPrincessWorld",
+    "52": "SoEWorld",
+    "53": "ShapezWorld",
+    "54": "ShiversWorld",
+    "55": "SA2BWorld",
+    "56": "SC2World",
+    "57": "StardewValleyWorld",
+    "58": "SubnauticaWorld",
+    "59": "SM64World",
+    "60": "MarioLand2World",
+    "61": "SMWWorld",
+    "62": "SMWorld",
+    "63": "TerrariaWorld",
+    "64": "TLoZWorld",
+    "65": "MessengerWorld",
+    "66": "TWWWorld",
+    "67": "WitnessWorld",
+    "68": "TimespinnerWorld",
+    "69": "TunicWorld",
+    "70": "UndertaleWorld",
+    "71": "V6World",
+    "72": "WargrooveWorld",
+    "73": "WebDevJourneyWorld",
+    "74": "YachtDiceWorld",
+    "75": "YoshisIslandWorld",
+    "76": "Yugioh06World"
+  },
+  "regions": {
+    "72": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "Humble Beginnings",
+            "connected_region": "Humble Beginnings",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Humble Beginnings": {
+        "name": "Humble Beginnings",
+        "exits": [
+          {
+            "name": "Best Friendssss",
+            "connected_region": "Best Friendssss",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "A Knight's Folly",
+            "connected_region": "A Knight's Folly",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Denrunaway",
+            "connected_region": "Denrunaway",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Wargroove Finale",
+            "connected_region": "Wargroove Finale",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Humble Beginnings: Caesar",
+            "id": 53001,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Weapon Energy (L)",
+              "player": 38,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Humble Beginnings: Chest 1",
+            "id": 53002,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Dusk Wings",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Humble Beginnings: Chest 2",
+            "id": 53003,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-personal-roboport-equipment",
+              "player": 21,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Humble Beginnings: Victory",
+            "id": 53004,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "PADDLE",
+              "player": 26,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Best Friendssss": {
+        "name": "Best Friendssss",
+        "exits": [
+          {
+            "name": "Dragon Freeway",
+            "connected_region": "Dragon Freeway",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Deep Thicket",
+            "connected_region": "Deep Thicket",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Corrupted Inlet",
+            "connected_region": "Corrupted Inlet",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Best Friendssss: Find Sedge",
+            "id": 53005,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Area: Lumbridge Farms",
+              "player": 44,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Best Friendssss: Victory",
+            "id": 53006,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Combat Level",
+              "player": 57,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "A Knight's Folly": {
+        "name": "A Knight's Folly",
+        "exits": [
+          {
+            "name": "Mage Mayhem",
+            "connected_region": "Mage Mayhem",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Endless Knight",
+            "connected_region": "Endless Knight",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Ambushed in the Middle",
+            "connected_region": "Ambushed in the Middle",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "A Knight's Folly: Caesar",
+            "id": 53007,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "S.S. Ticket",
+              "player": 48,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "A Knight's Folly: Victory",
+            "id": 53008,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Key for Bedroom",
+              "player": 54,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Denrunaway": {
+        "name": "Denrunaway",
+        "exits": [
+          {
+            "name": "The Churning Sea",
+            "connected_region": "The Churning Sea",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Frigid Archery",
+            "connected_region": "Frigid Archery",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Archery Lessons",
+            "connected_region": "Archery Lessons",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Denrunaway: Chest",
+            "id": 53009,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Dark Green Ramp",
+              "player": 45,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Denrunaway: Victory",
+            "id": 53010,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Rising Dragon",
+              "player": 29,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Dragon Freeway": {
+        "name": "Dragon Freeway",
+        "exits": [
+          {
+            "name": "Surrounded",
+            "connected_region": "Surrounded",
+            "access_rule": {
+              "type": "state_method",
+              "method": "_wargroove_has_item",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Mage"
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Dragon Freeway: Victory",
+            "id": 53011,
+            "access_rule": {
+              "type": "state_method",
+              "method": "_wargroove_has_item",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Mage"
+                }
+              ]
+            },
+            "item": {
+              "name": "Armor",
+              "player": 20,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Deep Thicket": {
+        "name": "Deep Thicket",
+        "exits": [
+          {
+            "name": "Darkest Knight",
+            "connected_region": "Darkest Knight",
+            "access_rule": {
+              "type": "state_method",
+              "method": "_wargroove_has_item",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Mage"
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Deep Thicket: Find Sedge",
+            "id": 53012,
+            "access_rule": {
+              "type": "state_method",
+              "method": "_wargroove_has_item",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Mage"
+                }
+              ]
+            },
+            "item": {
+              "name": "50 Golds",
+              "player": 32,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Deep Thicket: Victory",
+            "id": 53013,
+            "access_rule": {
+              "type": "state_method",
+              "method": "_wargroove_has_item",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Mage"
+                }
+              ]
+            },
+            "item": {
+              "name": "Cure Potion",
+              "player": 23,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Corrupted Inlet": {
+        "name": "Corrupted Inlet",
+        "exits": [
+          {
+            "name": "Robbed",
+            "connected_region": "Robbed",
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Barge"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Merfolk"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Warship"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Corrupted Inlet: Victory",
+            "id": 53014,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Barge"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Merfolk"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Warship"
+                    }
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "+10 Stars",
+              "player": 75,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Mage Mayhem": {
+        "name": "Mage Mayhem",
+        "exits": [
+          {
+            "name": "Open Season",
+            "connected_region": "Open Season",
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Dragon"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Harpy"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Foolish Canal: Mage Mayhem Entrance",
+            "connected_region": "Foolish Canal",
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Dragon"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Harpy"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Mage Mayhem: Caesar",
+            "id": 53015,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Dragon"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Harpy"
+                    }
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Wishing Lamp",
+              "player": 29,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Mage Mayhem: Victory",
+            "id": 53016,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Dragon"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Harpy"
+                    }
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "20 Golds",
+              "player": 32,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Endless Knight": {
+        "name": "Endless Knight",
+        "exits": [
+          {
+            "name": "Doggo Mountain",
+            "connected_region": "Doggo Mountain",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "state_method",
+                      "method": "_wargroove_has_item",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Dragon"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "_wargroove_has_item",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Harpy"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "_wargroove_has_item",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Spearman"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Eastern Bridges"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Foolish Canal: Endless Knight Entrance",
+            "connected_region": "Foolish Canal",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "state_method",
+                      "method": "_wargroove_has_item",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Dragon"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "_wargroove_has_item",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Harpy"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "_wargroove_has_item",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Spearman"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Eastern Bridges"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Endless Knight: Victory",
+            "id": 53017,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "state_method",
+                      "method": "_wargroove_has_item",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Dragon"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "_wargroove_has_item",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Harpy"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "_wargroove_has_item",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Spearman"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Eastern Bridges"
+                    }
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Optimized Logistics (Liberator)",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Ambushed in the Middle": {
+        "name": "Ambushed in the Middle",
+        "exits": [
+          {
+            "name": "Tenri's Fall",
+            "connected_region": "Tenri's Fall",
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Spearman"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Spearman"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Ambushed in the Middle: Victory (Blue)",
+            "id": 53018,
+            "access_rule": {
+              "type": "state_method",
+              "method": "_wargroove_has_item",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Spearman"
+                }
+              ]
+            },
+            "item": {
+              "name": "Chuckle Bean",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Ambushed in the Middle: Victory (Green)",
+            "id": 53019,
+            "access_rule": {
+              "type": "state_method",
+              "method": "_wargroove_has_item",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Spearman"
+                }
+              ]
+            },
+            "item": {
+              "name": "Puzzle Skip",
+              "player": 33,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "The Churning Sea": {
+        "name": "The Churning Sea",
+        "exits": [
+          {
+            "name": "Rebel Village",
+            "connected_region": "Rebel Village",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "state_method",
+                      "method": "_wargroove_has_item",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Merfolk"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "_wargroove_has_item",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Turtle"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Harpoon Ship"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "The Churning Sea: Victory",
+            "id": 53020,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "state_method",
+                      "method": "_wargroove_has_item",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Merfolk"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "_wargroove_has_item",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Turtle"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Harpoon Ship"
+                    }
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Rune Armlet",
+              "player": 30,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Frigid Archery": {
+        "name": "Frigid Archery",
+        "exits": [
+          {
+            "name": "A Ballista's Revenge",
+            "connected_region": "A Ballista's Revenge",
+            "access_rule": {
+              "type": "state_method",
+              "method": "_wargroove_has_item",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Archer"
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Frigid Archery: Light the Torch",
+            "id": 53021,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Archer"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Southern Walls"
+                    }
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 55,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Frigid Archery: Victory",
+            "id": 53022,
+            "access_rule": {
+              "type": "state_method",
+              "method": "_wargroove_has_item",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Archer"
+                }
+              ]
+            },
+            "item": {
+              "name": "Goliath",
+              "player": 56,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Archery Lessons": {
+        "name": "Archery Lessons",
+        "exits": [
+          {
+            "name": "Master of the Lake",
+            "connected_region": "Master of the Lake",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Knight"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Southern Walls"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Archery Lessons: Chest",
+            "id": 53023,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Knight"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Southern Walls"
+                    }
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Soul of a Nameless Soldier",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Archery Lessons: Victory",
+            "id": 53024,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Knight"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Southern Walls"
+                    }
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "+20 Stars",
+              "player": 75,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Surrounded": {
+        "name": "Surrounded",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Surrounded: Caesar",
+            "id": 53025,
+            "access_rule": {
+              "type": "state_method",
+              "method": "_wargroove_has_item_and_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Knight"
+                },
+                {
+                  "type": "constant",
+                  "value": "Surrounded"
+                }
+              ]
+            },
+            "item": {
+              "name": "Roast beef",
+              "player": 11,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Surrounded: Victory",
+            "id": 53026,
+            "access_rule": {
+              "type": "state_method",
+              "method": "_wargroove_has_item_and_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Knight"
+                },
+                {
+                  "type": "constant",
+                  "value": "Surrounded"
+                }
+              ]
+            },
+            "item": {
+              "name": "Speed Boost",
+              "player": 67,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Darkest Knight": {
+        "name": "Darkest Knight",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Darkest Knight: Victory",
+            "id": 53027,
+            "access_rule": {
+              "type": "state_method",
+              "method": "_wargroove_has_item_and_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Spearman"
+                },
+                {
+                  "type": "constant",
+                  "value": "Darkest Knight"
+                }
+              ]
+            },
+            "item": {
+              "name": "Roast chicken",
+              "player": 11,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Robbed": {
+        "name": "Robbed",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Robbed: Victory",
+            "id": 53028,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Rifleman"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item_and_region",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Thief"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Robbed"
+                    }
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Cold War",
+              "player": 15,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Open Season": {
+        "name": "Open Season",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Open Season: Caesar",
+            "id": 53029,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Knight"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item_and_region",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Mage"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Open Season"
+                    }
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Glass Pumpkin",
+              "player": 68,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Open Season: Victory",
+            "id": 53030,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Knight"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item_and_region",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Mage"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Open Season"
+                    }
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Spook",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Doggo Mountain": {
+        "name": "Doggo Mountain",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Doggo Mountain: Find all the Dogs",
+            "id": 53031,
+            "access_rule": {
+              "type": "state_method",
+              "method": "_wargroove_has_item_and_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Knight"
+                },
+                {
+                  "type": "constant",
+                  "value": "Doggo Mountain"
+                }
+              ]
+            },
+            "item": {
+              "name": "Inferno Orb",
+              "player": 25,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Doggo Mountain: Victory",
+            "id": 53032,
+            "access_rule": {
+              "type": "state_method",
+              "method": "_wargroove_has_item_and_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Knight"
+                },
+                {
+                  "type": "constant",
+                  "value": "Doggo Mountain"
+                }
+              ]
+            },
+            "item": {
+              "name": "Mettaton Plush",
+              "player": 70,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Tenri's Fall": {
+        "name": "Tenri's Fall",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Tenri's Fall: Victory",
+            "id": 53033,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Thief"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item_and_region",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Mage"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Tenri's Fall"
+                    }
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Laser Targeting System (Reaper)",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Foolish Canal": {
+        "name": "Foolish Canal",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Foolish Canal: Victory",
+            "id": 53038,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Spearman"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item_and_region",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Mage"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Foolish Canal"
+                    }
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Glowing Egg",
+              "player": 5,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Master of the Lake": {
+        "name": "Master of the Lake",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Master of the Lake: Victory",
+            "id": 53034,
+            "access_rule": {
+              "type": "state_method",
+              "method": "_wargroove_has_item_and_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Warship"
+                },
+                {
+                  "type": "constant",
+                  "value": "Master of the Lake"
+                }
+              ]
+            },
+            "item": {
+              "name": "Astronaut Food",
+              "player": 70,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "A Ballista's Revenge": {
+        "name": "A Ballista's Revenge",
+        "exits": [],
+        "locations": [
+          {
+            "name": "A Ballista's Revenge: Victory",
+            "id": 53035,
+            "access_rule": {
+              "type": "state_method",
+              "method": "_wargroove_has_item_and_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Ballista"
+                },
+                {
+                  "type": "constant",
+                  "value": "A Ballista's Revenge"
+                }
+              ]
+            },
+            "item": {
+              "name": "Tech Boost",
+              "player": 30,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Rebel Village": {
+        "name": "Rebel Village",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Rebel Village: Victory (Pink)",
+            "id": 53036,
+            "access_rule": {
+              "type": "state_method",
+              "method": "_wargroove_has_item_and_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Spearman"
+                },
+                {
+                  "type": "constant",
+                  "value": "Rebel Village"
+                }
+              ]
+            },
+            "item": {
+              "name": "Partial invisibility",
+              "player": 20,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Rebel Village: Victory (Red)",
+            "id": 53037,
+            "access_rule": {
+              "type": "state_method",
+              "method": "_wargroove_has_item_and_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Spearman"
+                },
+                {
+                  "type": "constant",
+                  "value": "Rebel Village"
+                }
+              ]
+            },
+            "item": {
+              "name": "Progressive Orbital Command",
+              "player": 56,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Wargroove Finale": {
+        "name": "Wargroove Finale",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Wargroove Finale: Victory",
+            "id": null,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Final Bridges"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Final Sickle"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Final Walls"
+                    }
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Wargroove Victory",
+              "player": 72,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "72": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "72": {
+      "Spearman": {
+        "name": "Spearman",
+        "id": 52000,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Wagon": {
+        "name": "Wagon",
+        "id": 52001,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mage": {
+        "name": "Mage",
+        "id": 52002,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Archer": {
+        "name": "Archer",
+        "id": 52003,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Knight": {
+        "name": "Knight",
+        "id": 52004,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ballista": {
+        "name": "Ballista",
+        "id": 52005,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Golem": {
+        "name": "Golem",
+        "id": 52006,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Harpy": {
+        "name": "Harpy",
+        "id": 52007,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Witch": {
+        "name": "Witch",
+        "id": 52008,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Dragon": {
+        "name": "Dragon",
+        "id": 52009,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Balloon": {
+        "name": "Balloon",
+        "id": 52010,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Barge": {
+        "name": "Barge",
+        "id": 52011,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Merfolk": {
+        "name": "Merfolk",
+        "id": 52012,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Turtle": {
+        "name": "Turtle",
+        "id": 52013,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Harpoon Ship": {
+        "name": "Harpoon Ship",
+        "id": 52014,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Warship": {
+        "name": "Warship",
+        "id": 52015,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Thief": {
+        "name": "Thief",
+        "id": 52016,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rifleman": {
+        "name": "Rifleman",
+        "id": 52017,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Eastern Bridges": {
+        "name": "Eastern Bridges",
+        "id": 52018,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Southern Walls": {
+        "name": "Southern Walls",
+        "id": 52019,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Final Bridges": {
+        "name": "Final Bridges",
+        "id": 52020,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Final Walls": {
+        "name": "Final Walls",
+        "id": 52021,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Final Sickle": {
+        "name": "Final Sickle",
+        "id": 52022,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Income Boost": {
+        "name": "Income Boost",
+        "id": 52023,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 7
+      },
+      "Commander Defense Boost": {
+        "name": "Commander Defense Boost",
+        "id": 52024,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 8
+      },
+      "Cherrystone Commanders": {
+        "name": "Cherrystone Commanders",
+        "id": 52025,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Felheim Commanders": {
+        "name": "Felheim Commanders",
+        "id": 52026,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Floran Commanders": {
+        "name": "Floran Commanders",
+        "id": 52027,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Heavensong Commanders": {
+        "name": "Heavensong Commanders",
+        "id": 52028,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Requiem Commanders": {
+        "name": "Requiem Commanders",
+        "id": 52029,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Outlaw Commanders": {
+        "name": "Outlaw Commanders",
+        "id": 52030,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Wargroove Victory": {
+        "name": "Wargroove Victory",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Weapon Energy (L)": {
+        "name": "Weapon Energy (L)",
+        "id": 8912929,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Dusk Wings": {
+        "name": "Dusk Wings",
+        "id": 1506,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "progressive-personal-roboport-equipment": {
+        "name": "progressive-personal-roboport-equipment",
+        "id": 131280,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "PADDLE": {
+        "name": "PADDLE",
+        "id": 200639,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Area: Lumbridge Farms": {
+        "name": "Area: Lumbridge Farms",
+        "id": 458755,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Combat Level": {
+        "name": "Combat Level",
+        "id": 717077,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "S.S. Ticket": {
+        "name": "S.S. Ticket",
+        "id": 172000063,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Key for Bedroom": {
+        "name": "Key for Bedroom",
+        "id": 27046,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Dark Green Ramp": {
+        "name": "Dark Green Ramp",
+        "id": 213742,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rising Dragon": {
+        "name": "Rising Dragon",
+        "id": 1245276,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Armor": {
+        "name": "Armor",
+        "id": 360008,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "50 Golds": {
+        "name": "50 Golds",
+        "id": 4066,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cure Potion": {
+        "name": "Cure Potion",
+        "id": 4325392,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "+10 Stars": {
+        "name": "+10 Stars",
+        "id": 3154058,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Wishing Lamp": {
+        "name": "Wishing Lamp",
+        "id": 1245300,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "20 Golds": {
+        "name": "20 Golds",
+        "id": 4065,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Optimized Logistics (Liberator)": {
+        "name": "Optimized Logistics (Liberator)",
+        "id": 1376,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Chuckle Bean": {
+        "name": "Chuckle Bean",
+        "id": 77771020,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Puzzle Skip": {
+        "name": "Puzzle Skip",
+        "id": 444413,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rune Armlet": {
+        "name": "Rune Armlet",
+        "id": 2641043,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Emblem": {
+        "name": "Emblem",
+        "id": 16711680,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Goliath": {
+        "name": "Goliath",
+        "id": 1007,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Soul of a Nameless Soldier": {
+        "name": "Soul of a Nameless Soldier",
+        "id": 100824,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "+20 Stars": {
+        "name": "+20 Stars",
+        "id": 3154059,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Roast beef": {
+        "name": "Roast beef",
+        "id": 12992519,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Speed Boost": {
+        "name": "Speed Boost",
+        "id": 158500,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Roast chicken": {
+        "name": "Roast chicken",
+        "id": 12992518,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cold War": {
+        "name": "Cold War",
+        "id": 5041120,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Glass Pumpkin": {
+        "name": "Glass Pumpkin",
+        "id": 1337047,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Spook": {
+        "name": "Spook",
+        "id": 101001,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Inferno Orb": {
+        "name": "Inferno Orb",
+        "id": 370021,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mettaton Plush": {
+        "name": "Mettaton Plush",
+        "id": 77786,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Laser Targeting System (Reaper)": {
+        "name": "Laser Targeting System (Reaper)",
+        "id": 1251,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Glowing Egg": {
+        "name": "Glowing Egg",
+        "id": 698047,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Astronaut Food": {
+        "name": "Astronaut Food",
+        "id": 77035,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Tech Boost": {
+        "name": "Tech Boost",
+        "id": 2643060,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Partial invisibility": {
+        "name": "Partial invisibility",
+        "id": 360012,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Orbital Command": {
+        "name": "Progressive Orbital Command",
+        "id": 1207,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      " coins": {
+        "name": " coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 999999
+      },
+      " coins freemium": {
+        "name": " coins freemium",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 999999
+      }
+    }
+  },
+  "item_groups": {
+    "72": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "72": {
+      "Archer": 1,
+      "Ballista": 1,
+      "Balloon": 1,
+      "Barge": 1,
+      "Commander Defense Boost": 8,
+      "Dragon": 1,
+      "Eastern Bridges": 1,
+      "Final Bridges": 1,
+      "Final Sickle": 1,
+      "Final Walls": 1,
+      "Golem": 1,
+      "Harpoon Ship": 1,
+      "Harpy": 1,
+      "Income Boost": 7,
+      "Knight": 1,
+      "Mage": 1,
+      "Merfolk": 1,
+      "Rifleman": 1,
+      "Southern Walls": 1,
+      "Spearman": 1,
+      "Thief": 1,
+      "Turtle": 1,
+      "Wagon": 1,
+      "Wargroove Victory": 1,
+      "Warship": 1,
+      "Witch": 1
+    }
+  },
+  "progression_mapping": {
+    "72": {}
+  },
+  "starting_items": {
+    "72": []
+  },
+  "settings": {
+    "72": {
+      "game": "Wargroove",
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "72": {
+      "name": "Wargroove",
+      "rule_format": {
+        "version": "1.0"
+      }
+    }
+  }
+}

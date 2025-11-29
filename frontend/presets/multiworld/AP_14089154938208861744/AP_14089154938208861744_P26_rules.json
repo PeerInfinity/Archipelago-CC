@@ -1,0 +1,5588 @@
+{
+  "schema_version": 3,
+  "game_name": "Hylics 2",
+  "game_directory": "hylics2",
+  "archipelago_version": "0.6.4",
+  "generation_seed": 1,
+  "player_names": {
+    "1": "Player1",
+    "2": "Player2",
+    "3": "Player3",
+    "4": "Player4",
+    "5": "Player5",
+    "6": "Player6",
+    "7": "Player7",
+    "8": "Player8",
+    "9": "Player9",
+    "10": "Player10",
+    "11": "Player11",
+    "12": "Player12",
+    "13": "Player13",
+    "14": "Player14",
+    "15": "Player15",
+    "16": "Player16",
+    "17": "Player17",
+    "18": "Player18",
+    "19": "Player19",
+    "20": "Player20",
+    "21": "Player21",
+    "22": "Player22",
+    "23": "Player23",
+    "24": "Player24",
+    "25": "Player25",
+    "26": "Player26",
+    "27": "Player27",
+    "28": "Player28",
+    "29": "Player29",
+    "30": "Player30",
+    "31": "Player31",
+    "32": "Player32",
+    "33": "Player33",
+    "34": "Player34",
+    "35": "Player35",
+    "36": "Player36",
+    "37": "Player37",
+    "38": "Player38",
+    "39": "Player39",
+    "40": "Player40",
+    "41": "Player41",
+    "42": "Player42",
+    "43": "Player43",
+    "44": "Player44",
+    "45": "Player45",
+    "46": "Player46",
+    "47": "Player47",
+    "48": "Player48",
+    "49": "Player49",
+    "50": "Player50",
+    "51": "Player51",
+    "52": "Player52",
+    "53": "Player53",
+    "54": "Player54",
+    "55": "Player55",
+    "56": "Player56",
+    "57": "Player57",
+    "58": "Player58",
+    "59": "Player59",
+    "60": "Player60",
+    "61": "Player61",
+    "62": "Player62",
+    "63": "Player63",
+    "64": "Player64",
+    "65": "Player65",
+    "66": "Player66",
+    "67": "Player67",
+    "68": "Player68",
+    "69": "Player69",
+    "70": "Player70",
+    "71": "Player71",
+    "72": "Player72",
+    "73": "Player73",
+    "74": "Player74",
+    "75": "Player75",
+    "76": "Player76"
+  },
+  "world_classes": {
+    "1": "HatInTimeWorld",
+    "2": "ALTTPWorld",
+    "3": "ShortHikeWorld",
+    "4": "AdventureWorld",
+    "5": "AquariaWorld",
+    "6": "ArchipIDLEWorld",
+    "7": "BlasphemousWorld",
+    "8": "BombRushCyberfunkWorld",
+    "9": "BumpStikWorld",
+    "10": "CVCotMWorld",
+    "11": "CV64World",
+    "12": "Celeste64World",
+    "13": "ChecksFinderWorld",
+    "14": "ChocolateChipCookiesWorld",
+    "15": "CivVIWorld",
+    "16": "DarkSouls3World",
+    "17": "DLCqworld",
+    "18": "DKC3World",
+    "19": "DOOM1993World",
+    "20": "DOOM2World",
+    "21": "Factorio",
+    "22": "FaxanaduWorld",
+    "23": "FFMQWorld",
+    "24": "FF1World",
+    "25": "HereticWorld",
+    "26": "Hylics2World",
+    "27": "InscryptionWorld",
+    "28": "JakAndDaxterWorld",
+    "29": "KH2World",
+    "30": "KH1World",
+    "31": "KDL3World",
+    "32": "LandstalkerWorld",
+    "33": "LingoWorld",
+    "34": "LinksAwakeningWorld",
+    "35": "L2ACWorld",
+    "36": "MLSSWorld",
+    "37": "MathProof2p2e4World",
+    "38": "MM2World",
+    "39": "MMBN3World",
+    "40": "MeritousWorld",
+    "41": "MetamathWorld",
+    "42": "MuseDashWorld",
+    "43": "NoitaWorld",
+    "44": "OSRSWorld",
+    "45": "Overcooked2World",
+    "46": "PaintWorld",
+    "47": "PokemonEmeraldWorld",
+    "48": "PokemonRedBlueWorld",
+    "49": "RaftWorld",
+    "50": "RiskOfRainWorld",
+    "51": "SavingPrincessWorld",
+    "52": "SoEWorld",
+    "53": "ShapezWorld",
+    "54": "ShiversWorld",
+    "55": "SA2BWorld",
+    "56": "SC2World",
+    "57": "StardewValleyWorld",
+    "58": "SubnauticaWorld",
+    "59": "SM64World",
+    "60": "MarioLand2World",
+    "61": "SMWWorld",
+    "62": "SMWorld",
+    "63": "TerrariaWorld",
+    "64": "TLoZWorld",
+    "65": "MessengerWorld",
+    "66": "TWWWorld",
+    "67": "WitnessWorld",
+    "68": "TimespinnerWorld",
+    "69": "TunicWorld",
+    "70": "UndertaleWorld",
+    "71": "V6World",
+    "72": "WargrooveWorld",
+    "73": "WebDevJourneyWorld",
+    "74": "YachtDiceWorld",
+    "75": "YoshisIslandWorld",
+    "76": "Yugioh06World"
+  },
+  "regions": {
+    "26": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "Menu New Game",
+            "connected_region": "Waynehouse",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Afterlife": {
+        "name": "Afterlife",
+        "exits": [
+          {
+            "name": "Afterlife To Waynehouse",
+            "connected_region": "Waynehouse",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Afterlife To New Muldul",
+            "connected_region": "New Muldul",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Afterlife To Viewax",
+            "connected_region": "Viewax",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "DOCK KEY"
+                },
+                {
+                  "type": "item_check",
+                  "item": "PNEUMATOPHORE"
+                }
+              ]
+            }
+          },
+          {
+            "name": "Afterlife To TV Island",
+            "connected_region": "TV Island",
+            "access_rule": {
+              "type": "item_check",
+              "item": "DOCK KEY"
+            }
+          },
+          {
+            "name": "Afterlife To Shield Facility",
+            "connected_region": "Shield Facility",
+            "access_rule": {
+              "type": "item_check",
+              "item": "DOCK KEY"
+            }
+          },
+          {
+            "name": "Afterlife To Worm Pod",
+            "connected_region": "Worm Pod",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "DOCK KEY"
+                },
+                {
+                  "type": "item_check",
+                  "item": "PADDLE"
+                },
+                {
+                  "type": "item_check",
+                  "item": "WORM ROOM KEY"
+                }
+              ]
+            }
+          },
+          {
+            "name": "Afterlife To Foglast",
+            "connected_region": "Foglast",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "DOCK KEY"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "PADDLE"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "WORM ROOM KEY"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "CHARGE UP"
+                }
+              ]
+            }
+          },
+          {
+            "name": "Afterlife To Sage Labyrinth",
+            "connected_region": "Sage Labyrinth",
+            "access_rule": {
+              "type": "item_check",
+              "item": "SKULL BOMB"
+            }
+          },
+          {
+            "name": "Afterlife To Hylemxylem",
+            "connected_region": "Hylemxylem",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "DOCK KEY"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "PADDLE"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "WORM ROOM KEY"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "BRIDGE KEY"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "PNEUMATOPHORE"
+                    }
+                  ]
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "CHARGE UP"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "PAPER CUP"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Afterlife: Mangled Wayne",
+            "id": 200628,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Blue Switch Palace",
+              "player": 61,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Afterlife: Jar near Mangled Wayne",
+            "id": 200629,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Winged Cloud Maker",
+              "player": 75,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Afterlife: Jar under Pool",
+            "id": 200630,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "The Gantlet (MAP03)",
+              "player": 20,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Afterlife: TV",
+            "id": 200631,
+            "access_rule": {
+              "type": "item_check",
+              "item": "CAVE KEY"
+            },
+            "item": {
+              "name": "Progressive Armor",
+              "player": 22,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Waynehouse": {
+        "name": "Waynehouse",
+        "exits": [
+          {
+            "name": "Waynehouse To World",
+            "connected_region": "World",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Waynehouse To Afterlife",
+            "connected_region": "Afterlife",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Waynehouse: Toilet",
+            "id": 200622,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "16 REP",
+              "player": 8,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Waynehouse: Basement Pot 1",
+            "id": 200623,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Super Potion",
+              "player": 47,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Waynehouse: Basement Pot 2",
+            "id": 200624,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Graffiti (L - INFINITY)",
+              "player": 8,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Waynehouse: Basement Pot 3",
+            "id": 200625,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-armor",
+              "player": 21,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Waynehouse: Sarcophagus",
+            "id": 200626,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Secret Key",
+              "player": 48,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Waynehouse: TV",
+            "id": 200627,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "The Inmost Dens (MAP14)",
+              "player": 20,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "World": {
+        "name": "World",
+        "exits": [
+          {
+            "name": "World To Airship",
+            "connected_region": "Airship",
+            "access_rule": {
+              "type": "item_check",
+              "item": "DOCK KEY"
+            }
+          },
+          {
+            "name": "World To Waynehouse",
+            "connected_region": "Waynehouse",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "World To New Muldul",
+            "connected_region": "New Muldul",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "World To Drill Castle",
+            "connected_region": "Drill Castle",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "World To Viewax",
+            "connected_region": "Viewax",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "DOCK KEY"
+                },
+                {
+                  "type": "item_check",
+                  "item": "PNEUMATOPHORE"
+                }
+              ]
+            }
+          },
+          {
+            "name": "World To Arcade Island",
+            "connected_region": "Arcade Island",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "DOCK KEY"
+                },
+                {
+                  "type": "item_check",
+                  "item": "PNEUMATOPHORE"
+                }
+              ]
+            }
+          },
+          {
+            "name": "World To TV Island",
+            "connected_region": "TV Island",
+            "access_rule": {
+              "type": "item_check",
+              "item": "DOCK KEY"
+            }
+          },
+          {
+            "name": "World To Juice Ranch",
+            "connected_region": "Juice Ranch",
+            "access_rule": {
+              "type": "item_check",
+              "item": "DOCK KEY"
+            }
+          },
+          {
+            "name": "World To Shield Facility",
+            "connected_region": "Shield Facility",
+            "access_rule": {
+              "type": "item_check",
+              "item": "DOCK KEY"
+            }
+          },
+          {
+            "name": "World To Worm Pod",
+            "connected_region": "Worm Pod",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "DOCK KEY"
+                },
+                {
+                  "type": "item_check",
+                  "item": "PADDLE"
+                },
+                {
+                  "type": "item_check",
+                  "item": "WORM ROOM KEY"
+                }
+              ]
+            }
+          },
+          {
+            "name": "World To Foglast",
+            "connected_region": "Foglast",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "DOCK KEY"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "PADDLE"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "WORM ROOM KEY"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "CHARGE UP"
+                }
+              ]
+            }
+          },
+          {
+            "name": "World To Sage Airship",
+            "connected_region": "Sage Airship",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "CHARGE UP"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "PAPER CUP"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "WORM ROOM KEY"
+                    }
+                  ]
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "DOCK KEY"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "PADDLE"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "SKULL BOMB"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "World To Hylemxylem",
+            "connected_region": "Hylemxylem",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "DOCK KEY"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "PADDLE"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "WORM ROOM KEY"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "BRIDGE KEY"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "PNEUMATOPHORE"
+                    }
+                  ]
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "CHARGE UP"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "PAPER CUP"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "New Muldul": {
+        "name": "New Muldul",
+        "exits": [
+          {
+            "name": "New Muldul To World",
+            "connected_region": "World",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "New Muldul To Afterlife",
+            "connected_region": "Afterlife",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "New Muldul To New Muldul Vault",
+            "connected_region": "New Muldul Vault",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "New Muldul: Shop Ceiling Pot 1",
+            "id": 200632,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Fenrir",
+              "player": 29,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "New Muldul: Shop Ceiling Pot 2",
+            "id": 200633,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Golden Statue",
+              "player": 32,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "New Muldul: Flag Banana",
+            "id": 200634,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "HM03 Surf",
+              "player": 47,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "New Muldul: Pot near Vault",
+            "id": 200635,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "1000 Exp",
+              "player": 50,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "New Muldul: Pot above Vault",
+            "id": 200785,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PNEUMATOPHORE"
+            },
+            "item": {
+              "name": "Golden Coin",
+              "player": 69,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "New Muldul: Underground Pot",
+            "id": 200636,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Halls of the Damned (E2M6) - Yellow skull key",
+              "player": 19,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "New Muldul: Underground Chest",
+            "id": 200637,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PNEUMATOPHORE"
+            },
+            "item": {
+              "name": "Broccoli Seeds",
+              "player": 57,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "New Muldul: Juice Trade",
+            "id": 200638,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Magnum1 A",
+              "player": 39,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "New Muldul: Basement Suitcase",
+            "id": 200639,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "The Azure Fortress (E3M4)",
+              "player": 25,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "New Muldul: Upper House Chest 1",
+            "id": 200640,
+            "access_rule": {
+              "type": "item_check",
+              "item": "UPPER HOUSE KEY"
+            },
+            "item": {
+              "name": "Hawk Ring",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "New Muldul: Upper House Chest 2",
+            "id": 200641,
+            "access_rule": {
+              "type": "item_check",
+              "item": "UPPER HOUSE KEY"
+            },
+            "item": {
+              "name": "Gladiator Sword",
+              "player": 52,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "New Muldul: Talk to Pongorma",
+            "id": 200643,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "DOCK KEY",
+              "player": 26,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "New Muldul: Rescued Blerol 1",
+            "id": 200645,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "DOCK KEY"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "PADDLE"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "WORM ROOM KEY"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "BRIDGE KEY"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "PNEUMATOPHORE"
+                    }
+                  ]
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "JAIL KEY"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "PADDLE"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "DOCK KEY"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "PNEUMATOPHORE"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Soul of an Unknown Traveler",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "New Muldul: Rescued Blerol 2",
+            "id": 200646,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "DOCK KEY"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "PADDLE"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "WORM ROOM KEY"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "BRIDGE KEY"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "PNEUMATOPHORE"
+                    }
+                  ]
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "JAIL KEY"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "PADDLE"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "DOCK KEY"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "PNEUMATOPHORE"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Super Missile",
+              "player": 62,
+              "advancement": true,
+              "type": "Super"
+            }
+          },
+          {
+            "name": "New Muldul: TV",
+            "id": 200642,
+            "access_rule": {
+              "type": "item_check",
+              "item": "HOUSE KEY"
+            },
+            "item": {
+              "name": "Titanite Chunk",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "New Muldul Vault": {
+        "name": "New Muldul Vault",
+        "exits": [
+          {
+            "name": "New Muldul Vault To New Muldul",
+            "connected_region": "New Muldul",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "New Muldul: Vault Left Chest",
+            "id": 200647,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "DOCK KEY"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "PADDLE"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "WORM ROOM KEY"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "BRIDGE KEY"
+                },
+                {
+                  "type": "item_check",
+                  "item": "PNEUMATOPHORE"
+                }
+              ]
+            },
+            "item": {
+              "name": "Titanite Chunk",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "New Muldul: Vault Right Chest",
+            "id": 200648,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "DOCK KEY"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "PADDLE"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "WORM ROOM KEY"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "BRIDGE KEY"
+                },
+                {
+                  "type": "item_check",
+                  "item": "PNEUMATOPHORE"
+                }
+              ]
+            },
+            "item": {
+              "name": "Progressive Space Port",
+              "player": 15,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "New Muldul: Vault Bomb",
+            "id": 200649,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "DOCK KEY"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "PADDLE"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "WORM ROOM KEY"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "BRIDGE KEY"
+                },
+                {
+                  "type": "item_check",
+                  "item": "PNEUMATOPHORE"
+                }
+              ]
+            },
+            "item": {
+              "name": "Bomb",
+              "player": 64,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Viewax": {
+        "name": "Viewax",
+        "exits": [
+          {
+            "name": "Viewax To World",
+            "connected_region": "World",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Viewax To Afterlife",
+            "connected_region": "Afterlife",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Viewax's Edifice: Fountain Banana",
+            "id": 200650,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Cure Potion",
+              "player": 23,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Viewax's Edifice: Dedusmuln's Suitcase",
+            "id": 200651,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Reward: Stopwatch",
+              "player": 63,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Viewax's Edifice: Dedusmuln's Campfire",
+            "id": 200652,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Automated Refinery",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Viewax's Edifice: Talk to Dedusmuln",
+            "id": 200653,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Red jewel(S)",
+              "player": 11,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Viewax's Edifice: Canopic Jar",
+            "id": 200655,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PADDLE"
+            },
+            "item": {
+              "name": "Anywhere Pow",
+              "player": 75,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Viewax's Edifice: Cave Sarcophagus",
+            "id": 200656,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PADDLE"
+            },
+            "item": {
+              "name": "Super Mushroom",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Viewax's Edifice: Shielded Key",
+            "id": 200657,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "PADDLE"
+                },
+                {
+                  "type": "item_check",
+                  "item": "PADDLE"
+                }
+              ]
+            },
+            "item": {
+              "name": "Great To Perfect (10 Pack)",
+              "player": 42,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Viewax's Edifice: Tower Pot",
+            "id": 200658,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PADDLE"
+            },
+            "item": {
+              "name": "Galaga Arcade Cabinet",
+              "player": 6,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Viewax's Edifice: Tower Jar",
+            "id": 200659,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PADDLE"
+            },
+            "item": {
+              "name": "Supercharge",
+              "player": 20,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Viewax's Edifice: Tower Chest",
+            "id": 200660,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "PADDLE"
+                },
+                {
+                  "type": "item_check",
+                  "item": "TOWER KEY"
+                }
+              ]
+            },
+            "item": {
+              "name": "Heal Potion",
+              "player": 23,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Viewax's Edifice: Sage Fridge",
+            "id": 200661,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PNEUMATOPHORE"
+            },
+            "item": {
+              "name": "Crystals x1000",
+              "player": 40,
+              "advancement": false,
+              "type": "Crystals"
+            }
+          },
+          {
+            "name": "Viewax's Edifice: Sage Item 1",
+            "id": 200662,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PNEUMATOPHORE"
+            },
+            "item": {
+              "name": "Primal Adaptation (Guardian)",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Viewax's Edifice: Sage Item 2",
+            "id": 200663,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PNEUMATOPHORE"
+            },
+            "item": {
+              "name": "Max HP",
+              "player": 68,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Viewax's Edifice: Viewax Pot",
+            "id": 200664,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PADDLE"
+            },
+            "item": {
+              "name": "Security Keycard A",
+              "player": 68,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Viewax's Edifice: Defeat Viewax",
+            "id": 200665,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PADDLE"
+            },
+            "item": {
+              "name": "Seashell",
+              "player": 34,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Arcade 1: Key",
+            "id": 200667,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PADDLE"
+            },
+            "item": {
+              "name": "Heart Max Up",
+              "player": 10,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Arcade 1: Coin Dash",
+            "id": 200668,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PADDLE"
+            },
+            "item": {
+              "name": "Cloth Pot Bottom",
+              "player": 54,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Arcade 1: Burrito Alcove 1",
+            "id": 200669,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PADDLE"
+            },
+            "item": {
+              "name": "Heart Container",
+              "player": 64,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Arcade 1: Burrito Alcove 2",
+            "id": 200670,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PADDLE"
+            },
+            "item": {
+              "name": "Hoolumbian",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Arcade 1: Behind Spikes Banana",
+            "id": 200671,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PADDLE"
+            },
+            "item": {
+              "name": "Box of rockets",
+              "player": 20,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Arcade 1: Pyramid Banana",
+            "id": 200672,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PADDLE"
+            },
+            "item": {
+              "name": "Slasher B",
+              "player": 39,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Arcade 1: Moving Platforms Muscle Applique",
+            "id": 200673,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PADDLE"
+            },
+            "item": {
+              "name": "Potion",
+              "player": 47,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Arcade 1: Bed Banana",
+            "id": 200674,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PADDLE"
+            },
+            "item": {
+              "name": "Power: The Diamond Hunter",
+              "player": 57,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Viewax's Edifice: TV",
+            "id": 200666,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "JAIL KEY"
+                },
+                {
+                  "type": "item_check",
+                  "item": "PADDLE"
+                }
+              ]
+            },
+            "item": {
+              "name": "Cyclops Hull Fragment",
+              "player": 58,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Airship": {
+        "name": "Airship",
+        "exits": [
+          {
+            "name": "Airship To World",
+            "connected_region": "World",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Airship: Talk to Somsnosa",
+            "id": 200675,
+            "access_rule": {
+              "type": "item_check",
+              "item": "WORM ROOM KEY"
+            },
+            "item": {
+              "name": "25 Coins",
+              "player": 3,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Arcade Island": {
+        "name": "Arcade Island",
+        "exits": [
+          {
+            "name": "Arcade Island To World",
+            "connected_region": "World",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Arcade Island: Shielded Key",
+            "id": 200676,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Entryway (MAP01) - Computer area map",
+              "player": 20,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Arcade 2: Flying Machine Banana",
+            "id": 200677,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Income Boost",
+              "player": 72,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Arcade 2: Paper Cup Detour",
+            "id": 200678,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Black Iron Gauntlets",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Arcade 2: Peak Muscle Applique",
+            "id": 200679,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "MP Berry",
+              "player": 69,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Arcade 2: Double Banana 1",
+            "id": 200680,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Ultra Nuts",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Arcade 2: Double Banana 2",
+            "id": 200681,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Barr200 E",
+              "player": 39,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Arcade 2: Cave Burrito",
+            "id": 200682,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Leg Enhancements (Zealot/Sentinel/Centurion)",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "TV Island": {
+        "name": "TV Island",
+        "exits": [
+          {
+            "name": "TV Island To World",
+            "connected_region": "World",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "TV Island To Afterlife",
+            "connected_region": "Afterlife",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "TV Island: TV",
+            "id": 200683,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Anytime Egg",
+              "player": 75,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Juice Ranch": {
+        "name": "Juice Ranch",
+        "exits": [
+          {
+            "name": "Juice Ranch To World",
+            "connected_region": "World",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Juice Ranch: Juice 1",
+            "id": 200684,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Geddon1 *",
+              "player": 39,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Juice Ranch: Juice 2",
+            "id": 200685,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Flask Shard",
+              "player": 69,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Juice Ranch: Juice 3",
+            "id": 200686,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Nugget",
+              "player": 47,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Juice Ranch: Ledge Rancher",
+            "id": 200687,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Neptune Cockpit",
+              "player": 58,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Juice Ranch: Battle with Somsnosa",
+            "id": 200688,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Small Key",
+              "player": 64,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Juice Ranch: Fridge",
+            "id": 200690,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Water",
+              "player": 52,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Juice Ranch: TV",
+            "id": 200691,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Homeward Bone x3",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Shield Facility": {
+        "name": "Shield Facility",
+        "exits": [
+          {
+            "name": "Shield Facility To World",
+            "connected_region": "World",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Shield Facility To Afterlife",
+            "connected_region": "Afterlife",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Shield Facility To Worm Pod",
+            "connected_region": "Worm Pod",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "DOCK KEY"
+                },
+                {
+                  "type": "item_check",
+                  "item": "PADDLE"
+                },
+                {
+                  "type": "item_check",
+                  "item": "WORM ROOM KEY"
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Worm Pod": {
+        "name": "Worm Pod",
+        "exits": [
+          {
+            "name": "Worm Pod To Shield Facility",
+            "connected_region": "Shield Facility",
+            "access_rule": {
+              "type": "item_check",
+              "item": "DOCK KEY"
+            }
+          },
+          {
+            "name": "Worm Pod To Afterlife",
+            "connected_region": "Afterlife",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Worm Pod: Key",
+            "id": 200692,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Dragon Claw",
+              "player": 23,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Foglast": {
+        "name": "Foglast",
+        "exits": [
+          {
+            "name": "Foglast To World",
+            "connected_region": "World",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Foglast To Afterlife",
+            "connected_region": "Afterlife",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Foglast: West Sarcophagus",
+            "id": 200693,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Graffiti (M - Teddy 4)",
+              "player": 8,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Foglast: Underground Sarcophagus",
+            "id": 200694,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PNEUMATOPHORE"
+            },
+            "item": {
+              "name": "13 Coins",
+              "player": 3,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Foglast: Shielded Key",
+            "id": 200695,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PNEUMATOPHORE"
+            },
+            "item": {
+              "name": "Chuckle Bean",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Foglast: Buy Clicker",
+            "id": 200696,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PNEUMATOPHORE"
+            },
+            "item": {
+              "name": "Max HP Up",
+              "player": 29,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Foglast: Shielded Chest",
+            "id": 200698,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PNEUMATOPHORE"
+            },
+            "item": {
+              "name": "TM34 Bide",
+              "player": 48,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Foglast: Cave Fridge",
+            "id": 200699,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PNEUMATOPHORE"
+            },
+            "item": {
+              "name": "Puppies 25-27",
+              "player": 30,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Foglast: Roof Sarcophagus",
+            "id": 200700,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "BRIDGE KEY"
+                },
+                {
+                  "type": "item_check",
+                  "item": "PNEUMATOPHORE"
+                }
+              ]
+            },
+            "item": {
+              "name": "Save The Queen+",
+              "player": 29,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Foglast: Under Lair Sarcophagus 1",
+            "id": 200701,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "BRIDGE KEY"
+                },
+                {
+                  "type": "item_check",
+                  "item": "PNEUMATOPHORE"
+                }
+              ]
+            },
+            "item": {
+              "name": "The Catacombs (MAP22)",
+              "player": 20,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Foglast: Under Lair Sarcophagus 2",
+            "id": 200702,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "BRIDGE KEY"
+                },
+                {
+                  "type": "item_check",
+                  "item": "PNEUMATOPHORE"
+                }
+              ]
+            },
+            "item": {
+              "name": "Progressive Shed",
+              "player": 57,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Foglast: Under Lair Sarcophagus 3",
+            "id": 200703,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "BRIDGE KEY"
+                },
+                {
+                  "type": "item_check",
+                  "item": "PNEUMATOPHORE"
+                }
+              ]
+            },
+            "item": {
+              "name": "Commander Defense Boost",
+              "player": 72,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Foglast: Sage Sarcophagus",
+            "id": 200704,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "BRIDGE KEY"
+                },
+                {
+                  "type": "item_check",
+                  "item": "PNEUMATOPHORE"
+                }
+              ]
+            },
+            "item": {
+              "name": "Anemone",
+              "player": 5,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Foglast: Sage Item 1",
+            "id": 200705,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "BRIDGE KEY"
+                },
+                {
+                  "type": "item_check",
+                  "item": "PNEUMATOPHORE"
+                }
+              ]
+            },
+            "item": {
+              "name": "Blue Shard",
+              "player": 47,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Foglast: Sage Item 2",
+            "id": 200706,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "BRIDGE KEY"
+                },
+                {
+                  "type": "item_check",
+                  "item": "PNEUMATOPHORE"
+                }
+              ]
+            },
+            "item": {
+              "name": "Pandemonium (E3M3)",
+              "player": 19,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Foglast: TV",
+            "id": 200697,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "CLICKER"
+                },
+                {
+                  "type": "item_check",
+                  "item": "PNEUMATOPHORE"
+                }
+              ]
+            },
+            "item": {
+              "name": "Small Key",
+              "player": 64,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Drill Castle": {
+        "name": "Drill Castle",
+        "exits": [
+          {
+            "name": "Drill Castle To World",
+            "connected_region": "World",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Drill Castle To Sage Labyrinth",
+            "connected_region": "Sage Labyrinth",
+            "access_rule": {
+              "type": "item_check",
+              "item": "SKULL BOMB"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Drill Castle: Ledge Banana",
+            "id": 200707,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Valkyrie",
+              "player": 56,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Drill Castle: Island Banana",
+            "id": 200708,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PNEUMATOPHORE"
+            },
+            "item": {
+              "name": "Mushroom",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Drill Castle: Island Pot",
+            "id": 200709,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PNEUMATOPHORE"
+            },
+            "item": {
+              "name": "Speed Boost",
+              "player": 67,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Drill Castle: Cave Sarcophagus",
+            "id": 200710,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PNEUMATOPHORE"
+            },
+            "item": {
+              "name": "Pocket Melon",
+              "player": 75,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Drill Castle: Roof Banana",
+            "id": 200711,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Heal Potion",
+              "player": 23,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Drill Castle: TV",
+            "id": 200712,
+            "access_rule": {
+              "type": "item_check",
+              "item": "PNEUMATOPHORE"
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 50,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Sage Labyrinth": {
+        "name": "Sage Labyrinth",
+        "exits": [
+          {
+            "name": "Sage Labyrinth To Drill Castle",
+            "connected_region": "Drill Castle",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Sage Labyrinth To Afterlife",
+            "connected_region": "Afterlife",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Sage Labyrinth: 1F Chest Near Fountain",
+            "id": 200713,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Repair *",
+              "player": 39,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: 1F Hidden Sarcophagus",
+            "id": 200714,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Empty White Hallways",
+              "player": 33,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: 1F Four Statues Chest 1",
+            "id": 200715,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Zambra to the Resplendent Crown",
+              "player": 7,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: 1F Four Statues Chest 2",
+            "id": 200716,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Life Stock",
+              "player": 32,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: B1 Double Chest 1",
+            "id": 200717,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Shark Fin Soup",
+              "player": 5,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: B1 Double Chest 2",
+            "id": 200718,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Biscuit",
+              "player": 52,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: B1 Single Chest",
+            "id": 200719,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Mark of the Second Refuge",
+              "player": 7,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: B1 Enemy Chest",
+            "id": 200720,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Black Dress",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: B1 Hidden Sarcophagus",
+            "id": 200721,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Missile",
+              "player": 62,
+              "advancement": false,
+              "type": "Missile"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: B1 Hole Chest",
+            "id": 200722,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Escape Rope",
+              "player": 48,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: B2 Hidden Sarcophagus 1",
+            "id": 200723,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Progressive Coop",
+              "player": 57,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: B2 Hidden Sarcophagus 2",
+            "id": 200724,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Wisdom Form",
+              "player": 29,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: 2F Sarcophagus",
+            "id": 200754,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Titanite Shard",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: Boss Secret Chest 1",
+            "id": 200786,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-bottle",
+              "player": 49,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: Boss Secret Chest 2",
+            "id": 200787,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Cerberus Mine (Spider Mine)",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: Motor Hunter Sarcophagus",
+            "id": 200725,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "CHARGE UP"
+                },
+                {
+                  "type": "item_check",
+                  "item": "PAPER CUP"
+                }
+              ]
+            },
+            "item": {
+              "name": "Precious Mushroom",
+              "player": 29,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: Sage Item 1",
+            "id": 200726,
+            "access_rule": {
+              "type": "item_check",
+              "item": "DEEP KEY"
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 46,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: Sage Item 2",
+            "id": 200727,
+            "access_rule": {
+              "type": "item_check",
+              "item": "DEEP KEY"
+            },
+            "item": {
+              "name": "Mind Repair",
+              "player": 32,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: Sage Left Arm",
+            "id": 200728,
+            "access_rule": {
+              "type": "item_check",
+              "item": "DEEP KEY"
+            },
+            "item": {
+              "name": "300 GOLD",
+              "player": 11,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: Sage Right Arm",
+            "id": 200729,
+            "access_rule": {
+              "type": "item_check",
+              "item": "DEEP KEY"
+            },
+            "item": {
+              "name": "1 coin",
+              "player": 61,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: Sage Left Leg",
+            "id": 200730,
+            "access_rule": {
+              "type": "item_check",
+              "item": "DEEP KEY"
+            },
+            "item": {
+              "name": "The Gatehouse (E1M3) - Green key",
+              "player": 25,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Labyrinth: Sage Right Leg",
+            "id": 200731,
+            "access_rule": {
+              "type": "item_check",
+              "item": "DEEP KEY"
+            },
+            "item": {
+              "name": "Bonus Coin",
+              "player": 18,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Sage Airship": {
+        "name": "Sage Airship",
+        "exits": [
+          {
+            "name": "Sage Airship To World",
+            "connected_region": "World",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Sage Airship: Bottom Level Pot",
+            "id": 200732,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Progressive Footwear",
+              "player": 57,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Airship: Flesh Pot",
+            "id": 200733,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Industrial Zone (MAP15) - Yellow keycard",
+              "player": 20,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Airship: Top Jar",
+            "id": 200734,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "MP Max Up",
+              "player": 10,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Sage Airship: TV",
+            "id": 200735,
+            "access_rule": {
+              "type": "item_check",
+              "item": "SAGE TOKEN",
+              "count": {
+                "type": "constant",
+                "value": 3
+              }
+            },
+            "item": {
+              "name": "Resource Pack: 5 Scrap",
+              "player": 49,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Hylemxylem": {
+        "name": "Hylemxylem",
+        "exits": [
+          {
+            "name": "Hylemxylem To World",
+            "connected_region": "World",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Hylemxylem To Afterlife",
+            "connected_region": "Afterlife",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Hylemxylem: Jar",
+            "id": 200736,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "10 BugFrags",
+              "player": 39,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Hylemxylem: Lower Reservoir Key",
+            "id": 200737,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "The Citadel (E1M5) - Map Scroll",
+              "player": 25,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Hylemxylem: Fountain Banana",
+            "id": 200738,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Mystic Urn",
+              "player": 25,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Hylemxylem: East Island Banana",
+            "id": 200739,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Special Order Board",
+              "player": 57,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Hylemxylem: East Island Chest",
+            "id": 200740,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Twinkling Titanite x3",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Hylemxylem: Upper Chamber Banana",
+            "id": 200741,
+            "access_rule": {
+              "type": "item_check",
+              "item": "UPPER CHAMBER KEY"
+            },
+            "item": {
+              "name": "Futurism",
+              "player": 8,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Hylemxylem: Across Upper Reservoir Chest",
+            "id": 200742,
+            "access_rule": {
+              "type": "item_check",
+              "item": "UPPER CHAMBER KEY"
+            },
+            "item": {
+              "name": "Rusted Coin x2",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Hylemxylem: Drained Lower Reservoir Chest",
+            "id": 200743,
+            "access_rule": {
+              "type": "item_check",
+              "item": "UPPER CHAMBER KEY"
+            },
+            "item": {
+              "name": "Dashed Stairs",
+              "player": 75,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Hylemxylem: Drained Lower Reservoir Burrito 1",
+            "id": 200744,
+            "access_rule": {
+              "type": "item_check",
+              "item": "UPPER CHAMBER KEY"
+            },
+            "item": {
+              "name": "Time Shard (100)",
+              "player": 65,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Hylemxylem: Drained Lower Reservoir Burrito 2",
+            "id": 200745,
+            "access_rule": {
+              "type": "item_check",
+              "item": "UPPER CHAMBER KEY"
+            },
+            "item": {
+              "name": "Tricks and Traps (MAP08) - Yellow skull key",
+              "player": 20,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Hylemxylem: Lower Reservoir Hole Pot 1",
+            "id": 200746,
+            "access_rule": {
+              "type": "item_check",
+              "item": "UPPER CHAMBER KEY"
+            },
+            "item": {
+              "name": "Equipment",
+              "player": 50,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Hylemxylem: Lower Reservoir Hole Pot 2",
+            "id": 200747,
+            "access_rule": {
+              "type": "item_check",
+              "item": "UPPER CHAMBER KEY"
+            },
+            "item": {
+              "name": "Chuckle Bean",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Hylemxylem: Lower Reservoir Hole Pot 3",
+            "id": 200748,
+            "access_rule": {
+              "type": "item_check",
+              "item": "UPPER CHAMBER KEY"
+            },
+            "item": {
+              "name": "Treehouse",
+              "player": 57,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Hylemxylem: Lower Reservoir Hole Sarcophagus",
+            "id": 200749,
+            "access_rule": {
+              "type": "item_check",
+              "item": "UPPER CHAMBER KEY"
+            },
+            "item": {
+              "name": "HP Berry x2",
+              "player": 69,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Hylemxylem: Drained Upper Reservoir Burrito 1",
+            "id": 200750,
+            "access_rule": {
+              "type": "item_check",
+              "item": "UPPER CHAMBER KEY"
+            },
+            "item": {
+              "name": "Gravity Suit",
+              "player": 62,
+              "advancement": true,
+              "type": "Gravity"
+            }
+          },
+          {
+            "name": "Hylemxylem: Drained Upper Reservoir Burrito 2",
+            "id": 200751,
+            "access_rule": {
+              "type": "item_check",
+              "item": "UPPER CHAMBER KEY"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 55,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Hylemxylem: Drained Upper Reservoir Burrito 3",
+            "id": 200752,
+            "access_rule": {
+              "type": "item_check",
+              "item": "UPPER CHAMBER KEY"
+            },
+            "item": {
+              "name": "Irreplaceable",
+              "player": 42,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Hylemxylem: Upper Reservoir Hole Key",
+            "id": 200753,
+            "access_rule": {
+              "type": "item_check",
+              "item": "UPPER CHAMBER KEY"
+            },
+            "item": {
+              "name": "Toxic Immunity Perk",
+              "player": 43,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Defeat Gibby",
+            "id": null,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "UPPER CHAMBER KEY"
+                },
+                {
+                  "type": "item_check",
+                  "item": "VESSEL ROOM KEY"
+                }
+              ]
+            },
+            "item": {
+              "name": "Victory",
+              "player": 26,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "26": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "26": {
+      "DUBIOUS BERRY": {
+        "name": "DUBIOUS BERRY",
+        "id": 200622,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BURRITO": {
+        "name": "BURRITO",
+        "id": 200623,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 11
+      },
+      "COFFEE": {
+        "name": "COFFEE",
+        "id": 200624,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "SOUL SPONGE": {
+        "name": "SOUL SPONGE",
+        "id": 200625,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 6
+      },
+      "MUSCLE APPLIQUE": {
+        "name": "MUSCLE APPLIQUE",
+        "id": 200626,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 7
+      },
+      "POOLWINE": {
+        "name": "POOLWINE",
+        "id": 200627,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "CUPCAKE": {
+        "name": "CUPCAKE",
+        "id": 200628,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "COOKIE": {
+        "name": "COOKIE",
+        "id": 200629,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "HOUSE KEY": {
+        "name": "HOUSE KEY",
+        "id": 200630,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "MEAT": {
+        "name": "MEAT",
+        "id": 200631,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "PNEUMATOPHORE": {
+        "name": "PNEUMATOPHORE",
+        "id": 200632,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "CAVE KEY": {
+        "name": "CAVE KEY",
+        "id": 200633,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "JUICE": {
+        "name": "JUICE",
+        "id": 200634,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 6
+      },
+      "DOCK KEY": {
+        "name": "DOCK KEY",
+        "id": 200635,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "BANANA": {
+        "name": "BANANA",
+        "id": 200636,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 14
+      },
+      "PAPER CUP": {
+        "name": "PAPER CUP",
+        "id": 200637,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "JAIL KEY": {
+        "name": "JAIL KEY",
+        "id": 200638,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "PADDLE": {
+        "name": "PADDLE",
+        "id": 200639,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "WORM ROOM KEY": {
+        "name": "WORM ROOM KEY",
+        "id": 200640,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BRIDGE KEY": {
+        "name": "BRIDGE KEY",
+        "id": 200641,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "STEM CELL": {
+        "name": "STEM CELL",
+        "id": 200642,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "UPPER CHAMBER KEY": {
+        "name": "UPPER CHAMBER KEY",
+        "id": 200643,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "VESSEL ROOM KEY": {
+        "name": "VESSEL ROOM KEY",
+        "id": 200644,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "CLOUD GERM": {
+        "name": "CLOUD GERM",
+        "id": 200645,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "SKULL BOMB": {
+        "name": "SKULL BOMB",
+        "id": 200646,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "TOWER KEY": {
+        "name": "TOWER KEY",
+        "id": 200647,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "DEEP KEY": {
+        "name": "DEEP KEY",
+        "id": 200648,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "MULTI-COFFEE": {
+        "name": "MULTI-COFFEE",
+        "id": 200649,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "MULTI-JUICE": {
+        "name": "MULTI-JUICE",
+        "id": 200650,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "MULTI STEM CELL": {
+        "name": "MULTI STEM CELL",
+        "id": 200651,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "MULTI SOUL SPONGE": {
+        "name": "MULTI SOUL SPONGE",
+        "id": 200652,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 6
+      },
+      "UPPER HOUSE KEY": {
+        "name": "UPPER HOUSE KEY",
+        "id": 200654,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BOTTOMLESS JUICE": {
+        "name": "BOTTOMLESS JUICE",
+        "id": 200655,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "SAGE TOKEN": {
+        "name": "SAGE TOKEN",
+        "id": 200656,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "CLICKER": {
+        "name": "CLICKER",
+        "id": 200657,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "CURSED GLOVES": {
+        "name": "CURSED GLOVES",
+        "id": 200658,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "LONG GLOVES": {
+        "name": "LONG GLOVES",
+        "id": 200659,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 5
+      },
+      "BRAIN DIGITS": {
+        "name": "BRAIN DIGITS",
+        "id": 200660,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "MATERIEL MITTS": {
+        "name": "MATERIEL MITTS",
+        "id": 200661,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "PLEATHER GAGE": {
+        "name": "PLEATHER GAGE",
+        "id": 200662,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "PEPTIDE BODKINS": {
+        "name": "PEPTIDE BODKINS",
+        "id": 200663,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "TELESCOPIC SLEEVE": {
+        "name": "TELESCOPIC SLEEVE",
+        "id": 200664,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "TENDRIL HAND": {
+        "name": "TENDRIL HAND",
+        "id": 200665,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "PSYCHIC KNUCKLE": {
+        "name": "PSYCHIC KNUCKLE",
+        "id": 200666,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "SINGLE GLOVE": {
+        "name": "SINGLE GLOVE",
+        "id": 200667,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "FADED PONCHO": {
+        "name": "FADED PONCHO",
+        "id": 200668,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "JUMPSUIT": {
+        "name": "JUMPSUIT",
+        "id": 200669,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BOOTS": {
+        "name": "BOOTS",
+        "id": 200670,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "CONVERTER WORM": {
+        "name": "CONVERTER WORM",
+        "id": 200671,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "COFFEE CHIP": {
+        "name": "COFFEE CHIP",
+        "id": 200672,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "RANCHER PONCHO": {
+        "name": "RANCHER PONCHO",
+        "id": 200673,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "ORGAN FORT": {
+        "name": "ORGAN FORT",
+        "id": 200674,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "LOOPED DOME": {
+        "name": "LOOPED DOME",
+        "id": 200675,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "DUCTILE HABIT": {
+        "name": "DUCTILE HABIT",
+        "id": 200676,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "TARP": {
+        "name": "TARP",
+        "id": 200677,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "POROMER BLEB": {
+        "name": "POROMER BLEB",
+        "id": 200678,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "SOUL CRISPER": {
+        "name": "SOUL CRISPER",
+        "id": 200679,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "TIME SIGIL": {
+        "name": "TIME SIGIL",
+        "id": 200680,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "CHARGE UP": {
+        "name": "CHARGE UP",
+        "id": 200681,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "FATE SANDBOX": {
+        "name": "FATE SANDBOX",
+        "id": 200682,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "TELEDENUDATE": {
+        "name": "TELEDENUDATE",
+        "id": 200683,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "LINK MOLLUSC": {
+        "name": "LINK MOLLUSC",
+        "id": 200684,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BOMBO - GENESIS": {
+        "name": "BOMBO - GENESIS",
+        "id": 200685,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "100 Bones": {
+        "name": "100 Bones",
+        "id": 200686,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "50 Bones": {
+        "name": "50 Bones",
+        "id": 200687,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "NEMATODE INTERFACE": {
+        "name": "NEMATODE INTERFACE",
+        "id": 200688,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Pongorma": {
+        "name": "Pongorma",
+        "id": 200689,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Dedusmuln": {
+        "name": "Dedusmuln",
+        "id": 200690,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Somsnosa": {
+        "name": "Somsnosa",
+        "id": 200691,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "10 Bones": {
+        "name": "10 Bones",
+        "id": 200692,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "16 REP": {
+        "name": "16 REP",
+        "id": 2308160,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Super Potion": {
+        "name": "Super Potion",
+        "id": 3860022,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - INFINITY)": {
+        "name": "Graffiti (L - INFINITY)",
+        "id": 2308056,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "progressive-armor": {
+        "name": "progressive-armor",
+        "id": 131261,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Secret Key": {
+        "name": "Secret Key",
+        "id": 172000043,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Blue Switch Palace": {
+        "name": "Blue Switch Palace",
+        "id": 12320785,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Winged Cloud Maker": {
+        "name": "Winged Cloud Maker",
+        "id": 3154053,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "The Gantlet (MAP03)": {
+        "name": "The Gantlet (MAP03)",
+        "id": 360406,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Fenrir": {
+        "name": "Fenrir",
+        "id": 1245308,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Golden Statue": {
+        "name": "Golden Statue",
+        "id": 4020,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "HM03 Surf": {
+        "name": "HM03 Surf",
+        "id": 3860341,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "1000 Exp": {
+        "name": "1000 Exp",
+        "id": 37303,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Golden Coin": {
+        "name": "Golden Coin",
+        "id": 509342439,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Halls of the Damned (E2M6) - Yellow skull key": {
+        "name": "Halls of the Damned (E2M6) - Yellow skull key",
+        "id": 350054,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Broccoli Seeds": {
+        "name": "Broccoli Seeds",
+        "id": 717478,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Magnum1 A": {
+        "name": "Magnum1 A",
+        "id": 11735118,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "The Azure Fortress (E3M4)": {
+        "name": "The Azure Fortress (E3M4)",
+        "id": 370463,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hawk Ring": {
+        "name": "Hawk Ring",
+        "id": 100662,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Gladiator Sword": {
+        "name": "Gladiator Sword",
+        "id": 64052,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Soul of an Unknown Traveler": {
+        "name": "Soul of an Unknown Traveler",
+        "id": 100822,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Super Missile": {
+        "name": "Super Missile",
+        "id": 83002,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Super",
+        "max_count": 1
+      },
+      "Titanite Chunk": {
+        "name": "Titanite Chunk",
+        "id": 100895,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Space Port": {
+        "name": "Progressive Space Port",
+        "id": 5041150,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Bomb": {
+        "name": "Bomb",
+        "id": 7127,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cure Potion": {
+        "name": "Cure Potion",
+        "id": 4325392,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Reward: Stopwatch": {
+        "name": "Reward: Stopwatch",
+        "id": 8257635,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Automated Refinery": {
+        "name": "Automated Refinery",
+        "id": 1604,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Red jewel(S)": {
+        "name": "Red jewel(S)",
+        "id": 12992514,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Anywhere Pow": {
+        "name": "Anywhere Pow",
+        "id": 3154052,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Super Mushroom": {
+        "name": "Super Mushroom",
+        "id": 77771002,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Great To Perfect (10 Pack)": {
+        "name": "Great To Perfect (10 Pack)",
+        "id": 2900030,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Galaga Arcade Cabinet": {
+        "name": "Galaga Arcade Cabinet",
+        "id": 9239,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Supercharge": {
+        "name": "Supercharge",
+        "id": 360013,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Heal Potion": {
+        "name": "Heal Potion",
+        "id": 4325393,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Crystals x1000": {
+        "name": "Crystals x1000",
+        "id": 593020,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Crystals",
+        "max_count": 1
+      },
+      "Primal Adaptation (Guardian)": {
+        "name": "Primal Adaptation (Guardian)",
+        "id": 2249,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Max HP": {
+        "name": "Max HP",
+        "id": 1337179,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Security Keycard A": {
+        "name": "Security Keycard A",
+        "id": 1337119,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Seashell": {
+        "name": "Seashell",
+        "id": 10000032,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Heart Max Up": {
+        "name": "Heart Max Up",
+        "id": 3579634688,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cloth Pot Bottom": {
+        "name": "Cloth Pot Bottom",
+        "id": 27004,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Heart Container": {
+        "name": "Heart Container",
+        "id": 7115,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hoolumbian": {
+        "name": "Hoolumbian",
+        "id": 77771025,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Box of rockets": {
+        "name": "Box of rockets",
+        "id": 360017,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Slasher B": {
+        "name": "Slasher B",
+        "id": 11735141,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Potion": {
+        "name": "Potion",
+        "id": 3860013,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Power: The Diamond Hunter": {
+        "name": "Power: The Diamond Hunter",
+        "id": 717534,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "25 Coins": {
+        "name": "25 Coins",
+        "id": 82032,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Entryway (MAP01) - Computer area map": {
+        "name": "Entryway (MAP01) - Computer area map",
+        "id": 360402,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Income Boost": {
+        "name": "Income Boost",
+        "id": 52023,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Black Iron Gauntlets": {
+        "name": "Black Iron Gauntlets",
+        "id": 100557,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "MP Berry": {
+        "name": "MP Berry",
+        "id": 509342418,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ultra Nuts": {
+        "name": "Ultra Nuts",
+        "id": 77771007,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Barr200 E": {
+        "name": "Barr200 E",
+        "id": 11735079,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Leg Enhancements (Zealot/Sentinel/Centurion)": {
+        "name": "Leg Enhancements (Zealot/Sentinel/Centurion)",
+        "id": 3376,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Geddon1 *": {
+        "name": "Geddon1 *",
+        "id": 11735094,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Flask Shard": {
+        "name": "Flask Shard",
+        "id": 509342437,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Nugget": {
+        "name": "Nugget",
+        "id": 3860110,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Neptune Cockpit": {
+        "name": "Neptune Cockpit",
+        "id": 35079,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Small Key": {
+        "name": "Small Key",
+        "id": 7126,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Water": {
+        "name": "Water",
+        "id": 64110,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Dragon Claw": {
+        "name": "Dragon Claw",
+        "id": 4325416,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - Teddy 4)": {
+        "name": "Graffiti (M - Teddy 4)",
+        "id": 2308040,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "13 Coins": {
+        "name": "13 Coins",
+        "id": 82037,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Chuckle Bean": {
+        "name": "Chuckle Bean",
+        "id": 77771020,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Max HP Up": {
+        "name": "Max HP Up",
+        "id": 1245350,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "TM34 Bide": {
+        "name": "TM34 Bide",
+        "id": 172000234,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Puppies 25-27": {
+        "name": "Puppies 25-27",
+        "id": 2642209,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Save The Queen+": {
+        "name": "Save The Queen+",
+        "id": 1245277,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "The Catacombs (MAP22)": {
+        "name": "The Catacombs (MAP22)",
+        "id": 360463,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Shed": {
+        "name": "Progressive Shed",
+        "id": 717089,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Commander Defense Boost": {
+        "name": "Commander Defense Boost",
+        "id": 52024,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Anemone": {
+        "name": "Anemone",
+        "id": 698000,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Blue Shard": {
+        "name": "Blue Shard",
+        "id": 3860049,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Pandemonium (E3M3)": {
+        "name": "Pandemonium (E3M3)",
+        "id": 350074,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Valkyrie": {
+        "name": "Valkyrie",
+        "id": 1019,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mushroom": {
+        "name": "Mushroom",
+        "id": 77771001,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Speed Boost": {
+        "name": "Speed Boost",
+        "id": 158500,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Pocket Melon": {
+        "name": "Pocket Melon",
+        "id": 3154054,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Repair *": {
+        "name": "Repair *",
+        "id": 11735134,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Empty White Hallways": {
+        "name": "Empty White Hallways",
+        "id": 444577,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Zambra to the Resplendent Crown": {
+        "name": "Zambra to the Resplendent Crown",
+        "id": 1909056,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Life Stock": {
+        "name": "Life Stock",
+        "id": 4062,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Shark Fin Soup": {
+        "name": "Shark Fin Soup",
+        "id": 698077,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Biscuit": {
+        "name": "Biscuit",
+        "id": 64141,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mark of the Second Refuge": {
+        "name": "Mark of the Second Refuge",
+        "id": 1909083,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Black Dress": {
+        "name": "Black Dress",
+        "id": 100345,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Missile": {
+        "name": "Missile",
+        "id": 83001,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Missile",
+        "max_count": 1
+      },
+      "Escape Rope": {
+        "name": "Escape Rope",
+        "id": 172000029,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Coop": {
+        "name": "Progressive Coop",
+        "id": 717084,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Wisdom Form": {
+        "name": "Wisdom Form",
+        "id": 1245216,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Titanite Shard": {
+        "name": "Titanite Shard",
+        "id": 100890,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "progressive-bottle": {
+        "name": "progressive-bottle",
+        "id": 47099,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cerberus Mine (Spider Mine)": {
+        "name": "Cerberus Mine (Spider Mine)",
+        "id": 1302,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Precious Mushroom": {
+        "name": "Precious Mushroom",
+        "id": 1245273,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Additional Palette Color": {
+        "name": "Additional Palette Color",
+        "id": 198523,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mind Repair": {
+        "name": "Mind Repair",
+        "id": 4021,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "300 GOLD": {
+        "name": "300 GOLD",
+        "id": 12992552,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "1 coin": {
+        "name": "1 coin",
+        "id": 12320791,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "The Gatehouse (E1M3) - Green key": {
+        "name": "The Gatehouse (E1M3) - Green key",
+        "id": 370205,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Bonus Coin": {
+        "name": "Bonus Coin",
+        "id": 14430211,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Footwear": {
+        "name": "Progressive Footwear",
+        "id": 717294,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Industrial Zone (MAP15) - Yellow keycard": {
+        "name": "Industrial Zone (MAP15) - Yellow keycard",
+        "id": 360228,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "MP Max Up": {
+        "name": "MP Max Up",
+        "id": 3579634690,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "10 BugFrags": {
+        "name": "10 BugFrags",
+        "id": 11735221,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "The Citadel (E1M5) - Map Scroll": {
+        "name": "The Citadel (E1M5) - Map Scroll",
+        "id": 370414,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mystic Urn": {
+        "name": "Mystic Urn",
+        "id": 370009,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Special Order Board": {
+        "name": "Special Order Board",
+        "id": 717228,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Twinkling Titanite x3": {
+        "name": "Twinkling Titanite x3",
+        "id": 100904,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Futurism": {
+        "name": "Futurism",
+        "id": 2308157,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rusted Coin x2": {
+        "name": "Rusted Coin x2",
+        "id": 100845,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Dashed Stairs": {
+        "name": "Dashed Stairs",
+        "id": 3154002,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Time Shard (100)": {
+        "name": "Time Shard (100)",
+        "id": 11391002,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Tricks and Traps (MAP08) - Yellow skull key": {
+        "name": "Tricks and Traps (MAP08) - Yellow skull key",
+        "id": 360213,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Equipment": {
+        "name": "Equipment",
+        "id": 37007,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Treehouse": {
+        "name": "Treehouse",
+        "id": 717287,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "HP Berry x2": {
+        "name": "HP Berry x2",
+        "id": 509342416,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Gravity Suit": {
+        "name": "Gravity Suit",
+        "id": 83013,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Gravity",
+        "max_count": 1
+      },
+      "Emblem": {
+        "name": "Emblem",
+        "id": 16711680,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Irreplaceable": {
+        "name": "Irreplaceable",
+        "id": 2900418,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Toxic Immunity Perk": {
+        "name": "Toxic Immunity Perk",
+        "id": 110014,
+        "groups": [],
+        "advancement": true,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "The Inmost Dens (MAP14)": {
+        "name": "The Inmost Dens (MAP14)",
+        "id": 360439,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Armor": {
+        "name": "Progressive Armor",
+        "id": 400001,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cyclops Hull Fragment": {
+        "name": "Cyclops Hull Fragment",
+        "id": 35022,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Anytime Egg": {
+        "name": "Anytime Egg",
+        "id": 3154051,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Homeward Bone x3": {
+        "name": "Homeward Bone x3",
+        "id": 100796,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Common Item": {
+        "name": "Common Item",
+        "id": 37002,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Resource Pack: 5 Scrap": {
+        "name": "Resource Pack: 5 Scrap",
+        "id": 47180,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      " coins": {
+        "name": " coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 999999
+      },
+      " coins freemium": {
+        "name": " coins freemium",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 999999
+      }
+    }
+  },
+  "item_groups": {
+    "26": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "26": {
+      "100 Bones": 1,
+      "50 Bones": 1,
+      "BANANA": 14,
+      "BOMBO - GENESIS": 1,
+      "BOOTS": 1,
+      "BOTTOMLESS JUICE": 1,
+      "BRAIN DIGITS": 1,
+      "BRIDGE KEY": 1,
+      "BURRITO": 11,
+      "CAVE KEY": 1,
+      "CHARGE UP": 1,
+      "CLICKER": 1,
+      "CLOUD GERM": 3,
+      "COFFEE": 1,
+      "COFFEE CHIP": 1,
+      "CONVERTER WORM": 1,
+      "COOKIE": 3,
+      "CUPCAKE": 3,
+      "CURSED GLOVES": 1,
+      "DEEP KEY": 1,
+      "DOCK KEY": 2,
+      "DUBIOUS BERRY": 1,
+      "DUCTILE HABIT": 1,
+      "FADED PONCHO": 1,
+      "FATE SANDBOX": 1,
+      "HOUSE KEY": 1,
+      "JAIL KEY": 1,
+      "JUICE": 6,
+      "JUMPSUIT": 1,
+      "LINK MOLLUSC": 1,
+      "LONG GLOVES": 5,
+      "LOOPED DOME": 2,
+      "MATERIEL MITTS": 1,
+      "MEAT": 2,
+      "MULTI SOUL SPONGE": 6,
+      "MULTI STEM CELL": 3,
+      "MULTI-COFFEE": 1,
+      "MULTI-JUICE": 4,
+      "MUSCLE APPLIQUE": 7,
+      "NEMATODE INTERFACE": 1,
+      "ORGAN FORT": 1,
+      "PADDLE": 1,
+      "PAPER CUP": 3,
+      "PEPTIDE BODKINS": 1,
+      "PLEATHER GAGE": 1,
+      "PNEUMATOPHORE": 1,
+      "POOLWINE": 1,
+      "POROMER BLEB": 1,
+      "PSYCHIC KNUCKLE": 1,
+      "RANCHER PONCHO": 1,
+      "SAGE TOKEN": 3,
+      "SINGLE GLOVE": 1,
+      "SKULL BOMB": 1,
+      "SOUL CRISPER": 1,
+      "SOUL SPONGE": 6,
+      "STEM CELL": 2,
+      "TARP": 2,
+      "TELEDENUDATE": 1,
+      "TELESCOPIC SLEEVE": 1,
+      "TENDRIL HAND": 1,
+      "TIME SIGIL": 1,
+      "TOWER KEY": 1,
+      "UPPER CHAMBER KEY": 1,
+      "UPPER HOUSE KEY": 1,
+      "VESSEL ROOM KEY": 1,
+      "Victory": 1,
+      "WORM ROOM KEY": 1
+    }
+  },
+  "progression_mapping": {
+    "26": {}
+  },
+  "starting_items": {
+    "26": []
+  },
+  "settings": {
+    "26": {
+      "game": "Hylics 2",
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "26": {
+      "name": "Hylics 2",
+      "rule_format": {
+        "version": "1.0"
+      }
+    }
+  }
+}

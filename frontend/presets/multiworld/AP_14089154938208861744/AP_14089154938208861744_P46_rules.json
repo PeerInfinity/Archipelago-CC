@@ -1,0 +1,4945 @@
+{
+  "schema_version": 3,
+  "game_name": "Paint",
+  "game_directory": "paint",
+  "archipelago_version": "0.6.4",
+  "generation_seed": 1,
+  "player_names": {
+    "1": "Player1",
+    "2": "Player2",
+    "3": "Player3",
+    "4": "Player4",
+    "5": "Player5",
+    "6": "Player6",
+    "7": "Player7",
+    "8": "Player8",
+    "9": "Player9",
+    "10": "Player10",
+    "11": "Player11",
+    "12": "Player12",
+    "13": "Player13",
+    "14": "Player14",
+    "15": "Player15",
+    "16": "Player16",
+    "17": "Player17",
+    "18": "Player18",
+    "19": "Player19",
+    "20": "Player20",
+    "21": "Player21",
+    "22": "Player22",
+    "23": "Player23",
+    "24": "Player24",
+    "25": "Player25",
+    "26": "Player26",
+    "27": "Player27",
+    "28": "Player28",
+    "29": "Player29",
+    "30": "Player30",
+    "31": "Player31",
+    "32": "Player32",
+    "33": "Player33",
+    "34": "Player34",
+    "35": "Player35",
+    "36": "Player36",
+    "37": "Player37",
+    "38": "Player38",
+    "39": "Player39",
+    "40": "Player40",
+    "41": "Player41",
+    "42": "Player42",
+    "43": "Player43",
+    "44": "Player44",
+    "45": "Player45",
+    "46": "Player46",
+    "47": "Player47",
+    "48": "Player48",
+    "49": "Player49",
+    "50": "Player50",
+    "51": "Player51",
+    "52": "Player52",
+    "53": "Player53",
+    "54": "Player54",
+    "55": "Player55",
+    "56": "Player56",
+    "57": "Player57",
+    "58": "Player58",
+    "59": "Player59",
+    "60": "Player60",
+    "61": "Player61",
+    "62": "Player62",
+    "63": "Player63",
+    "64": "Player64",
+    "65": "Player65",
+    "66": "Player66",
+    "67": "Player67",
+    "68": "Player68",
+    "69": "Player69",
+    "70": "Player70",
+    "71": "Player71",
+    "72": "Player72",
+    "73": "Player73",
+    "74": "Player74",
+    "75": "Player75",
+    "76": "Player76"
+  },
+  "world_classes": {
+    "1": "HatInTimeWorld",
+    "2": "ALTTPWorld",
+    "3": "ShortHikeWorld",
+    "4": "AdventureWorld",
+    "5": "AquariaWorld",
+    "6": "ArchipIDLEWorld",
+    "7": "BlasphemousWorld",
+    "8": "BombRushCyberfunkWorld",
+    "9": "BumpStikWorld",
+    "10": "CVCotMWorld",
+    "11": "CV64World",
+    "12": "Celeste64World",
+    "13": "ChecksFinderWorld",
+    "14": "ChocolateChipCookiesWorld",
+    "15": "CivVIWorld",
+    "16": "DarkSouls3World",
+    "17": "DLCqworld",
+    "18": "DKC3World",
+    "19": "DOOM1993World",
+    "20": "DOOM2World",
+    "21": "Factorio",
+    "22": "FaxanaduWorld",
+    "23": "FFMQWorld",
+    "24": "FF1World",
+    "25": "HereticWorld",
+    "26": "Hylics2World",
+    "27": "InscryptionWorld",
+    "28": "JakAndDaxterWorld",
+    "29": "KH2World",
+    "30": "KH1World",
+    "31": "KDL3World",
+    "32": "LandstalkerWorld",
+    "33": "LingoWorld",
+    "34": "LinksAwakeningWorld",
+    "35": "L2ACWorld",
+    "36": "MLSSWorld",
+    "37": "MathProof2p2e4World",
+    "38": "MM2World",
+    "39": "MMBN3World",
+    "40": "MeritousWorld",
+    "41": "MetamathWorld",
+    "42": "MuseDashWorld",
+    "43": "NoitaWorld",
+    "44": "OSRSWorld",
+    "45": "Overcooked2World",
+    "46": "PaintWorld",
+    "47": "PokemonEmeraldWorld",
+    "48": "PokemonRedBlueWorld",
+    "49": "RaftWorld",
+    "50": "RiskOfRainWorld",
+    "51": "SavingPrincessWorld",
+    "52": "SoEWorld",
+    "53": "ShapezWorld",
+    "54": "ShiversWorld",
+    "55": "SA2BWorld",
+    "56": "SC2World",
+    "57": "StardewValleyWorld",
+    "58": "SubnauticaWorld",
+    "59": "SM64World",
+    "60": "MarioLand2World",
+    "61": "SMWWorld",
+    "62": "SMWorld",
+    "63": "TerrariaWorld",
+    "64": "TLoZWorld",
+    "65": "MessengerWorld",
+    "66": "TWWWorld",
+    "67": "WitnessWorld",
+    "68": "TimespinnerWorld",
+    "69": "TunicWorld",
+    "70": "UndertaleWorld",
+    "71": "V6World",
+    "72": "WargrooveWorld",
+    "73": "WebDevJourneyWorld",
+    "74": "YachtDiceWorld",
+    "75": "YoshisIslandWorld",
+    "76": "Yugioh06World"
+  },
+  "regions": {
+    "46": {
+      "Canvas": {
+        "name": "Canvas",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Similarity: 1.0%",
+            "id": 198604,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 1.0
+              }
+            },
+            "item": {
+              "name": "Great To Perfect (10 Pack)",
+              "player": 42,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 2.0%",
+            "id": 198608,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 2.0
+              }
+            },
+            "item": {
+              "name": "The Ophidian Lair (E3M5) - Green key",
+              "player": 25,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 3.0%",
+            "id": 198612,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 3.0
+              }
+            },
+            "item": {
+              "name": "Spider Roll",
+              "player": 5,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 4.0%",
+            "id": 198616,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 4.0
+              }
+            },
+            "item": {
+              "name": "EkeEke",
+              "player": 32,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 5.0%",
+            "id": 198620,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 5.0
+              }
+            },
+            "item": {
+              "name": "Graffiti (M - SPRAYTANICPANIC!)",
+              "player": 8,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 6.0%",
+            "id": 198624,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 6.0
+              }
+            },
+            "item": {
+              "name": "Trap",
+              "player": 43,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 7.0%",
+            "id": 198628,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 7.0
+              }
+            },
+            "item": {
+              "name": "Graffiti (L - NOISY NINJA)",
+              "player": 8,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 8.0%",
+            "id": 198632,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 8.0
+              }
+            },
+            "item": {
+              "name": "Mt. Erebus (E3M6) - Blue skull key",
+              "player": 19,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 9.0%",
+            "id": 198636,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 9.0
+              }
+            },
+            "item": {
+              "name": "Progressive Watering Can",
+              "player": 57,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 10.0%",
+            "id": 198640,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 10.0
+              }
+            },
+            "item": {
+              "name": "Graffiti (M - Pora)",
+              "player": 8,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 11.0%",
+            "id": 198644,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 11.0
+              }
+            },
+            "item": {
+              "name": "Spell Refresher",
+              "player": 43,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 12.0%",
+            "id": 198648,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 12.0
+              }
+            },
+            "item": {
+              "name": "DK Coin",
+              "player": 18,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 13.0%",
+            "id": 198652,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 13.0
+              }
+            },
+            "item": {
+              "name": "Squirrel Totem Head",
+              "player": 27,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 14.0%",
+            "id": 198656,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 14.0
+              }
+            },
+            "item": {
+              "name": "Morne's Armor",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 15.0%",
+            "id": 198660,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 15.0
+              }
+            },
+            "item": {
+              "name": "Your First Grey Hair",
+              "player": 6,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 16.0%",
+            "id": 198664,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 16.0
+              }
+            },
+            "item": {
+              "name": "Dagger",
+              "player": 27,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 17.0%",
+            "id": 198668,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 17.0
+              }
+            },
+            "item": {
+              "name": "2 Iron",
+              "player": 52,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 18.0%",
+            "id": 198672,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 18.0
+              }
+            },
+            "item": {
+              "name": "5 coins",
+              "player": 61,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 19.0%",
+            "id": 198676,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 19.0
+              }
+            },
+            "item": {
+              "name": "Resource Efficiency (Brood Lord)",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 20.0%",
+            "id": 198680,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 20.0
+              }
+            },
+            "item": {
+              "name": "Power Chain",
+              "player": 30,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 21.0%",
+            "id": 198684,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 21.0
+              }
+            },
+            "item": {
+              "name": "HP Berry x3",
+              "player": 69,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 22.0%",
+            "id": 198688,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 22.0
+              }
+            },
+            "item": {
+              "name": "Puppies 67-69",
+              "player": 30,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 23.0%",
+            "id": 198692,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 23.0
+              }
+            },
+            "item": {
+              "name": "Resource Pack: 5 Scrap",
+              "player": 49,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 24.0%",
+            "id": 198696,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 24.0
+              }
+            },
+            "item": {
+              "name": "Money",
+              "player": 50,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 25.0%",
+            "id": 198700,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 25.0
+              }
+            },
+            "item": {
+              "name": "Mushroom",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 26.0%",
+            "id": 198704,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 26.0
+              }
+            },
+            "item": {
+              "name": "Fire+30 *",
+              "player": 39,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 27.0%",
+            "id": 198708,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 27.0
+              }
+            },
+            "item": {
+              "name": "Time Shard (100)",
+              "player": 65,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 28.0%",
+            "id": 198712,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 28.0
+              }
+            },
+            "item": {
+              "name": "Random Cosmetic",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 29.0%",
+            "id": 198716,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 29.0
+              }
+            },
+            "item": {
+              "name": "Llewellyn Shield",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 30.0%",
+            "id": 198720,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 30.0
+              }
+            },
+            "item": {
+              "name": "Progressive Protoss Air Armor",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 31.0%",
+            "id": 198724,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 31.0
+              }
+            },
+            "item": {
+              "name": "Spawning Vats (E2M7)",
+              "player": 19,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 32.0%",
+            "id": 198728,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 32.0
+              }
+            },
+            "item": {
+              "name": "Nest Ball",
+              "player": 47,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 33.0%",
+            "id": 198732,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 33.0
+              }
+            },
+            "item": {
+              "name": "Crystal Chime",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 34.0%",
+            "id": 198736,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 34.0
+              }
+            },
+            "item": {
+              "name": "Item Scrap, White",
+              "player": 50,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 35.0%",
+            "id": 198740,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 35.0
+              }
+            },
+            "item": {
+              "name": "Mush Badge AA",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 36.0%",
+            "id": 198744,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 36.0
+              }
+            },
+            "item": {
+              "name": "Burnt Trap",
+              "player": 57,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 37.0%",
+            "id": 198748,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 37.0
+              }
+            },
+            "item": {
+              "name": "Majestic Mushroom+",
+              "player": 29,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 38.0%",
+            "id": 198752,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 38.0
+              }
+            },
+            "item": {
+              "name": "Reactor Rod",
+              "player": 58,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 39.0%",
+            "id": 198756,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 39.0
+              }
+            },
+            "item": {
+              "name": "Northern Helm",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 40.0%",
+            "id": 198760,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 40.0
+              }
+            },
+            "item": {
+              "name": "Money x25",
+              "player": 69,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 41.0%",
+            "id": 198764,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 41.0
+              }
+            },
+            "item": {
+              "name": "Mushroom Tree Seed",
+              "player": 57,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 42.0%",
+            "id": 198768,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 42.0
+              }
+            },
+            "item": {
+              "name": "24 REP",
+              "player": 8,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 43.0%",
+            "id": 198772,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 43.0
+              }
+            },
+            "item": {
+              "name": "TM12 Water Gun",
+              "player": 48,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 44.0%",
+            "id": 198776,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 44.0
+              }
+            },
+            "item": {
+              "name": "Iron Boots",
+              "player": 66,
+              "advancement": true,
+              "type": "Item"
+            }
+          },
+          {
+            "name": "Similarity: 45.0%",
+            "id": 198780,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 45.0
+              }
+            },
+            "item": {
+              "name": "25 Pons",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 46.0%",
+            "id": 198784,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 46.0
+              }
+            },
+            "item": {
+              "name": "The Great Hall (E2M7) - Map Scroll",
+              "player": 25,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 47.0%",
+            "id": 198788,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 47.0
+              }
+            },
+            "item": {
+              "name": "Trinity Limit",
+              "player": 30,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 48.0%",
+            "id": 198792,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 48.0
+              }
+            },
+            "item": {
+              "name": "Priestess Ring",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 49.0%",
+            "id": 198796,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 49.0
+              }
+            },
+            "item": {
+              "name": "Bonus Coin",
+              "player": 18,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 50.0%",
+            "id": 198800,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 50.0
+              }
+            },
+            "item": {
+              "name": "Scout Fly - Mountain Pass",
+              "player": 28,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 50.5%",
+            "id": 198802,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 50.5
+              }
+            },
+            "item": {
+              "name": "Heart Container",
+              "player": 34,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 51.0%",
+            "id": 198804,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 51.0
+              }
+            },
+            "item": {
+              "name": "Cyclops Engine Fragment",
+              "player": 58,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 51.5%",
+            "id": 198806,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 51.5
+              }
+            },
+            "item": {
+              "name": "Drought Trap",
+              "player": 57,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 52.0%",
+            "id": 198808,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 52.0
+              }
+            },
+            "item": {
+              "name": "Power Star",
+              "player": 59,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 52.5%",
+            "id": 198810,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 52.5
+              }
+            },
+            "item": {
+              "name": "Eye Orb",
+              "player": 68,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 53.0%",
+            "id": 198812,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 53.0
+              }
+            },
+            "item": {
+              "name": "Yarn",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 53.5%",
+            "id": 198814,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 53.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 46,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 54.0%",
+            "id": 198816,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 54.0
+              }
+            },
+            "item": {
+              "name": "Jet Pack Overdrive (Reaper)",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 54.5%",
+            "id": 198818,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 54.5
+              }
+            },
+            "item": {
+              "name": "Supercharge",
+              "player": 19,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 55.0%",
+            "id": 198820,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 55.0
+              }
+            },
+            "item": {
+              "name": "Clay",
+              "player": 52,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 55.5%",
+            "id": 198822,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 55.5
+              }
+            },
+            "item": {
+              "name": "Antiquated Gloves",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 56.0%",
+            "id": 198824,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 56.0
+              }
+            },
+            "item": {
+              "name": "Molten Heart of Boiling Blood",
+              "player": 7,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 56.5%",
+            "id": 198826,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 56.5
+              }
+            },
+            "item": {
+              "name": "Hoo Bean",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 57.0%",
+            "id": 198828,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 57.0
+              }
+            },
+            "item": {
+              "name": "Silver Shield",
+              "player": 25,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 57.5%",
+            "id": 198830,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 57.5
+              }
+            },
+            "item": {
+              "name": "Cape",
+              "player": 2,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 58.0%",
+            "id": 198832,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 58.0
+              }
+            },
+            "item": {
+              "name": "Binoculars",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 58.5%",
+            "id": 198834,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 58.5
+              }
+            },
+            "item": {
+              "name": "Farming Level",
+              "player": 57,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 59.0%",
+            "id": 198836,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 59.0
+              }
+            },
+            "item": {
+              "name": "Sunflower Seeds",
+              "player": 57,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 59.5%",
+            "id": 198838,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 59.5
+              }
+            },
+            "item": {
+              "name": "8 REP",
+              "player": 8,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 60.0%",
+            "id": 198840,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 60.0
+              }
+            },
+            "item": {
+              "name": "Nayru's Pearl",
+              "player": 66,
+              "advancement": true,
+              "type": "Item"
+            }
+          },
+          {
+            "name": "Similarity: 60.5%",
+            "id": 198842,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 60.5
+              }
+            },
+            "item": {
+              "name": "Energy cell pack",
+              "player": 20,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 61.0%",
+            "id": 198844,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 61.0
+              }
+            },
+            "item": {
+              "name": "Treasure Bumper",
+              "player": 9,
+              "advancement": true,
+              "type": "Target"
+            }
+          },
+          {
+            "name": "Similarity: 61.5%",
+            "id": 198846,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 61.5
+              }
+            },
+            "item": {
+              "name": "Ocarina",
+              "player": 34,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 62.0%",
+            "id": 198848,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 62.0
+              }
+            },
+            "item": {
+              "name": "Medikit",
+              "player": 19,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 62.5%",
+            "id": 198850,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 62.5
+              }
+            },
+            "item": {
+              "name": "Potion",
+              "player": 43,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 63.0%",
+            "id": 198852,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 63.0
+              }
+            },
+            "item": {
+              "name": "Small Miner Upgrade",
+              "player": 53,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 63.5%",
+            "id": 198854,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 63.5
+              }
+            },
+            "item": {
+              "name": "Quartz Flask",
+              "player": 25,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 64.0%",
+            "id": 198856,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 64.0
+              }
+            },
+            "item": {
+              "name": "Golden Ritual Spear",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 64.5%",
+            "id": 198858,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 64.5
+              }
+            },
+            "item": {
+              "name": "Frost Land",
+              "player": 42,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 65.0%",
+            "id": 198860,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 65.0
+              }
+            },
+            "item": {
+              "name": "Scout Fly - Misty Island",
+              "player": 28,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 65.5%",
+            "id": 198862,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 65.5
+              }
+            },
+            "item": {
+              "name": "Ramuh Belt",
+              "player": 30,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 66.0%",
+            "id": 198864,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 66.0
+              }
+            },
+            "item": {
+              "name": ":)",
+              "player": 33,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 66.5%",
+            "id": 198866,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 66.5
+              }
+            },
+            "item": {
+              "name": "Large Titanite Shard",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 67.0%",
+            "id": 198868,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 67.0
+              }
+            },
+            "item": {
+              "name": "Water Stone",
+              "player": 47,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 67.5%",
+            "id": 198870,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 67.5
+              }
+            },
+            "item": {
+              "name": "Fairy",
+              "player": 64,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 68.0%",
+            "id": 198872,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 68.0
+              }
+            },
+            "item": {
+              "name": "Thorned Symbol",
+              "player": 7,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 68.5%",
+            "id": 198874,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 68.5
+              }
+            },
+            "item": {
+              "name": "Level Shapes Bundle",
+              "player": 53,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 69.0%",
+            "id": 198876,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 69.0
+              }
+            },
+            "item": {
+              "name": "Shake1 S",
+              "player": 39,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 69.5%",
+            "id": 198878,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 69.5
+              }
+            },
+            "item": {
+              "name": "RegUP2",
+              "player": 39,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 70.0%",
+            "id": 198880,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 70.0
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 55,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 70.25%",
+            "id": 198881,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 70.25
+              }
+            },
+            "item": {
+              "name": "Beanstone 7",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 70.5%",
+            "id": 198882,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 70.5
+              }
+            },
+            "item": {
+              "name": "Bonus Coin",
+              "player": 18,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 70.75%",
+            "id": 198883,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 70.75
+              }
+            },
+            "item": {
+              "name": "20 Golds",
+              "player": 32,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 71.0%",
+            "id": 198884,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 71.0
+              }
+            },
+            "item": {
+              "name": "Chuckle Bean",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 71.25%",
+            "id": 198885,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 71.25
+              }
+            },
+            "item": {
+              "name": "Chuckle Bean",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 71.5%",
+            "id": 198886,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 71.5
+              }
+            },
+            "item": {
+              "name": "BowlMan V3 B",
+              "player": 39,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 71.75%",
+            "id": 198887,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 71.75
+              }
+            },
+            "item": {
+              "name": "Neosteel Bunker (Bunker)",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 72.0%",
+            "id": 198888,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 72.0
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 55,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 72.25%",
+            "id": 198889,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 72.25
+              }
+            },
+            "item": {
+              "name": "Bass+ X",
+              "player": 39,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 72.5%",
+            "id": 198890,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 72.5
+              }
+            },
+            "item": {
+              "name": "Sunset Armor",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 72.75%",
+            "id": 198891,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 72.75
+              }
+            },
+            "item": {
+              "name": "The Crusher (MAP06) - Yellow keycard",
+              "player": 20,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 73.0%",
+            "id": 198892,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 73.0
+              }
+            },
+            "item": {
+              "name": "Effigy",
+              "player": 69,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 73.25%",
+            "id": 198893,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 73.25
+              }
+            },
+            "item": {
+              "name": "Donald Damage Control",
+              "player": 29,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 73.5%",
+            "id": 198894,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 73.5
+              }
+            },
+            "item": {
+              "name": "8 REP",
+              "player": 8,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 73.75%",
+            "id": 198895,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 73.75
+              }
+            },
+            "item": {
+              "name": "Donald MP Haste",
+              "player": 29,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 74.0%",
+            "id": 198896,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 74.0
+              }
+            },
+            "item": {
+              "name": "Box of bullets",
+              "player": 20,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 74.25%",
+            "id": 198897,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 74.25
+              }
+            },
+            "item": {
+              "name": "Snake D",
+              "player": 39,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 74.5%",
+            "id": 198898,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 74.5
+              }
+            },
+            "item": {
+              "name": "Timebomb of the Ancients",
+              "player": 25,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 74.75%",
+            "id": 198899,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 74.75
+              }
+            },
+            "item": {
+              "name": "Blueprint Shapes Bundle",
+              "player": 53,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 75.0%",
+            "id": 198900,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 75.0
+              }
+            },
+            "item": {
+              "name": "Aerial Dodge",
+              "player": 29,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 75.25%",
+            "id": 198901,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 75.25
+              }
+            },
+            "item": {
+              "name": "Yarn",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 75.5%",
+            "id": 198902,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 75.5
+              }
+            },
+            "item": {
+              "name": "Energy cell pack",
+              "player": 20,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 75.75%",
+            "id": 198903,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 75.75
+              }
+            },
+            "item": {
+              "name": "Poison",
+              "player": 22,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 76.0%",
+            "id": 198904,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 76.0
+              }
+            },
+            "item": {
+              "name": "Box of shotgun shells",
+              "player": 20,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 76.25%",
+            "id": 198905,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 76.25
+              }
+            },
+            "item": {
+              "name": "Resource Pack: 4 Plastic",
+              "player": 49,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 76.5%",
+            "id": 198906,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 76.5
+              }
+            },
+            "item": {
+              "name": "Monster Condo (MAP27) - Computer area map",
+              "player": 20,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 76.75%",
+            "id": 198907,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 76.75
+              }
+            },
+            "item": {
+              "name": "Trinket 17",
+              "player": 71,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 77.0%",
+            "id": 198908,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 77.0
+              }
+            },
+            "item": {
+              "name": "Clay",
+              "player": 52,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 77.25%",
+            "id": 198909,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 77.25
+              }
+            },
+            "item": {
+              "name": "Money x20",
+              "player": 69,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 77.5%",
+            "id": 198910,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 77.5
+              }
+            },
+            "item": {
+              "name": "Tech Reactor",
+              "player": 56,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 77.75%",
+            "id": 198911,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 77.75
+              }
+            },
+            "item": {
+              "name": "Gooey Bag",
+              "player": 31,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 78.0%",
+            "id": 198912,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 78.0
+              }
+            },
+            "item": {
+              "name": "MP Rage",
+              "player": 30,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 78.25%",
+            "id": 198913,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 78.25
+              }
+            },
+            "item": {
+              "name": "Dice Fragment",
+              "player": 74,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 78.5%",
+            "id": 198914,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 78.5
+              }
+            },
+            "item": {
+              "name": "Bear's Knowledge",
+              "player": 57,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 78.75%",
+            "id": 198915,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 78.75
+              }
+            },
+            "item": {
+              "name": "Hoo Bean",
+              "player": 36,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 79.0%",
+            "id": 198916,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 79.0
+              }
+            },
+            "item": {
+              "name": "Shadow - Mystic Melody",
+              "player": 55,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 79.25%",
+            "id": 198917,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 79.25
+              }
+            },
+            "item": {
+              "name": "Jaw of Ashgan, the Inquisitor",
+              "player": 7,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 79.5%",
+            "id": 198918,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 79.5
+              }
+            },
+            "item": {
+              "name": "Firebomb x2",
+              "player": 16,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 79.75%",
+            "id": 198919,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 79.75
+              }
+            },
+            "item": {
+              "name": "Stunted Wolf Card",
+              "player": 27,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Similarity: 80.0%",
+            "id": 198920,
+            "access_rule": {
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "paint_percent_available",
+                "args": []
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 80.0
+              }
+            },
+            "item": {
+              "name": "The Citadel (E1M5) - Blue key",
+              "player": 25,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "46": {
+      "default": [
+        "Canvas"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "46": {
+      "Progressive Canvas Width": {
+        "name": "Progressive Canvas Width",
+        "id": 198501,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "Progressive Canvas Height": {
+        "name": "Progressive Canvas Height",
+        "id": 198502,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "Progressive Color Depth (Red)": {
+        "name": "Progressive Color Depth (Red)",
+        "id": 198503,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 7
+      },
+      "Progressive Color Depth (Green)": {
+        "name": "Progressive Color Depth (Green)",
+        "id": 198504,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 7
+      },
+      "Progressive Color Depth (Blue)": {
+        "name": "Progressive Color Depth (Blue)",
+        "id": 198505,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 7
+      },
+      "Free-Form Select": {
+        "name": "Free-Form Select",
+        "id": 198506,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Select": {
+        "name": "Select",
+        "id": 198507,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Eraser/Color Eraser": {
+        "name": "Eraser/Color Eraser",
+        "id": 198508,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Fill With Color": {
+        "name": "Fill With Color",
+        "id": 198509,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Pick Color": {
+        "name": "Pick Color",
+        "id": 198510,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Magnifier": {
+        "name": "Magnifier",
+        "id": 198511,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Pencil": {
+        "name": "Pencil",
+        "id": 198512,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Brush": {
+        "name": "Brush",
+        "id": 198513,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Airbrush": {
+        "name": "Airbrush",
+        "id": 198514,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Text": {
+        "name": "Text",
+        "id": 198515,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Line": {
+        "name": "Line",
+        "id": 198516,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Curve": {
+        "name": "Curve",
+        "id": 198517,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rectangle": {
+        "name": "Rectangle",
+        "id": 198518,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Polygon": {
+        "name": "Polygon",
+        "id": 198519,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ellipse": {
+        "name": "Ellipse",
+        "id": 198520,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rounded Rectangle": {
+        "name": "Rounded Rectangle",
+        "id": 198521,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Additional Palette Color": {
+        "name": "Additional Palette Color",
+        "id": 198523,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 92
+      },
+      "Undo Trap": {
+        "name": "Undo Trap",
+        "id": 198524,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Clear Image Trap": {
+        "name": "Clear Image Trap",
+        "id": 198525,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Invert Colors Trap": {
+        "name": "Invert Colors Trap",
+        "id": 198526,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Flip Horizontal Trap": {
+        "name": "Flip Horizontal Trap",
+        "id": 198527,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Flip Vertical Trap": {
+        "name": "Flip Vertical Trap",
+        "id": 198528,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Great To Perfect (10 Pack)": {
+        "name": "Great To Perfect (10 Pack)",
+        "id": 2900030,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "The Ophidian Lair (E3M5) - Green key": {
+        "name": "The Ophidian Lair (E3M5) - Green key",
+        "id": 370252,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Spider Roll": {
+        "name": "Spider Roll",
+        "id": 698087,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "EkeEke": {
+        "name": "EkeEke",
+        "id": 4000,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - SPRAYTANICPANIC!)": {
+        "name": "Graffiti (M - SPRAYTANICPANIC!)",
+        "id": 2308042,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Trap": {
+        "name": "Trap",
+        "id": 110000,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": true,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - NOISY NINJA)": {
+        "name": "Graffiti (L - NOISY NINJA)",
+        "id": 2308065,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mt. Erebus (E3M6) - Blue skull key": {
+        "name": "Mt. Erebus (E3M6) - Blue skull key",
+        "id": 350087,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Watering Can": {
+        "name": "Progressive Watering Can",
+        "id": 717068,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - Pora)": {
+        "name": "Graffiti (M - Pora)",
+        "id": 2308039,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Spell Refresher": {
+        "name": "Spell Refresher",
+        "id": 110002,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "DK Coin": {
+        "name": "DK Coin",
+        "id": 14430212,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Squirrel Totem Head": {
+        "name": "Squirrel Totem Head",
+        "id": 147006,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Morne's Armor": {
+        "name": "Morne's Armor",
+        "id": 100321,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Your First Grey Hair": {
+        "name": "Your First Grey Hair",
+        "id": 9088,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Dagger": {
+        "name": "Dagger",
+        "id": 147007,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "2 Iron": {
+        "name": "2 Iron",
+        "id": 64239,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "5 coins": {
+        "name": "5 coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 1
+      },
+      "Resource Efficiency (Brood Lord)": {
+        "name": "Resource Efficiency (Brood Lord)",
+        "id": 2265,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Power Chain": {
+        "name": "Power Chain",
+        "id": 2641036,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "HP Berry x3": {
+        "name": "HP Berry x3",
+        "id": 509342417,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Puppies 67-69": {
+        "name": "Puppies 67-69",
+        "id": 2642223,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Resource Pack: 5 Scrap": {
+        "name": "Resource Pack: 5 Scrap",
+        "id": 47180,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Money": {
+        "name": "Money",
+        "id": 37301,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mushroom": {
+        "name": "Mushroom",
+        "id": 77771001,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Fire+30 *": {
+        "name": "Fire+30 *",
+        "id": 11735089,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Time Shard (100)": {
+        "name": "Time Shard (100)",
+        "id": 11391002,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Random Cosmetic": {
+        "name": "Random Cosmetic",
+        "id": 2000300044,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Llewellyn Shield": {
+        "name": "Llewellyn Shield",
+        "id": 100243,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Protoss Air Armor": {
+        "name": "Progressive Protoss Air Armor",
+        "id": 3104,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Spawning Vats (E2M7)": {
+        "name": "Spawning Vats (E2M7)",
+        "id": 350057,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Nest Ball": {
+        "name": "Nest Ball",
+        "id": 3860008,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Crystal Chime": {
+        "name": "Crystal Chime",
+        "id": 100192,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Item Scrap, White": {
+        "name": "Item Scrap, White",
+        "id": 37008,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mush Badge AA": {
+        "name": "Mush Badge AA",
+        "id": 77771094,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Burnt Trap": {
+        "name": "Burnt Trap",
+        "id": 721001,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": true,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Majestic Mushroom+": {
+        "name": "Majestic Mushroom+",
+        "id": 1245283,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Reactor Rod": {
+        "name": "Reactor Rod",
+        "id": 35213,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Northern Helm": {
+        "name": "Northern Helm",
+        "id": 100316,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Money x25": {
+        "name": "Money x25",
+        "id": 509342491,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mushroom Tree Seed": {
+        "name": "Mushroom Tree Seed",
+        "id": 722232,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "24 REP": {
+        "name": "24 REP",
+        "id": 2308161,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "TM12 Water Gun": {
+        "name": "TM12 Water Gun",
+        "id": 172000212,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Iron Boots": {
+        "name": "Iron Boots",
+        "id": 2322440,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Item",
+        "max_count": 1
+      },
+      "25 Pons": {
+        "name": "25 Pons",
+        "id": 2000300034,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "The Great Hall (E2M7) - Map Scroll": {
+        "name": "The Great Hall (E2M7) - Map Scroll",
+        "id": 370447,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Trinity Limit": {
+        "name": "Trinity Limit",
+        "id": 2643015,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Priestess Ring": {
+        "name": "Priestess Ring",
+        "id": 100637,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Bonus Coin": {
+        "name": "Bonus Coin",
+        "id": 14430211,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Scout Fly - Mountain Pass": {
+        "name": "Scout Fly - Mountain Pass",
+        "id": 741001112,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Heart Container": {
+        "name": "Heart Container",
+        "id": 10000137,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cyclops Engine Fragment": {
+        "name": "Cyclops Engine Fragment",
+        "id": 35021,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Drought Trap": {
+        "name": "Drought Trap",
+        "id": 721017,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": true,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Power Star": {
+        "name": "Power Star",
+        "id": 3626000,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Eye Orb": {
+        "name": "Eye Orb",
+        "id": 1337141,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Yarn": {
+        "name": "Yarn",
+        "id": 2000300001,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Jet Pack Overdrive (Reaper)": {
+        "name": "Jet Pack Overdrive (Reaper)",
+        "id": 1239,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Supercharge": {
+        "name": "Supercharge",
+        "id": 350112,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Clay": {
+        "name": "Clay",
+        "id": 64126,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Antiquated Gloves": {
+        "name": "Antiquated Gloves",
+        "id": 100581,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Molten Heart of Boiling Blood": {
+        "name": "Molten Heart of Boiling Blood",
+        "id": 1909076,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hoo Bean": {
+        "name": "Hoo Bean",
+        "id": 77771019,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Silver Shield": {
+        "name": "Silver Shield",
+        "id": 370016,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cape": {
+        "name": "Cape",
+        "id": 25,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Binoculars": {
+        "name": "Binoculars",
+        "id": 100807,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Farming Level": {
+        "name": "Farming Level",
+        "id": 717073,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sunflower Seeds": {
+        "name": "Sunflower Seeds",
+        "id": 717156,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "8 REP": {
+        "name": "8 REP",
+        "id": 2308159,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Nayru's Pearl": {
+        "name": "Nayru's Pearl",
+        "id": 2322483,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Item",
+        "max_count": 1
+      },
+      "Energy cell pack": {
+        "name": "Energy cell pack",
+        "id": 360019,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Treasure Bumper": {
+        "name": "Treasure Bumper",
+        "id": 595008,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "Target",
+        "max_count": 1
+      },
+      "Ocarina": {
+        "name": "Ocarina",
+        "id": 10000006,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Medikit": {
+        "name": "Medikit",
+        "id": 350113,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Potion": {
+        "name": "Potion",
+        "id": 110003,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Small Miner Upgrade": {
+        "name": "Small Miner Upgrade",
+        "id": 20010739,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Quartz Flask": {
+        "name": "Quartz Flask",
+        "id": 370010,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Golden Ritual Spear": {
+        "name": "Golden Ritual Spear",
+        "id": 100181,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Frost Land": {
+        "name": "Frost Land",
+        "id": 2900056,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Scout Fly - Misty Island": {
+        "name": "Scout Fly - Misty Island",
+        "id": 741001052,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ramuh Belt": {
+        "name": "Ramuh Belt",
+        "id": 2641066,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      ":)": {
+        "name": ":)",
+        "id": 444409,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Large Titanite Shard": {
+        "name": "Large Titanite Shard",
+        "id": 100892,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Water Stone": {
+        "name": "Water Stone",
+        "id": 3860097,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Fairy": {
+        "name": "Fairy",
+        "id": 7132,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Thorned Symbol": {
+        "name": "Thorned Symbol",
+        "id": 1909013,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Level Shapes Bundle": {
+        "name": "Level Shapes Bundle",
+        "id": 20010761,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Shake1 S": {
+        "name": "Shake1 S",
+        "id": 11735214,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "RegUP2": {
+        "name": "RegUP2",
+        "id": 11735060,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Emblem": {
+        "name": "Emblem",
+        "id": 16711680,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Beanstone 7": {
+        "name": "Beanstone 7",
+        "id": 77771074,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "20 Golds": {
+        "name": "20 Golds",
+        "id": 4065,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Chuckle Bean": {
+        "name": "Chuckle Bean",
+        "id": 77771020,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BowlMan V3 B": {
+        "name": "BowlMan V3 B",
+        "id": 11735262,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Neosteel Bunker (Bunker)": {
+        "name": "Neosteel Bunker (Bunker)",
+        "id": 1201,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Bass+ X": {
+        "name": "Bass+ X",
+        "id": 11735167,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sunset Armor": {
+        "name": "Sunset Armor",
+        "id": 100333,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "The Crusher (MAP06) - Yellow keycard": {
+        "name": "The Crusher (MAP06) - Yellow keycard",
+        "id": 360211,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Effigy": {
+        "name": "Effigy",
+        "id": 509342414,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Donald Damage Control": {
+        "name": "Donald Damage Control",
+        "id": 1245443,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Donald MP Haste": {
+        "name": "Donald MP Haste",
+        "id": 1245436,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Box of bullets": {
+        "name": "Box of bullets",
+        "id": 360016,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Snake D": {
+        "name": "Snake D",
+        "id": 11735143,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Timebomb of the Ancients": {
+        "name": "Timebomb of the Ancients",
+        "id": 370013,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Blueprint Shapes Bundle": {
+        "name": "Blueprint Shapes Bundle",
+        "id": 20010760,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Aerial Dodge": {
+        "name": "Aerial Dodge",
+        "id": 1245268,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Poison": {
+        "name": "Poison",
+        "id": 400028,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": true,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Box of shotgun shells": {
+        "name": "Box of shotgun shells",
+        "id": 360018,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Resource Pack: 4 Plastic": {
+        "name": "Resource Pack: 4 Plastic",
+        "id": 47134,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Monster Condo (MAP27) - Computer area map": {
+        "name": "Monster Condo (MAP27) - Computer area map",
+        "id": 360480,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Trinket 17": {
+        "name": "Trinket 17",
+        "id": 2515016,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Money x20": {
+        "name": "Money x20",
+        "id": 509342490,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Tech Reactor": {
+        "name": "Tech Reactor",
+        "id": 1608,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Gooey Bag": {
+        "name": "Gooey Bag",
+        "id": 7798848,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": true,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "MP Rage": {
+        "name": "MP Rage",
+        "id": 2643024,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Dice Fragment": {
+        "name": "Dice Fragment",
+        "id": 16871244001,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Bear's Knowledge": {
+        "name": "Bear's Knowledge",
+        "id": 717098,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Shadow - Mystic Melody": {
+        "name": "Shadow - Mystic Melody",
+        "id": 16711699,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Jaw of Ashgan, the Inquisitor": {
+        "name": "Jaw of Ashgan, the Inquisitor",
+        "id": 1909135,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Firebomb x2": {
+        "name": "Firebomb x2",
+        "id": 100745,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Stunted Wolf Card": {
+        "name": "Stunted Wolf Card",
+        "id": 147001,
+        "groups": [],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "The Citadel (E1M5) - Blue key": {
+        "name": "The Citadel (E1M5) - Blue key",
+        "id": 370210,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      " coins": {
+        "name": " coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 999999
+      },
+      " coins freemium": {
+        "name": " coins freemium",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 999999
+      }
+    }
+  },
+  "item_groups": {
+    "46": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "46": {
+      "Additional Palette Color": 92,
+      "Airbrush": 1,
+      "Brush": 1,
+      "Curve": 1,
+      "Ellipse": 1,
+      "Eraser/Color Eraser": 1,
+      "Fill With Color": 1,
+      "Free-Form Select": 1,
+      "Line": 1,
+      "Magnifier": 1,
+      "Pencil": 1,
+      "Pick Color": 1,
+      "Polygon": 1,
+      "Progressive Canvas Height": 3,
+      "Progressive Canvas Width": 4,
+      "Progressive Color Depth (Blue)": 7,
+      "Progressive Color Depth (Green)": 7,
+      "Progressive Color Depth (Red)": 7,
+      "Rectangle": 1,
+      "Rounded Rectangle": 1,
+      "Select": 1,
+      "Text": 1
+    }
+  },
+  "progression_mapping": {
+    "46": {}
+  },
+  "starting_items": {
+    "46": [
+      "Magnifier",
+      "Brush",
+      "Progressive Color Depth (Red)",
+      "Progressive Color Depth (Green)",
+      "Progressive Color Depth (Blue)"
+    ]
+  },
+  "settings": {
+    "46": {
+      "game": "Paint",
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false,
+      "canvas_size_increment": 100,
+      "logic_percent": 80
+    }
+  },
+  "game_info": {
+    "46": {
+      "name": "Paint",
+      "rule_format": {
+        "version": "1.0"
+      }
+    }
+  }
+}
