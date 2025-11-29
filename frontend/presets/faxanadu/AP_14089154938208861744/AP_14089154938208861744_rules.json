@@ -66,16 +66,19 @@
             "name": "Eolis Key Jack",
             "id": 400101,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
+              "type": "or",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Deluge",
-                    "Progressive Sword",
-                    "Ring of Elf"
-                  ]
+                  "type": "item_check",
+                  "item": "Progressive Sword"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Deluge"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ring of Elf"
                 }
               ]
             },
@@ -90,16 +93,19 @@
             "name": "Eolis Hand Dagger",
             "id": 400102,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
+              "type": "or",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Deluge",
-                    "Progressive Sword",
-                    "Ring of Elf"
-                  ]
+                  "type": "item_check",
+                  "item": "Progressive Sword"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Deluge"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ring of Elf"
                 }
               ]
             },
@@ -114,16 +120,19 @@
             "name": "Eolis Red Potion",
             "id": 400103,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
+              "type": "or",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Deluge",
-                    "Progressive Sword",
-                    "Ring of Elf"
-                  ]
+                  "type": "item_check",
+                  "item": "Progressive Sword"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Deluge"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ring of Elf"
                 }
               ]
             },
@@ -138,16 +147,19 @@
             "name": "Eolis Elixir",
             "id": 400104,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
+              "type": "or",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Deluge",
-                    "Progressive Sword",
-                    "Ring of Elf"
-                  ]
+                  "type": "item_check",
+                  "item": "Progressive Sword"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Deluge"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ring of Elf"
                 }
               ]
             },
@@ -162,16 +174,19 @@
             "name": "Eolis Deluge",
             "id": 400105,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
+              "type": "or",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Deluge",
-                    "Progressive Sword",
-                    "Ring of Elf"
-                  ]
+                  "type": "item_check",
+                  "item": "Progressive Sword"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Deluge"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ring of Elf"
                 }
               ]
             },
@@ -202,7 +217,10 @@
             "id": 400106,
             "access_rule": {
               "type": "item_check",
-              "item": "Key King"
+              "item": {
+                "type": "constant",
+                "value": "Key King"
+              }
             },
             "item": {
               "name": "Unlock Wingboots",
@@ -216,7 +234,10 @@
             "id": 400107,
             "access_rule": {
               "type": "item_check",
-              "item": "Key Ace"
+              "item": {
+                "type": "constant",
+                "value": "Key Ace"
+              }
             },
             "item": {
               "name": "Hourglass",
@@ -235,7 +256,10 @@
             "connected_region": "Tower of Trunk",
             "access_rule": {
               "type": "item_check",
-              "item": "Key Jack"
+              "item": {
+                "type": "constant",
+                "value": "Key Jack"
+              }
             }
           },
           {
@@ -243,7 +267,10 @@
             "connected_region": "Path to Forepaw",
             "access_rule": {
               "type": "item_check",
-              "item": "Mattock"
+              "item": {
+                "type": "constant",
+                "value": "Mattock"
+              }
             }
           }
         ],
@@ -309,7 +336,10 @@
             "id": 400112,
             "access_rule": {
               "type": "item_check",
-              "item": "Unlock Wingboots"
+              "item": {
+                "type": "constant",
+                "value": "Unlock Wingboots"
+              }
             },
             "item": {
               "name": "Wingboots",
@@ -332,7 +362,10 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Deluge",
+                  "item": {
+                    "type": "constant",
+                    "value": "Deluge"
+                  },
                   "count": {
                     "type": "constant",
                     "value": 1
@@ -340,7 +373,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Progressive Sword",
+                  "item": {
+                    "type": "constant",
+                    "value": "Progressive Sword"
+                  },
                   "count": {
                     "type": "constant",
                     "value": 2
@@ -558,7 +594,10 @@
             "connected_region": "Joker Spring",
             "access_rule": {
               "type": "item_check",
-              "item": "Key Joker"
+              "item": {
+                "type": "constant",
+                "value": "Key Joker"
+              }
             }
           },
           {
@@ -566,7 +605,10 @@
             "connected_region": "Tower of Fortress",
             "access_rule": {
               "type": "item_check",
-              "item": "Key Jack"
+              "item": {
+                "type": "constant",
+                "value": "Key Jack"
+              }
             }
           },
           {
@@ -593,7 +635,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Progressive Sword",
+                  "item": {
+                    "type": "constant",
+                    "value": "Progressive Sword"
+                  },
                   "count": {
                     "type": "constant",
                     "value": 2
@@ -637,7 +682,10 @@
             "id": 400127,
             "access_rule": {
               "type": "item_check",
-              "item": "Unlock Wingboots"
+              "item": {
+                "type": "constant",
+                "value": "Unlock Wingboots"
+              }
             },
             "item": {
               "name": "Red Potion",
@@ -651,7 +699,10 @@
             "id": null,
             "access_rule": {
               "type": "item_check",
-              "item": "Unlock Wingboots"
+              "item": {
+                "type": "constant",
+                "value": "Unlock Wingboots"
+              }
             },
             "item": {
               "name": "Sky Spring Flow",
@@ -789,7 +840,10 @@
             "id": 400135,
             "access_rule": {
               "type": "item_check",
-              "item": "Sky Spring Flow"
+              "item": {
+                "type": "constant",
+                "value": "Sky Spring Flow"
+              }
             },
             "item": {
               "name": "Progressive Sword",
@@ -803,7 +857,10 @@
             "id": null,
             "access_rule": {
               "type": "item_check",
-              "item": "Spring Elixir"
+              "item": {
+                "type": "constant",
+                "value": "Spring Elixir"
+              }
             },
             "item": {
               "name": "Tower of Fortress Spring Flow",
@@ -825,11 +882,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Key Queen"
+                  "item": {
+                    "type": "constant",
+                    "value": "Key Queen"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Red Potion",
+                  "item": {
+                    "type": "constant",
+                    "value": "Red Potion"
+                  },
                   "count": {
                     "type": "constant",
                     "value": 4
@@ -991,7 +1054,10 @@
             "connected_region": "Tower of Suffer",
             "access_rule": {
               "type": "item_check",
-              "item": "Key Queen"
+              "item": {
+                "type": "constant",
+                "value": "Key Queen"
+              }
             }
           },
           {
@@ -999,7 +1065,10 @@
             "connected_region": "Victim",
             "access_rule": {
               "type": "item_check",
-              "item": "Unlock Wingboots"
+              "item": {
+                "type": "constant",
+                "value": "Unlock Wingboots"
+              }
             }
           }
         ],
@@ -1009,7 +1078,10 @@
             "id": 400144,
             "access_rule": {
               "type": "item_check",
-              "item": "Unlock Wingboots"
+              "item": {
+                "type": "constant",
+                "value": "Unlock Wingboots"
+              }
             },
             "item": {
               "name": "Wingboots",
@@ -1064,18 +1136,27 @@
             "name": "Misty Doctor Office",
             "id": 400148,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
+              "type": "or",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Death",
-                    "Deluge",
-                    "Fire",
-                    "Thunder",
-                    "Tilte"
-                  ]
+                  "type": "item_check",
+                  "item": "Deluge"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Thunder"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Fire"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Death"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Tilte"
                 }
               ]
             },
@@ -1100,11 +1181,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Deluge"
+                  "item": {
+                    "type": "constant",
+                    "value": "Deluge"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Progressive Sword",
+                  "item": {
+                    "type": "constant",
+                    "value": "Progressive Sword"
+                  },
                   "count": {
                     "type": "constant",
                     "value": 2
@@ -1181,7 +1268,10 @@
             "id": 400153,
             "access_rule": {
               "type": "item_check",
-              "item": "Unlock Wingboots"
+              "item": {
+                "type": "constant",
+                "value": "Unlock Wingboots"
+              }
             },
             "item": {
               "name": "Wingboots",
@@ -1259,7 +1349,10 @@
             "connected_region": "Tower of Mist",
             "access_rule": {
               "type": "item_check",
-              "item": "Key King"
+              "item": {
+                "type": "constant",
+                "value": "Key King"
+              }
             }
           },
           {
@@ -1267,7 +1360,10 @@
             "connected_region": "Path to Conflate",
             "access_rule": {
               "type": "item_check",
-              "item": "Key Ace"
+              "item": {
+                "type": "constant",
+                "value": "Key Ace"
+              }
             }
           }
         ],
@@ -1347,7 +1443,10 @@
             "id": 400162,
             "access_rule": {
               "type": "item_check",
-              "item": "Black Onyx"
+              "item": {
+                "type": "constant",
+                "value": "Black Onyx"
+              }
             },
             "item": {
               "name": "Ointment",
@@ -1434,7 +1533,10 @@
             "connected_region": "Helm Branch",
             "access_rule": {
               "type": "item_check",
-              "item": "Key King"
+              "item": {
+                "type": "constant",
+                "value": "Key King"
+              }
             }
           },
           {
@@ -1450,7 +1552,10 @@
             "connected_region": "Branches",
             "access_rule": {
               "type": "item_check",
-              "item": "Key King"
+              "item": {
+                "type": "constant",
+                "value": "Key King"
+              }
             }
           }
         ],
@@ -1584,7 +1689,10 @@
             "id": 400175,
             "access_rule": {
               "type": "item_check",
-              "item": "Progressive Armor",
+              "item": {
+                "type": "constant",
+                "value": "Progressive Armor"
+              },
               "count": {
                 "type": "constant",
                 "value": 3
@@ -1645,7 +1753,10 @@
             "id": 400178,
             "access_rule": {
               "type": "item_check",
-              "item": "Unlock Wingboots"
+              "item": {
+                "type": "constant",
+                "value": "Unlock Wingboots"
+              }
             },
             "item": {
               "name": "Progressive Shield",
@@ -1744,7 +1855,10 @@
             "id": 400184,
             "access_rule": {
               "type": "item_check",
-              "item": "Unlock Wingboots"
+              "item": {
+                "type": "constant",
+                "value": "Unlock Wingboots"
+              }
             },
             "item": {
               "name": "Tilte",
@@ -1777,7 +1891,10 @@
             "connected_region": "Dartmoor Castle",
             "access_rule": {
               "type": "item_check",
-              "item": "Ring of Dworf"
+              "item": {
+                "type": "constant",
+                "value": "Ring of Dworf"
+              }
             }
           }
         ],
@@ -1878,7 +1995,10 @@
             "connected_region": "Evil Fortress",
             "access_rule": {
               "type": "item_check",
-              "item": "Demons Ring"
+              "item": {
+                "type": "constant",
+                "value": "Demons Ring"
+              }
             }
           }
         ],
@@ -1888,7 +2008,10 @@
             "id": 400191,
             "access_rule": {
               "type": "item_check",
-              "item": "Unlock Wingboots"
+              "item": {
+                "type": "constant",
+                "value": "Unlock Wingboots"
+              }
             },
             "item": {
               "name": "Poison",
@@ -1901,18 +2024,27 @@
             "name": "Dartmoor Castle Hidden Red Potion",
             "id": 400192,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
+              "type": "or",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Death",
-                    "Deluge",
-                    "Fire",
-                    "Thunder",
-                    "Tilte"
-                  ]
+                  "type": "item_check",
+                  "item": "Deluge"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Thunder"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Fire"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Death"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Tilte"
                 }
               ]
             },
@@ -1995,18 +2127,27 @@
             "name": "Fraternal Castle Shop Hidden Ointment",
             "id": 400197,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
+              "type": "or",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Death",
-                    "Deluge",
-                    "Fire",
-                    "Thunder",
-                    "Tilte"
-                  ]
+                  "type": "item_check",
+                  "item": "Deluge"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Thunder"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Fire"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Death"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Tilte"
                 }
               ]
             },
@@ -2092,7 +2233,10 @@
             "id": 400204,
             "access_rule": {
               "type": "item_check",
-              "item": "Progressive Sword",
+              "item": {
+                "type": "constant",
+                "value": "Progressive Sword"
+              },
               "count": {
                 "type": "constant",
                 "value": 4
@@ -2612,50 +2756,6 @@
         "event": false,
         "type": null,
         "max_count": 4
-      },
-      "Sky Spring Flow": {
-        "name": "Sky Spring Flow",
-        "id": null,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": null,
-        "max_count": 1
-      },
-      "Joker Spring Flow": {
-        "name": "Joker Spring Flow",
-        "id": null,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": null,
-        "max_count": 1
-      },
-      "Tower of Fortress Spring Flow": {
-        "name": "Tower of Fortress Spring Flow",
-        "id": null,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": null,
-        "max_count": 1
-      },
-      "Killed Evil One": {
-        "name": "Killed Evil One",
-        "id": null,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": null,
-        "max_count": 1
       }
     }
   },
@@ -2710,8 +2810,7 @@
   "settings": {
     "1": {
       "game": "Faxanadu",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

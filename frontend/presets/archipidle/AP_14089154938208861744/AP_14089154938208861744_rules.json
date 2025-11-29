@@ -6844,8 +6844,7 @@
   "settings": {
     "1": {
       "game": "ArchipIDLE",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

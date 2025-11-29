@@ -33,54 +33,10 @@
             "name": "Overworld -> Overworld Holy Cross",
             "connected_region": "Overworld Holy Cross",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "constant",
-                  "value": 1
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "constant",
-                        "value": 0
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": 0
-                      }
-                    },
-                    {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "item_check",
-                  "item": "Gold Questagon",
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "if_false": {
-                  "type": "item_check",
-                  "item": "Pages 42-43 (Holy Cross)"
-                }
-              }
+              "type": "item_check",
+              "item": "Ability",
+              "inferred": true,
+              "description": "Requires having Ability"
             }
           },
           {
@@ -95,17 +51,10 @@
             "name": "Overworld -> Dark Tomb",
             "connected_region": "Dark Tomb",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "constant",
-                  "value": 0
-                },
-                {
-                  "type": "item_check",
-                  "item": "Lantern"
-                }
-              ]
+              "type": "item_check",
+              "item": "Lantern",
+              "inferred": true,
+              "description": "Requires having Lantern"
             }
           },
           {
@@ -115,22 +64,17 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Stick",
-                        "Sword",
-                        "Sword Upgrade"
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Melee",
+                  "inferred": true,
+                  "description": "Requires having Melee"
                 },
                 {
                   "type": "item_check",
-                  "item": "Magic Wand"
+                  "item": {
+                    "type": "constant",
+                    "value": "Magic Wand"
+                  }
                 }
               ]
             }
@@ -142,86 +86,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Magic Dagger",
-                          "Magic Orb"
-                        ]
-                      }
-                    ]
+                    "value": "Hero's Laurels"
                   }
                 },
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "or",
-                    "conditions": [
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Magic Orb",
-                              "Shield"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Stick",
-                              "Sword",
-                              "Sword Upgrade"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
+                  "type": "capability",
+                  "capability": "ladder_storage",
+                  "inferred": true,
+                  "description": "Requires ability to ladder storage"
                 },
                 {
                   "type": "item_check",
-                  "item": "Hero's Laurels"
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
                 }
               ]
             }
@@ -241,142 +122,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "conditional",
-                        "test": {
-                          "type": "not",
-                          "condition": {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        },
-                        "if_true": {
-                          "type": "constant",
-                          "value": true
-                        },
-                        "if_false": {
-                          "type": "conditional",
-                          "test": {
-                            "type": "and",
-                            "conditions": [
-                              {
-                                "type": "compare",
-                                "left": {
-                                  "type": "constant",
-                                  "value": 0
-                                },
-                                "op": "==",
-                                "right": {
-                                  "type": "constant",
-                                  "value": 0
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": 0
-                              }
-                            ]
-                          },
-                          "if_true": {
-                            "type": "item_check",
-                            "item": "Gold Questagon",
-                            "count": {
-                              "type": "constant",
-                              "value": 1
-                            }
-                          },
-                          "if_false": {
-                            "type": "item_check",
-                            "item": "Pages 52-53 (Icebolt)"
-                          }
-                        }
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Magic Dagger",
-                              "Magic Orb",
-                              "Magic Wand"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "or",
-                    "conditions": [
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Magic Orb",
-                              "Shield"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Stick",
-                              "Sword",
-                              "Sword Upgrade"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
+                    "value": "Hero's Laurels"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Hero's Laurels"
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
+                },
+                {
+                  "type": "capability",
+                  "capability": "ladder_storage",
+                  "inferred": true,
+                  "description": "Requires ability to ladder storage"
                 }
               ]
             }
@@ -388,71 +150,26 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "conditional",
-                    "test": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 0
-                          }
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "type": "item_check",
-                      "item": "Gold Questagon",
-                      "count": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    },
-                    "if_false": {
-                      "type": "item_check",
-                      "item": "Pages 24-25 (Prayer)"
-                    }
-                  }
+                  "type": "item_check",
+                  "item": "Lantern",
+                  "inferred": true,
+                  "description": "Requires having Lantern"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
                 },
                 {
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    {
                       "type": "item_check",
-                      "item": "Lantern"
-                    }
-                  ]
-                },
-                {
-                  "type": "or",
-                  "conditions": [
+                      "item": "Melee",
+                      "inferred": true,
+                      "description": "Requires having Melee"
+                    },
                     {
                       "type": "state_method",
                       "method": "has_any",
@@ -463,20 +180,6 @@
                             "Gun",
                             "Magic Orb",
                             "Magic Wand"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Stick",
-                            "Sword",
-                            "Sword Upgrade"
                           ]
                         }
                       ]
@@ -504,51 +207,23 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "conditional",
-                      "test": {
-                        "type": "not",
-                        "condition": {
-                          "type": "constant",
-                          "value": 0
-                        }
-                      },
-                      "if_true": {
-                        "type": "constant",
-                        "value": false
-                      },
-                      "if_false": {
-                        "type": "or",
-                        "conditions": [
-                          {
-                            "type": "state_method",
-                            "method": "has_any",
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": [
-                                  "Magic Orb",
-                                  "Shield"
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "type": "state_method",
-                            "method": "has_any",
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": [
-                                  "Stick",
-                                  "Sword",
-                                  "Sword Upgrade"
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      }
+                      "type": "item_check",
+                      "item": "Sword",
+                      "inferred": true,
+                      "description": "Requires having Sword"
                     },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Magic Wand"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "or",
+                  "conditions": [
                     {
                       "type": "state_method",
                       "method": "has_any",
@@ -562,32 +237,12 @@
                           ]
                         }
                       ]
-                    }
-                  ]
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Sword"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Sword Upgrade",
-                          "count": {
-                            "type": "constant",
-                            "value": 2
-                          }
-                        }
-                      ]
                     },
                     {
-                      "type": "item_check",
-                      "item": "Magic Wand"
+                      "type": "capability",
+                      "capability": "ladder_storage",
+                      "inferred": true,
+                      "description": "Requires ability to ladder storage"
                     }
                   ]
                 }
@@ -609,104 +264,75 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Blue Questagon",
-                            "Green Questagon",
-                            "Red Questagon"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_group_unique",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Hero Relics"
-                        },
-                        {
-                          "type": "constant",
-                          "value": 6
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
                   "type": "conditional",
                   "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 1
-                    }
+                    "type": "attribute",
+                    "object": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "hexagon_quest"
+                    },
+                    "attr": "value"
                   },
                   "if_true": {
-                    "type": "constant",
-                    "value": true
+                    "type": "item_check",
+                    "item": {
+                      "type": "constant",
+                      "value": "Gold Questagon"
+                    },
+                    "count": {
+                      "type": "constant",
+                      "value": 20
+                    }
                   },
                   "if_false": {
-                    "type": "conditional",
-                    "test": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "state_method",
+                        "method": "has_all",
+                        "args": [
+                          {
                             "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 0
+                            "value": [
+                              "Blue Questagon",
+                              "Green Questagon",
+                              "Red Questagon"
+                            ]
                           }
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "type": "item_check",
-                      "item": "Gold Questagon",
-                      "count": {
-                        "type": "constant",
-                        "value": 1
+                        ]
+                      },
+                      {
+                        "type": "state_method",
+                        "method": "has_group_unique",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Hero Relics"
+                          },
+                          {
+                            "type": "constant",
+                            "value": 6
+                          }
+                        ]
                       }
-                    },
-                    "if_false": {
-                      "type": "item_check",
-                      "item": "Pages 24-25 (Prayer)"
-                    }
+                    ]
                   }
                 },
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Sword"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Sword Upgrade",
-                      "count": {
-                        "type": "constant",
-                        "value": 2
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
                 },
                 {
                   "type": "state_method",
@@ -775,210 +401,40 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "conditional",
-                      "test": {
-                        "type": "compare",
-                        "left": {
-                          "type": "constant",
-                          "value": 0
-                        },
-                        "op": "<",
-                        "right": {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      },
-                      "if_true": {
-                        "type": "constant",
-                        "value": false
-                      },
-                      "if_false": {
-                        "type": "and",
-                        "conditions": [
-                          {
-                            "type": "conditional",
-                            "test": {
-                              "type": "not",
-                              "condition": {
-                                "type": "constant",
-                                "value": 1
-                              }
-                            },
-                            "if_true": {
-                              "type": "constant",
-                              "value": true
-                            },
-                            "if_false": {
-                              "type": "conditional",
-                              "test": {
-                                "type": "and",
-                                "conditions": [
-                                  {
-                                    "type": "compare",
-                                    "left": {
-                                      "type": "constant",
-                                      "value": 0
-                                    },
-                                    "op": "==",
-                                    "right": {
-                                      "type": "constant",
-                                      "value": 0
-                                    }
-                                  },
-                                  {
-                                    "type": "constant",
-                                    "value": 0
-                                  }
-                                ]
-                              },
-                              "if_true": {
-                                "type": "item_check",
-                                "item": "Gold Questagon",
-                                "count": {
-                                  "type": "constant",
-                                  "value": 1
-                                }
-                              },
-                              "if_false": {
-                                "type": "item_check",
-                                "item": "Pages 52-53 (Icebolt)"
-                              }
-                            }
-                          },
-                          {
-                            "type": "state_method",
-                            "method": "has_all",
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": [
-                                  "Magic Dagger",
-                                  "Magic Orb",
-                                  "Magic Wand"
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "constant",
-                          "value": 0
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Lantern"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "conditional",
-                    "test": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 0
-                          }
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "type": "item_check",
-                      "item": "Gold Questagon",
-                      "count": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    },
-                    "if_false": {
-                      "type": "item_check",
-                      "item": "Pages 24-25 (Prayer)"
-                    }
-                  }
-                },
-                {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "or",
-                    "conditions": [
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Magic Orb",
-                              "Shield"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Stick",
-                              "Sword",
-                              "Sword Upgrade"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
+                  "type": "item_check",
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
                 },
                 {
                   "type": "item_check",
-                  "item": "Hero's Laurels"
+                  "item": {
+                    "type": "constant",
+                    "value": "Hero's Laurels"
+                  }
+                },
+                {
+                  "type": "capability",
+                  "capability": "ladder_storage",
+                  "inferred": true,
+                  "description": "Requires ability to ladder storage"
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Ice_Grapple_Logic",
+                      "inferred": true,
+                      "description": "Requires having Ice Grapple Logic"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Lantern",
+                      "inferred": true,
+                      "description": "Requires having Lantern"
+                    }
+                  ]
                 }
               ]
             },
@@ -1024,210 +480,40 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "conditional",
-                      "test": {
-                        "type": "compare",
-                        "left": {
-                          "type": "constant",
-                          "value": 0
-                        },
-                        "op": "<",
-                        "right": {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      },
-                      "if_true": {
-                        "type": "constant",
-                        "value": false
-                      },
-                      "if_false": {
-                        "type": "and",
-                        "conditions": [
-                          {
-                            "type": "conditional",
-                            "test": {
-                              "type": "not",
-                              "condition": {
-                                "type": "constant",
-                                "value": 1
-                              }
-                            },
-                            "if_true": {
-                              "type": "constant",
-                              "value": true
-                            },
-                            "if_false": {
-                              "type": "conditional",
-                              "test": {
-                                "type": "and",
-                                "conditions": [
-                                  {
-                                    "type": "compare",
-                                    "left": {
-                                      "type": "constant",
-                                      "value": 0
-                                    },
-                                    "op": "==",
-                                    "right": {
-                                      "type": "constant",
-                                      "value": 0
-                                    }
-                                  },
-                                  {
-                                    "type": "constant",
-                                    "value": 0
-                                  }
-                                ]
-                              },
-                              "if_true": {
-                                "type": "item_check",
-                                "item": "Gold Questagon",
-                                "count": {
-                                  "type": "constant",
-                                  "value": 1
-                                }
-                              },
-                              "if_false": {
-                                "type": "item_check",
-                                "item": "Pages 52-53 (Icebolt)"
-                              }
-                            }
-                          },
-                          {
-                            "type": "state_method",
-                            "method": "has_all",
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": [
-                                  "Magic Dagger",
-                                  "Magic Orb",
-                                  "Magic Wand"
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "constant",
-                          "value": 0
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Lantern"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "conditional",
-                    "test": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 0
-                          }
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "type": "item_check",
-                      "item": "Gold Questagon",
-                      "count": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    },
-                    "if_false": {
-                      "type": "item_check",
-                      "item": "Pages 24-25 (Prayer)"
-                    }
-                  }
-                },
-                {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "or",
-                    "conditions": [
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Magic Orb",
-                              "Shield"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Stick",
-                              "Sword",
-                              "Sword Upgrade"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
+                  "type": "item_check",
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
                 },
                 {
                   "type": "item_check",
-                  "item": "Hero's Laurels"
+                  "item": {
+                    "type": "constant",
+                    "value": "Hero's Laurels"
+                  }
+                },
+                {
+                  "type": "capability",
+                  "capability": "ladder_storage",
+                  "inferred": true,
+                  "description": "Requires ability to ladder storage"
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Ice_Grapple_Logic",
+                      "inferred": true,
+                      "description": "Requires having Ice Grapple Logic"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Lantern",
+                      "inferred": true,
+                      "description": "Requires having Lantern"
+                    }
+                  ]
                 }
               ]
             },
@@ -1245,17 +531,10 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Hero's Laurels",
-                        "Magic Wand"
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Melee",
+                  "inferred": true,
+                  "description": "Requires having Melee"
                 },
                 {
                   "type": "state_method",
@@ -1264,9 +543,8 @@
                     {
                       "type": "constant",
                       "value": [
-                        "Stick",
-                        "Sword",
-                        "Sword Upgrade"
+                        "Hero's Laurels",
+                        "Magic Wand"
                       ]
                     }
                   ]
@@ -1301,53 +579,22 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Hero's Laurels"
-                    }
-                  ]
-                },
-                {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 2
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Magic Dagger",
-                          "Magic Orb"
-                        ]
-                      }
-                    ]
+                    "value": "Old House Key"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Old House Key"
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
+                },
+                {
+                  "type": "helper",
+                  "name": "laurels_zip",
+                  "args": []
                 }
               ]
             },
@@ -1365,53 +612,22 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Hero's Laurels"
-                    }
-                  ]
-                },
-                {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 2
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Magic Dagger",
-                          "Magic Orb"
-                        ]
-                      }
-                    ]
+                    "value": "Old House Key"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Old House Key"
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
+                },
+                {
+                  "type": "helper",
+                  "name": "laurels_zip",
+                  "args": []
                 }
               ]
             },
@@ -1471,57 +687,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Magic Dagger",
-                          "Magic Orb"
-                        ]
-                      }
-                    ]
+                    "value": "Gun"
                   }
                 },
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Sword"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Sword Upgrade",
-                      "count": {
-                        "type": "constant",
-                        "value": 2
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
                 },
                 {
                   "type": "item_check",
-                  "item": "Gun"
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
                 }
               ]
             },
@@ -1709,7 +891,10 @@
             "id": 509342525,
             "access_rule": {
               "type": "item_check",
-              "item": "Hero's Laurels"
+              "item": {
+                "type": "constant",
+                "value": "Hero's Laurels"
+              }
             },
             "item": {
               "name": "Hero Relic - MP",
@@ -1723,7 +908,10 @@
             "id": 509342526,
             "access_rule": {
               "type": "item_check",
-              "item": "Magic Orb"
+              "item": {
+                "type": "constant",
+                "value": "Magic Orb"
+              }
             },
             "item": {
               "name": "Fairy",
@@ -1776,57 +964,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Magic Dagger",
-                          "Magic Orb"
-                        ]
-                      }
-                    ]
+                    "value": "Gun"
                   }
                 },
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Sword"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Sword Upgrade",
-                      "count": {
-                        "type": "constant",
-                        "value": 2
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
                 },
                 {
                   "type": "item_check",
-                  "item": "Gun"
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
                 }
               ]
             },
@@ -1844,89 +998,34 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Hero's Laurels"
+                  }
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "constant",
-                          "value": 0
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Lantern"
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": "Lantern",
+                      "inferred": true,
+                      "description": "Requires having Lantern"
                     },
                     {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Sword"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Sword Upgrade",
-                          "count": {
-                            "type": "constant",
-                            "value": 2
-                          }
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": "Sword",
+                      "inferred": true,
+                      "description": "Requires having Sword"
                     }
                   ]
                 },
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "or",
-                    "conditions": [
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Magic Orb",
-                              "Shield"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Stick",
-                              "Sword",
-                              "Sword Upgrade"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": "Hero's Laurels"
+                  "type": "capability",
+                  "capability": "ladder_storage",
+                  "inferred": true,
+                  "description": "Requires ability to ladder storage"
                 }
               ]
             },
@@ -2068,7 +1167,10 @@
             "id": 509342540,
             "access_rule": {
               "type": "item_check",
-              "item": "Hero's Laurels"
+              "item": {
+                "type": "constant",
+                "value": "Hero's Laurels"
+              }
             },
             "item": {
               "name": "Dagger Strap",
@@ -2124,7 +1226,10 @@
             "id": 509342544,
             "access_rule": {
               "type": "item_check",
-              "item": "Hero's Laurels"
+              "item": {
+                "type": "constant",
+                "value": "Hero's Laurels"
+              }
             },
             "item": {
               "name": "Aura's Gem",
@@ -2138,7 +1243,10 @@
             "id": 509342545,
             "access_rule": {
               "type": "item_check",
-              "item": "Hero's Laurels"
+              "item": {
+                "type": "constant",
+                "value": "Hero's Laurels"
+              }
             },
             "item": {
               "name": "Pages 26-27",
@@ -2263,21 +1371,10 @@
             "name": "Shop - Potion 1",
             "id": 509342554,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Sword"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Sword Upgrade",
-                  "count": {
-                    "type": "constant",
-                    "value": 2
-                  }
-                }
-              ]
+              "type": "item_check",
+              "item": "Sword",
+              "inferred": true,
+              "description": "Requires having Sword"
             },
             "item": {
               "name": "Ice Bomb x5",
@@ -2290,21 +1387,10 @@
             "name": "Shop - Potion 2",
             "id": 509342555,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Sword"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Sword Upgrade",
-                  "count": {
-                    "type": "constant",
-                    "value": 2
-                  }
-                }
-              ]
+              "type": "item_check",
+              "item": "Sword",
+              "inferred": true,
+              "description": "Requires having Sword"
             },
             "item": {
               "name": "Golden Coin",
@@ -2317,21 +1403,10 @@
             "name": "Shop - Coin 1",
             "id": 509342556,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Sword"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Sword Upgrade",
-                  "count": {
-                    "type": "constant",
-                    "value": 2
-                  }
-                }
-              ]
+              "type": "item_check",
+              "item": "Sword",
+              "inferred": true,
+              "description": "Requires having Sword"
             },
             "item": {
               "name": "Firecracker x6",
@@ -2344,21 +1419,10 @@
             "name": "Shop - Coin 2",
             "id": 509342557,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Sword"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Sword Upgrade",
-                  "count": {
-                    "type": "constant",
-                    "value": 2
-                  }
-                }
-              ]
+              "type": "item_check",
+              "item": "Sword",
+              "inferred": true,
+              "description": "Requires having Sword"
             },
             "item": {
               "name": "Golden Coin",
@@ -2372,7 +1436,10 @@
             "id": 509342558,
             "access_rule": {
               "type": "item_check",
-              "item": "Hero's Laurels"
+              "item": {
+                "type": "constant",
+                "value": "Hero's Laurels"
+              }
             },
             "item": {
               "name": "MP Berry",
@@ -2402,84 +1469,46 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Hero's Laurels"
+                  }
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "constant",
-                          "value": 0
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Lantern"
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": "Lantern",
+                      "inferred": true,
+                      "description": "Requires having Lantern"
                     },
                     {
                       "type": "or",
                       "conditions": [
                         {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "item_check",
-                              "item": "Sword"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Sword Upgrade",
-                              "count": {
-                                "type": "constant",
-                                "value": 2
-                              }
-                            }
-                          ]
+                          "type": "item_check",
+                          "item": "Sword",
+                          "inferred": true,
+                          "description": "Requires having Sword"
                         },
                         {
                           "type": "item_check",
-                          "item": "Magic Wand"
+                          "item": {
+                            "type": "constant",
+                            "value": "Magic Wand"
+                          }
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 2
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Magic Dagger",
-                          "Magic Orb"
-                        ]
-                      }
-                    ]
-                  }
-                },
-                {
                   "type": "item_check",
-                  "item": "Hero's Laurels"
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
                 }
               ]
             },
@@ -2511,58 +1540,17 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "conditional",
-                    "test": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 0
-                          }
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "type": "item_check",
-                      "item": "Gold Questagon",
-                      "count": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    },
-                    "if_false": {
-                      "type": "item_check",
-                      "item": "Pages 24-25 (Prayer)"
-                    }
+                    "value": "Hero's Laurels"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Hero's Laurels"
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
                 }
               ]
             },
@@ -2577,54 +1565,10 @@
             "name": "Far Shore - Page Pickup",
             "id": 509342563,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "constant",
-                  "value": 1
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "constant",
-                        "value": 0
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": 0
-                      }
-                    },
-                    {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "item_check",
-                  "item": "Gold Questagon",
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "if_false": {
-                  "type": "item_check",
-                  "item": "Pages 24-25 (Prayer)"
-                }
-              }
+              "type": "item_check",
+              "item": "Ability",
+              "inferred": true,
+              "description": "Requires having Ability"
             },
             "item": {
               "name": "Effigy",
@@ -2638,7 +1582,10 @@
             "id": 509342564,
             "access_rule": {
               "type": "item_check",
-              "item": "Golden Coin",
+              "item": {
+                "type": "constant",
+                "value": "Golden Coin"
+              },
               "count": {
                 "type": "constant",
                 "value": 10
@@ -2656,7 +1603,10 @@
             "id": 509342565,
             "access_rule": {
               "type": "item_check",
-              "item": "Golden Coin",
+              "item": {
+                "type": "constant",
+                "value": "Golden Coin"
+              },
               "count": {
                 "type": "constant",
                 "value": 15
@@ -2674,7 +1624,10 @@
             "id": 509342566,
             "access_rule": {
               "type": "item_check",
-              "item": "Golden Coin",
+              "item": {
+                "type": "constant",
+                "value": "Golden Coin"
+              },
               "count": {
                 "type": "constant",
                 "value": 3
@@ -2692,7 +1645,10 @@
             "id": 509342567,
             "access_rule": {
               "type": "item_check",
-              "item": "Golden Coin",
+              "item": {
+                "type": "constant",
+                "value": "Golden Coin"
+              },
               "count": {
                 "type": "constant",
                 "value": 6
@@ -2710,7 +1666,10 @@
             "id": 509342568,
             "access_rule": {
               "type": "item_check",
-              "item": "Fairy",
+              "item": {
+                "type": "constant",
+                "value": "Fairy"
+              },
               "count": {
                 "type": "constant",
                 "value": 20
@@ -2728,7 +1687,10 @@
             "id": 509342569,
             "access_rule": {
               "type": "item_check",
-              "item": "Fairy",
+              "item": {
+                "type": "constant",
+                "value": "Fairy"
+              },
               "count": {
                 "type": "constant",
                 "value": 10
@@ -2748,89 +1710,34 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Hero's Laurels"
+                  }
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "constant",
-                          "value": 0
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Lantern"
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": "Lantern",
+                      "inferred": true,
+                      "description": "Requires having Lantern"
                     },
                     {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Sword"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Sword Upgrade",
-                          "count": {
-                            "type": "constant",
-                            "value": 2
-                          }
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": "Sword",
+                      "inferred": true,
+                      "description": "Requires having Sword"
                     }
                   ]
                 },
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "or",
-                    "conditions": [
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Magic Orb",
-                              "Shield"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Stick",
-                              "Sword",
-                              "Sword Upgrade"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": "Hero's Laurels"
+                  "type": "capability",
+                  "capability": "ladder_storage",
+                  "inferred": true,
+                  "description": "Requires ability to ladder storage"
                 }
               ]
             },
@@ -3008,57 +1915,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Magic Dagger",
-                          "Magic Orb"
-                        ]
-                      }
-                    ]
+                    "value": "Gun"
                   }
                 },
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Sword"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Sword Upgrade",
-                      "count": {
-                        "type": "constant",
-                        "value": 2
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
                 },
                 {
                   "type": "item_check",
-                  "item": "Gun"
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
                 }
               ]
             },
@@ -3146,106 +2019,31 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "conditional",
-                    "test": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 0
-                          }
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "type": "item_check",
-                      "item": "Gold Questagon",
-                      "count": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    },
-                    "if_false": {
-                      "type": "item_check",
-                      "item": "Pages 42-43 (Holy Cross)"
-                    }
-                  }
+                  "type": "item_check",
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
                 },
                 {
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "constant",
-                          "value": 0
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Hero's Laurels"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "conditional",
-                      "test": {
-                        "type": "compare",
-                        "left": {
-                          "type": "constant",
-                          "value": 0
-                        },
-                        "op": "<",
-                        "right": {
-                          "type": "constant",
-                          "value": 2
-                        }
-                      },
-                      "if_true": {
+                      "type": "item_check",
+                      "item": {
                         "type": "constant",
-                        "value": false
-                      },
-                      "if_false": {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Magic Dagger",
-                              "Magic Orb"
-                            ]
-                          }
-                        ]
+                        "value": "Old House Key"
                       }
                     },
                     {
                       "type": "item_check",
-                      "item": "Old House Key"
+                      "item": "Ice_Grapple_Logic",
+                      "inferred": true,
+                      "description": "Requires having Ice Grapple Logic"
+                    },
+                    {
+                      "type": "helper",
+                      "name": "laurels_zip",
+                      "args": []
                     }
                   ]
                 }
@@ -3307,137 +2105,55 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "conditional",
-                    "test": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 0
-                          }
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "type": "item_check",
-                      "item": "Gold Questagon",
-                      "count": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    },
-                    "if_false": {
-                      "type": "item_check",
-                      "item": "Pages 42-43 (Holy Cross)"
-                    }
-                  }
+                  "type": "item_check",
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
                 },
                 {
                   "type": "or",
                   "conditions": [
                     {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Hero's Laurels"
+                      }
+                    },
+                    {
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "constant",
-                              "value": 0
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Lantern"
-                            }
-                          ]
+                          "type": "item_check",
+                          "item": "Lantern",
+                          "inferred": true,
+                          "description": "Requires having Lantern"
                         },
                         {
                           "type": "or",
                           "conditions": [
                             {
-                              "type": "or",
-                              "conditions": [
-                                {
-                                  "type": "item_check",
-                                  "item": "Sword"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Sword Upgrade",
-                                  "count": {
-                                    "type": "constant",
-                                    "value": 2
-                                  }
-                                }
-                              ]
+                              "type": "item_check",
+                              "item": "Sword",
+                              "inferred": true,
+                              "description": "Requires having Sword"
                             },
                             {
                               "type": "item_check",
-                              "item": "Magic Wand"
+                              "item": {
+                                "type": "constant",
+                                "value": "Magic Wand"
+                              }
                             }
                           ]
                         }
                       ]
                     },
                     {
-                      "type": "conditional",
-                      "test": {
-                        "type": "compare",
-                        "left": {
-                          "type": "constant",
-                          "value": 0
-                        },
-                        "op": "<",
-                        "right": {
-                          "type": "constant",
-                          "value": 2
-                        }
-                      },
-                      "if_true": {
-                        "type": "constant",
-                        "value": false
-                      },
-                      "if_false": {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Magic Dagger",
-                              "Magic Orb"
-                            ]
-                          }
-                        ]
-                      }
-                    },
-                    {
                       "type": "item_check",
-                      "item": "Hero's Laurels"
+                      "item": "Ice_Grapple_Logic",
+                      "inferred": true,
+                      "description": "Requires having Ice Grapple Logic"
                     }
                   ]
                 }
@@ -3558,54 +2274,10 @@
             "name": "East Forest - Dancing Fox Spirit Holy Cross",
             "id": 509342435,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "constant",
-                  "value": 1
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "constant",
-                        "value": 0
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": 0
-                      }
-                    },
-                    {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "item_check",
-                  "item": "Gold Questagon",
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "if_false": {
-                  "type": "item_check",
-                  "item": "Pages 42-43 (Holy Cross)"
-                }
-              }
+              "type": "item_check",
+              "item": "Ability",
+              "inferred": true,
+              "description": "Requires having Ability"
             },
             "item": {
               "name": "Pages 50-51",
@@ -3618,54 +2290,10 @@
             "name": "East Forest - Golden Obelisk Holy Cross",
             "id": 509342436,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "constant",
-                  "value": 1
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "constant",
-                        "value": 0
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": 0
-                      }
-                    },
-                    {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "item_check",
-                  "item": "Gold Questagon",
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "if_false": {
-                  "type": "item_check",
-                  "item": "Pages 42-43 (Holy Cross)"
-                }
-              }
+              "type": "item_check",
+              "item": "Ability",
+              "inferred": true,
+              "description": "Requires having Ability"
             },
             "item": {
               "name": "MP Berry x3",
@@ -3681,56 +2309,6 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "conditional",
-                    "test": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 0
-                          }
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "type": "item_check",
-                      "item": "Gold Questagon",
-                      "count": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    },
-                    "if_false": {
-                      "type": "item_check",
-                      "item": "Pages 52-53 (Icebolt)"
-                    }
-                  }
-                },
-                {
                   "type": "state_method",
                   "method": "has_all",
                   "args": [
@@ -3743,6 +2321,12 @@
                       ]
                     }
                   ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
                 }
               ]
             },
@@ -3879,7 +2463,10 @@
             "id": 509342446,
             "access_rule": {
               "type": "item_check",
-              "item": "Magic Orb"
+              "item": {
+                "type": "constant",
+                "value": "Magic Orb"
+              }
             },
             "item": {
               "name": "Pages 28-29",
@@ -3895,57 +2482,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Magic Dagger",
-                          "Magic Orb"
-                        ]
-                      }
-                    ]
+                    "value": "Gun"
                   }
                 },
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Sword"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Sword Upgrade",
-                      "count": {
-                        "type": "constant",
-                        "value": 2
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
                 },
                 {
                   "type": "item_check",
-                  "item": "Gun"
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
                 }
               ]
             },
@@ -4044,54 +2597,10 @@
             "name": "Forest Grave Path - Holy Cross Code by Grave",
             "id": 509342454,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "constant",
-                  "value": 1
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "constant",
-                        "value": 0
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": 0
-                      }
-                    },
-                    {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "item_check",
-                  "item": "Gold Questagon",
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "if_false": {
-                  "type": "item_check",
-                  "item": "Pages 42-43 (Holy Cross)"
-                }
-              }
+              "type": "item_check",
+              "item": "Ability",
+              "inferred": true,
+              "description": "Requires having Ability"
             },
             "item": {
               "name": "MP Berry x2",
@@ -4163,58 +2672,17 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "conditional",
-                    "test": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 0
-                          }
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "type": "item_check",
-                      "item": "Gold Questagon",
-                      "count": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    },
-                    "if_false": {
-                      "type": "item_check",
-                      "item": "Pages 24-25 (Prayer)"
-                    }
+                    "value": "Hero's Laurels"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Hero's Laurels"
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
                 }
               ]
             },
@@ -4362,54 +2830,10 @@
             "name": "Beneath the Well - [Powered Secret Room] Chest",
             "id": 509342400,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "constant",
-                  "value": 1
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "constant",
-                        "value": 0
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": 0
-                      }
-                    },
-                    {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "item_check",
-                  "item": "Gold Questagon",
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "if_false": {
-                  "type": "item_check",
-                  "item": "Pages 24-25 (Prayer)"
-                }
-              }
+              "type": "item_check",
+              "item": "Ability",
+              "inferred": true,
+              "description": "Requires having Ability"
             },
             "item": {
               "name": "Flask Shard",
@@ -4638,54 +3062,10 @@
             "name": "West Garden - [Central Highlands] Holy Cross (Blue Lines)",
             "id": 509342680,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "constant",
-                  "value": 1
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "constant",
-                        "value": 0
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": 0
-                      }
-                    },
-                    {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "item_check",
-                  "item": "Gold Questagon",
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "if_false": {
-                  "type": "item_check",
-                  "item": "Pages 42-43 (Holy Cross)"
-                }
-              }
+              "type": "item_check",
+              "item": "Ability",
+              "inferred": true,
+              "description": "Requires having Ability"
             },
             "item": {
               "name": "Fairy",
@@ -4701,58 +3081,17 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "conditional",
-                    "test": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 0
-                          }
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "type": "item_check",
-                      "item": "Gold Questagon",
-                      "count": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    },
-                    "if_false": {
-                      "type": "item_check",
-                      "item": "Pages 42-43 (Holy Cross)"
-                    }
+                    "value": "Hero's Laurels"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Hero's Laurels"
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
                 }
               ]
             },
@@ -4795,54 +3134,10 @@
             "name": "West Garden - [North] Behind Holy Cross Door",
             "id": 509342684,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "constant",
-                  "value": 1
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "constant",
-                        "value": 0
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": 0
-                      }
-                    },
-                    {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "item_check",
-                  "item": "Gold Questagon",
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "if_false": {
-                  "type": "item_check",
-                  "item": "Pages 42-43 (Holy Cross)"
-                }
-              }
+              "type": "item_check",
+              "item": "Ability",
+              "inferred": true,
+              "description": "Requires having Ability"
             },
             "item": {
               "name": "Pages 46-47",
@@ -4884,7 +3179,10 @@
             "id": 509342687,
             "access_rule": {
               "type": "item_check",
-              "item": "Hero's Laurels"
+              "item": {
+                "type": "constant",
+                "value": "Hero's Laurels"
+              }
             },
             "item": {
               "name": "HP Berry",
@@ -4898,7 +3196,10 @@
             "id": 509342688,
             "access_rule": {
               "type": "item_check",
-              "item": "Hero's Laurels"
+              "item": {
+                "type": "constant",
+                "value": "Hero's Laurels"
+              }
             },
             "item": {
               "name": "MP Berry x2",
@@ -4912,7 +3213,10 @@
             "id": 509342689,
             "access_rule": {
               "type": "item_check",
-              "item": "Hero's Laurels"
+              "item": {
+                "type": "constant",
+                "value": "Hero's Laurels"
+              }
             },
             "item": {
               "name": "Hourglass",
@@ -5029,148 +3333,25 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "conditional",
-                      "test": {
-                        "type": "not",
-                        "condition": {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      },
-                      "if_true": {
+                      "type": "item_check",
+                      "item": {
                         "type": "constant",
-                        "value": true
-                      },
-                      "if_false": {
-                        "type": "conditional",
-                        "test": {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "compare",
-                              "left": {
-                                "type": "constant",
-                                "value": 0
-                              },
-                              "op": "==",
-                              "right": {
-                                "type": "constant",
-                                "value": 0
-                              }
-                            },
-                            {
-                              "type": "constant",
-                              "value": 0
-                            }
-                          ]
-                        },
-                        "if_true": {
-                          "type": "item_check",
-                          "item": "Gold Questagon",
-                          "count": {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        },
-                        "if_false": {
-                          "type": "item_check",
-                          "item": "Pages 24-25 (Prayer)"
-                        }
+                        "value": "Hero's Laurels"
                       }
                     },
                     {
                       "type": "item_check",
-                      "item": "Hero's Laurels"
+                      "item": "Ability",
+                      "inferred": true,
+                      "description": "Requires having Ability"
                     }
                   ]
                 },
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "conditional",
-                        "test": {
-                          "type": "not",
-                          "condition": {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        },
-                        "if_true": {
-                          "type": "constant",
-                          "value": true
-                        },
-                        "if_false": {
-                          "type": "conditional",
-                          "test": {
-                            "type": "and",
-                            "conditions": [
-                              {
-                                "type": "compare",
-                                "left": {
-                                  "type": "constant",
-                                  "value": 0
-                                },
-                                "op": "==",
-                                "right": {
-                                  "type": "constant",
-                                  "value": 0
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": 0
-                              }
-                            ]
-                          },
-                          "if_true": {
-                            "type": "item_check",
-                            "item": "Gold Questagon",
-                            "count": {
-                              "type": "constant",
-                              "value": 1
-                            }
-                          },
-                          "if_false": {
-                            "type": "item_check",
-                            "item": "Pages 52-53 (Icebolt)"
-                          }
-                        }
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Magic Dagger",
-                              "Magic Orb",
-                              "Magic Wand"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
+                  "type": "item_check",
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
                 }
               ]
             },
@@ -5216,58 +3397,17 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "conditional",
-                    "test": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 0
-                          }
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "type": "item_check",
-                      "item": "Gold Questagon",
-                      "count": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    },
-                    "if_false": {
-                      "type": "item_check",
-                      "item": "Pages 24-25 (Prayer)"
-                    }
+                    "value": "Hero's Laurels"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Hero's Laurels"
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
                 }
               ]
             },
@@ -5298,74 +3438,32 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
                       "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "conditional",
-                    "test": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 0
-                          }
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        }
+                      "value": [
+                        "Hero's Laurels",
+                        "Magic Orb"
                       ]
-                    },
-                    "if_true": {
-                      "type": "item_check",
-                      "item": "Gold Questagon",
-                      "count": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    },
-                    "if_false": {
-                      "type": "item_check",
-                      "item": "Pages 24-25 (Prayer)"
                     }
-                  }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
                 },
                 {
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Sword"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Sword Upgrade",
-                          "count": {
-                            "type": "constant",
-                            "value": 2
-                          }
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": "Sword",
+                      "inferred": true,
+                      "description": "Requires having Sword"
                     },
                     {
                       "type": "state_method",
@@ -5381,19 +3479,6 @@
                       ]
                     }
                   ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Hero's Laurels",
-                        "Magic Orb"
-                      ]
-                    }
-                  ]
                 }
               ]
             }
@@ -5405,7 +3490,10 @@
             "id": 509342636,
             "access_rule": {
               "type": "item_check",
-              "item": "Hero's Laurels"
+              "item": {
+                "type": "constant",
+                "value": "Hero's Laurels"
+              }
             },
             "item": {
               "name": "Golden Coin",
@@ -5477,57 +3565,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Magic Dagger",
-                          "Magic Orb"
-                        ]
-                      }
-                    ]
+                    "value": "Gun"
                   }
                 },
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Sword"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Sword Upgrade",
-                      "count": {
-                        "type": "constant",
-                        "value": 2
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
                 },
                 {
                   "type": "item_check",
-                  "item": "Gun"
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
                 }
               ]
             },
@@ -5615,48 +3669,28 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 2
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Magic Dagger",
-                          "Magic Orb"
-                        ]
-                      }
-                    ]
+                    "value": "Hero's Laurels"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Hero's Laurels"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Key",
+                  "item": {
+                    "type": "constant",
+                    "value": "Key"
+                  },
                   "count": {
                     "type": "constant",
                     "value": 2
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
                 }
               ]
             },
@@ -5688,48 +3722,28 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 2
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Magic Dagger",
-                          "Magic Orb"
-                        ]
-                      }
-                    ]
+                    "value": "Hero's Laurels"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Hero's Laurels"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Key",
+                  "item": {
+                    "type": "constant",
+                    "value": "Key"
+                  },
                   "count": {
                     "type": "constant",
                     "value": 2
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
                 }
               ]
             },
@@ -5979,21 +3993,10 @@
             "name": "Librarian - Hexagon Green",
             "id": 509342490,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Sword"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Sword Upgrade",
-                  "count": {
-                    "type": "constant",
-                    "value": 2
-                  }
-                }
-              ]
+              "type": "item_check",
+              "item": "Sword",
+              "inferred": true,
+              "description": "Requires having Sword"
             },
             "item": {
               "name": "HP Berry",
@@ -6006,54 +4009,10 @@
             "name": "Library Hall - Holy Cross Chest",
             "id": 509342491,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "constant",
-                  "value": 1
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "constant",
-                        "value": 0
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": 0
-                      }
-                    },
-                    {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "item_check",
-                  "item": "Gold Questagon",
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "if_false": {
-                  "type": "item_check",
-                  "item": "Pages 42-43 (Holy Cross)"
-                }
-              }
+              "type": "item_check",
+              "item": "Ability",
+              "inferred": true,
+              "description": "Requires having Ability"
             },
             "item": {
               "name": "HP Berry x2",
@@ -6125,17 +4084,10 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Gun",
-                        "Magic Wand"
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Melee",
+                  "inferred": true,
+                  "description": "Requires having Melee"
                 },
                 {
                   "type": "state_method",
@@ -6144,9 +4096,8 @@
                     {
                       "type": "constant",
                       "value": [
-                        "Stick",
-                        "Sword",
-                        "Sword Upgrade"
+                        "Gun",
+                        "Magic Wand"
                       ]
                     }
                   ]
@@ -6167,17 +4118,10 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Gun",
-                        "Magic Wand"
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Melee",
+                  "inferred": true,
+                  "description": "Requires having Melee"
                 },
                 {
                   "type": "state_method",
@@ -6186,9 +4130,8 @@
                     {
                       "type": "constant",
                       "value": [
-                        "Stick",
-                        "Sword",
-                        "Sword Upgrade"
+                        "Gun",
+                        "Magic Wand"
                       ]
                     }
                   ]
@@ -6209,17 +4152,10 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Gun",
-                        "Magic Wand"
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Melee",
+                  "inferred": true,
+                  "description": "Requires having Melee"
                 },
                 {
                   "type": "state_method",
@@ -6228,9 +4164,8 @@
                     {
                       "type": "constant",
                       "value": [
-                        "Stick",
-                        "Sword",
-                        "Sword Upgrade"
+                        "Gun",
+                        "Magic Wand"
                       ]
                     }
                   ]
@@ -6251,58 +4186,17 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "conditional",
-                    "test": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 0
-                          }
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "type": "item_check",
-                      "item": "Gold Questagon",
-                      "count": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    },
-                    "if_false": {
-                      "type": "item_check",
-                      "item": "Pages 24-25 (Prayer)"
-                    }
+                    "value": "Hero's Laurels"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Hero's Laurels"
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
                 }
               ]
             },
@@ -6335,31 +4229,29 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Hero's Laurels"
+                  }
+                },
+                {
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Stick",
-                            "Sword",
-                            "Sword Upgrade"
-                          ]
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": "Melee",
+                      "inferred": true,
+                      "description": "Requires having Melee"
                     },
                     {
                       "type": "item_check",
-                      "item": "Magic Dagger"
+                      "item": {
+                        "type": "constant",
+                        "value": "Magic Dagger"
+                      }
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Hero's Laurels"
                 }
               ]
             },
@@ -6377,95 +4269,28 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Fortress Vault Key"
+                  }
+                },
+                {
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "conditional",
-                      "test": {
-                        "type": "compare",
-                        "left": {
-                          "type": "constant",
-                          "value": 0
-                        },
-                        "op": "<",
-                        "right": {
-                          "type": "constant",
-                          "value": 2
-                        }
-                      },
-                      "if_true": {
-                        "type": "constant",
-                        "value": false
-                      },
-                      "if_false": {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Magic Dagger",
-                              "Magic Orb"
-                            ]
-                          }
-                        ]
-                      }
+                      "type": "item_check",
+                      "item": "Ability",
+                      "inferred": true,
+                      "description": "Requires having Ability"
                     },
                     {
-                      "type": "conditional",
-                      "test": {
-                        "type": "not",
-                        "condition": {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      },
-                      "if_true": {
-                        "type": "constant",
-                        "value": true
-                      },
-                      "if_false": {
-                        "type": "conditional",
-                        "test": {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "compare",
-                              "left": {
-                                "type": "constant",
-                                "value": 0
-                              },
-                              "op": "==",
-                              "right": {
-                                "type": "constant",
-                                "value": 0
-                              }
-                            },
-                            {
-                              "type": "constant",
-                              "value": 0
-                            }
-                          ]
-                        },
-                        "if_true": {
-                          "type": "item_check",
-                          "item": "Gold Questagon",
-                          "count": {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        },
-                        "if_false": {
-                          "type": "item_check",
-                          "item": "Pages 24-25 (Prayer)"
-                        }
-                      }
+                      "type": "item_check",
+                      "item": "Ice_Grapple_Logic",
+                      "inferred": true,
+                      "description": "Requires having Ice Grapple Logic"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Fortress Vault Key"
                 }
               ]
             },
@@ -6483,106 +4308,25 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "conditional",
-                      "test": {
-                        "type": "compare",
-                        "left": {
-                          "type": "constant",
-                          "value": 0
-                        },
-                        "op": "<",
-                        "right": {
-                          "type": "constant",
-                          "value": 2
-                        }
-                      },
-                      "if_true": {
-                        "type": "constant",
-                        "value": false
-                      },
-                      "if_false": {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Magic Dagger",
-                              "Magic Orb"
-                            ]
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "conditional",
-                      "test": {
-                        "type": "not",
-                        "condition": {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      },
-                      "if_true": {
-                        "type": "constant",
-                        "value": true
-                      },
-                      "if_false": {
-                        "type": "conditional",
-                        "test": {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "compare",
-                              "left": {
-                                "type": "constant",
-                                "value": 0
-                              },
-                              "op": "==",
-                              "right": {
-                                "type": "constant",
-                                "value": 0
-                              }
-                            },
-                            {
-                              "type": "constant",
-                              "value": 0
-                            }
-                          ]
-                        },
-                        "if_true": {
-                          "type": "item_check",
-                          "item": "Gold Questagon",
-                          "count": {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        },
-                        "if_false": {
-                          "type": "item_check",
-                          "item": "Pages 24-25 (Prayer)"
-                        }
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
                 },
                 {
                   "type": "or",
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Sword"
+                      "item": "Ability",
+                      "inferred": true,
+                      "description": "Requires having Ability"
                     },
                     {
                       "type": "item_check",
-                      "item": "Sword Upgrade",
-                      "count": {
-                        "type": "constant",
-                        "value": 2
-                      }
+                      "item": "Ice_Grapple_Logic",
+                      "inferred": true,
+                      "description": "Requires having Ice Grapple Logic"
                     }
                   ]
                 }
@@ -6613,54 +4357,10 @@
             "name": "Eastern Vault Fortress - [West Wing] Candles Holy Cross",
             "id": 509342465,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "constant",
-                  "value": 1
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "constant",
-                        "value": 0
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": 0
-                      }
-                    },
-                    {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "item_check",
-                  "item": "Gold Questagon",
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "if_false": {
-                  "type": "item_check",
-                  "item": "Pages 42-43 (Holy Cross)"
-                }
-              }
+              "type": "item_check",
+              "item": "Ability",
+              "inferred": true,
+              "description": "Requires having Ability"
             },
             "item": {
               "name": "Money x25",
@@ -6704,57 +4404,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Magic Dagger",
-                          "Magic Orb"
-                        ]
-                      }
-                    ]
+                    "value": "Gun"
                   }
                 },
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Sword"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Sword Upgrade",
-                      "count": {
-                        "type": "constant",
-                        "value": 2
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
                 },
                 {
                   "type": "item_check",
-                  "item": "Gun"
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
                 }
               ]
             },
@@ -6828,58 +4494,17 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "conditional",
-                    "test": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 0
-                          }
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "type": "item_check",
-                      "item": "Gold Questagon",
-                      "count": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    },
-                    "if_false": {
-                      "type": "item_check",
-                      "item": "Pages 24-25 (Prayer)"
-                    }
+                    "value": "Hero's Laurels"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Hero's Laurels"
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
                 }
               ]
             },
@@ -6912,21 +4537,20 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Lantern"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Lantern",
+                  "inferred": true,
+                  "description": "Requires having Lantern"
                 },
                 {
                   "type": "or",
                   "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Melee",
+                      "inferred": true,
+                      "description": "Requires having Melee"
+                    },
                     {
                       "type": "state_method",
                       "method": "has_any",
@@ -6938,20 +4562,6 @@
                             "Hero's Laurels",
                             "Magic Dagger",
                             "Magic Wand"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Stick",
-                            "Sword",
-                            "Sword Upgrade"
                           ]
                         }
                       ]
@@ -6988,31 +4598,16 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Lantern"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Melee",
+                  "inferred": true,
+                  "description": "Requires having Melee"
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Stick",
-                        "Sword",
-                        "Sword Upgrade"
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Lantern",
+                  "inferred": true,
+                  "description": "Requires having Lantern"
                 }
               ]
             },
@@ -7063,25 +4658,17 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Sword"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Sword Upgrade",
-                      "count": {
-                        "type": "constant",
-                        "value": 2
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
                 },
                 {
                   "type": "item_check",
-                  "item": "Magic Wand"
+                  "item": {
+                    "type": "constant",
+                    "value": "Magic Wand"
+                  }
                 }
               ]
             }
@@ -7091,7 +4678,10 @@
             "connected_region": "Monastery",
             "access_rule": {
               "type": "item_check",
-              "item": "Hero's Laurels"
+              "item": {
+                "type": "constant",
+                "value": "Hero's Laurels"
+              }
             }
           }
         ],
@@ -7100,54 +4690,10 @@
             "name": "Quarry - [Back Entrance] Bushes Holy Cross",
             "id": 509342596,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "constant",
-                  "value": 1
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "constant",
-                        "value": 0
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": 0
-                      }
-                    },
-                    {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "item_check",
-                  "item": "Gold Questagon",
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "if_false": {
-                  "type": "item_check",
-                  "item": "Pages 42-43 (Holy Cross)"
-                }
-              }
+              "type": "item_check",
+              "item": "Ability",
+              "inferred": true,
+              "description": "Requires having Ability"
             },
             "item": {
               "name": "Golden Coin",
@@ -7233,57 +4779,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Magic Dagger",
-                          "Magic Orb"
-                        ]
-                      }
-                    ]
+                    "value": "Gun"
                   }
                 },
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Sword"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Sword Upgrade",
-                      "count": {
-                        "type": "constant",
-                        "value": 2
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
                 },
                 {
                   "type": "item_check",
-                  "item": "Gun"
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
                 }
               ]
             },
@@ -7311,17 +4823,10 @@
             "name": "Quarry -> Lower Quarry",
             "connected_region": "Lower Quarry",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "constant",
-                  "value": 0
-                },
-                {
-                  "type": "item_check",
-                  "item": "Scavenger Mask"
-                }
-              ]
+              "type": "item_check",
+              "item": "Mask",
+              "inferred": true,
+              "description": "Requires having Mask"
             }
           },
           {
@@ -7331,142 +4836,16 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "conditional",
-                        "test": {
-                          "type": "not",
-                          "condition": {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        },
-                        "if_true": {
-                          "type": "constant",
-                          "value": true
-                        },
-                        "if_false": {
-                          "type": "conditional",
-                          "test": {
-                            "type": "and",
-                            "conditions": [
-                              {
-                                "type": "compare",
-                                "left": {
-                                  "type": "constant",
-                                  "value": 0
-                                },
-                                "op": "==",
-                                "right": {
-                                  "type": "constant",
-                                  "value": 0
-                                }
-                              },
-                              {
-                                "type": "constant",
-                                "value": 0
-                              }
-                            ]
-                          },
-                          "if_true": {
-                            "type": "item_check",
-                            "item": "Gold Questagon",
-                            "count": {
-                              "type": "constant",
-                              "value": 1
-                            }
-                          },
-                          "if_false": {
-                            "type": "item_check",
-                            "item": "Pages 52-53 (Icebolt)"
-                          }
-                        }
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Magic Dagger",
-                              "Magic Orb",
-                              "Magic Wand"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
+                  "type": "item_check",
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
                 },
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "conditional",
-                    "test": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 0
-                          }
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "type": "item_check",
-                      "item": "Gold Questagon",
-                      "count": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    },
-                    "if_false": {
-                      "type": "item_check",
-                      "item": "Pages 24-25 (Prayer)"
-                    }
-                  }
+                  "type": "item_check",
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
                 }
               ]
             }
@@ -7592,25 +4971,17 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Sword"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Sword Upgrade",
-                      "count": {
-                        "type": "constant",
-                        "value": 2
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Gun"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Gun"
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
                 }
               ]
             },
@@ -7633,38 +5004,22 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Hero's Laurels"
-                    }
-                  ]
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Sword"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Sword Upgrade",
-                      "count": {
-                        "type": "constant",
-                        "value": 2
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
                 },
                 {
                   "type": "item_check",
-                  "item": "Magic Wand"
+                  "item": {
+                    "type": "constant",
+                    "value": "Magic Wand"
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "laurels_zip",
+                  "args": []
                 }
               ]
             }
@@ -7690,7 +5045,10 @@
             "id": 509342611,
             "access_rule": {
               "type": "item_check",
-              "item": "Hero's Laurels"
+              "item": {
+                "type": "constant",
+                "value": "Hero's Laurels"
+              }
             },
             "item": {
               "name": "ATT Offering",
@@ -7726,58 +5084,17 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "conditional",
-                    "test": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 0
-                          }
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "type": "item_check",
-                      "item": "Gold Questagon",
-                      "count": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    },
-                    "if_false": {
-                      "type": "item_check",
-                      "item": "Pages 24-25 (Prayer)"
-                    }
+                    "value": "Hero's Laurels"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Hero's Laurels"
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
                 }
               ]
             },
@@ -7800,58 +5117,17 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "conditional",
-                    "test": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 0
-                          }
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "type": "item_check",
-                      "item": "Gold Questagon",
-                      "count": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    },
-                    "if_false": {
-                      "type": "item_check",
-                      "item": "Pages 24-25 (Prayer)"
-                    }
+                    "value": "Magic Orb"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Magic Orb"
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
                 }
               ]
             }
@@ -8011,21 +5287,10 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Sword"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Sword Upgrade",
-                      "count": {
-                        "type": "constant",
-                        "value": 2
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Sword",
+                  "inferred": true,
+                  "description": "Requires having Sword"
                 },
                 {
                   "type": "state_method",
@@ -8179,21 +5444,10 @@
             "name": "Rooted Ziggurat Lower - Hexagon Blue",
             "id": 509342635,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Sword"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Sword Upgrade",
-                  "count": {
-                    "type": "constant",
-                    "value": 2
-                  }
-                }
-              ]
+              "type": "item_check",
+              "item": "Sword",
+              "inferred": true,
+              "description": "Requires having Sword"
             },
             "item": {
               "name": "Money x50",
@@ -8217,109 +5471,31 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "conditional",
-                      "test": {
-                        "type": "not",
-                        "condition": {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      },
-                      "if_true": {
+                      "type": "item_check",
+                      "item": {
                         "type": "constant",
-                        "value": true
-                      },
-                      "if_false": {
-                        "type": "conditional",
-                        "test": {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "compare",
-                              "left": {
-                                "type": "constant",
-                                "value": 0
-                              },
-                              "op": "==",
-                              "right": {
-                                "type": "constant",
-                                "value": 0
-                              }
-                            },
-                            {
-                              "type": "constant",
-                              "value": 0
-                            }
-                          ]
-                        },
-                        "if_true": {
-                          "type": "item_check",
-                          "item": "Gold Questagon",
-                          "count": {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        },
-                        "if_false": {
-                          "type": "item_check",
-                          "item": "Pages 24-25 (Prayer)"
-                        }
+                        "value": "Hero's Laurels"
                       }
                     },
                     {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Sword"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Sword Upgrade",
-                          "count": {
-                            "type": "constant",
-                            "value": 2
-                          }
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": "Ability",
+                      "inferred": true,
+                      "description": "Requires having Ability"
                     },
                     {
                       "type": "item_check",
-                      "item": "Hero's Laurels"
+                      "item": "Sword",
+                      "inferred": true,
+                      "description": "Requires having Sword"
                     }
                   ]
                 },
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "constant",
-                      "value": 0
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 2
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": false
-                  },
-                  "if_false": {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Magic Dagger",
-                          "Magic Orb"
-                        ]
-                      }
-                    ]
-                  }
+                  "type": "item_check",
+                  "item": "Ice_Grapple_Logic",
+                  "inferred": true,
+                  "description": "Requires having Ice Grapple Logic"
                 }
               ]
             }
@@ -8336,25 +5512,17 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Sword"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Sword Upgrade",
-                          "count": {
-                            "type": "constant",
-                            "value": 2
-                          }
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Magic Wand"
+                      }
                     },
                     {
                       "type": "item_check",
-                      "item": "Magic Wand"
+                      "item": "Sword",
+                      "inferred": true,
+                      "description": "Requires having Sword"
                     }
                   ]
                 },
@@ -8362,40 +5530,17 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "conditional",
-                      "test": {
-                        "type": "compare",
-                        "left": {
-                          "type": "constant",
-                          "value": 0
-                        },
-                        "op": "<",
-                        "right": {
-                          "type": "constant",
-                          "value": 2
-                        }
-                      },
-                      "if_true": {
+                      "type": "item_check",
+                      "item": {
                         "type": "constant",
-                        "value": false
-                      },
-                      "if_false": {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Magic Dagger",
-                              "Magic Orb"
-                            ]
-                          }
-                        ]
+                        "value": "Hero's Laurels"
                       }
                     },
                     {
                       "type": "item_check",
-                      "item": "Hero's Laurels"
+                      "item": "Ice_Grapple_Logic",
+                      "inferred": true,
+                      "description": "Requires having Ice Grapple Logic"
                     }
                   ]
                 }
@@ -8412,54 +5557,10 @@
             "name": "Cathedral - Secret Legend Trophy Chest",
             "id": 509342654,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "constant",
-                  "value": 1
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "constant",
-                        "value": 0
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": 0
-                      }
-                    },
-                    {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "item_check",
-                  "item": "Gold Questagon",
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "if_false": {
-                  "type": "item_check",
-                  "item": "Pages 42-43 (Holy Cross)"
-                }
-              }
+              "type": "item_check",
+              "item": "Ability",
+              "inferred": true,
+              "description": "Requires having Ability"
             },
             "item": {
               "name": "Fairy",
@@ -8486,21 +5587,10 @@
             "name": "Swamp - [South Graveyard] 4 Orange Skulls",
             "id": 509342656,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Sword"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Sword Upgrade",
-                  "count": {
-                    "type": "constant",
-                    "value": 2
-                  }
-                }
-              ]
+              "type": "item_check",
+              "item": "Sword",
+              "inferred": true,
+              "description": "Requires having Sword"
             },
             "item": {
               "name": "Money x32",
@@ -8570,7 +5660,10 @@
             "id": 509342661,
             "access_rule": {
               "type": "item_check",
-              "item": "Hero's Laurels"
+              "item": {
+                "type": "constant",
+                "value": "Hero's Laurels"
+              }
             },
             "item": {
               "name": "Fool Trap",
@@ -8724,7 +5817,10 @@
             "id": 509342672,
             "access_rule": {
               "type": "item_check",
-              "item": "Hero's Laurels"
+              "item": {
+                "type": "constant",
+                "value": "Hero's Laurels"
+              }
             },
             "item": {
               "name": "Fairy",
@@ -8752,7 +5848,10 @@
             "id": 509342674,
             "access_rule": {
               "type": "item_check",
-              "item": "Hero's Laurels"
+              "item": {
+                "type": "constant",
+                "value": "Hero's Laurels"
+              }
             },
             "item": {
               "name": "Phonomath",
@@ -8796,58 +5895,17 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "if_true": {
+                  "type": "item_check",
+                  "item": {
                     "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "conditional",
-                    "test": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": 0
-                          }
-                        },
-                        {
-                          "type": "constant",
-                          "value": 0
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "type": "item_check",
-                      "item": "Gold Questagon",
-                      "count": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    },
-                    "if_false": {
-                      "type": "item_check",
-                      "item": "Pages 24-25 (Prayer)"
-                    }
+                    "value": "Hero's Laurels"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Hero's Laurels"
+                  "item": "Ability",
+                  "inferred": true,
+                  "description": "Requires having Ability"
                 }
               ]
             },
@@ -9488,6 +6546,19 @@
         "event": false,
         "type": null,
         "max_count": 2
+      },
+      "Torch": {
+        "name": "Torch",
+        "id": 509342556,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
       },
       "Hourglass": {
         "name": "Hourglass",
@@ -10233,6 +7304,62 @@
       "Money x1": {
         "name": "Money x1",
         "id": 509342486,
+        "groups": [
+          "Everything",
+          "Money"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Money x2": {
+        "name": "Money x2",
+        "id": 509342552,
+        "groups": [
+          "Everything",
+          "Money"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Money x3": {
+        "name": "Money x3",
+        "id": 509342553,
+        "groups": [
+          "Everything",
+          "Money"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Money x4": {
+        "name": "Money x4",
+        "id": 509342554,
+        "groups": [
+          "Everything",
+          "Money"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Money x5": {
+        "name": "Money x5",
+        "id": 509342555,
         "groups": [
           "Everything",
           "Money"
@@ -11167,75 +8294,6 @@
         "type": null,
         "max_count": 1
       },
-      "Money x2": {
-        "name": "Money x2",
-        "id": 509342552,
-        "groups": [
-          "Everything",
-          "Money"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Money x3": {
-        "name": "Money x3",
-        "id": 509342553,
-        "groups": [
-          "Everything",
-          "Money"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Money x4": {
-        "name": "Money x4",
-        "id": 509342554,
-        "groups": [
-          "Everything",
-          "Money"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Money x5": {
-        "name": "Money x5",
-        "id": 509342555,
-        "groups": [
-          "Everything",
-          "Money"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Torch": {
-        "name": "Torch",
-        "id": 509342556,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
       "Victory": {
         "name": "Victory",
         "id": null,
@@ -11427,23 +8485,7 @@
   "settings": {
     "1": {
       "game": "TUNIC",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
-      "ability_unlocks": {
-        "Pages 42-43 (Holy Cross)": 1,
-        "Pages 52-53 (Icebolt)": 1,
-        "Pages 24-25 (Prayer)": 1
-      },
-      "ability_shuffling": 1,
-      "hexagon_quest": 0,
-      "hexagon_quest_ability_type": 0,
-      "entrance_rando": 0,
-      "shuffle_ladders": 0,
-      "laurels_zips": 0,
-      "ice_grappling": 0,
-      "ladder_storage": 0,
-      "lanternless": 0,
-      "maskless": 0
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

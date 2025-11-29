@@ -79,17 +79,31 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "flooded"
+                  },
+                  "attr": "flood_lake_desolation"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_timestop",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_timestop"
+                  },
                   "args": []
                 },
                 {
                   "type": "item_check",
-                  "item": "Talaria Attachment"
+                  "item": {
+                    "type": "constant",
+                    "value": "Talaria Attachment"
+                  }
                 }
               ]
             }
@@ -101,8 +115,15 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_fire",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_fire"
+                  },
                   "args": []
                 },
                 {
@@ -129,12 +150,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "flooded"
+                  },
+                  "attr": "flood_lake_desolation"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_doublejump",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_doublejump"
+                  },
                   "args": []
                 }
               ]
@@ -147,12 +179,19 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "flag_unchained_keys"
                 },
                 {
                   "type": "item_check",
-                  "item": "Twin Pyramid Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Twin Pyramid Key"
+                  }
                 }
               ]
             }
@@ -222,8 +261,15 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_fire",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_fire"
+                  },
                   "args": []
                 },
                 {
@@ -315,8 +361,26 @@
             "name": "Lake Desolation (Upper): Secret room",
             "id": 1337011,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "flag_eye_spy"
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": {
+                  "type": "constant",
+                  "value": "Oculus Ring"
+                }
+              },
+              "if_false": {
+                "type": "constant",
+                "value": true
+              }
             },
             "item": {
               "name": "Timespinner Spindle",
@@ -396,7 +460,10 @@
             "id": 1337016,
             "access_rule": {
               "type": "item_check",
-              "item": "Killed Maw"
+              "item": {
+                "type": "constant",
+                "value": "Killed Maw"
+              }
             },
             "item": {
               "name": "Lightwall",
@@ -410,7 +477,10 @@
             "id": 1337017,
             "access_rule": {
               "type": "item_check",
-              "item": "Killed Maw"
+              "item": {
+                "type": "constant",
+                "value": "Killed Maw"
+              }
             },
             "item": {
               "name": "Max Aura",
@@ -446,8 +516,26 @@
             "name": "Lake Desolation (Lower): Not so secret room",
             "id": 1337008,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "flag_eye_spy"
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": {
+                  "type": "constant",
+                  "value": "Oculus Ring"
+                }
+              },
+              "if_false": {
+                "type": "constant",
+                "value": true
+              }
             },
             "item": {
               "name": "Potion",
@@ -493,12 +581,19 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "flag_unchained_keys"
                 },
                 {
                   "type": "item_check",
-                  "item": "Twin Pyramid Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Twin Pyramid Key"
+                  }
                 }
               ]
             }
@@ -526,8 +621,15 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_fire",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_fire"
+                  },
                   "args": []
                 },
                 {
@@ -583,13 +685,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_doublejump",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_doublejump"
+                  },
                   "args": []
                 },
                 {
                   "type": "item_check",
-                  "item": "Talaria Attachment"
+                  "item": {
+                    "type": "constant",
+                    "value": "Talaria Attachment"
+                  }
                 }
               ]
             }
@@ -598,19 +710,37 @@
             "name": "Library -> Varndagroth tower left",
             "connected_region": "Varndagroth tower left",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "flag_specific_keycards"
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": {
                   "type": "constant",
-                  "value": [
-                    "Security Keycard A",
-                    "Security Keycard B",
-                    "Security Keycard C",
-                    "Security Keycard D"
-                  ]
+                  "value": "Security Keycard D"
                 }
-              ]
+              },
+              "if_false": {
+                "type": "state_method",
+                "method": "has_any",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C",
+                      "Security Keycard D"
+                    ]
+                  }
+                ]
+              }
             }
           },
           {
@@ -620,12 +750,19 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "flag_unchained_keys"
                 },
                 {
                   "type": "item_check",
-                  "item": "Twin Pyramid Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Twin Pyramid Key"
+                  }
                 }
               ]
             }
@@ -692,19 +829,37 @@
             "name": "Library: Storage room chest 1",
             "id": 1337023,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "flag_specific_keycards"
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": {
                   "type": "constant",
-                  "value": [
-                    "Security Keycard A",
-                    "Security Keycard B",
-                    "Security Keycard C",
-                    "Security Keycard D"
-                  ]
+                  "value": "Security Keycard D"
                 }
-              ]
+              },
+              "if_false": {
+                "type": "state_method",
+                "method": "has_any",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C",
+                      "Security Keycard D"
+                    ]
+                  }
+                ]
+              }
             },
             "item": {
               "name": "Max Sand",
@@ -717,19 +872,37 @@
             "name": "Library: Storage room chest 2",
             "id": 1337024,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "flag_specific_keycards"
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": {
                   "type": "constant",
-                  "value": [
-                    "Security Keycard A",
-                    "Security Keycard B",
-                    "Security Keycard C",
-                    "Security Keycard D"
-                  ]
+                  "value": "Security Keycard D"
                 }
-              ]
+              },
+              "if_false": {
+                "type": "state_method",
+                "method": "has_any",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C",
+                      "Security Keycard D"
+                    ]
+                  }
+                ]
+              }
             },
             "item": {
               "name": "Pendulum",
@@ -742,19 +915,37 @@
             "name": "Library: Storage room chest 3",
             "id": 1337025,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "flag_specific_keycards"
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": {
                   "type": "constant",
-                  "value": [
-                    "Security Keycard A",
-                    "Security Keycard B",
-                    "Security Keycard C",
-                    "Security Keycard D"
-                  ]
+                  "value": "Security Keycard D"
                 }
-              ]
+              },
+              "if_false": {
+                "type": "state_method",
+                "method": "has_any",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C",
+                      "Security Keycard D"
+                    ]
+                  }
+                ]
+              }
             },
             "item": {
               "name": "Max Sand",
@@ -768,7 +959,10 @@
             "id": 1337156,
             "access_rule": {
               "type": "item_check",
-              "item": "Tablet"
+              "item": {
+                "type": "constant",
+                "value": "Tablet"
+              }
             },
             "item": {
               "name": "Mind Refresh",
@@ -782,7 +976,10 @@
             "id": 1337157,
             "access_rule": {
               "type": "item_check",
-              "item": "Tablet"
+              "item": {
+                "type": "constant",
+                "value": "Tablet"
+              }
             },
             "item": {
               "name": "Gilded Egg",
@@ -796,7 +993,10 @@
             "id": 1337159,
             "access_rule": {
               "type": "item_check",
-              "item": "Tablet"
+              "item": {
+                "type": "constant",
+                "value": "Tablet"
+              }
             },
             "item": {
               "name": "Chaos Rose",
@@ -964,7 +1164,10 @@
             "id": 1337163,
             "access_rule": {
               "type": "item_check",
-              "item": "Tablet"
+              "item": {
+                "type": "constant",
+                "value": "Tablet"
+              }
             },
             "item": {
               "name": "Max HP",
@@ -990,35 +1193,71 @@
             "name": "Varndagroth tower left -> Varndagroth tower right (upper)",
             "connected_region": "Varndagroth tower right (upper)",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "flag_specific_keycards"
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": {
                   "type": "constant",
-                  "value": [
-                    "Security Keycard A",
-                    "Security Keycard B",
-                    "Security Keycard C"
-                  ]
+                  "value": "Security Keycard C"
                 }
-              ]
+              },
+              "if_false": {
+                "type": "state_method",
+                "method": "has_any",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C"
+                    ]
+                  }
+                ]
+              }
             }
           },
           {
             "name": "Varndagroth tower left -> Varndagroth tower right (lower)",
             "connected_region": "Varndagroth tower right (lower)",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "flag_specific_keycards"
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": {
                   "type": "constant",
-                  "value": [
-                    "Security Keycard A",
-                    "Security Keycard B"
-                  ]
+                  "value": "Security Keycard B"
                 }
-              ]
+              },
+              "if_false": {
+                "type": "state_method",
+                "method": "has_any",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Security Keycard A",
+                      "Security Keycard B"
+                    ]
+                  }
+                ]
+              }
             }
           },
           {
@@ -1028,13 +1267,23 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_keycard_B",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_keycard_B"
+                  },
                   "args": []
                 },
                 {
                   "type": "item_check",
-                  "item": "Elevator Keycard"
+                  "item": {
+                    "type": "constant",
+                    "value": "Elevator Keycard"
+                  }
                 }
               ]
             }
@@ -1047,11 +1296,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Timespinner Spindle"
+                  "item": {
+                    "type": "constant",
+                    "value": "Timespinner Wheel"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Timespinner Wheel"
+                  "item": {
+                    "type": "constant",
+                    "value": "Timespinner Spindle"
+                  }
                 }
               ]
             }
@@ -1090,18 +1345,36 @@
             "name": "Varndagroth Towers (Left): Bottom floor",
             "id": 1337033,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "flag_specific_keycards"
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": {
                   "type": "constant",
-                  "value": [
-                    "Security Keycard A",
-                    "Security Keycard B",
-                    "Security Keycard C"
-                  ]
+                  "value": "Security Keycard C"
                 }
-              ]
+              },
+              "if_false": {
+                "type": "state_method",
+                "method": "has_any",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C"
+                    ]
+                  }
+                ]
+              }
             },
             "item": {
               "name": "Library Keycard V",
@@ -1114,8 +1387,26 @@
             "name": "Varndagroth Towers (Left): Air vents secret",
             "id": 1337034,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "flag_eye_spy"
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": {
+                  "type": "constant",
+                  "value": "Oculus Ring"
+                }
+              },
+              "if_false": {
+                "type": "constant",
+                "value": true
+              }
             },
             "item": {
               "name": "Empire Orb",
@@ -1129,7 +1420,10 @@
             "id": 1337035,
             "access_rule": {
               "type": "item_check",
-              "item": "Elevator Keycard"
+              "item": {
+                "type": "constant",
+                "value": "Elevator Keycard"
+              }
             },
             "item": {
               "name": "Lab Glasses",
@@ -1156,7 +1450,10 @@
             "connected_region": "Varndagroth tower right (elevator)",
             "access_rule": {
               "type": "item_check",
-              "item": "Elevator Keycard"
+              "item": {
+                "type": "constant",
+                "value": "Elevator Keycard"
+              }
             }
           }
         ],
@@ -1182,13 +1479,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_doublejump",
-                  "args": []
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Elevator Keycard"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Elevator Keycard"
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_doublejump"
+                  },
+                  "args": []
                 }
               ]
             },
@@ -1206,13 +1513,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_doublejump",
-                  "args": []
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Elevator Keycard"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Elevator Keycard"
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_doublejump"
+                  },
+                  "args": []
                 }
               ]
             },
@@ -1230,13 +1547,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_doublejump",
-                  "args": []
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Elevator Keycard"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Elevator Keycard"
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_doublejump"
+                  },
+                  "args": []
                 }
               ]
             },
@@ -1256,17 +1583,35 @@
             "name": "Varndagroth tower right (lower) -> Varndagroth tower left",
             "connected_region": "Varndagroth tower left",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "flag_specific_keycards"
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": {
                   "type": "constant",
-                  "value": [
-                    "Security Keycard A",
-                    "Security Keycard B"
-                  ]
+                  "value": "Security Keycard B"
                 }
-              ]
+              },
+              "if_false": {
+                "type": "state_method",
+                "method": "has_any",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Security Keycard A",
+                      "Security Keycard B"
+                    ]
+                  }
+                ]
+              }
             }
           },
           {
@@ -1274,7 +1619,10 @@
             "connected_region": "Varndagroth tower right (elevator)",
             "access_rule": {
               "type": "item_check",
-              "item": "Elevator Keycard"
+              "item": {
+                "type": "constant",
+                "value": "Elevator Keycard"
+              }
             }
           },
           {
@@ -1284,13 +1632,23 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_keycard_B",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_keycard_B"
+                  },
                   "args": []
                 },
                 {
                   "type": "item_check",
-                  "item": "Elevator Keycard"
+                  "item": {
+                    "type": "constant",
+                    "value": "Elevator Keycard"
+                  }
                 }
               ]
             }
@@ -1299,18 +1657,30 @@
             "name": "Varndagroth tower right (lower) -> Military Fortress",
             "connected_region": "Military Fortress",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Killed Aelana",
-                    "Killed Maw",
-                    "Killed Twins"
-                  ]
-                }
-              ]
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "flag_prism_break"
+              },
+              "if_true": {
+                "type": "state_method",
+                "method": "has_all",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Laser Access A",
+                      "Laser Access I",
+                      "Laser Access M"
+                    ]
+                  }
+                ]
+              },
+              "if_false": null
             }
           },
           {
@@ -1320,12 +1690,19 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "flag_unchained_keys"
                 },
                 {
                   "type": "item_check",
-                  "item": "Twin Pyramid Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Twin Pyramid Key"
+                  }
                 }
               ]
             }
@@ -1387,18 +1764,36 @@
             "name": "Varndagroth Towers (Right): Varndagroth",
             "id": 1337042,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "flag_specific_keycards"
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": {
                   "type": "constant",
-                  "value": [
-                    "Security Keycard A",
-                    "Security Keycard B",
-                    "Security Keycard C"
-                  ]
+                  "value": "Security Keycard C"
                 }
-              ]
+              },
+              "if_false": {
+                "type": "state_method",
+                "method": "has_any",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C"
+                    ]
+                  }
+                ]
+              }
             },
             "item": {
               "name": "Princess Dress",
@@ -1412,7 +1807,10 @@
             "id": 1337043,
             "access_rule": {
               "type": "item_check",
-              "item": "Security Keycard A"
+              "item": {
+                "type": "constant",
+                "value": "Security Keycard A"
+              }
             },
             "item": {
               "name": "Twin Pyramid Key",
@@ -1428,13 +1826,23 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_keycard_B",
-                  "args": []
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Tablet"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Tablet"
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_keycard_B"
+                  },
+                  "args": []
                 }
               ]
             },
@@ -1455,7 +1863,10 @@
             "connected_region": "Varndagroth tower left",
             "access_rule": {
               "type": "item_check",
-              "item": "Elevator Keycard"
+              "item": {
+                "type": "constant",
+                "value": "Elevator Keycard"
+              }
             }
           },
           {
@@ -1463,7 +1874,10 @@
             "connected_region": "Varndagroth tower right (lower)",
             "access_rule": {
               "type": "item_check",
-              "item": "Elevator Keycard"
+              "item": {
+                "type": "constant",
+                "value": "Elevator Keycard"
+              }
             }
           },
           {
@@ -1473,12 +1887,19 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "flag_unchained_keys"
                 },
                 {
                   "type": "item_check",
-                  "item": "Twin Pyramid Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Twin Pyramid Key"
+                  }
                 }
               ]
             }
@@ -1490,7 +1911,10 @@
             "id": 1337053,
             "access_rule": {
               "type": "item_check",
-              "item": "Water Mask"
+              "item": {
+                "type": "constant",
+                "value": "Water Mask"
+              }
             },
             "item": {
               "name": "Timespinner Gear 2",
@@ -1504,7 +1928,10 @@
             "id": 1337054,
             "access_rule": {
               "type": "item_check",
-              "item": "Water Mask"
+              "item": {
+                "type": "constant",
+                "value": "Water Mask"
+              }
             },
             "item": {
               "name": "Greed Brooch",
@@ -1518,7 +1945,10 @@
             "id": 1337055,
             "access_rule": {
               "type": "item_check",
-              "item": "Water Mask"
+              "item": {
+                "type": "constant",
+                "value": "Water Mask"
+              }
             },
             "item": {
               "name": "Shadow Seal",
@@ -1564,18 +1994,30 @@
             "name": "Military Fortress -> Varndagroth tower right (lower)",
             "connected_region": "Varndagroth tower right (lower)",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Killed Aelana",
-                    "Killed Maw",
-                    "Killed Twins"
-                  ]
-                }
-              ]
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "flag_prism_break"
+              },
+              "if_true": {
+                "type": "state_method",
+                "method": "has_all",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Laser Access A",
+                      "Laser Access I",
+                      "Laser Access M"
+                    ]
+                  }
+                ]
+              },
+              "if_false": null
             }
           },
           {
@@ -1585,13 +2027,23 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_kill_all_3_bosses",
-                  "args": []
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Timespinner Wheel"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Timespinner Wheel"
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "can_kill_all_3_bosses"
+                  },
+                  "args": []
                 }
               ]
             }
@@ -1623,13 +2075,23 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_doublejump_of_npc",
-                  "args": []
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Timespinner Wheel"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Timespinner Wheel"
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_doublejump_of_npc"
+                  },
+                  "args": []
                 }
               ]
             },
@@ -1674,14 +2136,46 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_doublejump",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_keycard_B"
+                  },
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_keycard_B",
-                  "args": []
+                  "type": "conditional",
+                  "test": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "flooded"
+                    },
+                    "attr": "flood_lab"
+                  },
+                  "if_true": {
+                    "type": "item_check",
+                    "item": {
+                      "type": "constant",
+                      "value": "Water Mask"
+                    }
+                  },
+                  "if_false": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "logic"
+                      },
+                      "attr": "has_doublejump"
+                    },
+                    "args": []
+                  }
                 }
               ]
             }
@@ -1737,14 +2231,46 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_doublejump",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_keycard_B"
+                  },
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_keycard_B",
-                  "args": []
+                  "type": "conditional",
+                  "test": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "flooded"
+                    },
+                    "attr": "flood_lab"
+                  },
+                  "if_true": {
+                    "type": "item_check",
+                    "item": {
+                      "type": "constant",
+                      "value": "Water Mask"
+                    }
+                  },
+                  "if_false": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "logic"
+                      },
+                      "attr": "has_doublejump"
+                    },
+                    "args": []
+                  }
                 }
               ]
             },
@@ -1762,14 +2288,46 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_doublejump",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_keycard_B"
+                  },
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_keycard_B",
-                  "args": []
+                  "type": "conditional",
+                  "test": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "flooded"
+                    },
+                    "attr": "flood_lab"
+                  },
+                  "if_true": {
+                    "type": "item_check",
+                    "item": {
+                      "type": "constant",
+                      "value": "Water Mask"
+                    }
+                  },
+                  "if_false": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "logic"
+                      },
+                      "attr": "has_doublejump"
+                    },
+                    "args": []
+                  }
                 }
               ]
             },
@@ -1784,19 +2342,51 @@
             "name": "Military Fortress: Pedestal",
             "id": 1337065,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "has_doublejump_of_npc",
-                  "args": []
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "flooded"
                 },
-                {
-                  "type": "helper",
-                  "name": "has_forwarddash_doublejump",
-                  "args": []
+                "attr": "flood_lab"
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": {
+                  "type": "constant",
+                  "value": "Water Mask"
                 }
-              ]
+              },
+              "if_false": {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "logic"
+                      },
+                      "attr": "has_doublejump_of_npc"
+                    },
+                    "args": []
+                  },
+                  {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "logic"
+                      },
+                      "attr": "has_forwarddash_doublejump"
+                    },
+                    "args": []
+                  }
+                ]
+              }
             },
             "item": {
               "name": "Frozen Spires",
@@ -1825,12 +2415,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "lock_key_amadeus"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_doublejump_of_npc",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_doublejump_of_npc"
+                  },
                   "args": []
                 }
               ]
@@ -1880,9 +2481,39 @@
             "name": "Lab: Lower trash left",
             "id": 1337068,
             "access_rule": {
-              "type": "helper",
-              "name": "has_upwarddash",
-              "args": []
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "options"
+                },
+                "attr": "lock_key_amadeus"
+              },
+              "if_true": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "logic"
+                  },
+                  "attr": "has_doublejump_of_npc"
+                },
+                "args": []
+              },
+              "if_false": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "logic"
+                  },
+                  "attr": "has_upwarddash"
+                },
+                "args": []
+              }
             },
             "item": {
               "name": "Librarian Hat",
@@ -1920,7 +2551,10 @@
             "id": 1337168,
             "access_rule": {
               "type": "item_check",
-              "item": "Tablet"
+              "item": {
+                "type": "constant",
+                "value": "Tablet"
+              }
             },
             "item": {
               "name": "Eternal Coat",
@@ -1934,7 +2568,10 @@
             "id": 1337169,
             "access_rule": {
               "type": "item_check",
-              "item": "Tablet"
+              "item": {
+                "type": "constant",
+                "value": "Tablet"
+              }
             },
             "item": {
               "name": "Eternal Crown",
@@ -1957,13 +2594,20 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "constant",
-                    "value": false
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "flooded"
+                    },
+                    "attr": "flood_lab"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Water Mask"
+                  "item": {
+                    "type": "constant",
+                    "value": "Water Mask"
+                  }
                 }
               ]
             }
@@ -1975,8 +2619,15 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_forwarddash_doublejump",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_forwarddash_doublejump"
+                  },
                   "args": []
                 },
                 {
@@ -1985,13 +2636,20 @@
                     {
                       "type": "not",
                       "condition": {
-                        "type": "constant",
-                        "value": 0
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "options"
+                        },
+                        "attr": "lock_key_amadeus"
                       }
                     },
                     {
                       "type": "item_check",
-                      "item": "Lab Access Genza"
+                      "item": {
+                        "type": "constant",
+                        "value": "Lab Access Genza"
+                      }
                     }
                   ]
                 }
@@ -2007,16 +2665,27 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_doublejump_of_npc",
-                  "args": []
-                },
-                {
                   "type": "not",
                   "condition": {
-                    "type": "constant",
-                    "value": 0
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "options"
+                    },
+                    "attr": "lock_key_amadeus"
                   }
+                },
+                {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_doublejump_of_npc"
+                  },
+                  "args": []
                 }
               ]
             },
@@ -2036,8 +2705,12 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "constant",
-                    "value": 0
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "options"
+                    },
+                    "attr": "lock_key_amadeus"
                   }
                 },
                 {
@@ -2071,13 +2744,20 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "constant",
-                    "value": 0
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "options"
+                    },
+                    "attr": "lock_key_amadeus"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Lab Access Experiment"
+                  "item": {
+                    "type": "constant",
+                    "value": "Lab Access Experiment"
+                  }
                 }
               ]
             },
@@ -2098,22 +2778,36 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "has_keycard_A",
+                      "type": "function_call",
+                      "function": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "logic"
+                        },
+                        "attr": "has_keycard_A"
+                      },
                       "args": []
                     },
                     {
                       "type": "not",
                       "condition": {
-                        "type": "constant",
-                        "value": 0
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "options"
+                        },
+                        "attr": "lock_key_amadeus"
                       }
                     }
                   ]
                 },
                 {
                   "type": "item_check",
-                  "item": "Lab Access Research"
+                  "item": {
+                    "type": "constant",
+                    "value": "Lab Access Research"
+                  }
                 }
               ]
             },
@@ -2131,24 +2825,34 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Tablet"
+                  }
+                },
+                {
                   "type": "or",
                   "conditions": [
                     {
                       "type": "not",
                       "condition": {
-                        "type": "constant",
-                        "value": 0
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "options"
+                        },
+                        "attr": "lock_key_amadeus"
                       }
                     },
                     {
                       "type": "item_check",
-                      "item": "Lab Access Research"
+                      "item": {
+                        "type": "constant",
+                        "value": "Lab Access Research"
+                      }
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Tablet"
                 }
               ]
             },
@@ -2166,11 +2870,43 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Tablet"
+                  }
+                },
+                {
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "can_teleport_to",
+                      "type": "not",
+                      "condition": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "options"
+                        },
+                        "attr": "lock_key_amadeus"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Lab Access Genza"
+                      }
+                    },
+                    {
+                      "type": "function_call",
+                      "function": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "logic"
+                        },
+                        "attr": "can_teleport_to"
+                      },
                       "args": [
                         {
                           "type": "constant",
@@ -2181,23 +2917,8 @@
                           "value": "GateDadsTower"
                         }
                       ]
-                    },
-                    {
-                      "type": "not",
-                      "condition": {
-                        "type": "constant",
-                        "value": 0
-                      }
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Lab Access Genza"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Tablet"
                 }
               ]
             },
@@ -2215,24 +2936,34 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Tablet"
+                  }
+                },
+                {
                   "type": "or",
                   "conditions": [
                     {
                       "type": "not",
                       "condition": {
-                        "type": "constant",
-                        "value": 0
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "options"
+                        },
+                        "attr": "lock_key_amadeus"
                       }
                     },
                     {
                       "type": "item_check",
-                      "item": "Lab Access Research"
+                      "item": {
+                        "type": "constant",
+                        "value": "Lab Access Research"
+                      }
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Tablet"
                 }
               ]
             },
@@ -2255,12 +2986,19 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "lock_key_amadeus"
                 },
                 {
                   "type": "item_check",
-                  "item": "Lab Access Genza"
+                  "item": {
+                    "type": "constant",
+                    "value": "Lab Access Genza"
+                  }
                 }
               ]
             }
@@ -2272,23 +3010,40 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "has_upwarddash"
+                  },
+                  "args": []
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "has_doublejump",
-                      "args": []
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Talaria Attachment"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Talaria Attachment"
+                      "type": "function_call",
+                      "function": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "self"
+                        },
+                        "attr": "has_doublejump"
+                      },
+                      "args": []
                     }
                   ]
-                },
-                {
-                  "type": "helper",
-                  "name": "has_upwarddash",
-                  "args": []
                 }
               ]
             }
@@ -2347,8 +3102,26 @@
             "name": "Lab: Lab secret",
             "id": 1337075,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "flag_eye_spy"
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": {
+                  "type": "constant",
+                  "value": "Oculus Ring"
+                }
+              },
+              "if_false": {
+                "type": "constant",
+                "value": true
+              }
             },
             "item": {
               "name": "Max Sand",
@@ -2362,7 +3135,10 @@
             "id": 1337165,
             "access_rule": {
               "type": "item_check",
-              "item": "Tablet"
+              "item": {
+                "type": "constant",
+                "value": "Tablet"
+              }
             },
             "item": {
               "name": "Umbra Orb",
@@ -2407,13 +3183,27 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_break_walls",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_upwarddash"
+                  },
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_upwarddash",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "can_break_walls"
+                  },
                   "args": []
                 }
               ]
@@ -2429,8 +3219,15 @@
             "name": "Emperor's Tower: Courtyard upper chest",
             "id": 1337079,
             "access_rule": {
-              "type": "helper",
-              "name": "has_upwarddash",
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "logic"
+                },
+                "attr": "has_upwarddash"
+              },
               "args": []
             },
             "item": {
@@ -2475,23 +3272,40 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "has_upwarddash"
+                  },
+                  "args": []
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "has_doublejump",
-                      "args": []
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Timespinner Wheel"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Timespinner Wheel"
+                      "type": "function_call",
+                      "function": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "self"
+                        },
+                        "attr": "has_doublejump"
+                      },
+                      "args": []
                     }
                   ]
-                },
-                {
-                  "type": "helper",
-                  "name": "has_upwarddash",
-                  "args": []
                 }
               ]
             },
@@ -2576,7 +3390,10 @@
             "connected_region": "Sealed Caves (Xarion)",
             "access_rule": {
               "type": "item_check",
-              "item": "Security Keycard A"
+              "item": {
+                "type": "constant",
+                "value": "Security Keycard A"
+              }
             }
           },
           {
@@ -2586,12 +3403,19 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "flag_unchained_keys"
                 },
                 {
                   "type": "item_check",
-                  "item": "Twin Pyramid Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Twin Pyramid Key"
+                  }
                 }
               ]
             }
@@ -2632,12 +3456,19 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "flag_unchained_keys"
                 },
                 {
                   "type": "item_check",
-                  "item": "Twin Pyramid Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Twin Pyramid Key"
+                  }
                 }
               ]
             }
@@ -2690,23 +3521,40 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "has_upwarddash"
+                  },
+                  "args": []
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "has_doublejump",
-                      "args": []
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Talaria Attachment"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Talaria Attachment"
+                      "type": "function_call",
+                      "function": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "self"
+                        },
+                        "attr": "has_doublejump"
+                      },
+                      "args": []
                     }
                   ]
-                },
-                {
-                  "type": "helper",
-                  "name": "has_upwarddash",
-                  "args": []
                 }
               ]
             },
@@ -2735,8 +3583,26 @@
             "name": "Sealed Caves (Xarion): Secret room",
             "id": 1337049,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "flag_eye_spy"
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": {
+                  "type": "constant",
+                  "value": "Oculus Ring"
+                }
+              },
+              "if_false": {
+                "type": "constant",
+                "value": true
+              }
             },
             "item": {
               "name": "Max Sand",
@@ -2792,13 +3658,20 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "constant",
-                    "value": false
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "flooded"
+                    },
+                    "attr": "flood_xarion"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Water Mask"
+                  "item": {
+                    "type": "constant",
+                    "value": "Water Mask"
+                  }
                 }
               ]
             },
@@ -2829,21 +3702,33 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
-                },
-                {
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "pyramid_start"
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "inverted"
                     }
                   ]
+                },
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "back_to_the_future"
                 },
                 {
                   "type": "state_method",
@@ -2868,12 +3753,19 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "flag_unchained_keys"
                 },
                 {
                   "type": "item_check",
-                  "item": "Twin Pyramid Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Twin Pyramid Key"
+                  }
                 }
               ]
             }
@@ -2956,17 +3848,31 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
-                },
-                {
-                  "type": "helper",
-                  "name": "has_timestop",
-                  "args": []
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "flooded"
+                  },
+                  "attr": "flood_lake_serene_bridge"
                 },
                 {
                   "type": "item_check",
-                  "item": "Talaria Attachment"
+                  "item": {
+                    "type": "constant",
+                    "value": "Talaria Attachment"
+                  }
+                },
+                {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_timestop"
+                  },
+                  "args": []
                 }
               ]
             }
@@ -2986,20 +3892,34 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_upwarddash",
-                  "args": []
-                },
-                {
                   "type": "not",
                   "condition": {
-                    "type": "constant",
-                    "value": 0
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "options"
+                    },
+                    "attr": "gate_keep"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Drawbridge Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Drawbridge Key"
+                  }
+                },
+                {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_upwarddash"
+                  },
+                  "args": []
                 }
               ]
             }
@@ -3027,18 +3947,39 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_doublejump_of_npc",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_doublejump_of_npc"
+                  },
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_fastjump_on_npc",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_forwarddash_doublejump"
+                  },
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_forwarddash_doublejump",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_fastjump_on_npc"
+                  },
                   "args": []
                 }
               ]
@@ -3054,8 +3995,26 @@
             "name": "Forest: Green platform secret",
             "id": 1337092,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "flag_eye_spy"
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": {
+                  "type": "constant",
+                  "value": "Oculus Ring"
+                }
+              },
+              "if_false": {
+                "type": "constant",
+                "value": true
+              }
             },
             "item": {
               "name": "Wind Orb",
@@ -3083,7 +4042,10 @@
             "id": 1337094,
             "access_rule": {
               "type": "item_check",
-              "item": "Water Mask"
+              "item": {
+                "type": "constant",
+                "value": "Water Mask"
+              }
             },
             "item": {
               "name": "Security Keycard D",
@@ -3097,7 +4059,10 @@
             "id": 1337095,
             "access_rule": {
               "type": "item_check",
-              "item": "Water Mask"
+              "item": {
+                "type": "constant",
+                "value": "Water Mask"
+              }
             },
             "item": {
               "name": "Hope Ring",
@@ -3129,13 +4094,20 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "constant",
-                    "value": false
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "flooded"
+                    },
+                    "attr": "flood_moat"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Water Mask"
+                  "item": {
+                    "type": "constant",
+                    "value": "Water Mask"
+                  }
                 }
               ]
             },
@@ -3187,13 +4159,20 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "constant",
-                    "value": true
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "flooded"
+                    },
+                    "attr": "flood_lake_serene"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Water Mask"
+                  "item": {
+                    "type": "constant",
+                    "value": "Water Mask"
+                  }
                 }
               ]
             }
@@ -3205,12 +4184,19 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "flag_unchained_keys"
                 },
                 {
                   "type": "item_check",
-                  "item": "Twin Pyramid Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Twin Pyramid Key"
+                  }
                 }
               ]
             }
@@ -3236,7 +4222,10 @@
             "id": 1337106,
             "access_rule": {
               "type": "item_check",
-              "item": "Water Mask"
+              "item": {
+                "type": "constant",
+                "value": "Water Mask"
+              }
             },
             "item": {
               "name": "Max Sand",
@@ -3250,7 +4239,10 @@
             "id": 1337110,
             "access_rule": {
               "type": "item_check",
-              "item": "Water Mask"
+              "item": {
+                "type": "constant",
+                "value": "Water Mask"
+              }
             },
             "item": {
               "name": "Iron Orb",
@@ -3281,13 +4273,20 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "constant",
-                    "value": true
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "flooded"
+                    },
+                    "attr": "flood_lake_serene"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Water Mask"
+                  "item": {
+                    "type": "constant",
+                    "value": "Water Mask"
+                  }
                 }
               ]
             }
@@ -3350,8 +4349,26 @@
             "name": "Lake Serene (Upper): Cave secret",
             "id": 1337102,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "flag_eye_spy"
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": {
+                  "type": "constant",
+                  "value": "Oculus Ring"
+                }
+              },
+              "if_false": {
+                "type": "constant",
+                "value": true
+              }
             },
             "item": {
               "name": "Wyrm Brooch",
@@ -3444,12 +4461,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": true
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "flooded"
+                  },
+                  "attr": "flood_lake_serene"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_doublejump",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_doublejump"
+                  },
                   "args": []
                 }
               ]
@@ -3489,8 +4517,26 @@
             "name": "Lake Serene (Lower): Underwater secret",
             "id": 1337108,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "flag_eye_spy"
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": {
+                  "type": "constant",
+                  "value": "Oculus Ring"
+                }
+              },
+              "if_false": {
+                "type": "constant",
+                "value": true
+              }
             },
             "item": {
               "name": "Herb",
@@ -3506,12 +4552,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": true
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "flooded"
+                  },
+                  "attr": "flood_lake_serene"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_doublejump_of_npc",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_doublejump_of_npc"
+                  },
                   "args": []
                 }
               ]
@@ -3530,12 +4587,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": true
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "flooded"
+                  },
+                  "attr": "flood_lake_serene"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_doublejump",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_doublejump"
+                  },
                   "args": []
                 }
               ]
@@ -3561,13 +4629,20 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "constant",
-                    "value": true
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "flooded"
+                    },
+                    "attr": "flood_lake_serene"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Water Mask"
+                  "item": {
+                    "type": "constant",
+                    "value": "Water Mask"
+                  }
                 }
               ]
             }
@@ -3581,13 +4656,20 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "constant",
-                    "value": false
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "flooded"
+                    },
+                    "attr": "flood_maw"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Water Mask"
+                  "item": {
+                    "type": "constant",
+                    "value": "Water Mask"
+                  }
                 }
               ]
             }
@@ -3599,12 +4681,19 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "flag_unchained_keys"
                 },
                 {
                   "type": "item_check",
-                  "item": "Twin Pyramid Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Twin Pyramid Key"
+                  }
                 }
               ]
             }
@@ -3618,12 +4707,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "flooded"
+                  },
+                  "attr": "flood_maw"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_doublejump",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_doublejump"
+                  },
                   "args": []
                 }
               ]
@@ -3642,8 +4742,15 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_break_walls",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "can_break_walls"
+                  },
                   "args": []
                 },
                 {
@@ -3652,13 +4759,20 @@
                     {
                       "type": "not",
                       "condition": {
-                        "type": "constant",
-                        "value": false
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "flooded"
+                        },
+                        "attr": "flood_maw"
                       }
                     },
                     {
                       "type": "item_check",
-                      "item": "Water Mask"
+                      "item": {
+                        "type": "constant",
+                        "value": "Water Mask"
+                      }
                     }
                   ]
                 }
@@ -3680,13 +4794,20 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "constant",
-                    "value": false
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "flooded"
+                    },
+                    "attr": "flood_maw"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Water Mask"
+                  "item": {
+                    "type": "constant",
+                    "value": "Water Mask"
+                  }
                 }
               ]
             },
@@ -3718,12 +4839,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "flooded"
+                  },
+                  "attr": "flood_maw"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_forwarddash_doublejump",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_forwarddash_doublejump"
+                  },
                   "args": []
                 }
               ]
@@ -3742,12 +4874,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "flooded"
+                  },
+                  "attr": "flood_maw"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_forwarddash_doublejump",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_forwarddash_doublejump"
+                  },
                   "args": []
                 }
               ]
@@ -3766,12 +4909,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "flooded"
+                  },
+                  "attr": "flood_maw"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_forwarddash_doublejump",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_forwarddash_doublejump"
+                  },
                   "args": []
                 }
               ]
@@ -3790,12 +4944,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "flooded"
+                  },
+                  "attr": "flood_maw"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_forwarddash_doublejump",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_forwarddash_doublejump"
+                  },
                   "args": []
                 }
               ]
@@ -3816,13 +4981,20 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "constant",
-                    "value": false
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "flooded"
+                    },
+                    "attr": "flood_maw"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Water Mask"
+                  "item": {
+                    "type": "constant",
+                    "value": "Water Mask"
+                  }
                 }
               ]
             },
@@ -3846,18 +5018,32 @@
               "test": {
                 "type": "not",
                 "condition": {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "flooded"
+                  },
+                  "attr": "flood_maw"
                 }
               },
               "if_true": {
-                "type": "helper",
-                "name": "has_doublejump",
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "logic"
+                  },
+                  "attr": "has_doublejump"
+                },
                 "args": []
               },
               "if_false": {
                 "type": "item_check",
-                "item": "Water Mask"
+                "item": {
+                  "type": "constant",
+                  "value": "Water Mask"
+                }
               }
             }
           },
@@ -3885,12 +5071,19 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "flag_unchained_keys"
                 },
                 {
                   "type": "item_check",
-                  "item": "Twin Pyramid Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Twin Pyramid Key"
+                  }
                 }
               ]
             }
@@ -3904,12 +5097,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "flooded"
+                  },
+                  "attr": "flood_maw"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_doublejump",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_doublejump"
+                  },
                   "args": []
                 }
               ]
@@ -3949,7 +5153,10 @@
             "id": null,
             "access_rule": {
               "type": "item_check",
-              "item": "Gas Mask"
+              "item": {
+                "type": "constant",
+                "value": "Gas Mask"
+              }
             },
             "item": {
               "name": "Killed Maw",
@@ -4029,7 +5236,10 @@
             "id": 1337125,
             "access_rule": {
               "type": "item_check",
-              "item": "Water Mask"
+              "item": {
+                "type": "constant",
+                "value": "Water Mask"
+              }
             },
             "item": {
               "name": "Gas Mask",
@@ -4043,7 +5253,10 @@
             "id": 1337126,
             "access_rule": {
               "type": "item_check",
-              "item": "Water Mask"
+              "item": {
+                "type": "constant",
+                "value": "Water Mask"
+              }
             },
             "item": {
               "name": "Sand Bottle",
@@ -4057,7 +5270,10 @@
             "id": 1337172,
             "access_rule": {
               "type": "item_check",
-              "item": "Water Mask"
+              "item": {
+                "type": "constant",
+                "value": "Water Mask"
+              }
             },
             "item": {
               "name": "Sand Bottle",
@@ -4071,7 +5287,10 @@
             "id": 1337127,
             "access_rule": {
               "type": "item_check",
-              "item": "Water Mask"
+              "item": {
+                "type": "constant",
+                "value": "Water Mask"
+              }
             },
             "item": {
               "name": "Plasma IV Bag",
@@ -4108,12 +5327,19 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "flag_unchained_keys"
                 },
                 {
                   "type": "item_check",
-                  "item": "Twin Pyramid Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Twin Pyramid Key"
+                  }
                 }
               ]
             }
@@ -4127,13 +5353,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_upwarddash",
-                  "args": []
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Timespinner Wheel"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Timespinner Wheel"
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "has_upwarddash"
+                  },
+                  "args": []
                 }
               ]
             },
@@ -4151,13 +5387,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_timestop",
-                  "args": []
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Talaria Attachment"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Talaria Attachment"
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_timestop"
+                  },
+                  "args": []
                 }
               ]
             },
@@ -4232,13 +5478,20 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "constant",
-                    "value": false
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "flooded"
+                    },
+                    "attr": "flood_basement"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Water Mask"
+                  "item": {
+                    "type": "constant",
+                    "value": "Water Mask"
+                  }
                 }
               ]
             }
@@ -4250,24 +5503,42 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_doublejump",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_doublejump"
+                  },
                   "args": []
                 },
                 {
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "has_pink",
-                      "args": []
-                    },
-                    {
                       "type": "not",
                       "condition": {
-                        "type": "constant",
-                        "value": 0
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "options"
+                        },
+                        "attr": "royal_roadblock"
                       }
+                    },
+                    {
+                      "type": "function_call",
+                      "function": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "logic"
+                        },
+                        "attr": "has_pink"
+                      },
+                      "args": []
                     }
                   ]
                 }
@@ -4281,12 +5552,19 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "flag_unchained_keys"
                 },
                 {
                   "type": "item_check",
-                  "item": "Twin Pyramid Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Twin Pyramid Key"
+                  }
                 }
               ]
             }
@@ -4389,13 +5667,27 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_doublejump",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_doublejump"
+                  },
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_fastjump_on_npc",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_fastjump_on_npc"
+                  },
                   "args": []
                 }
               ]
@@ -4417,8 +5709,26 @@
             "name": "Castle Basement: Secret pedestal",
             "id": 1337133,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "flag_eye_spy"
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": {
+                  "type": "constant",
+                  "value": "Oculus Ring"
+                }
+              },
+              "if_false": {
+                "type": "constant",
+                "value": true
+              }
             },
             "item": {
               "name": "Traveler's Cloak",
@@ -4503,13 +5813,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_forwarddash_doublejump",
-                  "args": []
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Timespinner Wheel"
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Timespinner Wheel"
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_forwarddash_doublejump"
+                  },
+                  "args": []
                 }
               ]
             }
@@ -4521,12 +5841,19 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "flag_unchained_keys"
                 },
                 {
                   "type": "item_check",
-                  "item": "Twin Pyramid Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Twin Pyramid Key"
+                  }
                 }
               ]
             }
@@ -4564,13 +5891,27 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_break_walls",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_doublejump"
+                  },
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_doublejump",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "can_break_walls"
+                  },
                   "args": []
                 }
               ]
@@ -4638,13 +5979,20 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "constant",
-                    "value": false
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "flooded"
+                    },
+                    "attr": "flood_courtyard"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Water Mask"
+                  "item": {
+                    "type": "constant",
+                    "value": "Water Mask"
+                  }
                 }
               ]
             },
@@ -4662,12 +6010,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "flooded"
+                  },
+                  "attr": "flood_courtyard"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_doublejump_of_npc",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_doublejump_of_npc"
+                  },
                   "args": []
                 }
               ]
@@ -4686,23 +6045,40 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "has_upwarddash"
+                  },
+                  "args": []
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "has_doublejump",
-                      "args": []
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Timespinner Wheel"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Timespinner Wheel"
+                      "type": "function_call",
+                      "function": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "self"
+                        },
+                        "attr": "has_doublejump"
+                      },
+                      "args": []
                     }
                   ]
-                },
-                {
-                  "type": "helper",
-                  "name": "has_upwarddash",
-                  "args": []
                 }
               ]
             },
@@ -4749,23 +6125,40 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "has_upwarddash"
+                  },
+                  "args": []
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "has_doublejump",
-                      "args": []
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Timespinner Wheel"
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Timespinner Wheel"
+                      "type": "function_call",
+                      "function": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "self"
+                        },
+                        "attr": "has_doublejump"
+                      },
+                      "args": []
                     }
                   ]
-                },
-                {
-                  "type": "helper",
-                  "name": "has_upwarddash",
-                  "args": []
                 }
               ]
             },
@@ -4941,12 +6334,19 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "flag_unchained_keys"
                 },
                 {
                   "type": "item_check",
-                  "item": "Twin Pyramid Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Twin Pyramid Key"
+                  }
                 }
               ]
             }
@@ -4987,12 +6387,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "flooded"
+                  },
+                  "attr": "flood_pyramid_shaft"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_upwarddash",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_upwarddash"
+                  },
                   "args": []
                 }
               ]
@@ -5005,12 +6416,19 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "flag_unchained_keys"
                 },
                 {
                   "type": "item_check",
-                  "item": "Twin Pyramid Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Twin Pyramid Key"
+                  }
                 }
               ]
             }
@@ -5038,8 +6456,15 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_break_walls",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "can_break_walls"
+                  },
                   "args": []
                 },
                 {
@@ -5048,13 +6473,20 @@
                     {
                       "type": "not",
                       "condition": {
-                        "type": "constant",
-                        "value": false
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "flooded"
+                        },
+                        "attr": "flood_pyramid_shaft"
                       }
                     },
                     {
                       "type": "item_check",
-                      "item": "Water Mask"
+                      "item": {
+                        "type": "constant",
+                        "value": "Water Mask"
+                      }
                     }
                   ]
                 }
@@ -5074,14 +6506,46 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_break_walls",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "can_break_walls"
+                  },
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_doublejump",
-                  "args": []
+                  "type": "conditional",
+                  "test": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "flooded"
+                    },
+                    "attr": "flood_pyramid_shaft"
+                  },
+                  "if_true": {
+                    "type": "item_check",
+                    "item": {
+                      "type": "constant",
+                      "value": "Water Mask"
+                    }
+                  },
+                  "if_false": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "logic"
+                      },
+                      "attr": "has_doublejump"
+                    },
+                    "args": []
+                  }
                 }
               ]
             },
@@ -5104,12 +6568,23 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "flooded"
+                  },
+                  "attr": "flood_pyramid_shaft"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_upwarddash",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "has_upwarddash"
+                  },
                   "args": []
                 }
               ]
@@ -5122,12 +6597,19 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": false
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "flag_unchained_keys"
                 },
                 {
                   "type": "item_check",
-                  "item": "Twin Pyramid Key"
+                  "item": {
+                    "type": "constant",
+                    "value": "Twin Pyramid Key"
+                  }
                 }
               ]
             }
@@ -5143,13 +6625,20 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "constant",
-                    "value": false
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "flooded"
+                    },
+                    "attr": "flood_pyramid_back"
                   }
                 },
                 {
                   "type": "item_check",
-                  "item": "Water Mask"
+                  "item": {
+                    "type": "constant",
+                    "value": "Water Mask"
+                  }
                 }
               ]
             },
@@ -5167,22 +6656,6 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "not",
-                      "condition": {
-                        "type": "constant",
-                        "value": false
-                      }
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Water Mask"
-                    }
-                  ]
-                },
-                {
                   "type": "state_method",
                   "method": "has_all",
                   "args": [
@@ -5195,6 +6668,29 @@
                         "Timespinner Spindle",
                         "Timespinner Wheel"
                       ]
+                    }
+                  ]
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "not",
+                      "condition": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "flooded"
+                        },
+                        "attr": "flood_pyramid_back"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Water Mask"
+                      }
                     }
                   ]
                 }
@@ -5224,8 +6720,15 @@
             "name": "Space time continuum -> Lake desolation",
             "connected_region": "Lake desolation",
             "access_rule": {
-              "type": "helper",
-              "name": "can_teleport_to",
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "logic"
+                },
+                "attr": "can_teleport_to"
+              },
               "args": [
                 {
                   "type": "constant",
@@ -5242,8 +6745,15 @@
             "name": "Space time continuum -> Lower lake desolation",
             "connected_region": "Lower lake desolation",
             "access_rule": {
-              "type": "helper",
-              "name": "can_teleport_to",
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "logic"
+                },
+                "attr": "can_teleport_to"
+              },
               "args": [
                 {
                   "type": "constant",
@@ -5260,8 +6770,15 @@
             "name": "Space time continuum -> Library",
             "connected_region": "Library",
             "access_rule": {
-              "type": "helper",
-              "name": "can_teleport_to",
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "logic"
+                },
+                "attr": "can_teleport_to"
+              },
               "args": [
                 {
                   "type": "constant",
@@ -5278,8 +6795,15 @@
             "name": "Space time continuum -> Varndagroth tower right (lower)",
             "connected_region": "Varndagroth tower right (lower)",
             "access_rule": {
-              "type": "helper",
-              "name": "can_teleport_to",
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "logic"
+                },
+                "attr": "can_teleport_to"
+              },
               "args": [
                 {
                   "type": "constant",
@@ -5296,8 +6820,15 @@
             "name": "Space time continuum -> Skeleton Shaft",
             "connected_region": "Skeleton Shaft",
             "access_rule": {
-              "type": "helper",
-              "name": "can_teleport_to",
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "logic"
+                },
+                "attr": "can_teleport_to"
+              },
               "args": [
                 {
                   "type": "constant",
@@ -5314,8 +6845,15 @@
             "name": "Space time continuum -> Sealed Caves (Sirens)",
             "connected_region": "Sealed Caves (Sirens)",
             "access_rule": {
-              "type": "helper",
-              "name": "can_teleport_to",
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "logic"
+                },
+                "attr": "can_teleport_to"
+              },
               "args": [
                 {
                   "type": "constant",
@@ -5332,8 +6870,15 @@
             "name": "Space time continuum -> Sealed Caves (Xarion)",
             "connected_region": "Sealed Caves (Xarion)",
             "access_rule": {
-              "type": "helper",
-              "name": "can_teleport_to",
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "logic"
+                },
+                "attr": "can_teleport_to"
+              },
               "args": [
                 {
                   "type": "constant",
@@ -5350,8 +6895,15 @@
             "name": "Space time continuum -> Upper Lake Serene",
             "connected_region": "Upper Lake Serene",
             "access_rule": {
-              "type": "helper",
-              "name": "can_teleport_to",
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "logic"
+                },
+                "attr": "can_teleport_to"
+              },
               "args": [
                 {
                   "type": "constant",
@@ -5368,8 +6920,15 @@
             "name": "Space time continuum -> Left Side forest Caves",
             "connected_region": "Left Side forest Caves",
             "access_rule": {
-              "type": "helper",
-              "name": "can_teleport_to",
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "logic"
+                },
+                "attr": "can_teleport_to"
+              },
               "args": [
                 {
                   "type": "constant",
@@ -5386,8 +6945,15 @@
             "name": "Space time continuum -> Refugee Camp",
             "connected_region": "Refugee Camp",
             "access_rule": {
-              "type": "helper",
-              "name": "can_teleport_to",
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "logic"
+                },
+                "attr": "can_teleport_to"
+              },
               "args": [
                 {
                   "type": "constant",
@@ -5404,8 +6970,15 @@
             "name": "Space time continuum -> Forest",
             "connected_region": "Forest",
             "access_rule": {
-              "type": "helper",
-              "name": "can_teleport_to",
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "logic"
+                },
+                "attr": "can_teleport_to"
+              },
               "args": [
                 {
                   "type": "constant",
@@ -5422,8 +6995,15 @@
             "name": "Space time continuum -> Castle Keep",
             "connected_region": "Castle Keep",
             "access_rule": {
-              "type": "helper",
-              "name": "can_teleport_to",
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "logic"
+                },
+                "attr": "can_teleport_to"
+              },
               "args": [
                 {
                   "type": "constant",
@@ -5440,8 +7020,15 @@
             "name": "Space time continuum -> Royal towers (lower)",
             "connected_region": "Royal towers (lower)",
             "access_rule": {
-              "type": "helper",
-              "name": "can_teleport_to",
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "logic"
+                },
+                "attr": "can_teleport_to"
+              },
               "args": [
                 {
                   "type": "constant",
@@ -5458,8 +7045,15 @@
             "name": "Space time continuum -> Caves of Banishment (Maw)",
             "connected_region": "Caves of Banishment (Maw)",
             "access_rule": {
-              "type": "helper",
-              "name": "can_teleport_to",
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "logic"
+                },
+                "attr": "can_teleport_to"
+              },
               "args": [
                 {
                   "type": "constant",
@@ -5476,8 +7070,15 @@
             "name": "Space time continuum -> Caves of Banishment (upper)",
             "connected_region": "Caves of Banishment (upper)",
             "access_rule": {
-              "type": "helper",
-              "name": "can_teleport_to",
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "logic"
+                },
+                "attr": "can_teleport_to"
+              },
               "args": [
                 {
                   "type": "constant",
@@ -5494,8 +7095,15 @@
             "name": "Space time continuum -> Military Fortress (hangar)",
             "connected_region": "Military Fortress (hangar)",
             "access_rule": {
-              "type": "helper",
-              "name": "can_teleport_to",
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "logic"
+                },
+                "attr": "can_teleport_to"
+              },
               "args": [
                 {
                   "type": "constant",
@@ -5512,8 +7120,15 @@
             "name": "Space time continuum -> The lab (upper)",
             "connected_region": "The lab (upper)",
             "access_rule": {
-              "type": "helper",
-              "name": "can_teleport_to",
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "logic"
+                },
+                "attr": "can_teleport_to"
+              },
               "args": [
                 {
                   "type": "constant",
@@ -5533,24 +7148,15 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": 0
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
                     },
-                    {
-                      "type": "not",
-                      "condition": {
-                        "type": "constant",
-                        "value": 0
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "helper",
-                  "name": "can_teleport_to",
+                    "attr": "can_teleport_to"
+                  },
                   "args": [
                     {
                       "type": "constant",
@@ -5563,8 +7169,15 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_teleport_to",
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "logic"
+                    },
+                    "attr": "can_teleport_to"
+                  },
                   "args": [
                     {
                       "type": "constant",
@@ -5575,6 +7188,30 @@
                       "value": "GateLeftPyramid"
                     }
                   ]
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "not",
+                      "condition": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "options"
+                        },
+                        "attr": "unchained_keys"
+                      }
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "enter_sandman"
+                    }
+                  ]
                 }
               ]
             }
@@ -5583,8 +7220,15 @@
             "name": "Space time continuum -> Ancient Pyramid (right)",
             "connected_region": "Ancient Pyramid (right)",
             "access_rule": {
-              "type": "helper",
-              "name": "can_teleport_to",
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "logic"
+                },
+                "attr": "can_teleport_to"
+              },
               "args": [
                 {
                   "type": "constant",
@@ -8618,16 +10262,7 @@
   "settings": {
     "1": {
       "game": "Timespinner",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
-      "specific_keycards": 0,
-      "eye_spy": 0,
-      "unchained_keys": 0,
-      "prism_break": 0,
-      "pyramid_keys_unlock": "GateLakeSereneRight",
-      "present_keys_unlock": "GateSealedSirensCave",
-      "past_keys_unlock": "GateLakeSereneRight",
-      "time_keys_unlock": "GateRightPyramid"
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

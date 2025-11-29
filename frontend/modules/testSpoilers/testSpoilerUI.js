@@ -418,7 +418,8 @@ export class TestSpoilerUI {
 
       // Handle success case
       this.clearTestState(); // Clear previous test state
-      this.spoilerLogData = result.logData;
+      // Filter out non-state_update events (like log_header) - these are handled by sphereState
+      this.spoilerLogData = result.logData.filter(event => event.type === 'state_update');
       this.currentSpoilerLogPath = result.logPath;
 
       // Extract playerId from multiworld rules filename (e.g., "AP_xxx_P2_rules.json")
@@ -667,7 +668,8 @@ export class TestSpoilerUI {
       this.spoilerLogData,
       this.playerId,
       this.currentSpoilerLogPath,
-      isAutoLoad
+      isAutoLoad,
+      this.spoilerLogRawContent
     );
     this._syncStateFromOrchestrator();
     return prepareSuccess;
@@ -941,7 +943,9 @@ export class TestSpoilerUI {
       }
 
       // Store results
-      this.spoilerLogData = result.logData;
+      // Filter out non-state_update events (like log_header) - these are handled by sphereState
+      this.spoilerLogData = result.logData.filter(event => event.type === 'state_update');
+      this.spoilerLogRawContent = result.rawContent;
       this.currentSpoilerFile = file;
       this.currentSpoilerLogPath = file.name;
 

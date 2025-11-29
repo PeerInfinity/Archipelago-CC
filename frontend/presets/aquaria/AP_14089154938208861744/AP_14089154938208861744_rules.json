@@ -212,30 +212,30 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                },
+                {
                   "type": "or",
                   "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
                     {
                       "type": "and",
                       "conditions": [
                         {
                           "type": "item_check",
-                          "item": "Dual Form"
+                          "item": "Li and Li Song"
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Bind Song"
                 }
               ]
             }
@@ -338,21 +338,21 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": "Energy Form"
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Dual Form"
+                      "item": "Li and Li Song"
                     },
                     {
                       "type": "item_check",
-                      "item": "Li and Li Song"
+                      "item": "Dual Form"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Energy Form"
                 }
               ]
             }
@@ -405,7 +405,10 @@
             "connected_region": "The Veil top left area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Veil top left"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Veil top left"
+              }
             }
           },
           {
@@ -413,7 +416,10 @@
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Veil top right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Veil top right"
+              }
             }
           },
           {
@@ -421,7 +427,10 @@
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Open Waters top right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Open Waters top right"
+              }
             }
           },
           {
@@ -429,7 +438,10 @@
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Kelp Forest bottom left"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Kelp Forest bottom left"
+              }
             }
           },
           {
@@ -437,7 +449,10 @@
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Abyss right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Abyss right"
+              }
             }
           },
           {
@@ -445,7 +460,10 @@
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Final Boss"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Final Boss"
+              }
             }
           },
           {
@@ -453,7 +471,10 @@
             "connected_region": "Simon Says area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Simon Says"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Simon Says"
+              }
             }
           },
           {
@@ -461,7 +482,10 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Arnassi Ruins"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Arnassi Ruins"
+              }
             }
           }
         ],
@@ -502,21 +526,21 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": "Energy Form"
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Dual Form"
+                      "item": "Li and Li Song"
                     },
                     {
                       "type": "item_check",
-                      "item": "Li and Li Song"
+                      "item": "Dual Form"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Energy Form"
                 }
               ]
             },
@@ -672,8 +696,9 @@
             "name": "Song Cave, Anemone Seed",
             "id": 698162,
             "access_rule": {
-              "type": "item_check",
-              "item": "Nature Form"
+              "type": "helper",
+              "name": "_has_nature_form",
+              "args": []
             },
             "item": {
               "name": "Fish Form",
@@ -707,8 +732,9 @@
             "name": "Energy Temple first area to Energy Temple Idol room",
             "connected_region": "Energy Temple Idol room",
             "access_rule": {
-              "type": "item_check",
-              "item": "Fish Form"
+              "type": "helper",
+              "name": "_has_fish_form",
+              "args": []
             }
           },
           {
@@ -806,30 +832,30 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                },
+                {
                   "type": "or",
                   "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
                     {
                       "type": "and",
                       "conditions": [
                         {
                           "type": "item_check",
-                          "item": "Dual Form"
+                          "item": "Li and Li Song"
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Bind Song"
                 }
               ]
             }
@@ -865,27 +891,28 @@
                   "type": "or",
                   "conditions": [
                     {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
+                    {
                       "type": "and",
                       "conditions": [
                         {
                           "type": "item_check",
-                          "item": "Dual Form"
+                          "item": "Li and Li Song"
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Fish Form"
+                  "type": "helper",
+                  "name": "_has_fish_form",
+                  "args": []
                 }
               ]
             }
@@ -897,21 +924,21 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": "Energy Form"
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Dual Form"
+                      "item": "Li and Li Song"
                     },
                     {
                       "type": "item_check",
-                      "item": "Li and Li Song"
+                      "item": "Dual Form"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Energy Form"
                 }
               ]
             }
@@ -995,21 +1022,21 @@
                   "type": "or",
                   "conditions": [
                     {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
+                    {
                       "type": "and",
                       "conditions": [
                         {
                           "type": "item_check",
-                          "item": "Dual Form"
+                          "item": "Li and Li Song"
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
                     }
                   ]
                 },
@@ -1138,11 +1165,11 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Arnassi Armor"
+                  "item": "Beast Form"
                 },
                 {
                   "type": "item_check",
-                  "item": "Beast Form"
+                  "item": "Arnassi Armor"
                 }
               ]
             }
@@ -1154,25 +1181,41 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Baby Blaster",
-                        "Baby Nautilus",
-                        "Baby Piranha",
-                        "Beast Form",
-                        "Energy Form",
-                        "Li and Li Song"
-                      ]
-                    }
-                  ]
-                },
-                {
                   "type": "item_check",
                   "item": "Bind Song"
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Nature Form"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Beast Form"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Li and Li Song"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Nautilus"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Piranha"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Blaster"
+                    }
+                  ]
                 }
               ]
             }
@@ -1209,11 +1252,11 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Arnassi Armor"
+                  "item": "Beast Form"
                 },
                 {
                   "type": "item_check",
-                  "item": "Beast Form"
+                  "item": "Arnassi Armor"
                 }
               ]
             }
@@ -1308,7 +1351,10 @@
             "connected_region": "The Veil top left area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Veil top left"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Veil top left"
+              }
             }
           },
           {
@@ -1316,7 +1362,10 @@
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Veil top right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Veil top right"
+              }
             }
           },
           {
@@ -1324,7 +1373,10 @@
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Kelp Forest bottom left"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Kelp Forest bottom left"
+              }
             }
           },
           {
@@ -1332,7 +1384,10 @@
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Home Waters"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Home Waters"
+              }
             }
           },
           {
@@ -1340,7 +1395,10 @@
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Abyss right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Abyss right"
+              }
             }
           },
           {
@@ -1348,7 +1406,10 @@
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Final Boss"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Final Boss"
+              }
             }
           },
           {
@@ -1356,7 +1417,10 @@
             "connected_region": "Simon Says area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Simon Says"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Simon Says"
+              }
             }
           },
           {
@@ -1364,7 +1428,10 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Arnassi Ruins"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Arnassi Ruins"
+              }
             }
           }
         ],
@@ -1463,8 +1530,9 @@
             "name": "Open Waters bottom left area, bulb inside the lowest fish pass",
             "id": 698010,
             "access_rule": {
-              "type": "item_check",
-              "item": "Fish Form"
+              "type": "helper",
+              "name": "_has_fish_form",
+              "args": []
             },
             "item": {
               "name": "Healing Poultice x 2",
@@ -1673,11 +1741,11 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Arnassi Armor"
+                  "item": "Beast Form"
                 },
                 {
                   "type": "item_check",
-                  "item": "Beast Form"
+                  "item": "Arnassi Armor"
                 }
               ]
             },
@@ -1695,30 +1763,14 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Hot Soup",
-                            "Hot Soup x 2"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Beast Form"
-                    }
-                  ]
+                  "type": "helper",
+                  "name": "_has_fish_form",
+                  "args": []
                 },
                 {
-                  "type": "item_check",
-                  "item": "Fish Form"
+                  "type": "helper",
+                  "name": "_has_beast_and_soup_form",
+                  "args": []
                 }
               ]
             },
@@ -1746,8 +1798,9 @@
             "name": "Arnassi Ruins cave to Arnassi Ruins cave, transturtle area",
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
-              "type": "item_check",
-              "item": "Fish Form"
+              "type": "helper",
+              "name": "_has_fish_form",
+              "args": []
             }
           },
           {
@@ -1761,11 +1814,11 @@
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Arnassi Armor"
+                      "item": "Beast Form"
                     },
                     {
                       "type": "item_check",
-                      "item": "Beast Form"
+                      "item": "Arnassi Armor"
                     }
                   ]
                 },
@@ -1776,27 +1829,28 @@
                       "type": "or",
                       "conditions": [
                         {
+                          "type": "item_check",
+                          "item": "Energy Form"
+                        },
+                        {
                           "type": "and",
                           "conditions": [
                             {
                               "type": "item_check",
-                              "item": "Dual Form"
+                              "item": "Li and Li Song"
                             },
                             {
                               "type": "item_check",
-                              "item": "Li and Li Song"
+                              "item": "Dual Form"
                             }
                           ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Energy Form"
                         }
                       ]
                     },
                     {
-                      "type": "item_check",
-                      "item": "Nature Form"
+                      "type": "helper",
+                      "name": "_has_nature_form",
+                      "args": []
                     }
                   ]
                 }
@@ -1828,8 +1882,9 @@
             "name": "Arnassi Ruins cave, transturtle area to Arnassi Ruins cave",
             "connected_region": "Arnassi Ruins cave",
             "access_rule": {
-              "type": "item_check",
-              "item": "Fish Form"
+              "type": "helper",
+              "name": "_has_fish_form",
+              "args": []
             }
           },
           {
@@ -1837,7 +1892,10 @@
             "connected_region": "The Veil top left area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Veil top left"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Veil top left"
+              }
             }
           },
           {
@@ -1845,7 +1903,10 @@
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Veil top right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Veil top right"
+              }
             }
           },
           {
@@ -1853,7 +1914,10 @@
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Open Waters top right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Open Waters top right"
+              }
             }
           },
           {
@@ -1861,7 +1925,10 @@
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Kelp Forest bottom left"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Kelp Forest bottom left"
+              }
             }
           },
           {
@@ -1869,7 +1936,10 @@
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Home Waters"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Home Waters"
+              }
             }
           },
           {
@@ -1877,7 +1947,10 @@
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Abyss right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Abyss right"
+              }
             }
           },
           {
@@ -1885,7 +1958,10 @@
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Final Boss"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Final Boss"
+              }
             }
           },
           {
@@ -1893,7 +1969,10 @@
             "connected_region": "Simon Says area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Simon Says"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Simon Says"
+              }
             }
           }
         ],
@@ -1965,7 +2044,10 @@
             "connected_region": "The Veil top left area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Veil top left"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Veil top left"
+              }
             }
           },
           {
@@ -1973,7 +2055,10 @@
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Veil top right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Veil top right"
+              }
             }
           },
           {
@@ -1981,7 +2066,10 @@
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Open Waters top right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Open Waters top right"
+              }
             }
           },
           {
@@ -1989,7 +2077,10 @@
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Kelp Forest bottom left"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Kelp Forest bottom left"
+              }
             }
           },
           {
@@ -1997,7 +2088,10 @@
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Home Waters"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Home Waters"
+              }
             }
           },
           {
@@ -2005,7 +2099,10 @@
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Abyss right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Abyss right"
+              }
             }
           },
           {
@@ -2013,7 +2110,10 @@
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Final Boss"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Final Boss"
+              }
             }
           },
           {
@@ -2021,7 +2121,10 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Arnassi Ruins"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Arnassi Ruins"
+              }
             }
           }
         ],
@@ -2071,20 +2174,35 @@
             "name": "Mithalas City to Mithalas City urns",
             "connected_region": "Mithalas City urns",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
+              "type": "or",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Baby Blaster",
-                    "Baby Nautilus",
-                    "Baby Piranha",
-                    "Beast Form",
-                    "Energy Form",
-                    "Li and Li Song",
-                    "Nature Form"
-                  ]
+                  "type": "item_check",
+                  "item": "Energy Form"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Nature Form"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Beast Form"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Li and Li Song"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Baby Nautilus"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Baby Piranha"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Baby Blaster"
                 }
               ]
             }
@@ -2097,11 +2215,11 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Arnassi Armor"
+                  "item": "Beast Form"
                 },
                 {
                   "type": "item_check",
-                  "item": "Beast Form"
+                  "item": "Arnassi Armor"
                 }
               ]
             }
@@ -2110,8 +2228,9 @@
             "name": "Mithalas City to Mithalas City fish pass",
             "connected_region": "Mithalas City fish pass",
             "access_rule": {
-              "type": "item_check",
-              "item": "Fish Form"
+              "type": "helper",
+              "name": "_has_fish_form",
+              "args": []
             }
           },
           {
@@ -2284,30 +2403,31 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "helper",
+                  "name": "_has_nature_form",
+                  "args": []
+                },
+                {
                   "type": "or",
                   "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
                     {
                       "type": "and",
                       "conditions": [
                         {
                           "type": "item_check",
-                          "item": "Dual Form"
+                          "item": "Li and Li Song"
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Nature Form"
                 }
               ]
             }
@@ -2374,20 +2494,35 @@
             "name": "Mithalas City, urn in the Castle flower tube entrance",
             "id": 698128,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
+              "type": "or",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Baby Blaster",
-                    "Baby Nautilus",
-                    "Baby Piranha",
-                    "Beast Form",
-                    "Energy Form",
-                    "Li and Li Song",
-                    "Nature Form"
-                  ]
+                  "type": "item_check",
+                  "item": "Energy Form"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Nature Form"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Beast Form"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Li and Li Song"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Baby Nautilus"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Baby Piranha"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Baby Blaster"
                 }
               ]
             },
@@ -2407,8 +2542,9 @@
             "name": "Mithalas City fish pass to Mithalas City",
             "connected_region": "Mithalas City",
             "access_rule": {
-              "type": "item_check",
-              "item": "Fish Form"
+              "type": "helper",
+              "name": "_has_fish_form",
+              "args": []
             }
           }
         ],
@@ -2431,20 +2567,35 @@
             "name": "Mithalas City, urn inside a home fish pass",
             "id": 698129,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
+              "type": "or",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Baby Blaster",
-                    "Baby Nautilus",
-                    "Baby Piranha",
-                    "Beast Form",
-                    "Energy Form",
-                    "Li and Li Song",
-                    "Nature Form"
-                  ]
+                  "type": "item_check",
+                  "item": "Energy Form"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Nature Form"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Beast Form"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Li and Li Song"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Baby Nautilus"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Baby Piranha"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Baby Blaster"
                 }
               ]
             },
@@ -2472,20 +2623,35 @@
             "name": "Mithalas castle to Mithalas castle urns",
             "connected_region": "Mithalas castle urns",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
+              "type": "or",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Baby Blaster",
-                    "Baby Nautilus",
-                    "Baby Piranha",
-                    "Beast Form",
-                    "Energy Form",
-                    "Li and Li Song",
-                    "Nature Form"
-                  ]
+                  "type": "item_check",
+                  "item": "Energy Form"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Nature Form"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Beast Form"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Li and Li Song"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Baby Nautilus"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Baby Piranha"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Baby Blaster"
                 }
               ]
             }
@@ -2561,8 +2727,9 @@
             "name": "Mithalas castle, plant tube entrance to Mithalas City top path",
             "connected_region": "Mithalas City top path",
             "access_rule": {
-              "type": "item_check",
-              "item": "Nature Form"
+              "type": "helper",
+              "name": "_has_nature_form",
+              "args": []
             }
           },
           {
@@ -2649,20 +2816,35 @@
             "name": "Mithalas Cathedral start to Mithalas Cathedral start urns",
             "connected_region": "Mithalas Cathedral start urns",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
+              "type": "or",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Baby Blaster",
-                    "Baby Nautilus",
-                    "Baby Piranha",
-                    "Beast Form",
-                    "Energy Form",
-                    "Li and Li Song",
-                    "Nature Form"
-                  ]
+                  "type": "item_check",
+                  "item": "Energy Form"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Nature Form"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Beast Form"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Li and Li Song"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Baby Nautilus"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Baby Piranha"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Baby Blaster"
                 }
               ]
             }
@@ -2674,21 +2856,21 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": "Energy Form"
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Dual Form"
+                      "item": "Li and Li Song"
                     },
                     {
                       "type": "item_check",
-                      "item": "Li and Li Song"
+                      "item": "Dual Form"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Energy Form"
                 }
               ]
             }
@@ -2881,21 +3063,21 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": "Energy Form"
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Dual Form"
+                      "item": "Li and Li Song"
                     },
                     {
                       "type": "item_check",
-                      "item": "Li and Li Song"
+                      "item": "Dual Form"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Energy Form"
                 }
               ]
             }
@@ -2907,21 +3089,21 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": "Energy Form"
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Dual Form"
+                      "item": "Li and Li Song"
                     },
                     {
                       "type": "item_check",
-                      "item": "Li and Li Song"
+                      "item": "Dual Form"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Energy Form"
                 }
               ]
             }
@@ -2976,26 +3158,41 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Baby Blaster",
-                        "Baby Nautilus",
-                        "Baby Piranha",
-                        "Beast Form",
-                        "Energy Form",
-                        "Li and Li Song",
-                        "Nature Form"
-                      ]
-                    }
-                  ]
-                },
-                {
                   "type": "item_check",
                   "item": "Beast Form"
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Nature Form"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Beast Form"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Li and Li Song"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Nautilus"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Piranha"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Blaster"
+                    }
+                  ]
                 }
               ]
             }
@@ -3165,30 +3362,30 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                },
+                {
                   "type": "or",
                   "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
                     {
                       "type": "and",
                       "conditions": [
                         {
                           "type": "item_check",
-                          "item": "Dual Form"
+                          "item": "Li and Li Song"
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Bind Song"
                 }
               ]
             }
@@ -3214,38 +3411,40 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Dual Form"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Li and Li Song"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
-                    }
-                  ]
+                  "type": "helper",
+                  "name": "_has_nature_form",
+                  "args": []
                 },
                 {
                   "type": "item_check",
                   "item": "Bind Song"
                 },
                 {
-                  "type": "item_check",
-                  "item": "Fish Form"
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Li and Li Song"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Dual Form"
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Nature Form"
+                  "type": "helper",
+                  "name": "_has_fish_form",
+                  "args": []
                 }
               ]
             }
@@ -3333,8 +3532,9 @@
             "name": "Kelp Forest top left area fish pass to Kelp Forest top left area",
             "connected_region": "Kelp Forest top left area",
             "access_rule": {
-              "type": "item_check",
-              "item": "Fish Form"
+              "type": "helper",
+              "name": "_has_fish_form",
+              "args": []
             }
           }
         ],
@@ -3392,8 +3592,9 @@
             "name": "Kelp Forest top right area to Kelp Forest top right area fish pass",
             "connected_region": "Kelp Forest top right area fish pass",
             "access_rule": {
-              "type": "item_check",
-              "item": "Fish Form"
+              "type": "helper",
+              "name": "_has_fish_form",
+              "args": []
             }
           },
           {
@@ -3508,8 +3709,9 @@
             "name": "Kelp Forest top right area fish pass to Kelp Forest top right area",
             "connected_region": "Kelp Forest top right area",
             "access_rule": {
-              "type": "item_check",
-              "item": "Fish Form"
+              "type": "helper",
+              "name": "_has_fish_form",
+              "args": []
             }
           },
           {
@@ -3559,27 +3761,28 @@
                   "type": "or",
                   "conditions": [
                     {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
+                    {
                       "type": "and",
                       "conditions": [
                         {
                           "type": "item_check",
-                          "item": "Dual Form"
+                          "item": "Li and Li Song"
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Fish Form"
+                  "type": "helper",
+                  "name": "_has_fish_form",
+                  "args": []
                 }
               ]
             }
@@ -3604,8 +3807,9 @@
             "name": "Kelp Forest bottom left area to Kelp Forest Drunian God room entrance",
             "connected_region": "Kelp Forest Drunian God room entrance",
             "access_rule": {
-              "type": "item_check",
-              "item": "Nature Form"
+              "type": "helper",
+              "name": "_has_nature_form",
+              "args": []
             }
           },
           {
@@ -3613,7 +3817,10 @@
             "connected_region": "The Veil top left area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Veil top left"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Veil top left"
+              }
             }
           },
           {
@@ -3621,7 +3828,10 @@
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Veil top right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Veil top right"
+              }
             }
           },
           {
@@ -3629,7 +3839,10 @@
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Open Waters top right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Open Waters top right"
+              }
             }
           },
           {
@@ -3637,7 +3850,10 @@
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Home Waters"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Home Waters"
+              }
             }
           },
           {
@@ -3645,7 +3861,10 @@
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Abyss right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Abyss right"
+              }
             }
           },
           {
@@ -3653,7 +3872,10 @@
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Final Boss"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Final Boss"
+              }
             }
           },
           {
@@ -3661,7 +3883,10 @@
             "connected_region": "Simon Says area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Simon Says"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Simon Says"
+              }
             }
           },
           {
@@ -3669,7 +3894,10 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Arnassi Ruins"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Arnassi Ruins"
+              }
             }
           }
         ],
@@ -3845,8 +4073,9 @@
             "name": "Kelp Forest Drunian God room entrance to Kelp Forest bottom left area",
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
-              "type": "item_check",
-              "item": "Nature Form"
+              "type": "helper",
+              "name": "_has_nature_form",
+              "args": []
             }
           },
           {
@@ -3864,21 +4093,21 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": "Energy Form"
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Dual Form"
+                      "item": "Li and Li Song"
                     },
                     {
                       "type": "item_check",
-                      "item": "Li and Li Song"
+                      "item": "Dual Form"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Energy Form"
                 }
               ]
             }
@@ -3916,8 +4145,9 @@
             "name": "Sprite cave to Sprite cave after the plant tube",
             "connected_region": "Sprite cave after the plant tube",
             "access_rule": {
-              "type": "item_check",
-              "item": "Nature Form"
+              "type": "helper",
+              "name": "_has_nature_form",
+              "args": []
             }
           }
         ],
@@ -3945,8 +4175,9 @@
             "name": "Sprite cave after the plant tube to Sprite cave",
             "connected_region": "Sprite cave",
             "access_rule": {
-              "type": "item_check",
-              "item": "Nature Form"
+              "type": "helper",
+              "name": "_has_nature_form",
+              "args": []
             }
           }
         ],
@@ -3999,30 +4230,30 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": "Beast Form"
+                },
+                {
                   "type": "or",
                   "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
                     {
                       "type": "and",
                       "conditions": [
                         {
                           "type": "item_check",
-                          "item": "Dual Form"
+                          "item": "Li and Li Song"
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Beast Form"
                 }
               ]
             }
@@ -4055,30 +4286,30 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": "Beast Form"
+                },
+                {
                   "type": "or",
                   "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
                     {
                       "type": "and",
                       "conditions": [
                         {
                           "type": "item_check",
-                          "item": "Dual Form"
+                          "item": "Li and Li Song"
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Beast Form"
                 }
               ]
             }
@@ -4159,8 +4390,9 @@
             "name": "The Veil top left area to The Veil top left area fish pass",
             "connected_region": "The Veil top left area fish pass",
             "access_rule": {
-              "type": "item_check",
-              "item": "Fish Form"
+              "type": "helper",
+              "name": "_has_fish_form",
+              "args": []
             }
           },
           {
@@ -4184,7 +4416,10 @@
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Veil top right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Veil top right"
+              }
             }
           },
           {
@@ -4192,7 +4427,10 @@
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Open Waters top right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Open Waters top right"
+              }
             }
           },
           {
@@ -4200,7 +4438,10 @@
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Kelp Forest bottom left"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Kelp Forest bottom left"
+              }
             }
           },
           {
@@ -4208,7 +4449,10 @@
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Home Waters"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Home Waters"
+              }
             }
           },
           {
@@ -4216,7 +4460,10 @@
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Abyss right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Abyss right"
+              }
             }
           },
           {
@@ -4224,7 +4471,10 @@
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Final Boss"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Final Boss"
+              }
             }
           },
           {
@@ -4232,7 +4482,10 @@
             "connected_region": "Simon Says area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Simon Says"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Simon Says"
+              }
             }
           },
           {
@@ -4240,7 +4493,10 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Arnassi Ruins"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Arnassi Ruins"
+              }
             }
           }
         ],
@@ -4319,8 +4575,9 @@
             "name": "The Veil top left area fish pass to The Veil top left area",
             "connected_region": "The Veil top left area",
             "access_rule": {
-              "type": "item_check",
-              "item": "Fish Form"
+              "type": "helper",
+              "name": "_has_fish_form",
+              "args": []
             }
           }
         ],
@@ -4356,8 +4613,9 @@
             "name": "The Veil top right area, left of temple to The Veil top right area, fish pass left of temple",
             "connected_region": "The Veil top right area, fish pass left of temple",
             "access_rule": {
-              "type": "item_check",
-              "item": "Fish Form"
+              "type": "helper",
+              "name": "_has_fish_form",
+              "args": []
             }
           },
           {
@@ -4365,7 +4623,10 @@
             "connected_region": "The Veil top left area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Veil top left"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Veil top left"
+              }
             }
           },
           {
@@ -4373,7 +4634,10 @@
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Open Waters top right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Open Waters top right"
+              }
             }
           },
           {
@@ -4381,7 +4645,10 @@
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Kelp Forest bottom left"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Kelp Forest bottom left"
+              }
             }
           },
           {
@@ -4389,7 +4656,10 @@
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Home Waters"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Home Waters"
+              }
             }
           },
           {
@@ -4397,7 +4667,10 @@
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Abyss right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Abyss right"
+              }
             }
           },
           {
@@ -4405,7 +4678,10 @@
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Final Boss"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Final Boss"
+              }
             }
           },
           {
@@ -4413,7 +4689,10 @@
             "connected_region": "Simon Says area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Simon Says"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Simon Says"
+              }
             }
           },
           {
@@ -4421,7 +4700,10 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Arnassi Ruins"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Arnassi Ruins"
+              }
             }
           }
         ],
@@ -4430,26 +4712,9 @@
             "name": "The Veil top right area, bulb at the top of the waterfall",
             "id": 698080,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Hot Soup",
-                        "Hot Soup x 2"
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Beast Form"
-                }
-              ]
+              "type": "helper",
+              "name": "_has_beast_and_soup_form",
+              "args": []
             },
             "item": {
               "name": "Healing Poultice",
@@ -4481,8 +4746,9 @@
             "name": "The Veil top right area, fish pass left of temple to The Veil top right area, left of temple",
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
-              "type": "item_check",
-              "item": "Fish Form"
+              "type": "helper",
+              "name": "_has_fish_form",
+              "args": []
             }
           },
           {
@@ -4492,34 +4758,34 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Dual Form"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Li and Li Song"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Sun Form"
                 },
                 {
                   "type": "item_check",
                   "item": "Beast Form"
                 },
                 {
-                  "type": "item_check",
-                  "item": "Sun Form"
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Li and Li Song"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Dual Form"
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -4564,11 +4830,11 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Arnassi Armor"
+                  "item": "Beast Form"
                 },
                 {
                   "type": "item_check",
-                  "item": "Beast Form"
+                  "item": "Arnassi Armor"
                 }
               ]
             },
@@ -4621,12 +4887,13 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "item_check",
-                  "item": "Bind Song"
+                  "type": "helper",
+                  "name": "_has_fish_form",
+                  "args": []
                 },
                 {
                   "type": "item_check",
-                  "item": "Fish Form"
+                  "item": "Bind Song"
                 }
               ]
             }
@@ -4704,12 +4971,13 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "item_check",
-                  "item": "Bind Song"
+                  "type": "helper",
+                  "name": "_has_fish_form",
+                  "args": []
                 },
                 {
                   "type": "item_check",
-                  "item": "Fish Form"
+                  "item": "Bind Song"
                 }
               ]
             }
@@ -4917,17 +5185,9 @@
             "name": "Turtle cave, Urchin Costume",
             "id": 698193,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Hot Soup",
-                    "Hot Soup x 2"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "_has_hot_soup",
+              "args": []
             },
             "item": {
               "name": "Arcane Poultice",
@@ -5066,19 +5326,6 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Bind Song"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Has Sun Crystal"
-                    }
-                  ]
-                },
-                {
                   "type": "or",
                   "conditions": [
                     {
@@ -5090,6 +5337,11 @@
                       "item": "Sun Form"
                     }
                   ]
+                },
+                {
+                  "type": "helper",
+                  "name": "_has_sun_crystal",
+                  "args": []
                 }
               ]
             }
@@ -5115,6 +5367,10 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                },
+                {
                   "type": "or",
                   "conditions": [
                     {
@@ -5126,10 +5382,6 @@
                       "item": "Sun Form"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Bind Song"
                 }
               ]
             }
@@ -5218,19 +5470,6 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Bind Song"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Has Sun Crystal"
-                    }
-                  ]
-                },
-                {
                   "type": "or",
                   "conditions": [
                     {
@@ -5242,6 +5481,11 @@
                       "item": "Sun Form"
                     }
                   ]
+                },
+                {
+                  "type": "helper",
+                  "name": "_has_sun_crystal",
+                  "args": []
                 }
               ]
             }
@@ -5253,21 +5497,21 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": "Energy Form"
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Dual Form"
+                      "item": "Li and Li Song"
                     },
                     {
                       "type": "item_check",
-                      "item": "Li and Li Song"
+                      "item": "Dual Form"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Energy Form"
                 }
               ]
             }
@@ -5312,36 +5556,25 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Hot Soup",
-                                "Hot Soup x 2"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Beast Form"
-                        }
-                      ]
+                      "type": "helper",
+                      "name": "_has_beast_and_soup_form",
+                      "args": []
                     },
                     {
                       "type": "item_check",
-                      "item": "Lumerean God beated"
+                      "item": {
+                        "type": "constant",
+                        "value": "Lumerean God beated"
+                      }
                     }
                   ]
                 },
                 {
                   "type": "item_check",
-                  "item": "Sun God beated"
+                  "item": {
+                    "type": "constant",
+                    "value": "Sun God beated"
+                  }
                 }
               ]
             },
@@ -5362,36 +5595,25 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Hot Soup",
-                                "Hot Soup x 2"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Beast Form"
-                        }
-                      ]
+                      "type": "helper",
+                      "name": "_has_beast_and_soup_form",
+                      "args": []
                     },
                     {
                       "type": "item_check",
-                      "item": "Lumerean God beated"
+                      "item": {
+                        "type": "constant",
+                        "value": "Lumerean God beated"
+                      }
                     }
                   ]
                 },
                 {
                   "type": "item_check",
-                  "item": "Sun God beated"
+                  "item": {
+                    "type": "constant",
+                    "value": "Sun God beated"
+                  }
                 }
               ]
             },
@@ -5414,21 +5636,21 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": "Energy Form"
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Dual Form"
+                      "item": "Li and Li Song"
                     },
                     {
                       "type": "item_check",
-                      "item": "Li and Li Song"
+                      "item": "Dual Form"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Energy Form"
                 }
               ]
             }
@@ -5488,8 +5710,9 @@
             "name": "Abyss left area to Abyss left bottom area",
             "connected_region": "Abyss left bottom area",
             "access_rule": {
-              "type": "item_check",
-              "item": "Nature Form"
+              "type": "helper",
+              "name": "_has_nature_form",
+              "args": []
             }
           },
           {
@@ -5503,11 +5726,11 @@
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Beast Form"
+                      "item": "Li and Li Song"
                     },
                     {
                       "type": "item_check",
-                      "item": "Energy Form"
+                      "item": "Dual Form"
                     }
                   ]
                 },
@@ -5516,11 +5739,11 @@
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Dual Form"
+                      "item": "Energy Form"
                     },
                     {
                       "type": "item_check",
-                      "item": "Li and Li Song"
+                      "item": "Beast Form"
                     }
                   ]
                 }
@@ -5602,8 +5825,9 @@
             "name": "Abyss left bottom area to Abyss left area",
             "connected_region": "Abyss left area",
             "access_rule": {
-              "type": "item_check",
-              "item": "Nature Form"
+              "type": "helper",
+              "name": "_has_nature_form",
+              "args": []
             }
           },
           {
@@ -5618,8 +5842,9 @@
             "name": "Abyss left bottom area to The Body center area",
             "connected_region": "The Body center area",
             "access_rule": {
-              "type": "item_check",
-              "item": "Body Tongue cleared"
+              "type": "helper",
+              "name": "_has_tongue_cleared",
+              "args": []
             }
           }
         ],
@@ -5628,8 +5853,9 @@
             "name": "Abyss left area, bulb in the bottom fish pass",
             "id": 698026,
             "access_rule": {
-              "type": "item_check",
-              "item": "Fish Form"
+              "type": "helper",
+              "name": "_has_fish_form",
+              "args": []
             },
             "item": {
               "name": "Special Cake",
@@ -5691,38 +5917,38 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Dual Form"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Li and Li Song"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Bind Song"
-                },
-                {
                   "type": "item_check",
                   "item": "Spirit Form"
                 },
                 {
                   "type": "item_check",
                   "item": "Sun Form"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Li and Li Song"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Dual Form"
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -5852,7 +6078,10 @@
             "connected_region": "The Veil top left area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Veil top left"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Veil top left"
+              }
             }
           },
           {
@@ -5860,7 +6089,10 @@
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Veil top right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Veil top right"
+              }
             }
           },
           {
@@ -5868,7 +6100,10 @@
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Open Waters top right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Open Waters top right"
+              }
             }
           },
           {
@@ -5876,7 +6111,10 @@
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Kelp Forest bottom left"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Kelp Forest bottom left"
+              }
             }
           },
           {
@@ -5884,7 +6122,10 @@
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Home Waters"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Home Waters"
+              }
             }
           },
           {
@@ -5892,7 +6133,10 @@
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Final Boss"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Final Boss"
+              }
             }
           },
           {
@@ -5900,7 +6144,10 @@
             "connected_region": "Simon Says area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Simon Says"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Simon Says"
+              }
             }
           },
           {
@@ -5908,7 +6155,10 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Arnassi Ruins"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Arnassi Ruins"
+              }
             }
           }
         ],
@@ -6040,12 +6290,13 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "item_check",
-                  "item": "Bind Song"
+                  "type": "helper",
+                  "name": "_has_nature_form",
+                  "args": []
                 },
                 {
                   "type": "item_check",
-                  "item": "Nature Form"
+                  "item": "Bind Song"
                 }
               ]
             }
@@ -6237,21 +6488,21 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": "Energy Form"
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Dual Form"
+                      "item": "Li and Li Song"
                     },
                     {
                       "type": "item_check",
-                      "item": "Li and Li Song"
+                      "item": "Dual Form"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Energy Form"
                 }
               ]
             }
@@ -6263,38 +6514,38 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Dual Form"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Li and Li Song"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
-                    }
-                  ]
-                },
-                {
                   "type": "item_check",
                   "item": "Beast Form"
                 },
                 {
                   "type": "item_check",
-                  "item": "Bind Song"
+                  "item": "Sun Form"
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Li and Li Song"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Dual Form"
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
-                  "item": "Sun Form"
+                  "item": "Bind Song"
                 }
               ]
             }
@@ -6328,21 +6579,21 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": "Energy Form"
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Dual Form"
+                      "item": "Li and Li Song"
                     },
                     {
                       "type": "item_check",
-                      "item": "Li and Li Song"
+                      "item": "Dual Form"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Energy Form"
                 }
               ]
             }
@@ -6360,38 +6611,38 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Dual Form"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Li and Li Song"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
-                    }
-                  ]
-                },
-                {
                   "type": "item_check",
                   "item": "Beast Form"
                 },
                 {
                   "type": "item_check",
-                  "item": "Bind Song"
+                  "item": "Sun Form"
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Li and Li Song"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Dual Form"
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
-                  "item": "Sun Form"
+                  "item": "Bind Song"
                 }
               ]
             }
@@ -6523,11 +6774,11 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Dual Form"
+                  "item": "Li and Li Song"
                 },
                 {
                   "type": "item_check",
-                  "item": "Li and Li Song"
+                  "item": "Dual Form"
                 }
               ]
             }
@@ -6538,8 +6789,9 @@
             "name": "The Body center area, breaking Li's cage",
             "id": 698201,
             "access_rule": {
-              "type": "item_check",
-              "item": "Body Tongue cleared"
+              "type": "helper",
+              "name": "_has_tongue_cleared",
+              "args": []
             },
             "item": {
               "name": "Spider Roll",
@@ -6732,11 +6984,11 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Dual Form"
+                  "item": "Li and Li Song"
                 },
                 {
                   "type": "item_check",
-                  "item": "Li and Li Song"
+                  "item": "Dual Form"
                 }
               ]
             }
@@ -6749,11 +7001,11 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Dual Form"
+                  "item": "Li and Li Song"
                 },
                 {
                   "type": "item_check",
-                  "item": "Li and Li Song"
+                  "item": "Dual Form"
                 }
               ]
             }
@@ -6815,11 +7067,11 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Dual Form"
+                  "item": "Li and Li Song"
                 },
                 {
                   "type": "item_check",
-                  "item": "Li and Li Song"
+                  "item": "Dual Form"
                 }
               ]
             }
@@ -6828,8 +7080,9 @@
             "name": "The Body, before final boss to The Body, final boss area turtle room",
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
-              "type": "item_check",
-              "item": "Nature Form"
+              "type": "helper",
+              "name": "_has_nature_form",
+              "args": []
             }
           },
           {
@@ -6839,29 +7092,29 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": "Energy Form"
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Dual Form"
+                      "item": "Li and Li Song"
                     },
                     {
                       "type": "item_check",
-                      "item": "Li and Li Song"
+                      "item": "Dual Form"
                     }
                   ]
                 },
                 {
                   "type": "item_check",
-                  "item": "Bind Song"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Energy Form"
-                },
-                {
-                  "type": "item_check",
                   "item": "Sun Form"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Bind Song"
                 }
               ]
             }
@@ -6876,8 +7129,9 @@
             "name": "The Body, final boss area turtle room to The Body, before final boss",
             "connected_region": "The Body, before final boss",
             "access_rule": {
-              "type": "item_check",
-              "item": "Nature Form"
+              "type": "helper",
+              "name": "_has_nature_form",
+              "args": []
             }
           },
           {
@@ -6885,7 +7139,10 @@
             "connected_region": "The Veil top left area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Veil top left"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Veil top left"
+              }
             }
           },
           {
@@ -6893,7 +7150,10 @@
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Veil top right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Veil top right"
+              }
             }
           },
           {
@@ -6901,7 +7161,10 @@
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Open Waters top right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Open Waters top right"
+              }
             }
           },
           {
@@ -6909,7 +7172,10 @@
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Kelp Forest bottom left"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Kelp Forest bottom left"
+              }
             }
           },
           {
@@ -6917,7 +7183,10 @@
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Home Waters"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Home Waters"
+              }
             }
           },
           {
@@ -6925,7 +7194,10 @@
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Abyss right"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Abyss right"
+              }
             }
           },
           {
@@ -6933,7 +7205,10 @@
             "connected_region": "Simon Says area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Simon Says"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Simon Says"
+              }
             }
           },
           {
@@ -6941,7 +7216,10 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
               "type": "item_check",
-              "item": "Transturtle Arnassi Ruins"
+              "item": {
+                "type": "constant",
+                "value": "Transturtle Arnassi Ruins"
+              }
             }
           }
         ],
@@ -7063,38 +7341,38 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Dual Form"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Li and Li Song"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Bind Song"
-                },
-                {
                   "type": "item_check",
                   "item": "Spirit Form"
                 },
                 {
                   "type": "item_check",
                   "item": "Sun Form"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Li and Li Song"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Dual Form"
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -7125,8 +7403,9 @@
             "name": "Energy Temple Idol room to Energy Temple first area",
             "connected_region": "Energy Temple first area",
             "access_rule": {
-              "type": "item_check",
-              "item": "Fish Form"
+              "type": "helper",
+              "name": "_has_fish_form",
+              "args": []
             }
           },
           {
@@ -7139,27 +7418,28 @@
                   "type": "or",
                   "conditions": [
                     {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
+                    {
                       "type": "and",
                       "conditions": [
                         {
                           "type": "item_check",
-                          "item": "Dual Form"
+                          "item": "Li and Li Song"
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Fish Form"
+                  "type": "helper",
+                  "name": "_has_fish_form",
+                  "args": []
                 }
               ]
             }
@@ -7201,21 +7481,21 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": "Energy Form"
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Dual Form"
+                      "item": "Li and Li Song"
                     },
                     {
                       "type": "item_check",
-                      "item": "Li and Li Song"
+                      "item": "Dual Form"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Energy Form"
                 }
               ]
             }
@@ -7227,34 +7507,35 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Dual Form"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Li and Li Song"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
-                    }
-                  ]
+                  "type": "helper",
+                  "name": "_has_nature_form",
+                  "args": []
                 },
                 {
                   "type": "item_check",
                   "item": "Bind Song"
                 },
                 {
-                  "type": "item_check",
-                  "item": "Nature Form"
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Li and Li Song"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Dual Form"
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -7281,21 +7562,13 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Hot Soup",
-                        "Hot Soup x 2"
-                      ]
-                    }
-                  ]
-                },
-                {
                   "type": "item_check",
                   "item": "Beast Form"
+                },
+                {
+                  "type": "helper",
+                  "name": "_has_hot_soup",
+                  "args": []
                 }
               ]
             }
@@ -7406,21 +7679,21 @@
               "type": "or",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": "Energy Form"
+                },
+                {
                   "type": "and",
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Dual Form"
+                      "item": "Li and Li Song"
                     },
                     {
                       "type": "item_check",
-                      "item": "Li and Li Song"
+                      "item": "Dual Form"
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Energy Form"
                 }
               ]
             }
@@ -7443,21 +7716,21 @@
                   "type": "or",
                   "conditions": [
                     {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
+                    {
                       "type": "and",
                       "conditions": [
                         {
                           "type": "item_check",
-                          "item": "Dual Form"
+                          "item": "Li and Li Song"
                         },
                         {
                           "type": "item_check",
-                          "item": "Li and Li Song"
+                          "item": "Dual Form"
                         }
                       ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Energy Form"
                     }
                   ]
                 },
@@ -7730,253 +8003,6 @@
   },
   "items": {
     "1": {
-      "Nautilus Prime beated": {
-        "name": "Nautilus Prime beated",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Blaster Peg Prime beated": {
-        "name": "Blaster Peg Prime beated",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Mergog beated": {
-        "name": "Mergog beated",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Mithalan priests beated": {
-        "name": "Mithalan priests beated",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Octopus Prime beated": {
-        "name": "Octopus Prime beated",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Crabbius Maximus beated": {
-        "name": "Crabbius Maximus beated",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Mantis Shrimp Prime beated": {
-        "name": "Mantis Shrimp Prime beated",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "King Jellyfish God Prime beated": {
-        "name": "King Jellyfish God Prime beated",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Fallen God beated": {
-        "name": "Fallen God beated",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Mithalan God beated": {
-        "name": "Mithalan God beated",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Drunian God beated": {
-        "name": "Drunian God beated",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Lumerean God beated": {
-        "name": "Lumerean God beated",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "The Golem beated": {
-        "name": "The Golem beated",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "First Secret obtained": {
-        "name": "First Secret obtained",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Second Secret obtained": {
-        "name": "Second Secret obtained",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Third Secret obtained": {
-        "name": "Third Secret obtained",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Body Tongue cleared": {
-        "name": "Body Tongue cleared",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Has Sun Crystal": {
-        "name": "Has Sun Crystal",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Victory": {
-        "name": "Victory",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
       "Anemone": {
         "name": "Anemone",
         "id": 698000,
@@ -9903,8 +9929,7 @@
   "settings": {
     "1": {
       "game": "Aquaria",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

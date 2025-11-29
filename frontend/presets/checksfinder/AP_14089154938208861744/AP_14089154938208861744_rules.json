@@ -736,8 +736,7 @@
   "settings": {
     "1": {
       "game": "ChecksFinder",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

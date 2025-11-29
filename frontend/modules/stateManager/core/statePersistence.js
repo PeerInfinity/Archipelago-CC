@@ -22,7 +22,6 @@
  *     ├─> Build inventory snapshot (copy)
  *     ├─> Build region reachability map
  *     ├─> Build location reachability map
- *     ├─> Convert eventLocations Map to object
  *
  *   Output: Snapshot object
  *     ├─> inventory: {itemName: count}
@@ -141,17 +140,7 @@ export function getSnapshot(sm) {
   }
 
   // 4. LocationItems - REMOVED: Now in static data
-
-  // 5. Convert eventLocations Map to plain object
-  const eventLocationsObject = {};
-  if (sm.eventLocations && sm.eventLocations instanceof Map) {
-    for (const [
-      locationName,
-      locationData,
-    ] of sm.eventLocations.entries()) {
-      eventLocationsObject[locationName] = locationData;
-    }
-  }
+  // 5. eventLocations - REMOVED: Now in static data
 
   // Increment snapshot counter
   sm.snapshotCount++;
@@ -203,7 +192,6 @@ export function getSnapshot(sm) {
     // REFACTOR: Add missing properties for canonical state
     debugMode: sm.debugMode || false,
     autoCollectEventsEnabled: sm.autoCollectEventsEnabled !== false, // Default true
-    eventLocations: eventLocationsObject,
     startRegions: sm.startRegions || ['Menu'],
     // Progressive items tracking (used by games like DLCQuest for coin accumulation)
     prog_items: sm.prog_items || {},
@@ -224,7 +212,6 @@ export function getSnapshot(sm) {
         flagsCount: snapshot.flags.length,
         checkedLocationsCount: snapshot.checkedLocations.length,
         eventsCount: snapshot.events.length,
-        eventLocationsCount: Object.keys(snapshot.eventLocations).length,
         regionReachabilityCount: Object.keys(snapshot.regionReachability).length,
         locationReachabilityCount: Object.keys(snapshot.locationReachability).length,
       }

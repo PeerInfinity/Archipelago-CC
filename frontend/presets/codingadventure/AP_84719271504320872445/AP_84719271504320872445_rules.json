@@ -68,29 +68,44 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "HTML"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "CSS"
+                  }
+                },
+                {
                   "type": "or",
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Git"
+                      "item": {
+                        "type": "constant",
+                        "value": "JavaScript Basics"
+                      }
                     },
                     {
                       "type": "item_check",
-                      "item": "JavaScript Basics"
+                      "item": {
+                        "type": "constant",
+                        "value": "Git"
+                      }
                     },
                     {
                       "type": "item_check",
-                      "item": "Server Basics"
+                      "item": {
+                        "type": "constant",
+                        "value": "Server Basics"
+                      }
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "CSS"
-                },
-                {
-                  "type": "item_check",
-                  "item": "HTML"
                 }
               ]
             }
@@ -121,7 +136,10 @@
             "id": 400000002,
             "access_rule": {
               "type": "item_check",
-              "item": "HTML"
+              "item": {
+                "type": "constant",
+                "value": "HTML"
+              }
             },
             "item": {
               "name": "Django",
@@ -135,7 +153,10 @@
             "id": 400000003,
             "access_rule": {
               "type": "item_check",
-              "item": "CSS"
+              "item": {
+                "type": "constant",
+                "value": "CSS"
+              }
             },
             "item": {
               "name": "Integration Tests",
@@ -169,7 +190,10 @@
             "id": 400000005,
             "access_rule": {
               "type": "item_check",
-              "item": "JavaScript Basics"
+              "item": {
+                "type": "constant",
+                "value": "JavaScript Basics"
+              }
             },
             "item": {
               "name": "State Management",
@@ -183,7 +207,10 @@
             "id": 400000006,
             "access_rule": {
               "type": "item_check",
-              "item": "JavaScript Basics"
+              "item": {
+                "type": "constant",
+                "value": "JavaScript Basics"
+              }
             },
             "item": {
               "name": "Command Line",
@@ -217,7 +244,10 @@
             "id": 400000008,
             "access_rule": {
               "type": "item_check",
-              "item": "Server Basics"
+              "item": {
+                "type": "constant",
+                "value": "Server Basics"
+              }
             },
             "item": {
               "name": "Docker",
@@ -231,7 +261,10 @@
             "id": 400000009,
             "access_rule": {
               "type": "item_check",
-              "item": "Server Basics"
+              "item": {
+                "type": "constant",
+                "value": "Server Basics"
+              }
             },
             "item": {
               "name": "Frontend Framework",
@@ -279,7 +312,10 @@
             "id": 400000012,
             "access_rule": {
               "type": "item_check",
-              "item": "Command Line"
+              "item": {
+                "type": "constant",
+                "value": "Command Line"
+              }
             },
             "item": {
               "name": "Package Managers",
@@ -336,11 +372,17 @@
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Database Basics"
+                      "item": {
+                        "type": "constant",
+                        "value": "Frontend Framework"
+                      }
                     },
                     {
                       "type": "item_check",
-                      "item": "State Management"
+                      "item": {
+                        "type": "constant",
+                        "value": "REST APIs"
+                      }
                     }
                   ]
                 },
@@ -349,11 +391,17 @@
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Frontend Framework"
+                      "item": {
+                        "type": "constant",
+                        "value": "State Management"
+                      }
                     },
                     {
                       "type": "item_check",
-                      "item": "REST APIs"
+                      "item": {
+                        "type": "constant",
+                        "value": "Database Basics"
+                      }
                     }
                   ]
                 }
@@ -386,7 +434,10 @@
             "connected_region": "ReactRoute",
             "access_rule": {
               "type": "item_check",
-              "item": "DOM Manipulation"
+              "item": {
+                "type": "constant",
+                "value": "DOM Manipulation"
+              }
             }
           },
           {
@@ -402,7 +453,10 @@
             "connected_region": "VanillaRoute",
             "access_rule": {
               "type": "item_check",
-              "item": "Algorithms"
+              "item": {
+                "type": "constant",
+                "value": "Algorithms"
+              }
             }
           }
         ],
@@ -431,7 +485,10 @@
             "id": 400000015,
             "access_rule": {
               "type": "item_check",
-              "item": "React"
+              "item": {
+                "type": "constant",
+                "value": "React"
+              }
             },
             "item": {
               "name": "Scaling Complete",
@@ -445,7 +502,10 @@
             "id": 400000016,
             "access_rule": {
               "type": "item_check",
-              "item": "Frontend Framework"
+              "item": {
+                "type": "constant",
+                "value": "Frontend Framework"
+              }
             },
             "item": {
               "name": "Server Basics",
@@ -479,7 +539,10 @@
             "id": 400000018,
             "access_rule": {
               "type": "item_check",
-              "item": "Vue"
+              "item": {
+                "type": "constant",
+                "value": "Vue"
+              }
             },
             "item": {
               "name": "React",
@@ -493,7 +556,10 @@
             "id": 400000019,
             "access_rule": {
               "type": "item_check",
-              "item": "Frontend Framework"
+              "item": {
+                "type": "constant",
+                "value": "Frontend Framework"
+              }
             },
             "item": {
               "name": "Database Basics",
@@ -527,7 +593,10 @@
             "id": 400000021,
             "access_rule": {
               "type": "item_check",
-              "item": "Frontend Framework"
+              "item": {
+                "type": "constant",
+                "value": "Frontend Framework"
+              }
             },
             "item": {
               "name": "State Management",
@@ -546,7 +615,10 @@
             "connected_region": "ExpressRoute",
             "access_rule": {
               "type": "item_check",
-              "item": "JavaScript Basics"
+              "item": {
+                "type": "constant",
+                "value": "JavaScript Basics"
+              }
             }
           },
           {
@@ -554,7 +626,10 @@
             "connected_region": "DjangoRoute",
             "access_rule": {
               "type": "item_check",
-              "item": "Server Basics"
+              "item": {
+                "type": "constant",
+                "value": "Server Basics"
+              }
             }
           },
           {
@@ -562,7 +637,10 @@
             "connected_region": "FlaskRoute",
             "access_rule": {
               "type": "item_check",
-              "item": "Server Basics"
+              "item": {
+                "type": "constant",
+                "value": "Server Basics"
+              }
             }
           }
         ],
@@ -591,7 +669,10 @@
             "id": 400000023,
             "access_rule": {
               "type": "item_check",
-              "item": "Express"
+              "item": {
+                "type": "constant",
+                "value": "Express"
+              }
             },
             "item": {
               "name": "Authentication",
@@ -605,7 +686,10 @@
             "id": 400000024,
             "access_rule": {
               "type": "item_check",
-              "item": "REST APIs"
+              "item": {
+                "type": "constant",
+                "value": "REST APIs"
+              }
             },
             "item": {
               "name": "Cloud Provider",
@@ -639,7 +723,10 @@
             "id": 400000026,
             "access_rule": {
               "type": "item_check",
-              "item": "Django"
+              "item": {
+                "type": "constant",
+                "value": "Django"
+              }
             },
             "item": {
               "name": "REST APIs",
@@ -653,7 +740,10 @@
             "id": 400000027,
             "access_rule": {
               "type": "item_check",
-              "item": "REST APIs"
+              "item": {
+                "type": "constant",
+                "value": "REST APIs"
+              }
             },
             "item": {
               "name": "Interactive App Complete",
@@ -687,7 +777,10 @@
             "id": 400000029,
             "access_rule": {
               "type": "item_check",
-              "item": "Flask"
+              "item": {
+                "type": "constant",
+                "value": "Flask"
+              }
             },
             "item": {
               "name": "CI/CD",
@@ -701,7 +794,10 @@
             "id": 400000030,
             "access_rule": {
               "type": "item_check",
-              "item": "REST APIs"
+              "item": {
+                "type": "constant",
+                "value": "REST APIs"
+              }
             },
             "item": {
               "name": "Accessibility",
@@ -721,7 +817,10 @@
             "id": 400000031,
             "access_rule": {
               "type": "item_check",
-              "item": "Design Systems"
+              "item": {
+                "type": "constant",
+                "value": "Design Systems"
+              }
             },
             "item": {
               "name": "Horizontal Scaling",
@@ -735,7 +834,10 @@
             "id": 400000032,
             "access_rule": {
               "type": "item_check",
-              "item": "UI/UX"
+              "item": {
+                "type": "constant",
+                "value": "UI/UX"
+              }
             },
             "item": {
               "name": "Query Optimization",
@@ -749,7 +851,10 @@
             "id": 400000033,
             "access_rule": {
               "type": "item_check",
-              "item": "Responsive Design"
+              "item": {
+                "type": "constant",
+                "value": "Responsive Design"
+              }
             },
             "item": {
               "name": "Vue",
@@ -805,7 +910,10 @@
             "id": 400000035,
             "access_rule": {
               "type": "item_check",
-              "item": "SQL"
+              "item": {
+                "type": "constant",
+                "value": "SQL"
+              }
             },
             "item": {
               "name": "UI/UX",
@@ -819,7 +927,10 @@
             "id": 400000036,
             "access_rule": {
               "type": "item_check",
-              "item": "Database Basics"
+              "item": {
+                "type": "constant",
+                "value": "Database Basics"
+              }
             },
             "item": {
               "name": "Algorithms",
@@ -853,7 +964,10 @@
             "id": 400000038,
             "access_rule": {
               "type": "item_check",
-              "item": "NoSQL"
+              "item": {
+                "type": "constant",
+                "value": "NoSQL"
+              }
             },
             "item": {
               "name": "Responsive Design",
@@ -867,7 +981,10 @@
             "id": 400000039,
             "access_rule": {
               "type": "item_check",
-              "item": "Database Basics"
+              "item": {
+                "type": "constant",
+                "value": "Database Basics"
+              }
             },
             "item": {
               "name": "Caching",
@@ -920,6 +1037,13 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Authentication"
+                  }
+                },
+                {
                   "type": "or",
                   "conditions": [
                     {
@@ -927,11 +1051,17 @@
                       "conditions": [
                         {
                           "type": "item_check",
-                          "item": "DevOps"
+                          "item": {
+                            "type": "constant",
+                            "value": "Performance"
+                          }
                         },
                         {
                           "type": "item_check",
-                          "item": "Performance"
+                          "item": {
+                            "type": "constant",
+                            "value": "Testing"
+                          }
                         }
                       ]
                     },
@@ -940,11 +1070,17 @@
                       "conditions": [
                         {
                           "type": "item_check",
-                          "item": "DevOps"
+                          "item": {
+                            "type": "constant",
+                            "value": "Performance"
+                          }
                         },
                         {
                           "type": "item_check",
-                          "item": "Testing"
+                          "item": {
+                            "type": "constant",
+                            "value": "DevOps"
+                          }
                         }
                       ]
                     },
@@ -953,19 +1089,21 @@
                       "conditions": [
                         {
                           "type": "item_check",
-                          "item": "Performance"
+                          "item": {
+                            "type": "constant",
+                            "value": "Testing"
+                          }
                         },
                         {
                           "type": "item_check",
-                          "item": "Testing"
+                          "item": {
+                            "type": "constant",
+                            "value": "DevOps"
+                          }
                         }
                       ]
                     }
                   ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Authentication"
                 }
               ]
             }
@@ -997,7 +1135,10 @@
             "id": 400000041,
             "access_rule": {
               "type": "item_check",
-              "item": "HTTP Basics"
+              "item": {
+                "type": "constant",
+                "value": "HTTP Basics"
+              }
             },
             "item": {
               "name": "DOM Manipulation",
@@ -1011,7 +1152,10 @@
             "id": 400000042,
             "access_rule": {
               "type": "item_check",
-              "item": "Sessions"
+              "item": {
+                "type": "constant",
+                "value": "Sessions"
+              }
             },
             "item": {
               "name": "HTTPS",
@@ -1025,7 +1169,10 @@
             "id": 400000043,
             "access_rule": {
               "type": "item_check",
-              "item": "JWT"
+              "item": {
+                "type": "constant",
+                "value": "JWT"
+              }
             },
             "item": {
               "name": "CDN",
@@ -1048,11 +1195,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Database Basics"
+                  "item": {
+                    "type": "constant",
+                    "value": "Database Basics"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "REST APIs"
+                  "item": {
+                    "type": "constant",
+                    "value": "REST APIs"
+                  }
                 }
               ]
             },
@@ -1068,7 +1221,10 @@
             "id": 400000045,
             "access_rule": {
               "type": "item_check",
-              "item": "Caching"
+              "item": {
+                "type": "constant",
+                "value": "Caching"
+              }
             },
             "item": {
               "name": "JWT",
@@ -1082,7 +1238,10 @@
             "id": 400000046,
             "access_rule": {
               "type": "item_check",
-              "item": "CDN"
+              "item": {
+                "type": "constant",
+                "value": "CDN"
+              }
             },
             "item": {
               "name": "Express",
@@ -1116,7 +1275,10 @@
             "id": 400000048,
             "access_rule": {
               "type": "item_check",
-              "item": "Unit Tests"
+              "item": {
+                "type": "constant",
+                "value": "Unit Tests"
+              }
             },
             "item": {
               "name": "Domain",
@@ -1130,7 +1292,10 @@
             "id": 400000049,
             "access_rule": {
               "type": "item_check",
-              "item": "Integration Tests"
+              "item": {
+                "type": "constant",
+                "value": "Integration Tests"
+              }
             },
             "item": {
               "name": "HTTP Basics",
@@ -1150,7 +1315,10 @@
             "id": 400000050,
             "access_rule": {
               "type": "item_check",
-              "item": "Command Line"
+              "item": {
+                "type": "constant",
+                "value": "Command Line"
+              }
             },
             "item": {
               "name": "Database Integration",
@@ -1167,11 +1335,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Docker"
+                  "item": {
+                    "type": "constant",
+                    "value": "Docker"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Git"
+                  "item": {
+                    "type": "constant",
+                    "value": "Git"
+                  }
                 }
               ]
             },
@@ -1187,7 +1361,10 @@
             "id": 400000052,
             "access_rule": {
               "type": "item_check",
-              "item": "CI/CD"
+              "item": {
+                "type": "constant",
+                "value": "CI/CD"
+              }
             },
             "item": {
               "name": "State Management",
@@ -1233,15 +1410,24 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Deployment Complete"
+                  "item": {
+                    "type": "constant",
+                    "value": "Security Complete"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Scaling Complete"
+                  "item": {
+                    "type": "constant",
+                    "value": "Scaling Complete"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Security Complete"
+                  "item": {
+                    "type": "constant",
+                    "value": "Deployment Complete"
+                  }
                 }
               ]
             }
@@ -1287,7 +1473,10 @@
             "id": 400000055,
             "access_rule": {
               "type": "item_check",
-              "item": "HTTPS"
+              "item": {
+                "type": "constant",
+                "value": "HTTPS"
+              }
             },
             "item": {
               "name": "Testing",
@@ -1301,7 +1490,10 @@
             "id": 400000056,
             "access_rule": {
               "type": "item_check",
-              "item": "CORS"
+              "item": {
+                "type": "constant",
+                "value": "CORS"
+              }
             },
             "item": {
               "name": "REST APIs",
@@ -1321,7 +1513,10 @@
             "id": 400000057,
             "access_rule": {
               "type": "item_check",
-              "item": "Performance"
+              "item": {
+                "type": "constant",
+                "value": "Performance"
+              }
             },
             "item": {
               "name": "Database Integration",
@@ -1335,7 +1530,10 @@
             "id": 400000058,
             "access_rule": {
               "type": "item_check",
-              "item": "Horizontal Scaling"
+              "item": {
+                "type": "constant",
+                "value": "Horizontal Scaling"
+              }
             },
             "item": {
               "name": "CORS",
@@ -1355,7 +1553,10 @@
             "id": 400000059,
             "access_rule": {
               "type": "item_check",
-              "item": "DevOps"
+              "item": {
+                "type": "constant",
+                "value": "DevOps"
+              }
             },
             "item": {
               "name": "Static Website Complete",
@@ -1369,7 +1570,10 @@
             "id": 400000060,
             "access_rule": {
               "type": "item_check",
-              "item": "Cloud Provider"
+              "item": {
+                "type": "constant",
+                "value": "Cloud Provider"
+              }
             },
             "item": {
               "name": "SQL",
@@ -1386,11 +1590,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Domain"
+                  "item": {
+                    "type": "constant",
+                    "value": "Domain"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "HTTPS"
+                  "item": {
+                    "type": "constant",
+                    "value": "HTTPS"
+                  }
                 }
               ]
             },
@@ -2183,8 +2393,7 @@
   "settings": {
     "1": {
       "game": "WebDevJourney",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

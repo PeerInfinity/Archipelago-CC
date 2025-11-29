@@ -33,32 +33,144 @@
             "name": "Best Friendssss",
             "connected_region": "Best Friendssss",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "any",
+              "args": [
+                {
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
+                    }
+                  }
+                }
+              ]
             }
           },
           {
             "name": "A Knight's Folly",
             "connected_region": "A Knight's Folly",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "any",
+              "args": [
+                {
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
+                    }
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Denrunaway",
             "connected_region": "Denrunaway",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "any",
+              "args": [
+                {
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
+                    }
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Wargroove Finale",
             "connected_region": "Wargroove Finale",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "any",
+              "args": [
+                {
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -128,24 +240,108 @@
             "name": "Dragon Freeway",
             "connected_region": "Dragon Freeway",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "any",
+              "args": [
+                {
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
+                    }
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Deep Thicket",
             "connected_region": "Deep Thicket",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "any",
+              "args": [
+                {
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
+                    }
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Corrupted Inlet",
             "connected_region": "Corrupted Inlet",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "any",
+              "args": [
+                {
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -187,24 +383,108 @@
             "name": "Mage Mayhem",
             "connected_region": "Mage Mayhem",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "any",
+              "args": [
+                {
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
+                    }
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Endless Knight",
             "connected_region": "Endless Knight",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "any",
+              "args": [
+                {
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
+                    }
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Ambushed in the Middle",
             "connected_region": "Ambushed in the Middle",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "any",
+              "args": [
+                {
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -246,24 +526,108 @@
             "name": "The Churning Sea",
             "connected_region": "The Churning Sea",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "any",
+              "args": [
+                {
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
+                    }
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Frigid Archery",
             "connected_region": "Frigid Archery",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "any",
+              "args": [
+                {
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
+                    }
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Archery Lessons",
             "connected_region": "Archery Lessons",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "any",
+              "args": [
+                {
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -305,12 +669,34 @@
             "name": "Surrounded",
             "connected_region": "Surrounded",
             "access_rule": {
-              "type": "state_method",
-              "method": "_wargroove_has_item",
+              "type": "helper",
+              "name": "any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": "Mage"
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
+                    }
+                  }
                 }
               ]
             }
@@ -346,12 +732,34 @@
             "name": "Darkest Knight",
             "connected_region": "Darkest Knight",
             "access_rule": {
-              "type": "state_method",
-              "method": "_wargroove_has_item",
+              "type": "helper",
+              "name": "any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": "Mage"
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
+                    }
+                  }
                 }
               ]
             }
@@ -407,37 +815,34 @@
             "name": "Robbed",
             "connected_region": "Robbed",
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "type": "helper",
+              "name": "any",
+              "args": [
                 {
-                  "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Barge"
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
                     }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Merfolk"
-                    }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Warship"
-                    }
-                  ]
+                  }
                 }
               ]
             }
@@ -498,27 +903,34 @@
             "name": "Open Season",
             "connected_region": "Open Season",
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "type": "helper",
+              "name": "any",
+              "args": [
                 {
-                  "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Dragon"
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
                     }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Harpy"
-                    }
-                  ]
+                  }
                 }
               ]
             }
@@ -527,27 +939,34 @@
             "name": "Foolish Canal: Mage Mayhem Entrance",
             "connected_region": "Foolish Canal",
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "type": "helper",
+              "name": "any",
+              "args": [
                 {
-                  "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Dragon"
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
                     }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Harpy"
-                    }
-                  ]
+                  }
                 }
               ]
             }
@@ -566,7 +985,7 @@
                   "args": [
                     {
                       "type": "constant",
-                      "value": "Dragon"
+                      "value": "Harpy"
                     }
                   ]
                 },
@@ -576,7 +995,7 @@
                   "args": [
                     {
                       "type": "constant",
-                      "value": "Harpy"
+                      "value": "Dragon"
                     }
                   ]
                 }
@@ -601,7 +1020,7 @@
                   "args": [
                     {
                       "type": "constant",
-                      "value": "Dragon"
+                      "value": "Harpy"
                     }
                   ]
                 },
@@ -611,7 +1030,7 @@
                   "args": [
                     {
                       "type": "constant",
-                      "value": "Harpy"
+                      "value": "Dragon"
                     }
                   ]
                 }
@@ -633,52 +1052,34 @@
             "name": "Doggo Mountain",
             "connected_region": "Doggo Mountain",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "any",
+              "args": [
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "state_method",
-                      "method": "_wargroove_has_item",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Dragon"
-                        }
-                      ]
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
                     },
-                    {
-                      "type": "state_method",
-                      "method": "_wargroove_has_item",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Harpy"
-                        }
-                      ]
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
                     },
-                    {
-                      "type": "state_method",
-                      "method": "_wargroove_has_item",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Spearman"
-                        }
-                      ]
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
                     }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Eastern Bridges"
-                    }
-                  ]
+                  }
                 }
               ]
             }
@@ -687,52 +1088,34 @@
             "name": "Foolish Canal: Endless Knight Entrance",
             "connected_region": "Foolish Canal",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "any",
+              "args": [
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "state_method",
-                      "method": "_wargroove_has_item",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Dragon"
-                        }
-                      ]
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
                     },
-                    {
-                      "type": "state_method",
-                      "method": "_wargroove_has_item",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Harpy"
-                        }
-                      ]
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
                     },
-                    {
-                      "type": "state_method",
-                      "method": "_wargroove_has_item",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Spearman"
-                        }
-                      ]
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
                     }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Eastern Bridges"
-                    }
-                  ]
+                  }
                 }
               ]
             }
@@ -746,6 +1129,16 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Eastern Bridges"
+                    }
+                  ]
+                },
+                {
                   "type": "or",
                   "conditions": [
                     {
@@ -754,7 +1147,7 @@
                       "args": [
                         {
                           "type": "constant",
-                          "value": "Dragon"
+                          "value": "Spearman"
                         }
                       ]
                     },
@@ -774,19 +1167,9 @@
                       "args": [
                         {
                           "type": "constant",
-                          "value": "Spearman"
+                          "value": "Dragon"
                         }
                       ]
-                    }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Eastern Bridges"
                     }
                   ]
                 }
@@ -808,27 +1191,34 @@
             "name": "Tenri's Fall",
             "connected_region": "Tenri's Fall",
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "type": "helper",
+              "name": "any",
+              "args": [
                 {
-                  "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Spearman"
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
                     }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Spearman"
-                    }
-                  ]
+                  }
                 }
               ]
             }
@@ -884,42 +1274,34 @@
             "name": "Rebel Village",
             "connected_region": "Rebel Village",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "any",
+              "args": [
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "state_method",
-                      "method": "_wargroove_has_item",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Merfolk"
-                        }
-                      ]
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
                     },
-                    {
-                      "type": "state_method",
-                      "method": "_wargroove_has_item",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Turtle"
-                        }
-                      ]
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
                     }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Harpoon Ship"
-                    }
-                  ]
+                  }
                 }
               ]
             }
@@ -985,12 +1367,34 @@
             "name": "A Ballista's Revenge",
             "connected_region": "A Ballista's Revenge",
             "access_rule": {
-              "type": "state_method",
-              "method": "_wargroove_has_item",
+              "type": "helper",
+              "name": "any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": "Archer"
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
+                    }
+                  }
                 }
               ]
             }
@@ -1061,27 +1465,34 @@
             "name": "Master of the Lake",
             "connected_region": "Master of the Lake",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "any",
+              "args": [
                 {
-                  "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Knight"
+                  "type": "generator_expression",
+                  "element": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "access_rule"
+                    },
+                    "args": []
+                  },
+                  "comprehension": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "iterator": {
+                      "type": "name",
+                      "name": "locations"
                     }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Southern Walls"
-                    }
-                  ]
+                  }
                 }
               ]
             }
@@ -1256,16 +1667,6 @@
               "conditions": [
                 {
                   "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Rifleman"
-                    }
-                  ]
-                },
-                {
-                  "type": "state_method",
                   "method": "_wargroove_has_item_and_region",
                   "args": [
                     {
@@ -1275,6 +1676,16 @@
                     {
                       "type": "constant",
                       "value": "Robbed"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Rifleman"
                     }
                   ]
                 }
@@ -1301,16 +1712,6 @@
               "conditions": [
                 {
                   "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Knight"
-                    }
-                  ]
-                },
-                {
-                  "type": "state_method",
                   "method": "_wargroove_has_item_and_region",
                   "args": [
                     {
@@ -1320,6 +1721,16 @@
                     {
                       "type": "constant",
                       "value": "Open Season"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Knight"
                     }
                   ]
                 }
@@ -1340,16 +1751,6 @@
               "conditions": [
                 {
                   "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Knight"
-                    }
-                  ]
-                },
-                {
-                  "type": "state_method",
                   "method": "_wargroove_has_item_and_region",
                   "args": [
                     {
@@ -1359,6 +1760,16 @@
                     {
                       "type": "constant",
                       "value": "Open Season"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Knight"
                     }
                   ]
                 }
@@ -1439,16 +1850,6 @@
               "conditions": [
                 {
                   "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Thief"
-                    }
-                  ]
-                },
-                {
-                  "type": "state_method",
                   "method": "_wargroove_has_item_and_region",
                   "args": [
                     {
@@ -1458,6 +1859,16 @@
                     {
                       "type": "constant",
                       "value": "Tenri's Fall"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Thief"
                     }
                   ]
                 }
@@ -1484,16 +1895,6 @@
               "conditions": [
                 {
                   "type": "state_method",
-                  "method": "_wargroove_has_item",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Spearman"
-                    }
-                  ]
-                },
-                {
-                  "type": "state_method",
                   "method": "_wargroove_has_item_and_region",
                   "args": [
                     {
@@ -1503,6 +1904,16 @@
                     {
                       "type": "constant",
                       "value": "Foolish Canal"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "_wargroove_has_item",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Spearman"
                     }
                   ]
                 }
@@ -1657,7 +2068,7 @@
                   "args": [
                     {
                       "type": "constant",
-                      "value": "Final Sickle"
+                      "value": "Final Walls"
                     }
                   ]
                 },
@@ -1667,7 +2078,7 @@
                   "args": [
                     {
                       "type": "constant",
-                      "value": "Final Walls"
+                      "value": "Final Sickle"
                     }
                   ]
                 }
@@ -2156,8 +2567,7 @@
   "settings": {
     "1": {
       "game": "Wargroove",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {

@@ -53,11 +53,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "df-2"
+                  "item": {
+                    "type": "constant",
+                    "value": "df-2"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "df-3"
+                  "item": {
+                    "type": "constant",
+                    "value": "df-3"
+                  }
                 }
               ]
             }
@@ -177,11 +183,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "addassi"
+                  "item": {
+                    "type": "constant",
+                    "value": "oveq2i"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "oveq2i"
+                  "item": {
+                    "type": "constant",
+                    "value": "addassi"
+                  }
                 }
               ]
             }
@@ -193,7 +205,10 @@
             "id": 200000006,
             "access_rule": {
               "type": "item_check",
-              "item": "df-2"
+              "item": {
+                "type": "constant",
+                "value": "df-2"
+              }
             },
             "item": {
               "name": "df-3",
@@ -207,7 +222,10 @@
             "id": 200000007,
             "access_rule": {
               "type": "item_check",
-              "item": "df-3"
+              "item": {
+                "type": "constant",
+                "value": "df-3"
+              }
             },
             "item": {
               "name": "df-4",
@@ -224,11 +242,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "2cn"
+                  "item": {
+                    "type": "constant",
+                    "value": "2cn"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "ax-1cn"
+                  "item": {
+                    "type": "constant",
+                    "value": "ax-1cn"
+                  }
                 }
               ]
             },
@@ -253,15 +277,24 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "addassi"
+                  "item": {
+                    "type": "constant",
+                    "value": "df-4"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "df-4"
+                  "item": {
+                    "type": "constant",
+                    "value": "oveq1i"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "oveq1i"
+                  "item": {
+                    "type": "constant",
+                    "value": "addassi"
+                  }
                 }
               ]
             },
@@ -280,11 +313,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "3eqtri"
+                  "item": {
+                    "type": "constant",
+                    "value": "oveq2i"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "oveq2i"
+                  "item": {
+                    "type": "constant",
+                    "value": "3eqtri"
+                  }
                 }
               ]
             },
@@ -300,7 +339,10 @@
             "id": null,
             "access_rule": {
               "type": "item_check",
-              "item": "eqtr4i"
+              "item": {
+                "type": "constant",
+                "value": "eqtr4i"
+              }
             },
             "item": {
               "name": "Victory",
@@ -497,8 +539,7 @@
   "settings": {
     "1": {
       "game": "MathProof2p2e4",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "assume_bidirectional_exits": false
     }
   },
   "game_info": {
