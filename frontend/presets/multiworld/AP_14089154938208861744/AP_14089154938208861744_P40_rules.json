@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
-  "game_name": "Meritous",
-  "game_directory": "meritous",
+  "game_name": "Metamath",
+  "game_directory": "metamath",
   "archipelago_version": "0.6.4",
   "generation_seed": 1,
   "player_names": {
@@ -79,8 +79,7 @@
     "72": "Player72",
     "73": "Player73",
     "74": "Player74",
-    "75": "Player75",
-    "76": "Player76"
+    "75": "Player75"
   },
   "world_classes": {
     "1": "HatInTimeWorld",
@@ -106,59 +105,58 @@
     "21": "Factorio",
     "22": "FaxanaduWorld",
     "23": "FFMQWorld",
-    "24": "FF1World",
-    "25": "HereticWorld",
-    "26": "Hylics2World",
-    "27": "InscryptionWorld",
-    "28": "JakAndDaxterWorld",
-    "29": "KH2World",
-    "30": "KH1World",
-    "31": "KDL3World",
-    "32": "LandstalkerWorld",
-    "33": "LingoWorld",
-    "34": "LinksAwakeningWorld",
-    "35": "L2ACWorld",
-    "36": "MLSSWorld",
-    "37": "MathProof2p2e4World",
-    "38": "MM2World",
-    "39": "MMBN3World",
-    "40": "MeritousWorld",
-    "41": "MetamathWorld",
-    "42": "MuseDashWorld",
-    "43": "NoitaWorld",
-    "44": "OSRSWorld",
-    "45": "Overcooked2World",
-    "46": "PaintWorld",
-    "47": "PokemonEmeraldWorld",
-    "48": "PokemonRedBlueWorld",
-    "49": "RaftWorld",
-    "50": "RiskOfRainWorld",
-    "51": "SavingPrincessWorld",
-    "52": "SoEWorld",
-    "53": "ShapezWorld",
-    "54": "ShiversWorld",
-    "55": "SA2BWorld",
-    "56": "SC2World",
-    "57": "StardewValleyWorld",
-    "58": "SubnauticaWorld",
-    "59": "SM64World",
-    "60": "MarioLand2World",
-    "61": "SMWWorld",
-    "62": "SMWorld",
-    "63": "TerrariaWorld",
-    "64": "TLoZWorld",
-    "65": "MessengerWorld",
-    "66": "TWWWorld",
-    "67": "WitnessWorld",
-    "68": "TimespinnerWorld",
-    "69": "TunicWorld",
-    "70": "UndertaleWorld",
-    "71": "V6World",
-    "72": "WargrooveWorld",
-    "73": "WebDevJourneyWorld",
-    "74": "YachtDiceWorld",
-    "75": "YoshisIslandWorld",
-    "76": "Yugioh06World"
+    "24": "HereticWorld",
+    "25": "Hylics2World",
+    "26": "InscryptionWorld",
+    "27": "JakAndDaxterWorld",
+    "28": "KH2World",
+    "29": "KH1World",
+    "30": "KDL3World",
+    "31": "LandstalkerWorld",
+    "32": "LingoWorld",
+    "33": "LinksAwakeningWorld",
+    "34": "L2ACWorld",
+    "35": "MLSSWorld",
+    "36": "MathProof2p2e4World",
+    "37": "MM2World",
+    "38": "MMBN3World",
+    "39": "MeritousWorld",
+    "40": "MetamathWorld",
+    "41": "MuseDashWorld",
+    "42": "NoitaWorld",
+    "43": "OSRSWorld",
+    "44": "Overcooked2World",
+    "45": "PaintWorld",
+    "46": "PokemonEmeraldWorld",
+    "47": "PokemonRedBlueWorld",
+    "48": "RaftWorld",
+    "49": "RiskOfRainWorld",
+    "50": "SavingPrincessWorld",
+    "51": "SoEWorld",
+    "52": "ShapezWorld",
+    "53": "ShiversWorld",
+    "54": "SA2BWorld",
+    "55": "SC2World",
+    "56": "StardewValleyWorld",
+    "57": "SubnauticaWorld",
+    "58": "SM64World",
+    "59": "MarioLand2World",
+    "60": "SMWWorld",
+    "61": "SMWorld",
+    "62": "TerrariaWorld",
+    "63": "TLoZWorld",
+    "64": "MessengerWorld",
+    "65": "TWWWorld",
+    "66": "WitnessWorld",
+    "67": "TimespinnerWorld",
+    "68": "TunicWorld",
+    "69": "UndertaleWorld",
+    "70": "V6World",
+    "71": "WargrooveWorld",
+    "72": "WebDevJourneyWorld",
+    "73": "YachtDiceWorld",
+    "74": "YoshisIslandWorld",
+    "75": "Yugioh06World"
   },
   "regions": {
     "40": {
@@ -166,22 +164,113 @@
         "name": "Menu",
         "exits": [
           {
-            "name": "To Meridian",
-            "connected_region": "Meridian",
+            "name": "To Statement 1",
+            "connected_region": "Prove Statement 1",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "To Statement 2",
+            "connected_region": "Prove Statement 2",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "To Statement 4",
+            "connected_region": "Prove Statement 4",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "To Statement 5",
+            "connected_region": "Prove Statement 5",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "To Statement 6",
+            "connected_region": "Prove Statement 6",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Prove Statement 1": {
+        "name": "Prove Statement 1",
+        "exits": [
+          {
+            "name": "From Statement 1 to Statement 3",
+            "connected_region": "Prove Statement 3",
             "access_rule": {
               "type": "and",
               "conditions": [
                 {
-                  "type": "group_check",
-                  "group": "Important Artifacts",
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 1"
+                  },
                   "count": {
                     "type": "constant",
                     "value": 1
                   }
                 },
                 {
-                  "type": "group_check",
-                  "group": "PSI Keys",
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 2"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [],
+        "label1": "2cn",
+        "label2": "|- 2 e. CC"
+      },
+      "Prove Statement 2": {
+        "name": "Prove Statement 2",
+        "exits": [
+          {
+            "name": "From Statement 2 to Statement 3",
+            "connected_region": "Prove Statement 3",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 1"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 2"
+                  },
                   "count": {
                     "type": "constant",
                     "value": 1
@@ -193,380 +282,66 @@
         ],
         "locations": [
           {
-            "name": "Alpha Cache 1",
-            "id": 593000,
+            "name": "Prove Statement 2",
+            "id": 234790002,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "Thor",
-              "player": 56,
+              "name": "Statement 2",
+              "player": 40,
               "advancement": true,
               "type": "None"
-            }
-          },
-          {
-            "name": "Alpha Cache 2",
-            "id": 593001,
-            "access_rule": {
-              "type": "constant",
-              "value": true
             },
-            "item": {
-              "name": "Holy Wound of Compunction",
-              "player": 7,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Alpha Cache 3",
-            "id": 593002,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Dice Fragment",
-              "player": 74,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Alpha Cache 4",
-            "id": 593003,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Yarn",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Alpha Cache 5",
-            "id": 593004,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Medic",
-              "player": 56,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Alpha Cache 6",
-            "id": 593005,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Bonus Star",
-              "player": 45,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 1",
-            "id": 593024,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Kinetic Blast (Kerrigan Tier 1)",
-              "player": 56,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 2",
-            "id": 593025,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Boss Heart Container",
-              "player": 2,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 3",
-            "id": 593026,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Shovel",
-              "player": 49,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 4",
-            "id": 593027,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Graffiti (XL - WILD STRUXXA)",
-              "player": 8,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 5",
-            "id": 593028,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Foreign Trade",
-              "player": 15,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 6",
-            "id": 593029,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "1 BugFrag",
-              "player": 39,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 1",
-            "id": 593048,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Battlefields of War",
-              "player": 29,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 2",
-            "id": 593049,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Treasure Bumper",
-              "player": 9,
-              "advancement": true,
-              "type": "Target"
-            }
-          },
-          {
-            "name": "Gamma Cache 3",
-            "id": 593050,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "concrete",
-              "player": 21,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 4",
-            "id": 593051,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Progressive Commercial Hub",
-              "player": 15,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 5",
-            "id": 593052,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Booster Bumper",
-              "player": 9,
-              "advancement": true,
-              "type": "Target"
-            }
-          },
-          {
-            "name": "Gamma Cache 6",
-            "id": 593053,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Apple Sapling",
-              "player": 57,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 1",
-            "id": 593072,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Circle of Life",
-              "player": 29,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 2",
-            "id": 593073,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "DK Coin",
-              "player": 18,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 3",
-            "id": 593074,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Relic (Burger Patty)",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 4",
-            "id": 593075,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Progressive House",
-              "player": 57,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 5",
-            "id": 593076,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Progressive Power Bracelet",
-              "player": 34,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 6",
-            "id": 593077,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Time Piece",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "PSI Key Storage 1",
-            "id": 593096,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Scout Fly - Snowy Mountain",
-              "player": 28,
-              "advancement": true,
-              "type": "None"
-            }
+            "statement_id": 2,
+            "label1": "ax-1cn",
+            "label2": "|- 1 e. CC"
           }
-        ]
+        ],
+        "label1": "ax-1cn",
+        "label2": "|- 1 e. CC"
       },
-      "Second Quarter": {
-        "name": "Second Quarter",
+      "Prove Statement 3": {
+        "name": "Prove Statement 3",
         "exits": [
           {
-            "name": "To Ataraxia",
-            "connected_region": "Ataraxia",
+            "name": "From Statement 3 to Statement 8",
+            "connected_region": "Prove Statement 8",
             "access_rule": {
               "type": "and",
               "conditions": [
                 {
-                  "type": "group_check",
-                  "group": "Important Artifacts",
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 3"
+                  },
                   "count": {
                     "type": "constant",
-                    "value": 2
+                    "value": 1
                   }
                 },
                 {
-                  "type": "group_check",
-                  "group": "PSI Keys",
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 6"
+                  },
                   "count": {
                     "type": "constant",
-                    "value": 2
+                    "value": 1
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 7"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               ]
@@ -575,380 +350,175 @@
         ],
         "locations": [
           {
-            "name": "Alpha Cache 7",
-            "id": 593006,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Dynamo Badge",
-              "player": 47,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Alpha Cache 8",
-            "id": 593007,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "SpinPink",
-              "player": 39,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Alpha Cache 9",
-            "id": 593008,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Additional Palette Color",
-              "player": 46,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Alpha Cache 10",
-            "id": 593009,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Music (Scraped On The Way Out)",
-              "player": 8,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Alpha Cache 11",
-            "id": 593010,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Life Stock",
-              "player": 32,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Alpha Cache 12",
-            "id": 593011,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Additional Palette Color",
-              "player": 46,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 7",
-            "id": 593030,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Pontiff's Right Eye",
-              "player": 16,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 8",
-            "id": 593031,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "progressive-net",
-              "player": 49,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 9",
-            "id": 593032,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Badge Pin",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 10",
-            "id": 593033,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Large Soul of a Nameless Soldier",
-              "player": 16,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 11",
-            "id": 593034,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Treasure Bumper",
-              "player": 9,
-              "advancement": true,
-              "type": "Target"
-            }
-          },
-          {
-            "name": "Beta Cache 12",
-            "id": 593035,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Faded Ribbon",
-              "player": 70,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 7",
-            "id": 593054,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Piece of Heart",
-              "player": 66,
-              "advancement": false,
-              "type": "Item"
-            }
-          },
-          {
-            "name": "Gamma Cache 8",
-            "id": 593055,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Large Titanite Shard",
-              "player": 16,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 9",
-            "id": 593056,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Rubber Band Ball",
-              "player": 6,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 10",
-            "id": 593057,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Fire Melon",
-              "player": 75,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 11",
-            "id": 593058,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Potion",
-              "player": 43,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 12",
-            "id": 593059,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Bass Telekinesis",
-              "player": 42,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 7",
-            "id": 593078,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Recov120 *",
-              "player": 39,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 8",
-            "id": 593079,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Underhalls (MAP02) - Computer area map",
-              "player": 20,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 9",
-            "id": 593080,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Power Star",
-              "player": 59,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 10",
-            "id": 593081,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Magic Wand",
-              "player": 69,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 11",
-            "id": 593082,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Soul of an Unknown Traveler",
-              "player": 16,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 12",
-            "id": 593083,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Wanderlust",
-              "player": 33,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "PSI Key Storage 2",
-            "id": 593097,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Multipurpose Room",
-              "player": 58,
-              "advancement": true,
-              "type": "None"
-            }
-          }
-        ]
-      },
-      "Third Quarter": {
-        "name": "Third Quarter",
-        "exits": [
-          {
-            "name": "To Merodach",
-            "connected_region": "Merodach",
+            "name": "Prove Statement 3",
+            "id": 234790003,
             "access_rule": {
               "type": "and",
               "conditions": [
                 {
-                  "type": "group_check",
-                  "group": "Important Artifacts",
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 1"
+                  },
                   "count": {
                     "type": "constant",
-                    "value": 3
+                    "value": 1
                   }
                 },
                 {
-                  "type": "group_check",
-                  "group": "PSI Keys",
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 2"
+                  },
                   "count": {
                     "type": "constant",
-                    "value": 3
+                    "value": 1
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Statement 3",
+              "player": 40,
+              "advancement": true,
+              "type": "None"
+            },
+            "statement_id": 3,
+            "label1": "addassi",
+            "label2": "|- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+            "required_items": [
+              "Statement 1",
+              "Statement 2"
+            ]
+          }
+        ],
+        "label1": "addassi",
+        "label2": "|- ( ( A + B ) + C ) = ( A + ( B + C ) )"
+      },
+      "Prove Statement 4": {
+        "name": "Prove Statement 4",
+        "exits": [
+          {
+            "name": "From Statement 4 to Statement 9",
+            "connected_region": "Prove Statement 9",
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Statement 4"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Prove Statement 4",
+            "id": 234790004,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Statement 4",
+              "player": 40,
+              "advancement": true,
+              "type": "None"
+            },
+            "statement_id": 4,
+            "label1": "df-2",
+            "label2": "|- 2 = ( 1 + 1 )"
+          }
+        ],
+        "label1": "df-2",
+        "label2": "|- 2 = ( 1 + 1 )"
+      },
+      "Prove Statement 5": {
+        "name": "Prove Statement 5",
+        "exits": [
+          {
+            "name": "From Statement 5 to Statement 7",
+            "connected_region": "Prove Statement 7",
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Statement 5"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Prove Statement 5",
+            "id": 234790005,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Statement 5",
+              "player": 40,
+              "advancement": true,
+              "type": "None"
+            },
+            "statement_id": 5,
+            "label1": "df-3",
+            "label2": "|- 3 = ( 2 + 1 )"
+          }
+        ],
+        "label1": "df-3",
+        "label2": "|- 3 = ( 2 + 1 )"
+      },
+      "Prove Statement 6": {
+        "name": "Prove Statement 6",
+        "exits": [
+          {
+            "name": "From Statement 6 to Statement 8",
+            "connected_region": "Prove Statement 8",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 3"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 6"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 7"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               ]
@@ -957,381 +527,67 @@
         ],
         "locations": [
           {
-            "name": "Alpha Cache 13",
-            "id": 593012,
+            "name": "Prove Statement 6",
+            "id": 234790006,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "Large Titanite Shard",
-              "player": 16,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Alpha Cache 14",
-            "id": 593013,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Rupees (20)",
-              "player": 2,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Alpha Cache 15",
-            "id": 593014,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Southern Walls",
-              "player": 72,
+              "name": "Statement 6",
+              "player": 40,
               "advancement": true,
               "type": "None"
-            }
-          },
-          {
-            "name": "Alpha Cache 16",
-            "id": 593015,
-            "access_rule": {
-              "type": "constant",
-              "value": true
             },
-            "item": {
-              "name": "Thorn Upgrade",
-              "player": 7,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Alpha Cache 17",
-            "id": 593016,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Small Key",
-              "player": 64,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Alpha Cache 18",
-            "id": 593017,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 23,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 13",
-            "id": 593036,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Red Bulb x 2",
-              "player": 5,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 14",
-            "id": 593037,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Wax",
-              "player": 52,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 15",
-            "id": 593038,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "The King Map",
-              "player": 3,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 16",
-            "id": 593039,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Stargazer",
-              "player": 42,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 17",
-            "id": 593040,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Music (State of Mind)",
-              "player": 8,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 18",
-            "id": 593041,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Pages 24-25 (Prayer)",
-              "player": 69,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 13",
-            "id": 593060,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Resource Efficiency (Siege Tank)",
-              "player": 56,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 14",
-            "id": 593061,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Motivational Video",
-              "player": 6,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 15",
-            "id": 593062,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Unlocker",
-              "player": 39,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 16",
-            "id": 593063,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Darkmoon Ring",
-              "player": 16,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 17",
-            "id": 593064,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Medikit",
-              "player": 20,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 18",
-            "id": 593065,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "progressive-turret",
-              "player": 21,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 13",
-            "id": 593084,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Greater Runes",
-              "player": 25,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 14",
-            "id": 593085,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Progressive Slingshot",
-              "player": 57,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 15",
-            "id": 593086,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Ten Rings",
-              "player": 55,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 16",
-            "id": 593087,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Ember",
-              "player": 16,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 17",
-            "id": 593088,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Beanstone 5",
-              "player": 36,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 18",
-            "id": 593089,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Armor",
-              "player": 19,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "PSI Key Storage 3",
-            "id": 593098,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Veggie Soup",
-              "player": 5,
-              "advancement": false,
-              "type": "None"
-            }
+            "statement_id": 6,
+            "label1": "df-4",
+            "label2": "|- 4 = ( 3 + 1 )"
           }
-        ]
+        ],
+        "label1": "df-4",
+        "label2": "|- 4 = ( 3 + 1 )"
       },
-      "Last Quarter": {
-        "name": "Last Quarter",
+      "Prove Statement 7": {
+        "name": "Prove Statement 7",
         "exits": [
           {
-            "name": "Back to the entrance",
-            "connected_region": "Final Boss",
+            "name": "From Statement 7 to Statement 8",
+            "connected_region": "Prove Statement 8",
             "access_rule": {
-              "type": "item_check",
-              "item": "Cursed Seal"
-            }
-          },
-          {
-            "name": "Back to the entrance with the Knife",
-            "connected_region": "True Final Boss",
-            "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Agate Knife",
-                    "Cursed Seal"
-                  ]
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 3"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 6"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 7"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
                 }
               ]
             }
@@ -1339,539 +595,250 @@
         ],
         "locations": [
           {
-            "name": "Alpha Cache 19",
-            "id": 593018,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Reflect Shield upgrade",
-              "player": 40,
-              "advancement": false,
-              "type": "Enhancement"
-            }
-          },
-          {
-            "name": "Alpha Cache 20",
-            "id": 593019,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Energy cell pack",
-              "player": 20,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Alpha Cache 21",
-            "id": 593020,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Raspberry",
-              "player": 12,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Alpha Cache 22",
-            "id": 593021,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Exile Greatsword",
-              "player": 16,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Alpha Cache 23",
-            "id": 593022,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Sorcerer Robe",
-              "player": 16,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Alpha Cache 24",
-            "id": 593023,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 23,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 19",
-            "id": 593042,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Crystal Always Available in Ocean",
-              "player": 54,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 20",
-            "id": 593043,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Soul of a Weary Warrior",
-              "player": 16,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 21",
-            "id": 593044,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Heart Piece",
-              "player": 34,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 22",
-            "id": 593045,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "3 Water",
-              "player": 52,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Beta Cache 23",
-            "id": 593046,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Power Bomb",
-              "player": 62,
-              "advancement": false,
-              "type": "PowerBomb"
-            }
-          },
-          {
-            "name": "Beta Cache 24",
-            "id": 593047,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Recovery Heart",
-              "player": 64,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 19",
-            "id": 593066,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Executioner Helm",
-              "player": 16,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 20",
-            "id": 593067,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "progressive-follower-robot-count",
-              "player": 21,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 21",
-            "id": 593068,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "RegUP1",
-              "player": 39,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 22",
-            "id": 593069,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "1 BugFrag",
-              "player": 39,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 23",
-            "id": 593070,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Invulnerability",
-              "player": 19,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Gamma Cache 24",
-            "id": 593071,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Atbash Trap",
-              "player": 33,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 19",
-            "id": 593090,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Silver Shield",
-              "player": 25,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 20",
-            "id": 593091,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Pocket Ice Melon",
-              "player": 75,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 21",
-            "id": 593092,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Chuckle Bean",
-              "player": 36,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 22",
-            "id": 593093,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Box of Pogs",
-              "player": 6,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 23",
-            "id": 593094,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": ":)",
-              "player": 33,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Reward Chest 24",
-            "id": 593095,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Fuel pipe",
-              "player": 49,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Place of Power",
-            "id": 593102,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Cursed Seal",
-              "player": 40,
-              "advancement": true,
-              "type": "Cursed Seal"
-            }
-          },
-          {
-            "name": "The Last Place You'll Look",
-            "id": 593103,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Agate Knife",
-              "player": 40,
-              "advancement": true,
-              "type": "Agate Knife"
-            }
-          }
-        ]
-      },
-      "Meridian": {
-        "name": "Meridian",
-        "exits": [
-          {
-            "name": "To Second Quarter",
-            "connected_region": "Second Quarter",
+            "name": "Prove Statement 7",
+            "id": 234790007,
             "access_rule": {
               "type": "item_check",
-              "item": "Meridian Defeated"
+              "item": {
+                "type": "constant",
+                "value": "Statement 5"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
+            },
+            "item": {
+              "name": "Statement 7",
+              "player": 40,
+              "advancement": true,
+              "type": "None"
+            },
+            "statement_id": 7,
+            "label1": "oveq1i",
+            "label2": "|- ( A F C ) = ( B F C )",
+            "required_items": [
+              "Statement 5"
+            ]
+          }
+        ],
+        "label1": "oveq1i",
+        "label2": "|- ( A F C ) = ( B F C )"
+      },
+      "Prove Statement 8": {
+        "name": "Prove Statement 8",
+        "exits": [
+          {
+            "name": "From Statement 8 to Statement 10",
+            "connected_region": "Prove Statement 10",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 8"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 9"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                }
+              ]
             }
           }
         ],
         "locations": [
           {
-            "name": "Meridian",
-            "id": 593099,
+            "name": "Prove Statement 8",
+            "id": 234790008,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 3"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 6"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 7"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                }
+              ]
             },
             "item": {
-              "name": "Evolution Trap",
-              "player": 40,
-              "advancement": false,
-              "type": "Trap"
-            }
-          },
-          {
-            "name": "Meridian Defeat",
-            "id": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Meridian Defeated",
+              "name": "Statement 8",
               "player": 40,
               "advancement": true,
-              "type": "Victory"
-            }
+              "type": "None"
+            },
+            "statement_id": 8,
+            "label1": "3eqtri",
+            "label2": "|- A = D",
+            "required_items": [
+              "Statement 3",
+              "Statement 6",
+              "Statement 7"
+            ]
           }
-        ]
+        ],
+        "label1": "3eqtri",
+        "label2": "|- A = D"
       },
-      "Ataraxia": {
-        "name": "Ataraxia",
+      "Prove Statement 9": {
+        "name": "Prove Statement 9",
         "exits": [
           {
-            "name": "To Third Quarter",
-            "connected_region": "Third Quarter",
+            "name": "From Statement 9 to Statement 10",
+            "connected_region": "Prove Statement 10",
             "access_rule": {
-              "type": "item_check",
-              "item": "Ataraxia Defeated"
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 8"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 9"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                }
+              ]
             }
           }
         ],
         "locations": [
           {
-            "name": "Ataraxia",
-            "id": 593100,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Evolution Trap",
-              "player": 40,
-              "advancement": false,
-              "type": "Trap"
-            }
-          },
-          {
-            "name": "Ataraxia Defeat",
-            "id": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Ataraxia Defeated",
-              "player": 40,
-              "advancement": true,
-              "type": "Victory"
-            }
-          }
-        ]
-      },
-      "Merodach": {
-        "name": "Merodach",
-        "exits": [
-          {
-            "name": "To Last Quarter",
-            "connected_region": "Last Quarter",
+            "name": "Prove Statement 9",
+            "id": 234790009,
             "access_rule": {
               "type": "item_check",
-              "item": "Merodach Defeated"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Merodach",
-            "id": 593101,
-            "access_rule": {
-              "type": "constant",
-              "value": true
+              "item": {
+                "type": "constant",
+                "value": "Statement 4"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
             },
             "item": {
-              "name": "Evolution Trap",
-              "player": 40,
-              "advancement": false,
-              "type": "Trap"
-            }
-          },
-          {
-            "name": "Merodach Defeat",
-            "id": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Merodach Defeated",
+              "name": "Statement 9",
               "player": 40,
               "advancement": true,
-              "type": "Victory"
-            }
+              "type": "None"
+            },
+            "statement_id": 9,
+            "label1": "oveq2i",
+            "label2": "|- ( C F A ) = ( C F B )",
+            "required_items": [
+              "Statement 4"
+            ]
           }
-        ]
+        ],
+        "label1": "oveq2i",
+        "label2": "|- ( C F A ) = ( C F B )"
       },
-      "Final Boss": {
-        "name": "Final Boss",
+      "Prove Statement 10": {
+        "name": "Prove Statement 10",
         "exits": [],
         "locations": [
           {
-            "name": "Wervyn Anixil",
-            "id": null,
+            "name": "Prove Statement 10",
+            "id": 234790010,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 8"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 9"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                }
+              ]
             },
             "item": {
-              "name": "Victory",
+              "name": "Statement 10",
               "player": 40,
               "advancement": true,
-              "type": "Victory"
-            }
-          }
-        ]
-      },
-      "True Final Boss": {
-        "name": "True Final Boss",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Wervyn Anixil?",
-            "id": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "None"
             },
-            "item": {
-              "name": "Full Victory",
-              "player": 40,
-              "advancement": true,
-              "type": "Victory"
-            }
+            "statement_id": 10,
+            "label1": "eqtr4i",
+            "label2": "|- A = C",
+            "required_items": [
+              "Statement 8",
+              "Statement 9"
+            ]
           }
-        ]
+        ],
+        "label1": "eqtr4i",
+        "label2": "|- A = C"
       }
     }
   },
@@ -1885,319 +852,200 @@
   },
   "items": {
     "40": {
-      "Nothing": {
-        "name": "Nothing",
-        "id": 593000,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Reflect Shield upgrade": {
-        "name": "Reflect Shield upgrade",
-        "id": 593001,
+      "Statement 1": {
+        "name": "Statement 1",
         "groups": [
           "Everything",
-          "Upgrades"
+          "Statements"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 26
+        "max_count": 1,
+        "label1": "2cn",
+        "label2": "|- 2 e. CC",
+        "id": 234790000
       },
-      "Circuit Charge upgrade": {
-        "name": "Circuit Charge upgrade",
-        "id": 593002,
+      "Statement 2": {
+        "name": "Statement 2",
         "groups": [
           "Everything",
-          "Upgrades"
+          "Statements"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 23
+        "max_count": 1,
+        "label1": "ax-1cn",
+        "label2": "|- 1 e. CC",
+        "id": 234790001
       },
-      "Circuit Refill upgrade": {
-        "name": "Circuit Refill upgrade",
-        "id": 593003,
+      "Statement 3": {
+        "name": "Statement 3",
         "groups": [
           "Everything",
-          "Upgrades"
+          "Statements"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 22
+        "max_count": 1,
+        "label1": "addassi",
+        "label2": "|- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+        "id": 234790002
       },
-      "Map": {
-        "name": "Map",
-        "id": 593004,
-        "groups": [
-          "Artifacts",
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Shield Boost": {
-        "name": "Shield Boost",
-        "id": 593005,
-        "groups": [
-          "Artifacts",
-          "Everything",
-          "Important Artifacts"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Crystal Efficiency": {
-        "name": "Crystal Efficiency",
-        "id": 593006,
-        "groups": [
-          "Artifacts",
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Circuit Booster": {
-        "name": "Circuit Booster",
-        "id": 593007,
-        "groups": [
-          "Artifacts",
-          "Everything",
-          "Important Artifacts"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Metabolism": {
-        "name": "Metabolism",
-        "id": 593008,
-        "groups": [
-          "Artifacts",
-          "Everything",
-          "Important Artifacts"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Dodge Enhancer": {
-        "name": "Dodge Enhancer",
-        "id": 593009,
-        "groups": [
-          "Artifacts",
-          "Everything",
-          "Important Artifacts"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Ethereal Monocle": {
-        "name": "Ethereal Monocle",
-        "id": 593010,
-        "groups": [
-          "Artifacts",
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Crystal Gatherer": {
-        "name": "Crystal Gatherer",
-        "id": 593011,
-        "groups": [
-          "Artifacts",
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Portable Compass": {
-        "name": "Portable Compass",
-        "id": 593012,
-        "groups": [
-          "Artifacts",
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "PSI Key 1": {
-        "name": "PSI Key 1",
-        "id": 593013,
+      "Statement 4": {
+        "name": "Statement 4",
         "groups": [
           "Everything",
-          "PSI Keys"
+          "Statements"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "label1": "df-2",
+        "label2": "|- 2 = ( 1 + 1 )",
+        "id": 234790003
       },
-      "PSI Key 2": {
-        "name": "PSI Key 2",
-        "id": 593014,
+      "Statement 5": {
+        "name": "Statement 5",
         "groups": [
           "Everything",
-          "PSI Keys"
+          "Statements"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "label1": "df-3",
+        "label2": "|- 3 = ( 2 + 1 )",
+        "id": 234790004
       },
-      "PSI Key 3": {
-        "name": "PSI Key 3",
-        "id": 593015,
+      "Statement 6": {
+        "name": "Statement 6",
         "groups": [
           "Everything",
-          "PSI Keys"
+          "Statements"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "label1": "df-4",
+        "label2": "|- 4 = ( 3 + 1 )",
+        "id": 234790005
       },
-      "Cursed Seal": {
-        "name": "Cursed Seal",
-        "id": 593016,
+      "Statement 7": {
+        "name": "Statement 7",
         "groups": [
-          "Everything"
+          "Everything",
+          "Statements"
         ],
         "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "label1": "oveq1i",
+        "label2": "|- ( A F C ) = ( B F C )",
+        "id": 234790006
       },
-      "Agate Knife": {
-        "name": "Agate Knife",
-        "id": 593017,
+      "Statement 8": {
+        "name": "Statement 8",
         "groups": [
-          "Everything"
+          "Everything",
+          "Statements"
         ],
         "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "label1": "3eqtri",
+        "label2": "|- A = D",
+        "id": 234790007
       },
-      "Evolution Trap": {
-        "name": "Evolution Trap",
-        "id": 593018,
+      "Statement 9": {
+        "name": "Statement 9",
         "groups": [
-          "Everything"
+          "Everything",
+          "Statements"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
-        "trap": true,
+        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 1,
+        "label1": "oveq2i",
+        "label2": "|- ( C F A ) = ( C F B )",
+        "id": 234790008
       },
-      "Crystals x500": {
-        "name": "Crystals x500",
-        "id": 593019,
+      "Statement 10": {
+        "name": "Statement 10",
         "groups": [
-          "Crystals",
-          "Everything"
+          "Everything",
+          "Statements"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 5
+        "max_count": 1,
+        "label1": "eqtr4i",
+        "label2": "|- A = C",
+        "id": 234790009
       },
-      "Crystals x1000": {
-        "name": "Crystals x1000",
-        "id": 593020,
+      "Statement 11": {
+        "name": "Statement 11",
+        "id": 234790010,
         "groups": [
-          "Crystals",
-          "Everything"
+          "Everything",
+          "Statements"
         ],
         "advancement": false,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 1
       },
-      "Crystals x2000": {
-        "name": "Crystals x2000",
-        "id": 593021,
+      "Statement 12": {
+        "name": "Statement 12",
+        "id": 234790011,
         "groups": [
-          "Crystals",
-          "Everything"
+          "Everything",
+          "Statements"
         ],
         "advancement": false,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
-      "Extra Life": {
-        "name": "Extra Life",
-        "id": 593022,
+      "Statement 13": {
+        "name": "Statement 13",
+        "id": 234790012,
         "groups": [
-          "Everything"
+          "Everything",
+          "Statements"
         ],
         "advancement": false,
         "useful": false,
@@ -2206,196 +1054,69 @@
         "type": null,
         "max_count": 1
       },
-      "Meridian Defeated": {
-        "name": "Meridian Defeated",
-        "id": null,
+      "Statement 14": {
+        "name": "Statement 14",
+        "id": 234790013,
         "groups": [
-          "Event"
+          "Everything",
+          "Statements"
         ],
-        "advancement": true,
+        "advancement": false,
         "useful": false,
         "trap": false,
-        "event": true,
-        "type": "Event",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "Ataraxia Defeated": {
-        "name": "Ataraxia Defeated",
-        "id": null,
+      "Statement 15": {
+        "name": "Statement 15",
+        "id": 234790014,
         "groups": [
-          "Event"
+          "Everything",
+          "Statements"
         ],
-        "advancement": true,
+        "advancement": false,
         "useful": false,
         "trap": false,
-        "event": true,
-        "type": "Event",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "Merodach Defeated": {
-        "name": "Merodach Defeated",
-        "id": null,
+      "Statement 16": {
+        "name": "Statement 16",
+        "id": 234790015,
         "groups": [
-          "Event"
+          "Everything",
+          "Statements"
         ],
-        "advancement": true,
+        "advancement": false,
         "useful": false,
         "trap": false,
-        "event": true,
-        "type": "Event",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "Victory": {
-        "name": "Victory",
-        "id": null,
+      "Statement 17": {
+        "name": "Statement 17",
+        "id": 234790016,
         "groups": [
-          "Event"
+          "Everything",
+          "Statements"
         ],
-        "advancement": true,
+        "advancement": false,
         "useful": false,
         "trap": false,
-        "event": true,
-        "type": "Event",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "Full Victory": {
-        "name": "Full Victory",
-        "id": null,
+      "Statement 18": {
+        "name": "Statement 18",
+        "id": 234790017,
         "groups": [
-          "Event"
+          "Everything",
+          "Statements"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Thor": {
-        "name": "Thor",
-        "id": 1017,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Holy Wound of Compunction": {
-        "name": "Holy Wound of Compunction",
-        "id": 1909099,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Dice Fragment": {
-        "name": "Dice Fragment",
-        "id": 16871244001,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Yarn": {
-        "name": "Yarn",
-        "id": 2000300001,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Medic": {
-        "name": "Medic",
-        "id": 1001,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Bonus Star": {
-        "name": "Bonus Star",
-        "id": 213736,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Kinetic Blast (Kerrigan Tier 1)": {
-        "name": "Kinetic Blast (Kerrigan Tier 1)",
-        "id": 2400,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Boss Heart Container": {
-        "name": "Boss Heart Container",
-        "id": 62,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Shovel": {
-        "name": "Shovel",
-        "id": 47076,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (XL - WILD STRUXXA)": {
-        "name": "Graffiti (XL - WILD STRUXXA)",
-        "id": 2308075,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Foreign Trade": {
-        "name": "Foreign Trade",
-        "id": 5041079,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "1 BugFrag": {
-        "name": "1 BugFrag",
-        "id": 11735222,
-        "groups": [],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2403,175 +1124,13 @@
         "type": null,
         "max_count": 1
       },
-      "Battlefields of War": {
-        "name": "Battlefields of War",
-        "id": 1245203,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Treasure Bumper": {
-        "name": "Treasure Bumper",
-        "id": 595008,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "Target",
-        "max_count": 1
-      },
-      "concrete": {
-        "name": "concrete",
-        "id": 131101,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Commercial Hub": {
-        "name": "Progressive Commercial Hub",
-        "id": 5041142,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Booster Bumper": {
-        "name": "Booster Bumper",
-        "id": 595006,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "Target",
-        "max_count": 1
-      },
-      "Apple Sapling": {
-        "name": "Apple Sapling",
-        "id": 717252,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Circle of Life": {
-        "name": "Circle of Life",
-        "id": 1245295,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "DK Coin": {
-        "name": "DK Coin",
-        "id": 14430212,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Relic (Burger Patty)": {
-        "name": "Relic (Burger Patty)",
-        "id": 2000300006,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive House": {
-        "name": "Progressive House",
-        "id": 717112,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Power Bracelet": {
-        "name": "Progressive Power Bracelet",
-        "id": 10000000,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Time Piece": {
-        "name": "Time Piece",
-        "id": 2000300002,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Scout Fly - Snowy Mountain": {
-        "name": "Scout Fly - Snowy Mountain",
-        "id": 741001089,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Dynamo Badge": {
-        "name": "Dynamo Badge",
-        "id": 3860228,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "SpinPink": {
-        "name": "SpinPink",
-        "id": 11735050,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Additional Palette Color": {
-        "name": "Additional Palette Color",
-        "id": 198523,
-        "groups": [],
+      "Statement 19": {
+        "name": "Statement 19",
+        "id": 234790018,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2579,10 +1138,13 @@
         "type": null,
         "max_count": 1
       },
-      "Music (Scraped On The Way Out)": {
-        "name": "Music (Scraped On The Way Out)",
-        "id": 2308010,
-        "groups": [],
+      "Statement 20": {
+        "name": "Statement 20",
+        "id": 234790019,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2590,10 +1152,13 @@
         "type": null,
         "max_count": 1
       },
-      "Life Stock": {
-        "name": "Life Stock",
-        "id": 4062,
-        "groups": [],
+      "Statement 21": {
+        "name": "Statement 21",
+        "id": 234790020,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2601,10 +1166,13 @@
         "type": null,
         "max_count": 1
       },
-      "Pontiff's Right Eye": {
-        "name": "Pontiff's Right Eye",
-        "id": 100700,
-        "groups": [],
+      "Statement 22": {
+        "name": "Statement 22",
+        "id": 234790021,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2612,10 +1180,13 @@
         "type": null,
         "max_count": 1
       },
-      "progressive-net": {
-        "name": "progressive-net",
-        "id": 47107,
-        "groups": [],
+      "Statement 23": {
+        "name": "Statement 23",
+        "id": 234790022,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2623,21 +1194,13 @@
         "type": null,
         "max_count": 1
       },
-      "Badge Pin": {
-        "name": "Badge Pin",
-        "id": 2000300043,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Large Soul of a Nameless Soldier": {
-        "name": "Large Soul of a Nameless Soldier",
-        "id": 100825,
-        "groups": [],
+      "Statement 24": {
+        "name": "Statement 24",
+        "id": 234790023,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2645,32 +1208,13 @@
         "type": null,
         "max_count": 1
       },
-      "Faded Ribbon": {
-        "name": "Faded Ribbon",
-        "id": 77012,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Piece of Heart": {
-        "name": "Piece of Heart",
-        "id": 2322561,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": "Item",
-        "max_count": 1
-      },
-      "Large Titanite Shard": {
-        "name": "Large Titanite Shard",
-        "id": 100892,
-        "groups": [],
+      "Statement 25": {
+        "name": "Statement 25",
+        "id": 234790024,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2678,10 +1222,13 @@
         "type": null,
         "max_count": 1
       },
-      "Rubber Band Ball": {
-        "name": "Rubber Band Ball",
-        "id": 9237,
-        "groups": [],
+      "Statement 26": {
+        "name": "Statement 26",
+        "id": 234790025,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2689,21 +1236,13 @@
         "type": null,
         "max_count": 1
       },
-      "Fire Melon": {
-        "name": "Fire Melon",
-        "id": 3154012,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Potion": {
-        "name": "Potion",
-        "id": 110003,
-        "groups": [],
+      "Statement 27": {
+        "name": "Statement 27",
+        "id": 234790026,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2711,32 +1250,13 @@
         "type": null,
         "max_count": 1
       },
-      "Bass Telekinesis": {
-        "name": "Bass Telekinesis",
-        "id": 2900077,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Recov120 *": {
-        "name": "Recov120 *",
-        "id": 11735126,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Underhalls (MAP02) - Computer area map": {
-        "name": "Underhalls (MAP02) - Computer area map",
-        "id": 360405,
-        "groups": [],
+      "Statement 28": {
+        "name": "Statement 28",
+        "id": 234790027,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2744,32 +1264,13 @@
         "type": null,
         "max_count": 1
       },
-      "Power Star": {
-        "name": "Power Star",
-        "id": 3626000,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Magic Wand": {
-        "name": "Magic Wand",
-        "id": 509342425,
-        "groups": [],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Soul of an Unknown Traveler": {
-        "name": "Soul of an Unknown Traveler",
-        "id": 100822,
-        "groups": [],
+      "Statement 29": {
+        "name": "Statement 29",
+        "id": 234790028,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2777,10 +1278,13 @@
         "type": null,
         "max_count": 1
       },
-      "Wanderlust": {
-        "name": "Wanderlust",
-        "id": 444576,
-        "groups": [],
+      "Statement 30": {
+        "name": "Statement 30",
+        "id": 234790029,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2788,21 +1292,13 @@
         "type": null,
         "max_count": 1
       },
-      "Multipurpose Room": {
-        "name": "Multipurpose Room",
-        "id": 35053,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Rupees (20)": {
-        "name": "Rupees (20)",
-        "id": 54,
-        "groups": [],
+      "Statement 31": {
+        "name": "Statement 31",
+        "id": 234790030,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2810,32 +1306,13 @@
         "type": null,
         "max_count": 1
       },
-      "Southern Walls": {
-        "name": "Southern Walls",
-        "id": 52019,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Thorn Upgrade": {
-        "name": "Thorn Upgrade",
-        "id": 1909095,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Small Key": {
-        "name": "Small Key",
-        "id": 7126,
-        "groups": [],
+      "Statement 32": {
+        "name": "Statement 32",
+        "id": 234790031,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2843,10 +1320,13 @@
         "type": null,
         "max_count": 1
       },
-      "Heal Potion": {
-        "name": "Heal Potion",
-        "id": 4325393,
-        "groups": [],
+      "Statement 33": {
+        "name": "Statement 33",
+        "id": 234790032,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2854,21 +1334,13 @@
         "type": null,
         "max_count": 1
       },
-      "Red Bulb x 2": {
-        "name": "Red Bulb x 2",
-        "id": 698070,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Wax": {
-        "name": "Wax",
-        "id": 64107,
-        "groups": [],
+      "Statement 34": {
+        "name": "Statement 34",
+        "id": 234790033,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2876,10 +1348,13 @@
         "type": null,
         "max_count": 1
       },
-      "The King Map": {
-        "name": "The King Map",
-        "id": 82018,
-        "groups": [],
+      "Statement 35": {
+        "name": "Statement 35",
+        "id": 234790034,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2887,21 +1362,13 @@
         "type": null,
         "max_count": 1
       },
-      "Stargazer": {
-        "name": "Stargazer",
-        "id": 2900522,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (State of Mind)": {
-        "name": "Music (State of Mind)",
-        "id": 2308012,
-        "groups": [],
+      "Statement 36": {
+        "name": "Statement 36",
+        "id": 234790035,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2909,32 +1376,13 @@
         "type": null,
         "max_count": 1
       },
-      "Pages 24-25 (Prayer)": {
-        "name": "Pages 24-25 (Prayer)",
-        "id": 509342514,
-        "groups": [],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Resource Efficiency (Siege Tank)": {
-        "name": "Resource Efficiency (Siege Tank)",
-        "id": 1246,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Motivational Video": {
-        "name": "Motivational Video",
-        "id": 9002,
-        "groups": [],
+      "Statement 37": {
+        "name": "Statement 37",
+        "id": 234790036,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2942,21 +1390,13 @@
         "type": null,
         "max_count": 1
       },
-      "Unlocker": {
-        "name": "Unlocker",
-        "id": 11735064,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Darkmoon Ring": {
-        "name": "Darkmoon Ring",
-        "id": 100661,
-        "groups": [],
+      "Statement 38": {
+        "name": "Statement 38",
+        "id": 234790037,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2964,10 +1404,13 @@
         "type": null,
         "max_count": 1
       },
-      "Medikit": {
-        "name": "Medikit",
-        "id": 360015,
-        "groups": [],
+      "Statement 39": {
+        "name": "Statement 39",
+        "id": 234790038,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2975,10 +1418,13 @@
         "type": null,
         "max_count": 1
       },
-      "progressive-turret": {
-        "name": "progressive-turret",
-        "id": 131291,
-        "groups": [],
+      "Statement 40": {
+        "name": "Statement 40",
+        "id": 234790039,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2986,10 +1432,13 @@
         "type": null,
         "max_count": 1
       },
-      "Greater Runes": {
-        "name": "Greater Runes",
-        "id": 370020,
-        "groups": [],
+      "Statement 41": {
+        "name": "Statement 41",
+        "id": 234790040,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -2997,21 +1446,13 @@
         "type": null,
         "max_count": 1
       },
-      "Progressive Slingshot": {
-        "name": "Progressive Slingshot",
-        "id": 717293,
-        "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Ten Rings": {
-        "name": "Ten Rings",
-        "id": 16711713,
-        "groups": [],
+      "Statement 42": {
+        "name": "Statement 42",
+        "id": 234790041,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3019,10 +1460,13 @@
         "type": null,
         "max_count": 1
       },
-      "Ember": {
-        "name": "Ember",
-        "id": 100863,
-        "groups": [],
+      "Statement 43": {
+        "name": "Statement 43",
+        "id": 234790042,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3030,21 +1474,13 @@
         "type": null,
         "max_count": 1
       },
-      "Beanstone 5": {
-        "name": "Beanstone 5",
-        "id": 77771072,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Armor": {
-        "name": "Armor",
-        "id": 350107,
-        "groups": [],
+      "Statement 44": {
+        "name": "Statement 44",
+        "id": 234790043,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3052,21 +1488,13 @@
         "type": null,
         "max_count": 1
       },
-      "Veggie Soup": {
-        "name": "Veggie Soup",
-        "id": 698096,
-        "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Energy cell pack": {
-        "name": "Energy cell pack",
-        "id": 360019,
-        "groups": [],
+      "Statement 45": {
+        "name": "Statement 45",
+        "id": 234790044,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3074,10 +1502,13 @@
         "type": null,
         "max_count": 1
       },
-      "Raspberry": {
-        "name": "Raspberry",
-        "id": 13238281,
-        "groups": [],
+      "Statement 46": {
+        "name": "Statement 46",
+        "id": 234790045,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3085,10 +1516,13 @@
         "type": null,
         "max_count": 1
       },
-      "Exile Greatsword": {
-        "name": "Exile Greatsword",
-        "id": 100085,
-        "groups": [],
+      "Statement 47": {
+        "name": "Statement 47",
+        "id": 234790046,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3096,10 +1530,13 @@
         "type": null,
         "max_count": 1
       },
-      "Sorcerer Robe": {
-        "name": "Sorcerer Robe",
-        "id": 100357,
-        "groups": [],
+      "Statement 48": {
+        "name": "Statement 48",
+        "id": 234790047,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3107,10 +1544,13 @@
         "type": null,
         "max_count": 1
       },
-      "Cure Potion": {
-        "name": "Cure Potion",
-        "id": 4325392,
-        "groups": [],
+      "Statement 49": {
+        "name": "Statement 49",
+        "id": 234790048,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3118,10 +1558,13 @@
         "type": null,
         "max_count": 1
       },
-      "Crystal Always Available in Ocean": {
-        "name": "Crystal Always Available in Ocean",
-        "id": 27106,
-        "groups": [],
+      "Statement 50": {
+        "name": "Statement 50",
+        "id": 234790049,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3129,10 +1572,13 @@
         "type": null,
         "max_count": 1
       },
-      "Soul of a Weary Warrior": {
-        "name": "Soul of a Weary Warrior",
-        "id": 100826,
-        "groups": [],
+      "Statement 51": {
+        "name": "Statement 51",
+        "id": 234790050,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3140,10 +1586,13 @@
         "type": null,
         "max_count": 1
       },
-      "Heart Piece": {
-        "name": "Heart Piece",
-        "id": 10000128,
-        "groups": [],
+      "Statement 52": {
+        "name": "Statement 52",
+        "id": 234790051,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3151,10 +1600,13 @@
         "type": null,
         "max_count": 1
       },
-      "3 Water": {
-        "name": "3 Water",
-        "id": 64132,
-        "groups": [],
+      "Statement 53": {
+        "name": "Statement 53",
+        "id": 234790052,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3162,21 +1614,13 @@
         "type": null,
         "max_count": 1
       },
-      "Power Bomb": {
-        "name": "Power Bomb",
-        "id": 83003,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "PowerBomb",
-        "max_count": 1
-      },
-      "Recovery Heart": {
-        "name": "Recovery Heart",
-        "id": 7128,
-        "groups": [],
+      "Statement 54": {
+        "name": "Statement 54",
+        "id": 234790053,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3184,10 +1628,13 @@
         "type": null,
         "max_count": 1
       },
-      "Executioner Helm": {
-        "name": "Executioner Helm",
-        "id": 100340,
-        "groups": [],
+      "Statement 55": {
+        "name": "Statement 55",
+        "id": 234790054,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3195,10 +1642,13 @@
         "type": null,
         "max_count": 1
       },
-      "progressive-follower-robot-count": {
-        "name": "progressive-follower-robot-count",
-        "id": 131271,
-        "groups": [],
+      "Statement 56": {
+        "name": "Statement 56",
+        "id": 234790055,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3206,10 +1656,13 @@
         "type": null,
         "max_count": 1
       },
-      "RegUP1": {
-        "name": "RegUP1",
-        "id": 11735059,
-        "groups": [],
+      "Statement 57": {
+        "name": "Statement 57",
+        "id": 234790056,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3217,10 +1670,13 @@
         "type": null,
         "max_count": 1
       },
-      "Invulnerability": {
-        "name": "Invulnerability",
-        "id": 350110,
-        "groups": [],
+      "Statement 58": {
+        "name": "Statement 58",
+        "id": 234790057,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3228,21 +1684,13 @@
         "type": null,
         "max_count": 1
       },
-      "Atbash Trap": {
-        "name": "Atbash Trap",
-        "id": 444412,
-        "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Silver Shield": {
-        "name": "Silver Shield",
-        "id": 370016,
-        "groups": [],
+      "Statement 59": {
+        "name": "Statement 59",
+        "id": 234790058,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3250,10 +1698,13 @@
         "type": null,
         "max_count": 1
       },
-      "Pocket Ice Melon": {
-        "name": "Pocket Ice Melon",
-        "id": 3154056,
-        "groups": [],
+      "Statement 60": {
+        "name": "Statement 60",
+        "id": 234790059,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3261,10 +1712,13 @@
         "type": null,
         "max_count": 1
       },
-      "Chuckle Bean": {
-        "name": "Chuckle Bean",
-        "id": 77771020,
-        "groups": [],
+      "Statement 61": {
+        "name": "Statement 61",
+        "id": 234790060,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3272,10 +1726,13 @@
         "type": null,
         "max_count": 1
       },
-      "Box of Pogs": {
-        "name": "Box of Pogs",
-        "id": 9100,
-        "groups": [],
+      "Statement 62": {
+        "name": "Statement 62",
+        "id": 234790061,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3283,10 +1740,13 @@
         "type": null,
         "max_count": 1
       },
-      ":)": {
-        "name": ":)",
-        "id": 444409,
-        "groups": [],
+      "Statement 63": {
+        "name": "Statement 63",
+        "id": 234790062,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3294,10 +1754,629 @@
         "type": null,
         "max_count": 1
       },
-      "Fuel pipe": {
-        "name": "Fuel pipe",
-        "id": 47060,
-        "groups": [],
+      "Statement 64": {
+        "name": "Statement 64",
+        "id": 234790063,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 65": {
+        "name": "Statement 65",
+        "id": 234790064,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 66": {
+        "name": "Statement 66",
+        "id": 234790065,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 67": {
+        "name": "Statement 67",
+        "id": 234790066,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 68": {
+        "name": "Statement 68",
+        "id": 234790067,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 69": {
+        "name": "Statement 69",
+        "id": 234790068,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 70": {
+        "name": "Statement 70",
+        "id": 234790069,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 71": {
+        "name": "Statement 71",
+        "id": 234790070,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 72": {
+        "name": "Statement 72",
+        "id": 234790071,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 73": {
+        "name": "Statement 73",
+        "id": 234790072,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 74": {
+        "name": "Statement 74",
+        "id": 234790073,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 75": {
+        "name": "Statement 75",
+        "id": 234790074,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 76": {
+        "name": "Statement 76",
+        "id": 234790075,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 77": {
+        "name": "Statement 77",
+        "id": 234790076,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 78": {
+        "name": "Statement 78",
+        "id": 234790077,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 79": {
+        "name": "Statement 79",
+        "id": 234790078,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 80": {
+        "name": "Statement 80",
+        "id": 234790079,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 81": {
+        "name": "Statement 81",
+        "id": 234790080,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 82": {
+        "name": "Statement 82",
+        "id": 234790081,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 83": {
+        "name": "Statement 83",
+        "id": 234790082,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 84": {
+        "name": "Statement 84",
+        "id": 234790083,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 85": {
+        "name": "Statement 85",
+        "id": 234790084,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 86": {
+        "name": "Statement 86",
+        "id": 234790085,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 87": {
+        "name": "Statement 87",
+        "id": 234790086,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 88": {
+        "name": "Statement 88",
+        "id": 234790087,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 89": {
+        "name": "Statement 89",
+        "id": 234790088,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 90": {
+        "name": "Statement 90",
+        "id": 234790089,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 91": {
+        "name": "Statement 91",
+        "id": 234790090,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 92": {
+        "name": "Statement 92",
+        "id": 234790091,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 93": {
+        "name": "Statement 93",
+        "id": 234790092,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 94": {
+        "name": "Statement 94",
+        "id": 234790093,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 95": {
+        "name": "Statement 95",
+        "id": 234790094,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 96": {
+        "name": "Statement 96",
+        "id": 234790095,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 97": {
+        "name": "Statement 97",
+        "id": 234790096,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 98": {
+        "name": "Statement 98",
+        "id": 234790097,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 99": {
+        "name": "Statement 99",
+        "id": 234790098,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Statement 100": {
+        "name": "Statement 100",
+        "id": 234790099,
+        "groups": [
+          "Everything",
+          "Statements"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Proof Hint": {
+        "name": "Proof Hint",
+        "id": 234791999,
+        "groups": [
+          "Everything",
+          "Hints"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Logic Guide": {
+        "name": "Logic Guide",
+        "id": 234791998,
+        "groups": [
+          "Everything",
+          "Hints"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Axiom Reference": {
+        "name": "Axiom Reference",
+        "id": 234791997,
+        "groups": [
+          "Everything",
+          "Hints"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Lemma Note": {
+        "name": "Lemma Note",
+        "id": 234791996,
+        "groups": [
+          "Everything",
+          "Hints"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Theorem Insight": {
+        "name": "Theorem Insight",
+        "id": 234791995,
+        "groups": [
+          "Everything",
+          "Hints"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Deduction Tip": {
+        "name": "Deduction Tip",
+        "id": 234791994,
+        "groups": [
+          "Everything",
+          "Hints"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Inference Help": {
+        "name": "Inference Help",
+        "id": 234791993,
+        "groups": [
+          "Everything",
+          "Hints"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "QED Moment": {
+        "name": "QED Moment",
+        "id": 234791992,
+        "groups": [
+          "Everything",
+          "Hints"
+        ],
         "advancement": false,
         "useful": false,
         "trap": false,
@@ -3335,62 +2414,192 @@
   },
   "item_groups": {
     "40": [
-      "Artifacts",
-      "Crystals",
       "Everything",
-      "Important Artifacts",
-      "PSI Keys",
-      "Upgrades"
+      "Hints",
+      "Statements"
     ]
   },
   "itempool_counts": {
     "40": {
-      "Agate Knife": 1,
-      "Ataraxia Defeated": 1,
-      "Circuit Booster": 1,
-      "Circuit Charge upgrade": 23,
-      "Circuit Refill upgrade": 22,
-      "Crystal Efficiency": 1,
-      "Crystal Gatherer": 1,
-      "Crystals x1000": 10,
-      "Crystals x2000": 2,
-      "Crystals x500": 5,
-      "Cursed Seal": 1,
-      "Dodge Enhancer": 1,
-      "Ethereal Monocle": 1,
-      "Evolution Trap": 3,
-      "Full Victory": 1,
-      "Map": 1,
-      "Meridian Defeated": 1,
-      "Merodach Defeated": 1,
-      "Metabolism": 1,
-      "PSI Key 1": 1,
-      "PSI Key 2": 1,
-      "PSI Key 3": 1,
-      "Portable Compass": 1,
-      "Reflect Shield upgrade": 26,
-      "Shield Boost": 1,
-      "Victory": 1
+      "Statement 1": 1,
+      "Statement 10": 1,
+      "Statement 2": 1,
+      "Statement 3": 1,
+      "Statement 4": 1,
+      "Statement 5": 1,
+      "Statement 6": 1,
+      "Statement 7": 1,
+      "Statement 8": 1,
+      "Statement 9": 1
     }
   },
   "progression_mapping": {
     "40": {}
   },
   "starting_items": {
-    "40": []
+    "40": [
+      "Statement 1"
+    ]
   },
   "settings": {
     "40": {
-      "game": "Meritous",
+      "game": "Metamath",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false
     }
   },
   "game_info": {
     "40": {
-      "name": "Meritous",
+      "name": "Metamath",
       "rule_format": {
         "version": "1.0"
+      }
+    }
+  },
+  "metamath_data": {
+    "40": {
+      "statements": {
+        "1": {
+          "label": "2cn",
+          "expression": "|- 2 e. CC",
+          "dependencies": [],
+          "full_text": "2cn: The number 2 is a complex number.  (Contributed by NM, 30-Jul-2004.) Reduce dependencies on axioms.  (Revised by Steven Nguyen, 4-Oct-2022.) (|- 2 e. CC)"
+        },
+        "2": {
+          "label": "ax-1cn",
+          "expression": "|- 1 e. CC",
+          "dependencies": [],
+          "full_text": "ax-1cn: $j restatement 'ax-resscn' of 'axresscn'; $) $( 1 is a complex number.  Axiom 2 of 22 for real and complex numbers, justified by Theorem ~ ax1cn .  (Contributed by NM, 1-Mar-1995.) (|- 1 e. CC)"
+        },
+        "3": {
+          "label": "addassi",
+          "expression": "|- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "dependencies": [
+            1,
+            2
+          ],
+          "full_text": "addassi: Associative law for addition.  (Contributed by NM, 23-Nov-1994.) (|- ( ( A + B ) + C ) = ( A + ( B + C ) ))"
+        },
+        "4": {
+          "label": "df-2",
+          "expression": "|- 2 = ( 1 + 1 )",
+          "dependencies": [],
+          "full_text": "df-2: Define the number 2.  (Contributed by NM, 27-May-1999.) (|- 2 = ( 1 + 1 ))"
+        },
+        "5": {
+          "label": "df-3",
+          "expression": "|- 3 = ( 2 + 1 )",
+          "dependencies": [],
+          "full_text": "df-3: Define the number 3.  (Contributed by NM, 27-May-1999.) (|- 3 = ( 2 + 1 ))"
+        },
+        "6": {
+          "label": "df-4",
+          "expression": "|- 4 = ( 3 + 1 )",
+          "dependencies": [],
+          "full_text": "df-4: Define the number 4.  (Contributed by NM, 27-May-1999.) (|- 4 = ( 3 + 1 ))"
+        },
+        "7": {
+          "label": "oveq1i",
+          "expression": "|- ( A F C ) = ( B F C )",
+          "dependencies": [
+            5
+          ],
+          "full_text": "oveq1i: Equality inference for operation value.  (Contributed by NM, 28-Feb-1995.) (|- ( A F C ) = ( B F C ))"
+        },
+        "8": {
+          "label": "3eqtri",
+          "expression": "|- A = D",
+          "dependencies": [
+            3,
+            6,
+            7
+          ],
+          "full_text": "3eqtri: Register '=' as an equality for its type (class). $) $( $j equality 'wceq' from 'eqid' 'eqcomi' 'eqtri'; $) ${ 3eqtri.1 $e |- A = B $. 3eqtri.2 $e |- B = C $. 3eqtri.3 $e |- C = D $. $( An inference from three chained equalities.  (Contributed by NM, 29-Aug-1993.) (|- A = D)"
+        },
+        "9": {
+          "label": "oveq2i",
+          "expression": "|- ( C F A ) = ( C F B )",
+          "dependencies": [
+            4
+          ],
+          "full_text": "oveq2i: Equality inference for operation value.  (Contributed by NM, 28-Feb-1995.) (|- ( C F A ) = ( C F B ))"
+        },
+        "10": {
+          "label": "eqtr4i",
+          "expression": "|- A = C",
+          "dependencies": [
+            8,
+            9
+          ],
+          "full_text": "eqtr4i: An equality transitivity inference.  (Contributed by NM, 26-May-1993.) (|- A = C)"
+        }
+      },
+      "dependency_graph": {
+        "1": [],
+        "2": [],
+        "3": [
+          1,
+          2
+        ],
+        "4": [],
+        "5": [],
+        "6": [],
+        "7": [
+          5
+        ],
+        "8": [
+          3,
+          6,
+          7
+        ],
+        "9": [
+          4
+        ],
+        "10": [
+          8,
+          9
+        ]
+      },
+      "reverse_dependencies": {
+        "1": [
+          3
+        ],
+        "2": [
+          3
+        ],
+        "3": [
+          8
+        ],
+        "4": [
+          9
+        ],
+        "5": [
+          7
+        ],
+        "6": [
+          8
+        ],
+        "7": [
+          8
+        ],
+        "8": [
+          10
+        ],
+        "9": [
+          10
+        ]
+      },
+      "label_to_index": {
+        "2cn": 1,
+        "ax-1cn": 2,
+        "addassi": 3,
+        "df-2": 4,
+        "df-3": 5,
+        "df-4": 6,
+        "oveq1i": 7,
+        "3eqtri": 8,
+        "oveq2i": 9,
+        "eqtr4i": 10
       }
     }
   }

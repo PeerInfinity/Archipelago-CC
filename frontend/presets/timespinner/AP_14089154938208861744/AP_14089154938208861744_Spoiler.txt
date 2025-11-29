@@ -469,17 +469,23 @@ Killed Twins
 Lake Desolation (Upper): Crash site chest 1
         Menu -> Tutorial
    =>   Tutorial -> Start Game
-   =>   Lake desolation -> Lake desolation -> Upper lake desolation
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Upper lake desolation
    =>   Upper lake desolation
 Lake Desolation (Upper): Double jump cave platform
         Menu -> Tutorial
    =>   Tutorial -> Start Game
-   =>   Lake desolation -> Lake desolation -> Upper lake desolation
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Upper lake desolation
    =>   Upper lake desolation
 Lake Desolation (Upper): Secret room
         Menu -> Tutorial
    =>   Tutorial -> Start Game
-   =>   Lake desolation -> Lake desolation -> Upper lake desolation
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Upper lake desolation
    =>   Upper lake desolation
 Lake Desolation: Starter chest 1
         Menu -> Tutorial
@@ -533,7 +539,8 @@ Sealed Caves (Sirens): Water hook
    =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
    =>   Eastern lake desolation -> Eastern lake desolation -> Library
    =>   Library -> Library -> Varndagroth tower left
-   =>   Varndagroth tower left -> Varndagroth tower left -> Sealed Caves (Sirens)
+   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (lower)
+   =>   Varndagroth tower right (lower) -> Varndagroth tower right (lower) -> Sealed Caves (Sirens)
    =>   Sealed Caves (Sirens)
 Sealed Caves (Xarion): Jacksquat room
         Menu -> Tutorial
