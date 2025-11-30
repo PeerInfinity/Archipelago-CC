@@ -12,6 +12,7 @@ comprehensive JSON output file.
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -1014,6 +1015,18 @@ def main():
                     # Create the directory if it doesn't exist
                     os.makedirs(multiworld_dir, exist_ok=True)
                     print(f"  Created multiworld directory: {multiworld_dir}")
+
+                # Also clear the output preset directory for this seed to avoid stale files
+                # from previous multiworld runs with different player counts
+                seed_id = compute_seed_id(seed_list[0])
+                preset_output_dir = os.path.join(project_root, 'frontend', 'presets', 'multiworld', seed_id)
+                if os.path.exists(preset_output_dir):
+                    print(f"  Clearing existing preset output directory: {preset_output_dir}")
+                    try:
+                        shutil.rmtree(preset_output_dir)
+                        print(f"  Removed preset directory for seed {seed_list[0]}")
+                    except Exception as e:
+                        print(f"  Error removing preset directory: {e}")
             else:
                 # For subsequent seeds, count existing templates
                 if os.path.exists(multiworld_dir):
