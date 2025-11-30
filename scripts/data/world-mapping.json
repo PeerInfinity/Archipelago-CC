@@ -20,6 +20,13 @@
     "has_custom_game_logic": false,
     "world_directory": "shorthike"
   },
+  "APQuest": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "apquest"
+  },
   "Adventure": {
     "exporter_path": "exporter/games/adventure.py",
     "game_logic_path": null,

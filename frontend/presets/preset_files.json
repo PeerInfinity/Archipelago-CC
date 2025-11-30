@@ -1001,6 +1001,27 @@
       }
     }
   },
+  "apquest": {
+    "name": "APQuest",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "APQuest"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
+        ]
+      }
+    }
+  },
   "aquaria": {
     "name": "Aquaria",
     "folders": {
@@ -1542,6 +1563,27 @@
       }
     }
   },
+  "celeste_open_world": {
+    "name": "Celeste (Open World)",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Celeste (Open World)"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
+        ]
+      }
+    }
+  },
   "checksfinder": {
     "name": "ChecksFinder",
     "folders": {
@@ -1616,6 +1658,27 @@
         "players_failed": 0,
         "total_players": 13,
         "first_failure_player": null
+      }
+    }
+  },
+  "cccharles": {
+    "name": "Choo-Choo Charles",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Choo-Choo Charles"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
+        ]
       }
     }
   },
