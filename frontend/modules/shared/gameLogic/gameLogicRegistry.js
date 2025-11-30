@@ -492,6 +492,8 @@ const GAME_REGISTRY = {
   'Starcraft 2': {
     logicModule: genericLogic.genericStateModule,
     helperFunctions: sc2Logic.helperFunctions,
+    helperPrefixes: sc2Logic.helperPrefixes,
+    wrapState: sc2Logic.wrapState,
     worldClasses: ['SC2World'],
     aliases: ['Starcraft 2', 'SC2', 'StarCraft 2', 'StarCraft II']
   },

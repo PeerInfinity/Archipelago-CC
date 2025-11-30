@@ -394,6 +394,26 @@ export function createStateSnapshotInterface(
             return gameLogic.constants[name];
           }
 
+          // Check if there's a helper function that computes this value
+          // Some games use computed values (e.g., SC2's power_rating) from inventory state
+          const computedHelpers = getHelperFunctions(gameName);
+          if (computedHelpers) {
+            // Try exact match first (e.g., 'power_rating' -> power_rating helper)
+            if (typeof computedHelpers[name] === 'function') {
+              const result = computedHelpers[name](snapshot, staticData);
+              return result;
+            }
+            // Try with game-specific prefixes if defined (e.g., 'power_rating' -> 'terran_power_rating' for SC2)
+            const prefixes = gameLogic.helperPrefixes || [];
+            for (const prefix of prefixes) {
+              const prefixedName = prefix + name;
+              if (typeof computedHelpers[prefixedName] === 'function') {
+                const result = computedHelpers[prefixedName](snapshot, staticData);
+                return result;
+              }
+            }
+          }
+
           // Game-specific location variable extraction hook
           // For variables not found in context, try to extract from location name
           if (contextVariables && contextVariables.location) {
