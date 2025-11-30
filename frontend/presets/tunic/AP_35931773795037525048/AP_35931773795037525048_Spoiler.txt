@@ -1,0 +1,466 @@
+﻿Archipelago Version 0.6.5  -  Seed: 7
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            TUNIC
+Location Count:                  302
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Start Inventory from Pool:       
+Sword Progression:               Yes
+Start With Sword:                No
+Keys Behind Bosses:              No
+Shuffle Abilities:               Yes
+Fool Traps:                      Normal
+Laurels Location:                Anywhere
+Hexagon Quest:                   No
+Gold Hexagons Required:          20
+Percentage of Extra Gold Hexagons:50
+Hexagon Quest Ability Unlocks:   Hexagons
+Shuffle Ladders:                 No
+Shuffle Fuses:                   No
+Shuffle Bells:                   No
+Grass Randomizer:                No
+Breakable Shuffle:               No
+Local Fill Percent:              0
+Entrance Rando:                  No
+Entrance Layout:                 Standard
+Decoupled Entrances:             No
+More Combat Logic:               Off
+Lanternless:                     No
+Maskless:                        No
+Laurels Zips Logic:              No
+Ice Grapple Logic:               Off
+Ladder Storage Logic:            Off
+Ladder Storage without Items:    No
+Plando Connections:              
+
+
+Locations:
+
+Beneath the Well - [Powered Secret Room] Chest: Magic Echo
+Beneath the Well - [Entryway] Chest: Pages 24-25 (Prayer)
+Beneath the Well - [Third Room] Beneath Platform Chest: Money x50
+Beneath the Well - [Third Room] Tentacle Chest: Firecracker x2
+Beneath the Well - [Entryway] Obscured Behind Waterfall: Fairy
+Beneath the Well - [Save Room] Upper Floor Chest 1: Money x50
+Beneath the Well - [Save Room] Upper Floor Chest 2: Potion Offering
+Beneath the Well - [Second Room] Underwater Chest: HP Offering
+Beneath the Well - [Back Corridor] Right Secret: Effigy
+Beneath the Well - [Back Corridor] Left Secret: Money x32
+Beneath the Well - [Second Room] Obscured Behind Waterfall: Flask Shard
+Beneath the Well - [Side Room] Chest By Pots: Lure
+Beneath the Well - [Side Room] Chest By Phrends: Lure
+Beneath the Well - [Second Room] Page: Effigy
+Dark Tomb Checkpoint - [Passage To Dark Tomb] Page Pickup: Ice Bomb x2
+Cathedral - [1F] Guarded By Lasers: Lure
+Cathedral - [1F] Near Spikes: Ice Bomb x3
+Cathedral - [2F] Bird Room: MP Berry
+Cathedral - [2F] Entryway Upper Walkway: DEF Offering
+Cathedral - [1F] Library: ATT Offering
+Cathedral - [2F] Library: HP Offering
+Cathedral - [2F] Guarded By Lasers: Magic Orb
+Cathedral - [2F] Bird Room Secret: Fool Trap
+Cathedral - [1F] Library Secret: Golden Coin
+Dark Tomb - Spike Maze Near Exit: Hero Relic - DEF
+Dark Tomb - 2nd Laser Room: Pages 18-19
+Dark Tomb - 1st Laser Room: MP Berry x2
+Dark Tomb - Spike Maze Upper Walkway: Money x50
+Dark Tomb - Skulls Chest: Fairy
+Dark Tomb - Spike Maze Near Stairs: Fool Trap
+Dark Tomb - 1st Laser Room Obscured: Fool Trap
+Guardhouse 2 - Upper Floor: Fairy
+Guardhouse 2 - Bottom Floor Secret: MP Offering
+Guardhouse 1 - Upper Floor Obscured: Dagger Strap
+Guardhouse 1 - Upper Floor: Secret Legend
+East Forest - Dancing Fox Spirit Holy Cross: Money x20
+East Forest - Golden Obelisk Holy Cross: Fairy
+East Forest - Ice Rod Grapple Chest: Firecracker x3
+East Forest - Above Save Point: HP Offering
+East Forest - Above Save Point Obscured: Money x50
+East Forest - From Guardhouse 1 Chest: Fairy
+East Forest - Near Save Point: Money x30
+East Forest - Beneath Spider Chest: Magic Dagger
+East Forest - Near Telescope: Fortress Vault Key
+East Forest - Spider Chest: Golden Coin
+East Forest - Lower Dash Chest: Potion Offering
+East Forest - Lower Grapple Chest: Pages 42-43 (Holy Cross)
+East Forest - Bombable Wall: Fool Trap
+East Forest - Page On Teleporter: Fairy
+Forest Belltower - Near Save Point: MP Offering
+Forest Belltower - After Guard Captain: Regal Weasel
+Forest Belltower - Obscured Near Bell Top Floor: Money x48
+Forest Belltower - Obscured Beneath Bell Bottom Floor: Money x25
+Forest Belltower - Page Pickup: Card Slot
+Forest Grave Path - Holy Cross Code by Grave: Money x32
+Forest Grave Path - Above Gate: Perfume
+Forest Grave Path - Obscured Chest: HP Berry x2
+Forest Grave Path - Upper Walkway: Hero Relic - HP
+Forest Grave Path - Sword Pickup: Fairy
+Hero's Grave - Tooth Relic: Money x32
+Fortress Courtyard - From East Belltower: MP Berry x3
+Fortress Leaf Piles - Secret Chest: Firecracker x6
+Fortress Arena - Hexagon Red: MP Berry x3
+Fortress Arena - Siege Engine/Vault Key Pickup: Money x20
+Fortress East Shortcut - Chest Near Slimes: Pages 4-5
+Eastern Vault Fortress - [West Wing] Candles Holy Cross: Fool Trap
+Eastern Vault Fortress - [West Wing] Dark Room Chest 1: HP Offering
+Eastern Vault Fortress - [West Wing] Dark Room Chest 2: Fool Trap
+Eastern Vault Fortress - [East Wing] Bombable Wall: Shield
+Eastern Vault Fortress - [West Wing] Page Pickup: Fool Trap
+Fortress Grave Path - Upper Walkway: Effigy
+Fortress Grave Path - Chest Right of Grave: Hero Relic - ATT
+Fortress Grave Path - Obscured Chest Left of Grave: Fairy
+Hero's Grave - Flowers Relic: MP Berry
+Beneath the Fortress - Bridge: Sacred Geometry
+Beneath the Fortress - Cell Chest 1: Pages 14-15
+Beneath the Fortress - Obscured Behind Waterfall: Key
+Beneath the Fortress - Back Room Chest: Flask Shard
+Beneath the Fortress - Cell Chest 2: DEF Offering
+Frog's Domain - Near Vault: Effigy
+Frog's Domain - Slorm Room: Golden Coin
+Frog's Domain - Escape Chest: Money x25
+Frog's Domain - Grapple Above Hot Tub: Pages 2-3
+Frog's Domain - Above Vault: Money x20
+Frog's Domain - Main Room Top Floor: Pages 12-13
+Frog's Domain - Main Room Bottom Floor: Hero Relic - POTION
+Frog's Domain - Side Room Secret Passage: Firecracker x3
+Frog's Domain - Side Room Chest: Firecracker x4
+Frog's Domain - Side Room Grapple Secret: Potion Offering
+Frog's Domain - Magic Orb Pickup: Money x20
+Librarian - Hexagon Green: Pages 22-23
+Library Hall - Holy Cross Chest: Money x25
+Library Lab - Chest By Shrine 2: MP Berry x3
+Library Lab - Chest By Shrine 1: DEF Offering
+Library Lab - Chest By Shrine 3: Cyan Peril Ring
+Library Lab - Behind Chalkboard by Fuse: Fool Trap
+Library Lab - Page 3: Fairy
+Library Lab - Page 1: Firecracker x5
+Library Lab - Page 2: Sword Upgrade
+Hero's Grave - Mushroom Relic: Fairy
+Lower Mountain - Page Before Door: Pepper x2
+Changing Room - Normal Chest: Money x25
+Fortress Courtyard - Chest Near Cave: Money x40
+Fortress Courtyard - Near Fuse: Back To Work
+Fortress Courtyard - Below Walkway: Glass Cannon
+Fortress Courtyard - Page Near Cave: Potion Flask
+West Furnace - Lantern Pickup: Money x50
+Maze Cave - Maze Room Chest: Hero Relic - SP
+Old House - Normal Chest: Money x20
+Old House - Shield Pickup: Sword Upgrade
+Overworld - [West] Obscured Behind Windmill: Firecracker x4
+Overworld - [South] Beach Chest: Money x25
+Overworld - [West] Obscured Near Well: Pages 52-53 (Icebolt)
+Overworld - [Central] Bombable Wall: Fairy
+Overworld - [Northwest] Chest Near Turret: HP Berry x3
+Overworld - [East] Chest Near Pots: Fairy
+Overworld - [Northwest] Chest Near Golden Obelisk: SP Offering
+Overworld - [Southwest] South Chest Near Guard: Money x20
+Overworld - [Southwest] West Beach Guarded By Turret: Potion Flask
+Overworld - [Southwest] Chest Guarded By Turret: Money x100
+Overworld - [Northwest] Shadowy Corner Chest: Money x40
+Overworld - [Southwest] Obscured In Tunnel To Beach: Golden Coin
+Overworld - [Southwest] Grapple Chest Over Walkway: ATT Offering
+Overworld - [Northwest] Chest Beneath Quarry Gate: Hero Relic - MP
+Overworld - [Southeast] Chest Near Swamp: Potion Flask
+Overworld - [Southwest] From West Garden: MP Berry x3
+Overworld - [East] Grapple Chest: Ivy x3
+Overworld - [Southwest] West Beach Guarded By Turret 2: Golden Coin
+Overworld - [Southwest] Beach Chest Near Flowers: Muffling Bell
+Overworld - [Southwest] Bombable Wall Near Fountain: Money x40
+Overworld - [West] Chest After Bell: Mr Mayor
+Overworld - [Southwest] Tunnel Guarded By Turret: Pages 16-17
+Overworld - [East] Between Ladders Near Ruined Passage: Money x30
+Overworld - [Northeast] Chest Above Patrol Cave: Scavenger Mask
+Overworld - [Southwest] Beach Chest Beneath Guard: Spring Falls
+Overworld - [Central] Chest Across From Well: Effigy
+Overworld - [Northwest] Chest Near Quarry Gate: Pages 34-35
+Overworld - [East] Chest In Trees: Flask Shard
+Overworld - [West] Chest Behind Moss Wall: Money x25
+Overworld - [South] Beach Page: Dusty
+Overworld - [Southeast] Page on Pillar by Swamp: Money x25
+Overworld - [Southwest] Key Pickup: Golden Coin
+Overworld - [West] Key Pickup: Money x100
+Overworld - [East] Page Near Secret Shop: Golden Coin
+Overworld - [Southwest] Fountain Page: Pages 30-31
+Overworld - [Northwest] Page on Pillar by Dark Tomb: Fire Bomb x3
+Overworld - [Northwest] Fire Wand Pickup: Pages 46-47
+Overworld - [West] Page On Teleporter: Aura's Gem
+Overworld - [Northwest] Page By Well: Bone Card
+Patrol Cave - Normal Chest: Fairy
+Ruined Shop - Chest 1: Ice Bomb x3
+Ruined Shop - Chest 2: Money x255
+Ruined Shop - Chest 3: Money x20
+Ruined Passage - Page Pickup: Money x20
+Shop - Potion 1: Golden Coin
+Shop - Potion 2: HP Berry x2
+Shop - Coin 1: Pages 38-39
+Shop - Coin 2: Pages 8-9
+Special Shop - Secret Page Pickup: Pepper x2
+Stick House - Stick Chest: MP Offering
+Sealed Temple - Page Pickup: MP Berry x3
+Hourglass Cave - Hourglass Chest: Anklet
+Far Shore - Secret Chest: Golden Coin
+Far Shore - Page Pickup: Flask Shard
+Coins in the Well - 10 Coins: Fool Trap
+Coins in the Well - 15 Coins: Money x100
+Coins in the Well - 3 Coins: Magic Wand
+Coins in the Well - 6 Coins: MP Berry
+Secret Gathering Place - 20 Fairy Reward: Power Up
+Secret Gathering Place - 10 Fairy Reward: Effigy
+Overworld - [West] Moss Wall Holy Cross: Money x128
+Overworld - [Southwest] Flowers Holy Cross: Fire Bomb x2
+Overworld - [Southwest] Fountain Holy Cross: SP Offering
+Overworld - [Northeast] Flowers Holy Cross: ATT Offering
+Overworld - [East] Weathervane Holy Cross: Effigy
+Overworld - [West] Windmill Holy Cross: Money x20
+Overworld - [Southwest] Haiku Holy Cross: Fairy
+Overworld - [West] Windchimes Holy Cross: Money x100
+Overworld - [South] Starting Platform Holy Cross: Effigy
+Overworld - [Northwest] Golden Obelisk Page: Fairy
+Old House - Holy Cross Door Page: Money x20
+Cube Cave - Holy Cross Chest: Golden Coin
+Southeast Cross Door - Chest 3: Flask Shard
+Southeast Cross Door - Chest 2: Golden Coin
+Southeast Cross Door - Chest 1: Money x128
+Maze Cave - Maze Room Holy Cross: Firecracker x3
+Caustic Light Cave - Holy Cross Chest: MP Berry
+Old House - Holy Cross Chest: Fool Trap
+Patrol Cave - Holy Cross Chest: Money x50
+Ruined Passage - Holy Cross Chest: Pages 20-21
+Hourglass Cave - Holy Cross Chest: Pages 50-51
+Sealed Temple - Holy Cross Chest: Effigy
+Fountain Cross Door - Page Pickup: Fool Trap
+Secret Gathering Place - Holy Cross Chest: Money x20
+Top of the Mountain - Page At The Peak: Money x25
+Monastery - Monastery Chest: Effigy
+Quarry - [Back Entrance] Bushes Holy Cross: Sword Upgrade
+Quarry - [Back Entrance] Chest: Lucky Cup
+Quarry - [Central] Near Shortcut Ladder: Money x25
+Quarry - [East] Near Telescope: Ice Bomb x2
+Quarry - [East] Upper Floor: Gun
+Quarry - [Central] Below Entry Walkway: Ivy x3
+Quarry - [East] Obscured Near Winding Staircase: Effigy
+Quarry - [East] Obscured Beneath Scaffolding: Just Some Pals
+Quarry - [East] Obscured Near Telescope: MP Berry x3
+Quarry - [Back Entrance] Obscured Behind Wall: Fire Bomb x2
+Quarry - [Central] Obscured Below Entry Walkway: Hero's Laurels
+Quarry - [Central] Top Floor Overhang: Money x20
+Quarry - [East] Near Bridge: Golden Coin
+Quarry - [Central] Above Ladder: Golden Coin
+Quarry - [Central] Obscured Behind Staircase: Potion Flask
+Quarry - [Central] Above Ladder Dash Chest: Lure
+Quarry - [West] Upper Area Bombable Wall: ATT Offering
+Quarry - [East] Bombable Wall: Pages 32-33
+Hero's Grave - Ash Relic: Green Questagon
+Quarry - [West] Shooting Range Secret Path: DEF Offering
+Quarry - [West] Near Shooting Range: Fairy
+Quarry - [West] Below Shooting Range: Fairy
+Quarry - [Lowlands] Below Broken Ladder: Fairy
+Quarry - [West] Upper Area Near Waterfall: Fairy
+Quarry - [Lowlands] Upper Walkway: HP Offering
+Quarry - [West] Lower Area Below Bridge: Money x30
+Quarry - [West] Lower Area Isolated Chest: Money x25
+Quarry - [Lowlands] Near Elevator: HP Berry x3
+Quarry - [West] Lower Area After Bridge: Money x20
+Rooted Ziggurat Upper - Near Bridge Switch: Money x200
+Rooted Ziggurat Upper - Beneath Bridge To Administrator: Money x32
+Rooted Ziggurat Tower - Inside Tower: Money x20
+Rooted Ziggurat Lower - Near Corpses: Pages 44-45
+Rooted Ziggurat Lower - Spider Ambush: Tincture
+Rooted Ziggurat Lower - Left Of Checkpoint Before Fuse: Firecracker x2
+Rooted Ziggurat Lower - After Guarded Fuse: Louder Echo
+Rooted Ziggurat Lower - Guarded By Double Turrets: Money x128
+Rooted Ziggurat Lower - After 2nd Double Turret Chest: Firecracker x4
+Rooted Ziggurat Lower - Guarded By Double Turrets 2: Key
+Rooted Ziggurat Lower - Hexagon Blue: Pages 48-49
+Ruined Atoll - [West] Near Kevin Block: Pages 10-11
+Ruined Atoll - [South] Upper Floor On Power Line: Fool Trap
+Ruined Atoll - [South] Chest Near Big Crabs: MP Berry x2
+Ruined Atoll - [North] Guarded By Bird: Card Slot
+Ruined Atoll - [Northeast] Chest Beneath Brick Walkway: Fool Trap
+Ruined Atoll - [Northwest] Bombable Wall: Hourglass
+Ruined Atoll - [North] Obscured Beneath Bridge: Money x20
+Ruined Atoll - [South] Upper Floor On Bricks: Money x100
+Ruined Atoll - [South] Near Birds: Flask Shard
+Ruined Atoll - [Northwest] Behind Envoy: Orange Peril Ring
+Ruined Atoll - [Southwest] Obscured Behind Fuse: Flask Shard
+Ruined Atoll - [East] Locked Room Upper Chest: Blue Questagon
+Ruined Atoll - [North] From Lower Overworld Entrance: HP Berry
+Ruined Atoll - [East] Locked Room Lower Chest: HP Berry x2
+Ruined Atoll - [Northeast] Chest On Brick Walkway: HP Offering
+Ruined Atoll - [Southeast] Chest Near Fuse: Pages 26-27
+Ruined Atoll - [Northeast] Key Pickup: Forever Friend
+Cathedral Gauntlet - Gauntlet Reward: Fool Trap
+Cathedral - Secret Legend Trophy Chest: Money x20
+Swamp - [Upper Graveyard] Obscured Behind Hill: Golden Coin
+Swamp - [South Graveyard] 4 Orange Skulls: Pages 0-1
+Swamp - [Central] Near Ramps Up: Firecracker x6
+Swamp - [Upper Graveyard] Near Shield Fleemers: Pepper x2
+Swamp - [South Graveyard] Obscured Behind Ridge: Lure x2
+Swamp - [South Graveyard] Obscured Beneath Telescope: Phonomath
+Swamp - [Entrance] Above Entryway: Money x64
+Swamp - [Central] South Secret Passage: Money x30
+Swamp - [South Graveyard] Upper Walkway On Pedestal: Money x20
+Swamp - [South Graveyard] Guarded By Tentacles: Flask Shard
+Swamp - [Upper Graveyard] Near Telescope: Bracer
+Swamp - [Outside Cathedral] Near Moonlight Bridge Door: Fairy
+Swamp - [Entrance] Obscured Inside Watchtower: Money x50
+Swamp - [Entrance] South Near Fence: Dath Stone
+Swamp - [South Graveyard] Guarded By Big Skeleton: Flask Shard
+Swamp - [South Graveyard] Chest Near Graves: Flask Shard
+Swamp - [Entrance] North Small Island: Sword Upgrade
+Swamp - [Outside Cathedral] Obscured Behind Memorial: Old House Key
+Swamp - [Central] Obscured Behind Northern Mountain: Pages 40-41
+Swamp - [South Graveyard] Upper Walkway Dash Chest: Money x25
+Swamp - [South Graveyard] Above Big Skeleton: Lantern
+Swamp - [Central] Beneath Memorial: Flask Shard
+Hero's Grave - Feathers Relic: Card Slot
+West Furnace - Chest: Red Questagon
+Overworld - [West] Near West Garden Entrance: Pages 54-55
+West Garden - [Central Highlands] Holy Cross (Blue Lines): Golden Coin
+West Garden - [West Lowlands] Tree Holy Cross Chest: Card Slot
+West Garden - [Southeast Lowlands] Outside Cave: Inverted Ash
+West Garden - [Central Lowlands] Chest Beneath Faeries: Vintage
+West Garden - [North] Behind Holy Cross Door: Golden Coin
+West Garden - [Central Highlands] Top of Ladder Before Boss: HP Berry x2
+West Garden - [Central Lowlands] Passage Beneath Bridge: Pages 6-7
+West Garden - [North] Across From Page Pickup: Firecracker x2
+West Garden - [Central Lowlands] Below Left Walkway: Pepper x2
+West Garden - [West] In Flooded Walkway: Potion Flask
+West Garden - [West] Past Flooded Walkway: HP Berry
+West Garden - [North] Obscured Beneath Hero's Memorial: Golden Coin
+West Garden - [Central Lowlands] Chest Near Shortcut Bridge: Money x25
+West Garden - [West Highlands] Upper Left Walkway: Effigy
+West Garden - [Central Lowlands] Chest Beneath Save Point: Flask Shard
+West Garden - [Central Highlands] Behind Guard Captain: Money x25
+West Garden - [Central Highlands] After Garden Knight: Ice Bomb x5
+West Garden - [South Highlands] Secret Chest Beneath Fuse: Fool Trap
+West Garden - [East Lowlands] Page Behind Ice Dagger House: Pages 28-29
+West Garden - [North] Page Pickup: Money x25
+West Garden House - [Southeast Lowlands] Ice Dagger Pickup: Pages 36-37
+Hero's Grave - Effigy Relic: MP Berry x3
+Eastern Bell: Ring Eastern Bell
+Western Bell: Ring Western Bell
+Furnace Fuse: Activate Furnace Fuse
+South and West Fortress Exterior Fuses: Activate South and West Fortress Exterior Fuses
+Upper and Central Fortress Exterior Fuses: Activate Upper and Central Fortress Exterior Fuses
+Beneath the Vault Fuse: Activate Beneath the Vault Fuse
+Eastern Vault West Fuses: Activate Eastern Vault West Fuses
+Eastern Vault East Fuse: Activate Eastern Vault East Fuse
+Quarry Connector Fuse: Activate Quarry Connector Fuse
+Quarry Fuse: Activate Quarry Fuse
+Ziggurat Fuse: Activate Ziggurat Fuse
+West Garden Fuse: Activate West Garden Fuse
+Library Fuse: Activate Library Fuse
+Place Questagons: Unseal the Heir
+The Heir: Victory
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  East Forest - Beneath Spider Chest: Magic Dagger
+  East Forest - From Guardhouse 1 Chest: Fairy
+  East Forest - Near Telescope: Fortress Vault Key
+  East Forest - Page On Teleporter: Fairy
+  East Forest - Spider Chest: Golden Coin
+  Forest Grave Path - Sword Pickup: Fairy
+  Forest Grave Path - Upper Walkway: Hero Relic - HP
+  Frog's Domain - Main Room Bottom Floor: Hero Relic - POTION
+  Frog's Domain - Slorm Room: Golden Coin
+  Guardhouse 2 - Upper Floor: Fairy
+  Maze Cave - Maze Room Chest: Hero Relic - SP
+  Overworld - [East] Chest Near Pots: Fairy
+  Overworld - [East] Page Near Secret Shop: Golden Coin
+  Overworld - [Northeast] Chest Above Patrol Cave: Scavenger Mask
+  Overworld - [Southwest] Key Pickup: Golden Coin
+  Overworld - [Southwest] Obscured In Tunnel To Beach: Golden Coin
+  Overworld - [West] Obscured Near Well: Pages 52-53 (Icebolt)
+  Patrol Cave - Normal Chest: Fairy
+  Quarry - [Central] Obscured Below Entry Walkway: Hero's Laurels
+  Swamp - [Entrance] North Small Island: Sword Upgrade
+  Swamp - [Outside Cathedral] Near Moonlight Bridge Door: Fairy
+  Swamp - [South Graveyard] Above Big Skeleton: Lantern
+  Swamp - [Upper Graveyard] Obscured Behind Hill: Golden Coin
+}
+2: {
+  Beneath the Fortress - Obscured Behind Waterfall: Key
+  Beneath the Well - [Entryway] Chest: Pages 24-25 (Prayer)
+  Beneath the Well - [Entryway] Obscured Behind Waterfall: Fairy
+  Coins in the Well - 3 Coins: Magic Wand
+  Dark Tomb - Skulls Chest: Fairy
+  Dark Tomb - Spike Maze Near Exit: Hero Relic - DEF
+  Eastern Bell: Ring Eastern Bell
+  Fortress Grave Path - Chest Right of Grave: Hero Relic - ATT
+  Fortress Grave Path - Obscured Chest Left of Grave: Fairy
+  Overworld - [Northwest] Chest Beneath Quarry Gate: Hero Relic - MP
+  Overworld - [Southwest] West Beach Guarded By Turret 2: Golden Coin
+  Quarry - [Central] Above Ladder: Golden Coin
+  Ruined Atoll - [East] Locked Room Upper Chest: Blue Questagon
+  Swamp - [Outside Cathedral] Obscured Behind Memorial: Old House Key
+  West Furnace - Chest: Red Questagon
+  West Garden - [North] Obscured Beneath Hero's Memorial: Golden Coin
+  Western Bell: Ring Western Bell
+}
+3: {
+  Far Shore - Secret Chest: Golden Coin
+  Furnace Fuse: Activate Furnace Fuse
+  Hero's Grave - Ash Relic: Green Questagon
+  Hero's Grave - Mushroom Relic: Fairy
+  Library Fuse: Activate Library Fuse
+  Library Lab - Page 2: Sword Upgrade
+  Library Lab - Page 3: Fairy
+  Old House - Shield Pickup: Sword Upgrade
+  Quarry - [East] Near Bridge: Golden Coin
+  Quarry - [East] Upper Floor: Gun
+  Quarry - [Lowlands] Below Broken Ladder: Fairy
+  Quarry - [West] Below Shooting Range: Fairy
+  Quarry - [West] Near Shooting Range: Fairy
+  Quarry - [West] Upper Area Near Waterfall: Fairy
+  South and West Fortress Exterior Fuses: Activate South and West Fortress Exterior Fuses
+  Upper and Central Fortress Exterior Fuses: Activate Upper and Central Fortress Exterior Fuses
+  West Garden Fuse: Activate West Garden Fuse
+}
+4: {
+  Beneath the Vault Fuse: Activate Beneath the Vault Fuse
+  Cathedral - [1F] Library Secret: Golden Coin
+  Cathedral - [2F] Guarded By Lasers: Magic Orb
+  Eastern Vault East Fuse: Activate Eastern Vault East Fuse
+  Overworld - [Central] Bombable Wall: Fairy
+  Place Questagons: Unseal the Heir
+  Shop - Potion 1: Golden Coin
+}
+5: {
+  East Forest - Lower Grapple Chest: Pages 42-43 (Holy Cross)
+  Eastern Vault West Fuses: Activate Eastern Vault West Fuses
+  Quarry Connector Fuse: Activate Quarry Connector Fuse
+  The Heir: Victory
+}
+6: {
+  Cube Cave - Holy Cross Chest: Golden Coin
+  East Forest - Golden Obelisk Holy Cross: Fairy
+  Overworld - [Northwest] Golden Obelisk Page: Fairy
+  Overworld - [Southwest] Haiku Holy Cross: Fairy
+  Quarry - [Back Entrance] Bushes Holy Cross: Sword Upgrade
+  Quarry Fuse: Activate Quarry Fuse
+  Southeast Cross Door - Chest 2: Golden Coin
+  West Garden - [Central Highlands] Holy Cross (Blue Lines): Golden Coin
+  West Garden - [North] Behind Holy Cross Door: Golden Coin
+}
+7: {
+  Rooted Ziggurat Lower - Guarded By Double Turrets 2: Key
+  Ziggurat Fuse: Activate Ziggurat Fuse
+}
