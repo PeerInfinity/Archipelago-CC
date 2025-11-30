@@ -572,8 +572,15 @@ export function has_any(sm, items) {
  * @returns {boolean} True if all items are in inventory
  */
 export function has_all(sm, items) {
+  // has_all with no args or empty array means no requirements - return true
+  if (items === undefined || items === null) {
+    return true;
+  }
   if (!Array.isArray(items)) {
     return false;
+  }
+  if (items.length === 0) {
+    return true; // Empty array means no requirements
   }
   return items.every(itemName => hasItem(sm, itemName));
 }

@@ -150,6 +150,26 @@ export function executeStateMethod(manager, method, ...args) {
       return manager.can_reach(targetName, targetType, playerId);
     }
 
+    // 2.1. Check special case for has_all - checks if all items in a list are present
+    // Note: This case is usually handled by manager.has_all() but kept for fallback
+    if (method === 'has_all') {
+      // has_all with no args or empty array means no requirements - return true
+      if (args.length === 0) return true;
+      const items = args[0];
+      if (!Array.isArray(items)) return false;
+      if (items.length === 0) return true; // Empty array means no requirements
+      return items.every(itemName => manager._hasItem(itemName));
+    }
+
+    // 2.2. Check special case for has_any - checks if any item in a list is present
+    if (method === 'has_any') {
+      if (args.length === 0) return false;
+      const items = args[0];
+      if (!Array.isArray(items)) return false;
+      if (items.length === 0) return false; // Empty array means no items to check
+      return items.some(itemName => manager._hasItem(itemName));
+    }
+
     // 3. Check for game-specific state methods (e.g., has_from_list_unique for Mario Land 2)
     if (manager.stateMethods && typeof manager.stateMethods[method] === 'function') {
       const snapshot = manager.getSnapshot();

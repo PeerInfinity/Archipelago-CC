@@ -138,6 +138,53 @@ export function terran_competent_anti_air(snapshot, staticData) {
 }
 
 /**
+ * Moderate anti-air capability (more than basic but not full competence)
+ */
+export function terran_moderate_anti_air(snapshot, staticData) {
+    const advancedTactics = isAdvancedTactics(staticData);
+
+    return terran_competent_anti_air(snapshot, staticData)
+        || has_any(snapshot, [
+            'Marine', 'Dominion Trooper', 'Thor', 'Cyclone',
+            'Battlecruiser', 'Wraith', 'Valkyrie'
+        ])
+        || (has_all(snapshot, ['Medivac', 'Siege Tank'])
+            && count(snapshot, 'Progressive Siege Tank Transport Hook') >= 2)
+        || (advancedTactics && has_any(snapshot, ['Ghost', 'Spectre', 'Liberator']));
+}
+
+/**
+ * Haven's Fall mission requirement
+ */
+export function terran_havens_fall_requirement(snapshot, staticData) {
+    return terran_common_unit(snapshot, staticData) && (
+        terran_competent_comp(snapshot, staticData)
+        || (
+            terran_competent_anti_air(snapshot, staticData)
+            && (
+                has_any(snapshot, ['Viking', 'Battlecruiser'])
+                || has_all(snapshot, ['Wraith', 'Advanced Laser Technology (Wraith)'])
+                || has_all(snapshot, ['Liberator', 'Raid Artillery (Liberator)'])
+            )
+        )
+    );
+}
+
+/**
+ * Ability to deal with trains (moving target with a lot of HP) - Great Train Robbery
+ */
+export function terran_great_train_robbery_train_stopper(snapshot, staticData) {
+    const advancedTactics = isAdvancedTactics(staticData);
+
+    return has_any(snapshot, ['Siege Tank', 'Diamondback', 'Marauder', 'Cyclone', 'Banshee'])
+        || (advancedTactics && (
+            has_all(snapshot, ['Reaper', 'G-4 Clusterbomb (Reaper)'])
+            || has_all(snapshot, ['Spectre', 'Psionic Lash (Spectre)'])
+            || has_any(snapshot, ['Vulture', 'Liberator'])
+        ));
+}
+
+/**
  * Ability to heal bio units
  */
 export function terran_bio_heal(snapshot, staticData) {
@@ -273,6 +320,17 @@ export function nova_ranged_weapon(snapshot, staticData) {
         'C20A Canister Rifle (Nova Weapon)',
         'Hellfire Shotgun (Nova Weapon)',
         'Plasma Rifle (Nova Weapon)'
+    ]);
+}
+
+/**
+ * Nova has an anti-air weapon
+ */
+export function nova_anti_air_weapon(snapshot, staticData) {
+    return has_any(snapshot, [
+        'C20A Canister Rifle (Nova Weapon)',
+        'Plasma Rifle (Nova Weapon)',
+        'Blazefire Gunblade (Nova Weapon)'
     ]);
 }
 
@@ -961,6 +1019,9 @@ export default {
     terran_air_anti_air,
     terran_competent_ground_to_air,
     terran_competent_anti_air,
+    terran_moderate_anti_air,
+    terran_havens_fall_requirement,
+    terran_great_train_robbery_train_stopper,
     terran_bio_heal,
     terran_basic_anti_air,
     terran_competent_comp,
@@ -1115,6 +1176,7 @@ export default {
 
     nova_any_weapon,
     nova_ranged_weapon,
+    nova_anti_air_weapon,
     nova_splash,
     nova_full_stealth,
     nova_dash,

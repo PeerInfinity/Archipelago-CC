@@ -698,9 +698,12 @@ export function createStateSnapshotInterface(
         return items.some(itemName => finalSnapshotInterface.hasItem(itemName));
       }
 
-      if (methodName === 'has_all' && args.length >= 1) {
+      if (methodName === 'has_all') {
+        // has_all with no args or empty array means no requirements - return true
+        if (args.length === 0) return true;
         const items = args[0];
         if (!Array.isArray(items)) return false;
+        if (items.length === 0) return true; // Empty array means no requirements
         return items.every(itemName => finalSnapshotInterface.hasItem(itemName));
       }
 
