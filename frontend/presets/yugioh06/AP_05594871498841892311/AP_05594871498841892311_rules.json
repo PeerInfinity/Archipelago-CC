@@ -3,7 +3,7 @@
   "game_name": "Yu-Gi-Oh! 2006",
   "game_directory": "yugioh06",
   "archipelago_version": "0.6.5",
-  "generation_seed": 1,
+  "generation_seed": 4,
   "player_names": {
     "1": "Player1"
   },
@@ -1255,7 +1255,7 @@
               "item": "Tier 1 Beaten"
             },
             "item": {
-              "name": "Special Summon Collection C",
+              "name": "CYBERNETIC REVOLUTION",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1269,9 +1269,9 @@
               "item": "Tier 2 Beaten"
             },
             "item": {
-              "name": "Banlist March 2005",
+              "name": "Campaign Tier 1 Column 2",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1283,7 +1283,7 @@
               "item": "Tier 3 Beaten"
             },
             "item": {
-              "name": "TD24 Victory in 5 Turns Unlock",
+              "name": "TD25 Moth Grows Up Unlock",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1297,7 +1297,7 @@
               "item": "Tier 4 Beaten"
             },
             "item": {
-              "name": "Special Summon Collection B",
+              "name": "Continuous Spell/Trap A",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1311,7 +1311,7 @@
               "item": "Tier 5 Beaten"
             },
             "item": {
-              "name": "Special Summon Collection A",
+              "name": "TD29 Destroy Monsters in Battle Unlock",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1325,7 +1325,7 @@
               "value": true
             },
             "item": {
-              "name": "Campaign Tier 2 Column 2",
+              "name": "Banlist September 2003",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1339,7 +1339,7 @@
               "value": true
             },
             "item": {
-              "name": "Fairy Collection",
+              "name": "GAME GIFT COLLECTION",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1382,9 +1382,9 @@
               ]
             },
             "item": {
-              "name": "Banlist March 2004",
+              "name": "TD26 Magnetic Power Unlock",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1407,7 +1407,7 @@
               ]
             },
             "item": {
-              "name": "LD38 Refer to Mar 04 Banlist Unlock",
+              "name": "ELEMENTAL ENERGY",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1421,7 +1421,7 @@
               "value": true
             },
             "item": {
-              "name": "Campaign Tier 4 Column 4",
+              "name": "TD08 Draw Unlock",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1435,7 +1435,7 @@
               "value": true
             },
             "item": {
-              "name": "SPELL RULER",
+              "name": "Campaign Tier 2 Column 4",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1449,7 +1449,7 @@
               "value": true
             },
             "item": {
-              "name": "ELEMENTAL ENERGY",
+              "name": "ANCIENT SANCTUARY",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1463,7 +1463,7 @@
               "value": true
             },
             "item": {
-              "name": "Zombie Collection",
+              "name": "Campaign Tier 4 Column 1",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1487,7 +1487,7 @@
               ]
             },
             "item": {
-              "name": "LD37 All except Water forbidden Unlock",
+              "name": "Campaign Tier 4 Column 4",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1501,7 +1501,7 @@
               "item": "Ritual"
             },
             "item": {
-              "name": "Fiend Collection A",
+              "name": "PHARAOH'S SERVANT",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1515,7 +1515,7 @@
               "value": true
             },
             "item": {
-              "name": "LD16 Effect Monsters forbidden Unlock",
+              "name": "Special Summon Collection A",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1558,7 +1558,7 @@
               ]
             },
             "item": {
-              "name": "Campaign Tier 3 Column 4",
+              "name": "Equipment Collection",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1601,9 +1601,9 @@
               ]
             },
             "item": {
-              "name": "Continuous Spell/Trap B",
+              "name": "5000DP",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1619,7 +1619,7 @@
               }
             },
             "item": {
-              "name": "Warrior Collection B",
+              "name": "Special Gift Collection",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1644,7 +1644,7 @@
               ]
             },
             "item": {
-              "name": "GAME GIFT COLLECTION",
+              "name": "Spellcaster Collection B",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1696,7 +1696,7 @@
               ]
             },
             "item": {
-              "name": "LD12 All except Wind forbidden Unlock",
+              "name": "SOUL OF THE DUELIST",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1757,7 +1757,7 @@
               ]
             },
             "item": {
-              "name": "Campaign Tier 1 Column 1",
+              "name": "Campaign Tier 5 Column 1",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1819,7 +1819,7 @@
               ]
             },
             "item": {
-              "name": "Campaign Tier 3 Column 1",
+              "name": "TD31 Special Summon C Unlock",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1881,7 +1881,7 @@
               ]
             },
             "item": {
-              "name": "LD21 All except Dark forbidden Unlock",
+              "name": "METAL RAIDERS",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1949,7 +1949,7 @@
               ]
             },
             "item": {
-              "name": "Direct Attack Collection",
+              "name": "Campaign Tier 3 Column 2",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2025,7 +2025,7 @@
               ]
             },
             "item": {
-              "name": "INVASION OF CHAOS",
+              "name": "LABYRINTH OF NIGHTMARE",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2068,7 +2068,7 @@
               ]
             },
             "item": {
-              "name": "Reverse Collection",
+              "name": "TD19 20 Turns Unlock",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2111,7 +2111,7 @@
               ]
             },
             "item": {
-              "name": "MAGICIAN'S FORCE",
+              "name": "Spellcaster Collection A",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2154,7 +2154,7 @@
               ]
             },
             "item": {
-              "name": "Special Gift Collection",
+              "name": "Campaign Tier 2 Column 3",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2206,7 +2206,7 @@
               ]
             },
             "item": {
-              "name": "METAL RAIDERS",
+              "name": "Special Monsters B",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2220,9 +2220,9 @@
               "item": "Can Exodia Win"
             },
             "item": {
-              "name": "5000DP",
+              "name": "SHADOW OF INFINITY",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2234,7 +2234,7 @@
               "item": "Can Last Turn Win"
             },
             "item": {
-              "name": "Campaign Tier 5 Column 2",
+              "name": "Campaign Tier 4 Column 3",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2257,7 +2257,7 @@
               ]
             },
             "item": {
-              "name": "THE LOST MILLENIUM",
+              "name": "Special Summon Collection C",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2284,7 +2284,7 @@
               ]
             },
             "item": {
-              "name": "Machine Collection A",
+              "name": "INVASION OF CHAOS",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2298,7 +2298,7 @@
               "item": "Can Yata Lock"
             },
             "item": {
-              "name": "Campaign Tier 4 Column 5",
+              "name": "Monster Destroy Collection",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2350,7 +2350,7 @@
               ]
             },
             "item": {
-              "name": "Direct Damage Collection",
+              "name": "Campaign Tier 3 Column 3",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2432,7 +2432,7 @@
               ]
             },
             "item": {
-              "name": "ANCIENT SANCTUARY",
+              "name": "Fairy Collection",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2446,9 +2446,9 @@
               "item": "Tier 1 Beaten"
             },
             "item": {
-              "name": "Dragon Collection",
+              "name": "Banlist September 2004",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2464,7 +2464,7 @@
               }
             },
             "item": {
-              "name": "SHADOW OF INFINITY",
+              "name": "LEGEND OF B.E.W.D.",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2482,7 +2482,7 @@
               }
             },
             "item": {
-              "name": "Spellcaster Collection A",
+              "name": "Machine Collection B",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2500,7 +2500,7 @@
               }
             },
             "item": {
-              "name": "Campaign Tier 4 Column 1",
+              "name": "Zombie Collection",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2518,7 +2518,7 @@
               }
             },
             "item": {
-              "name": "Campaign Tier 5 Column 1",
+              "name": "Direct Attack Collection",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2532,7 +2532,7 @@
               "item": "Tier 2 Beaten"
             },
             "item": {
-              "name": "Campaign Tier 1 Column 3",
+              "name": "LD26 All except Toons forbidden Unlock",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2550,7 +2550,7 @@
               }
             },
             "item": {
-              "name": "5000DP",
+              "name": "Banlist March 2004",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2568,7 +2568,7 @@
               }
             },
             "item": {
-              "name": "TD13 Flip Summon Unlock",
+              "name": "Campaign Tier 4 Column 2",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2586,7 +2586,7 @@
               }
             },
             "item": {
-              "name": "LD24 Refer to Sept 04 Banlist Unlock",
+              "name": "Continuous Spell/Trap B",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2604,9 +2604,9 @@
               }
             },
             "item": {
-              "name": "Warrior Collection A",
+              "name": "5000DP",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2618,7 +2618,7 @@
               "item": "Tier 3 Beaten"
             },
             "item": {
-              "name": "DARK CRISIS",
+              "name": "Quick/Counter Collection",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2636,9 +2636,9 @@
               }
             },
             "item": {
-              "name": "FLAMING ETERNITY",
+              "name": "5000DP",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2654,7 +2654,7 @@
               }
             },
             "item": {
-              "name": "Campaign Tier 2 Column 5",
+              "name": "LEGACY OF DARKNESS",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2672,9 +2672,9 @@
               }
             },
             "item": {
-              "name": "5000DP",
+              "name": "Warrior Collection B",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2690,7 +2690,7 @@
               }
             },
             "item": {
-              "name": "Banlist September 2003",
+              "name": "Special Monsters A",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2708,7 +2708,7 @@
               }
             },
             "item": {
-              "name": "LD23 Refer to Mar 05 Banlist Unlock",
+              "name": "Campaign Tier 2 Column 5",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2726,7 +2726,7 @@
               }
             },
             "item": {
-              "name": "SOUL OF THE DUELIST",
+              "name": "Campaign Tier 1 Column 3",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2738,8 +2738,8 @@
         "name": "Challenges",
         "exits": [
           {
-            "name": "LD12 All except Wind forbidden",
-            "connected_region": "LD12 All except Wind forbidden",
+            "name": "LD26 All except Toons forbidden",
+            "connected_region": "LD26 All except Toons forbidden",
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -2748,7 +2748,7 @@
                   "conditions": [
                     {
                       "type": "helper",
-                      "name": "only_wind",
+                      "name": "only_toons",
                       "args": []
                     },
                     {
@@ -2788,14 +2788,14 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "LD12 All except Wind forbidden Unlock"
+                  "item": "LD26 All except Toons forbidden Unlock"
                 }
               ]
             }
           },
           {
-            "name": "LD16 Effect Monsters forbidden",
-            "connected_region": "LD16 Effect Monsters forbidden",
+            "name": "LD34 Normal Summons forbidden",
+            "connected_region": "LD34 Normal Summons forbidden",
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -2803,9 +2803,60 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "only_normal",
-                      "args": []
+                      "type": "compare",
+                      "left": {
+                        "type": "helper",
+                        "name": "count_has_materials",
+                        "args": [
+                          {
+                            "type": "list",
+                            "value": [
+                              {
+                                "type": "constant",
+                                "value": "Elemental Hero Flame Wingman"
+                              },
+                              {
+                                "type": "constant",
+                                "value": "Elemental Hero Madballman"
+                              },
+                              {
+                                "type": "constant",
+                                "value": "Elemental Hero Rampart Blaster"
+                              },
+                              {
+                                "type": "constant",
+                                "value": "Elemental Hero Steam Healer"
+                              },
+                              {
+                                "type": "constant",
+                                "value": "Elemental Hero Shining Flare Wingman"
+                              },
+                              {
+                                "type": "constant",
+                                "value": "Elemental Hero Wildedge"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      "op": ">=",
+                      "right": {
+                        "type": "constant",
+                        "value": 3
+                      }
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "King of the Swamp",
+                            "Polymerization"
+                          ]
+                        }
+                      ]
                     },
                     {
                       "type": "state_method",
@@ -2844,70 +2895,14 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "LD16 Effect Monsters forbidden Unlock"
+                  "item": "LD34 Normal Summons forbidden Unlock"
                 }
               ]
             }
           },
           {
-            "name": "LD21 All except Dark forbidden",
-            "connected_region": "LD21 All except Dark forbidden",
-            "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "only_dark",
-                      "args": []
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_from_list",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "LEGEND OF B.E.W.D.",
-                            "METAL RAIDERS",
-                            "PHARAOH'S SERVANT",
-                            "PHARAONIC GUARDIAN",
-                            "SPELL RULER",
-                            "LABYRINTH OF NIGHTMARE",
-                            "LEGACY OF DARKNESS",
-                            "MAGICIAN'S FORCE",
-                            "DARK CRISIS",
-                            "INVASION OF CHAOS",
-                            "ANCIENT SANCTUARY",
-                            "SOUL OF THE DUELIST",
-                            "RISE OF DESTINY",
-                            "FLAMING ETERNITY",
-                            "THE LOST MILLENIUM",
-                            "CYBERNETIC REVOLUTION",
-                            "ELEMENTAL ENERGY",
-                            "SHADOW OF INFINITY"
-                          ]
-                        },
-                        {
-                          "type": "constant",
-                          "value": 2
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "LD21 All except Dark forbidden Unlock"
-                }
-              ]
-            }
-          },
-          {
-            "name": "LD23 Refer to Mar 05 Banlist",
-            "connected_region": "LD23 Refer to Mar 05 Banlist",
+            "name": "LD41 Refer to Sept 03 Banlist",
+            "connected_region": "LD41 Refer to Sept 03 Banlist",
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -2946,60 +2941,14 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "LD23 Refer to Mar 05 Banlist Unlock"
+                  "item": "LD41 Refer to Sept 03 Banlist Unlock"
                 }
               ]
             }
           },
           {
-            "name": "LD24 Refer to Sept 04 Banlist",
-            "connected_region": "LD24 Refer to Sept 04 Banlist",
-            "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "state_method",
-                  "method": "has_from_list",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "LEGEND OF B.E.W.D.",
-                        "METAL RAIDERS",
-                        "PHARAOH'S SERVANT",
-                        "PHARAONIC GUARDIAN",
-                        "SPELL RULER",
-                        "LABYRINTH OF NIGHTMARE",
-                        "LEGACY OF DARKNESS",
-                        "MAGICIAN'S FORCE",
-                        "DARK CRISIS",
-                        "INVASION OF CHAOS",
-                        "ANCIENT SANCTUARY",
-                        "SOUL OF THE DUELIST",
-                        "RISE OF DESTINY",
-                        "FLAMING ETERNITY",
-                        "THE LOST MILLENIUM",
-                        "CYBERNETIC REVOLUTION",
-                        "ELEMENTAL ENERGY",
-                        "SHADOW OF INFINITY"
-                      ]
-                    },
-                    {
-                      "type": "constant",
-                      "value": 5
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "LD24 Refer to Sept 04 Banlist Unlock"
-                }
-              ]
-            }
-          },
-          {
-            "name": "LD37 All except Water forbidden",
-            "connected_region": "LD37 All except Water forbidden",
+            "name": "TD02 Deflected Damage",
+            "connected_region": "TD02 Deflected Damage",
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -3007,9 +2956,72 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "only_water",
-                      "args": []
+                      "type": "state_method",
+                      "method": "has_from_list",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "LEGEND OF B.E.W.D.",
+                            "METAL RAIDERS",
+                            "PHARAOH'S SERVANT",
+                            "PHARAONIC GUARDIAN",
+                            "SPELL RULER",
+                            "LABYRINTH OF NIGHTMARE",
+                            "LEGACY OF DARKNESS",
+                            "MAGICIAN'S FORCE",
+                            "DARK CRISIS",
+                            "INVASION OF CHAOS",
+                            "ANCIENT SANCTUARY",
+                            "SOUL OF THE DUELIST",
+                            "RISE OF DESTINY",
+                            "FLAMING ETERNITY",
+                            "THE LOST MILLENIUM",
+                            "CYBERNETIC REVOLUTION",
+                            "ELEMENTAL ENERGY",
+                            "SHADOW OF INFINITY"
+                          ]
+                        },
+                        {
+                          "type": "constant",
+                          "value": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Fairy Box"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "TD02 Deflected Damage Unlock"
+                }
+              ]
+            }
+          },
+          {
+            "name": "TD08 Draw",
+            "connected_region": "TD08 Draw",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Dark Snake Syndrome",
+                            "Self-Destruct Button"
+                          ]
+                        }
+                      ]
                     },
                     {
                       "type": "state_method",
@@ -3040,7 +3052,7 @@
                         },
                         {
                           "type": "constant",
-                          "value": 2
+                          "value": 3
                         }
                       ]
                     }
@@ -3048,71 +3060,20 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "LD37 All except Water forbidden Unlock"
+                  "item": "TD08 Draw Unlock"
                 }
               ]
             }
           },
           {
-            "name": "LD38 Refer to Mar 04 Banlist",
-            "connected_region": "LD38 Refer to Mar 04 Banlist",
-            "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "state_method",
-                  "method": "has_from_list",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "LEGEND OF B.E.W.D.",
-                        "METAL RAIDERS",
-                        "PHARAOH'S SERVANT",
-                        "PHARAONIC GUARDIAN",
-                        "SPELL RULER",
-                        "LABYRINTH OF NIGHTMARE",
-                        "LEGACY OF DARKNESS",
-                        "MAGICIAN'S FORCE",
-                        "DARK CRISIS",
-                        "INVASION OF CHAOS",
-                        "ANCIENT SANCTUARY",
-                        "SOUL OF THE DUELIST",
-                        "RISE OF DESTINY",
-                        "FLAMING ETERNITY",
-                        "THE LOST MILLENIUM",
-                        "CYBERNETIC REVOLUTION",
-                        "ELEMENTAL ENERGY",
-                        "SHADOW OF INFINITY"
-                      ]
-                    },
-                    {
-                      "type": "constant",
-                      "value": 4
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "LD38 Refer to Mar 04 Banlist Unlock"
-                }
-              ]
-            }
-          },
-          {
-            "name": "TD13 Flip Summon",
-            "connected_region": "TD13 Flip Summon",
+            "name": "TD19 20 Turns",
+            "connected_region": "TD19 20 Turns",
             "access_rule": {
               "type": "and",
               "conditions": [
                 {
                   "type": "and",
                   "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "pacman_deck",
-                      "args": []
-                    },
                     {
                       "type": "state_method",
                       "method": "has_from_list",
@@ -3142,22 +3103,30 @@
                         },
                         {
                           "type": "constant",
-                          "value": 2
+                          "value": 3
                         }
                       ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Can Stall with ST"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Final Countdown"
                     }
                   ]
                 },
                 {
                   "type": "item_check",
-                  "item": "TD13 Flip Summon Unlock"
+                  "item": "TD19 20 Turns Unlock"
                 }
               ]
             }
           },
           {
-            "name": "TD21 Victory D.",
-            "connected_region": "TD21 Victory D.",
+            "name": "TD25 Moth Grows Up",
+            "connected_region": "TD25 Moth Grows Up",
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -3165,9 +3134,17 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "only_dragon",
-                      "args": []
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Gokipon",
+                            "Howling Insect"
+                          ]
+                        }
+                      ]
                     },
                     {
                       "type": "state_method",
@@ -3204,20 +3181,75 @@
                     },
                     {
                       "type": "item_check",
-                      "item": "Victory D."
+                      "item": "Perfectly Ultimate Great Moth and its required cards"
                     }
                   ]
                 },
                 {
                   "type": "item_check",
-                  "item": "TD21 Victory D. Unlock"
+                  "item": "TD25 Moth Grows Up Unlock"
                 }
               ]
             }
           },
           {
-            "name": "TD24 Victory in 5 Turns",
-            "connected_region": "TD24 Victory in 5 Turns",
+            "name": "TD26 Magnetic Power",
+            "connected_region": "TD26 Magnetic Power",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "state_method",
+                      "method": "has_from_list",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "LEGEND OF B.E.W.D.",
+                            "METAL RAIDERS",
+                            "PHARAOH'S SERVANT",
+                            "PHARAONIC GUARDIAN",
+                            "SPELL RULER",
+                            "LABYRINTH OF NIGHTMARE",
+                            "LEGACY OF DARKNESS",
+                            "MAGICIAN'S FORCE",
+                            "DARK CRISIS",
+                            "INVASION OF CHAOS",
+                            "ANCIENT SANCTUARY",
+                            "SOUL OF THE DUELIST",
+                            "RISE OF DESTINY",
+                            "FLAMING ETERNITY",
+                            "THE LOST MILLENIUM",
+                            "CYBERNETIC REVOLUTION",
+                            "ELEMENTAL ENERGY",
+                            "SHADOW OF INFINITY"
+                          ]
+                        },
+                        {
+                          "type": "constant",
+                          "value": 2
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Valkyrion the Magna Warrior and its pieces"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "TD26 Magnetic Power Unlock"
+                }
+              ]
+            }
+          },
+          {
+            "name": "TD29 Destroy Monsters in Battle",
+            "connected_region": "TD29 Destroy Monsters in Battle",
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -3250,13 +3282,91 @@
                     },
                     {
                       "type": "constant",
-                      "value": 3
+                      "value": 2
                     }
                   ]
                 },
                 {
                   "type": "item_check",
-                  "item": "TD24 Victory in 5 Turns Unlock"
+                  "item": "TD29 Destroy Monsters in Battle Unlock"
+                }
+              ]
+            }
+          },
+          {
+            "name": "TD31 Special Summon C",
+            "connected_region": "TD31 Special Summon C",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "compare",
+                      "left": {
+                        "type": "state_method",
+                        "method": "count_from_list_unique",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Aqua Spirit",
+                              "Rock Spirit",
+                              "Spirit of Flames",
+                              "Garuda the Wind Spirit",
+                              "Gigantes",
+                              "Inferno",
+                              "Megarock Dragon",
+                              "Silpheed"
+                            ]
+                          }
+                        ]
+                      },
+                      "op": ">",
+                      "right": {
+                        "type": "constant",
+                        "value": 4
+                      }
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "has_from_list",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "LEGEND OF B.E.W.D.",
+                            "METAL RAIDERS",
+                            "PHARAOH'S SERVANT",
+                            "PHARAONIC GUARDIAN",
+                            "SPELL RULER",
+                            "LABYRINTH OF NIGHTMARE",
+                            "LEGACY OF DARKNESS",
+                            "MAGICIAN'S FORCE",
+                            "DARK CRISIS",
+                            "INVASION OF CHAOS",
+                            "ANCIENT SANCTUARY",
+                            "SOUL OF THE DUELIST",
+                            "RISE OF DESTINY",
+                            "FLAMING ETERNITY",
+                            "THE LOST MILLENIUM",
+                            "CYBERNETIC REVOLUTION",
+                            "ELEMENTAL ENERGY",
+                            "SHADOW OF INFINITY"
+                          ]
+                        },
+                        {
+                          "type": "constant",
+                          "value": 3
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "TD31 Special Summon C Unlock"
                 }
               ]
             }
@@ -3637,7 +3747,7 @@
               "item": "Exodia"
             },
             "item": {
-              "name": "LEGEND OF B.E.W.D.",
+              "name": "DARK CRISIS",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3651,7 +3761,7 @@
               "item": "Final Countdown"
             },
             "item": {
-              "name": "Campaign Tier 4 Column 2",
+              "name": "Campaign Tier 2 Column 2",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3665,7 +3775,7 @@
               "item": "Victory D."
             },
             "item": {
-              "name": "Special Monsters A",
+              "name": "RISE OF DESTINY",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3679,7 +3789,7 @@
               "item": "Ojama Delta Hurricane and required cards"
             },
             "item": {
-              "name": "CYBERNETIC REVOLUTION",
+              "name": "PHARAONIC GUARDIAN",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3693,7 +3803,7 @@
               "item": "Huge Revolution and its required cards"
             },
             "item": {
-              "name": "Campaign Tier 3 Column 5",
+              "name": "SPELL RULER",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3707,9 +3817,9 @@
               "item": "Perfectly Ultimate Great Moth and its required cards"
             },
             "item": {
-              "name": "5000DP",
+              "name": "Warrior Collection A",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3721,7 +3831,7 @@
               "item": "Valkyrion the Magna Warrior and its pieces"
             },
             "item": {
-              "name": "Campaign Tier 1 Column 2",
+              "name": "Campaign Tier 2 Column 1",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3735,9 +3845,9 @@
               "item": "Dark Sage and its required cards"
             },
             "item": {
-              "name": "Campaign Tier 1 Column 4",
+              "name": "Banlist March 2005",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3749,9 +3859,9 @@
               "item": "Destiny Board and its letters"
             },
             "item": {
-              "name": "5000DP",
+              "name": "Special Summon Collection B",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3763,7 +3873,7 @@
               "item": "XYZ-Dragon Cannon fusions and their materials"
             },
             "item": {
-              "name": "Campaign Tier 2 Column 3",
+              "name": "FLAMING ETERNITY",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3777,7 +3887,7 @@
               "item": "VWXYZ-Dragon Catapult Cannon and the fusion materials"
             },
             "item": {
-              "name": "PHARAOH'S SERVANT",
+              "name": "LD41 Refer to Sept 03 Banlist Unlock",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3791,9 +3901,9 @@
               "item": "Hamon, Lord of Striking Thunder"
             },
             "item": {
-              "name": "Banlist September 2004",
+              "name": "LP Recovery Collection",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3805,7 +3915,7 @@
               "item": "Raviel, Lord of Phantasms"
             },
             "item": {
-              "name": "PHARAONIC GUARDIAN",
+              "name": "MAGICIAN'S FORCE",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3819,9 +3929,9 @@
               "item": "Uria, Lord of Searing Flames"
             },
             "item": {
-              "name": "Campaign Tier 4 Column 3",
+              "name": "5000DP",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3833,7 +3943,7 @@
               "item": "Gate Guardian and its pieces"
             },
             "item": {
-              "name": "Equipment Collection",
+              "name": "Fiend Collection B",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3847,7 +3957,7 @@
               "item": "Dark Scorpion Combination and its required cards"
             },
             "item": {
-              "name": "LP Recovery Collection",
+              "name": "Reverse Collection",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4323,147 +4433,133 @@
         "exits": [],
         "locations": [
           {
-            "name": "dragons_roar 1",
+            "name": "spellcasters_judgement 1",
             "id": null,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "Luster Dragon",
+              "name": "Dark Magician",
               "player": 1,
               "advancement": true,
               "type": "None"
             }
           },
           {
-            "name": "dragons_roar 2",
+            "name": "spellcasters_judgement 2",
             "id": null,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "Armed Dragon LV3",
+              "name": "Apprentice Magician",
               "player": 1,
               "advancement": true,
               "type": "None"
             }
           },
           {
-            "name": "dragons_roar 3",
+            "name": "spellcasters_judgement 3",
             "id": null,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "Armed Dragon LV5",
+              "name": "Breaker the Magical Warrior",
               "player": 1,
               "advancement": true,
               "type": "None"
             }
           },
           {
-            "name": "dragons_roar 4",
+            "name": "spellcasters_judgement 4",
             "id": null,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "Masked Dragon",
+              "name": "Magician of Faith",
               "player": 1,
               "advancement": true,
               "type": "None"
             }
           },
           {
-            "name": "dragons_roar 5",
+            "name": "spellcasters_judgement 5",
             "id": null,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "Twin-Headed Behemoth",
+              "name": "Skilled Dark Magician",
               "player": 1,
               "advancement": true,
               "type": "None"
             }
           },
           {
-            "name": "dragons_roar 6",
+            "name": "spellcasters_judgement 6",
             "id": null,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "Stamping Destruction",
+              "name": "Tsukuyomi",
               "player": 1,
               "advancement": true,
               "type": "None"
             }
           },
           {
-            "name": "dragons_roar 7",
+            "name": "spellcasters_judgement 7",
             "id": null,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "Nobleman of Crossout",
+              "name": "Magical Dimension",
               "player": 1,
               "advancement": true,
               "type": "None"
             }
           },
           {
-            "name": "dragons_roar 8",
+            "name": "spellcasters_judgement 8",
             "id": null,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "Creature Swap",
+              "name": "Mage Power",
               "player": 1,
               "advancement": true,
               "type": "None"
             }
           },
           {
-            "name": "dragons_roar 9",
+            "name": "spellcasters_judgement 9",
             "id": null,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "Reload",
+              "name": "Spell-Counter Cards",
               "player": 1,
               "advancement": true,
               "type": "None"
             }
           },
           {
-            "name": "dragons_roar 10",
-            "id": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Stamping Destruction",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "dragons_roar 11",
+            "name": "spellcasters_judgement 10",
             "id": null,
             "access_rule": {
               "type": "constant",
@@ -4477,7 +4573,7 @@
             }
           },
           {
-            "name": "dragons_roar 12",
+            "name": "spellcasters_judgement 11",
             "id": null,
             "access_rule": {
               "type": "constant",
@@ -4491,7 +4587,7 @@
             }
           },
           {
-            "name": "dragons_roar 13",
+            "name": "spellcasters_judgement 12",
             "id": null,
             "access_rule": {
               "type": "constant",
@@ -5086,9 +5182,9 @@
               "value": true
             },
             "item": {
-              "name": "Campaign Tier 3 Column 2",
+              "name": "5000DP",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -5120,7 +5216,7 @@
               "value": true
             },
             "item": {
-              "name": "Monster Destroy Collection",
+              "name": "Dragon Collection",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5154,7 +5250,7 @@
               "value": true
             },
             "item": {
-              "name": "Machine Collection B",
+              "name": "TD02 Deflected Damage Unlock",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5188,7 +5284,7 @@
               "value": true
             },
             "item": {
-              "name": "Campaign Tier 3 Column 3",
+              "name": "THE LOST MILLENIUM",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16994,26 +17090,26 @@
           }
         ]
       },
-      "LD12 All except Wind forbidden": {
-        "name": "LD12 All except Wind forbidden",
+      "LD26 All except Toons forbidden": {
+        "name": "LD26 All except Toons forbidden",
         "exits": [],
         "locations": [
           {
-            "name": "LD12 All except Wind forbidden",
-            "id": 5730049,
+            "name": "LD26 All except Toons forbidden",
+            "id": 5730063,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "Continuous Spell/Trap A",
+              "name": "Campaign Tier 1 Column 1",
               "player": 1,
               "advancement": true,
               "type": "None"
             }
           },
           {
-            "name": "LD12 All except Wind forbidden Complete",
+            "name": "LD26 All except Toons forbidden Complete",
             "id": null,
             "access_rule": {
               "type": "constant",
@@ -17028,26 +17124,26 @@
           }
         ]
       },
-      "LD16 Effect Monsters forbidden": {
-        "name": "LD16 Effect Monsters forbidden",
+      "LD34 Normal Summons forbidden": {
+        "name": "LD34 Normal Summons forbidden",
         "exits": [],
         "locations": [
           {
-            "name": "LD16 Effect Monsters forbidden",
-            "id": 5730053,
+            "name": "LD34 Normal Summons forbidden",
+            "id": 5730071,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "Quick/Counter Collection",
+              "name": "Campaign Tier 4 Column 5",
               "player": 1,
               "advancement": true,
               "type": "None"
             }
           },
           {
-            "name": "LD16 Effect Monsters forbidden Complete",
+            "name": "LD34 Normal Summons forbidden Complete",
             "id": null,
             "access_rule": {
               "type": "constant",
@@ -17062,26 +17158,26 @@
           }
         ]
       },
-      "LD21 All except Dark forbidden": {
-        "name": "LD21 All except Dark forbidden",
+      "LD41 Refer to Sept 03 Banlist": {
+        "name": "LD41 Refer to Sept 03 Banlist",
         "exits": [],
         "locations": [
           {
-            "name": "LD21 All except Dark forbidden",
-            "id": 5730058,
+            "name": "LD41 Refer to Sept 03 Banlist",
+            "id": 5730078,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "Campaign Tier 2 Column 1",
+              "name": "Campaign Tier 1 Column 4",
               "player": 1,
               "advancement": true,
               "type": "None"
             }
           },
           {
-            "name": "LD21 All except Dark forbidden Complete",
+            "name": "LD41 Refer to Sept 03 Banlist Complete",
             "id": null,
             "access_rule": {
               "type": "constant",
@@ -17096,26 +17192,26 @@
           }
         ]
       },
-      "LD23 Refer to Mar 05 Banlist": {
-        "name": "LD23 Refer to Mar 05 Banlist",
+      "TD02 Deflected Damage": {
+        "name": "TD02 Deflected Damage",
         "exits": [],
         "locations": [
           {
-            "name": "LD23 Refer to Mar 05 Banlist",
-            "id": 5730060,
+            "name": "TD02 Deflected Damage",
+            "id": 5730080,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "TD21 Victory D. Unlock",
+              "name": "Fiend Collection A",
               "player": 1,
               "advancement": true,
               "type": "None"
             }
           },
           {
-            "name": "LD23 Refer to Mar 05 Banlist Complete",
+            "name": "TD02 Deflected Damage Complete",
             "id": null,
             "access_rule": {
               "type": "constant",
@@ -17130,26 +17226,26 @@
           }
         ]
       },
-      "LD24 Refer to Sept 04 Banlist": {
-        "name": "LD24 Refer to Sept 04 Banlist",
+      "TD08 Draw": {
+        "name": "TD08 Draw",
         "exits": [],
         "locations": [
           {
-            "name": "LD24 Refer to Sept 04 Banlist",
-            "id": 5730061,
+            "name": "TD08 Draw",
+            "id": 5730086,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "RISE OF DESTINY",
+              "name": "Campaign Tier 3 Column 5",
               "player": 1,
               "advancement": true,
               "type": "None"
             }
           },
           {
-            "name": "LD24 Refer to Sept 04 Banlist Complete",
+            "name": "TD08 Draw Complete",
             "id": null,
             "access_rule": {
               "type": "constant",
@@ -17164,26 +17260,26 @@
           }
         ]
       },
-      "LD37 All except Water forbidden": {
-        "name": "LD37 All except Water forbidden",
+      "TD19 20 Turns": {
+        "name": "TD19 20 Turns",
         "exits": [],
         "locations": [
           {
-            "name": "LD37 All except Water forbidden",
-            "id": 5730074,
+            "name": "TD19 20 Turns",
+            "id": 5730097,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "Campaign Tier 2 Column 4",
+              "name": "Machine Collection A",
               "player": 1,
               "advancement": true,
               "type": "None"
             }
           },
           {
-            "name": "LD37 All except Water forbidden Complete",
+            "name": "TD19 20 Turns Complete",
             "id": null,
             "access_rule": {
               "type": "constant",
@@ -17198,26 +17294,26 @@
           }
         ]
       },
-      "LD38 Refer to Mar 04 Banlist": {
-        "name": "LD38 Refer to Mar 04 Banlist",
+      "TD25 Moth Grows Up": {
+        "name": "TD25 Moth Grows Up",
         "exits": [],
         "locations": [
           {
-            "name": "LD38 Refer to Mar 04 Banlist",
-            "id": 5730075,
+            "name": "TD25 Moth Grows Up",
+            "id": 5730103,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "Spellcaster Collection B",
+              "name": "LD34 Normal Summons forbidden Unlock",
               "player": 1,
               "advancement": true,
               "type": "None"
             }
           },
           {
-            "name": "LD38 Refer to Mar 04 Banlist Complete",
+            "name": "TD25 Moth Grows Up Complete",
             "id": null,
             "access_rule": {
               "type": "constant",
@@ -17232,26 +17328,26 @@
           }
         ]
       },
-      "TD13 Flip Summon": {
-        "name": "TD13 Flip Summon",
+      "TD26 Magnetic Power": {
+        "name": "TD26 Magnetic Power",
         "exits": [],
         "locations": [
           {
-            "name": "TD13 Flip Summon",
-            "id": 5730091,
+            "name": "TD26 Magnetic Power",
+            "id": 5730104,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "LABYRINTH OF NIGHTMARE",
+              "name": "Campaign Tier 3 Column 1",
               "player": 1,
               "advancement": true,
               "type": "None"
             }
           },
           {
-            "name": "TD13 Flip Summon Complete",
+            "name": "TD26 Magnetic Power Complete",
             "id": null,
             "access_rule": {
               "type": "constant",
@@ -17266,26 +17362,26 @@
           }
         ]
       },
-      "TD21 Victory D.": {
-        "name": "TD21 Victory D.",
+      "TD29 Destroy Monsters in Battle": {
+        "name": "TD29 Destroy Monsters in Battle",
         "exits": [],
         "locations": [
           {
-            "name": "TD21 Victory D.",
-            "id": 5730099,
+            "name": "TD29 Destroy Monsters in Battle",
+            "id": 5730107,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "Fiend Collection B",
+              "name": "Campaign Tier 3 Column 4",
               "player": 1,
               "advancement": true,
               "type": "None"
             }
           },
           {
-            "name": "TD21 Victory D. Complete",
+            "name": "TD29 Destroy Monsters in Battle Complete",
             "id": null,
             "access_rule": {
               "type": "constant",
@@ -17300,26 +17396,26 @@
           }
         ]
       },
-      "TD24 Victory in 5 Turns": {
-        "name": "TD24 Victory in 5 Turns",
+      "TD31 Special Summon C": {
+        "name": "TD31 Special Summon C",
         "exits": [],
         "locations": [
           {
-            "name": "TD24 Victory in 5 Turns",
-            "id": 5730102,
+            "name": "TD31 Special Summon C",
+            "id": 5730109,
             "access_rule": {
               "type": "constant",
               "value": true
             },
             "item": {
-              "name": "Special Monsters B",
+              "name": "Campaign Tier 5 Column 2",
               "player": 1,
               "advancement": true,
               "type": "None"
             }
           },
           {
-            "name": "TD24 Victory in 5 Turns Complete",
+            "name": "TD31 Special Summon C Complete",
             "id": null,
             "access_rule": {
               "type": "constant",
@@ -17442,7 +17538,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "MAGICIAN'S FORCE": {
         "name": "MAGICIAN'S FORCE",
@@ -17921,7 +18017,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Direct Attack Collection": {
         "name": "Direct Attack Collection",
@@ -18188,12 +18284,12 @@
           "Challenge",
           "Everything"
         ],
-        "advancement": true,
+        "advancement": false,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "LD13 All except monsters forbidden Unlock": {
         "name": "LD13 All except monsters forbidden Unlock",
@@ -18244,12 +18340,12 @@
           "Challenge",
           "Everything"
         ],
-        "advancement": true,
+        "advancement": false,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "LD17 Spells forbidden Unlock": {
         "name": "LD17 Spells forbidden Unlock",
@@ -18314,12 +18410,12 @@
           "Challenge",
           "Everything"
         ],
-        "advancement": true,
+        "advancement": false,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "LD22 All limited cards forbidden Unlock": {
         "name": "LD22 All limited cards forbidden Unlock",
@@ -18342,12 +18438,12 @@
           "Challenge",
           "Everything"
         ],
-        "advancement": true,
+        "advancement": false,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "LD24 Refer to Sept 04 Banlist Unlock": {
         "name": "LD24 Refer to Sept 04 Banlist Unlock",
@@ -18356,12 +18452,12 @@
           "Challenge",
           "Everything"
         ],
-        "advancement": true,
+        "advancement": false,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "LD25 Low Life Points Unlock": {
         "name": "LD25 Low Life Points Unlock",
@@ -18384,12 +18480,12 @@
           "Challenge",
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "LD27 All except Spirits forbidden Unlock": {
         "name": "LD27 All except Spirits forbidden Unlock",
@@ -18496,12 +18592,12 @@
           "Challenge",
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "LD35 All except Zombies forbidden Unlock": {
         "name": "LD35 All except Zombies forbidden Unlock",
@@ -18538,12 +18634,12 @@
           "Challenge",
           "Everything"
         ],
-        "advancement": true,
+        "advancement": false,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "LD38 Refer to Mar 04 Banlist Unlock": {
         "name": "LD38 Refer to Mar 04 Banlist Unlock",
@@ -18552,12 +18648,12 @@
           "Challenge",
           "Everything"
         ],
-        "advancement": true,
+        "advancement": false,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "LD39 Monsters forbidden Unlock": {
         "name": "LD39 Monsters forbidden Unlock",
@@ -18594,12 +18690,12 @@
           "Challenge",
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "TD01 Battle Damage Unlock": {
         "name": "TD01 Battle Damage Unlock",
@@ -18622,12 +18718,12 @@
           "Challenge",
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "TD03 Normal Summon Unlock": {
         "name": "TD03 Normal Summon Unlock",
@@ -18706,12 +18802,12 @@
           "Challenge",
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "TD09 Hand Destruction Unlock": {
         "name": "TD09 Hand Destruction Unlock",
@@ -18776,12 +18872,12 @@
           "Challenge",
           "Everything"
         ],
-        "advancement": true,
+        "advancement": false,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "TD14 Special Summon B Unlock": {
         "name": "TD14 Special Summon B Unlock",
@@ -18860,12 +18956,12 @@
           "Challenge",
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "TD20 Deck Destruction Unlock": {
         "name": "TD20 Deck Destruction Unlock",
@@ -18888,12 +18984,12 @@
           "Challenge",
           "Everything"
         ],
-        "advancement": true,
+        "advancement": false,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "TD22 The Preventers Fight Back Unlock": {
         "name": "TD22 The Preventers Fight Back Unlock",
@@ -18930,12 +19026,12 @@
           "Challenge",
           "Everything"
         ],
-        "advancement": true,
+        "advancement": false,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "TD25 Moth Grows Up Unlock": {
         "name": "TD25 Moth Grows Up Unlock",
@@ -18944,12 +19040,12 @@
           "Challenge",
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "TD26 Magnetic Power Unlock": {
         "name": "TD26 Magnetic Power Unlock",
@@ -18958,12 +19054,12 @@
           "Challenge",
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "TD27 Dark Sage Unlock": {
         "name": "TD27 Dark Sage Unlock",
@@ -19000,12 +19096,12 @@
           "Challenge",
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "TD30 Tribute Summon Unlock": {
         "name": "TD30 Tribute Summon Unlock",
@@ -19028,12 +19124,12 @@
           "Challenge",
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "TD32 Toon Unlock": {
         "name": "TD32 Toon Unlock",
@@ -19943,8 +20039,8 @@
         "type": "Event",
         "max_count": 1
       },
-      "Luster Dragon": {
-        "name": "Luster Dragon",
+      "Dark Magician": {
+        "name": "Dark Magician",
         "id": null,
         "groups": [
           "Event"
@@ -19956,47 +20052,8 @@
         "type": "Event",
         "max_count": 3
       },
-      "Armed Dragon LV3": {
-        "name": "Armed Dragon LV3",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 5
-      },
-      "Armed Dragon LV5": {
-        "name": "Armed Dragon LV5",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 6
-      },
-      "Masked Dragon": {
-        "name": "Masked Dragon",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 4
-      },
-      "Twin-Headed Behemoth": {
-        "name": "Twin-Headed Behemoth",
+      "Apprentice Magician": {
+        "name": "Apprentice Magician",
         "id": null,
         "groups": [
           "Event"
@@ -20008,8 +20065,21 @@
         "type": "Event",
         "max_count": 3
       },
-      "Stamping Destruction": {
-        "name": "Stamping Destruction",
+      "Breaker the Magical Warrior": {
+        "name": "Breaker the Magical Warrior",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Magician of Faith": {
+        "name": "Magician of Faith",
         "id": null,
         "groups": [
           "Event"
@@ -20021,8 +20091,8 @@
         "type": "Event",
         "max_count": 4
       },
-      "Nobleman of Crossout": {
-        "name": "Nobleman of Crossout",
+      "Skilled Dark Magician": {
+        "name": "Skilled Dark Magician",
         "id": null,
         "groups": [
           "Event"
@@ -20034,8 +20104,8 @@
         "type": "Event",
         "max_count": 4
       },
-      "Creature Swap": {
-        "name": "Creature Swap",
+      "Tsukuyomi": {
+        "name": "Tsukuyomi",
         "id": null,
         "groups": [
           "Event"
@@ -20045,10 +20115,10 @@
         "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 2
+        "max_count": 4
       },
-      "Reload": {
-        "name": "Reload",
+      "Magical Dimension": {
+        "name": "Magical Dimension",
         "id": null,
         "groups": [
           "Event"
@@ -20058,7 +20128,33 @@
         "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 3
+        "max_count": 4
+      },
+      "Mage Power": {
+        "name": "Mage Power",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Spell-Counter Cards": {
+        "name": "Spell-Counter Cards",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Heavy Storm": {
         "name": "Heavy Storm",
@@ -20197,19 +20293,6 @@
       },
       "Exodia": {
         "name": "Exodia",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 2
-      },
-      "Dark Magician": {
-        "name": "Dark Magician",
         "id": null,
         "groups": [
           "Event"
@@ -20376,19 +20459,6 @@
         "event": true,
         "type": "Event",
         "max_count": 1
-      },
-      "Magician of Faith": {
-        "name": "Magician of Faith",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 3
       },
       "Dark Elf": {
         "name": "Dark Elf",
@@ -20623,6 +20693,19 @@
         "event": true,
         "type": "Event",
         "max_count": 1
+      },
+      "Nobleman of Crossout": {
+        "name": "Nobleman of Crossout",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
       },
       "Magic Drain": {
         "name": "Magic Drain",
@@ -21625,6 +21708,19 @@
         "type": "Event",
         "max_count": 2
       },
+      "Twin-Headed Behemoth": {
+        "name": "Twin-Headed Behemoth",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
       "Airknight Parshath": {
         "name": "Airknight Parshath",
         "id": null,
@@ -21702,6 +21798,32 @@
         "event": true,
         "type": "Event",
         "max_count": 3
+      },
+      "Stamping Destruction": {
+        "name": "Stamping Destruction",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
+      "Creature Swap": {
+        "name": "Creature Swap",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Asura Priest": {
         "name": "Asura Priest",
@@ -21976,19 +22098,6 @@
         "type": "Event",
         "max_count": 2
       },
-      "Skilled Dark Magician": {
-        "name": "Skilled Dark Magician",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 3
-      },
       "Dark Blade": {
         "name": "Dark Blade",
         "id": null,
@@ -22015,6 +22124,19 @@
         "type": "Event",
         "max_count": 1
       },
+      "Luster Dragon": {
+        "name": "Luster Dragon",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
       "Breaker the magical Warrior": {
         "name": "Breaker the magical Warrior",
         "id": null,
@@ -22040,19 +22162,6 @@
         "event": true,
         "type": "Event",
         "max_count": 4
-      },
-      "Apprentice Magician": {
-        "name": "Apprentice Magician",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 2
       },
       "Burning Beast": {
         "name": "Burning Beast",
@@ -22339,19 +22448,6 @@
         "event": true,
         "type": "Event",
         "max_count": 2
-      },
-      "Tsukuyomi": {
-        "name": "Tsukuyomi",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 3
       },
       "Ojama Trio": {
         "name": "Ojama Trio",
@@ -22873,6 +22969,19 @@
         "type": "Event",
         "max_count": 2
       },
+      "Reload": {
+        "name": "Reload",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 2
+      },
       "Cursed Seal of the Forbidden Spell": {
         "name": "Cursed Seal of the Forbidden Spell",
         "id": null,
@@ -23148,6 +23257,45 @@
       },
       "Ultimate Baseball Kid": {
         "name": "Ultimate Baseball Kid",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 3
+      },
+      "Armed Dragon LV3": {
+        "name": "Armed Dragon LV3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 4
+      },
+      "Armed Dragon LV5": {
+        "name": "Armed Dragon LV5",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 5
+      },
+      "Masked Dragon": {
+        "name": "Masked Dragon",
         "id": null,
         "groups": [
           "Event"
@@ -24966,19 +25114,6 @@
         "type": "Event",
         "max_count": 1
       },
-      "Magical Dimension": {
-        "name": "Magical Dimension",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 3
-      },
       "Skull Zoma": {
         "name": "Skull Zoma",
         "id": null,
@@ -25097,11 +25232,11 @@
       "Alpha the Magnet Warrior": 1,
       "Amphibian Beast": 1,
       "Anteatereatingant": 2,
-      "Apprentice Magician": 2,
+      "Apprentice Magician": 3,
       "Aqua Spirit": 2,
       "Archfiend Soldier": 2,
-      "Armed Dragon LV3": 5,
-      "Armed Dragon LV5": 6,
+      "Armed Dragon LV3": 4,
+      "Armed Dragon LV5": 5,
       "Asura Priest": 3,
       "Aussa the Earth Charmer": 3,
       "B.E.S. Tetran": 2,
@@ -25123,6 +25258,7 @@
       "Book of Moon": 2,
       "Book of Taiyou": 1,
       "Brain Control": 1,
+      "Breaker the Magical Warrior": 1,
       "Breaker the magical Warrior": 2,
       "Brron, Mad King of Dark World": 2,
       "Burning Beast": 2,
@@ -25172,7 +25308,7 @@
       "Continuous Spell/Trap B": 2,
       "Contract with the Abyss": 1,
       "Cosmo Queen": 1,
-      "Creature Swap": 2,
+      "Creature Swap": 1,
       "Cure Mermaid": 2,
       "Curse of Vampire": 3,
       "Cursed Seal of the Forbidden Spell": 2,
@@ -25195,7 +25331,7 @@
       "Dark Elf": 2,
       "Dark Magic Curtain": 1,
       "Dark Magic Ritual": 1,
-      "Dark Magician": 2,
+      "Dark Magician": 3,
       "Dark Master - Zorc": 1,
       "Dark Ruler Ha Des": 2,
       "Dark Sage": 2,
@@ -25216,7 +25352,7 @@
       "Dimension Fusion": 2,
       "Dimensional Warrior": 1,
       "Direct Attack Collection": 2,
-      "Direct Damage Collection": 2,
+      "Direct Damage Collection": 1,
       "Divine Wrath": 3,
       "Don Zaloog": 2,
       "Dragon Collection": 2,
@@ -25329,14 +25465,10 @@
       "Kiseitai": 3,
       "Kycoo the Ghost Destroyer": 3,
       "LABYRINTH OF NIGHTMARE": 2,
-      "LD12 All except Wind forbidden Unlock": 2,
-      "LD16 Effect Monsters forbidden Unlock": 2,
-      "LD21 All except Dark forbidden Unlock": 2,
-      "LD23 Refer to Mar 05 Banlist Unlock": 2,
-      "LD24 Refer to Sept 04 Banlist Unlock": 2,
-      "LD37 All except Water forbidden Unlock": 2,
-      "LD38 Refer to Mar 04 Banlist Unlock": 2,
-      "LEGACY OF DARKNESS": 1,
+      "LD26 All except Toons forbidden Unlock": 2,
+      "LD34 Normal Summons forbidden Unlock": 2,
+      "LD41 Refer to Sept 03 Banlist Unlock": 2,
+      "LEGACY OF DARKNESS": 2,
       "LEGEND OF B.E.W.D.": 2,
       "LP Recovery Collection": 2,
       "La Jinn the Mystical Genie of the Lamp": 2,
@@ -25344,27 +25476,28 @@
       "Legendary Fiend": 1,
       "Level Limit - Area B": 2,
       "Level Up!": 3,
-      "Luster Dragon": 3,
+      "Luster Dragon": 2,
       "Luster Dragon #2": 2,
       "MAGICIAN'S FORCE": 2,
       "METAL RAIDERS": 2,
       "Machine Collection A": 2,
       "Machine Collection B": 2,
       "Mad Dog of Darkness": 1,
+      "Mage Power": 1,
       "Magic Drain": 2,
       "Magic Jammer": 2,
       "Magical Blast": 1,
-      "Magical Dimension": 3,
+      "Magical Dimension": 4,
       "Magical Marionette": 3,
       "Magical Merchant": 2,
       "Magician of Black Chaos": 2,
-      "Magician of Faith": 3,
+      "Magician of Faith": 4,
       "Maharaghi": 2,
       "Manju of the Ten Thousand Hands": 2,
       "Manticore of Darkness": 2,
       "Marauding Captain": 3,
       "Marshmallon": 1,
-      "Masked Dragon": 4,
+      "Masked Dragon": 3,
       "Master Kyonshee": 2,
       "Mechanicalchaser": 1,
       "Megamorph": 2,
@@ -25395,7 +25528,7 @@
       "Nimble Momonga": 3,
       "Nin-Ken Dog": 1,
       "Ninja Grandmaster Sasuke": 3,
-      "Nobleman of Crossout": 4,
+      "Nobleman of Crossout": 3,
       "Non Aggression Area": 1,
       "Offerings to the Doomed": 2,
       "Ojama Black": 1,
@@ -25433,7 +25566,7 @@
       "Red Gadget": 1,
       "Regenerating Mummy": 2,
       "Reinforcement of the Army": 1,
-      "Reload": 3,
+      "Reload": 2,
       "Rescue Cat": 2,
       "Return from the Different Dimension": 1,
       "Reverse Collection": 2,
@@ -25464,7 +25597,7 @@
       "Silent Swordsman Lv3": 4,
       "Silent Swordsman Lv5": 4,
       "Silpheed": 3,
-      "Skilled Dark Magician": 3,
+      "Skilled Dark Magician": 4,
       "Skull Archfiend of Lightning": 2,
       "Skull Descovery Knight": 2,
       "Skull Servant": 2,
@@ -25485,6 +25618,7 @@
       "Special Summon Collection C": 2,
       "Spell Reproduction": 1,
       "Spell Shield Type-8": 2,
+      "Spell-Counter Cards": 1,
       "Spellcaster Collection A": 2,
       "Spellcaster Collection B": 2,
       "Spirit Message 'A'": 2,
@@ -25493,7 +25627,7 @@
       "Spirit Message 'N'": 2,
       "Spirit Reaper": 3,
       "Spirit of Flames": 2,
-      "Stamping Destruction": 4,
+      "Stamping Destruction": 2,
       "Stealth Bird": 2,
       "Stray Lambs": 2,
       "Suijin": 1,
@@ -25502,9 +25636,13 @@
       "Susa Soldier": 2,
       "Swarm of Locusts": 1,
       "Swarm of Scarabs": 2,
-      "TD13 Flip Summon Unlock": 2,
-      "TD21 Victory D. Unlock": 2,
-      "TD24 Victory in 5 Turns Unlock": 2,
+      "TD02 Deflected Damage Unlock": 2,
+      "TD08 Draw Unlock": 2,
+      "TD19 20 Turns Unlock": 2,
+      "TD25 Moth Grows Up Unlock": 2,
+      "TD26 Magnetic Power Unlock": 2,
+      "TD29 Destroy Monsters in Battle Unlock": 2,
+      "TD31 Special Summon C Unlock": 2,
       "THE LOST MILLENIUM": 2,
       "Tenkabito Shien": 1,
       "Terraforming": 1,
@@ -25537,8 +25675,8 @@
       "Tribute Doll": 2,
       "Tribute to the Doomed": 2,
       "Troop Dragon": 3,
-      "Tsukuyomi": 3,
-      "Twin-Headed Behemoth": 3,
+      "Tsukuyomi": 4,
+      "Twin-Headed Behemoth": 2,
       "UFO Turtle": 3,
       "Ultimate Baseball Kid": 3,
       "Ultimate Insect Lv3": 3,
@@ -25589,7 +25727,7 @@
   "starting_items": {
     "1": [
       "Campaign Tier 1 Column 5",
-      "LEGACY OF DARKNESS",
+      "Direct Damage Collection",
       "Banlist September 2005"
     ]
   },
