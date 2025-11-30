@@ -208,8 +208,8 @@ def main():
     parser.add_argument(
         '--multiworld-max-templates',
         type=int,
-        default=2,
-        help='Maximum number of templates to keep in multiworld directory (default: 2). When exceeded, oldest templates are removed.'
+        default=10,
+        help='Maximum number of templates to keep in multiworld directory (default: 10). When exceeded, oldest templates are removed.'
     )
     parser.add_argument(
         '--dry-run',
