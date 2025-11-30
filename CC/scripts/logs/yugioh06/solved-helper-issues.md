@@ -5,7 +5,6 @@
 ## Issue 1: `only_dragon` helper had incorrect item name concatenation
 
 **Status:** Solved
-**Fixed in commit:** (pending commit)
 **File:** `frontend/modules/shared/gameLogic/yugioh06/yugioh06Logic.js`
 
 ### Problem
@@ -33,11 +32,7 @@ The `only_dragon` helper did not correctly count items, causing:
 
 ### Fix Applied
 
-Changed line 426 from:
-```javascript
-    "Cave DragonArmed Dragon LV3",  // Matches Python bug: missing comma causes string concatenation
-```
-To:
+Changed the concatenated string to two separate items:
 ```javascript
     "Cave Dragon",
     "Armed Dragon LV3",
@@ -47,4 +42,34 @@ Also removed the incorrect comment about a "Python bug" since there was no bug i
 
 ### Verification
 
-After the fix, all 971 spoiler test events pass successfully.
+After the fix, all spoiler test events pass for seeds 1-10.
+
+---
+
+## Issue 2: Missing `count_has_materials` and `has_all_materials` helpers
+
+**Status:** Solved
+**Files:**
+- `frontend/modules/shared/gameLogic/yugioh06/yugioh06Logic.js`
+- `exporter/games/yugioh06.py`
+
+### Problem
+
+The `count_has_materials` function from `worlds/yugioh06/fusions.py` was not implemented in JavaScript. This function is used to check if the player can create fusion monsters, which is required for rules like:
+- LD19 All except E-Hero's forbidden
+- LD34 Normal Summons forbidden
+- TD44 Extra Deck Monsters
+
+### Fix Applied
+
+1. Added `count_has_materials` to `CUSTOM_HELPERS` in the exporter to preserve it as a helper call
+2. Implemented the fusion data structures in JavaScript:
+   - `FUSIONS` object containing all Elemental Hero fusion recipes
+   - `FUSION_SUBS` list of fusion substitute monsters
+3. Implemented helper functions:
+   - `has_all_materials(snapshot, staticData, monster)` - recursively checks if player has all materials
+   - `count_has_materials(snapshot, staticData, monsters)` - counts how many fusions can be made
+
+### Verification
+
+After the fix, all spoiler test events pass for seeds 1-10.
