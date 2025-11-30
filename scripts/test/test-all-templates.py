@@ -845,7 +845,6 @@ def main():
         backup_file = os.path.join(backup_dir, backup_filename)
 
         try:
-            import shutil
             shutil.copy2(results_file, backup_file)
             print(f"Backup of existing results saved to: {backup_filename}")
         except (IOError, OSError) as e:
