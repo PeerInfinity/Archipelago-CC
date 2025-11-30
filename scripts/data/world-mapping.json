@@ -84,9 +84,9 @@
     "world_directory": "cv64"
   },
   "Celeste (Open World)": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/celeste_open_world.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "celeste_open_world"
   },
