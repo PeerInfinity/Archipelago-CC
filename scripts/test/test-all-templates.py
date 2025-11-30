@@ -208,8 +208,8 @@ def main():
     parser.add_argument(
         '--multiworld-max-templates',
         type=int,
-        default=10,
-        help='Maximum number of templates to keep in multiworld directory (default: 10). When exceeded, oldest templates are removed.'
+        default=2,
+        help='Maximum number of templates to keep in multiworld directory (default: 2). When exceeded, oldest templates are removed.'
     )
     parser.add_argument(
         '--dry-run',
@@ -1162,9 +1162,11 @@ def main():
                         dry_run=args.dry_run
                     )
 
-                # If the test passed AND we're not in keep_templates mode, increment player count for next template
-                if not args.multiworld_keep_templates and template_result.get('multiworld_test', {}).get('success', False):
-                    multiworld_player_count += 1
+                # After multiworld test, synchronize player count with actual templates in directory
+                # This accounts for templates being removed when exceeding max_templates
+                if not args.multiworld_keep_templates:
+                    actual_templates = [f for f in os.listdir(multiworld_dir) if f.endswith('.yaml')]
+                    multiworld_player_count = len(actual_templates)
             elif len(seed_list) > 1:
                 # Test with seed range (normal mode)
                 template_result = test_template_seed_range(
