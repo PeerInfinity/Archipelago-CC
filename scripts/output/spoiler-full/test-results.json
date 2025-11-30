@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-28T04:59:04.753213",
-    "last_updated": "2025-11-28T04:59:04.753219",
+    "last_updated": "2025-11-30T08:08:39.119064",
     "script_version": "1.0.0"
   },
   "results": {
@@ -27524,30 +27524,30 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.7,
+            "processing_time_seconds": 8.55,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/sc2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-            "size_bytes": 809029,
-            "size_mb": 0.77
+            "size_bytes": 1109685,
+            "size_mb": 1.06
           },
           "seed": "1",
           "seed_id": "AP_14089154938208861744",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 115.28,
+            "processing_time_seconds": 55.0,
             "return_code": 0,
-            "sphere_reached": 32.2,
+            "sphere_reached": 15.14,
             "success": true,
-            "total_spheres": 32.2,
+            "total_spheres": 15.14,
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-11-28T04:44:36.366484",
+          "timestamp": "2025-11-30T07:56:06.219306",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -27569,30 +27569,30 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.65,
+            "processing_time_seconds": 8.39,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/sc2/AP_55941320597534372051/AP_55941320597534372051_rules.json",
-            "size_bytes": 809030,
-            "size_mb": 0.77
+            "size_bytes": 1109731,
+            "size_mb": 1.06
           },
           "seed": "10",
           "seed_id": "AP_55941320597534372051",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 112.51,
+            "processing_time_seconds": 55.01,
             "return_code": 0,
-            "sphere_reached": 29.2,
+            "sphere_reached": 16.14,
             "success": true,
-            "total_spheres": 29.2,
+            "total_spheres": 16.14,
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-11-28T04:45:00.307567",
+          "timestamp": "2025-11-30T08:07:34.892705",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -27614,30 +27614,30 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.55,
+            "processing_time_seconds": 8.39,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/sc2/AP_01043188731678011336/AP_01043188731678011336_rules.json",
-            "size_bytes": 809031,
-            "size_mb": 0.77
+            "size_bytes": 1109888,
+            "size_mb": 1.06
           },
           "seed": "2",
           "seed_id": "AP_01043188731678011336",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 109.35,
+            "processing_time_seconds": 63.99,
             "return_code": 0,
-            "sphere_reached": 32.3,
+            "sphere_reached": 12.14,
             "success": true,
-            "total_spheres": 32.3,
+            "total_spheres": 12.14,
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-11-28T04:44:21.286867",
+          "timestamp": "2025-11-30T07:57:14.736684",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -27659,30 +27659,30 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.69,
+            "processing_time_seconds": 8.0,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/sc2/AP_84719271504320872445/AP_84719271504320872445_rules.json",
-            "size_bytes": 809035,
-            "size_mb": 0.77
+            "size_bytes": 1109665,
+            "size_mb": 1.06
           },
           "seed": "3",
           "seed_id": "AP_84719271504320872445",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 109.53,
+            "processing_time_seconds": 59.83,
             "return_code": 0,
-            "sphere_reached": 40.3,
+            "sphere_reached": 12.14,
             "success": true,
-            "total_spheres": 40.3,
+            "total_spheres": 12.14,
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-11-28T04:44:50.602541",
+          "timestamp": "2025-11-30T07:58:31.931022",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -27704,30 +27704,30 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.69,
+            "processing_time_seconds": 8.46,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/sc2/AP_05594871498841892311/AP_05594871498841892311_rules.json",
-            "size_bytes": 809031,
-            "size_mb": 0.77
+            "size_bytes": 1109573,
+            "size_mb": 1.06
           },
           "seed": "4",
           "seed_id": "AP_05594871498841892311",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 109.7,
+            "processing_time_seconds": 55.95,
             "return_code": 0,
-            "sphere_reached": 30.5,
+            "sphere_reached": 17.29,
             "success": true,
-            "total_spheres": 30.5,
+            "total_spheres": 17.29,
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-11-28T04:44:54.354325",
+          "timestamp": "2025-11-30T07:59:44.897617",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -27749,30 +27749,30 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.62,
+            "processing_time_seconds": 8.49,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/sc2/AP_96945849220684217413/AP_96945849220684217413_rules.json",
-            "size_bytes": 809031,
-            "size_mb": 0.77
+            "size_bytes": 1109785,
+            "size_mb": 1.06
           },
           "seed": "5",
           "seed_id": "AP_96945849220684217413",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 112.32,
+            "processing_time_seconds": 66.08,
             "return_code": 0,
-            "sphere_reached": 33.2,
+            "sphere_reached": 10.23,
             "success": true,
-            "total_spheres": 33.2,
+            "total_spheres": 10.23,
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-11-28T04:44:34.383983",
+          "timestamp": "2025-11-30T08:01:05.119641",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -27794,30 +27794,30 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.66,
+            "processing_time_seconds": 8.32,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/sc2/AP_00679259829289197625/AP_00679259829289197625_rules.json",
-            "size_bytes": 809022,
-            "size_mb": 0.77
+            "size_bytes": 1110074,
+            "size_mb": 1.06
           },
           "seed": "6",
           "seed_id": "AP_00679259829289197625",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 111.31,
+            "processing_time_seconds": 66.07,
             "return_code": 0,
-            "sphere_reached": 31.2,
+            "sphere_reached": 12.65,
             "success": true,
-            "total_spheres": 31.2,
+            "total_spheres": 12.65,
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-11-28T04:44:15.910425",
+          "timestamp": "2025-11-30T08:02:24.735476",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -27839,30 +27839,30 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.93,
+            "processing_time_seconds": 8.3,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/sc2/AP_35931773795037525048/AP_35931773795037525048_rules.json",
-            "size_bytes": 809025,
-            "size_mb": 0.77
+            "size_bytes": 1109823,
+            "size_mb": 1.06
           },
           "seed": "7",
           "seed_id": "AP_35931773795037525048",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 114.3,
+            "processing_time_seconds": 59.04,
             "return_code": 0,
-            "sphere_reached": 36.2,
+            "sphere_reached": 14.27,
             "success": true,
-            "total_spheres": 36.2,
+            "total_spheres": 14.27,
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-11-28T04:46:48.138712",
+          "timestamp": "2025-11-30T08:03:45.105846",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -27884,30 +27884,30 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 8.04,
+            "processing_time_seconds": 8.17,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/sc2/AP_20777137877808592492/AP_20777137877808592492_rules.json",
-            "size_bytes": 809024,
-            "size_mb": 0.77
+            "size_bytes": 1109991,
+            "size_mb": 1.06
           },
           "seed": "8",
           "seed_id": "AP_20777137877808592492",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 121.52,
+            "processing_time_seconds": 61.82,
             "return_code": 0,
-            "sphere_reached": 30.2,
+            "sphere_reached": 19.14,
             "success": true,
-            "total_spheres": 30.2,
+            "total_spheres": 19.14,
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-11-28T04:46:09.166780",
+          "timestamp": "2025-11-30T08:04:58.419185",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -27929,30 +27929,30 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 7.72,
+            "processing_time_seconds": 8.44,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/sc2/AP_48205312626925217390/AP_48205312626925217390_rules.json",
-            "size_bytes": 809037,
-            "size_mb": 0.77
+            "size_bytes": 1109877,
+            "size_mb": 1.06
           },
           "seed": "9",
           "seed_id": "AP_48205312626925217390",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 111.27,
+            "processing_time_seconds": 57.97,
             "return_code": 0,
-            "sphere_reached": 28.2,
+            "sphere_reached": 17.29,
             "success": true,
-            "total_spheres": 28.2,
+            "total_spheres": 17.29,
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-11-28T04:44:30.660441",
+          "timestamp": "2025-11-30T08:06:22.453196",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -27990,7 +27990,7 @@
         "failure_rate": 0.0
       },
       "template_filename": "Starcraft 2.yaml",
-      "timestamp": "2025-11-28T04:44:36.366484",
+      "timestamp": "2025-11-30T08:07:34.892705",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/sc2.py",

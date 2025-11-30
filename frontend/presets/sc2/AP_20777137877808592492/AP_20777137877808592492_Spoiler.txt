@@ -1,0 +1,667 @@
+﻿Archipelago Version 0.6.5  -  Seed: 8
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Starcraft 2
+Location Count:                  232
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Game Difficulty:                 Normal
+Difficulty Damage Modifier:      Yes
+Game Speed:                      Default
+Disable Forced Camera Movement:  Yes
+Skip Cutscenes:                  No
+All In Map:                      Air
+Mission Order:                   Golden Path
+Maximum Campaign Size:           83
+Two start missions:              No
+Key Mode:                        Disabled
+Terran Player Color (Raynor):    Default
+Protoss Player Color:            Default
+Zerg Player Color:               Default
+Zerg Player Color (Primal):      Default
+Terran Player Color (Nova):      Default
+Select Playable Races:           Protoss, Terran, Zerg
+Enabled Campaigns:               Wings of Liberty
+Enable Race-Swapped Mission Variants:Disabled
+Enable Mission Race Balancing:   Semi Balanced
+Shuffle Campaigns:               Yes
+Shuffle No-Build Missions:       Yes
+Starter Unit:                    Off
+Required Tactics:                Standard
+Enable Void Trade:               No
+Void Trade Age Limit:            30 Minutes
+Allow Workers in Void Trade:     No
+Ensure Generic Items:            25
+Minimum number of upgrades per unit/structure:2
+Maximum number of upgrades per unit/structure:-1
+Mercenary Highlanders:           Yes
+Maximum Upgrade Level:           3
+Generic Upgrade Missions:        0
+Generic Upgrade Research:        Vanilla
+Generic Upgrade Research Speedup:No
+Generic Upgrade Items:           Individual Items
+Kerrigan Presence:               Vanilla
+Levels Per Mission Beaten:       0
+Levels Per Mission Beaten Cap:   -1
+Kerrigan Level Item Sum:         70
+Kerrigan Level Item Distribution:Smooth
+Total Level Cap:                 -1
+Starting Primary Abilities:      0
+Kerrigan Primal Status:          Vanilla
+Kerrigan Maximum Active Abilities:12
+Kerrigan Maximum Passive Abilities:5
+Enable Morphling:                No
+Allow Unit Nerfs:                No
+Spear of Adun Presence:          Vanilla
+Spear of Adun Present in No-Build:No
+Spear of Adun Passive Ability Presence:Vanilla
+Spear of Adun Passive Abilities Present in No-Build:No
+Spear of Adun Maximum Active Abilities:13
+Spear of Adun Maximum Passive Abilities:3
+Grant Story Tech:                No Grant
+Grant Story Levels:              Minimum
+Nova Maximum Weapons:            5
+Nova Maximum Gadgets:            5
+Nova Ghost of Chance Variant:    WoL
+Take Over AI Allies:             No
+Locked Items:                    
+Excluded Items:                  
+Unexcluded Items:                
+Excluded Missions:               
+Difficulty Curve:                Standard
+Exclude Very Hard Missions:      Default
+Vanilla Items Only:              No
+Exclude Overpowered Items:       No
+Victory Cache:                   0
+Vanilla Locations:               Enabled
+Extra Locations:                 Enabled
+Challenge Locations:             Enabled
+Mastery Locations:               Enabled
+Base-Bust Locations:             Enabled
+Speedrun Locations:              Enabled
+Preventative Locations:          Enabled
+Filler Percentage:               0
+Minerals Per Item:               25
+Vespene Per Item:                25
+Starting Supply Per Item:        2
+Maximum Supply Per Item:         1
+Maximum Supply Reduction Per Item:1
+Lowest Maximum Supply:           180
+Upgrade Cost Discount Per Item:  2
+Filler Items Distribution:       1 Kerrigan Level: 0, Additional Maximum Supply: 1, Additional Starting Minerals: 1, Additional Starting Supply: 1, Additional Starting Vespene: 1, Decreased Maximum Supply: 0, Increased Building Construction Speed: 1, Increased Shield Regeneration: 1, Increased Upgrade Research Speed: 1, Reduced Upgrade Research Cost: 1
+Mission Order Scouting:          None
+
+
+Locations:
+
+All-In (Terran): Victory: Internal Tech Module (Battlecruiser)
+All-In (Terran): First Kerrigan Attack: Internal Tech Module (Banshee)
+All-In (Terran): Second Kerrigan Attack: Spider Mines (Raven)
+All-In (Terran): Third Kerrigan Attack: Progressive Stimpack (Firebat)
+All-In (Terran): Fourth Kerrigan Attack: Reaper
+All-In (Terran): Fifth Kerrigan Attack: Moirai Impulse Drive (Battlecruiser)
+Beat All-In (Terran): Beat All-In (Terran)
+Devil's Playground (Terran): Victory: Brynhilds
+Devil's Playground (Terran): Tosh's Miners: Optimized Logistics (Hellion)
+Devil's Playground (Terran): Brutalisk: Progressive Terran Ship Armor
+Devil's Playground (Terran): North Reapers: Concussive Shells (Marauder)
+Devil's Playground (Terran): Middle Reapers: Raven
+Devil's Playground (Terran): Southwest Reapers: Scanner Sweep (Command Center)
+Devil's Playground (Terran): Southeast Reapers: Automated Refinery (Terran)
+Devil's Playground (Terran): East Reapers: Grapple Pull (HERC)
+Devil's Playground (Terran): Zerg Cleared: Concussive Charge (Predator)
+Beat Devil's Playground (Terran): Beat Devil's Playground (Terran)
+Zero Hour (Terran): Victory: Progressive Fire-Suppression System (Terran)
+Zero Hour (Terran): First Group Rescued: Goliath
+Zero Hour (Terran): Second Group Rescued: Resource Efficiency (Predator)
+Zero Hour (Terran): Third Group Rescued: Progressive Tomahawk Power Cells (Wraith)
+Zero Hour (Terran): First Hatchery: Rocket Barrage (Banshee)
+Zero Hour (Terran): Second Hatchery: Skibi's Angels
+Zero Hour (Terran): Third Hatchery: Progressive Terran Infantry Weapon
+Zero Hour (Terran): Fourth Hatchery: Hammer Securities
+Zero Hour (Terran): Ride's on its Way: Orbital Depots (Terran)
+Zero Hour (Terran): Hold Just a Little Longer: Planetary Fortress
+Zero Hour (Terran): Cavalry's on the Way: Progressive Missile Pods (Battlecruiser)
+Beat Zero Hour (Terran): Beat Zero Hour (Terran)
+Piercing the Shroud: Victory: Wraith
+Piercing the Shroud: Holding Cell Relic: Resource Efficiency (Widow Mine)
+Piercing the Shroud: Brutalisk Relic: Concussive Grenades (Devastator Turret)
+Piercing the Shroud: First Escape Relic: Advanced Healing AI (Medivac)
+Piercing the Shroud: Second Escape Relic: Progressive Fire-Suppression System (Terran)
+Piercing the Shroud: Brutalisk: Resource Efficiency (Wraith)
+Piercing the Shroud: Fusion Reactor: Psi Screen (Psi Disrupter)
+Piercing the Shroud: Entrance Holding Pen: Combat Shield (Marine)
+Piercing the Shroud: Cargo Bay Warbot: Anti-Armor Munitions (Devastator Turret)
+Piercing the Shroud: Escape Warbot: Structure Armor (Terran)
+Beat Piercing the Shroud: Beat Piercing the Shroud
+Maw of the Void (Terran): Victory: Demolition Payload (Widow Mine)
+Maw of the Void (Terran): Landing Zone Cleared: Progressive Terran Ship Weapon
+Maw of the Void (Terran): Expansion Prisoners: Hunter-Seeker Weapon (Raven)
+Maw of the Void (Terran): South Close Prisoners: Magrail Munitions (Marine)
+Maw of the Void (Terran): South Far Prisoners: Hostile Environment Adaptation (SCV)
+Maw of the Void (Terran): North Prisoners: Resource Efficiency (Devastator Turret)
+Maw of the Void (Terran): Mothership: Behemoth Reactor (Battlecruiser)
+Maw of the Void (Terran): Expansion Rip Field Generator: Devil Dogs
+Maw of the Void (Terran): Middle Rip Field Generator: Twin-Linked Flamethrower (Hellion)
+Maw of the Void (Terran): Southeast Rip Field Generator: Phobos-Class Weapons System (Viking)
+Maw of the Void (Terran): Stargate Rip Field Generator: Displacement Field (Wraith)
+Maw of the Void (Terran): Northwest Rip Field Generator: Juggernaut Plating (HERC)
+Maw of the Void (Terran): West Rip Field Generator: Resource Efficiency (Medivac)
+Maw of the Void (Terran): Southwest Rip Field Generator: Expanded Hull (Medivac)
+Beat Maw of the Void (Terran): Beat Maw of the Void (Terran)
+Supernova (Terran): Victory: Firebat
+Supernova (Terran): West Relic: Behemoth Plating (Battlecruiser)
+Supernova (Terran): North Relic: Railgun Turret (Raven)
+Supernova (Terran): South Relic: Progressive Stimpack (Reaper)
+Supernova (Terran): East Relic: Progressive Terran Infantry Weapon
+Supernova (Terran): Landing Zone Cleared: Laser Targeting System (Marine)
+Supernova (Terran): Middle Base: Vulture
+Supernova (Terran): Southeast Base: Progressive Cross-Spectrum Dampeners (Banshee)
+Beat Supernova (Terran): Beat Supernova (Terran)
+Gates of Hell (Terran): Victory: Spider Mines (Reaper)
+Gates of Hell (Terran): Large Army: Progressive Cross-Spectrum Dampeners (Banshee)
+Gates of Hell (Terran): 2 Drop Pods: Hive Mind Emulator
+Gates of Hell (Terran): 4 Drop Pods: Thermite Filaments (Hellion)
+Gates of Hell (Terran): 6 Drop Pods: Deploy Turret (Warhound)
+Gates of Hell (Terran): 8 Drop Pods: Incinerator Gauntlets (Firebat)
+Gates of Hell (Terran): Southwest Spore Cannon: Diamondback
+Gates of Hell (Terran): Northwest Spore Cannon: Black Market Launchers (Widow Mine)
+Gates of Hell (Terran): Northeast Spore Cannon: Ibiks Tracking Scanners (Planetary Fortress)
+Gates of Hell (Terran): East Spore Cannon: G-4 Clusterbomb (Reaper)
+Gates of Hell (Terran): Southeast Spore Cannon: Orbital Module (Planetary Fortress)
+Gates of Hell (Terran): Expansion Spore Cannon: Progressive Stimpack (Marauder)
+Beat Gates of Hell (Terran): Beat Gates of Hell (Terran)
+Engine of Destruction (Terran): Victory: Shaped Hull (Diamondback)
+Engine of Destruction (Terran): Odin: Construction Jump Jets (SCV)
+Engine of Destruction (Terran): Loki: Optimized Logistics (Goliath)
+Engine of Destruction (Terran): Lab Devourer: Magrail Munitions (Marauder)
+Engine of Destruction (Terran): North Devourer: Resource Efficiency (Missile Turret)
+Engine of Destruction (Terran): Southeast Devourer: Progressive Terran Infantry Armor
+Engine of Destruction (Terran): West Base: Rapid Fire Launchers (Cyclone)
+Engine of Destruction (Terran): Northwest Base: Bio Mechanical Repair Drone (Raven)
+Engine of Destruction (Terran): Northeast Base: Progressive Tri-Lithium Power Cell (Diamondback)
+Engine of Destruction (Terran): Southeast Base: Valkyrie
+Beat Engine of Destruction (Terran): Beat Engine of Destruction (Terran)
+Media Blitz (Terran): Victory: Internal Tech Module (Raven)
+Media Blitz (Terran): Tower 1: Smart Servos (Viking)
+Media Blitz (Terran): Tower 2: Progressive Terran Vehicle Armor
+Media Blitz (Terran): Tower 3: Flechette Missiles (Valkyrie)
+Media Blitz (Terran): Science Facility: Winged Nightmares
+Media Blitz (Terran): All Barracks: Juggernaut Plating (Marauder)
+Media Blitz (Terran): All Factories: Hailstorm Launcher (Dominion Trooper)
+Media Blitz (Terran): All Starports: Laser Targeting System (Marauder)
+Media Blitz (Terran): Odin Not Trashed: Widow Mine
+Media Blitz (Terran): Surprise Attack Ends: Progressive Regenerative Bio-Steel (Terran)
+Beat Media Blitz (Terran): Beat Media Blitz (Terran)
+The Outlaws (Terran): Victory: Progressive Terran Ship Weapon
+The Outlaws (Terran): Rebel Base: W.I.L.D. Missiles (Viking)
+The Outlaws (Terran): North Resource Pickups: Infernal Plating (Hellion)
+The Outlaws (Terran): Bunker: Hel's Angels
+The Outlaws (Terran): Close Resource Pickups: Hellion
+Beat The Outlaws (Terran): Beat The Outlaws (Terran)
+Smash and Grab (Terran): Victory: Progressive Missile Pods (Battlecruiser)
+Smash and Grab (Terran): First Relic: Shaped Hull (Goliath)
+Smash and Grab (Terran): Second Relic: Argus Amplifier (Hive Mind Emulator)
+Smash and Grab (Terran): Third Relic: War Pigs
+Smash and Grab (Terran): Fourth Relic: Maglev Propulsion (Diamondback)
+Smash and Grab (Terran): First Forcefield Area Busted: Progressive Terran Infantry Armor
+Smash and Grab (Terran): Second Forcefield Area Busted: Anti-Armor Missile (Raven)
+Smash and Grab (Terran): Defeat Kerrigan: Progressive Fast Delivery (Terran)
+Beat Smash and Grab (Terran): Beat Smash and Grab (Terran)
+The Great Train Robbery (Terran): Victory: Multispectrum Doppler (Sensor Tower)
+The Great Train Robbery (Terran): North Defiler: Progressive Stimpack (Firebat)
+The Great Train Robbery (Terran): Mid Defiler: Auto Launchers (Vulture)
+The Great Train Robbery (Terran): South Defiler: Ultra-Capacitors (Terran)
+The Great Train Robbery (Terran): Close Diamondback: Vanadium Plating (Terran)
+The Great Train Robbery (Terran): Northwest Diamondback: Predator
+The Great Train Robbery (Terran): North Diamondback: Assistive Targeting (Sensor Tower)
+The Great Train Robbery (Terran): Northeast Diamondback: Perdition Turret
+The Great Train Robbery (Terran): Southwest Diamondback: Tactical Jump (Battlecruiser)
+The Great Train Robbery (Terran): Southeast Diamondback: Progressive Terran Vehicle Weapon
+The Great Train Robbery (Terran): Kill Team: Optimized Logistics (Dominion Trooper)
+The Great Train Robbery (Terran): Flawless: Advanced Laser Technology (Wraith)
+The Great Train Robbery (Terran): 2 Trains Destroyed: Optical Flare (Medic)
+The Great Train Robbery (Terran): 4 Trains Destroyed: Progressive Stimpack (Hellion)
+The Great Train Robbery (Terran): 6 Trains Destroyed: Tech Reactor (Terran)
+Beat The Great Train Robbery (Terran): Beat The Great Train Robbery (Terran)
+Cutthroat (Terran): Victory: Ion Thrusters (Vulture)
+Cutthroat (Terran): Mira Han: Progressive Terran Ship Armor
+Cutthroat (Terran): North Relic: Laser Targeting System (Reaper)
+Cutthroat (Terran): Mid Relic: Combat Drugs (Reaper)
+Cutthroat (Terran): Southwest Relic: HERC
+Cutthroat (Terran): North Command Center: Rapid Reignition Systems (Medivac)
+Cutthroat (Terran): South Command Center: Burst Capacitors (Diamondback)
+Cutthroat (Terran): West Command Center: Rapid Deployment Tube (Medivac)
+Beat Cutthroat (Terran): Beat Cutthroat (Terran)
+Outbreak (Terran): Victory: Fusion Reactor (Fusion Core)
+Outbreak (Terran): Left Infestor: Ares-Class Targeting System (Goliath)
+Outbreak (Terran): Right Infestor: Progressive Tri-Lithium Power Cell (Diamondback)
+Outbreak (Terran): North Infested Command Center: High Explosive Munition (Spider Mine)
+Outbreak (Terran): South Infested Command Center: Adaptive Defenses (Predator)
+Outbreak (Terran): Northwest Bar: Viking
+Outbreak (Terran): North Bar: Progressive Terran Infantry Weapon
+Outbreak (Terran): South Bar: Psi Indoctrinator (Hive Mind Emulator)
+Beat Outbreak (Terran): Beat Outbreak (Terran)
+The Moebius Factor (Terran): Victory: Axiom Plating (Warhound)
+The Moebius Factor (Terran): 1st Data Core: Cerberus Mine (Spider Mine)
+The Moebius Factor (Terran): 2nd Data Core: Missile Turret
+The Moebius Factor (Terran): South Rescue: Midnight Riders
+The Moebius Factor (Terran): Wall Rescue: Scatter Veil (Medivac)
+The Moebius Factor (Terran): Mid Rescue: Orbital Strike (Barracks)
+The Moebius Factor (Terran): Nydus Roof Rescue: Shockwave Missile Battery (Banshee)
+The Moebius Factor (Terran): Alive Inside Rescue: Resource Efficiency (Valkyrie)
+The Moebius Factor (Terran): Brutalisk: Dominion Trooper
+The Moebius Factor (Terran): 3rd Data Core: CPO-7 Salamander Flamethrower (Dominion Trooper)
+Beat The Moebius Factor (Terran): Beat The Moebius Factor (Terran)
+Welcome to the Jungle (Terran): Victory: Resource Efficiency (Raven)
+Welcome to the Jungle (Terran): Close Relic: Advanced Medic Facilities (Medic)
+Welcome to the Jungle (Terran): West Relic: Progressive Terran Ship Weapon
+Welcome to the Jungle (Terran): North-East Relic: Warhound
+Welcome to the Jungle (Terran): Middle Base: Progressive Terran Vehicle Armor
+Welcome to the Jungle (Terran): Protoss Cleared: Internal Tech Module (Cyclone)
+Welcome to the Jungle (Terran): No Terrazine Nodes Sealed: Drilling Claws (Widow Mine)
+Welcome to the Jungle (Terran): Up to 1 Terrazine Node Sealed: Enhanced Cluster Launchers (Valkyrie)
+Welcome to the Jungle (Terran): Up to 2 Terrazine Nodes Sealed: Field-Assist Target System (Battlecruiser)
+Welcome to the Jungle (Terran): Up to 3 Terrazine Nodes Sealed: Multi-Lock Weapons System (Goliath)
+Welcome to the Jungle (Terran): Up to 4 Terrazine Nodes Sealed: Shredder Rounds (Viking)
+Welcome to the Jungle (Terran): Up to 5 Terrazine Nodes Sealed: Nano Projectors (Firebat)
+Beat Welcome to the Jungle (Terran): Beat Welcome to the Jungle (Terran)
+Shatter the Sky (Terran): Victory: Launching Vector Compensator (Valkyrie)
+Shatter the Sky (Terran): Close Coolant Tower: Advanced Optics (Terran)
+Shatter the Sky (Terran): Northwest Coolant Tower: Internal Tech Module (Goliath)
+Shatter the Sky (Terran): Southeast Coolant Tower: Aesir Turbines (Viking)
+Shatter the Sky (Terran): Southwest Coolant Tower: Interference Matrix (Raven)
+Shatter the Sky (Terran): Leviathan: Marine
+Shatter the Sky (Terran): East Hatchery: Signal Beacon (Terran)
+Shatter the Sky (Terran): North Hatchery: Cloak (Battlecruiser)
+Shatter the Sky (Terran): Mid Hatchery: Stabilizer Medpacks (Medic)
+Beat Shatter the Sky (Terran): Beat Shatter the Sky (Terran)
+The Dig (Terran): Victory: Resource Efficiency (Medic)
+The Dig (Terran): Left Relic: Jotun
+The Dig (Terran): Right Ground Relic: Optimized Logistics (Marine)
+The Dig (Terran): Right Cliff Relic: Progressive Terran Ship Armor
+The Dig (Terran): Moebius Base: Infernal Pre-Igniter (Firebat)
+The Dig (Terran): Door Outer Layer: Progressive Terran Vehicle Weapon
+The Dig (Terran): Door Thermal Barrier: Internal Tech Module (Marauder)
+The Dig (Terran): Cutting Through the Core: Progressive Terran Vehicle Armor
+The Dig (Terran): Structure Access Imminent: Siege Breakers
+The Dig (Terran): Northwestern Protoss Base: Targeting Optics (Cyclone)
+The Dig (Terran): Northeastern Protoss Base: Advanced Targeting Optics (Banshee)
+The Dig (Terran): Eastern Protoss Base: Banshee
+Beat The Dig (Terran): Beat The Dig (Terran)
+Safe Haven (Terran): Victory: Micro-Filtering (Terran)
+Safe Haven (Terran): North Nexus: Progressive Defensive Matrix (Battlecruiser)
+Safe Haven (Terran): East Nexus: Ballistic Flightsuit (Reaper)
+Safe Haven (Terran): South Nexus: Progressive Stimpack (Hellion)
+Safe Haven (Terran): First Terror Fleet: Advanced Cloaking Field (Reaper)
+Safe Haven (Terran): Second Terror Fleet: Mag-Field Launchers (Cyclone)
+Safe Haven (Terran): Third Terror Fleet: Sensor Tower
+Beat Safe Haven (Terran): Beat Safe Haven (Terran)
+Haven's Fall (Terran): Victory: Sonic Disrupter (Psi Disrupter)
+Haven's Fall (Terran): North Hive: Resource Efficiency (Goliath)
+Haven's Fall (Terran): East Hive: Progressive Terran Vehicle Weapon
+Haven's Fall (Terran): South Hive: Progressive Defensive Matrix (Battlecruiser)
+Haven's Fall (Terran): Northeast Colony Base: Progressive Terran Infantry Armor
+Haven's Fall (Terran): East Colony Base: Hellstorm Batteries (Missile Turret)
+Haven's Fall (Terran): Middle Colony Base: Resource Efficiency (Cyclone)
+Haven's Fall (Terran): Southeast Colony Base: Hyperflight Rotors (Banshee)
+Haven's Fall (Terran): Southwest Colony Base: Resource Efficiency (Reaper)
+Haven's Fall (Terran): Southwest Gas Pickups: Dusk Wings
+Haven's Fall (Terran): East Gas Pickups: Anti-Mechanical Munition (Viking)
+Haven's Fall (Terran): Southeast Gas Pickups: Kinetic Foam (Firebat)
+Beat Haven's Fall (Terran): Beat Haven's Fall (Terran)
+Breakout: Victory: Kinetic Foam (HERC)
+Breakout: Diamondback Prison: Shaped Hull (Banshee)
+Breakout: Siege Tank Prison: Trigger Override (Wraith)
+Breakout: First Checkpoint: Titanium Housing (Missile Turret)
+Breakout: Second Checkpoint: Ripwave Missiles (Viking)
+Beat Breakout: Beat Breakout
+Belly of the Beast: Victory: ATX Laser Battery (Battlecruiser)
+Belly of the Beast: First Charge: Battlecruiser
+Belly of the Beast: Second Charge: Optimized Logistics (Battlecruiser)
+Belly of the Beast: Third Charge: Juggernaut Plating (Firebat)
+Belly of the Beast: First Group Rescued: Advanced Cloaking Field (Medivac)
+Belly of the Beast: Second Group Rescued: Mercenary Munitions (Terran)
+Belly of the Beast: Third Group Rescued: Advanced Alloys (Dominion Trooper)
+Beat Belly of the Beast: Beat Belly of the Beast
+Ghost of a Chance: Victory: Afterburners (Valkyrie)
+Ghost of a Chance: Terrazine Tank: Progressive Fast Delivery (Terran)
+Ghost of a Chance: Jorium Stockpile: Rogue Forces (Terran)
+Ghost of a Chance: First Island Spectres: Internal Tech Module (Wraith)
+Ghost of a Chance: Second Island Spectres: Progressive Stimpack (Marauder)
+Ghost of a Chance: Third Island Spectres: Jump Jets (Goliath)
+Beat Ghost of a Chance: Beat Ghost of a Chance
+Evacuation (Terran): Victory: Marauder
+Evacuation (Terran): North Chrysalis: Dual-Fusion Welders (SCV)
+Evacuation (Terran): West Chrysalis: Resource Efficiency (Warhound)
+Evacuation (Terran): East Chrysalis: MULE (Command Center)
+Evacuation (Terran): Reach Hanson: Durable Materials (Raven)
+Evacuation (Terran): Secret Resource Stash: Cellular Reactor (Terran)
+Evacuation (Terran): Flawless: Cyclone
+Evacuation (Terran): Western Zerg Base: Hyperfluxor (Diamondback)
+Evacuation (Terran): Eastern Zerg Base: Medic
+Beat Evacuation (Terran): Beat Evacuation (Terran)
+Liberation Day: Victory: Medivac
+Liberation Day: First Statue: Progressive Regenerative Bio-Steel (Terran)
+Liberation Day: Second Statue: Smart Servos (Hellion)
+Liberation Day: Third Statue: Rapid Reinforcement (Terran)
+Liberation Day: Fourth Statue: Jerry-Rigged Patchup (Vulture)
+Liberation Day: Fifth Statue: Progressive Augmented Thrusters (Planetary Fortress)
+Liberation Day: Sixth Statue: B-2 High-Cal LMG (Dominion Trooper)
+Liberation Day: Special Delivery: Devastator Turret
+Liberation Day: Transport: Resource Efficiency (Firebat)
+Beat Liberation Day: Beat Liberation Day
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Piercing the Shroud: Cargo Bay Warbot: Anti-Armor Munitions (Devastator Turret)
+  Piercing the Shroud: Entrance Holding Pen: Combat Shield (Marine)
+  Piercing the Shroud: Holding Cell Relic: Resource Efficiency (Widow Mine)
+}
+2: {
+  Beat Piercing the Shroud: Beat Piercing the Shroud
+  Piercing the Shroud: Brutalisk: Resource Efficiency (Wraith)
+  Piercing the Shroud: Brutalisk Relic: Concussive Grenades (Devastator Turret)
+  Piercing the Shroud: Escape Warbot: Structure Armor (Terran)
+  Piercing the Shroud: First Escape Relic: Advanced Healing AI (Medivac)
+  Piercing the Shroud: Fusion Reactor: Psi Screen (Psi Disrupter)
+  Piercing the Shroud: Second Escape Relic: Progressive Fire-Suppression System (Terran)
+  Piercing the Shroud: Victory: Wraith
+}
+3: {
+  Devil's Playground (Terran): Middle Reapers: Raven
+  Devil's Playground (Terran): North Reapers: Concussive Shells (Marauder)
+  Devil's Playground (Terran): Tosh's Miners: Optimized Logistics (Hellion)
+  Zero Hour (Terran): First Group Rescued: Goliath
+}
+4: {
+  Beat Devil's Playground (Terran): Beat Devil's Playground (Terran)
+  Devil's Playground (Terran): Brutalisk: Progressive Terran Ship Armor
+  Devil's Playground (Terran): East Reapers: Grapple Pull (HERC)
+  Devil's Playground (Terran): Southeast Reapers: Automated Refinery (Terran)
+  Devil's Playground (Terran): Southwest Reapers: Scanner Sweep (Command Center)
+  Devil's Playground (Terran): Victory: Brynhilds
+  Devil's Playground (Terran): Zerg Cleared: Concussive Charge (Predator)
+  Zero Hour (Terran): Ride's on its Way: Orbital Depots (Terran)
+  Zero Hour (Terran): Second Group Rescued: Resource Efficiency (Predator)
+}
+5: {
+  Beat Welcome to the Jungle (Terran): Beat Welcome to the Jungle (Terran)
+  Welcome to the Jungle (Terran): Close Relic: Advanced Medic Facilities (Medic)
+  Welcome to the Jungle (Terran): Middle Base: Progressive Terran Vehicle Armor
+  Welcome to the Jungle (Terran): North-East Relic: Warhound
+  Welcome to the Jungle (Terran): Up to 4 Terrazine Nodes Sealed: Shredder Rounds (Viking)
+  Welcome to the Jungle (Terran): Up to 5 Terrazine Nodes Sealed: Nano Projectors (Firebat)
+  Welcome to the Jungle (Terran): Victory: Resource Efficiency (Raven)
+  Welcome to the Jungle (Terran): West Relic: Progressive Terran Ship Weapon
+}
+6: {
+  The Moebius Factor (Terran): 1st Data Core: Cerberus Mine (Spider Mine)
+  The Moebius Factor (Terran): 2nd Data Core: Missile Turret
+  The Moebius Factor (Terran): Alive Inside Rescue: Resource Efficiency (Valkyrie)
+  The Moebius Factor (Terran): Mid Rescue: Orbital Strike (Barracks)
+  The Moebius Factor (Terran): Nydus Roof Rescue: Shockwave Missile Battery (Banshee)
+  The Moebius Factor (Terran): South Rescue: Midnight Riders
+  The Moebius Factor (Terran): Wall Rescue: Scatter Veil (Medivac)
+}
+7: {
+  Beat Zero Hour (Terran): Beat Zero Hour (Terran)
+  Zero Hour (Terran): Cavalry's on the Way: Progressive Missile Pods (Battlecruiser)
+  Zero Hour (Terran): Hold Just a Little Longer: Planetary Fortress
+  Zero Hour (Terran): Third Group Rescued: Progressive Tomahawk Power Cells (Wraith)
+  Zero Hour (Terran): Victory: Progressive Fire-Suppression System (Terran)
+}
+8: {
+  Beat Cutthroat (Terran): Beat Cutthroat (Terran)
+  Cutthroat (Terran): Mid Relic: Combat Drugs (Reaper)
+  Cutthroat (Terran): Mira Han: Progressive Terran Ship Armor
+  Cutthroat (Terran): North Command Center: Rapid Reignition Systems (Medivac)
+  Cutthroat (Terran): North Relic: Laser Targeting System (Reaper)
+  Cutthroat (Terran): South Command Center: Burst Capacitors (Diamondback)
+  Cutthroat (Terran): Southwest Relic: HERC
+  Cutthroat (Terran): Victory: Ion Thrusters (Vulture)
+  Cutthroat (Terran): West Command Center: Rapid Deployment Tube (Medivac)
+  The Outlaws (Terran): Close Resource Pickups: Hellion
+}
+9: {
+  Beat The Outlaws (Terran): Beat The Outlaws (Terran)
+  The Outlaws (Terran): Bunker: Hel's Angels
+  The Outlaws (Terran): North Resource Pickups: Infernal Plating (Hellion)
+  The Outlaws (Terran): Rebel Base: W.I.L.D. Missiles (Viking)
+  The Outlaws (Terran): Victory: Progressive Terran Ship Weapon
+}
+10: {
+  The Great Train Robbery (Terran): Close Diamondback: Vanadium Plating (Terran)
+  The Great Train Robbery (Terran): Mid Defiler: Auto Launchers (Vulture)
+  The Great Train Robbery (Terran): North Defiler: Progressive Stimpack (Firebat)
+  The Great Train Robbery (Terran): North Diamondback: Assistive Targeting (Sensor Tower)
+  The Great Train Robbery (Terran): Northeast Diamondback: Perdition Turret
+  The Great Train Robbery (Terran): Northwest Diamondback: Predator
+  The Great Train Robbery (Terran): South Defiler: Ultra-Capacitors (Terran)
+  The Great Train Robbery (Terran): Southeast Diamondback: Progressive Terran Vehicle Weapon
+  The Great Train Robbery (Terran): Southwest Diamondback: Tactical Jump (Battlecruiser)
+}
+11: {
+  Beat Outbreak (Terran): Beat Outbreak (Terran)
+  Outbreak (Terran): Left Infestor: Ares-Class Targeting System (Goliath)
+  Outbreak (Terran): North Bar: Progressive Terran Infantry Weapon
+  Outbreak (Terran): North Infested Command Center: High Explosive Munition (Spider Mine)
+  Outbreak (Terran): Northwest Bar: Viking
+  Outbreak (Terran): Right Infestor: Progressive Tri-Lithium Power Cell (Diamondback)
+  Outbreak (Terran): South Bar: Psi Indoctrinator (Hive Mind Emulator)
+  Outbreak (Terran): South Infested Command Center: Adaptive Defenses (Predator)
+  Outbreak (Terran): Victory: Fusion Reactor (Fusion Core)
+}
+12: {
+  Beat Breakout: Beat Breakout
+  Beat The Moebius Factor (Terran): Beat The Moebius Factor (Terran)
+  Breakout: Diamondback Prison: Shaped Hull (Banshee)
+  Breakout: First Checkpoint: Titanium Housing (Missile Turret)
+  Breakout: Second Checkpoint: Ripwave Missiles (Viking)
+  Breakout: Siege Tank Prison: Trigger Override (Wraith)
+  Breakout: Victory: Kinetic Foam (HERC)
+  The Moebius Factor (Terran): 3rd Data Core: CPO-7 Salamander Flamethrower (Dominion Trooper)
+  The Moebius Factor (Terran): Brutalisk: Dominion Trooper
+  The Moebius Factor (Terran): Victory: Axiom Plating (Warhound)
+}
+13: {
+  Beat Smash and Grab (Terran): Beat Smash and Grab (Terran)
+  Smash and Grab (Terran): First Forcefield Area Busted: Progressive Terran Infantry Armor
+  Smash and Grab (Terran): First Relic: Shaped Hull (Goliath)
+  Smash and Grab (Terran): Fourth Relic: Maglev Propulsion (Diamondback)
+  Smash and Grab (Terran): Second Forcefield Area Busted: Anti-Armor Missile (Raven)
+  Smash and Grab (Terran): Second Relic: Argus Amplifier (Hive Mind Emulator)
+  Smash and Grab (Terran): Third Relic: War Pigs
+  Smash and Grab (Terran): Victory: Progressive Missile Pods (Battlecruiser)
+}
+14: {
+  Beat Safe Haven (Terran): Beat Safe Haven (Terran)
+  Beat The Dig (Terran): Beat The Dig (Terran)
+  Safe Haven (Terran): East Nexus: Ballistic Flightsuit (Reaper)
+  Safe Haven (Terran): First Terror Fleet: Advanced Cloaking Field (Reaper)
+  Safe Haven (Terran): North Nexus: Progressive Defensive Matrix (Battlecruiser)
+  Safe Haven (Terran): Second Terror Fleet: Mag-Field Launchers (Cyclone)
+  Safe Haven (Terran): South Nexus: Progressive Stimpack (Hellion)
+  Safe Haven (Terran): Third Terror Fleet: Sensor Tower
+  Safe Haven (Terran): Victory: Micro-Filtering (Terran)
+  The Dig (Terran): Cutting Through the Core: Progressive Terran Vehicle Armor
+  The Dig (Terran): Door Outer Layer: Progressive Terran Vehicle Weapon
+  The Dig (Terran): Door Thermal Barrier: Internal Tech Module (Marauder)
+  The Dig (Terran): Left Relic: Jotun
+  The Dig (Terran): Moebius Base: Infernal Pre-Igniter (Firebat)
+  The Dig (Terran): Right Cliff Relic: Progressive Terran Ship Armor
+  The Dig (Terran): Right Ground Relic: Optimized Logistics (Marine)
+  The Dig (Terran): Structure Access Imminent: Siege Breakers
+  The Dig (Terran): Victory: Resource Efficiency (Medic)
+}
+15: {
+  Beat Evacuation (Terran): Beat Evacuation (Terran)
+  Beat Ghost of a Chance: Beat Ghost of a Chance
+  Evacuation (Terran): East Chrysalis: MULE (Command Center)
+  Evacuation (Terran): Flawless: Cyclone
+  Evacuation (Terran): North Chrysalis: Dual-Fusion Welders (SCV)
+  Evacuation (Terran): Reach Hanson: Durable Materials (Raven)
+  Evacuation (Terran): Secret Resource Stash: Cellular Reactor (Terran)
+  Evacuation (Terran): Victory: Marauder
+  Evacuation (Terran): West Chrysalis: Resource Efficiency (Warhound)
+  Ghost of a Chance: First Island Spectres: Internal Tech Module (Wraith)
+  Ghost of a Chance: Jorium Stockpile: Rogue Forces (Terran)
+  Ghost of a Chance: Second Island Spectres: Progressive Stimpack (Marauder)
+  Ghost of a Chance: Terrazine Tank: Progressive Fast Delivery (Terran)
+  Ghost of a Chance: Third Island Spectres: Jump Jets (Goliath)
+  Ghost of a Chance: Victory: Afterburners (Valkyrie)
+}
+16: {
+  Beat Engine of Destruction (Terran): Beat Engine of Destruction (Terran)
+  Beat The Great Train Robbery (Terran): Beat The Great Train Robbery (Terran)
+  Engine of Destruction (Terran): Lab Devourer: Magrail Munitions (Marauder)
+  Engine of Destruction (Terran): Loki: Optimized Logistics (Goliath)
+  Engine of Destruction (Terran): North Devourer: Resource Efficiency (Missile Turret)
+  Engine of Destruction (Terran): Northeast Base: Progressive Tri-Lithium Power Cell (Diamondback)
+  Engine of Destruction (Terran): Northwest Base: Bio Mechanical Repair Drone (Raven)
+  Engine of Destruction (Terran): Odin: Construction Jump Jets (SCV)
+  Engine of Destruction (Terran): Southeast Base: Valkyrie
+  Engine of Destruction (Terran): Southeast Devourer: Progressive Terran Infantry Armor
+  Engine of Destruction (Terran): Victory: Shaped Hull (Diamondback)
+  Engine of Destruction (Terran): West Base: Rapid Fire Launchers (Cyclone)
+  The Great Train Robbery (Terran): 2 Trains Destroyed: Optical Flare (Medic)
+  The Great Train Robbery (Terran): 4 Trains Destroyed: Progressive Stimpack (Hellion)
+  The Great Train Robbery (Terran): 6 Trains Destroyed: Tech Reactor (Terran)
+  The Great Train Robbery (Terran): Flawless: Advanced Laser Technology (Wraith)
+  The Great Train Robbery (Terran): Kill Team: Optimized Logistics (Dominion Trooper)
+  The Great Train Robbery (Terran): Victory: Multispectrum Doppler (Sensor Tower)
+}
+17: {
+  Beat Haven's Fall (Terran): Beat Haven's Fall (Terran)
+  Beat Media Blitz (Terran): Beat Media Blitz (Terran)
+  Beat Shatter the Sky (Terran): Beat Shatter the Sky (Terran)
+  Haven's Fall (Terran): East Colony Base: Hellstorm Batteries (Missile Turret)
+  Haven's Fall (Terran): East Gas Pickups: Anti-Mechanical Munition (Viking)
+  Haven's Fall (Terran): East Hive: Progressive Terran Vehicle Weapon
+  Haven's Fall (Terran): Middle Colony Base: Resource Efficiency (Cyclone)
+  Haven's Fall (Terran): North Hive: Resource Efficiency (Goliath)
+  Haven's Fall (Terran): Northeast Colony Base: Progressive Terran Infantry Armor
+  Haven's Fall (Terran): South Hive: Progressive Defensive Matrix (Battlecruiser)
+  Haven's Fall (Terran): Southeast Colony Base: Hyperflight Rotors (Banshee)
+  Haven's Fall (Terran): Southeast Gas Pickups: Kinetic Foam (Firebat)
+  Haven's Fall (Terran): Southwest Colony Base: Resource Efficiency (Reaper)
+  Haven's Fall (Terran): Southwest Gas Pickups: Dusk Wings
+  Haven's Fall (Terran): Victory: Sonic Disrupter (Psi Disrupter)
+  Maw of the Void (Terran): Landing Zone Cleared: Progressive Terran Ship Weapon
+  Media Blitz (Terran): All Barracks: Juggernaut Plating (Marauder)
+  Media Blitz (Terran): All Factories: Hailstorm Launcher (Dominion Trooper)
+  Media Blitz (Terran): All Starports: Laser Targeting System (Marauder)
+  Media Blitz (Terran): Odin Not Trashed: Widow Mine
+  Media Blitz (Terran): Science Facility: Winged Nightmares
+  Media Blitz (Terran): Surprise Attack Ends: Progressive Regenerative Bio-Steel (Terran)
+  Media Blitz (Terran): Tower 1: Smart Servos (Viking)
+  Media Blitz (Terran): Tower 2: Progressive Terran Vehicle Armor
+  Media Blitz (Terran): Tower 3: Flechette Missiles (Valkyrie)
+  Media Blitz (Terran): Victory: Internal Tech Module (Raven)
+  Shatter the Sky (Terran): Close Coolant Tower: Advanced Optics (Terran)
+  Shatter the Sky (Terran): East Hatchery: Signal Beacon (Terran)
+  Shatter the Sky (Terran): Leviathan: Marine
+  Shatter the Sky (Terran): Mid Hatchery: Stabilizer Medpacks (Medic)
+  Shatter the Sky (Terran): North Hatchery: Cloak (Battlecruiser)
+  Shatter the Sky (Terran): Northwest Coolant Tower: Internal Tech Module (Goliath)
+  Shatter the Sky (Terran): Southeast Coolant Tower: Aesir Turbines (Viking)
+  Shatter the Sky (Terran): Southwest Coolant Tower: Interference Matrix (Raven)
+  Shatter the Sky (Terran): Victory: Launching Vector Compensator (Valkyrie)
+  Welcome to the Jungle (Terran): Up to 3 Terrazine Nodes Sealed: Multi-Lock Weapons System (Goliath)
+  Zero Hour (Terran): First Hatchery: Rocket Barrage (Banshee)
+  Zero Hour (Terran): Fourth Hatchery: Hammer Securities
+  Zero Hour (Terran): Second Hatchery: Skibi's Angels
+  Zero Hour (Terran): Third Hatchery: Progressive Terran Infantry Weapon
+}
+18: {
+  Beat Belly of the Beast: Beat Belly of the Beast
+  Beat Liberation Day: Beat Liberation Day
+  Belly of the Beast: First Charge: Battlecruiser
+  Belly of the Beast: First Group Rescued: Advanced Cloaking Field (Medivac)
+  Belly of the Beast: Second Charge: Optimized Logistics (Battlecruiser)
+  Belly of the Beast: Second Group Rescued: Mercenary Munitions (Terran)
+  Belly of the Beast: Third Charge: Juggernaut Plating (Firebat)
+  Belly of the Beast: Third Group Rescued: Advanced Alloys (Dominion Trooper)
+  Belly of the Beast: Victory: ATX Laser Battery (Battlecruiser)
+  Liberation Day: Fifth Statue: Progressive Augmented Thrusters (Planetary Fortress)
+  Liberation Day: First Statue: Progressive Regenerative Bio-Steel (Terran)
+  Liberation Day: Fourth Statue: Jerry-Rigged Patchup (Vulture)
+  Liberation Day: Second Statue: Smart Servos (Hellion)
+  Liberation Day: Sixth Statue: B-2 High-Cal LMG (Dominion Trooper)
+  Liberation Day: Special Delivery: Devastator Turret
+  Liberation Day: Third Statue: Rapid Reinforcement (Terran)
+  Liberation Day: Transport: Resource Efficiency (Firebat)
+  Liberation Day: Victory: Medivac
+  Welcome to the Jungle (Terran): No Terrazine Nodes Sealed: Drilling Claws (Widow Mine)
+  Welcome to the Jungle (Terran): Up to 1 Terrazine Node Sealed: Enhanced Cluster Launchers (Valkyrie)
+  Welcome to the Jungle (Terran): Up to 2 Terrazine Nodes Sealed: Field-Assist Target System (Battlecruiser)
+}
+19: {
+  Beat Gates of Hell (Terran): Beat Gates of Hell (Terran)
+  Beat Maw of the Void (Terran): Beat Maw of the Void (Terran)
+  Beat Supernova (Terran): Beat Supernova (Terran)
+  Gates of Hell (Terran): 2 Drop Pods: Hive Mind Emulator
+  Gates of Hell (Terran): 4 Drop Pods: Thermite Filaments (Hellion)
+  Gates of Hell (Terran): 6 Drop Pods: Deploy Turret (Warhound)
+  Gates of Hell (Terran): 8 Drop Pods: Incinerator Gauntlets (Firebat)
+  Gates of Hell (Terran): East Spore Cannon: G-4 Clusterbomb (Reaper)
+  Gates of Hell (Terran): Expansion Spore Cannon: Progressive Stimpack (Marauder)
+  Gates of Hell (Terran): Large Army: Progressive Cross-Spectrum Dampeners (Banshee)
+  Gates of Hell (Terran): Northeast Spore Cannon: Ibiks Tracking Scanners (Planetary Fortress)
+  Gates of Hell (Terran): Northwest Spore Cannon: Black Market Launchers (Widow Mine)
+  Gates of Hell (Terran): Southeast Spore Cannon: Orbital Module (Planetary Fortress)
+  Gates of Hell (Terran): Southwest Spore Cannon: Diamondback
+  Gates of Hell (Terran): Victory: Spider Mines (Reaper)
+  Maw of the Void (Terran): Expansion Prisoners: Hunter-Seeker Weapon (Raven)
+  Maw of the Void (Terran): Expansion Rip Field Generator: Devil Dogs
+  Maw of the Void (Terran): Middle Rip Field Generator: Twin-Linked Flamethrower (Hellion)
+  Maw of the Void (Terran): Mothership: Behemoth Reactor (Battlecruiser)
+  Maw of the Void (Terran): North Prisoners: Resource Efficiency (Devastator Turret)
+  Maw of the Void (Terran): Northwest Rip Field Generator: Juggernaut Plating (HERC)
+  Maw of the Void (Terran): South Close Prisoners: Magrail Munitions (Marine)
+  Maw of the Void (Terran): South Far Prisoners: Hostile Environment Adaptation (SCV)
+  Maw of the Void (Terran): Southeast Rip Field Generator: Phobos-Class Weapons System (Viking)
+  Maw of the Void (Terran): Southwest Rip Field Generator: Expanded Hull (Medivac)
+  Maw of the Void (Terran): Stargate Rip Field Generator: Displacement Field (Wraith)
+  Maw of the Void (Terran): Victory: Demolition Payload (Widow Mine)
+  Maw of the Void (Terran): West Rip Field Generator: Resource Efficiency (Medivac)
+  Supernova (Terran): East Relic: Progressive Terran Infantry Weapon
+  Supernova (Terran): Landing Zone Cleared: Laser Targeting System (Marine)
+  Supernova (Terran): Middle Base: Vulture
+  Supernova (Terran): North Relic: Railgun Turret (Raven)
+  Supernova (Terran): South Relic: Progressive Stimpack (Reaper)
+  Supernova (Terran): Southeast Base: Progressive Cross-Spectrum Dampeners (Banshee)
+  Supernova (Terran): Victory: Firebat
+  Supernova (Terran): West Relic: Behemoth Plating (Battlecruiser)
+}
+20: {
+  All-In (Terran): Fifth Kerrigan Attack: Moirai Impulse Drive (Battlecruiser)
+  All-In (Terran): First Kerrigan Attack: Internal Tech Module (Banshee)
+  All-In (Terran): Fourth Kerrigan Attack: Reaper
+  All-In (Terran): Second Kerrigan Attack: Spider Mines (Raven)
+  All-In (Terran): Third Kerrigan Attack: Progressive Stimpack (Firebat)
+  All-In (Terran): Victory: Internal Tech Module (Battlecruiser)
+  Beat All-In (Terran): Beat All-In (Terran)
+  Evacuation (Terran): Eastern Zerg Base: Medic
+  Evacuation (Terran): Western Zerg Base: Hyperfluxor (Diamondback)
+  Smash and Grab (Terran): Defeat Kerrigan: Progressive Fast Delivery (Terran)
+  The Dig (Terran): Eastern Protoss Base: Banshee
+  The Dig (Terran): Northeastern Protoss Base: Advanced Targeting Optics (Banshee)
+  The Dig (Terran): Northwestern Protoss Base: Targeting Optics (Cyclone)
+  Welcome to the Jungle (Terran): Protoss Cleared: Internal Tech Module (Cyclone)
+}
