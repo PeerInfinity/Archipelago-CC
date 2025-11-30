@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-30 04:49:33
+**Generated:** 2025-11-30 05:38:17
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -15,7 +15,7 @@ This summary combines results from four types of tests:
 - **Minimal Test:** 73/78 passed (93.6%)
 - **Full Test:** 76/76 passed (100.0%)
 - **Multiclient Test:** 75/76 passed (98.7%)
-- **Multiworld Test:** 73/76 passed (96.1%)
+- **Multiworld Test:** 75/76 passed (98.7%)
 
 ### Intermittent Failures
 
@@ -24,8 +24,8 @@ This summary combines results from four types of tests:
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 68/79 (86.1%)
-- **Templates passing 3 tests:** 7/79 (8.9%)
+- **Templates passing all 4 tests:** 70/79 (88.6%)
+- **Templates passing 3 tests:** 5/79 (6.3%)
 - **Templates passing 2 tests:** 0/79 (0.0%)
 - **Templates passing 1 test:** 4/79 (5.1%)
 - **Templates passing 0 tests:** 0/79 (0.0%)
@@ -36,9 +36,9 @@ This summary combines results from four types of tests:
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|-----------------|------------------|
 | A Hat in Time | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ⚫ |
+| A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | APQuest | ✅ Passed | ❓ N/A | ❓ N/A | ❓ N/A | ✅ | ✅ | ⚫ | ⚫ |
-| Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ⚫ |
+| Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Aquaria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | ArchipIDLE | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
 | Blasphemous | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
