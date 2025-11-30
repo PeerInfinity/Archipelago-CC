@@ -188,11 +188,19 @@ export class MessageHandler {
 
     this.clientSlotName = slotName;
 
-    // Determine the game name from RoomInfo
-    // The game name should come from the slot info for the player we're connecting as
-    let gameName = 'A Link to the Past'; // Default fallback
+    // Determine the game name - prefer stateManager's loaded rules over RoomInfo
+    // This ensures multiworld scenarios use the correct player-specific game
+    let gameName = null;
 
-    // Log RoomInfo structure to understand what data is available
+    // First, try to get game name from stateManager (most reliable for multiworld)
+    if (stateManagerProxySingleton) {
+      gameName = stateManagerProxySingleton.getGameName();
+      if (gameName) {
+        log('info', `[MessageHandler] Using game name from stateManager: ${gameName}`);
+      }
+    }
+
+    // Log RoomInfo structure for debugging
     log('info', `[MessageHandler] RoomInfo keys:`, Object.keys(data));
     if (data.games) {
       log('info', `[MessageHandler] RoomInfo.games:`, data.games);
@@ -204,15 +212,20 @@ export class MessageHandler {
       log('info', `[MessageHandler] RoomInfo.players:`, data.players);
     }
 
-    // RoomInfo might only have a 'games' array listing all available games
-    // We may need to just pick the first non-Archipelago game
-    if (data.games && Array.isArray(data.games) && data.games.length > 0) {
+    // Fallback: if stateManager didn't have the game name, try RoomInfo
+    if (!gameName && data.games && Array.isArray(data.games) && data.games.length > 0) {
       // Filter out 'Archipelago' which is the meta-game
       const actualGames = data.games.filter(g => g !== 'Archipelago');
       if (actualGames.length > 0) {
         gameName = actualGames[0];
-        log('info', `[MessageHandler] Using first available game: ${gameName}`);
+        log('info', `[MessageHandler] Fallback: using first available game from RoomInfo: ${gameName}`);
       }
+    }
+
+    // Final fallback
+    if (!gameName) {
+      gameName = 'A Link to the Past';
+      log('warn', `[MessageHandler] No game name found, using default: ${gameName}`);
     }
 
     // Store the game name for this client
@@ -628,7 +641,10 @@ export class MessageHandler {
     // Save to storage
     if (data.data.version !== 0) {
       storage.setItem('dataPackageVersion', data.data.version);
-      storage.setItem('dataPackage', JSON.stringify(data.data));
+      // Full data package storage is optional - it may exceed localStorage quota
+      // for large games or multiworld sessions. The app fetches fresh data each connection,
+      // so this is just a cache optimization. Use silent mode to avoid warning on quota errors.
+      storage.setItem('dataPackage', JSON.stringify(data.data), { silent: true });
 
       // Initialize mappings, passing the client's game name to avoid ID collisions in multiworld
       const initSuccess = initializeMappingsFromDataPackage(data.data, this.clientGameName);

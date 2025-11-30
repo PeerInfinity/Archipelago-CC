@@ -191,6 +191,8 @@ jobs:
 
       - name: Run minimal spoiler test (seed-1 mode)
         if: inputs.spoiler_mode == 'seed-1'
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -203,6 +205,8 @@ jobs:
 
       - name: Retest minimal spoiler failures (seed-1 mode)
         if: inputs.spoiler_mode == 'seed-1' && inputs.retest_failures != 'disabled'
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -221,6 +225,8 @@ jobs:
 
       - name: Run generation consistency test (seed-1 mode)
         if: inputs.spoiler_mode == 'seed-1' && inputs.test_generation_consistency
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -234,6 +240,8 @@ jobs:
 
       - name: Run minimal spoiler test (seeds-1-10 mode)
         if: inputs.spoiler_mode == 'seeds-1-10'
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -244,6 +252,8 @@ jobs:
 
       - name: Retest minimal spoiler failures (seeds-1-10 mode)
         if: inputs.spoiler_mode == 'seeds-1-10' && inputs.retest_failures != 'disabled'
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -262,6 +272,8 @@ jobs:
 
       - name: Run generation consistency test (seeds-1-10 mode)
         if: inputs.spoiler_mode == 'seeds-1-10' && inputs.test_generation_consistency
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -403,6 +415,8 @@ jobs:
 
       - name: Run full spoiler test (seed-1 mode)
         if: inputs.spoiler_mode == 'seed-1'
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -415,6 +429,8 @@ jobs:
 
       - name: Retest full spoiler failures (seed-1 mode)
         if: inputs.spoiler_mode == 'seed-1' && inputs.retest_failures != 'disabled'
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -433,6 +449,8 @@ jobs:
 
       - name: Run full spoiler test (seeds-1-10 mode)
         if: inputs.spoiler_mode == 'seeds-1-10'
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -443,6 +461,8 @@ jobs:
 
       - name: Retest full spoiler failures (seeds-1-10 mode)
         if: inputs.spoiler_mode == 'seeds-1-10' && inputs.retest_failures != 'disabled'
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -590,6 +610,8 @@ jobs:
           sleep 2
 
       - name: Run multiclient test
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -724,6 +746,8 @@ jobs:
           sleep 2
 
       - name: Run multiworld test
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -855,6 +879,8 @@ jobs:
           sleep 2
 
       - name: Run multiworld test
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -1000,6 +1026,8 @@ jobs:
           sleep 2
 
       - name: Run minimal multitemplate test
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -1146,6 +1174,8 @@ jobs:
           sleep 2
 
       - name: Run full multitemplate test
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \

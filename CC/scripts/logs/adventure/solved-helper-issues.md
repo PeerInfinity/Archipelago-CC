@@ -1,2 +1,0 @@
-# Solved Helper Issues
-
