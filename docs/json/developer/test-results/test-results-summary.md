@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-30 04:49:33
+**Generated:** 2025-11-29 08:48:24
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -12,10 +12,10 @@ This summary combines results from four types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 73/78 passed (93.6%)
+- **Minimal Test:** 76/76 passed (100.0%)
 - **Full Test:** 76/76 passed (100.0%)
 - **Multiclient Test:** 75/76 passed (98.7%)
-- **Multiworld Test:** 73/76 passed (96.1%)
+- **Multiworld Test:** 75/76 passed (98.7%)
 
 ### Intermittent Failures
 
@@ -24,11 +24,11 @@ This summary combines results from four types of tests:
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 68/79 (86.1%)
-- **Templates passing 3 tests:** 7/79 (8.9%)
-- **Templates passing 2 tests:** 0/79 (0.0%)
-- **Templates passing 1 test:** 4/79 (5.1%)
-- **Templates passing 0 tests:** 0/79 (0.0%)
+- **Templates passing all 4 tests:** 75/76 (98.7%)
+- **Templates passing 3 tests:** 0/76 (0.0%)
+- **Templates passing 2 tests:** 1/76 (1.3%)
+- **Templates passing 1 test:** 0/76 (0.0%)
+- **Templates passing 0 tests:** 0/76 (0.0%)
 
 ## Test Results
 
@@ -36,21 +36,18 @@ This summary combines results from four types of tests:
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|-----------------|------------------|
 | A Hat in Time | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ⚫ |
-| APQuest | ✅ Passed | ❓ N/A | ❓ N/A | ❓ N/A | ✅ | ✅ | ⚫ | ⚫ |
-| Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ⚫ |
+| A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
+| Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Aquaria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| ArchipIDLE | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
+| ArchipIDLE | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Blasphemous | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Bumper Stickers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Castlevania 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Celeste (Open World) | ✅ Passed | ❓ N/A | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ⚫ |
 | Celeste 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | ChecksFinder | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | ChocolateChipCookies | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
-| Choo-Choo Charles | ✅ Passed | ❓ N/A | ❓ N/A | ❓ N/A | ✅ | ✅ | ⚫ | ⚫ |
 | Civilization VI | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | DLCQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | DOOM 1993 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
@@ -64,7 +61,7 @@ This summary combines results from four types of tests:
 | Hylics 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Inscryption | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Kingdom Hearts | ❌ Failed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Kingdom Hearts | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
@@ -86,19 +83,19 @@ This summary combines results from four types of tests:
 | Pokemon Red and Blue | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Raft | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ⚫ | ⚫ |
-| SMZ3 | ❌ Failed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
+| SMZ3 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | Saving Princess | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
-| Starcraft 2 | ❌ Failed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Starcraft 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Stardew Valley | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Subnautica | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Super Mario World | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Super Metroid | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| TUNIC | ❌ Failed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
+| TUNIC | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Terraria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | The Messenger | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
@@ -111,7 +108,7 @@ This summary combines results from four types of tests:
 | WebDevJourney | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ⚫ | ⚫ |
 | Yacht Dice | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Yu-Gi-Oh! 2006 | ❌ Failed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Yu-Gi-Oh! 2006 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | shapez | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 
 ## Multi-Template Test Results
