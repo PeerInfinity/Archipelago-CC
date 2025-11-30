@@ -724,6 +724,8 @@ jobs:
           sleep 2
 
       - name: Run multiworld test
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
