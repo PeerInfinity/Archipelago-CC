@@ -3,9 +3,9 @@
 No remaining exporter issues identified. All known issues have been resolved.
 
 ## Test Status
-- **Spoiler test:** PASSED (184/184 events processed)
+- **Spoiler test:** PASSED
 - **Test date:** 2025-11-30
-- **Seed tested:** 1
+- **Seeds tested:** 1-10 (all passed)
 
 ## Summary of Resolved Issues
 All 7 exporter issues have been fixed:

@@ -3,9 +3,9 @@
 No remaining general issues identified. All known issues have been resolved.
 
 ## Test Status
-- **Spoiler test:** PASSED (184/184 events processed)
+- **Spoiler test:** PASSED
 - **Test date:** 2025-11-30
-- **Seed tested:** 1
+- **Seeds tested:** 1-10 (all passed)
 
 ## Summary
 The Kingdom Hearts game support is now fully functional. All spoiler test events pass with the JavaScript rule engine producing results matching the Python Archipelago generator.

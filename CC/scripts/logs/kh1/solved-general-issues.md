@@ -3,9 +3,9 @@
 All general issues have been resolved. The spoiler test now passes completely.
 
 ## Test Status
-- **Spoiler test:** PASSED (184/184 events processed)
+- **Spoiler test:** PASSED
 - **Test date:** 2025-11-30
-- **Seed tested:** 1
+- **Seeds tested:** 1-10 (all passed)
 
 ## Issues Resolved During Development
 
