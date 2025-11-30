@@ -123,10 +123,10 @@ function weapon_armor_upgrade_count(snapshot, staticData, upgradeItem) {
 export function terran_common_unit(snapshot, staticData) {
     const advancedTactics = isAdvancedTactics(staticData);
 
-    // Basic units (always included)
-    const basicUnits = ['Marine', 'Marauder', 'Goliath', 'Hellion', 'Vulture', 'Warhound'];
+    // Basic units (always included) - matches Python basic_units[SC2Race.TERRAN]
+    const basicUnits = ['Marine', 'Marauder', 'Dominion Trooper', 'Goliath', 'Hellion', 'Vulture', 'Warhound'];
 
-    // Advanced tactics units
+    // Advanced tactics units - additional units for advanced_basic_units
     const advancedUnits = [
         'Reaper', 'Diamondback', 'Viking', 'Siege Tank', 'Banshee',
         'Thor', 'Battlecruiser', 'Cyclone'
@@ -149,7 +149,7 @@ export function terran_common_unit(snapshot, staticData) {
 export function terran_early_tech(snapshot, staticData) {
     const advancedTactics = isAdvancedTactics(staticData);
 
-    return has_any(snapshot, ['Marine', 'Firebat', 'Marauder', 'Reaper', 'Hellion'])
+    return has_any(snapshot, ['Marine', 'Dominion Trooper', 'Firebat', 'Marauder', 'Reaper', 'Hellion'])
         || (advancedTactics && has_any(snapshot, ['Goliath', 'Diamondback', 'Viking', 'Banshee']));
 }
 
@@ -177,13 +177,37 @@ export function terran_air_anti_air(snapshot, staticData) {
 
 /**
  * Ground-to-air capable units
+ * Python: terran_competent_ground_to_air requires:
+ *   - Goliath, OR
+ *   - (Marine OR Dominion Trooper) AND bio_heal AND weapon_upgrade >= 2, OR
+ *   - Advanced tactics AND (Cyclone OR (Thor AND Thor_HIGH_IMPACT_PAYLOAD))
  */
 export function terran_competent_ground_to_air(snapshot, staticData) {
     const advancedTactics = isAdvancedTactics(staticData);
 
-    return has(snapshot, 'Goliath')
-        || (has(snapshot, 'Marine') && terran_bio_heal(snapshot, staticData))
-        || (advancedTactics && has(snapshot, 'Cyclone'));
+    // Has Goliath
+    if (has(snapshot, 'Goliath')) {
+        return true;
+    }
+
+    // (Marine OR Dominion Trooper) AND bio_heal AND infantry weapon >= 2
+    if (has_any(snapshot, ['Marine', 'Dominion Trooper'])
+        && terran_bio_heal(snapshot, staticData)
+        && count(snapshot, 'Progressive Terran Infantry Weapon') >= 2) {
+        return true;
+    }
+
+    // Advanced tactics: Cyclone OR (Thor AND upgrade)
+    if (advancedTactics) {
+        if (has(snapshot, 'Cyclone')) {
+            return true;
+        }
+        if (has_all(snapshot, ['Thor', 'Progressive High Impact Payload (Thor)'])) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 /**
@@ -428,8 +452,8 @@ export function terran_defense_rating(snapshot, staticData, zergEnemy, airEnemy 
         }
     }
 
-    // Manned bunker bonus - Marine or Marauder gives +3
-    if (has(snapshot, 'Bunker') && (has(snapshot, 'Marine') || has(snapshot, 'Marauder'))) {
+    // Manned bunker bonus - Marine, Dominion Trooper, or Marauder gives +3
+    if (has(snapshot, 'Bunker') && (has(snapshot, 'Marine') || has(snapshot, 'Dominion Trooper') || has(snapshot, 'Marauder'))) {
         defenseScore += 3;
     }
     // Firebat bunker bonus for zerg enemies (else if - doesn't stack with above)
@@ -2038,13 +2062,17 @@ export default {
 
     // Terran mission requirement aliases
     terran_welcome_to_the_jungle_requirement: function(snapshot, staticData) {
+        // Power rating check first (must be >= 5)
+        if (terran_power_rating(snapshot, staticData) < 5) {
+            return false;
+        }
         const advancedTactics = isAdvancedTactics(staticData);
         return (
             terran_common_unit(snapshot, staticData)
             && terran_competent_ground_to_air(snapshot, staticData)
         ) || (
             advancedTactics
-            && has_any(snapshot, ['Marine', 'Vulture'])
+            && has_any(snapshot, ['Marine', 'Dominion Trooper', 'Vulture'])
             && terran_air_anti_air(snapshot, staticData)
         );
     },
@@ -2125,24 +2153,51 @@ export default {
                 || (advancedTactics && terran_can_drop(snapshot, staticData) && terran_defense_rating(snapshot, staticData, true, true) >= 6)
             );
     },
+    terran_gates_of_hell_requirement: function(snapshot, staticData) {
+        return terran_competent_comp(snapshot, staticData)
+            && terran_defense_rating(snapshot, staticData, true, false) > 6;
+    },
     terran_all_in_requirement: function(snapshot, staticData) {
         const advancedTactics = isAdvancedTactics(staticData);
         const playerId = staticData?.player || DEFAULT_PLAYER_ID;
         const settings = staticData?.settings?.[playerId];
         const allInMap = settings?.all_in_map;
 
-        const beatsKerrigan = has_any(snapshot, ['Marine', 'Banshee', 'Ghost']) || advancedTactics;
+        // First check: weapon/armor upgrades must be high enough for very hard missions
+        // (Uses terran_very_hard_mission_weapon_armor_level logic inline)
+        const requiredLevel = advancedTactics ? 2 : 3;
+        if (terranArmyWeaponArmorUpgradeMinLevel(snapshot) < requiredLevel) {
+            return false;
+        }
 
-        if (allInMap === 0) {
+        // Beats Kerrigan check - need specific units to deal with Kerrigan
+        const beatsKerrigan = (
+            has_any(snapshot, ['Marine', 'Dominion Trooper', 'Banshee'])
+            || has_all(snapshot, ['Reaper', 'Resource Efficiency (Reaper)'])
+            || (allInMap === 1 && has_all(snapshot, ['Valkyrie', 'Flechette Missiles (Valkyrie)']))
+            || (advancedTactics && has_all(snapshot, ['Ghost', 'EMP Rounds (Ghost)']))
+        );
+        if (!beatsKerrigan) {
+            return false;
+        }
+
+        // Need a competent army composition
+        if (!terran_competent_comp(snapshot, staticData)) {
+            return false;
+        }
+
+        // allInMap: 0 = Ground (default), 1 = Air
+        if (allInMap === 0 || allInMap === undefined) {
+            // Ground path
             let defenseRating = terran_defense_rating(snapshot, staticData, true, false);
             if (has_any(snapshot, ['Battlecruiser', 'Banshee'])) {
                 defenseRating += 2;
             }
-            return defenseRating >= 13 && beatsKerrigan;
+            return defenseRating >= 13;
         } else {
+            // Air path
             const defenseRating = terran_defense_rating(snapshot, staticData, true, true);
             return defenseRating >= 9
-                && beatsKerrigan
                 && has_any(snapshot, ['Viking', 'Battlecruiser', 'Valkyrie'])
                 && has_any(snapshot, ['Hive Mind Emulator', 'Psi Disrupter', 'Missile Turret']);
         }

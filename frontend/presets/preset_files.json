@@ -4607,6 +4607,38 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
+      },
+      "AP_01043188731678011336": {
+        "seed": 2,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Starcraft 2"
+          }
+        ],
+        "files": [
+          "AP_01043188731678011336.archipelago",
+          "AP_01043188731678011336_Spoiler.txt",
+          "AP_01043188731678011336_rules.json",
+          "AP_01043188731678011336_spheres_log.jsonl"
+        ]
+      },
+      "AP_84719271504320872445": {
+        "seed": 3,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Starcraft 2"
+          }
+        ],
+        "files": [
+          "AP_84719271504320872445.archipelago",
+          "AP_84719271504320872445_Spoiler.txt",
+          "AP_84719271504320872445_rules.json",
+          "AP_84719271504320872445_spheres_log.jsonl"
+        ]
       }
     },
     "test_result": {
