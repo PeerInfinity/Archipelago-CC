@@ -25,6 +25,25 @@ class SC2GameExportHandler(GenericGameExportHandler):
                             pass
         return closure_vars
 
+    # Complex helper methods that should be kept as helper calls rather than expanded
+    COMPLEX_HELPERS = {
+        'terran_competent_comp', 'protoss_competent_comp', 'zerg_competent_comp',
+        'terran_defense_rating', 'protoss_defense_rating', 'zerg_defense_rating',
+        'terran_power_rating', 'protoss_power_rating', 'zerg_power_rating',
+        'terran_havens_fall_requirement', 'terran_great_train_robbery_train_stopper',
+        'terran_welcome_to_the_jungle_requirement', 'zerg_welcome_to_the_jungle_requirement',
+        'protoss_welcome_to_the_jungle_requirement', 'terran_night_terrors_requirement',
+        'terran_engine_of_destruction_requirement', 'engine_of_destruction_requirement',
+        'terran_trouble_in_paradise_requirement', 'terran_media_blitz_requirement',
+        'terran_gates_of_hell_requirement', 'terran_all_in_requirement',
+        'basic_kerrigan', 'kerrigan_levels', 'two_kerrigan_actives',
+        'terran_competent_ground_to_air', 'protoss_competent_ground_to_air',
+        'zerg_competent_ground_to_air', 'terran_beats_protoss_deathball',
+        'terran_base_trasher', 'terran_can_rescue', 'terran_cliffjumper',
+        'terran_able_to_snipe_defiler', 'terran_respond_to_colony_infestations',
+        'terran_survives_rip_field', 'terran_sustainable_mech_heal',
+    }
+
     def override_rule_analysis(self, rule_func: Callable, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """
         Override rule analysis for SC2 mission entry rules.
@@ -33,9 +52,15 @@ class SC2GameExportHandler(GenericGameExportHandler):
         - CountMissionsEntryRule: count_missions closure with target_amount and beat_items list
         - SubRuleEntryRule: count_rules closure with sub_lambdas
         - BeatMissionsEntryRule: has_all closure with missions_to_beat
+        - Complex helper methods: should be kept as helper calls, not expanded
         """
         func_name = getattr(rule_func, '__name__', '')
         logger.debug(f"[SC2] override_rule_analysis called for '{rule_target_name}' with func_name='{func_name}'")
+
+        # Check if this is a complex helper method that should not be expanded
+        if func_name in self.COMPLEX_HELPERS:
+            logger.debug(f"[SC2] Converting complex helper method '{func_name}' to helper call")
+            return {'type': 'helper', 'name': func_name, 'args': []}
 
         # Handle count_missions pattern (from CountMissionsEntryRule.to_lambda)
         if func_name == 'count_missions':

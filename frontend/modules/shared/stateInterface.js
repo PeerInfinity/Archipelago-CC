@@ -476,8 +476,10 @@ export function createStateSnapshotInterface(
 
       if (Array.isArray(playerItemGroups)) {
         // ALTTP uses array of group names
-        // This logic assumes staticData.itemsByPlayer is available and structured per player
-        const playerItemsData = staticData.itemsByPlayer && staticData.itemsByPlayer[playerId];
+        // This logic assumes staticData.itemsByPlayer or staticData.items is available and structured per player
+        const playerItemsData =
+          (staticData.itemsByPlayer && staticData.itemsByPlayer[playerId]) ||
+          (staticData.items && staticData.items[playerId]);
         if (playerItemsData) {
           for (const itemName in playerItemsData) {
             if (playerItemsData[itemName]?.groups?.includes(groupName)) {
@@ -486,7 +488,7 @@ export function createStateSnapshotInterface(
             }
           }
         } else {
-          log('error', `[countGroup] playerItemsData not found for player ${playerId}. staticData.itemsByPlayer:`, staticData?.itemsByPlayer);
+          log('warn', `[countGroup] playerItemsData not found for player ${playerId}.`);
         }
       } else if (
         typeof playerItemGroups === 'object' &&
@@ -733,6 +735,12 @@ export function createStateSnapshotInterface(
           }
         }
         return true;
+      }
+
+      // Handle count method - returns the count of a specific item
+      if (methodName === 'count' && args.length >= 1) {
+        const itemName = args[0];
+        return finalSnapshotInterface.countItem(itemName);
       }
 
       if (methodName === 'has_from_list' && args.length >= 2) {
