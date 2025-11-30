@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "test_data_updated": "2025-11-29T08:48:29.317237",
+    "test_data_updated": "2025-11-30T11:34:35.079483",
     "test_data_source": {
       "average_time_per_template_seconds": 18.6,
       "batch_processing_time_minutes": 24.6,
@@ -9,8 +9,8 @@
       "last_updated": "2025-10-09T23:50:14.807461",
       "script_version": "1.0.0"
     },
-    "games_with_test_data": 76,
-    "total_games": 79,
+    "games_with_test_data": 78,
+    "total_games": 81,
     "games_without_test_data": 3,
     "test_types_loaded": [
       "minimal_spoiler",
@@ -235,7 +235,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 4,
+        "total_players": 5,
         "first_failure_player": null
       }
     }
@@ -487,37 +487,37 @@
           {
             "player": 5,
             "name": "Player5",
-            "game": "Aquaria"
+            "game": "APQuest"
           },
           {
             "player": 6,
             "name": "Player6",
-            "game": "ArchipIDLE"
+            "game": "Aquaria"
           },
           {
             "player": 7,
             "name": "Player7",
-            "game": "Blasphemous"
+            "game": "Bomb Rush Cyberfunk"
           },
           {
             "player": 8,
             "name": "Player8",
-            "game": "Bomb Rush Cyberfunk"
+            "game": "Bumper Stickers"
           },
           {
             "player": 9,
             "name": "Player9",
-            "game": "Bumper Stickers"
+            "game": "Castlevania - Circle of the Moon"
           },
           {
             "player": 10,
             "name": "Player10",
-            "game": "Castlevania - Circle of the Moon"
+            "game": "Castlevania 64"
           },
           {
             "player": 11,
             "name": "Player11",
-            "game": "Castlevania 64"
+            "game": "Celeste (Open World)"
           },
           {
             "player": 12,
@@ -537,77 +537,77 @@
           {
             "player": 15,
             "name": "Player15",
-            "game": "Civilization VI"
+            "game": "Choo-Choo Charles"
           },
           {
             "player": 16,
             "name": "Player16",
-            "game": "Dark Souls III"
+            "game": "Civilization VI"
           },
           {
             "player": 17,
             "name": "Player17",
-            "game": "DLCQuest"
+            "game": "Dark Souls III"
           },
           {
             "player": 18,
             "name": "Player18",
-            "game": "Donkey Kong Country 3"
+            "game": "DLCQuest"
           },
           {
             "player": 19,
             "name": "Player19",
-            "game": "DOOM 1993"
+            "game": "Donkey Kong Country 3"
           },
           {
             "player": 20,
             "name": "Player20",
-            "game": "DOOM II"
+            "game": "DOOM 1993"
           },
           {
             "player": 21,
             "name": "Player21",
-            "game": "Factorio"
+            "game": "DOOM II"
           },
           {
             "player": 22,
             "name": "Player22",
-            "game": "Faxanadu"
+            "game": "Factorio"
           },
           {
             "player": 23,
             "name": "Player23",
-            "game": "Final Fantasy Mystic Quest"
+            "game": "Faxanadu"
           },
           {
             "player": 24,
             "name": "Player24",
-            "game": "Heretic"
+            "game": "Final Fantasy Mystic Quest"
           },
           {
             "player": 25,
             "name": "Player25",
-            "game": "Hylics 2"
+            "game": "Heretic"
           },
           {
             "player": 26,
             "name": "Player26",
-            "game": "Inscryption"
+            "game": "Hylics 2"
           },
           {
             "player": 27,
             "name": "Player27",
-            "game": "Jak and Daxter: The Precursor Legacy"
+            "game": "Inscryption"
           },
           {
             "player": 28,
             "name": "Player28",
-            "game": "Kingdom Hearts 2"
+            "game": "Jak and Daxter: The Precursor Legacy"
           },
           {
             "player": 29,
             "name": "Player29",
-            "game": "Kingdom Hearts"
+            "game": "Kingdom Hearts 2"
           },
           {
             "player": 30,
@@ -742,117 +742,106 @@
           {
             "player": 56,
             "name": "Player56",
-            "game": "Stardew Valley"
+            "game": "Subnautica"
           },
           {
             "player": 57,
             "name": "Player57",
-            "game": "Subnautica"
+            "game": "Super Mario 64"
           },
           {
             "player": 58,
             "name": "Player58",
-            "game": "Super Mario 64"
+            "game": "Super Mario Land 2"
           },
           {
             "player": 59,
             "name": "Player59",
-            "game": "Super Mario Land 2"
+            "game": "Super Mario World"
           },
           {
             "player": 60,
             "name": "Player60",
-            "game": "Super Mario World"
+            "game": "Terraria"
           },
           {
             "player": 61,
             "name": "Player61",
-            "game": "Super Metroid"
+            "game": "The Legend of Zelda"
           },
           {
             "player": 62,
             "name": "Player62",
-            "game": "Terraria"
+            "game": "The Messenger"
           },
           {
             "player": 63,
             "name": "Player63",
-            "game": "The Legend of Zelda"
+            "game": "The Wind Waker"
           },
           {
             "player": 64,
             "name": "Player64",
-            "game": "The Messenger"
+            "game": "The Witness"
           },
           {
             "player": 65,
             "name": "Player65",
-            "game": "The Wind Waker"
+            "game": "Timespinner"
           },
           {
             "player": 66,
             "name": "Player66",
-            "game": "The Witness"
+            "game": "TUNIC"
           },
           {
             "player": 67,
             "name": "Player67",
-            "game": "Timespinner"
+            "game": "Undertale"
           },
           {
             "player": 68,
             "name": "Player68",
-            "game": "TUNIC"
+            "game": "VVVVVV"
           },
           {
             "player": 69,
             "name": "Player69",
-            "game": "Undertale"
+            "game": "Wargroove"
           },
           {
             "player": 70,
             "name": "Player70",
-            "game": "VVVVVV"
+            "game": "WebDevJourney"
           },
           {
             "player": 71,
             "name": "Player71",
-            "game": "Wargroove"
+            "game": "Yacht Dice"
           },
           {
             "player": 72,
             "name": "Player72",
-            "game": "WebDevJourney"
+            "game": "Yoshi's Island"
           },
           {
             "player": 73,
             "name": "Player73",
-            "game": "Yacht Dice"
-          },
-          {
-            "player": 74,
-            "name": "Player74",
-            "game": "Yoshi's Island"
-          },
-          {
-            "player": 75,
-            "name": "Player75",
             "game": "Yu-Gi-Oh! 2006"
           }
         ],
         "files": [
-          "AP-14089154938208861744-P21-Player21_0.6.4.zip",
-          "AP-14089154938208861744-P28-Player28_0.6.4.zip",
+          "AP-14089154938208861744-P22-Player22_0.6.5.zip",
+          "AP-14089154938208861744-P29-Player29_0.6.5.zip",
           "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_P10_Player10.apcvcotm",
+          "AP_14089154938208861744_P10_Player10.apcv64",
           "AP_14089154938208861744_P10_rules.json",
-          "AP_14089154938208861744_P11_Player11.apcv64",
           "AP_14089154938208861744_P11_rules.json",
           "AP_14089154938208861744_P12_rules.json",
           "AP_14089154938208861744_P13_rules.json",
           "AP_14089154938208861744_P14_rules.json",
-          "AP_14089154938208861744_P15_Player15.apcivvi",
           "AP_14089154938208861744_P15_rules.json",
+          "AP_14089154938208861744_P16_Player16.apcivvi",
           "AP_14089154938208861744_P16_rules.json",
           "AP_14089154938208861744_P17_rules.json",
           "AP_14089154938208861744_P18_rules.json",
@@ -861,8 +850,8 @@
           "AP_14089154938208861744_P20_rules.json",
           "AP_14089154938208861744_P21_rules.json",
           "AP_14089154938208861744_P22_rules.json",
-          "AP_14089154938208861744_P23_Player23.apmq",
           "AP_14089154938208861744_P23_rules.json",
+          "AP_14089154938208861744_P24_Player24.apmq",
           "AP_14089154938208861744_P24_rules.json",
           "AP_14089154938208861744_P25_rules.json",
           "AP_14089154938208861744_P26_rules.json",
@@ -893,7 +882,7 @@
           "AP_14089154938208861744_P45_rules.json",
           "AP_14089154938208861744_P46_Player46.apemerald",
           "AP_14089154938208861744_P46_rules.json",
-          "AP_14089154938208861744_P47_Player47.apblue",
+          "AP_14089154938208861744_P47_Player47.apred",
           "AP_14089154938208861744_P47_rules.json",
           "AP_14089154938208861744_P48_rules.json",
           "AP_14089154938208861744_P49_rules.json",
@@ -907,17 +896,16 @@
           "AP_14089154938208861744_P55_rules.json",
           "AP_14089154938208861744_P56_rules.json",
           "AP_14089154938208861744_P57_rules.json",
+          "AP_14089154938208861744_P58_Player58.apsml2",
           "AP_14089154938208861744_P58_rules.json",
-          "AP_14089154938208861744_P59_Player59.apsml2",
           "AP_14089154938208861744_P59_rules.json",
           "AP_14089154938208861744_P5_rules.json",
           "AP_14089154938208861744_P60_rules.json",
-          "AP_14089154938208861744_P61_Player61.apsm",
           "AP_14089154938208861744_P61_rules.json",
           "AP_14089154938208861744_P62_rules.json",
+          "AP_14089154938208861744_P63_Player63.aptww",
           "AP_14089154938208861744_P63_rules.json",
           "AP_14089154938208861744_P64_rules.json",
-          "AP_14089154938208861744_P65_Player65.aptww",
           "AP_14089154938208861744_P65_rules.json",
           "AP_14089154938208861744_P66_rules.json",
           "AP_14089154938208861744_P67_rules.json",
@@ -927,12 +915,11 @@
           "AP_14089154938208861744_P70_rules.json",
           "AP_14089154938208861744_P71_rules.json",
           "AP_14089154938208861744_P72_rules.json",
+          "AP_14089154938208861744_P73_Player73.apygo06",
           "AP_14089154938208861744_P73_rules.json",
-          "AP_14089154938208861744_P74_rules.json",
-          "AP_14089154938208861744_P75_Player75.apygo06",
-          "AP_14089154938208861744_P75_rules.json",
           "AP_14089154938208861744_P7_rules.json",
           "AP_14089154938208861744_P8_rules.json",
+          "AP_14089154938208861744_P9_Player9.apcvcotm",
           "AP_14089154938208861744_P9_rules.json",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -1020,6 +1007,38 @@
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "total_seeds": 10,
+        "first_failure_seed": null,
+        "seed_range": "1-10"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "total_seeds": 10,
+        "first_failure_seed": null,
+        "seed_range": "1-10"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 8,
+        "total_locations": 8
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 4,
+        "first_failure_player": null
+      }
     }
   },
   "aquaria": {
@@ -1094,7 +1113,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 5,
+        "total_players": 6,
         "first_failure_player": null
       }
     }
@@ -1168,11 +1187,11 @@
         "total_locations": 305
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
         "total_players": 7,
-        "first_failure_player": null
+        "first_failure_player": 7
       }
     }
   },
@@ -1248,7 +1267,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 8,
+        "total_players": 7,
         "first_failure_player": null
       }
     }
@@ -1325,7 +1344,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 9,
+        "total_players": 8,
         "first_failure_player": null
       }
     }
@@ -1403,7 +1422,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 9,
         "first_failure_player": null
       }
     }
@@ -1481,7 +1500,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 11,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -1558,7 +1577,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 12,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -1581,6 +1600,38 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "total_seeds": 10,
+        "first_failure_seed": null,
+        "seed_range": "1-10"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "total_seeds": 10,
+        "first_failure_seed": null,
+        "seed_range": "1-10"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 237,
+        "total_locations": 237
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 10,
+        "first_failure_player": null
       }
     }
   },
@@ -1656,7 +1707,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 13,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -1679,6 +1730,38 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "total_seeds": 10,
+        "first_failure_seed": null,
+        "seed_range": "1-10"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "total_seeds": 10,
+        "first_failure_seed": null,
+        "seed_range": "1-10"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 692,
+        "total_locations": 692
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 10,
+        "first_failure_player": null
       }
     }
   },
@@ -1755,7 +1838,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 15,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -1832,7 +1915,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 16,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -1909,7 +1992,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 17,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -1986,7 +2069,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 18,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -2056,14 +2139,14 @@
         "passed": true,
         "client1_passed": true,
         "client2_passed": true,
-        "locations_checked": 100,
-        "total_locations": 100
+        "locations_checked": 1194,
+        "total_locations": 1194
       },
       "multiworld": {
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 19,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -2116,7 +2199,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 20,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -2134,7 +2217,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1_0.6.4.zip",
+          "AP-14089154938208861744-P1-Player1_0.6.5.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -2194,7 +2277,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 21,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -2271,7 +2354,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 22,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -2349,7 +2432,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 23,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -2426,7 +2509,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 24,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -2548,7 +2631,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 25,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -2625,7 +2708,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 26,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -2678,7 +2761,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 27,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -2696,7 +2779,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1_0.6.4.zip",
+          "AP-14089154938208861744-P1-Player1_0.6.5.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -2756,7 +2839,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 28,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -2774,6 +2857,7 @@
           }
         ],
         "files": [
+          "AP-14089154938208861744-P1-Player1_0.6.5.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -2826,15 +2910,15 @@
         "passed": true,
         "client1_passed": true,
         "client2_passed": true,
-        "locations_checked": 440,
-        "total_locations": 440
+        "locations_checked": 512,
+        "total_locations": 512
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 29,
-        "first_failure_player": null
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
+        "total_players": 10,
+        "first_failure_player": 10
       }
     }
   },
@@ -2911,7 +2995,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 30,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -2988,7 +3072,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 31,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -3065,7 +3149,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 32,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -3119,7 +3203,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 33,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -3196,7 +3280,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 34,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -3274,7 +3358,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 35,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -3352,7 +3436,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 37,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -3429,7 +3513,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 38,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -3506,7 +3590,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 39,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -3583,7 +3667,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 41,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -3660,7 +3744,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 42,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -3782,7 +3866,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 43,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -3859,7 +3943,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 44,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -3936,7 +4020,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 45,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -4014,7 +4098,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 46,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -4092,7 +4176,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 47,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -4169,7 +4253,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 48,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -4246,7 +4330,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 49,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -4317,7 +4401,7 @@
         "passed": false,
         "client1_passed": false,
         "client2_passed": false,
-        "locations_checked": 235,
+        "locations_checked": 70,
         "total_locations": 316
       },
       "multiworld": {
@@ -4401,7 +4485,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 50,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -4454,7 +4538,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 51,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -4531,7 +4615,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 52,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -4584,7 +4668,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 53,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -4654,14 +4738,14 @@
         "passed": true,
         "client1_passed": true,
         "client2_passed": true,
-        "locations_checked": 746,
-        "total_locations": 746
+        "locations_checked": 257,
+        "total_locations": 257
       },
       "multiworld": {
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 54,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -4735,11 +4819,11 @@
         "total_locations": 500
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 55,
-        "first_failure_player": null
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
+        "total_players": 10,
+        "first_failure_player": 10
       }
     }
   },
@@ -4815,7 +4899,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 56,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -4869,7 +4953,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 57,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -4947,7 +5031,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 58,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -5000,7 +5084,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 59,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -5075,11 +5159,11 @@
         "total_locations": 109
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 60,
-        "first_failure_player": null
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
+        "total_players": 10,
+        "first_failure_player": 10
       }
     }
   },
@@ -5148,14 +5232,14 @@
         "passed": true,
         "client1_passed": true,
         "client2_passed": true,
-        "locations_checked": 303,
-        "total_locations": 303
+        "locations_checked": 317,
+        "total_locations": 317
       },
       "multiworld": {
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 61,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -5232,7 +5316,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 62,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -5309,7 +5393,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 63,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -5386,7 +5470,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 64,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -5464,7 +5548,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 65,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -5541,7 +5625,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 66,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -5618,7 +5702,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 67,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -5695,7 +5779,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 68,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -5749,7 +5833,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 69,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -5826,7 +5910,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 70,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -5879,7 +5963,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 72,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -5956,7 +6040,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 73,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -6027,14 +6111,14 @@
         "passed": true,
         "client1_passed": true,
         "client2_passed": true,
-        "locations_checked": 978,
-        "total_locations": 978
+        "locations_checked": 981,
+        "total_locations": 981
       },
       "multiworld": {
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 74,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -6157,7 +6241,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 75,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -6266,7 +6350,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 36,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -6375,7 +6459,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 14,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -6484,7 +6568,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 71,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -6593,7 +6677,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 40,
+        "total_players": 10,
         "first_failure_player": null
       }
     }

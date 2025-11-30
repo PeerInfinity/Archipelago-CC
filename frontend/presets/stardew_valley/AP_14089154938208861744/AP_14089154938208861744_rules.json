@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Stardew Valley",
   "game_directory": "stardew_valley",
-  "archipelago_version": "0.6.4",
+  "archipelago_version": "0.6.5",
   "generation_seed": 1,
   "player_names": {
     "1": "Player1"
@@ -22501,35 +22501,44 @@
             "name": "Buy from Traveling Merchant",
             "connected_region": "Traveling Cart",
             "access_rule": {
-              "type": "or",
+              "type": "and",
               "conditions": [
                 {
-                  "type": "item_check",
-                  "item": "Traveling Merchant: Friday"
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Traveling Merchant: Friday"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Traveling Merchant: Monday"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Traveling Merchant: Saturday"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Traveling Merchant: Sunday"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Traveling Merchant: Thursday"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Traveling Merchant: Tuesday"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Traveling Merchant: Wednesday"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
-                  "item": "Traveling Merchant: Monday"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Traveling Merchant: Saturday"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Traveling Merchant: Sunday"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Traveling Merchant: Thursday"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Traveling Merchant: Tuesday"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Traveling Merchant: Wednesday"
+                  "item": "Shipping Bin"
                 }
               ]
             }
