@@ -101,17 +101,12 @@ function terranVeryHardMissionWeaponArmorLevel(snapshot, staticData) {
 
 /**
  * Count weapon/armor upgrades for a specific progressive item
- * Simplified version - only counts the progressive items directly
- *
- * NOTE: When called as a helper from a rule (returning just the count),
- * the result is coerced to boolean (count >= 1 means true).
- * This matches Python's truthy semantics where non-zero integers are True.
+ * Returns the count of a weapon/armor upgrade item.
+ * Used in comparisons like `weapon_armor_upgrade_count(...) >= 2`
+ * Matches Python: self.weapon_armor_upgrade_count(item_name, state)
  */
 function weapon_armor_upgrade_count(snapshot, staticData, upgradeItem) {
-    const upgradeCount = count(snapshot, upgradeItem);
-    // Return boolean for truthy evaluation in rule engine
-    // The exporter sometimes uses this directly as an access rule result
-    return upgradeCount >= 1;
+    return count(snapshot, upgradeItem);
 }
 
 /**
@@ -1236,15 +1231,26 @@ function marine_medic_firebat_upgrade(snapshot, staticData) {
 
 /**
  * Engine of Destruction mission requirement
+ * Matches Python: terran_engine_of_destruction_requirement
  */
 function engine_of_destruction_requirement(snapshot, staticData) {
-    // Engine of Destruction requires marine_medic_upgrade AND
-    // ((terran_competent_anti_air AND terran_common_unit) OR Wraith)
-    return marine_medic_upgrade(snapshot, staticData)
-        && (
-            (terran_competent_anti_air(snapshot, staticData) && terran_common_unit(snapshot, staticData))
-            || has(snapshot, 'Wraith')
-        );
+    const powerRating = terran_power_rating(snapshot, staticData);
+
+    // Base requirements: power_rating >= 3, marine_medic_upgrade, terran_common_unit
+    if (powerRating < 3 || !marine_medic_upgrade(snapshot, staticData) || !terran_common_unit(snapshot, staticData)) {
+        return false;
+    }
+
+    // High power rating path: power_rating >= 7 with competent comp
+    if (powerRating >= 7 && terran_competent_comp(snapshot, staticData)) {
+        return true;
+    }
+
+    // Alternative: specific air units
+    return (
+        has_any(snapshot, ['Wraith', 'Battlecruiser'])
+        || (terran_air_anti_air(snapshot, staticData) && has_any(snapshot, ['Banshee', 'Liberator']))
+    );
 }
 
 /**
@@ -1283,10 +1289,11 @@ function the_escape_requirement(snapshot, staticData) {
 /**
  * Terran sustainable mech healing
  * Ability to keep mechanical units alive indefinitely
+ * Matches Python: terran_sustainable_mech_heal
  */
 function terran_sustainable_mech_heal(snapshot, staticData) {
     return has(snapshot, 'Science Vessel')
-        || has_all(snapshot, ['Medic', 'Adaptive Medpacks (Medic)'])
+        || (has_any(snapshot, ['Medic', 'Field Response Theta']) && has(snapshot, 'Adaptive Medpacks (Medic)'))
         || count(snapshot, 'Progressive Regenerative Bio-Steel') >= 3
         || (isAdvancedTactics(staticData) && (
             has_all(snapshot, ['Raven', 'Bio-Mechanical Repair Drone (Raven)'])
@@ -1359,14 +1366,16 @@ export default {
             || has_all(snapshot, ['Siege Tank', 'Maelstrom Rounds (Siege Tank)', 'Jump Jets (Siege Tank)']);
     },
     terran_respond_to_colony_infestations: (snapshot, staticData) => {
+        // Can deal quickly with Brood Lords and Mutas in Haven's Fall and being able to progress the mission
         return (
-            terran_common_unit(snapshot, staticData)
-            && terran_competent_anti_air(snapshot, staticData)
+            terran_havens_fall_requirement(snapshot, staticData)
             && (
                 terran_air_anti_air(snapshot, staticData)
-                || has_any(snapshot, ['Battlecruiser', 'Valkyrie'])
+                || (
+                    has_any(snapshot, ['Battlecruiser', 'Valkyrie'])
+                    && count(snapshot, 'Progressive Terran Ship Weapon') >= 2
+                )
             )
-            && terran_defense_rating(snapshot, staticData, true) >= 3
         );
     },
     terran_survives_rip_field: (snapshot, staticData) => {
