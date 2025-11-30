@@ -30,3 +30,16 @@ const isRegionAccessible = regionStatus === true || regionStatus === 'reachable'
 
 **Files Modified:**
 - `frontend/modules/shared/gameLogic/smz3/smz3Logic.js`: Modified `checkRegionCompletion` function to handle both boolean and string region accessibility values
+
+### 3. smz3_CanAcquire not checking region accessibility (Fixed 2025-11-30)
+
+**Problem:** Sahasrahla was accessible at Sphere 5.2 in seed 7 when it should only be accessible at Sphere 9.1. The `smz3_CanAcquire` helper was returning true incorrectly.
+
+**Root Cause:** The `smz3_CanAcquire` function had duplicate code that evaluated boss location access rules directly without checking region accessibility. This was the same bug that was fixed in `checkRegionCompletion` for issue #1.
+
+**Solution:** Refactored `smz3_CanAcquire` to use `checkRegionCompletion` instead of duplicating the boss location access logic. This ensures consistent region accessibility checks across all helper functions.
+
+**Files Modified:**
+- `frontend/modules/shared/gameLogic/smz3/smz3Logic.js`: Refactored `smz3_CanAcquire` to use `checkRegionCompletion`
+
+**Seeds Tested:** 1-10 (all passing)
