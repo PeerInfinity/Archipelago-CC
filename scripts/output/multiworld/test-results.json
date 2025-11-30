@@ -1,7 +1,7 @@
 {
   "metadata": {
     "created": "2025-11-28T05:16:59.253989",
-    "last_updated": "2025-11-28T05:57:55.480377",
+    "last_updated": "2025-11-30T04:49:11.604984",
     "script_version": "1.0.0"
   },
   "results": {
@@ -115,31 +115,31 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 10.2,
+        "processing_time_seconds": 2.94,
         "return_code": 0,
         "success": true,
-        "warning_count": 2
+        "warning_count": 1
       },
       "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 3,
+        "first_failure_player": 1,
+        "player_number": 1,
         "player_results": {
-          "player_3": {
+          "player_1": {
             "error_count": 1,
-            "pass_fail": "passed",
-            "passed": true,
-            "player_number": 3,
-            "return_code": 0,
-            "sphere_reached": 11.7,
-            "total_spheres": 11.7,
-            "warning_count": 0
+            "pass_fail": "unknown",
+            "passed": false,
+            "player_number": 1,
+            "return_code": -1,
+            "sphere_reached": 0,
+            "total_spheres": 15.8,
+            "warning_count": 5608
           }
         },
-        "players_failed": 0,
-        "players_passed": 1,
-        "processing_time_seconds": 12.08,
-        "success": true,
-        "total_players_tested": 3
+        "players_failed": 1,
+        "players_passed": 0,
+        "processing_time_seconds": 901.02,
+        "success": false,
+        "total_players_tested": 1
       },
       "prerequisite_check": {
         "all_prerequisites_passed": true,
@@ -150,7 +150,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "A Short Hike.yaml",
-      "timestamp": "2025-11-28T05:17:40.509423",
+      "timestamp": "2025-11-30T04:19:03.539199",
       "world_info": {
         "exporter_path": "exporter/games/shorthike.py",
         "game_logic_path": null,
@@ -167,31 +167,31 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 10.37,
+        "processing_time_seconds": 2.75,
         "return_code": 0,
         "success": true,
-        "warning_count": 2
+        "warning_count": 1
       },
       "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 4,
+        "first_failure_player": 1,
+        "player_number": 1,
         "player_results": {
-          "player_4": {
-            "error_count": 1,
-            "pass_fail": "passed",
-            "passed": true,
-            "player_number": 4,
-            "return_code": 0,
-            "sphere_reached": 13.6,
-            "total_spheres": 13.6,
-            "warning_count": 0
+          "player_1": {
+            "error_count": 0,
+            "pass_fail": "unknown",
+            "passed": false,
+            "player_number": 1,
+            "return_code": -1,
+            "sphere_reached": 0,
+            "total_spheres": 15.8,
+            "warning_count": 5607
           }
         },
-        "players_failed": 0,
-        "players_passed": 1,
-        "processing_time_seconds": 9.05,
-        "success": true,
-        "total_players_tested": 4
+        "players_failed": 1,
+        "players_passed": 0,
+        "processing_time_seconds": 901.02,
+        "success": false,
+        "total_players_tested": 1
       },
       "prerequisite_check": {
         "all_prerequisites_passed": true,
@@ -202,7 +202,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Adventure.yaml",
-      "timestamp": "2025-11-28T05:18:02.955249",
+      "timestamp": "2025-11-30T04:34:07.678308",
       "world_info": {
         "exporter_path": "exporter/games/adventure.py",
         "game_logic_path": null,
