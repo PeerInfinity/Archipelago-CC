@@ -4,13 +4,13 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-30 09:43:10
+**Generated:** 2025-11-30 10:35:27
 
 ## Summary
 
 - **Total Games:** 78
-- **Passed:** 71 (91.0%)
-- **Failed:** 6 (7.7%)
+- **Passed:** 73 (93.6%)
+- **Failed:** 4 (5.1%)
 - **Skipped (Prerequisites):** 1 (1.3%)
 
 ## Test Results
@@ -50,7 +50,7 @@
 | Kingdom Hearts 2 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
-| Lingo | ❌ Failed | 10 | 10 | 0 | 1 | ✅ | ✅ |
+| Lingo | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Links Awakening DX | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 10 | 10 | 1 | 0 | ⚫ | ⚫ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
@@ -92,7 +92,7 @@
 | Wargroove | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | WebDevJourney | ✅ Passed | 10 | 10 | 1 | 0 | ⚫ | ⚫ |
 | Yacht Dice | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
-| Yoshi's Island | ❌ Failed | 10 | 10 | 0 | 1 | ✅ | ✅ |
+| Yoshi's Island | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Yu-Gi-Oh! 2006 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | shapez | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 
