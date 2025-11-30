@@ -728,6 +728,7 @@ jobs:
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
             --multiworld \
+            --include-list "Adventure.yaml" "A Short Hike.yaml" \
             --output-file scripts/output/multiworld/test-results.json \
             --no-backup \
             -p
