@@ -34,103 +34,9 @@
             "name": "All-In (Terran): Victory",
             "id": 3900,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_very_hard_mission_weapon_armor_level",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "compare",
-                        "left": {
-                          "type": "constant",
-                          "value": 1
-                        },
-                        "op": "==",
-                        "right": {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Flechette Missiles (Valkyrie)",
-                              "Valkyrie"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": false
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "EMP Rounds (Ghost)",
-                              "Ghost"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Reaper",
-                          "Resource Efficiency (Reaper)"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "has_any",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Banshee",
-                          "Dominion Trooper",
-                          "Marine"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_all_in_requirement",
+              "args": []
             },
             "item": {
               "name": "Juggernaut Plating (Marauder)",
@@ -143,103 +49,9 @@
             "name": "All-In (Terran): First Kerrigan Attack",
             "id": 3901,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_very_hard_mission_weapon_armor_level",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "compare",
-                        "left": {
-                          "type": "constant",
-                          "value": 1
-                        },
-                        "op": "==",
-                        "right": {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Flechette Missiles (Valkyrie)",
-                              "Valkyrie"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": false
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "EMP Rounds (Ghost)",
-                              "Ghost"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Reaper",
-                          "Resource Efficiency (Reaper)"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "has_any",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Banshee",
-                          "Dominion Trooper",
-                          "Marine"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_all_in_requirement",
+              "args": []
             },
             "item": {
               "name": "Command Center Reactor (Command Center)",
@@ -252,103 +64,9 @@
             "name": "All-In (Terran): Second Kerrigan Attack",
             "id": 3902,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_very_hard_mission_weapon_armor_level",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "compare",
-                        "left": {
-                          "type": "constant",
-                          "value": 1
-                        },
-                        "op": "==",
-                        "right": {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Flechette Missiles (Valkyrie)",
-                              "Valkyrie"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": false
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "EMP Rounds (Ghost)",
-                              "Ghost"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Reaper",
-                          "Resource Efficiency (Reaper)"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "has_any",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Banshee",
-                          "Dominion Trooper",
-                          "Marine"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_all_in_requirement",
+              "args": []
             },
             "item": {
               "name": "Rapid Reignition Systems (Medivac)",
@@ -361,103 +79,9 @@
             "name": "All-In (Terran): Third Kerrigan Attack",
             "id": 3903,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_very_hard_mission_weapon_armor_level",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "compare",
-                        "left": {
-                          "type": "constant",
-                          "value": 1
-                        },
-                        "op": "==",
-                        "right": {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Flechette Missiles (Valkyrie)",
-                              "Valkyrie"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": false
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "EMP Rounds (Ghost)",
-                              "Ghost"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Reaper",
-                          "Resource Efficiency (Reaper)"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "has_any",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Banshee",
-                          "Dominion Trooper",
-                          "Marine"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_all_in_requirement",
+              "args": []
             },
             "item": {
               "name": "EMP Rounds (Ghost)",
@@ -470,103 +94,9 @@
             "name": "All-In (Terran): Fourth Kerrigan Attack",
             "id": 3904,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_very_hard_mission_weapon_armor_level",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "compare",
-                        "left": {
-                          "type": "constant",
-                          "value": 1
-                        },
-                        "op": "==",
-                        "right": {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Flechette Missiles (Valkyrie)",
-                              "Valkyrie"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": false
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "EMP Rounds (Ghost)",
-                              "Ghost"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Reaper",
-                          "Resource Efficiency (Reaper)"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "has_any",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Banshee",
-                          "Dominion Trooper",
-                          "Marine"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_all_in_requirement",
+              "args": []
             },
             "item": {
               "name": "Orbital Strike (Barracks)",
@@ -579,103 +109,9 @@
             "name": "All-In (Terran): Fifth Kerrigan Attack",
             "id": 3905,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_very_hard_mission_weapon_armor_level",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "compare",
-                        "left": {
-                          "type": "constant",
-                          "value": 1
-                        },
-                        "op": "==",
-                        "right": {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Flechette Missiles (Valkyrie)",
-                              "Valkyrie"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": false
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "EMP Rounds (Ghost)",
-                              "Ghost"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Reaper",
-                          "Resource Efficiency (Reaper)"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "has_any",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Banshee",
-                          "Dominion Trooper",
-                          "Marine"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_all_in_requirement",
+              "args": []
             },
             "item": {
               "name": "Resource Efficiency (Ghost)",
@@ -688,103 +124,9 @@
             "name": "Beat All-In (Terran)",
             "id": null,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_very_hard_mission_weapon_armor_level",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "compare",
-                        "left": {
-                          "type": "constant",
-                          "value": 1
-                        },
-                        "op": "==",
-                        "right": {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Flechette Missiles (Valkyrie)",
-                              "Valkyrie"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": false
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "EMP Rounds (Ghost)",
-                              "Ghost"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Reaper",
-                          "Resource Efficiency (Reaper)"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "has_any",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Banshee",
-                          "Dominion Trooper",
-                          "Marine"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_all_in_requirement",
+              "args": []
             },
             "item": {
               "name": "Beat All-In (Terran)",
@@ -2114,32 +1456,9 @@
             "name": "Gates of Hell (Terran): Victory",
             "id": 3600,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "compare",
-                  "left": {
-                    "type": "helper",
-                    "name": "terran_defense_rating",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      }
-                    ]
-                  },
-                  "op": ">",
-                  "right": {
-                    "type": "constant",
-                    "value": 6
-                  }
-                },
-                {
-                  "type": "helper",
-                  "name": "terran_competent_comp",
-                  "args": []
-                }
-              ]
+              "type": "helper",
+              "name": "terran_gates_of_hell_requirement",
+              "args": []
             },
             "item": {
               "name": "Advanced Optics (Terran)",
@@ -2152,32 +1471,9 @@
             "name": "Gates of Hell (Terran): Large Army",
             "id": 3601,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "compare",
-                  "left": {
-                    "type": "helper",
-                    "name": "terran_defense_rating",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      }
-                    ]
-                  },
-                  "op": ">",
-                  "right": {
-                    "type": "constant",
-                    "value": 6
-                  }
-                },
-                {
-                  "type": "helper",
-                  "name": "terran_competent_comp",
-                  "args": []
-                }
-              ]
+              "type": "helper",
+              "name": "terran_gates_of_hell_requirement",
+              "args": []
             },
             "item": {
               "name": "Argus Amplifier (Hive Mind Emulator)",
@@ -2190,32 +1486,9 @@
             "name": "Gates of Hell (Terran): 2 Drop Pods",
             "id": 3602,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "compare",
-                  "left": {
-                    "type": "helper",
-                    "name": "terran_defense_rating",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      }
-                    ]
-                  },
-                  "op": ">",
-                  "right": {
-                    "type": "constant",
-                    "value": 6
-                  }
-                },
-                {
-                  "type": "helper",
-                  "name": "terran_competent_comp",
-                  "args": []
-                }
-              ]
+              "type": "helper",
+              "name": "terran_gates_of_hell_requirement",
+              "args": []
             },
             "item": {
               "name": "Progressive Stimpack (Firebat)",
@@ -2228,32 +1501,9 @@
             "name": "Gates of Hell (Terran): 4 Drop Pods",
             "id": 3603,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "compare",
-                  "left": {
-                    "type": "helper",
-                    "name": "terran_defense_rating",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      }
-                    ]
-                  },
-                  "op": ">",
-                  "right": {
-                    "type": "constant",
-                    "value": 6
-                  }
-                },
-                {
-                  "type": "helper",
-                  "name": "terran_competent_comp",
-                  "args": []
-                }
-              ]
+              "type": "helper",
+              "name": "terran_gates_of_hell_requirement",
+              "args": []
             },
             "item": {
               "name": "Mechanical Know-how (Terran)",
@@ -2266,32 +1516,9 @@
             "name": "Gates of Hell (Terran): 6 Drop Pods",
             "id": 3604,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "compare",
-                  "left": {
-                    "type": "helper",
-                    "name": "terran_defense_rating",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      }
-                    ]
-                  },
-                  "op": ">",
-                  "right": {
-                    "type": "constant",
-                    "value": 6
-                  }
-                },
-                {
-                  "type": "helper",
-                  "name": "terran_competent_comp",
-                  "args": []
-                }
-              ]
+              "type": "helper",
+              "name": "terran_gates_of_hell_requirement",
+              "args": []
             },
             "item": {
               "name": "Progressive Tomahawk Power Cells (Wraith)",
@@ -2304,32 +1531,9 @@
             "name": "Gates of Hell (Terran): 8 Drop Pods",
             "id": 3605,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "compare",
-                  "left": {
-                    "type": "helper",
-                    "name": "terran_defense_rating",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      }
-                    ]
-                  },
-                  "op": ">",
-                  "right": {
-                    "type": "constant",
-                    "value": 6
-                  }
-                },
-                {
-                  "type": "helper",
-                  "name": "terran_competent_comp",
-                  "args": []
-                }
-              ]
+              "type": "helper",
+              "name": "terran_gates_of_hell_requirement",
+              "args": []
             },
             "item": {
               "name": "Progressive Terran Vehicle Armor",
@@ -2342,32 +1546,9 @@
             "name": "Gates of Hell (Terran): Southwest Spore Cannon",
             "id": 3606,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "compare",
-                  "left": {
-                    "type": "helper",
-                    "name": "terran_defense_rating",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      }
-                    ]
-                  },
-                  "op": ">",
-                  "right": {
-                    "type": "constant",
-                    "value": 6
-                  }
-                },
-                {
-                  "type": "helper",
-                  "name": "terran_competent_comp",
-                  "args": []
-                }
-              ]
+              "type": "helper",
+              "name": "terran_gates_of_hell_requirement",
+              "args": []
             },
             "item": {
               "name": "Progressive Fast Delivery (Terran)",
@@ -2380,32 +1561,9 @@
             "name": "Gates of Hell (Terran): Northwest Spore Cannon",
             "id": 3607,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "compare",
-                  "left": {
-                    "type": "helper",
-                    "name": "terran_defense_rating",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      }
-                    ]
-                  },
-                  "op": ">",
-                  "right": {
-                    "type": "constant",
-                    "value": 6
-                  }
-                },
-                {
-                  "type": "helper",
-                  "name": "terran_competent_comp",
-                  "args": []
-                }
-              ]
+              "type": "helper",
+              "name": "terran_gates_of_hell_requirement",
+              "args": []
             },
             "item": {
               "name": "Resource Efficiency (Liberator)",
@@ -2418,32 +1576,9 @@
             "name": "Gates of Hell (Terran): Northeast Spore Cannon",
             "id": 3608,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "compare",
-                  "left": {
-                    "type": "helper",
-                    "name": "terran_defense_rating",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      }
-                    ]
-                  },
-                  "op": ">",
-                  "right": {
-                    "type": "constant",
-                    "value": 6
-                  }
-                },
-                {
-                  "type": "helper",
-                  "name": "terran_competent_comp",
-                  "args": []
-                }
-              ]
+              "type": "helper",
+              "name": "terran_gates_of_hell_requirement",
+              "args": []
             },
             "item": {
               "name": "Jet Pack Overdrive (Reaper)",
@@ -2456,32 +1591,9 @@
             "name": "Gates of Hell (Terran): East Spore Cannon",
             "id": 3609,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "compare",
-                  "left": {
-                    "type": "helper",
-                    "name": "terran_defense_rating",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      }
-                    ]
-                  },
-                  "op": ">",
-                  "right": {
-                    "type": "constant",
-                    "value": 6
-                  }
-                },
-                {
-                  "type": "helper",
-                  "name": "terran_competent_comp",
-                  "args": []
-                }
-              ]
+              "type": "helper",
+              "name": "terran_gates_of_hell_requirement",
+              "args": []
             },
             "item": {
               "name": "Jerry-Rigged Patchup (Vulture)",
@@ -2494,32 +1606,9 @@
             "name": "Gates of Hell (Terran): Southeast Spore Cannon",
             "id": 3610,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "compare",
-                  "left": {
-                    "type": "helper",
-                    "name": "terran_defense_rating",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      }
-                    ]
-                  },
-                  "op": ">",
-                  "right": {
-                    "type": "constant",
-                    "value": 6
-                  }
-                },
-                {
-                  "type": "helper",
-                  "name": "terran_competent_comp",
-                  "args": []
-                }
-              ]
+              "type": "helper",
+              "name": "terran_gates_of_hell_requirement",
+              "args": []
             },
             "item": {
               "name": "Skibi's Angels",
@@ -2532,32 +1621,9 @@
             "name": "Gates of Hell (Terran): Expansion Spore Cannon",
             "id": 3611,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "compare",
-                  "left": {
-                    "type": "helper",
-                    "name": "terran_defense_rating",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      }
-                    ]
-                  },
-                  "op": ">",
-                  "right": {
-                    "type": "constant",
-                    "value": 6
-                  }
-                },
-                {
-                  "type": "helper",
-                  "name": "terran_competent_comp",
-                  "args": []
-                }
-              ]
+              "type": "helper",
+              "name": "terran_gates_of_hell_requirement",
+              "args": []
             },
             "item": {
               "name": "Guerilla Missiles (Liberator)",
@@ -2570,32 +1636,9 @@
             "name": "Beat Gates of Hell (Terran)",
             "id": null,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "compare",
-                  "left": {
-                    "type": "helper",
-                    "name": "terran_defense_rating",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      }
-                    ]
-                  },
-                  "op": ">",
-                  "right": {
-                    "type": "constant",
-                    "value": 6
-                  }
-                },
-                {
-                  "type": "helper",
-                  "name": "terran_competent_comp",
-                  "args": []
-                }
-              ]
+              "type": "helper",
+              "name": "terran_gates_of_hell_requirement",
+              "args": []
             },
             "item": {
               "name": "Beat Gates of Hell (Terran)",
@@ -5633,28 +4676,9 @@
             "name": "The Moebius Factor (Terran): South Rescue",
             "id": 2003,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "constant",
-                  "value": false
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Hercules",
-                        "Medivac",
-                        "Raven",
-                        "Viking"
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "terran_can_rescue",
+              "args": []
             },
             "item": {
               "name": "Progressive Replenishable Magazine (Vulture)",
@@ -5667,28 +4691,9 @@
             "name": "The Moebius Factor (Terran): Wall Rescue",
             "id": 2004,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "constant",
-                  "value": false
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Hercules",
-                        "Medivac",
-                        "Raven",
-                        "Viking"
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "terran_can_rescue",
+              "args": []
             },
             "item": {
               "name": "Optimized Logistics (Battlecruiser)",
@@ -5701,28 +4706,9 @@
             "name": "The Moebius Factor (Terran): Mid Rescue",
             "id": 2005,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "constant",
-                  "value": false
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Hercules",
-                        "Medivac",
-                        "Raven",
-                        "Viking"
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "terran_can_rescue",
+              "args": []
             },
             "item": {
               "name": "Resource Efficiency (Widow Mine)",
@@ -5735,28 +4721,9 @@
             "name": "The Moebius Factor (Terran): Nydus Roof Rescue",
             "id": 2006,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "constant",
-                  "value": false
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Hercules",
-                        "Medivac",
-                        "Raven",
-                        "Viking"
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "terran_can_rescue",
+              "args": []
             },
             "item": {
               "name": "Jotun",
@@ -5769,28 +4736,9 @@
             "name": "The Moebius Factor (Terran): Alive Inside Rescue",
             "id": 2007,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "constant",
-                  "value": false
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Hercules",
-                        "Medivac",
-                        "Raven",
-                        "Viking"
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "terran_can_rescue",
+              "args": []
             },
             "item": {
               "name": "Juggernaut Plating (Firebat)",
@@ -7105,78 +6053,9 @@
             "name": "The Great Train Robbery (Terran): 2 Trains Destroyed",
             "id": 2712,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": false
-                    },
-                    {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "state_method",
-                          "method": "has_all",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "G-4 Clusterbomb (Reaper)",
-                                "Reaper"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_all",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Psionic Lash (Spectre)",
-                                "Spectre"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Liberator",
-                                "Vulture"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Banshee",
-                        "Cyclone",
-                        "Diamondback",
-                        "Marauder",
-                        "Siege Tank"
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "terran_great_train_robbery_train_stopper",
+              "args": []
             },
             "item": {
               "name": "Hive Mind Emulator",
@@ -9022,78 +7901,9 @@
             "name": "Haven's Fall (Terran): Victory",
             "id": 1700,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "terran_common_unit",
-                  "args": []
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "helper",
-                          "name": "terran_competent_anti_air",
-                          "args": []
-                        },
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Advanced Laser Technology (Wraith)",
-                                    "Wraith"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Liberator",
-                                    "Raid Artillery (Liberator)"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "state_method",
-                              "method": "has_any",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Battlecruiser",
-                                    "Viking"
-                                  ]
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "helper",
-                      "name": "terran_competent_comp",
-                      "args": []
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "terran_havens_fall_requirement",
+              "args": []
             },
             "item": {
               "name": "Reaper",
@@ -9131,78 +7941,9 @@
             "name": "Haven's Fall (Terran): East Hive",
             "id": 1702,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "terran_common_unit",
-                  "args": []
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "helper",
-                          "name": "terran_competent_anti_air",
-                          "args": []
-                        },
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Advanced Laser Technology (Wraith)",
-                                    "Wraith"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Liberator",
-                                    "Raid Artillery (Liberator)"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "state_method",
-                              "method": "has_any",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Battlecruiser",
-                                    "Viking"
-                                  ]
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "helper",
-                      "name": "terran_competent_comp",
-                      "args": []
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "terran_havens_fall_requirement",
+              "args": []
             },
             "item": {
               "name": "Scatter Veil (Medivac)",
@@ -9215,78 +7956,9 @@
             "name": "Haven's Fall (Terran): South Hive",
             "id": 1703,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "terran_common_unit",
-                  "args": []
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "helper",
-                          "name": "terran_competent_anti_air",
-                          "args": []
-                        },
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Advanced Laser Technology (Wraith)",
-                                    "Wraith"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Liberator",
-                                    "Raid Artillery (Liberator)"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "state_method",
-                              "method": "has_any",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Battlecruiser",
-                                    "Viking"
-                                  ]
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "helper",
-                      "name": "terran_competent_comp",
-                      "args": []
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "terran_havens_fall_requirement",
+              "args": []
             },
             "item": {
               "name": "Progressive Immortality Protocol (Thor)",
@@ -9299,60 +7971,9 @@
             "name": "Haven's Fall (Terran): Northeast Colony Base",
             "id": 1704,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "terran_havens_fall_requirement",
-                  "args": []
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "helper",
-                            "name": "weapon_armor_upgrade_count",
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": "Progressive Terran Ship Weapon"
-                              }
-                            ]
-                          },
-                          "op": ">=",
-                          "right": {
-                            "type": "constant",
-                            "value": 2
-                          }
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Battlecruiser",
-                                "Valkyrie"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "helper",
-                      "name": "terran_air_anti_air",
-                      "args": []
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "terran_respond_to_colony_infestations",
+              "args": []
             },
             "item": {
               "name": "Shaped Hull (Diamondback)",
@@ -9365,60 +7986,9 @@
             "name": "Haven's Fall (Terran): East Colony Base",
             "id": 1705,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "terran_havens_fall_requirement",
-                  "args": []
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "helper",
-                            "name": "weapon_armor_upgrade_count",
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": "Progressive Terran Ship Weapon"
-                              }
-                            ]
-                          },
-                          "op": ">=",
-                          "right": {
-                            "type": "constant",
-                            "value": 2
-                          }
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Battlecruiser",
-                                "Valkyrie"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "helper",
-                      "name": "terran_air_anti_air",
-                      "args": []
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "terran_respond_to_colony_infestations",
+              "args": []
             },
             "item": {
               "name": "Projectile Accelerator (Bunker)",
@@ -9431,60 +8001,9 @@
             "name": "Haven's Fall (Terran): Middle Colony Base",
             "id": 1706,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "terran_havens_fall_requirement",
-                  "args": []
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "helper",
-                            "name": "weapon_armor_upgrade_count",
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": "Progressive Terran Ship Weapon"
-                              }
-                            ]
-                          },
-                          "op": ">=",
-                          "right": {
-                            "type": "constant",
-                            "value": 2
-                          }
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Battlecruiser",
-                                "Valkyrie"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "helper",
-                      "name": "terran_air_anti_air",
-                      "args": []
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "terran_respond_to_colony_infestations",
+              "args": []
             },
             "item": {
               "name": "Progressive Stimpack (Marauder)",
@@ -9497,60 +8016,9 @@
             "name": "Haven's Fall (Terran): Southeast Colony Base",
             "id": 1707,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "terran_havens_fall_requirement",
-                  "args": []
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "helper",
-                            "name": "weapon_armor_upgrade_count",
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": "Progressive Terran Ship Weapon"
-                              }
-                            ]
-                          },
-                          "op": ">=",
-                          "right": {
-                            "type": "constant",
-                            "value": 2
-                          }
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Battlecruiser",
-                                "Valkyrie"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "helper",
-                      "name": "terran_air_anti_air",
-                      "args": []
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "terran_respond_to_colony_infestations",
+              "args": []
             },
             "item": {
               "name": "Devastator Turret",
@@ -9563,60 +8031,9 @@
             "name": "Haven's Fall (Terran): Southwest Colony Base",
             "id": 1708,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "terran_havens_fall_requirement",
-                  "args": []
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "compare",
-                          "left": {
-                            "type": "helper",
-                            "name": "weapon_armor_upgrade_count",
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": "Progressive Terran Ship Weapon"
-                              }
-                            ]
-                          },
-                          "op": ">=",
-                          "right": {
-                            "type": "constant",
-                            "value": 2
-                          }
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Battlecruiser",
-                                "Valkyrie"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "helper",
-                      "name": "terran_air_anti_air",
-                      "args": []
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "terran_respond_to_colony_infestations",
+              "args": []
             },
             "item": {
               "name": "Rapid Fire Launchers (Cyclone)",
@@ -9643,78 +8060,9 @@
             "name": "Haven's Fall (Terran): East Gas Pickups",
             "id": 1710,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "terran_common_unit",
-                  "args": []
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "helper",
-                          "name": "terran_competent_anti_air",
-                          "args": []
-                        },
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Advanced Laser Technology (Wraith)",
-                                    "Wraith"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Liberator",
-                                    "Raid Artillery (Liberator)"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "state_method",
-                              "method": "has_any",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Battlecruiser",
-                                    "Viking"
-                                  ]
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "helper",
-                      "name": "terran_competent_comp",
-                      "args": []
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "terran_havens_fall_requirement",
+              "args": []
             },
             "item": {
               "name": "Trigger Override (Wraith)",
@@ -9727,78 +8075,9 @@
             "name": "Haven's Fall (Terran): Southeast Gas Pickups",
             "id": 1711,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "terran_common_unit",
-                  "args": []
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "helper",
-                          "name": "terran_competent_anti_air",
-                          "args": []
-                        },
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Advanced Laser Technology (Wraith)",
-                                    "Wraith"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Liberator",
-                                    "Raid Artillery (Liberator)"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "state_method",
-                              "method": "has_any",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Battlecruiser",
-                                    "Viking"
-                                  ]
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "helper",
-                      "name": "terran_competent_comp",
-                      "args": []
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "terran_havens_fall_requirement",
+              "args": []
             },
             "item": {
               "name": "Progressive Terran Vehicle Armor",
@@ -9811,78 +8090,9 @@
             "name": "Beat Haven's Fall (Terran)",
             "id": null,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "terran_common_unit",
-                  "args": []
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "helper",
-                          "name": "terran_competent_anti_air",
-                          "args": []
-                        },
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Advanced Laser Technology (Wraith)",
-                                    "Wraith"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Liberator",
-                                    "Raid Artillery (Liberator)"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "state_method",
-                              "method": "has_any",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Battlecruiser",
-                                    "Viking"
-                                  ]
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "helper",
-                      "name": "terran_competent_comp",
-                      "args": []
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "terran_havens_fall_requirement",
+              "args": []
             },
             "item": {
               "name": "Beat Haven's Fall (Terran)",
@@ -9921,29 +8131,9 @@
             "name": "Shatter the Sky (Terran): Close Coolant Tower",
             "id": 3801,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_competent_anti_air",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "helper",
-                "name": "weapon_armor_upgrade_count",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Progressive Terran Infantry Weapon"
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_competent_comp",
+              "args": []
             },
             "item": {
               "name": "Ultra-Capacitors (Terran)",
@@ -9956,29 +8146,9 @@
             "name": "Shatter the Sky (Terran): Northwest Coolant Tower",
             "id": 3802,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_competent_anti_air",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "helper",
-                "name": "weapon_armor_upgrade_count",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Progressive Terran Infantry Weapon"
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_competent_comp",
+              "args": []
             },
             "item": {
               "name": "Progressive Terran Vehicle Weapon",
@@ -10051,29 +8221,9 @@
             "name": "Shatter the Sky (Terran): East Hatchery",
             "id": 3806,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_competent_anti_air",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "helper",
-                "name": "weapon_armor_upgrade_count",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Progressive Terran Infantry Weapon"
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_competent_comp",
+              "args": []
             },
             "item": {
               "name": "Progressive Terran Infantry Weapon",
@@ -10086,29 +8236,9 @@
             "name": "Shatter the Sky (Terran): North Hatchery",
             "id": 3807,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_competent_anti_air",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "helper",
-                "name": "weapon_armor_upgrade_count",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Progressive Terran Infantry Weapon"
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_competent_comp",
+              "args": []
             },
             "item": {
               "name": "Progressive Terran Vehicle Weapon",
@@ -10121,29 +8251,9 @@
             "name": "Shatter the Sky (Terran): Mid Hatchery",
             "id": 3808,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_competent_anti_air",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "helper",
-                "name": "weapon_armor_upgrade_count",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Progressive Terran Infantry Weapon"
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_competent_comp",
+              "args": []
             },
             "item": {
               "name": "Ripwave Missiles (Viking)",
@@ -10388,114 +8498,9 @@
             "name": "Engine of Destruction (Terran): Victory",
             "id": 2900,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "compare",
-                    "left": {
-                      "type": "name",
-                      "name": "power_rating"
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "helper",
-                      "name": "marine_medic_upgrade",
-                      "args": []
-                    }
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "helper",
-                      "name": "terran_common_unit",
-                      "args": []
-                    }
-                  }
-                ]
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "name",
-                        "name": "power_rating"
-                      },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 7
-                      }
-                    },
-                    {
-                      "type": "helper",
-                      "name": "terran_competent_comp",
-                      "args": []
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "constant",
-                  "value": true
-                },
-                "if_false": {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "helper",
-                          "name": "terran_air_anti_air",
-                          "args": []
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Banshee",
-                                "Liberator"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Battlecruiser",
-                            "Wraith"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              }
+              "type": "helper",
+              "name": "terran_engine_of_destruction_requirement",
+              "args": []
             },
             "item": {
               "name": "Maglev Propulsion (Diamondback)",
@@ -10581,114 +8586,9 @@
             "name": "Engine of Destruction (Terran): Loki",
             "id": 2902,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "compare",
-                    "left": {
-                      "type": "name",
-                      "name": "power_rating"
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "helper",
-                      "name": "marine_medic_upgrade",
-                      "args": []
-                    }
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "helper",
-                      "name": "terran_common_unit",
-                      "args": []
-                    }
-                  }
-                ]
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "name",
-                        "name": "power_rating"
-                      },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 7
-                      }
-                    },
-                    {
-                      "type": "helper",
-                      "name": "terran_competent_comp",
-                      "args": []
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "constant",
-                  "value": true
-                },
-                "if_false": {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "helper",
-                          "name": "terran_air_anti_air",
-                          "args": []
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Banshee",
-                                "Liberator"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Battlecruiser",
-                            "Wraith"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              }
+              "type": "helper",
+              "name": "terran_engine_of_destruction_requirement",
+              "args": []
             },
             "item": {
               "name": "Spartan Company",
@@ -10774,114 +8674,9 @@
             "name": "Engine of Destruction (Terran): North Devourer",
             "id": 2904,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "compare",
-                    "left": {
-                      "type": "name",
-                      "name": "power_rating"
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "helper",
-                      "name": "marine_medic_upgrade",
-                      "args": []
-                    }
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "helper",
-                      "name": "terran_common_unit",
-                      "args": []
-                    }
-                  }
-                ]
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "name",
-                        "name": "power_rating"
-                      },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 7
-                      }
-                    },
-                    {
-                      "type": "helper",
-                      "name": "terran_competent_comp",
-                      "args": []
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "constant",
-                  "value": true
-                },
-                "if_false": {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "helper",
-                          "name": "terran_air_anti_air",
-                          "args": []
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Banshee",
-                                "Liberator"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Battlecruiser",
-                            "Wraith"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              }
+              "type": "helper",
+              "name": "terran_engine_of_destruction_requirement",
+              "args": []
             },
             "item": {
               "name": "Enhanced Cluster Launchers (Valkyrie)",
@@ -10894,114 +8689,9 @@
             "name": "Engine of Destruction (Terran): Southeast Devourer",
             "id": 2905,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "compare",
-                    "left": {
-                      "type": "name",
-                      "name": "power_rating"
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "helper",
-                      "name": "marine_medic_upgrade",
-                      "args": []
-                    }
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "helper",
-                      "name": "terran_common_unit",
-                      "args": []
-                    }
-                  }
-                ]
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "name",
-                        "name": "power_rating"
-                      },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 7
-                      }
-                    },
-                    {
-                      "type": "helper",
-                      "name": "terran_competent_comp",
-                      "args": []
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "constant",
-                  "value": true
-                },
-                "if_false": {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "helper",
-                          "name": "terran_air_anti_air",
-                          "args": []
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Banshee",
-                                "Liberator"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Battlecruiser",
-                            "Wraith"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              }
+              "type": "helper",
+              "name": "terran_engine_of_destruction_requirement",
+              "args": []
             },
             "item": {
               "name": "Hunter-Seeker Weapon (Raven)",
@@ -11014,114 +8704,9 @@
             "name": "Engine of Destruction (Terran): West Base",
             "id": 2906,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "compare",
-                    "left": {
-                      "type": "name",
-                      "name": "power_rating"
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "helper",
-                      "name": "marine_medic_upgrade",
-                      "args": []
-                    }
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "helper",
-                      "name": "terran_common_unit",
-                      "args": []
-                    }
-                  }
-                ]
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "name",
-                        "name": "power_rating"
-                      },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 7
-                      }
-                    },
-                    {
-                      "type": "helper",
-                      "name": "terran_competent_comp",
-                      "args": []
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "constant",
-                  "value": true
-                },
-                "if_false": {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "helper",
-                          "name": "terran_air_anti_air",
-                          "args": []
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Banshee",
-                                "Liberator"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Battlecruiser",
-                            "Wraith"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              }
+              "type": "helper",
+              "name": "terran_engine_of_destruction_requirement",
+              "args": []
             },
             "item": {
               "name": "Behemoth Reactor (Battlecruiser)",
@@ -11134,114 +8719,9 @@
             "name": "Engine of Destruction (Terran): Northwest Base",
             "id": 2907,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "compare",
-                    "left": {
-                      "type": "name",
-                      "name": "power_rating"
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "helper",
-                      "name": "marine_medic_upgrade",
-                      "args": []
-                    }
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "helper",
-                      "name": "terran_common_unit",
-                      "args": []
-                    }
-                  }
-                ]
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "name",
-                        "name": "power_rating"
-                      },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 7
-                      }
-                    },
-                    {
-                      "type": "helper",
-                      "name": "terran_competent_comp",
-                      "args": []
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "constant",
-                  "value": true
-                },
-                "if_false": {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "helper",
-                          "name": "terran_air_anti_air",
-                          "args": []
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Banshee",
-                                "Liberator"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Battlecruiser",
-                            "Wraith"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              }
+              "type": "helper",
+              "name": "terran_engine_of_destruction_requirement",
+              "args": []
             },
             "item": {
               "name": "Progressive Terran Ship Armor",
@@ -11254,114 +8734,9 @@
             "name": "Engine of Destruction (Terran): Northeast Base",
             "id": 2908,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "compare",
-                    "left": {
-                      "type": "name",
-                      "name": "power_rating"
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "helper",
-                      "name": "marine_medic_upgrade",
-                      "args": []
-                    }
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "helper",
-                      "name": "terran_common_unit",
-                      "args": []
-                    }
-                  }
-                ]
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "name",
-                        "name": "power_rating"
-                      },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 7
-                      }
-                    },
-                    {
-                      "type": "helper",
-                      "name": "terran_competent_comp",
-                      "args": []
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "constant",
-                  "value": true
-                },
-                "if_false": {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "helper",
-                          "name": "terran_air_anti_air",
-                          "args": []
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Banshee",
-                                "Liberator"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Battlecruiser",
-                            "Wraith"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              }
+              "type": "helper",
+              "name": "terran_engine_of_destruction_requirement",
+              "args": []
             },
             "item": {
               "name": "Marine",
@@ -11374,114 +8749,9 @@
             "name": "Engine of Destruction (Terran): Southeast Base",
             "id": 2909,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "compare",
-                    "left": {
-                      "type": "name",
-                      "name": "power_rating"
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "helper",
-                      "name": "marine_medic_upgrade",
-                      "args": []
-                    }
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "helper",
-                      "name": "terran_common_unit",
-                      "args": []
-                    }
-                  }
-                ]
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "name",
-                        "name": "power_rating"
-                      },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 7
-                      }
-                    },
-                    {
-                      "type": "helper",
-                      "name": "terran_competent_comp",
-                      "args": []
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "constant",
-                  "value": true
-                },
-                "if_false": {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "helper",
-                          "name": "terran_air_anti_air",
-                          "args": []
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Banshee",
-                                "Liberator"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Battlecruiser",
-                            "Wraith"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              }
+              "type": "helper",
+              "name": "terran_engine_of_destruction_requirement",
+              "args": []
             },
             "item": {
               "name": "Hyperfluxor (Diamondback)",
@@ -11494,114 +8764,9 @@
             "name": "Beat Engine of Destruction (Terran)",
             "id": null,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "compare",
-                    "left": {
-                      "type": "name",
-                      "name": "power_rating"
-                    },
-                    "op": "<",
-                    "right": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "helper",
-                      "name": "marine_medic_upgrade",
-                      "args": []
-                    }
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "helper",
-                      "name": "terran_common_unit",
-                      "args": []
-                    }
-                  }
-                ]
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "name",
-                        "name": "power_rating"
-                      },
-                      "op": ">=",
-                      "right": {
-                        "type": "constant",
-                        "value": 7
-                      }
-                    },
-                    {
-                      "type": "helper",
-                      "name": "terran_competent_comp",
-                      "args": []
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "constant",
-                  "value": true
-                },
-                "if_false": {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "helper",
-                          "name": "terran_air_anti_air",
-                          "args": []
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Banshee",
-                                "Liberator"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Battlecruiser",
-                            "Wraith"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              }
+              "type": "helper",
+              "name": "terran_engine_of_destruction_requirement",
+              "args": []
             },
             "item": {
               "name": "Beat Engine of Destruction (Terran)",
@@ -11620,72 +8785,9 @@
             "name": "Welcome to the Jungle (Terran): Victory",
             "id": 2400,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "helper",
-                  "name": "terran_power_rating",
-                  "args": []
-                },
-                "op": "<",
-                "right": {
-                  "type": "constant",
-                  "value": 5
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": false
-                      },
-                      {
-                        "type": "helper",
-                        "name": "terran_air_anti_air",
-                        "args": []
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Dominion Trooper",
-                              "Marine",
-                              "Vulture"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "helper",
-                        "name": "terran_common_unit",
-                        "args": []
-                      },
-                      {
-                        "type": "helper",
-                        "name": "terran_competent_ground_to_air",
-                        "args": []
-                      }
-                    ]
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_welcome_to_the_jungle_requirement",
+              "args": []
             },
             "item": {
               "name": "Perdition Turret",
@@ -11712,72 +8814,9 @@
             "name": "Welcome to the Jungle (Terran): West Relic",
             "id": 2402,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "helper",
-                  "name": "terran_power_rating",
-                  "args": []
-                },
-                "op": "<",
-                "right": {
-                  "type": "constant",
-                  "value": 5
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": false
-                      },
-                      {
-                        "type": "helper",
-                        "name": "terran_air_anti_air",
-                        "args": []
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Dominion Trooper",
-                              "Marine",
-                              "Vulture"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "helper",
-                        "name": "terran_common_unit",
-                        "args": []
-                      },
-                      {
-                        "type": "helper",
-                        "name": "terran_competent_ground_to_air",
-                        "args": []
-                      }
-                    ]
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_welcome_to_the_jungle_requirement",
+              "args": []
             },
             "item": {
               "name": "Infernal Plating (Hellion)",
@@ -11790,72 +8829,9 @@
             "name": "Welcome to the Jungle (Terran): North-East Relic",
             "id": 2403,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "helper",
-                  "name": "terran_power_rating",
-                  "args": []
-                },
-                "op": "<",
-                "right": {
-                  "type": "constant",
-                  "value": 5
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": false
-                      },
-                      {
-                        "type": "helper",
-                        "name": "terran_air_anti_air",
-                        "args": []
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Dominion Trooper",
-                              "Marine",
-                              "Vulture"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "helper",
-                        "name": "terran_common_unit",
-                        "args": []
-                      },
-                      {
-                        "type": "helper",
-                        "name": "terran_competent_ground_to_air",
-                        "args": []
-                      }
-                    ]
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_welcome_to_the_jungle_requirement",
+              "args": []
             },
             "item": {
               "name": "Resource Efficiency (Firebat)",
@@ -11868,72 +8844,9 @@
             "name": "Welcome to the Jungle (Terran): Middle Base",
             "id": 2404,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "helper",
-                  "name": "terran_power_rating",
-                  "args": []
-                },
-                "op": "<",
-                "right": {
-                  "type": "constant",
-                  "value": 5
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": false
-                      },
-                      {
-                        "type": "helper",
-                        "name": "terran_air_anti_air",
-                        "args": []
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Dominion Trooper",
-                              "Marine",
-                              "Vulture"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "helper",
-                        "name": "terran_common_unit",
-                        "args": []
-                      },
-                      {
-                        "type": "helper",
-                        "name": "terran_competent_ground_to_air",
-                        "args": []
-                      }
-                    ]
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_welcome_to_the_jungle_requirement",
+              "args": []
             },
             "item": {
               "name": "Hel's Angels",
@@ -12086,72 +8999,9 @@
             "name": "Welcome to the Jungle (Terran): Up to 4 Terrazine Nodes Sealed",
             "id": 2410,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "helper",
-                  "name": "terran_power_rating",
-                  "args": []
-                },
-                "op": "<",
-                "right": {
-                  "type": "constant",
-                  "value": 5
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": false
-                      },
-                      {
-                        "type": "helper",
-                        "name": "terran_air_anti_air",
-                        "args": []
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Dominion Trooper",
-                              "Marine",
-                              "Vulture"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "helper",
-                        "name": "terran_common_unit",
-                        "args": []
-                      },
-                      {
-                        "type": "helper",
-                        "name": "terran_competent_ground_to_air",
-                        "args": []
-                      }
-                    ]
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_welcome_to_the_jungle_requirement",
+              "args": []
             },
             "item": {
               "name": "Hellbat (Hellion Morph)",
@@ -12164,72 +9014,9 @@
             "name": "Welcome to the Jungle (Terran): Up to 5 Terrazine Nodes Sealed",
             "id": 2411,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "helper",
-                  "name": "terran_power_rating",
-                  "args": []
-                },
-                "op": "<",
-                "right": {
-                  "type": "constant",
-                  "value": 5
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": false
-                      },
-                      {
-                        "type": "helper",
-                        "name": "terran_air_anti_air",
-                        "args": []
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Dominion Trooper",
-                              "Marine",
-                              "Vulture"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "helper",
-                        "name": "terran_common_unit",
-                        "args": []
-                      },
-                      {
-                        "type": "helper",
-                        "name": "terran_competent_ground_to_air",
-                        "args": []
-                      }
-                    ]
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_welcome_to_the_jungle_requirement",
+              "args": []
             },
             "item": {
               "name": "Warhound",
@@ -12242,72 +9029,9 @@
             "name": "Beat Welcome to the Jungle (Terran)",
             "id": null,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "helper",
-                  "name": "terran_power_rating",
-                  "args": []
-                },
-                "op": "<",
-                "right": {
-                  "type": "constant",
-                  "value": 5
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": false
-                      },
-                      {
-                        "type": "helper",
-                        "name": "terran_air_anti_air",
-                        "args": []
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Dominion Trooper",
-                              "Marine",
-                              "Vulture"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "helper",
-                        "name": "terran_common_unit",
-                        "args": []
-                      },
-                      {
-                        "type": "helper",
-                        "name": "terran_competent_ground_to_air",
-                        "args": []
-                      }
-                    ]
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_welcome_to_the_jungle_requirement",
+              "args": []
             },
             "item": {
               "name": "Beat Welcome to the Jungle (Terran)",
@@ -12326,29 +9050,9 @@
             "name": "Media Blitz (Terran): Victory",
             "id": 3000,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_competent_anti_air",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "helper",
-                "name": "weapon_armor_upgrade_count",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Progressive Terran Infantry Weapon"
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_competent_comp",
+              "args": []
             },
             "item": {
               "name": "Siege Breakers",
@@ -12361,29 +9065,9 @@
             "name": "Media Blitz (Terran): Tower 1",
             "id": 3001,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_competent_anti_air",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "helper",
-                "name": "weapon_armor_upgrade_count",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Progressive Terran Infantry Weapon"
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_competent_comp",
+              "args": []
             },
             "item": {
               "name": "Advanced Targeting Optics (Banshee)",
@@ -12396,29 +9080,9 @@
             "name": "Media Blitz (Terran): Tower 2",
             "id": 3002,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_competent_anti_air",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "helper",
-                "name": "weapon_armor_upgrade_count",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Progressive Terran Infantry Weapon"
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_competent_comp",
+              "args": []
             },
             "item": {
               "name": "Twin-Linked Flamethrower (Hellion)",
@@ -12431,29 +9095,9 @@
             "name": "Media Blitz (Terran): Tower 3",
             "id": 3003,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_competent_anti_air",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "helper",
-                "name": "weapon_armor_upgrade_count",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Progressive Terran Infantry Weapon"
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_competent_comp",
+              "args": []
             },
             "item": {
               "name": "Internal Tech Module (Raven)",
@@ -12490,29 +9134,9 @@
             "name": "Media Blitz (Terran): All Barracks",
             "id": 3005,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_competent_anti_air",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "helper",
-                "name": "weapon_armor_upgrade_count",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Progressive Terran Infantry Weapon"
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_competent_comp",
+              "args": []
             },
             "item": {
               "name": "Progressive Terran Ship Weapon",
@@ -12525,29 +9149,9 @@
             "name": "Media Blitz (Terran): All Factories",
             "id": 3006,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_competent_anti_air",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "helper",
-                "name": "weapon_armor_upgrade_count",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Progressive Terran Infantry Weapon"
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_competent_comp",
+              "args": []
             },
             "item": {
               "name": "Advanced Cloaking Field (Medivac)",
@@ -12584,29 +9188,9 @@
             "name": "Media Blitz (Terran): Odin Not Trashed",
             "id": 3008,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_competent_anti_air",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "helper",
-                "name": "weapon_armor_upgrade_count",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Progressive Terran Infantry Weapon"
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_competent_comp",
+              "args": []
             },
             "item": {
               "name": "Launching Vector Compensator (Valkyrie)",
@@ -12633,29 +9217,9 @@
             "name": "Beat Media Blitz (Terran)",
             "id": null,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_competent_anti_air",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "helper",
-                "name": "weapon_armor_upgrade_count",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Progressive Terran Infantry Weapon"
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_competent_comp",
+              "args": []
             },
             "item": {
               "name": "Beat Media Blitz (Terran)",
@@ -14044,29 +10608,9 @@
             "name": "Zero Hour (Terran): First Hatchery",
             "id": 1304,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_competent_anti_air",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "helper",
-                "name": "weapon_armor_upgrade_count",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Progressive Terran Infantry Weapon"
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_competent_comp",
+              "args": []
             },
             "item": {
               "name": "Siege Tank",
@@ -14079,29 +10623,9 @@
             "name": "Zero Hour (Terran): Second Hatchery",
             "id": 1305,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_competent_anti_air",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "helper",
-                "name": "weapon_armor_upgrade_count",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Progressive Terran Infantry Weapon"
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_competent_comp",
+              "args": []
             },
             "item": {
               "name": "Progressive Terran Ship Weapon",
@@ -14114,29 +10638,9 @@
             "name": "Zero Hour (Terran): Third Hatchery",
             "id": 1306,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_competent_anti_air",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "helper",
-                "name": "weapon_armor_upgrade_count",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Progressive Terran Infantry Weapon"
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_competent_comp",
+              "args": []
             },
             "item": {
               "name": "Laser Targeting System (Marine)",
@@ -14149,29 +10653,9 @@
             "name": "Zero Hour (Terran): Fourth Hatchery",
             "id": 1307,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "helper",
-                  "name": "terran_competent_anti_air",
-                  "args": []
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "helper",
-                "name": "weapon_armor_upgrade_count",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Progressive Terran Infantry Weapon"
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "terran_competent_comp",
+              "args": []
             },
             "item": {
               "name": "Progressive Terran Ship Armor",
