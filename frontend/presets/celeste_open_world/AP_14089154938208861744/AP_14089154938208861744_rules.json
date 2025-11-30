@@ -1964,15 +1964,15 @@
             "name": "1a_7zb_east -> 1a_7zb_west",
             "connected_region": "1a_7zb_west",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Springs"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
                 }
               ]
             }
@@ -3570,15 +3570,15 @@
             "name": "1a_11_south-east -> 1a_11_north",
             "connected_region": "1a_11_north",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Springs",
-                    "Traffic Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Springs"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Traffic Blocks"
                 }
               ]
             }
@@ -3767,15 +3767,15 @@
             "name": "Forsaken City A - Cassette",
             "id": 211886080,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Cassette Blocks",
-                    "Pink Cassette Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Cassette Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Pink Cassette Blocks"
                 }
               ]
             },
@@ -5400,16 +5400,19 @@
             "name": "Old Site A - Cassette",
             "id": 211886081,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Cassette Blocks",
-                    "Dream Blocks",
-                    "Pink Cassette Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Cassette Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dream Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Pink Cassette Blocks"
                 }
               ]
             },
@@ -5468,15 +5471,15 @@
             "name": "Old Site A - Room d1 Strawberry",
             "id": 211877913,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dream Blocks",
-                    "Strawberry Seeds"
-                  ]
+                  "type": "item_check",
+                  "item": "Dream Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Strawberry Seeds"
                 }
               ]
             },
@@ -5691,15 +5694,15 @@
             "name": "Old Site A - Room d4 Strawberry",
             "id": 211877915,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dream Blocks",
-                    "Traffic Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dream Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Traffic Blocks"
                 }
               ]
             },
@@ -6107,15 +6110,15 @@
             "name": "2a_6_bottom -> 2a_6_top",
             "connected_region": "2a_6_top",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Coins",
-                    "Dream Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dream Blocks"
                 }
               ]
             }
@@ -6173,15 +6176,15 @@
             "name": "2a_7_bottom -> 2a_7_top",
             "connected_region": "2a_7_top",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Coins",
-                    "Dream Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dream Blocks"
                 }
               ]
             }
@@ -6545,16 +6548,19 @@
             "name": "2a_10_top -> 2a_10_bottom",
             "connected_region": "2a_10_bottom",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Coins",
-                    "Dash Refills",
-                    "Dream Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dream Blocks"
                 }
               ]
             }
@@ -8685,7 +8691,19 @@
           {
             "name": "3a_02-a_west -> 3a_02-a_main",
             "connected_region": "3a_02-a_main",
-            "access_rule": null
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Sinking Platforms"
+                }
+              ]
+            }
           },
           {
             "name": "3a_02-a_west -> 3a_02-a_room",
@@ -9562,15 +9580,15 @@
             "name": "3a_05-a_west -> 3a_05-a_east",
             "connected_region": "3a_05-a_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Moving Platforms"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Moving Platforms"
                 }
               ]
             }
@@ -9601,15 +9619,15 @@
             "name": "3a_05-a_east -> 3a_05-a_west",
             "connected_region": "3a_05-a_west",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Moving Platforms"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Moving Platforms"
                 }
               ]
             }
@@ -9717,15 +9735,15 @@
             "name": "3a_07-a_west -> 3a_07-a_east",
             "connected_region": "3a_07-a_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Celestial Resort A - Hallway Key 2",
-                    "Dash Refills"
-                  ]
+                  "type": "item_check",
+                  "item": "Celestial Resort A - Hallway Key 2"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dash Refills"
                 }
               ]
             }
@@ -9794,15 +9812,15 @@
             "name": "3a_07-a_east -> 3a_07-a_west",
             "connected_region": "3a_07-a_west",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Celestial Resort A - Hallway Key 2",
-                    "Dash Refills"
-                  ]
+                  "type": "item_check",
+                  "item": "Celestial Resort A - Hallway Key 2"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dash Refills"
                 }
               ]
             }
@@ -10255,16 +10273,19 @@
             "name": "3a_08-c_west -> 3a_08-c_east",
             "connected_region": "3a_08-c_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Coins",
-                    "Moving Platforms",
-                    "Springs"
-                  ]
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Moving Platforms"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
                 }
               ]
             }
@@ -10344,15 +10365,15 @@
             "name": "3a_08-b_east -> 3a_08-b_west",
             "connected_region": "3a_08-b_west",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Coins",
-                    "Sinking Platforms"
-                  ]
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Sinking Platforms"
                 }
               ]
             }
@@ -10410,7 +10431,23 @@
           {
             "name": "3a_08-a_west -> 3a_08-a_bottom",
             "connected_region": "3a_08-a_bottom",
-            "access_rule": null
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Celestial Resort A - Brown Clutter"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Celestial Resort A - Green Clutter"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Celestial Resort A - Pink Clutter"
+                }
+              ]
+            }
           },
           {
             "name": "3a_08-a_west -> 3a_08-a_room",
@@ -10562,7 +10599,23 @@
           {
             "name": "3a_09-b_center -> 3a_09-b_south-west",
             "connected_region": "3a_09-b_south-west",
-            "access_rule": null
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Celestial Resort A - Brown Clutter"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Celestial Resort A - Green Clutter"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Celestial Resort A - Pink Clutter"
+                }
+              ]
+            }
           },
           {
             "name": "3a_09-b_center -> 3a_09-b_south",
@@ -10626,16 +10679,19 @@
             "name": "Celestial Resort A - Huge Mess Key",
             "id": 211902467,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Celestial Resort A - Brown Clutter",
-                    "Celestial Resort A - Green Clutter",
-                    "Celestial Resort A - Pink Clutter"
-                  ]
+                  "type": "item_check",
+                  "item": "Celestial Resort A - Brown Clutter"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Celestial Resort A - Green Clutter"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Celestial Resort A - Pink Clutter"
                 }
               ]
             },
@@ -10654,7 +10710,23 @@
           {
             "name": "3a_09-b_south-west -> 3a_09-b_center",
             "connected_region": "3a_09-b_center",
-            "access_rule": null
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Celestial Resort A - Brown Clutter"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Celestial Resort A - Green Clutter"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Celestial Resort A - Pink Clutter"
+                }
+              ]
+            }
           },
           {
             "name": "3a_09-b_south-west -> 3a_09-b_room",
@@ -12785,15 +12857,15 @@
             "name": "3a_08-d_east -> 3a_08-d_west",
             "connected_region": "3a_08-d_west",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Coins",
-                    "Dash Refills"
-                  ]
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dash Refills"
                 }
               ]
             }
@@ -13434,15 +13506,15 @@
             "name": "Celestial Resort A - Cassette",
             "id": 211886082,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Cassette Blocks",
-                    "Pink Cassette Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Cassette Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Pink Cassette Blocks"
                 }
               ]
             },
@@ -13783,16 +13855,19 @@
             "name": "3a_roof03_west -> 3a_roof03_east",
             "connected_region": "3a_roof03_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Coins",
-                    "Dash Refills",
-                    "Springs"
-                  ]
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
                 }
               ]
             }
@@ -14580,15 +14655,15 @@
             "name": "4a_a-04_west -> 4a_a-04_east",
             "connected_region": "4a_a-04_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Clouds",
-                    "Pink Clouds"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Clouds"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Pink Clouds"
                 }
               ]
             }
@@ -14814,15 +14889,15 @@
             "name": "4a_a-07_west -> 4a_a-07_east",
             "connected_region": "4a_a-07_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Boosters",
-                    "Coins"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Coins"
                 }
               ]
             }
@@ -14895,15 +14970,15 @@
             "name": "4a_a-08_west -> 4a_a-08_north-west",
             "connected_region": "4a_a-08_north-west",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Boosters",
-                    "Blue Clouds"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Blue Clouds"
                 }
               ]
             }
@@ -15063,15 +15138,15 @@
             "name": "Golden Ridge A - Room a-10 Strawberry",
             "id": 211877957,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Springs",
-                    "Strawberry Seeds"
-                  ]
+                  "type": "item_check",
+                  "item": "Springs"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Strawberry Seeds"
                 }
               ]
             },
@@ -15114,15 +15189,15 @@
             "name": "Golden Ridge A - Cassette",
             "id": 211886083,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Cassette Blocks",
-                    "Pink Cassette Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Cassette Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Pink Cassette Blocks"
                 }
               ]
             },
@@ -15669,15 +15744,15 @@
             "name": "4a_b-06_east -> 4a_b-06_west",
             "connected_region": "4a_b-06_west",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Boosters",
-                    "Move Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Move Blocks"
                 }
               ]
             }
@@ -15713,15 +15788,15 @@
             "name": "4a_b-07_west -> 4a_b-07_east",
             "connected_region": "4a_b-07_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Boosters",
-                    "Move Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Move Blocks"
                 }
               ]
             }
@@ -15748,15 +15823,15 @@
             "name": "Golden Ridge A - Room b-07 Strawberry",
             "id": 211877962,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Boosters",
-                    "Move Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Move Blocks"
                 }
               ]
             },
@@ -16160,15 +16235,15 @@
             "name": "4a_b-05_center -> 4a_b-05_west",
             "connected_region": "4a_b-05_west",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Move Blocks",
-                    "Pink Clouds"
-                  ]
+                  "type": "item_check",
+                  "item": "Move Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Pink Clouds"
                 }
               ]
             }
@@ -16278,15 +16353,15 @@
             "name": "4a_b-08b_west -> 4a_b-08b_east",
             "connected_region": "4a_b-08b_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Move Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Move Blocks"
                 }
               ]
             }
@@ -16352,15 +16427,15 @@
             "name": "4a_b-08_west -> 4a_b-08_east",
             "connected_region": "4a_b-08_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Clouds",
-                    "Move Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Clouds"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Move Blocks"
                 }
               ]
             }
@@ -16387,15 +16462,15 @@
             "name": "Golden Ridge A - Room b-08 Strawberry",
             "id": 211877967,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Clouds",
-                    "Move Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Clouds"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Move Blocks"
                 }
               ]
             },
@@ -16723,15 +16798,15 @@
             "name": "4a_c-05_west -> 4a_c-05_east",
             "connected_region": "4a_c-05_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Boosters",
-                    "Move Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Move Blocks"
                 }
               ]
             }
@@ -16788,15 +16863,15 @@
             "name": "Golden Ridge A - Room c-05 Strawberry",
             "id": 211877970,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Boosters",
-                    "Move Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Move Blocks"
                 }
               ]
             },
@@ -16821,16 +16896,19 @@
             "name": "4a_c-06_bottom -> 4a_c-06_west",
             "connected_region": "4a_c-06_west",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Boosters",
-                    "Blue Clouds",
-                    "Move Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Blue Clouds"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Move Blocks"
                 }
               ]
             }
@@ -16895,15 +16973,15 @@
             "name": "Golden Ridge A - Room c-06 Strawberry",
             "id": 211877971,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Coins",
-                    "Move Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Move Blocks"
                 }
               ]
             },
@@ -16968,15 +17046,15 @@
             "name": "Golden Ridge A - Room c-06b Strawberry",
             "id": 211877972,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Boosters",
-                    "Dash Refills"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dash Refills"
                 }
               ]
             },
@@ -17001,15 +17079,15 @@
             "name": "4a_c-09_west -> 4a_c-09_east",
             "connected_region": "4a_c-09_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Coins",
-                    "Move Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Move Blocks"
                 }
               ]
             }
@@ -17464,15 +17542,15 @@
             "name": "Golden Ridge A - Room d-00b Strawberry",
             "id": 211877975,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Boosters",
-                    "Move Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Move Blocks"
                 }
               ]
             },
@@ -17577,17 +17655,23 @@
             "name": "4a_d-02_west -> 4a_d-02_east",
             "connected_region": "4a_d-02_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Boosters",
-                    "Coins",
-                    "Move Blocks",
-                    "Pink Clouds"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Move Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Pink Clouds"
                 }
               ]
             }
@@ -18000,15 +18084,15 @@
             "name": "4a_d-08_west -> 4a_d-08_east",
             "connected_region": "4a_d-08_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Boosters",
-                    "Blue Clouds"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Blue Clouds"
                 }
               ]
             }
@@ -18439,15 +18523,15 @@
             "name": "5a_a-00_west -> 5a_a-00_east",
             "connected_region": "5a_a-00_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Switches",
-                    "Red Boosters"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Switches"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red Boosters"
                 }
               ]
             }
@@ -18967,15 +19051,15 @@
             "name": "Mirror Temple A - Room a-04 Strawberry",
             "id": 211877985,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Springs",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Springs"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             },
@@ -19264,15 +19348,15 @@
             "name": "Mirror Temple A - Room a-06 Strawberry",
             "id": 211877987,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Red Boosters",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Red Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             },
@@ -19315,15 +19399,15 @@
             "name": "Mirror Temple A - Room a-07 Strawberry",
             "id": 211877988,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             },
@@ -19386,15 +19470,15 @@
             "name": "5a_a-08_center -> 5a_a-08_north-east",
             "connected_region": "5a_a-08_north-east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Red Boosters",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Red Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             }
@@ -19759,15 +19843,15 @@
             "name": "Mirror Temple A - Room a-11 Strawberry",
             "id": 211877989,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             },
@@ -19844,15 +19928,15 @@
             "name": "5a_a-12_south-west -> 5a_a-12_east",
             "connected_region": "5a_a-12_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Switches",
-                    "Red Boosters"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Switches"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red Boosters"
                 }
               ]
             }
@@ -19928,15 +20012,15 @@
             "name": "Mirror Temple A - Room a-15 Strawberry",
             "id": 211877990,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Coins",
-                    "Red Boosters"
-                  ]
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red Boosters"
                 }
               ]
             },
@@ -19979,15 +20063,15 @@
             "name": "Mirror Temple A - Room a-14 Strawberry",
             "id": 211877991,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             },
@@ -20787,15 +20871,15 @@
             "name": "Mirror Temple A - Room b-21 Strawberry",
             "id": 211877996,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Red Boosters"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red Boosters"
                 }
               ]
             },
@@ -21260,15 +21344,15 @@
             "name": "Mirror Temple A - Room b-05 Strawberry",
             "id": 211877998,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Red Boosters"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red Boosters"
                 }
               ]
             },
@@ -21533,15 +21617,15 @@
             "name": "5a_b-09_north -> 5a_b-09_south",
             "connected_region": "5a_b-09_south",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Switches",
-                    "Red Boosters"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Switches"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red Boosters"
                 }
               ]
             }
@@ -21908,15 +21992,15 @@
             "name": "5a_b-13_west -> 5a_b-13_east",
             "connected_region": "5a_b-13_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Switches",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Switches"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             }
@@ -22030,15 +22114,15 @@
             "name": "Mirror Temple A - Room b-17 Strawberry 2",
             "id": 211878001,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Springs",
-                    "Strawberry Seeds"
-                  ]
+                  "type": "item_check",
+                  "item": "Springs"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Strawberry Seeds"
                 }
               ]
             },
@@ -22148,16 +22232,19 @@
             "name": "Mirror Temple A - Cassette",
             "id": 211886084,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Cassette Blocks",
-                    "Pink Cassette Blocks",
-                    "Red Boosters"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Cassette Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Pink Cassette Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red Boosters"
                 }
               ]
             },
@@ -22190,15 +22277,15 @@
             "name": "5a_b-06_west -> 5a_b-06_east",
             "connected_region": "5a_b-06_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Mirror Temple A - Depths Key",
-                    "Red Boosters"
-                  ]
+                  "type": "item_check",
+                  "item": "Mirror Temple A - Depths Key"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red Boosters"
                 }
               ]
             }
@@ -22229,15 +22316,15 @@
             "name": "5a_b-06_east -> 5a_b-06_west",
             "connected_region": "5a_b-06_west",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Mirror Temple A - Depths Key",
-                    "Red Boosters"
-                  ]
+                  "type": "item_check",
+                  "item": "Mirror Temple A - Depths Key"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red Boosters"
                 }
               ]
             }
@@ -22303,15 +22390,15 @@
             "name": "5a_b-19_west -> 5a_b-19_east",
             "connected_region": "5a_b-19_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Red Boosters"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red Boosters"
                 }
               ]
             }
@@ -22528,15 +22615,15 @@
             "name": "5a_b-16_bottom -> 5a_b-16_mirror",
             "connected_region": "5a_b-16_mirror",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Switches",
-                    "Red Boosters"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Switches"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red Boosters"
                 }
               ]
             }
@@ -22780,16 +22867,19 @@
             "name": "5a_c-01b_west -> 5a_c-01b_east",
             "connected_region": "5a_c-01b_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Switches",
-                    "Red Boosters",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Switches"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             }
@@ -22839,15 +22929,15 @@
             "name": "5a_c-01c_west -> 5a_c-01c_east",
             "connected_region": "5a_c-01c_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Red Boosters",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Red Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             }
@@ -23797,16 +23887,19 @@
             "name": "5a_d-09_east -> 5a_d-09_west",
             "connected_region": "5a_d-09_west",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Red Boosters",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             }
@@ -23872,16 +23965,19 @@
             "name": "5a_d-04_east -> 5a_d-04_west",
             "connected_region": "5a_d-04_west",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Mirror Temple A - Search Key 1",
-                    "Mirror Temple A - Search Key 2",
-                    "Red Boosters"
-                  ]
+                  "type": "item_check",
+                  "item": "Mirror Temple A - Search Key 1"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Mirror Temple A - Search Key 2"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red Boosters"
                 }
               ]
             }
@@ -24042,15 +24138,15 @@
             "name": "Mirror Temple A - Room d-04 Strawberry 2",
             "id": 211878004,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Red Boosters",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Red Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             },
@@ -24120,15 +24216,15 @@
             "name": "5a_d-05_north -> 5a_d-05_west",
             "connected_region": "5a_d-05_west",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Red Boosters",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Red Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             }
@@ -24268,15 +24364,15 @@
             "name": "5a_d-06_south-east -> 5a_d-06_north-east",
             "connected_region": "5a_d-06_north-east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Red Boosters",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Red Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             }
@@ -24420,7 +24516,19 @@
           {
             "name": "5a_d-02_east -> 5a_d-02_west",
             "connected_region": "5a_d-02_west",
-            "access_rule": null
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Seekers"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
+                }
+              ]
+            }
           },
           {
             "name": "5a_d-02_east -> 5a_d-02_room",
@@ -24475,15 +24583,15 @@
             "name": "5a_d-03_east -> 5a_d-03_west",
             "connected_region": "5a_d-03_west",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Coins",
-                    "Seekers"
-                  ]
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Seekers"
                 }
               ]
             }
@@ -24605,15 +24713,15 @@
             "name": "Mirror Temple A - Room d-15 Strawberry 2",
             "id": 211878006,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             },
@@ -24628,15 +24736,15 @@
             "name": "Mirror Temple A - Search Key 3",
             "id": 211902473,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Seekers",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Seekers"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             },
@@ -24977,15 +25085,15 @@
             "name": "5a_d-19_east -> 5a_d-19_west",
             "connected_region": "5a_d-19_west",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Springs",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Springs"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             }
@@ -25115,15 +25223,15 @@
             "name": "5a_d-20_west -> 5a_d-20_east",
             "connected_region": "5a_d-20_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Coins",
-                    "Seekers"
-                  ]
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Seekers"
                 }
               ]
             }
@@ -25237,15 +25345,15 @@
             "name": "5a_e-01_west -> 5a_e-01_east",
             "connected_region": "5a_e-01_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Switches",
-                    "Theo Crystal"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Switches"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Theo Crystal"
                 }
               ]
             }
@@ -25295,15 +25403,15 @@
             "name": "5a_e-02_west -> 5a_e-02_east",
             "connected_region": "5a_e-02_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Switches",
-                    "Theo Crystal"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Switches"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Theo Crystal"
                 }
               ]
             }
@@ -25353,15 +25461,15 @@
             "name": "5a_e-03_west -> 5a_e-03_east",
             "connected_region": "5a_e-03_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Switches",
-                    "Theo Crystal"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Switches"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Theo Crystal"
                 }
               ]
             }
@@ -25411,15 +25519,15 @@
             "name": "5a_e-04_west -> 5a_e-04_east",
             "connected_region": "5a_e-04_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Coins",
-                    "Theo Crystal"
-                  ]
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Theo Crystal"
                 }
               ]
             }
@@ -25469,16 +25577,19 @@
             "name": "5a_e-06_west -> 5a_e-06_east",
             "connected_region": "5a_e-06_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Switches",
-                    "Springs",
-                    "Theo Crystal"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Switches"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Theo Crystal"
                 }
               ]
             }
@@ -25543,16 +25654,19 @@
             "name": "5a_e-05_west -> 5a_e-05_east",
             "connected_region": "5a_e-05_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Coins",
-                    "Swap Blocks",
-                    "Theo Crystal"
-                  ]
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Theo Crystal"
                 }
               ]
             }
@@ -25651,15 +25765,15 @@
             "name": "5a_e-08_west -> 5a_e-08_east",
             "connected_region": "5a_e-08_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Swap Blocks",
-                    "Theo Crystal"
-                  ]
+                  "type": "item_check",
+                  "item": "Swap Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Theo Crystal"
                 }
               ]
             }
@@ -25709,15 +25823,15 @@
             "name": "5a_e-09_west -> 5a_e-09_east",
             "connected_region": "5a_e-09_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Swap Blocks",
-                    "Theo Crystal"
-                  ]
+                  "type": "item_check",
+                  "item": "Swap Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Theo Crystal"
                 }
               ]
             }
@@ -25767,17 +25881,23 @@
             "name": "5a_e-10_west -> 5a_e-10_east",
             "connected_region": "5a_e-10_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Switches",
-                    "Springs",
-                    "Swap Blocks",
-                    "Theo Crystal"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Switches"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Theo Crystal"
                 }
               ]
             }
@@ -26550,16 +26670,19 @@
             "name": "Reflection A - Cassette",
             "id": 211886085,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Cassette Blocks",
-                    "Dash Refills",
-                    "Pink Cassette Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Cassette Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Pink Cassette Blocks"
                 }
               ]
             },
@@ -26641,15 +26764,15 @@
             "name": "6a_06_west -> 6a_06_east",
             "connected_region": "6a_06_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Feathers",
-                    "Kevins"
-                  ]
+                  "type": "item_check",
+                  "item": "Feathers"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Kevins"
                 }
               ]
             }
@@ -26810,15 +26933,15 @@
             "name": "6a_08a_west -> 6a_08a_east",
             "connected_region": "6a_08a_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Kevins"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Kevins"
                 }
               ]
             }
@@ -26876,15 +26999,15 @@
             "name": "6a_08b_west -> 6a_08b_east",
             "connected_region": "6a_08b_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Feathers",
-                    "Kevins"
-                  ]
+                  "type": "item_check",
+                  "item": "Feathers"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Kevins"
                 }
               ]
             }
@@ -27355,15 +27478,15 @@
             "name": "6a_12b_west -> 6a_12b_east",
             "connected_region": "6a_12b_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Bumpers",
-                    "Kevins"
-                  ]
+                  "type": "item_check",
+                  "item": "Bumpers"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Kevins"
                 }
               ]
             }
@@ -27554,15 +27677,15 @@
             "name": "6a_14a_west -> 6a_14a_east",
             "connected_region": "6a_14a_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Bumpers",
-                    "Dash Refills"
-                  ]
+                  "type": "item_check",
+                  "item": "Bumpers"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dash Refills"
                 }
               ]
             }
@@ -27620,16 +27743,19 @@
             "name": "6a_14b_west -> 6a_14b_east",
             "connected_region": "6a_14b_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Bumpers",
-                    "Coins",
-                    "Springs"
-                  ]
+                  "type": "item_check",
+                  "item": "Bumpers"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
                 }
               ]
             }
@@ -27869,15 +27995,15 @@
             "name": "6a_16b_west -> 6a_16b_east",
             "connected_region": "6a_16b_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Feathers"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Feathers"
                 }
               ]
             }
@@ -28060,15 +28186,15 @@
             "name": "6a_18a_west -> 6a_18a_east",
             "connected_region": "6a_18a_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Bumpers",
-                    "Feathers"
-                  ]
+                  "type": "item_check",
+                  "item": "Bumpers"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Feathers"
                 }
               ]
             }
@@ -29902,15 +30028,15 @@
             "name": "6a_boss-18_west -> 6a_boss-18_east",
             "connected_region": "6a_boss-18_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Bumpers",
-                    "Feathers"
-                  ]
+                  "type": "item_check",
+                  "item": "Bumpers"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Feathers"
                 }
               ]
             }
@@ -29968,15 +30094,15 @@
             "name": "6a_boss-19_west -> 6a_boss-19_east",
             "connected_region": "6a_boss-19_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Bumpers",
-                    "Feathers"
-                  ]
+                  "type": "item_check",
+                  "item": "Bumpers"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Feathers"
                 }
               ]
             }
@@ -30595,15 +30721,15 @@
             "name": "7a_a-04_west -> 7a_a-04_east",
             "connected_region": "7a_a-04_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Springs"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
                 }
               ]
             }
@@ -30725,15 +30851,15 @@
             "name": "The Summit A - Room a-04b Strawberry 1",
             "id": 211878012,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Springs"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
                 }
               ]
             },
@@ -30852,15 +30978,15 @@
             "name": "7a_a-06_bottom -> 7a_a-06_top",
             "connected_region": "7a_a-06_top",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Badeline Boosters",
-                    "Springs"
-                  ]
+                  "type": "item_check",
+                  "item": "Badeline Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
                 }
               ]
             }
@@ -30869,15 +30995,15 @@
             "name": "7a_a-06_bottom -> 7a_a-06_top-side",
             "connected_region": "7a_a-06_top-side",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Badeline Boosters",
-                    "Springs"
-                  ]
+                  "type": "item_check",
+                  "item": "Badeline Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
                 }
               ]
             }
@@ -30995,15 +31121,15 @@
             "name": "7a_b-00_bottom -> 7a_b-00_top",
             "connected_region": "7a_b-00_top",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Traffic Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Traffic Blocks"
                 }
               ]
             }
@@ -31061,15 +31187,15 @@
             "name": "7a_b-01_west -> 7a_b-01_east",
             "connected_region": "7a_b-01_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Springs",
-                    "Traffic Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Springs"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Traffic Blocks"
                 }
               ]
             }
@@ -31119,15 +31245,15 @@
             "name": "7a_b-02_south -> 7a_b-02_north-west",
             "connected_region": "7a_b-02_north-west",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Traffic Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Traffic Blocks"
                 }
               ]
             }
@@ -31136,15 +31262,15 @@
             "name": "7a_b-02_south -> 7a_b-02_north-east",
             "connected_region": "7a_b-02_north-east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Traffic Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Traffic Blocks"
                 }
               ]
             }
@@ -31293,15 +31419,15 @@
             "name": "7a_b-02b_south -> 7a_b-02b_north-west",
             "connected_region": "7a_b-02b_north-west",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Traffic Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Traffic Blocks"
                 }
               ]
             }
@@ -31310,15 +31436,15 @@
             "name": "7a_b-02b_south -> 7a_b-02b_north-east",
             "connected_region": "7a_b-02b_north-east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Traffic Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Traffic Blocks"
                 }
               ]
             }
@@ -31479,15 +31605,15 @@
             "name": "7a_b-02c_west -> 7a_b-02c_east",
             "connected_region": "7a_b-02c_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Traffic Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Traffic Blocks"
                 }
               ]
             }
@@ -31518,15 +31644,15 @@
             "name": "7a_b-02c_east -> 7a_b-02c_west",
             "connected_region": "7a_b-02c_west",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Traffic Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Traffic Blocks"
                 }
               ]
             }
@@ -31718,15 +31844,15 @@
             "name": "7a_b-03_east -> 7a_b-03_north",
             "connected_region": "7a_b-03_north",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Traffic Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Traffic Blocks"
                 }
               ]
             }
@@ -31834,16 +31960,19 @@
             "name": "7a_b-05_west -> 7a_b-05_east",
             "connected_region": "7a_b-05_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Coins",
-                    "Dash Refills",
-                    "Springs"
-                  ]
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
                 }
               ]
             }
@@ -32117,15 +32246,15 @@
             "name": "7a_b-09_bottom -> 7a_b-09_top",
             "connected_region": "7a_b-09_top",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Badeline Boosters",
-                    "Traffic Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Badeline Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Traffic Blocks"
                 }
               ]
             }
@@ -32365,16 +32494,19 @@
             "name": "7a_c-02_bottom -> 7a_c-02_top",
             "connected_region": "7a_c-02_top",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Coins",
-                    "Dream Blocks",
-                    "Springs"
-                  ]
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dream Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
                 }
               ]
             }
@@ -32537,15 +32669,15 @@
             "name": "The Summit A - Room c-03b Strawberry",
             "id": 211878021,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Dream Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dream Blocks"
                 }
               ]
             },
@@ -32848,15 +32980,15 @@
             "name": "7a_c-06b_south -> 7a_c-06b_east",
             "connected_region": "7a_c-06b_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dream Blocks",
-                    "Dream Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dream Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dream Blocks"
                 }
               ]
             }
@@ -33007,15 +33139,15 @@
             "name": "The Summit A - Gem 3",
             "id": 211905026,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Coins",
-                    "Dream Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dream Blocks"
                 }
               ]
             },
@@ -33287,15 +33419,15 @@
             "name": "7a_c-09_bottom -> 7a_c-09_top",
             "connected_region": "7a_c-09_top",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Badeline Boosters",
-                    "Dream Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Badeline Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dream Blocks"
                 }
               ]
             }
@@ -33827,15 +33959,15 @@
             "name": "The Summit A - Room d-01d Strawberry",
             "id": 211878029,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Coins",
-                    "Dash Refills"
-                  ]
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dash Refills"
                 }
               ]
             },
@@ -34135,15 +34267,15 @@
             "name": "The Summit A - Cassette",
             "id": 211886086,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Cassette Blocks",
-                    "Pink Cassette Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Cassette Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Pink Cassette Blocks"
                 }
               ]
             },
@@ -34247,7 +34379,19 @@
           {
             "name": "7a_d-05_west -> 7a_d-05_east",
             "connected_region": "7a_d-05_east",
-            "access_rule": null
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                }
+              ]
+            }
           },
           {
             "name": "7a_d-05_west -> 7a_d-05_room",
@@ -35112,15 +35256,15 @@
             "name": "7a_e-00_south-west -> 7a_e-00_east",
             "connected_region": "7a_e-00_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Boosters",
-                    "Blue Clouds"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Blue Clouds"
                 }
               ]
             }
@@ -35181,15 +35325,15 @@
             "name": "7a_e-00_east -> 7a_e-00_south-west",
             "connected_region": "7a_e-00_south-west",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Boosters",
-                    "Blue Clouds"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Blue Clouds"
                 }
               ]
             }
@@ -35489,15 +35633,15 @@
             "name": "7a_e-03_south-west -> 7a_e-03_east",
             "connected_region": "7a_e-03_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Boosters",
-                    "Moving Platforms"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Moving Platforms"
                 }
               ]
             }
@@ -35593,15 +35737,15 @@
             "name": "7a_e-04_west -> 7a_e-04_east",
             "connected_region": "7a_e-04_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Boosters",
-                    "Springs"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
                 }
               ]
             }
@@ -35822,15 +35966,15 @@
             "name": "The Summit A - Room e-07 Strawberry",
             "id": 211878037,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Move Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Move Blocks"
                 }
               ]
             },
@@ -36060,15 +36204,15 @@
             "name": "7a_e-11_south -> 7a_e-11_east",
             "connected_region": "7a_e-11_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Boosters",
-                    "Move Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Move Blocks"
                 }
               ]
             }
@@ -36189,15 +36333,15 @@
             "name": "The Summit A - Room e-12 Strawberry",
             "id": 211878040,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Strawberry Seeds"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Strawberry Seeds"
                 }
               ]
             },
@@ -36316,16 +36460,19 @@
             "name": "7a_e-10b_west -> 7a_e-10b_east",
             "connected_region": "7a_e-10b_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Move Blocks",
-                    "Springs"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Move Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
                 }
               ]
             }
@@ -36383,18 +36530,27 @@
             "name": "7a_e-13_bottom -> 7a_e-13_top",
             "connected_region": "7a_e-13_top",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Badeline Boosters",
-                    "Blue Boosters",
-                    "Dash Refills",
-                    "Move Blocks",
-                    "Springs"
-                  ]
+                  "type": "item_check",
+                  "item": "Badeline Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Blue Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Move Blocks"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
                 }
               ]
             }
@@ -36825,17 +36981,23 @@
             "name": "7a_f-02b_west -> 7a_f-02b_east",
             "connected_region": "7a_f-02b_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Dash Switches",
-                    "Red Boosters",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dash Switches"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             }
@@ -36965,15 +37127,15 @@
             "name": "7a_f-03_west -> 7a_f-03_east",
             "connected_region": "7a_f-03_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             }
@@ -37004,15 +37166,15 @@
             "name": "7a_f-03_east -> 7a_f-03_west",
             "connected_region": "7a_f-03_west",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             }
@@ -37551,16 +37713,19 @@
             "name": "7a_f-08_west -> 7a_f-08_east",
             "connected_region": "7a_f-08_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Red Boosters",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             }
@@ -37728,15 +37893,15 @@
             "name": "7a_f-08d_west -> 7a_f-08d_east",
             "connected_region": "7a_f-08d_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Switches",
-                    "Springs"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Switches"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
                 }
               ]
             }
@@ -37794,15 +37959,15 @@
             "name": "7a_f-08c_west -> 7a_f-08c_east",
             "connected_region": "7a_f-08c_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             }
@@ -38011,16 +38176,19 @@
             "name": "7a_f-10b_west -> 7a_f-10b_east",
             "connected_region": "7a_f-10b_east",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Dash Switches",
-                    "Springs"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dash Switches"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
                 }
               ]
             }
@@ -38078,17 +38246,23 @@
             "name": "7a_f-11_bottom -> 7a_f-11_top",
             "connected_region": "7a_f-11_top",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Badeline Boosters",
-                    "Red Boosters",
-                    "Springs",
-                    "Swap Blocks"
-                  ]
+                  "type": "item_check",
+                  "item": "Badeline Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Swap Blocks"
                 }
               ]
             }
@@ -38212,15 +38386,15 @@
             "name": "7a_g-00_bottom -> 7a_g-00_top",
             "connected_region": "7a_g-00_top",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Badeline Boosters",
-                    "Dash Refills"
-                  ]
+                  "type": "item_check",
+                  "item": "Badeline Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dash Refills"
                 }
               ]
             }
@@ -38288,19 +38462,31 @@
             "name": "The Summit A - Crystal Heart",
             "id": 211890182,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Summit A - Gem 1",
-                    "The Summit A - Gem 2",
-                    "The Summit A - Gem 3",
-                    "The Summit A - Gem 4",
-                    "The Summit A - Gem 5",
-                    "The Summit A - Gem 6"
-                  ]
+                  "type": "item_check",
+                  "item": "The Summit A - Gem 1"
+                },
+                {
+                  "type": "item_check",
+                  "item": "The Summit A - Gem 2"
+                },
+                {
+                  "type": "item_check",
+                  "item": "The Summit A - Gem 3"
+                },
+                {
+                  "type": "item_check",
+                  "item": "The Summit A - Gem 4"
+                },
+                {
+                  "type": "item_check",
+                  "item": "The Summit A - Gem 5"
+                },
+                {
+                  "type": "item_check",
+                  "item": "The Summit A - Gem 6"
                 }
               ]
             },
@@ -38394,16 +38580,19 @@
             "name": "7a_g-00b_c21 -> 7a_g-00b_top",
             "connected_region": "7a_g-00b_top",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Badeline Boosters",
-                    "Dash Refills",
-                    "Springs"
-                  ]
+                  "type": "item_check",
+                  "item": "Badeline Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
                 }
               ]
             }
@@ -38490,15 +38679,15 @@
             "name": "7a_g-01_c18 -> 7a_g-01_c16",
             "connected_region": "7a_g-01_c16",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Clouds",
-                    "Dash Refills"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Clouds"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dash Refills"
                 }
               ]
             }
@@ -38517,15 +38706,15 @@
             "name": "The Summit A - Room g-01 Strawberry 1",
             "id": 211878054,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Clouds",
-                    "Dash Refills"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Clouds"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dash Refills"
                 }
               ]
             },
@@ -38545,18 +38734,27 @@
             "name": "7a_g-01_c16 -> 7a_g-01_top",
             "connected_region": "7a_g-01_top",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Badeline Boosters",
-                    "Coins",
-                    "Dash Refills",
-                    "Pink Clouds",
-                    "Springs"
-                  ]
+                  "type": "item_check",
+                  "item": "Badeline Boosters"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Coins"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Pink Clouds"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
                 }
               ]
             }
@@ -38635,15 +38833,15 @@
             "name": "7a_g-02_bottom -> 7a_g-02_top",
             "connected_region": "7a_g-02_top",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Blue Clouds",
-                    "Feathers"
-                  ]
+                  "type": "item_check",
+                  "item": "Blue Clouds"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Feathers"
                 }
               ]
             }
@@ -38693,16 +38891,19 @@
             "name": "7a_g-03_bottom -> 7a_g-03_goal",
             "connected_region": "7a_g-03_goal",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Feathers",
-                    "Springs"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Feathers"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
                 }
               ]
             }
@@ -38721,16 +38922,19 @@
             "name": "The Summit A - Room g-03 Strawberry",
             "id": 211878057,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dash Refills",
-                    "Feathers",
-                    "Springs"
-                  ]
+                  "type": "item_check",
+                  "item": "Dash Refills"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Feathers"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Springs"
                 }
               ]
             },
