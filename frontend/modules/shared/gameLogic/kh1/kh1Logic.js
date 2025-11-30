@@ -2,6 +2,8 @@
  * Kingdom Hearts 1 game-specific logic
  */
 
+import { DEFAULT_PLAYER_ID } from '../../playerIdUtils.js';
+
 // Must match Python WORLDS and KEYBLADES arrays from worlds/kh1/Rules.py
 const WORLDS = ["Destiny Islands", "Traverse Town", "Wonderland", "Olympus Coliseum", "Deep Jungle", "Agrabah", "Monstro", "Atlantica", "Halloween Town", "Neverland", "Hollow Bastion", "End of the World", "100 Acre Wood"];
 const KEYBLADES = ["Oathkeeper", "Lionheart", "Lady Luck", "Olympia", "Jungle King", "Three Wishes", "Wishing Star", "Crabclaw", "Pumpkinhead", "Fairy Harp", "Divine Rose", "Oblivion", "Spellbinder"];
@@ -47,7 +49,7 @@ export const kh1Logic = {
         keyblades_unlock_chests = keyblades_unlock_chests ?? false;
 
         // Get hundred_acre_wood setting from staticData if available
-        const playerId = staticData?.playerId || 1;
+        const playerId = snapshot?.player?.id || snapshot?.player?.slot || snapshot?.player || staticData?.playerId || DEFAULT_PLAYER_ID;
         const settings = staticData?.settings?.[playerId] || {};
         const hundred_acre_wood = settings.hundred_acre_wood !== 0 && settings.hundred_acre_wood !== false;
 
