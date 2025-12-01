@@ -19,6 +19,7 @@ import { ComparisonEngine } from './comparisonEngine.js';
 import { AnalysisReporter } from './analysisReporter.js';
 import { EventProcessor } from './eventProcessor.js';
 import { TestOrchestrator } from './testOrchestrator.js';
+import { UTComparison, deriveUtLogPath } from './utComparison.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 
 const logger = createUniversalLogger('testSpoilerUI');
@@ -78,6 +79,11 @@ export class TestSpoilerUI {
     this.stopOnFirstError = true;
     this.currentMismatchDetailsArray = [];
     this.ruleEvaluator = new TestSpoilerRuleEvaluator((level, message, ...data) => this.log(level, message, ...data));
+
+    // UT Comparison
+    this.utComparison = null;
+    this.utComparisonResult = null;
+    this.utLogData = null;  // Parsed UT sphere log entries for comparison during test
 
     // Initialize module dependencies
     this.fileLoader = new FileLoader();
@@ -420,6 +426,7 @@ export class TestSpoilerUI {
       this.clearTestState(); // Clear previous test state
       // Filter out non-state_update events (like log_header) - these are handled by sphereState
       this.spoilerLogData = result.logData.filter(event => event.type === 'state_update');
+      this.spoilerLogRawContent = result.rawContent;
       this.currentSpoilerLogPath = result.logPath;
 
       // Extract playerId from multiworld rules filename (e.g., "AP_xxx_P2_rules.json")
@@ -659,8 +666,186 @@ export class TestSpoilerUI {
     controlsDiv.appendChild(autoCollectCheckbox);
     controlsDiv.appendChild(autoCollectLabel);
 
+    // UT Comparison button
+    const utComparisonBtn = document.createElement('button');
+    utComparisonBtn.id = 'ut-comparison-btn';
+    utComparisonBtn.textContent = 'Compare with UT';
+    utComparisonBtn.style.marginLeft = '15px';
+    utComparisonBtn.onclick = () => this.runUtComparison();
+    controlsDiv.appendChild(utComparisonBtn);
+
     this.controlsContainer.innerHTML = ''; // Clear previous controls
     this.controlsContainer.appendChild(controlsDiv);
+  }
+
+  /**
+   * Run UT comparison - loads UT log and runs the full spoiler test with UT comparison.
+   */
+  async runUtComparison() {
+    if (!this.spoilerLogData) {
+      this.log('error', 'No Python sphere log loaded');
+      return;
+    }
+
+    if (!this.currentSpoilerLogPath) {
+      this.log('error', 'Cannot determine sphere log path');
+      return;
+    }
+
+    // Derive the UT log path from the Python log path
+    const utLogUrl = deriveUtLogPath(this.currentSpoilerLogPath);
+    this.log('info', `--- UT Comparison Test ---`);
+    this.log('info', `Fetching UT log: ${utLogUrl}`);
+
+    // Fetch and parse the UT log
+    try {
+      const response = await fetch(utLogUrl);
+      if (!response.ok) {
+        this.log('warn', `UT sphere log not found at ${utLogUrl} (HTTP ${response.status})`);
+        this.log('info', 'To generate a UT log, run the UT comparison test script.');
+        return;
+      }
+      const utContent = await response.text();
+
+      // Parse the UT log - filter to state_update entries only
+      const lines = utContent.trim().split('\n').filter(line => line.trim());
+      const allEntries = lines.map((line, index) => {
+        try {
+          return JSON.parse(line);
+        } catch (e) {
+          this.log('error', `Failed to parse UT log line ${index + 1}: ${e.message}`);
+          return null;
+        }
+      }).filter(entry => entry !== null);
+
+      this.utLogData = allEntries.filter(entry => entry.type === 'state_update');
+      this.log('info', `Loaded UT sphere log: ${this.utLogData.length} entries`);
+
+      // Build an index of UT entries by sphere_index for quick lookup
+      this.utLogByIndex = {};
+      for (const entry of this.utLogData) {
+        this.utLogByIndex[String(entry.sphere_index)] = entry;
+      }
+
+    } catch (error) {
+      this.log('error', `Failed to fetch UT log: ${error.message}`);
+      return;
+    }
+
+    // Set up the UT comparison callback
+    this.testOrchestrator.setUtComparisonCallback((pythonEvent, sphereIndex, playerId) => {
+      return this.compareWithUtLog(pythonEvent, sphereIndex, playerId);
+    });
+
+    // Run the full spoiler test with UT comparison enabled
+    try {
+      await this.runFullSpoilerTest();
+    } finally {
+      // Clear the callback after test completes
+      this.testOrchestrator.setUtComparisonCallback(null);
+      this.utLogData = null;
+      this.utLogByIndex = null;
+    }
+  }
+
+  /**
+   * Compare a Python sphere log entry against the corresponding UT log entry.
+   * Called after each event is processed during the UT comparison test.
+   * @returns {boolean} True if comparison passed (no mismatch), false if there was a mismatch
+   */
+  compareWithUtLog(pythonEvent, sphereIndex, playerId) {
+    if (!this.utLogByIndex) return true;
+
+    const sphereKey = String(sphereIndex);
+    const utEntry = this.utLogByIndex[sphereKey];
+
+    if (!utEntry) {
+      this.log('error', `[UT] No UT entry for sphere ${sphereIndex}`);
+      return false;
+    }
+
+    const playerKey = String(playerId);
+    const pythonPlayerData = pythonEvent.player_data?.[playerKey];
+    const utPlayerData = utEntry.player_data?.[playerKey];
+
+    if (!pythonPlayerData) {
+      this.log('error', `[UT] Missing Python player data for sphere ${sphereIndex}, player ${playerId}`);
+      return false;
+    }
+
+    if (!utPlayerData) {
+      this.log('error', `[UT] Missing UT player data for sphere ${sphereIndex}, player ${playerId}`);
+      return false;
+    }
+
+    let hasMismatch = false;
+
+    // Compare accessible locations
+    const pythonLocs = new Set(pythonPlayerData.new_accessible_locations || []);
+    const utLocs = new Set(utPlayerData.new_accessible_locations || []);
+
+    const missingInUt = [...pythonLocs].filter(loc => !utLocs.has(loc));
+    const extraInUt = [...utLocs].filter(loc => !pythonLocs.has(loc));
+
+    if (missingInUt.length > 0 || extraInUt.length > 0) {
+      hasMismatch = true;
+      this.log('warn', `[UT] Sphere ${sphereIndex} location mismatch:`);
+      if (missingInUt.length > 0) {
+        this.log('mismatch', `  Missing in UT: ${missingInUt.join(', ')}`);
+      }
+      if (extraInUt.length > 0) {
+        this.log('mismatch', `  Extra in UT: ${extraInUt.join(', ')}`);
+      }
+    } else {
+      this.log('info', `[UT] Sphere ${sphereIndex}: locations match (${pythonLocs.size} locations)`);
+    }
+
+    // Compare accessible regions
+    const pythonRegions = new Set(pythonPlayerData.new_accessible_regions || []);
+    const utRegions = new Set(utPlayerData.new_accessible_regions || []);
+
+    const missingRegionsInUt = [...pythonRegions].filter(r => !utRegions.has(r));
+    const extraRegionsInUt = [...utRegions].filter(r => !pythonRegions.has(r));
+
+    if (missingRegionsInUt.length > 0 || extraRegionsInUt.length > 0) {
+      hasMismatch = true;
+      this.log('warn', `[UT] Sphere ${sphereIndex} region mismatch:`);
+      if (missingRegionsInUt.length > 0) {
+        this.log('mismatch', `  Regions missing in UT: ${missingRegionsInUt.join(', ')}`);
+      }
+      if (extraRegionsInUt.length > 0) {
+        this.log('mismatch', `  Regions extra in UT: ${extraRegionsInUt.join(', ')}`);
+      }
+    }
+
+    // Compare inventory
+    const pythonInv = pythonPlayerData.new_inventory_details?.base_items || {};
+    const utInv = utPlayerData.new_inventory_details?.base_items || {};
+
+    const allItems = new Set([...Object.keys(pythonInv), ...Object.keys(utInv)]);
+    const invMismatches = [];
+
+    for (const item of allItems) {
+      const pythonCount = pythonInv[item] || 0;
+      const utCount = utInv[item] || 0;
+      if (pythonCount !== utCount) {
+        invMismatches.push(`${item}: Python=${pythonCount}, UT=${utCount}`);
+      }
+    }
+
+    if (invMismatches.length > 0) {
+      hasMismatch = true;
+      this.log('warn', `[UT] Sphere ${sphereIndex} inventory mismatch:`);
+      for (const mismatch of invMismatches) {
+        this.log('mismatch', `  ${mismatch}`);
+      }
+    }
+
+    if (hasMismatch) {
+      this.log('error', `[UT] Sphere ${sphereIndex} FAILED`);
+    }
+
+    return !hasMismatch;
   }
 
   async prepareSpoilerTest(isAutoLoad = false) {

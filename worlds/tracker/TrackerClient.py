@@ -303,6 +303,16 @@ class TrackerGameContext(CommonContext):
     re_gen_passthrough = None
     local_items: list[NetworkItem] = []
 
+    # UT Test Sync attributes for sphere log comparison testing
+    sphere_log_mode: bool = False  # Enable sphere logging for UT comparison tests
+    sphere_log_output_path: str | None = None  # Path to write sphere_log_ut.jsonl
+    sphere_log_verbose: bool = False  # Use verbose (full state) vs delta format
+    _sphere_log_file = None  # File handle for sphere log output
+    _prev_accessible_locations: set = None  # Previous accessible locations for delta
+    _prev_accessible_regions: set = None  # Previous accessible regions for delta
+    _prev_items: dict = None  # Previous inventory for delta
+    _debug_log_file = None  # File handle for debug log output (all messages + full state)
+
     _auto_tab = True
 
     @property
@@ -1231,6 +1241,20 @@ class TrackerGameContext(CommonContext):
         self.use_split = self.tracker_core.use_split #fancy hack
 
     def on_package(self, cmd: str, args: dict):
+        # Log all messages to debug log if sphere_log_mode is enabled
+        if self.sphere_log_mode:
+            self._open_debug_log()
+            # Create a sanitized version of args for logging (avoid huge data)
+            log_args = {}
+            for key, value in args.items():
+                if key in ('slot_info', 'slot_data', 'players'):
+                    log_args[key] = f"<{type(value).__name__} len={len(value) if hasattr(value, '__len__') else '?'}>"
+                elif isinstance(value, (list, set)) and len(value) > 20:
+                    log_args[key] = f"<{type(value).__name__} len={len(value)}>"
+                else:
+                    log_args[key] = value
+            self._log_debug_message(f"recv_{cmd}", {"cmd": cmd, "args": log_args})
+
         try:
             if cmd == 'Connected':
                 self.game = args["slot_info"][str(args["slot"])][1]
@@ -1316,6 +1340,9 @@ class TrackerGameContext(CommonContext):
                 if not (self.items_handling & 0b010):
                     self.update_tracker_items()
                     self.updateTracker()
+            elif cmd == 'Bounced':
+                # Handle UT_TEST_SYNC bounce messages for sphere log comparison testing
+                self._handle_ut_test_sync_bounce(args)
         except Exception as e:
             e.args = e.args+("This is likely a UT error, make sure you have the correct tracker.apworld version and no duplicates",
                              "Then try to reproduce with the debug launcher and post in the Discord channel")
@@ -1339,7 +1366,293 @@ class TrackerGameContext(CommonContext):
             self.defered_entrance_callback(key,self.stored_data.get(key,None))
             self.updateTracker()
 
+    def _handle_ut_test_sync_bounce(self, args: dict):
+        """
+        Handle UT_TEST_SYNC bounce messages for sphere log comparison testing.
+
+        Protocol:
+        1. Test driver sends Bounce with data: {"type": "UT_TEST_SYNC", "action": "STEP", "sphere": "0.1"}
+        2. UT receives STEP, logs current state to sphere_log_ut.jsonl
+        3. UT sends Bounce with data: {"type": "UT_TEST_SYNC", "action": "READY", "sphere": "0.1"}
+        4. Test driver waits for READY before proceeding to next step
+        """
+        data = args.get("data", {})
+
+        # Only handle UT_TEST_SYNC messages
+        if data.get("type") != "UT_TEST_SYNC":
+            return
+
+        action = data.get("action")
+        sphere = data.get("sphere")
+
+        if action == "STEP":
+            logger.info(f"[UT_TEST_SYNC] Received STEP for sphere {sphere}")
+
+            # Log current state if sphere logging is enabled
+            if self.sphere_log_mode:
+                self._log_sphere_state(sphere)
+                # Also log full state to debug log
+                self._log_debug_full_state(sphere)
+
+            # Send READY response
+            async_start(self._send_ut_ready_bounce(sphere), name=f"UT_READY_{sphere}")
+
+        elif action == "READY":
+            # This is received by the test driver, not UT
+            # UT doesn't need to handle this
+            pass
+
+        elif action == "COMPLETE":
+            # Test is complete, close sphere log file if open
+            # (debug log stays open to capture any remaining messages until disconnect)
+            logger.info("[UT_TEST_SYNC] Received COMPLETE signal, test finished")
+            self._close_sphere_log()
+
+    async def _send_ut_ready_bounce(self, sphere: str):
+        """Send a READY bounce message to signal that UT has processed the STEP."""
+        if self.server and self.server.socket:
+            await self.send_msgs([{
+                "cmd": "Bounce",
+                "tags": ["AP"],  # Target the test driver client (which has AP tag)
+                "data": {
+                    "type": "UT_TEST_SYNC",
+                    "action": "READY",
+                    "sphere": sphere
+                }
+            }])
+            logger.info(f"[UT_TEST_SYNC] Sent READY for sphere {sphere}")
+
+    def _log_sphere_state(self, sphere: str):
+        """Log the current tracker state to the sphere log file."""
+        import json
+
+        if not self.sphere_log_output_path:
+            logger.warning("[UT_TEST_SYNC] sphere_log_output_path not set, skipping logging")
+            return
+
+        # Open file if not already open
+        if self._sphere_log_file is None:
+            try:
+                self._sphere_log_file = open(self.sphere_log_output_path, 'w', encoding='utf-8')
+                logger.info(f"[UT_TEST_SYNC] Opened sphere log file: {self.sphere_log_output_path}")
+                # Initialize previous state tracking
+                self._prev_accessible_locations = set()
+                self._prev_accessible_regions = set()
+                self._prev_items = {}
+
+                # Write metadata line (same format as Python sphere_logger)
+                multiworld = self.tracker_core.multiworld
+                if multiworld:
+                    metadata_entry = {
+                        "type": "metadata",
+                        "seed": multiworld.seed,
+                        "seed_name": str(multiworld.seed_name),
+                        "source": "universal_tracker"
+                    }
+                    self._sphere_log_file.write(json.dumps(metadata_entry) + '\n')
+                    self._sphere_log_file.flush()
+                    logger.info(f"[UT_TEST_SYNC] Wrote metadata: seed={multiworld.seed}, seed_name={multiworld.seed_name}")
+            except Exception as e:
+                logger.error(f"[UT_TEST_SYNC] Failed to open sphere log file: {e}")
+                return
+
+        # Get current state from tracker
+        if not self.tracker_core.multiworld:
+            logger.warning("[UT_TEST_SYNC] Multiworld not initialized, skipping logging")
+            return
+
+        try:
+            # Call updateTracker to get the current state - this creates a fresh CollectionState
+            # and returns a CurrentTrackerState with all the computed values
+            tracker_state = self.tracker_core.updateTracker()
+
+            # Get accessible locations (names, not IDs)
+            current_locations = set()
+            for loc_id in self.tracker_core.locations_available:
+                loc_name = self.tracker_core.multiworld.worlds[self.tracker_core.player_id].location_id_to_name.get(loc_id)
+                if loc_name:
+                    current_locations.add(loc_name)
+
+            # Get reachable regions from the CollectionState
+            current_regions = set()
+            if tracker_state.state and hasattr(tracker_state.state, 'reachable_regions'):
+                player_id = self.tracker_core.player_id
+                if player_id in tracker_state.state.reachable_regions:
+                    current_regions = set(region.name for region in tracker_state.state.reachable_regions[player_id])
+
+            # Get inventory details from CurrentTrackerState
+            # all_items is a Counter of all items by name
+            # prog_items is a Counter of progression items by name
+            current_base_items = dict(tracker_state.all_items) if tracker_state.all_items else {}
+            current_resolved_items = dict(tracker_state.prog_items) if tracker_state.prog_items else {}
+
+            # Compute deltas (new items in this sphere)
+            new_locations = sorted(current_locations - self._prev_accessible_locations)
+            new_regions = sorted(current_regions - self._prev_accessible_regions)
+
+            # Compute new items (items that were added or increased in count)
+            new_base_items = {}
+            for item, count in current_base_items.items():
+                prev_count = self._prev_items.get(item, 0)
+                if count > prev_count:
+                    new_base_items[item] = count - prev_count
+
+            new_resolved_items = {}
+            for item, count in current_resolved_items.items():
+                prev_count = self._prev_items.get(item, 0)
+                if count > prev_count:
+                    new_resolved_items[item] = count - prev_count
+
+            # Build log entry in same format as Python sphere_logger
+            log_entry = {
+                "type": "state_update",
+                "sphere_index": sphere,
+                "player_data": {
+                    str(self.tracker_core.player_id): {
+                        "new_inventory_details": {
+                            "base_items": new_base_items,
+                            "resolved_items": new_resolved_items
+                        },
+                        "new_accessible_locations": new_locations,
+                        "new_accessible_regions": new_regions,
+                        "sphere_locations": []  # Test driver will fill this in
+                    }
+                }
+            }
+
+            # Update previous state for next delta computation
+            self._prev_accessible_locations = current_locations
+            self._prev_accessible_regions = current_regions
+            self._prev_items = current_base_items.copy()
+
+            # Write to file
+            self._sphere_log_file.write(json.dumps(log_entry) + '\n')
+            self._sphere_log_file.flush()
+            logger.info(f"[UT_TEST_SYNC] Logged state for sphere {sphere}: {len(new_locations)} new locations, {len(new_regions)} new regions")
+
+        except Exception as e:
+            logger.error(f"[UT_TEST_SYNC] Error logging sphere state: {e}")
+            import traceback
+            traceback.print_exc()
+
+    def _close_sphere_log(self):
+        """Close the sphere log file if open."""
+        if self._sphere_log_file is not None:
+            try:
+                self._sphere_log_file.close()
+                logger.info(f"[UT_TEST_SYNC] Closed sphere log file")
+            except Exception as e:
+                logger.error(f"[UT_TEST_SYNC] Error closing sphere log file: {e}")
+            finally:
+                self._sphere_log_file = None
+
+    def _open_debug_log(self):
+        """Open the debug log file if sphere_log_mode is enabled."""
+        if not self.sphere_log_mode or not self.sphere_log_output_path:
+            return
+        if self._debug_log_file is not None:
+            return
+        try:
+            # Derive debug log path from sphere log path
+            # e.g., "foo_sphere_log_ut.jsonl" -> "foo_debug_log_ut.jsonl"
+            debug_path = self.sphere_log_output_path.replace("_sphere_log_ut.jsonl", "_debug_log_ut.jsonl")
+            if debug_path == self.sphere_log_output_path:
+                # Fallback if pattern didn't match
+                debug_path = self.sphere_log_output_path.replace(".jsonl", "_debug.jsonl")
+            self._debug_log_file = open(debug_path, 'w', encoding='utf-8')
+            logger.info(f"[UT_TEST_SYNC] Opened debug log file: {debug_path}")
+        except Exception as e:
+            logger.error(f"[UT_TEST_SYNC] Failed to open debug log file: {e}")
+
+    def _log_debug_message(self, event_type: str, data: dict):
+        """Log a message to the debug log file."""
+        if self._debug_log_file is None:
+            return
+        try:
+            import json
+            from datetime import datetime
+            entry = {
+                "timestamp": datetime.now().isoformat(),
+                "event_type": event_type,
+                "data": data
+            }
+            self._debug_log_file.write(json.dumps(entry) + '\n')
+            self._debug_log_file.flush()
+        except Exception as e:
+            logger.error(f"[UT_TEST_SYNC] Error writing to debug log: {e}")
+
+    def _log_debug_full_state(self, sphere: str):
+        """Log the full tracker state (not deltas) to the debug log."""
+        if self._debug_log_file is None or not self.tracker_core.multiworld:
+            return
+        try:
+            import json
+            from datetime import datetime
+            tracker_state = self.tracker_core.updateTracker()
+
+            # Get ALL accessible locations (cumulative, not delta)
+            all_locations = []
+            for loc_id in self.tracker_core.locations_available:
+                loc_name = self.tracker_core.multiworld.worlds[self.tracker_core.player_id].location_id_to_name.get(loc_id)
+                if loc_name:
+                    all_locations.append(loc_name)
+            all_locations.sort()
+
+            # Get ALL reachable regions
+            all_regions = []
+            if tracker_state.state and hasattr(tracker_state.state, 'reachable_regions'):
+                player_id = self.tracker_core.player_id
+                if player_id in tracker_state.state.reachable_regions:
+                    all_regions = sorted([region.name for region in tracker_state.state.reachable_regions[player_id]])
+
+            # Get in_logic_regions
+            in_logic_regions = sorted(tracker_state.in_logic_regions) if tracker_state.in_logic_regions else []
+
+            # Get full inventory
+            all_items = dict(tracker_state.all_items) if tracker_state.all_items else {}
+            prog_items = dict(tracker_state.prog_items) if tracker_state.prog_items else {}
+
+            # Get checked locations
+            checked_locations = list(self.checked_locations) if self.checked_locations else []
+
+            entry = {
+                "timestamp": datetime.now().isoformat(),
+                "event_type": "full_state",
+                "sphere": sphere,
+                "player_id": self.tracker_core.player_id,
+                "all_accessible_locations": all_locations,
+                "all_accessible_locations_count": len(all_locations),
+                "all_reachable_regions": all_regions,
+                "all_reachable_regions_count": len(all_regions),
+                "in_logic_regions": in_logic_regions,
+                "inventory": {
+                    "all_items": all_items,
+                    "prog_items": prog_items
+                },
+                "checked_locations_count": len(checked_locations),
+                "missing_locations_count": len(self.missing_locations) if self.missing_locations else 0
+            }
+            self._debug_log_file.write(json.dumps(entry) + '\n')
+            self._debug_log_file.flush()
+        except Exception as e:
+            logger.error(f"[UT_TEST_SYNC] Error logging full state to debug log: {e}")
+
+    def _close_debug_log(self):
+        """Close the debug log file if open."""
+        if self._debug_log_file is not None:
+            try:
+                self._debug_log_file.close()
+                logger.info(f"[UT_TEST_SYNC] Closed debug log file")
+            except Exception as e:
+                logger.error(f"[UT_TEST_SYNC] Error closing debug log file: {e}")
+            finally:
+                self._debug_log_file = None
+
     async def disconnect(self, allow_autoreconnect: bool = False):
+        # Close sphere log and debug log files if open (before any other cleanup)
+        self._close_sphere_log()
+        self._close_debug_log()
+
         if "Tracker" in self.tags:
             self.game = ""
             if self.ui:
@@ -1553,6 +1866,14 @@ async def wait_for_items(ctx: TrackerGameContext)-> None:
 async def main(args):
     ctx = TrackerGameContext(args.connect, args.password, print_count=args.count, print_list=args.list)
     ctx.auth = args.name
+
+    # Set sphere log mode attributes if enabled
+    if hasattr(args, 'sphere_log_mode') and args.sphere_log_mode:
+        ctx.sphere_log_mode = True
+        ctx.sphere_log_output_path = args.sphere_log_output
+        ctx.sphere_log_verbose = getattr(args, 'sphere_log_verbose', False)
+        logger.info(f"[UT_TEST_SYNC] Sphere log mode enabled, output: {ctx.sphere_log_output_path}")
+
     ctx.server_task = asyncio.create_task(server_loop(ctx), name="server loop")
     ctx.run_generator()
 
@@ -1570,6 +1891,13 @@ def launch(*args):
     if sys.stdout:  # If terminal output exists, offer gui-less mode
         parser.add_argument('--count', default=False, action='store_true', help="just return a count of in logic checks")
         parser.add_argument('--list', default=False, action='store_true', help="just return a list of in logic checks")
+    # Sphere log mode arguments for UT comparison testing
+    parser.add_argument('--sphere-log-mode', default=False, action='store_true',
+                        help="Enable sphere logging for UT comparison testing")
+    parser.add_argument('--sphere-log-output', default=None, type=str,
+                        help="Path to write sphere_log_ut.jsonl (required with --sphere-log-mode)")
+    parser.add_argument('--sphere-log-verbose', default=False, action='store_true',
+                        help="Use verbose (full state) format instead of deltas")
     parser.add_argument("url", nargs="?", help="Archipelago connection url")
     args = handle_url_arg(parser.parse_args(args))
 
@@ -1579,6 +1907,11 @@ def launch(*args):
             return
         from logging import ERROR
         logger.setLevel(ERROR)
+
+    # Validate sphere log mode arguments
+    if args.sphere_log_mode and not args.sphere_log_output:
+        logger.error("--sphere-log-output is required when using --sphere-log-mode")
+        return
 
     asyncio.run(main(args))
 

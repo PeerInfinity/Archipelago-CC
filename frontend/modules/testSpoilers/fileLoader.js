@@ -211,6 +211,7 @@ export class FileLoader {
       return {
         success: true,
         logData: parsedResult.logData,
+        rawContent: fileContent,
         logPath
       };
     } catch (error) {
