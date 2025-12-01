@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-01 07:26:48
+**Generated:** 2025-12-01 08:34:14
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -15,7 +15,7 @@ This summary combines results from four types of tests:
 - **Minimal Test:** 74/78 passed (94.9%)
 - **Full Test:** 73/78 passed (93.6%)
 - **Multiclient Test:** 77/78 passed (98.7%)
-- **Multiworld Test:** 73/78 passed (93.6%)
+- **Multiworld Test:** 70/78 passed (89.7%)
 
 ### Intermittent Failures
 
@@ -26,8 +26,8 @@ This summary combines results from four types of tests:
 
 - **Templates passing all 4 tests:** 70/78 (89.7%)
 - **Templates passing 3 tests:** 2/78 (2.6%)
-- **Templates passing 2 tests:** 5/78 (6.4%)
-- **Templates passing 1 test:** 1/78 (1.3%)
+- **Templates passing 2 tests:** 2/78 (2.6%)
+- **Templates passing 1 test:** 4/78 (5.1%)
 - **Templates passing 0 tests:** 0/78 (0.0%)
 
 ## Test Results
@@ -40,7 +40,7 @@ This summary combines results from four types of tests:
 | APQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ⚫ | ⚫ |
 | Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Aquaria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Blasphemous | ✅ Passed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ |
+| Blasphemous | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Bumper Stickers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
@@ -82,7 +82,7 @@ This summary combines results from four types of tests:
 | Overcooked! 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Paint | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Pokemon Emerald | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Pokemon Red and Blue | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Pokemon Red and Blue | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | Raft | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ⚫ | ⚫ |
 | SMZ3 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
@@ -90,19 +90,19 @@ This summary combines results from four types of tests:
 | Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
-| Starcraft 2 | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Starcraft 2 | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | Stardew Valley | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ⚫ |
 | Subnautica | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Super Mario World | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
-| Super Metroid | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ |
+| Super Metroid | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | TUNIC | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Terraria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | The Messenger | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| The Witness | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| The Witness | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Undertale | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | VVVVVV | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
