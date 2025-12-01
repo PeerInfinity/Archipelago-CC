@@ -296,13 +296,6 @@ export class EventProcessor {
             // Wait for state to stabilize after adding items
             await stateManager.pingWorker(`sphere_${context.sphere_number}_items_added`, 10000);
 
-            // CRITICAL: Trigger reachability update after adding items
-            // The items were added but reachability hasn't been recalculated yet
-            await stateManager.recalculateAccessibility();
-
-            // Wait for reachability update to complete
-            await stateManager.pingWorker(`sphere_${context.sphere_number}_reachability_updated`, 10000);
-
             // Get fresh snapshot after reachability update
             const snapshot = await stateManager.getFullSnapshot();
 
