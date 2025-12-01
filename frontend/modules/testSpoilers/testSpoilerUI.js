@@ -489,7 +489,7 @@ export class TestSpoilerUI {
 
     if (this.activeRulesetName) {
       const baseName = this.extractFilenameBase(this.activeRulesetName);
-      suggestedLogName = `${baseName}_spheres_log.jsonl`;
+      suggestedLogName = `${baseName}_sphere_log.jsonl`;
       canLoadSuggested = true;
       suggestedLogInfoContainer.innerHTML = `
         <p>Current ruleset: <strong>${this.escapeHtml(

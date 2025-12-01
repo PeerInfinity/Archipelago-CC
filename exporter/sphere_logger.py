@@ -230,15 +230,15 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
     log_file_path = ""
 
     try:
-        # Use temp_dir from multiworld if available for spheres_log.jsonl, otherwise fallback to output_path
-        log_output_directory = getattr(spoiler.multiworld, 'temp_dir_for_spheres_log', None)
+        # Use temp_dir from multiworld if available for sphere_log.jsonl, otherwise fallback to output_path
+        log_output_directory = getattr(spoiler.multiworld, 'temp_dir_for_sphere_log', None)
 
         if log_output_directory is None:
             log_output_directory = getattr(spoiler.multiworld, 'output_path', 'output')
             if not os.path.exists(log_output_directory):
                 os.makedirs(log_output_directory, exist_ok=True)
         
-        log_filename = f"AP_{spoiler.multiworld.seed_name}_spheres_log.jsonl"
+        log_filename = f"AP_{spoiler.multiworld.seed_name}_sphere_log.jsonl"
         log_file_path = os.path.join(log_output_directory, log_filename)
         
         logging.info(f"Attempting to open spoiler log file for sphere data at: {log_file_path}")

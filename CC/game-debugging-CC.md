@@ -46,7 +46,7 @@ The core principle is **progression equivalence**. The JavaScript `StateManager`
 ```
 ┌──────────────────┐   1. Generates   ┌────────────────────────┐
 │ Generate.py      ├───────────────►│   Spoiler Log & Rules  │
-│ (Python Backend) │                  │ (..._spheres_log.jsonl)│
+│ (Python Backend) │                  │ (..._sphere_log.jsonl) │
 └──────────────────┘                  │ (..._rules.json)       │
                                       └───────────┬────────────┘
                                                   │ 2. Consumes
@@ -83,7 +83,7 @@ python Generate.py --weights_file_path "Templates/A Hat in Time.yaml" --multi 1 
 - Output directory: `frontend/presets/ahit/AP_14089154938208861744/`
 - Generated files:
   - `AP_14089154938208861744_rules.json` (logic to test)
-  - `AP_14089154938208861744_spheres_log.jsonl` (expected progression)
+  - `AP_14089154938208861744_sphere_log.jsonl` (expected progression)
   - `AP_14089154938208861744_Spoiler.txt` (human-readable spoiler)
   - `AP_14089154938208861744.archipelago` (multiworld file)
 
@@ -373,7 +373,7 @@ If you're stuck:
 1. **Read the Python source**: `worlds/[game]/Rules.py` shows what's expected
 2. **Check the JSON**: Inspect `*_rules.json` to verify export is correct
 3. **Enable verbose logging**: Check browser console for rule evaluation details
-4. **Compare spheres**: Look at `*_spheres_log.jsonl` vs actual accessible locations
+4. **Compare spheres**: Look at `*_sphere_log.jsonl` vs actual accessible locations
 5. **Test incrementally**: Fix one issue at a time, verify, then continue
 
 ## Additional Resources

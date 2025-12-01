@@ -11,7 +11,7 @@ The core principle is **progression equivalence**. The JavaScript `StateManager`
 ```
 ┌──────────────────┐   1. Generates   ┌────────────────────────┐
 │ Generate.py      ├───────────────►│   Spoiler Log & Rules  │
-│ (Python Backend) │                  │ (..._spheres_log.jsonl)│
+│ (Python Backend) │                  │ (..._sphere_log.jsonl) │
 └──────────────────┘                  │ (..._rules.json)       │
                                       └───────────┬────────────┘
                                                   │ 2. Consumes
@@ -25,7 +25,7 @@ The core principle is **progression equivalence**. The JavaScript `StateManager`
 ### Stage 1: Python Source & Spoiler Log Generation
 
 -   **Source of Truth:** The game generation process, orchestrated by `Generate.py`, is the source of truth. When run with a spoiler level of 2 or higher, it produces a detailed log of the game's logical progression.
--   **Spoiler Log (`_spheres_log.jsonl`):** This file is the ground truth for testing. It contains a sequence of "spheres," where each sphere lists the locations that become accessible after collecting all the items from the previous spheres.
+-   **Spoiler Log (`_sphere_log.jsonl`):** This file is the ground truth for testing. It contains a sequence of "spheres," where each sphere lists the locations that become accessible after collecting all the items from the previous spheres.
 
 ### Stage 2: The Exporter
 
@@ -38,13 +38,13 @@ The core principle is **progression equivalence**. The JavaScript `StateManager`
 The generation and export process creates two critical JSON files for each seed:
 
 1.  **`..._rules.json`**: A complete dump of the game's logic, including all region data, location rules, item definitions, and game settings. This is the logic that will be **under test**. The structure of this file follows the schema defined in `frontend/schema/rules.schema.json`.
-2.  **`..._spheres_log.jsonl`**: The list of progression spheres, which serves as the **expected result**.
+2.  **`..._sphere_log.jsonl`**: The list of progression spheres, which serves as the **expected result**.
 
 ### Stage 4: Frontend Test Execution
 
 The **Test Spoilers** panel in the web client validates the implementation:
 
--   **Loading:** The test loads the `_rules.json` file into the `StateManager` worker, then loads the corresponding `_spheres_log.jsonl` file.
+-   **Loading:** The test loads the `_rules.json` file into the `StateManager` worker, then loads the corresponding `_sphere_log.jsonl` file.
 -   **Execution & Validation:** When you click "Run Full Test," it simulates a full playthrough sphere by sphere:
     1.  Starts with an empty inventory
     2.  Gets the list of accessible locations from the frontend `StateManager`
@@ -126,7 +126,7 @@ The **Test Spoilers** panel in the web client validates the implementation:
    
    This creates files in `frontend/presets/[game]/AP_[seed]/`:
    - `AP_[seed]_rules.json` (the logic under test)
-   - `AP_[seed]_spheres_log.jsonl` (the expected progression)
+   - `AP_[seed]_sphere_log.jsonl` (the expected progression)
 
 4. **Run the Test:** Execute the spoiler validation using the new parameter format:
    

@@ -11,7 +11,7 @@ The core principle is **data fidelity**. The exporter must accurately convert al
 ```
 ┌──────────────────┐   1. Generates   ┌────────────────────────┐
 │ Generate.py      ├───────────────►│   Spoiler Log & Rules  │
-│ (Python Backend) │                  │ (..._spheres_log.jsonl)│
+│ (Python Backend) │                  │ (..._sphere_log.jsonl) │
 └──────────────────┘                  │ (..._rules.json)       │
                                       └───────────┬────────────┘
                                                   │ 2. Consumes
