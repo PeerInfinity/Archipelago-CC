@@ -86,6 +86,8 @@ jobs:
           sleep 2
 
       - name: Run test
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           case "${{ github.event.inputs.test_type }}" in

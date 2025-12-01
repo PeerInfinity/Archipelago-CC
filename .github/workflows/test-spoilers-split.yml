@@ -87,6 +87,8 @@ jobs:
           sleep 2
 
       - name: Run test for seed ${{ matrix.seed }}
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           SPOILER_TYPE=$([[ "${{ github.event.inputs.test_type }}" == "seeds-full" ]] && echo "full" || echo "minimal")
@@ -308,6 +310,8 @@ jobs:
           sleep 2
 
       - name: Run minimal spoiler test for split ${{ matrix.split_num }}
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -519,6 +523,8 @@ jobs:
           sleep 2
 
       - name: Run full spoiler test for split ${{ matrix.split_num }}
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -730,6 +736,8 @@ jobs:
           sleep 2
 
       - name: Run multiclient test for split ${{ matrix.split_num }}
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -944,6 +952,8 @@ jobs:
           sleep 2
 
       - name: Run minimal multitemplate test for split ${{ matrix.split_num }}
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -1160,6 +1170,8 @@ jobs:
           sleep 2
 
       - name: Run full multitemplate test for split ${{ matrix.split_num }}
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -1372,6 +1384,8 @@ jobs:
           sleep 2
 
       - name: Run multiworld test for split ${{ matrix.split_num }}
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \

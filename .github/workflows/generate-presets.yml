@@ -65,6 +65,8 @@ jobs:
           python scripts/setup/update_host_settings.py minimal-spoilers
 
       - name: Run generate script
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           chmod +x scripts/utils/generate_all_templates.sh
