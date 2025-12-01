@@ -1,0 +1,1182 @@
+{
+  "metadata": {
+    "combined_from": 10,
+    "created": "2025-12-01T23:13:14.345715",
+    "last_updated": "2025-12-01T23:13:14.345720",
+    "script_version": "1.0.0",
+    "seed": "1",
+    "total_templates": 78
+  },
+  "results": {
+    "A Hat in Time.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:03:51.875667",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "A Hat in Time",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "A Link to the Past.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:03:59.137706",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "A Link to the Past",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "A Short Hike.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:02:58.520398",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "A Short Hike",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "APQuest.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:02:06.728317",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "APQuest",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Adventure.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:02:16.917792",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Adventure",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Aquaria.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:02:45.486188",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Aquaria",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Blasphemous.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:04:41.119454",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Blasphemous",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Bomb Rush Cyberfunk.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:03:56.268946",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Bomb Rush Cyberfunk",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Bumper Stickers.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:02:57.854799",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Bumper Stickers",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Castlevania - Circle of the Moon.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:02:34.080087",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Castlevania - Circle of the Moon",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Castlevania 64.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:04:31.571937",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Castlevania 64",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Celeste (Open World).yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:05:46.643482",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Celeste (Open World)",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Celeste 64.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:03:44.718836",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Celeste 64",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "ChecksFinder.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:02:45.589364",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "ChecksFinder",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "ChocolateChipCookies.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:02:48.197165",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "ChocolateChipCookies",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Choo-Choo Charles.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:03:32.303796",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Choo-Choo Charles",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Civilization VI.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:05:44.102535",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Civilization VI",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "DLCQuest.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:04:31.264412",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "DLCQuest",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "DOOM 1993.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:04:39.582433",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "DOOM 1993",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "DOOM II.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:04:31.309359",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "DOOM II",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Dark Souls III.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:05:58.525752",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Dark Souls III",
+        "has_re_gen_passthrough": true
+      }
+    },
+    "Donkey Kong Country 3.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:05:49.796699",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Donkey Kong Country 3",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Factorio.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:04:56.355396",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Factorio",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Faxanadu.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:03:26.543389",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Faxanadu",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Final Fantasy Mystic Quest.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:04:01.560097",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Final Fantasy Mystic Quest",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Heretic.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:05:26.910942",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Heretic",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Hylics 2.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:05:48.005533",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Hylics 2",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Inscryption.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:05:14.479887",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Inscryption",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Jak and Daxter The Precursor Legacy.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:04:43.215088",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Jak and Daxter: The Precursor Legacy",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Kingdom Hearts 2.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:06:43.247689",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Kingdom Hearts 2",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Kingdom Hearts.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:08:15.315265",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Kingdom Hearts",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Kirby's Dream Land 3.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:08:01.580699",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Kirby's Dream Land 3",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Landstalker - The Treasures of King Nole.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:05:56.272000",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Landstalker - The Treasures of King Nole",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Lingo.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:03:54.913210",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Lingo",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Links Awakening DX.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:04:08.932794",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Links Awakening DX",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Lufia II Ancient Cave.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:05:57.201151",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Lufia II Ancient Cave",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Mario & Luigi Superstar Saga.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:06:38.014147",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Mario & Luigi Superstar Saga",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "MathProof2p2e4.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:05:42.128702",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "MathProof2p2e4",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Mega Man 2.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:05:20.722082",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Mega Man 2",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "MegaMan Battle Network 3.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:07:36.844086",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "MegaMan Battle Network 3",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Meritous.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:08:44.728874",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Meritous",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Metamath.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:08:35.483563",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Metamath",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Muse Dash.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:06:54.421414",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Muse Dash",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Noita.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:04:24.875248",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Noita",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Old School Runescape.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:05:19.349975",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Old School Runescape",
+        "has_re_gen_passthrough": true
+      }
+    },
+    "Overcooked! 2.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:08:07.811636",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Overcooked! 2",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Paint.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:07:17.666543",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Paint",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Pokemon Emerald.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:07:54.600038",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Pokemon Emerald",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Pokemon Red and Blue.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:07:42.046982",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Pokemon Red and Blue",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Raft.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:08:25.198435",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Raft",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Risk of Rain 2.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:09:28.250045",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Risk of Rain 2",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "SMZ3.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:10:31.581922",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "SMZ3",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Saving Princess.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:07:27.426825",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Saving Princess",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Secret of Evermore.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:04:29.503810",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Secret of Evermore",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Shivers.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:06:35.922888",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Shivers",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Sonic Adventure 2 Battle.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:08:11.360334",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Sonic Adventure 2 Battle",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Starcraft 2.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:09:24.721056",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Starcraft 2",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Stardew Valley.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:10:08.556315",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Stardew Valley",
+        "has_re_gen_passthrough": true
+      }
+    },
+    "Subnautica.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:09:00.109238",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Subnautica",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Super Mario 64.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:08:28.270720",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Super Mario 64",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Super Mario Land 2.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:10:15.515436",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Super Mario Land 2",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Super Mario World.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:10:35.637154",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Super Mario World",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Super Metroid.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:08:34.133596",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Super Metroid",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "TUNIC.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:05:53.163518",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "TUNIC",
+        "has_re_gen_passthrough": true
+      }
+    },
+    "Terraria.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:08:46.477025",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Terraria",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "The Legend of Zelda.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:09:11.511126",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "The Legend of Zelda",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "The Messenger.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:10:40.110743",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "The Messenger",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "The Wind Waker.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:11:21.076896",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "The Wind Waker",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "The Witness.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:09:46.066009",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "The Witness",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Timespinner.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:09:12.083089",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Timespinner",
+        "has_re_gen_passthrough": true
+      }
+    },
+    "Undertale.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:10:46.214834",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Undertale",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "VVVVVV.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:10:38.465120",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "VVVVVV",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Wargroove.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:09:08.681399",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Wargroove",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "WebDevJourney.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:07:01.656382",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "WebDevJourney",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Yacht Dice.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:08:49.818100",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Yacht Dice",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Yoshi's Island.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:10:12.459502",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Yoshi's Island",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Yu-Gi-Oh! 2006.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:12:52.119727",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Yu-Gi-Oh! 2006",
+        "has_re_gen_passthrough": true
+      }
+    },
+    "shapez.yaml": {
+      "error": "Comparison result file not found",
+      "timestamp": "2025-12-01T23:12:04.242910",
+      "ut_comparison": {
+        "first_mismatch_sphere": null,
+        "mismatch_details": null,
+        "passed": false,
+        "spheres_matched": 0,
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "shapez",
+        "has_re_gen_passthrough": true
+      }
+    }
+  }
+}
