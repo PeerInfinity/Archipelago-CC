@@ -36,7 +36,7 @@ Generated: 2025-11-29T07:18:22.949Z
 | settings | settings | Settings | settingsPanel | ⚙️ | Middle | Settings editor panel. | ❌ | ❌ | ❌ |
 | spoilerChecklist | spoilerChecklist | Spoiler Checklist | spoilerChecklistPanel | 📋 | Middle | Displays sphere log data as... | ❌ | ❌ | ❌ |
 | tests | tests | Tests | testsPanel | ✅ | Left | Automated application featu... | ❌ | ❌ | ❌ |
-| testSpoilers | testSpoilers | Test Spoilers | testSpoilersPanel | 🔍 | Middle | Provides UI for loading and... | ❌ | ❌ | ❌ |
+| spoilerTest | spoilerTest | Spoiler Test | spoilerTestPanel | 🔍 | Middle | Provides UI for loading and... | ❌ | ❌ | ❌ |
 | textAdventure | textAdventure | Text Adventure | textAdventurePanel | 📖 | Right | Text Adventure display panel. | ❌ | ❌ | ❌ |
 | timerPanel | timerPanel | Timer Panel | timerPanel | ⏱️ | Middle | A dedicated panel for displ... | ❌ | ❌ | ❌ |
 | windowManagerPanel | windowManagerPanel | Window Manager | windowManagerPanel | 🪟 | Middle | Window Manager display panel. | ❌ | ❌ | ❌ |
@@ -91,6 +91,6 @@ Based on the analysis, consider adding the following fields to modules that are 
 | Column | Count | Modules |
 |--------|-------|---------|
 | Left (1) | 5 | events, inventory, json, modules, tests |
-| Middle (2) | 14 | client, editor, iframeManagerPanel, metaGamePanel, pathAnalyzerPanel, playerStatePanel, presets, progressBarPanel, regionGraph, settings, spoilerChecklist, testSpoilers, timerPanel, windowManagerPanel |
+| Middle (2) | 14 | client, editor, iframeManagerPanel, metaGamePanel, pathAnalyzerPanel, playerStatePanel, presets, progressBarPanel, regionGraph, settings, spoilerChecklist, spoilerTest, timerPanel, windowManagerPanel |
 | Right (3) | 8 | dungeons, exits, iframePanel, locations, loops, regions, textAdventure, windowPanel |
 | Unspecified | 0 | None |

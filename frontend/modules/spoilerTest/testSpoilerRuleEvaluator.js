@@ -7,7 +7,7 @@ import { evaluateRule } from '../shared/ruleEngine.js';
  * This module contains the complex rule evaluation logic that was extracted from testSpoilerUI.js
  * to improve code organization and maintainability.
  *
- * @module testSpoilers/testSpoilerRuleEvaluator
+ * @module spoilerTest/testSpoilerRuleEvaluator
  */
 export class TestSpoilerRuleEvaluator {
   /**

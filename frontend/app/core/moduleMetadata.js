@@ -84,10 +84,10 @@ export const moduleMetadata = {
     name: 'presets',
     column: 2
   },
-  testSpoilersPanel: {
-    title: 'Test Spoilers',
+  spoilerTestPanel: {
+    title: 'Spoiler Test',
     icon: '🔍',
-    name: 'testSpoilers',
+    name: 'spoilerTest',
     column: 2
   },
   editorPanel: {

@@ -25,7 +25,7 @@
  *   - Progress tracking
  *   - UI control updates
  *
- * @module testSpoilers/testOrchestrator
+ * @module spoilerTest/testOrchestrator
  */
 
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';

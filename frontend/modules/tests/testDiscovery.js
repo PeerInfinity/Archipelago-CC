@@ -43,7 +43,7 @@ const TEST_CASE_FILES = [
   './testCases/window-baseTests.js',
   './testCases/timerTests.js',
   './testCases/multiclientTests.js',
-  './testCases/testSpoilersPanelTests.js',
+  './testCases/spoilerTestPanelTests.js',
   //'./testCases/manualTests.js',
 ];
 

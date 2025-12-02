@@ -519,12 +519,12 @@
     },
     {
       "id": "test_spoiler_full_run",
-      "name": "Test Spoilers Panel - Full Run",
-      "description": "Activates the Test Spoilers panel, loads the suggested log, runs the full test, and reports the result.",
-      "functionName": "testSpoilersPanelFullRun",
+      "name": "Spoiler Test Panel - Full Run",
+      "description": "Activates the Spoiler Test panel, loads the suggested log, runs the full test, and reports the result.",
+      "functionName": "spoilerTestPanelFullRun",
       "enabled": false,
       "order": 57,
-      "category": "Test Spoilers Panel"
+      "category": "Spoiler Test Panel"
     }
   ]
 }

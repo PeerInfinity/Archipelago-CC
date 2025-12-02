@@ -97,8 +97,8 @@
       "path": "./modules/presets/index.js",
       "enabled": true
     },
-    "testSpoilers": {
-      "path": "./modules/testSpoilers/index.js",
+    "spoilerTest": {
+      "path": "./modules/spoilerTest/index.js",
       "enabled": true
     },
     "sphereState": {
@@ -192,7 +192,7 @@
     "playerStatePanel",
     "loops",
     "presets",
-    "testSpoilers",
+    "spoilerTest",
     "sphereState",
     "spoilerChecklist",
     "textAdventure",
