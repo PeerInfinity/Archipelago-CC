@@ -4,7 +4,7 @@
  * Provides UI and logic for comparing Python-generated sphere logs with
  * Universal Tracker sphere logs to verify UT correctly tracks game logic.
  *
- * This module integrates with the testSpoilers panel to add UT comparison
+ * This module integrates with the spoilerTest panel to add UT comparison
  * functionality.
  *
  * @module utComparison

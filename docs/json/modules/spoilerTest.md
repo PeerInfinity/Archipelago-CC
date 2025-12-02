@@ -1,14 +1,14 @@
-### Module: `Test Spoilers`
+### Module: `Spoiler Test`
 
-- **ID:** `testSpoilers`
+- **ID:** `spoilerTest`
 - **Purpose:** A powerful, game-agnostic validation tool that replays a game's logical progression by processing its spoiler log. It verifies that the frontend `StateManager` can correctly unlock all locations in the same sequence (or "spheres") as the original game generation, confirming the accuracy of the exported rules.
 
 ---
 
 #### Key Files
 
-- `frontend/modules/testSpoilers/index.js`: The module's entry point for registration.
-- `frontend/modules/testSpoilers/testSpoilerUI.js`: The UI class that renders the panel and handles the test execution logic.
+- `frontend/modules/spoilerTest/index.js`: The module's entry point for registration.
+- `frontend/modules/spoilerTest/testSpoilerUI.js`: The UI class that renders the panel and handles the test execution logic.
 
 #### Responsibilities
 
@@ -39,5 +39,5 @@ This module does not register any public functions.
 
 #### Dependencies & Interactions
 
-- **StateManager**: The `Test Spoilers` module uses the `StateManager` as its test subject. It loads a ruleset, then iteratively sends `checkLocation` commands and queries the resulting state snapshot to perform its validation. It is a key tool for verifying the integrity of the `RuleEngine` and `StateManager` against authoritative data.
+- **StateManager**: The `Spoiler Test` module uses the `StateManager` as its test subject. It loads a ruleset, then iteratively sends `checkLocation` commands and queries the resulting state snapshot to perform its validation. It is a key tool for verifying the integrity of the `RuleEngine` and `StateManager` against authoritative data.
 - **Spoiler Log Generation:** It depends on the generation process creating a `_sphere_log.jsonl` file alongside the `rules.json`. This file contains the ground-truth data that the module validates against.

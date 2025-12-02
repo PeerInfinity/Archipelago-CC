@@ -8,8 +8,8 @@
       "path": "./modules/sphereState/index.js",
       "enabled": true
     },
-    "testSpoilers": {
-      "path": "./modules/testSpoilers/index.js",
+    "spoilerTest": {
+      "path": "./modules/spoilerTest/index.js",
       "enabled": true
     },
     "tests": {
@@ -20,7 +20,7 @@
   "loadPriority": [
     "stateManager",
     "sphereState",
-    "testSpoilers",
+    "spoilerTest",
     "tests"
   ]
 }

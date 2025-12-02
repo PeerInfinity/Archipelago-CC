@@ -144,7 +144,7 @@ async function checkTestData() {
   const testDataPaths = [
     'frontend/presets/adventure',
     'frontend/modules/tests',
-    'frontend/modules/testSpoilers'
+    'frontend/modules/spoilerTest'
   ];
 
   const available = testDataPaths.filter(path => fs.existsSync(path));

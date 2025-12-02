@@ -33,7 +33,7 @@
  *   - message: string (summary)
  *   - details: Object (event info, sphere, player, items)
  *
- * @module testSpoilers/eventProcessor
+ * @module spoilerTest/eventProcessor
  */
 
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
@@ -71,7 +71,7 @@ export class EventProcessor {
    */
   async _loadVerboseSetting() {
     try {
-      this.verboseMode = await settingsManager.getSetting('moduleSettings.testSpoilers.verboseSpoilerTests', false);
+      this.verboseMode = await settingsManager.getSetting('moduleSettings.spoilerTest.verboseSpoilerTests', false);
       logger.debug(`Verbose spoiler tests mode: ${this.verboseMode}`);
     } catch (error) {
       logger.warn('Failed to load verboseSpoilerTests setting, defaulting to false', error);

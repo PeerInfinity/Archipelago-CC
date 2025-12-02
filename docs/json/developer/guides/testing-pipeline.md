@@ -42,9 +42,9 @@ The generation and export process creates two critical JSON files for each seed:
 1.  **`..._rules.json`**: A complete dump of the entire game's logic, including all region data, location rules, item definitions, and game settings, translated into the JSON format that our frontend understands. This is the logic that will be **under test**. The structure of this file follows the schema defined in `frontend/schema/rules.schema.json`.
 2.  **`..._sphere_log.jsonl`**: The list of progression spheres, which serves as the **expected result**. Each sphere contains the set of locations that should become accessible at that stage.
 
-### Stage 4: Frontend Test Execution (`frontend/modules/testSpoilers/`)
+### Stage 4: Frontend Test Execution (`frontend/modules/spoilerTest/`)
 
-The **Test Spoilers** panel in the web client is the user interface for this pipeline.
+The **Spoiler Test** panel in the web client is the user interface for this pipeline.
 
 -   **Loading:** The test automatically loads the `_rules.json` file into the `StateManager` worker, configuring it with the specific logic for that seed. It then loads the corresponding `_sphere_log.jsonl` file.
 -   **Execution & Validation:** When you click "Run Full Test," the `testSpoilerUI.js` module simulates a full playthrough sphere by sphere:

@@ -41,7 +41,7 @@
  *   - Detailed rule tree analysis
  *   - Assessment of why items are failing
  *
- * @module testSpoilers/analysisReporter
+ * @module spoilerTest/analysisReporter
  */
 
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
