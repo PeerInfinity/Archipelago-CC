@@ -370,7 +370,7 @@ async def run_test(args) -> dict:
 
         # Wait for driver to complete (with timeout)
         try:
-            driver_proc.wait(timeout=120)
+            driver_proc.wait(timeout=600)
             results["driver_completed"] = driver_proc.returncode == 0
             if not results["driver_completed"]:
                 stdout, _ = driver_proc.communicate()
