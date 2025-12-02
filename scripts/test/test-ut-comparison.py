@@ -41,7 +41,6 @@ import os
 import shutil
 import subprocess
 import sys
-import tempfile
 import time
 from pathlib import Path
 
@@ -59,11 +58,66 @@ logger = logging.getLogger("UTComparisonTest")
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
+def setup_players_directory_for_ut(yaml_file: str) -> list:
+    """
+    Prepare the Players directory for Universal Tracker.
+
+    UT looks for YAML files directly in the Players directory (not subdirectories).
+    This function:
+    1. Removes any existing .yaml files from Players/ (not subdirectories)
+    2. Copies the specified template to Players/
+
+    Returns a list of removed files so they can be restored later.
+    """
+    players_dir = Path(PROJECT_ROOT) / "Players"
+    removed_files = []
+
+    # Remove existing YAML files from Players/ (not subdirectories)
+    for yaml_path in players_dir.glob("*.yaml"):
+        if yaml_path.is_file():
+            # Back up by moving to a temp location
+            backup_path = yaml_path.with_suffix(".yaml.ut_backup")
+            shutil.move(str(yaml_path), str(backup_path))
+            removed_files.append((str(yaml_path), str(backup_path)))
+            logger.info(f"Backed up {yaml_path.name}")
+
+    # Copy the template to Players/
+    yaml_path = Path(yaml_file)
+    dest_path = players_dir / yaml_path.name
+    shutil.copy(str(yaml_path), str(dest_path))
+    logger.info(f"Copied {yaml_path.name} to Players/")
+
+    return removed_files
+
+
+def cleanup_players_directory(yaml_file: str, removed_files: list):
+    """
+    Clean up the Players directory after UT test.
+
+    Removes the copied template and restores any backed up files.
+    """
+    players_dir = Path(PROJECT_ROOT) / "Players"
+
+    # Remove the copied template
+    yaml_name = Path(yaml_file).name
+    copied_path = players_dir / yaml_name
+    if copied_path.exists():
+        copied_path.unlink()
+        logger.info(f"Removed {yaml_name} from Players/")
+
+    # Restore backed up files
+    for original_path, backup_path in removed_files:
+        if Path(backup_path).exists():
+            shutil.move(backup_path, original_path)
+            logger.info(f"Restored {Path(original_path).name}")
+
+
 def run_generation(yaml_file: str, seed: str, preset_dir: str) -> dict:
     """
     Run game generation using Generate.py.
 
     Uses seed_utils.get_seed_id() to predict the output filename from the seed.
+    Calls Generate.py the same way as test_runner.py for consistency.
 
     Returns dict with:
         - success: bool
@@ -91,15 +145,7 @@ def run_generation(yaml_file: str, seed: str, preset_dir: str) -> dict:
     game_file = seed_dir / f"{seed_id}.archipelago"
     sphere_log = seed_dir / f"{seed_id}_sphere_log.jsonl"
 
-    # Create a temp directory for YAML files
-    yaml_temp_dir = tempfile.mkdtemp(prefix="ap_yaml_")
-
     try:
-        # Copy the YAML file to the temp directory
-        yaml_path = Path(yaml_file)
-        temp_yaml = Path(yaml_temp_dir) / yaml_path.name
-        shutil.copy(yaml_path, temp_yaml)
-
         logger.info("=" * 60)
         logger.info("Step 0: Running game generation")
         logger.info("=" * 60)
@@ -107,13 +153,15 @@ def run_generation(yaml_file: str, seed: str, preset_dir: str) -> dict:
         logger.info(f"Seed: {seed} -> {seed_id}")
         logger.info(f"Output directory: {preset_path}")
 
-        # Run Generate.py - output goes directly to preset_dir
+        # Run Generate.py the same way as test_runner.py:
+        # Use --weights_file_path with absolute path, --multi 1
+        # test_runner.py uses: os.path.join(templates_dir, template_file) where templates_dir is absolute
+        yaml_abs_path = str(Path(yaml_file).resolve())
         generate_cmd = [
-            sys.executable, "Generate.py",
-            "--player_files_path", yaml_temp_dir,
-            "--seed", seed,
-            "--outputpath", str(preset_path),
-            "--spoiler", "2"  # Full spoiler
+            "python", "Generate.py",
+            "--weights_file_path", yaml_abs_path,
+            "--multi", "1",
+            "--seed", seed
         ]
 
         logger.info(f"Running: {' '.join(generate_cmd)}")
@@ -122,7 +170,8 @@ def run_generation(yaml_file: str, seed: str, preset_dir: str) -> dict:
             generate_cmd,
             capture_output=True,
             text=True,
-            timeout=300  # 5 minute timeout for generation
+            timeout=600,  # 10 minute timeout for generation (same as test_runner.py)
+            cwd=str(PROJECT_ROOT)
         )
 
         if proc.returncode != 0:
@@ -157,15 +206,11 @@ def run_generation(yaml_file: str, seed: str, preset_dir: str) -> dict:
         return result
 
     except subprocess.TimeoutExpired:
-        result["error"] = "Generation timed out after 5 minutes"
+        result["error"] = "Generation timed out after 10 minutes"
         return result
     except Exception as e:
         result["error"] = f"Generation failed with exception: {e}"
         return result
-    finally:
-        # Cleanup temp directory
-        if os.path.exists(yaml_temp_dir):
-            shutil.rmtree(yaml_temp_dir, ignore_errors=True)
 
 
 class ProcessManager:
@@ -487,8 +532,18 @@ def main():
             logger.error(f"Python sphere log not found: {args.python_sphere_log}")
             return 1
 
+    # Set up Players directory for UT (it looks for YAMLs in Players/, not subdirectories)
+    removed_files = []
+    if args.yaml_file:
+        removed_files = setup_players_directory_for_ut(args.yaml_file)
+
     # Run the test
-    results = asyncio.run(run_test(args))
+    try:
+        results = asyncio.run(run_test(args))
+    finally:
+        # Clean up Players directory
+        if args.yaml_file:
+            cleanup_players_directory(args.yaml_file, removed_files)
 
     # Report results
     logger.info("=" * 60)

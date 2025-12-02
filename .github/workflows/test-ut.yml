@@ -9,6 +9,12 @@ on:
         type: number
         default: 1
 
+      runs_per_template:
+        description: 'Number of test runs per template (for consistency checking)'
+        required: true
+        type: number
+        default: 3
+
       delete_existing_results:
         description: 'Delete existing ut-comparison test results before testing'
         type: boolean
@@ -132,9 +138,11 @@ jobs:
           source .venv/bin/activate
           python scripts/test/test-all-ut-comparison.py \
             --seed ${{ inputs.seed }} \
+            --runs-per-template ${{ inputs.runs_per_template }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --output-file scripts/output/ut-comparison/test-results-split-${{ matrix.split_num }}.json
+            --output-file scripts/output/ut-comparison/test-results-split-${{ matrix.split_num }}.json \
+            --skip-chart
 
       - name: Upload test results for split ${{ matrix.split_num }}
         if: ${{ !cancelled() }}
@@ -195,21 +203,30 @@ jobs:
           mkdir -p scripts/output/ut-comparison
           cp /tmp/merged-results/scripts/output/ut-comparison/test-results.json \
              scripts/output/ut-comparison/test-results.json
-          python scripts/docs/generate-ut-comparison-chart.py
+          python scripts/docs/generate_ut_comparison_chart.py
 
       - name: Copy preset files from artifacts
         run: |
-          # Copy sphere log files from all split artifacts
+          # Check state BEFORE copy
+          echo "=== Sphere log files BEFORE copy ==="
+          find frontend/presets -name "*_sphere_log*.jsonl" -type f 2>/dev/null | wc -l
+
+          # The artifact stores files without the frontend/presets/ prefix
+          # So we need to copy them into the correct location
+          mkdir -p frontend/presets
+
+          # Copy sphere log files from all split artifacts into frontend/presets/
           for split_dir in artifacts/preset-files-ut-comparison-split-*; do
             if [ -d "$split_dir" ]; then
-              echo "Copying files from $split_dir"
-              # The artifact preserves directory structure, so copy recursively
-              cp -r "$split_dir"/* . 2>/dev/null || true
+              echo "Copying files from $split_dir to frontend/presets/"
+              cp -r "$split_dir"/* frontend/presets/ 2>/dev/null || true
             fi
           done
 
           # List what was copied
-          echo "Sphere log files found:"
+          echo ""
+          echo "=== Sphere log files AFTER copy ==="
+          find frontend/presets -name "*_sphere_log*.jsonl" -type f 2>/dev/null | wc -l
           find frontend/presets -name "*_sphere_log*.jsonl" -type f 2>/dev/null | head -20 || echo "No sphere log files found"
 
       - name: Commit and push results
@@ -223,9 +240,25 @@ jobs:
           # Add documentation
           git add docs/json/developer/test-results/*.md || true
 
-          # Add sphere log files
-          git add frontend/presets/**/AP_*_sphere_log.jsonl || true
-          git add frontend/presets/**/AP_*_sphere_log_ut.jsonl || true
+          # Debug: check if sphere log files exist before adding
+          echo "=== Sphere log files to add ==="
+          find frontend/presets -name "AP_*_sphere_log*.jsonl" -type f | wc -l
+          find frontend/presets -name "AP_*_sphere_log*.jsonl" -type f | head -5
+
+          # Add sphere log files using find to handle nested directories
+          echo "=== Adding sphere log files ==="
+          find frontend/presets -name "AP_*_sphere_log.jsonl" -type f -exec git add -f {} \; 2>&1 || echo "Error adding sphere_log.jsonl files"
+          find frontend/presets -name "AP_*_sphere_log_ut.jsonl" -type f -exec git add -f {} \; 2>&1 || echo "Error adding sphere_log_ut.jsonl files"
+
+          # Debug: show git status
+          echo "=== Git status ==="
+          git status --short | head -20
+
+          # Debug: show what was staged
+          echo "=== Staged files ==="
+          git diff --staged --name-only | head -20
+          echo "Staged sphere log files:"
+          git diff --staged --name-only | grep sphere_log || echo "No sphere log files staged"
 
           if ! git diff --staged --quiet; then
             git commit -m "Update UT comparison test results

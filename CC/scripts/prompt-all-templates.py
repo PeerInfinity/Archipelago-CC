@@ -96,8 +96,8 @@ def extract_game_name_from_yaml(template_path):
 
 
 def get_first_failing_seed(template_file, test_results):
-    """Get the first failing seed number if seed 1 passes but another seed fails.
-    Returns None if seed 1 fails or if all seeds pass."""
+    """Get the first failing seed number from test results.
+    Returns the first_failure_seed if available, None otherwise."""
     if template_file not in test_results:
         return None
 
@@ -106,24 +106,8 @@ def get_first_failing_seed(template_file, test_results):
     if not isinstance(result, dict):
         return None
 
-    # Check if there's a first_failure_seed field
-    if 'first_failure_seed' in result and result['first_failure_seed'] is not None:
-        # Check if seed 1 passed - try individual_results first, then top-level spoiler_test
-        individual_results = result.get('individual_results', {})
-        if '1' in individual_results:
-            seed_1_result = individual_results['1']
-            spoiler_test = seed_1_result.get('spoiler_test', {})
-            if spoiler_test.get('pass_fail') == 'passed':
-                # Seed 1 passed, but another seed failed
-                return result['first_failure_seed']
-        else:
-            # No individual_results, check top-level spoiler_test (this is seed 1's result)
-            spoiler_test = result.get('spoiler_test', {})
-            if spoiler_test.get('pass_fail') == 'passed':
-                # Seed 1 passed, but another seed failed
-                return result['first_failure_seed']
-
-    return None
+    # Return first_failure_seed if it exists and is non-null
+    return result.get('first_failure_seed')
 
 
 def get_template_files(template_dir, skip_list=None):

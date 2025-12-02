@@ -1,8 +1,49 @@
 // modeDataLoader.js - Load combined mode data from localStorage or files
 // Extracted from init.js lines 640-1097
 
-import { LOCAL_STORAGE_MODE_PREFIX } from './modeManager.js';
+import { LOCAL_STORAGE_MODE_PREFIX, LOCAL_STORAGE_LAST_ACTIVE_MODE_KEY } from './modeManager.js';
 import { loadAndMergeJsonFiles, getConfigPaths } from '../../utils/settingsMerger.js';
+
+/**
+ * Reads the autoLoadMode setting to determine if localStorage data should be loaded.
+ * This mirrors the logic in modeManager.js but is needed here for mode data loading.
+ *
+ * @param {Function} fetchJson - Function to fetch JSON files
+ * @param {Object} logger - Logger instance
+ * @returns {Promise<boolean>}
+ */
+async function shouldLoadFromLocalStorage(fetchJson, logger) {
+  try {
+    // First, try to get settings from localStorage mode data
+    const lastActiveMode = localStorage.getItem(LOCAL_STORAGE_LAST_ACTIVE_MODE_KEY);
+    const modesToCheck = lastActiveMode ? [lastActiveMode, 'default'] : ['default'];
+
+    for (const modeName of modesToCheck) {
+      const storedData = localStorage.getItem(`${LOCAL_STORAGE_MODE_PREFIX}${modeName}`);
+      if (storedData) {
+        try {
+          const modeData = JSON.parse(storedData);
+          if (modeData.userSettings?.generalSettings?.autoLoadMode !== undefined) {
+            return modeData.userSettings.generalSettings.autoLoadMode;
+          }
+        } catch (parseError) {
+          logger.warn('init', `Failed to parse stored mode data for "${modeName}":`, parseError);
+        }
+      }
+    }
+
+    // If not found in localStorage, fetch from default settings.json
+    const settingsJson = await fetchJson('./settings.json', 'Error loading settings.json for autoLoadMode check');
+    if (settingsJson?.generalSettings?.autoLoadMode !== undefined) {
+      return settingsJson.generalSettings.autoLoadMode;
+    }
+  } catch (error) {
+    logger.warn('init', 'Error reading autoLoadMode setting, defaulting to false:', error);
+  }
+
+  // Default to false (don't auto-load from localStorage)
+  return false;
+}
 
 /**
  * Loads combined mode data from localStorage or config files
@@ -65,8 +106,19 @@ export async function loadCombinedModeData(options) {
   let baseCombinedData = {};
   const dataSources = {}; // To track the origin of each config piece
 
-  // Load from localStorage if allowed
-  if (!skipLocalStorageLoad) {
+  // Check if autoLoadMode is enabled (in addition to skipLocalStorageLoad flag)
+  const autoLoadModeEnabled = await shouldLoadFromLocalStorage(fetchJson, logger);
+  const shouldSkipLocalStorage = skipLocalStorageLoad || !autoLoadModeEnabled;
+
+  if (!autoLoadModeEnabled && !skipLocalStorageLoad) {
+    logger.info(
+      'init',
+      'autoLoadMode is disabled in settings. Skipping localStorage load for mode data.'
+    );
+  }
+
+  // Load from localStorage if allowed and autoLoadMode is enabled
+  if (!shouldSkipLocalStorage) {
     try {
       const storedData = localStorage.getItem(
         `${LOCAL_STORAGE_MODE_PREFIX}${currentActiveMode}`
@@ -85,7 +137,7 @@ export async function loadCombinedModeData(options) {
         });
         logger.info(
           'init',
-          `Successfully set baseCombinedData for mode "${currentActiveMode}" from localStorage.`
+          `Successfully set baseCombinedData for mode "${currentActiveMode}" from localStorage (autoLoadMode enabled).`
         );
       } else {
         logger.info(
@@ -101,7 +153,7 @@ export async function loadCombinedModeData(options) {
       );
       baseCombinedData = {}; // Reset on error
     }
-  } else {
+  } else if (skipLocalStorageLoad) {
     logger.info(
       'init',
       'Skipping localStorage load for mode data as per skipLocalStorageLoad flag.'
@@ -143,7 +195,7 @@ export async function loadCombinedModeData(options) {
         baseCombinedData,
         dataSources,
         rulesOverride,
-        skipLocalStorageLoad,
+        skipLocalStorageLoad: shouldSkipLocalStorage,
         fetchJson,
         logger,
       });

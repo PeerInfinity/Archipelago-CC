@@ -58,6 +58,7 @@ export class EventProcessor {
     this.verboseMode = false; // Will be loaded from settings
     this.focusedMode = false; // True if this is a focused regression test
     this.focusLocations = []; // Locations to focus on in focused mode
+    this._sphere0Cleared = false; // Track if sphere 0 has been cleared
     logger.debug('EventProcessor constructor called');
 
     // Load verbose mode setting
@@ -85,6 +86,13 @@ export class EventProcessor {
    * @param {number} playerId - Player ID for context
    */
   setContext(currentLogIndex, spoilerLogData, playerId) {
+    // Reset sphere0 cleared flag only when starting a NEW test run (index 0)
+    // NOT for every event, as that would cause the state to be cleared multiple times
+    const isNewTestRun = currentLogIndex === 0 || this.spoilerLogData !== spoilerLogData;
+    if (isNewTestRun) {
+      this._sphere0Cleared = false; // Reset for new test run
+    }
+
     this.currentLogIndex = currentLogIndex;
     this.spoilerLogData = spoilerLogData;
     this.playerId = Number(playerId); // Ensure numeric type for consistency
@@ -253,8 +261,12 @@ export class EventProcessor {
         try {
           // For sphere 0, clear ALL inventory and prog_items to ensure clean start
           // This is critical for games like DLCQuest that use prog_items accumulators
-          if (context.sphere_number === 0) {
+          // Note: sphere_index from JSON can be a string (e.g., "0", "0.1") or number
+          // We use parseInt to handle both, and check for the integer part being 0
+          const sphereNumberInt = parseInt(String(context.sphere_number), 10);
+          if (sphereNumberInt === 0 && !this._sphere0Cleared) {
             await stateManager.clearStateAndReset();
+            this._sphere0Cleared = true; // Prevent clearing again for sub-spheres (0.1, 0.2, etc.)
             if (this.verboseMode) {
               this.logCallback('debug', 'Full state cleared for sphere 0 (inventory, prog_items, and event items).');
             }
@@ -285,15 +297,22 @@ export class EventProcessor {
           // Most games get items naturally from checking locations
           const addItemsUpfront = staticData?.settings?.[this.playerIdKey]?.add_sphere_items_upfront || false;
 
-          if (addItemsUpfront && newlyAddedItems.length > 0) {
-            this.logCallback('info', `Adding ${newlyAddedItems.length} items from sphere log to inventory...`);
-            for (const itemName of newlyAddedItems) {
-              await stateManager.addItemToInventory(itemName, 1);
-              if (this.verboseMode) {
-                this.logCallback('debug', `  Added item: ${itemName}`);
+          if (addItemsUpfront) {
+            // For upfront mode, add items from sphere log and compare BEFORE checking locations
+            // This mode is used for games with event locations that auto-collect items
+            if (newlyAddedItems.length > 0) {
+              this.logCallback('info', `Adding ${newlyAddedItems.length} items from sphere log to inventory...`);
+              for (const itemName of newlyAddedItems) {
+                await stateManager.addItemToInventory(itemName, 1);
+                if (this.verboseMode) {
+                  this.logCallback('debug', `  Added item: ${itemName}`);
+                }
               }
+            } else {
+              this.logCallback('info', `[add_sphere_items_upfront] No new items for sphere ${context.sphere_number}, comparing with current inventory state`);
             }
-            // Wait for state to stabilize after adding items
+
+            // Wait for state to stabilize after adding items (or just to sync if no items)
             await stateManager.pingWorker(`sphere_${context.sphere_number}_items_added`, 10000);
 
             // Get fresh snapshot after reachability update
