@@ -5587,6 +5587,150 @@
           "AP_54611489483343604102_rules.json",
           "AP_54611489483343604102_sphere_log.jsonl"
         ]
+      },
+      "AP_89757102641179993453": {
+        "seed": 11,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "The Witness"
+          }
+        ],
+        "files": [
+          "AP_89757102641179993453.archipelago",
+          "AP_89757102641179993453_Spoiler.txt",
+          "AP_89757102641179993453_rules.json",
+          "AP_89757102641179993453_sphere_log.jsonl"
+        ]
+      },
+      "AP_97195801408842856158": {
+        "seed": 12,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "The Witness"
+          }
+        ],
+        "files": [
+          "AP_97195801408842856158.archipelago",
+          "AP_97195801408842856158_Spoiler.txt",
+          "AP_97195801408842856158_rules.json",
+          "AP_97195801408842856158_sphere_log.jsonl"
+        ]
+      },
+      "AP_97597253031866294651": {
+        "seed": 13,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "The Witness"
+          }
+        ],
+        "files": [
+          "AP_97597253031866294651.archipelago",
+          "AP_97597253031866294651_Spoiler.txt",
+          "AP_97597253031866294651_rules.json",
+          "AP_97597253031866294651_sphere_log.jsonl"
+        ]
+      },
+      "AP_85815028503973011889": {
+        "seed": 14,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "The Witness"
+          }
+        ],
+        "files": [
+          "AP_85815028503973011889.archipelago",
+          "AP_85815028503973011889_Spoiler.txt",
+          "AP_85815028503973011889_rules.json",
+          "AP_85815028503973011889_sphere_log.jsonl"
+        ]
+      },
+      "AP_03855006904931195900": {
+        "seed": 15,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "The Witness"
+          }
+        ],
+        "files": [
+          "AP_03855006904931195900.archipelago",
+          "AP_03855006904931195900_Spoiler.txt",
+          "AP_03855006904931195900_rules.json",
+          "AP_03855006904931195900_sphere_log.jsonl"
+        ]
+      },
+      "AP_63995860912159113643": {
+        "seed": 16,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "The Witness"
+          }
+        ],
+        "files": [
+          "AP_63995860912159113643.archipelago",
+          "AP_63995860912159113643_Spoiler.txt",
+          "AP_63995860912159113643_rules.json",
+          "AP_63995860912159113643_sphere_log.jsonl"
+        ]
+      },
+      "AP_94499266122763165639": {
+        "seed": 18,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "The Witness"
+          }
+        ],
+        "files": [
+          "AP_94499266122763165639.archipelago",
+          "AP_94499266122763165639_Spoiler.txt",
+          "AP_94499266122763165639_rules.json",
+          "AP_94499266122763165639_sphere_log.jsonl"
+        ]
+      },
+      "AP_09600906052635305867": {
+        "seed": 19,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "The Witness"
+          }
+        ],
+        "files": [
+          "AP_09600906052635305867.archipelago",
+          "AP_09600906052635305867_Spoiler.txt",
+          "AP_09600906052635305867_rules.json",
+          "AP_09600906052635305867_sphere_log.jsonl"
+        ]
+      },
+      "AP_39682733307390651924": {
+        "seed": 20,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "The Witness"
+          }
+        ],
+        "files": [
+          "AP_39682733307390651924.archipelago",
+          "AP_39682733307390651924_Spoiler.txt",
+          "AP_39682733307390651924_rules.json",
+          "AP_39682733307390651924_sphere_log.jsonl"
+        ]
       }
     },
     "test_result": {

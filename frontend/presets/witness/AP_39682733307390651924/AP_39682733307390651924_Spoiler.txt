@@ -1,0 +1,262 @@
+﻿Archipelago Version 0.6.5  -  Seed: 20
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            The Witness
+Location Count:                  132
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Puzzle Randomization:            Sigma Normal
+Shuffle Symbols:                 Yes
+Shuffle Doors:                   Off
+Door Groupings:                  Off
+Shuffle Boat:                    Yes
+Shuffle Lasers:                  Off
+Disable non randomized puzzles:  No
+Shuffle Discarded Panels:        No
+Shuffle Vault Boxes:             No
+Obelisk Keys:                    Yes
+Unlockable Fast Travel Points:   No
+Shuffle Environmental Puzzles:   Off
+Environmental Puzzles Difficulty:Normal
+Shuffle Postgame:                No
+Victory Condition:               Elevator
+Required Lasers for Mountain Entry:7
+Required Lasers for Challenge:   11
+Total Panel Hunt panels:         40
+Percentage of required Panel Hunt panels:63
+Force postgame in Panel Hunt:    Disable Anything Locked By Lasers
+Panel Hunt Discourage Same Area Factor:40
+Panel Hunt Plando:               
+Early Caves:                     Off
+Elevators come to you:           Quarry Elevator
+Trap Percentage:                 20
+Trap Weights:                    Bonk: 1, Power Surge: 2, Slowness: 6
+Puzzle Skips:                    10
+Hints on Audio Logs:             12
+Vague Hints:                     Off
+Area Hint Percentage:            33
+Laser Hints:                     No
+Death Link:                      No
+Death Link Amnesty:              1
+Puzzle Randomization Seed:       9628967
+Pet the Dog:                     Puzzle Skip
+
+
+Locations:
+
+Symmetry Island Laser Activated: +1 Laser
+Desert Laser Activated: +1 Laser (Unredirected)
+Quarry Laser Activated: +1 Laser
+Shadows Laser Activated: +1 Laser
+Keep Laser Activated: +1 Laser
+Monastery Laser Activated: +1 Laser
+Town Laser Activated: +1 Laser
+Jungle Laser Activated: +1 Laser
+Bunker Laser Activated: +1 Laser
+Swamp Laser Activated: +1 Laser
+Treehouse Laser Activated: +1 Laser
+Tutorial Front Left: Rotated Shapers
+Tutorial Back Left: Slowness
+Tutorial Back Right: Speed Boost
+Tutorial Gate Open: Black/White Squares
+Tutorial Patio Floor: Speed Boost
+Outside Tutorial Shed Row 5: Speed Boost
+Outside Tutorial Tree Row 9: Slowness
+Outside Tutorial Outpost Entry Panel: Slowness
+Outside Tutorial Outpost Exit Panel: Progressive Stars
+Orchard Apple Tree 5: Speed Boost
+Glass Factory Entry Panel: Speed Boost
+Glass Factory Back Wall 5: Speed Boost
+Glass Factory Front 3: Slowness
+Glass Factory Melting 3: Speed Boost
+Symmetry Island Lower Panel: Puzzle Skip
+Symmetry Island Right 5: Speed Boost
+Symmetry Island Back 6: Puzzle Skip
+Symmetry Island Left 7: Puzzle Skip
+Symmetry Island Scenery Outlines 5: Shapers
+Symmetry Island Upper Panel: Speed Boost
+Symmetry Island Laser Yellow 3: Speed Boost
+Symmetry Island Laser Blue 3: Speed Boost
+Symmetry Island Laser Panel: Speed Boost
+Desert Surface 8: Speed Boost
+Desert Laser Panel: Speed Boost
+Desert Laser Activated + Redirected Solved: +1 Laser (Redirected)
+Desert Light Room 3: Speed Boost
+Desert Pond Room 5: Speed Boost
+Desert Flood Room 6: Speed Boost
+Desert Elevator Room Hexagonal: Speed Boost
+Desert Elevator Room Bent 3: Progressive Stars
+Quarry Entry 1 Panel: Speed Boost
+Quarry Laser Panel: Slowness
+Quarry Entry 2 Panel: Speed Boost
+Quarry Stoneworks Entry Left Panel: Slowness
+Quarry Stoneworks Entry Right Panel: Speed Boost
+Quarry Stoneworks Lower Row 6: Progressive Dots
+Quarry Stoneworks Upper Row 8: Speed Boost
+Quarry Stoneworks Stairs Panel: Puzzle Skip
+Quarry Stoneworks Control Room Left: Speed Boost
+Quarry Stoneworks Control Room Right: Speed Boost
+Quarry Boathouse Intro Left: Speed Boost
+Quarry Boathouse Intro Right: Speed Boost
+Quarry Boathouse Front Row 5: Colored Squares
+Quarry Boathouse Back First Row 9: Speed Boost
+Quarry Boathouse Back Second Row 3: Power Surge
+Shadows Intro 8: Speed Boost
+Shadows Far 8: Progressive Symmetry
+Shadows Near 5: Speed Boost
+Shadows Laser Panel: Speed Boost
+Keep Hedge Maze 1: Speed Boost
+Keep Pressure Plates 1: Speed Boost
+Keep Hedge Maze 2: Slowness
+Keep Hedge Maze 3: Speed Boost
+Keep Hedge Maze 4: Slowness
+Keep Pressure Plates 2: Speed Boost
+Keep Pressure Plates 3: Speed Boost
+Keep Pressure Plates 4: Speed Boost
+Keep Laser Panel Hedges: Speed Boost
+Keep Laser Panel Pressure Plates: Slowness
+Monastery Outside 3: Speed Boost
+Monastery Laser Panel: Speed Boost
+Monastery Inside 4: Speed Boost
+Town Cargo Box Entry Panel: Speed Boost
+Town Desert Laser Redirect Control Solved: Desert Laser Redirection
+Town Wooden Roof Lower Row 5: Bonk
+Town RGB House Entry Panel: Speed Boost
+Town Church Entry Panel: Speed Boost
+Town Maze Panel: Speed Boost
+Town Pet the Dog: Puzzle Skip
+Town Red Rooftop 5: Speed Boost
+Town Tall Hexagonal: Speed Boost
+Town Wooden Rooftop: Speed Boost
+Town Church Lattice: Speed Boost
+Town RGB House Sound Room Right: Progressive Dots
+Town RGB House Upstairs Left: Speed Boost
+Town RGB House Upstairs Right: Speed Boost
+Town Laser Panel: Speed Boost
+Windmill Entry Panel: Speed Boost
+Windmill Theater Entry Panel: Functioning Brain
+Theater Exit Left Panel: Speed Boost
+Theater Exit Right Panel: Power Surge
+Jungle First Row 3: Speed Boost
+Jungle Second Row 4: Speed Boost
+Jungle Popup Wall 6: Speed Boost
+Jungle Laser Panel: Speed Boost
+Jungle Monastery Garden Shortcut Panel: Speed Boost
+Bunker Entry Panel: Speed Boost
+Bunker Intro Left 5: Speed Boost
+Bunker Intro Back 4: Speed Boost
+Bunker Glass Room 3: Speed Boost
+Bunker UV Room 2: Speed Boost
+Bunker Laser Panel: Speed Boost
+Swamp Entry Panel: Speed Boost
+Swamp Intro Front 6: Eraser
+Swamp Intro Back 8: Speed Boost
+Swamp Platform Row 4: Speed Boost
+Swamp Platform Shortcut Right Panel: Puzzle Skip
+Swamp Cyan Underwater 5: Speed Boost
+Swamp Between Bridges Near Row 4: Puzzle Skip
+Swamp Between Bridges Far Row 4: Speed Boost
+Swamp Red Underwater 4: Speed Boost
+Swamp Beyond Rotating Bridge 4: Slowness
+Swamp Purple Underwater: Power Surge
+Swamp Blue Underwater 5: Puzzle Skip
+Swamp Laser Panel: Slowness
+Swamp Laser Shortcut Right Panel: Speed Boost
+Treehouse First Door Panel: Power Surge
+Treehouse Second Door Panel: Speed Boost
+Treehouse Yellow Bridge 9: Slowness
+Treehouse Third Door Panel: Speed Boost
+Treehouse First Purple Bridge 5: Speed Boost
+Treehouse Right Orange Bridge 12: Slowness
+Treehouse Drawbridge Panel: Puzzle Skip
+Treehouse Second Purple Bridge 7: Speed Boost
+Treehouse Left Orange Bridge 15: Puzzle Skip
+Treehouse Green Bridge 7: Triangles
+Treehouse Laser Panel: Negative Shapers
+Mountaintop River Shape: Sound Dots
+Mountaintop Mountain Entry Panel: Speed Boost
+Mountaintop Mountain Entry Panel Solved: Mountain Entry
+Mountain Floor 1 Light Bridge Controller: Speed Boost
+Mountain Floor 1 Right Row 5: Progressive Symmetry
+Mountain Floor 1 Left Row 7: Speed Boost
+Mountain Floor 1 Trash Pillar 2: Power Surge
+Mountain Floor 1 Back Row 3: Speed Boost
+Mountain Floor 2 Near Row 5: Speed Boost
+Mountain Floor 2 Light Bridge Controller Near: Boat
+Mountain Floor 2 Far Row 6: Bonk
+Mountain Floor 2 Light Bridge Controller Far: Puzzle Skip
+Mountain Bottom Floor Giant Puzzle: Speed Boost
+Mountain Bottom Floor Pillars Room Entry Left: Speed Boost
+Mountain Bottom Floor Pillars Room Entry Right: Slowness
+Mountain Bottom Floor Right Pillar 4: Speed Boost
+Mountain Bottom Floor Left Pillar 4: Speed Boost
+Mountain Bottom Floor Elevator Start Solved: Victory
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Desert Elevator Room Bent 3: Progressive Stars
+  Desert Laser Activated: +1 Laser (Unredirected)
+  Keep Laser Activated: +1 Laser
+  Mountaintop River Shape: Sound Dots
+  Shadows Far 8: Progressive Symmetry
+  Shadows Laser Activated: +1 Laser
+  Town Desert Laser Redirect Control Solved: Desert Laser Redirection
+  Tutorial Front Left: Rotated Shapers
+  Tutorial Gate Open: Black/White Squares
+}
+2: {
+  Desert Laser Activated + Redirected Solved: +1 Laser (Redirected)
+  Jungle Laser Activated: +1 Laser
+  Town RGB House Sound Room Right: Progressive Dots
+}
+3: {
+  Monastery Laser Activated: +1 Laser
+  Symmetry Island Scenery Outlines 5: Shapers
+}
+4: {
+  Swamp Intro Front 6: Eraser
+}
+5: {
+  Quarry Boathouse Front Row 5: Colored Squares
+  Quarry Stoneworks Lower Row 6: Progressive Dots
+}
+6: {
+  Bunker Laser Activated: +1 Laser
+  Outside Tutorial Outpost Exit Panel: Progressive Stars
+  Town Laser Activated: +1 Laser
+}
+7: {
+  Mountaintop Mountain Entry Panel Solved: Mountain Entry
+  Quarry Laser Activated: +1 Laser
+}
+8: {
+  Mountain Floor 1 Right Row 5: Progressive Symmetry
+}
+9: {
+  Mountain Bottom Floor Elevator Start Solved: Victory
+  Mountain Floor 2 Light Bridge Controller Near: Boat
+  Symmetry Island Laser Activated: +1 Laser
+}
+10: {
+  Treehouse Laser Activated: +1 Laser
+  Treehouse Laser Panel: Negative Shapers
+}
+11: {
+  Swamp Laser Activated: +1 Laser
+  Treehouse Green Bridge 7: Triangles
+}
