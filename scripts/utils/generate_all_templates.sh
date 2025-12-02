@@ -1,51 +1,80 @@
 #!/bin/bash
 
+# Environment variables (with defaults for local usage):
+# GENERATE_MULTIWORLD - set to "false" to skip multiworld generation (default: true)
+# GENERATE_EXTRA_SEEDS - set to "false" to skip seeds 2 and 3 (default: true)
+
+GENERATE_MULTIWORLD="${GENERATE_MULTIWORLD:-true}"
+GENERATE_EXTRA_SEEDS="${GENERATE_EXTRA_SEEDS:-true}"
+
+echo "GENERATE_MULTIWORLD: $GENERATE_MULTIWORLD"
+echo "GENERATE_EXTRA_SEEDS: $GENERATE_EXTRA_SEEDS"
+
+# Templates with seeds 1, 2, 3
 python Generate.py --weights_file_path "Templates/A Link to the Past.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/A Link to the Past.yaml" --multi 1 --seed 2
-python Generate.py --weights_file_path "Templates/A Link to the Past.yaml" --multi 1 --seed 3
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  python Generate.py --weights_file_path "Templates/A Link to the Past.yaml" --multi 1 --seed 2
+  python Generate.py --weights_file_path "Templates/A Link to the Past.yaml" --multi 1 --seed 3
+fi
+
 python Generate.py --weights_file_path "Templates/Adventure.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/Adventure.yaml" --multi 1 --seed 2
-python Generate.py --weights_file_path "Templates/Adventure.yaml" --multi 1 --seed 3
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  python Generate.py --weights_file_path "Templates/Adventure.yaml" --multi 1 --seed 2
+  python Generate.py --weights_file_path "Templates/Adventure.yaml" --multi 1 --seed 3
+fi
+
 python Generate.py --weights_file_path "Templates/A Short Hike.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/A Short Hike.yaml" --multi 1 --seed 2
-python Generate.py --weights_file_path "Templates/A Short Hike.yaml" --multi 1 --seed 3
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  python Generate.py --weights_file_path "Templates/A Short Hike.yaml" --multi 1 --seed 2
+  python Generate.py --weights_file_path "Templates/A Short Hike.yaml" --multi 1 --seed 3
+fi
+
 python Generate.py --weights_file_path "Templates/A Hat in Time.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/A Hat in Time.yaml" --multi 1 --seed 2
-python Generate.py --weights_file_path "Templates/A Hat in Time.yaml" --multi 1 --seed 3
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  python Generate.py --weights_file_path "Templates/A Hat in Time.yaml" --multi 1 --seed 2
+  python Generate.py --weights_file_path "Templates/A Hat in Time.yaml" --multi 1 --seed 3
+fi
 
-rm -rf Players/presets/Multiworld/
-mkdir -p Players/presets/Multiworld/
-cp Players/Templates/*.yaml Players/presets/Multiworld/
+# Multiworld generation
+if [ "$GENERATE_MULTIWORLD" = "true" ]; then
+  rm -rf Players/presets/Multiworld/
+  mkdir -p Players/presets/Multiworld/
+  cp Players/Templates/*.yaml Players/presets/Multiworld/
 
-#Exclude list:
-rm -f Players/presets/Multiworld/"Archipelago.yaml" \
-      Players/presets/Multiworld/"Final Fantasy.yaml" \
-      Players/presets/Multiworld/"Hollow Knight.yaml" \
-      Players/presets/Multiworld/"Ocarina of Time.yaml" \
-      Players/presets/Multiworld/"Sudoku.yaml" \
-      Players/presets/Multiworld/"Universal Tracker.yaml" \
-      Players/presets/Multiworld/"Zillion.yaml"
+  #Exclude list:
+  rm -f Players/presets/Multiworld/"Archipelago.yaml" \
+        Players/presets/Multiworld/"Final Fantasy.yaml" \
+        Players/presets/Multiworld/"Hollow Knight.yaml" \
+        Players/presets/Multiworld/"Ocarina of Time.yaml" \
+        Players/presets/Multiworld/"Sudoku.yaml" \
+        Players/presets/Multiworld/"Universal Tracker.yaml" \
+        Players/presets/Multiworld/"Zillion.yaml"
 
-#Currently failing games:
-rm -f Players/presets/Multiworld/"Blasphemous.yaml" \
-      Players/presets/Multiworld/"Kingdom Hearts.yaml" \
-      Players/presets/Multiworld/"SMZ3.yaml" \
-      Players/presets/Multiworld/"Stardew Valley.yaml" \
-      Players/presets/Multiworld/"Super Metroid.yaml"
+  #Currently failing games:
+  rm -f Players/presets/Multiworld/"Blasphemous.yaml" \
+        Players/presets/Multiworld/"Kingdom Hearts.yaml" \
+        Players/presets/Multiworld/"SMZ3.yaml" \
+        Players/presets/Multiworld/"Stardew Valley.yaml" \
+        Players/presets/Multiworld/"Super Metroid.yaml"
 
-python Generate.py --player_files_path "Players/presets/Multiworld" --seed 1
+  python Generate.py --player_files_path "Players/presets/Multiworld" --seed 1
 
-rm -rf Players/presets/Multiworld/
-mkdir -p Players/presets/Multiworld/
-cp "Players/Templates/A Hat in Time.yaml" "Players/Templates/A Link to the Past.yaml" "Players/Templates/Adventure.yaml" "Players/Templates/A Short Hike.yaml" Players/presets/Multiworld/
+  if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+    rm -rf Players/presets/Multiworld/
+    mkdir -p Players/presets/Multiworld/
+    cp "Players/Templates/A Hat in Time.yaml" "Players/Templates/A Link to the Past.yaml" "Players/Templates/Adventure.yaml" "Players/Templates/A Short Hike.yaml" Players/presets/Multiworld/
 
-python Generate.py --player_files_path "Players/presets/Multiworld" --seed 2
+    python Generate.py --player_files_path "Players/presets/Multiworld" --seed 2
 
-rm -rf Players/presets/Multiworld/
-mkdir -p Players/presets/Multiworld/
-cp "Players/Templates/Adventure.yaml" "Players/Templates/A Short Hike.yaml" Players/presets/Multiworld/
+    rm -rf Players/presets/Multiworld/
+    mkdir -p Players/presets/Multiworld/
+    cp "Players/Templates/Adventure.yaml" "Players/Templates/A Short Hike.yaml" Players/presets/Multiworld/
 
-python Generate.py --player_files_path "Players/presets/Multiworld" --seed 3
+    python Generate.py --player_files_path "Players/presets/Multiworld" --seed 3
+  fi
+
+  rm -rf Players/presets/Multiworld/
+fi
 
 python Generate.py --weights_file_path "Templates/APQuest.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Aquaria.yaml" --multi 1 --seed 1
@@ -119,18 +148,28 @@ python Generate.py --weights_file_path "Templates/Yoshi's Island.yaml" --multi 1
 python Generate.py --weights_file_path "Templates/Yu-Gi-Oh! 2006.yaml" --multi 1 --seed 1
 
 python Generate.py --weights_file_path "Templates/MathProof2p2e4.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/MathProof2p2e4.yaml" --multi 1 --seed 2
-python Generate.py --weights_file_path "Templates/MathProof2p2e4.yaml" --multi 1 --seed 3
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  python Generate.py --weights_file_path "Templates/MathProof2p2e4.yaml" --multi 1 --seed 2
+  python Generate.py --weights_file_path "Templates/MathProof2p2e4.yaml" --multi 1 --seed 3
+fi
+
 python Generate.py --weights_file_path "Templates/ChocolateChipCookies.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/ChocolateChipCookies.yaml" --multi 1 --seed 2
-python Generate.py --weights_file_path "Templates/ChocolateChipCookies.yaml" --multi 1 --seed 3
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  python Generate.py --weights_file_path "Templates/ChocolateChipCookies.yaml" --multi 1 --seed 2
+  python Generate.py --weights_file_path "Templates/ChocolateChipCookies.yaml" --multi 1 --seed 3
+fi
+
 python Generate.py --weights_file_path "Templates/WebDevJourney.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/WebDevJourney.yaml" --multi 1 --seed 2
-python Generate.py --weights_file_path "Templates/WebDevJourney.yaml" --multi 1 --seed 3
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  python Generate.py --weights_file_path "Templates/WebDevJourney.yaml" --multi 1 --seed 2
+  python Generate.py --weights_file_path "Templates/WebDevJourney.yaml" --multi 1 --seed 3
+fi
 
 python Generate.py --weights_file_path "Templates/Metamath.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/Metamath.yaml" --multi 1 --seed 2
-python Generate.py --weights_file_path "Templates/Metamath.yaml" --multi 1 --seed 3
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  python Generate.py --weights_file_path "Templates/Metamath.yaml" --multi 1 --seed 2
+  python Generate.py --weights_file_path "Templates/Metamath.yaml" --multi 1 --seed 3
+fi
 
 #python scripts/build/pack_apworld.py metamath
 #python scripts/build/pack_apworld.py mathadventure
