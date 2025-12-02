@@ -21,7 +21,8 @@ from lib.test_utils import load_template_exclude_list
 # Import UT comparison functions from the dedicated script
 from generate_ut_comparison_chart import (
     extract_ut_comparison_chart_data,
-    generate_ut_comparison_markdown
+    generate_ut_comparison_markdown,
+    load_world_mapping
 )
 
 
@@ -994,7 +995,8 @@ def main():
             md_content = generate_multitemplate_markdown(chart_data, metadata, subtitle)
         elif args.test_type == 'ut-comparison':
             chart_data = extract_ut_comparison_chart_data(results)
-            md_content = generate_ut_comparison_markdown(chart_data, metadata)
+            world_mapping = load_world_mapping(project_root)
+            md_content = generate_ut_comparison_markdown(chart_data, metadata, world_mapping)
         else:  # multiworld
             chart_data = extract_multiworld_chart_data(results)
             # Extract top-level metadata for multiworld
@@ -1126,7 +1128,8 @@ def main():
     if os.path.exists(ut_input):
         ut_results = load_test_results(ut_input)
         ut_data = extract_ut_comparison_chart_data(ut_results)
-        ut_md = generate_ut_comparison_markdown(ut_data, ut_results.get('metadata', {}))
+        world_mapping = load_world_mapping(project_root)
+        ut_md = generate_ut_comparison_markdown(ut_data, ut_results.get('metadata', {}), world_mapping)
         os.makedirs(os.path.dirname(ut_output), exist_ok=True)
         with open(ut_output, 'w') as f:
             f.write(ut_md)
