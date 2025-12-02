@@ -14,6 +14,16 @@ on:
         type: boolean
         default: true
 
+      run_random_seed_test:
+        description: 'Run test with random seeds (different seed per test)'
+        type: boolean
+        default: true
+
+      run_fixed_seed_test:
+        description: 'Run test with fixed seed (seed=1, matches spoiler test)'
+        type: boolean
+        default: true
+
 permissions:
   contents: write  # Allow pushing commits and creating branches
 
@@ -74,6 +84,7 @@ jobs:
     name: Test UT Random Seed Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     needs: setup-branch
+    if: inputs.run_random_seed_test
     timeout-minutes: 180
 
     strategy:
@@ -152,7 +163,7 @@ jobs:
     name: Combine UT Random Seed Results
     runs-on: ubuntu-latest
     needs: [setup-branch, test-ut-comparison-random]
-    if: ${{ !cancelled() }}
+    if: ${{ inputs.run_random_seed_test && !cancelled() }}
 
     steps:
       - name: Checkout ut-test branch
@@ -218,11 +229,12 @@ jobs:
             git push origin ut-test
           fi
 
-  # UT Comparison Tests with FIXED seed (runs SECOND - after random)
+  # UT Comparison Tests with FIXED seed (runs SECOND - after random if enabled)
   test-ut-comparison-fixed:
     name: Test UT Fixed Seed Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     needs: [setup-branch, combine-ut-comparison-random]
+    if: ${{ inputs.run_fixed_seed_test && !cancelled() }}
     timeout-minutes: 180
 
     strategy:
@@ -312,7 +324,7 @@ jobs:
     name: Combine UT Fixed Seed Results
     runs-on: ubuntu-latest
     needs: [setup-branch, test-ut-comparison-fixed]
-    if: ${{ !cancelled() }}
+    if: ${{ inputs.run_fixed_seed_test && !cancelled() }}
 
     steps:
       - name: Checkout ut-test branch
