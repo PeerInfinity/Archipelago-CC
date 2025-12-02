@@ -9,6 +9,12 @@ on:
         type: number
         default: 1
 
+      runs_per_template:
+        description: 'Number of test runs per template (for consistency checking)'
+        required: true
+        type: number
+        default: 3
+
       delete_existing_results:
         description: 'Delete existing ut-comparison test results before testing'
         type: boolean
@@ -132,6 +138,7 @@ jobs:
           source .venv/bin/activate
           python scripts/test/test-all-ut-comparison.py \
             --seed ${{ inputs.seed }} \
+            --runs-per-template ${{ inputs.runs_per_template }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
             --output-file scripts/output/ut-comparison/test-results-split-${{ matrix.split_num }}.json
@@ -195,7 +202,7 @@ jobs:
           mkdir -p scripts/output/ut-comparison
           cp /tmp/merged-results/scripts/output/ut-comparison/test-results.json \
              scripts/output/ut-comparison/test-results.json
-          python scripts/docs/generate-ut-comparison-chart.py
+          python scripts/docs/generate_ut_comparison_chart.py
 
       - name: Copy preset files from artifacts
         run: |

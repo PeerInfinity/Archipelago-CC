@@ -87,16 +87,22 @@ def run_ut_comparison_test(yaml_file: Path, seed: str, port: int, output_dir: Pa
         - passed: bool
         - total_spheres: int
         - spheres_matched: int
-        - first_mismatch_sphere: str or None
-        - mismatch_details: dict or None
+        - spheres_mismatched: int
+        - first_mismatch_sphere: str or None (sphere index where first mismatch occurred)
+        - last_matched_sphere: str or None (sphere index of last successful match)
+        - last_sphere_before_first_mismatch: str or None (sphere index just before first mismatch)
+        - all_sphere_indices: list of all sphere indices in order
         - error: str or None
     """
     result = {
         "passed": False,
         "total_spheres": 0,
         "spheres_matched": 0,
+        "spheres_mismatched": 0,
         "first_mismatch_sphere": None,
-        "mismatch_details": None,
+        "last_matched_sphere": None,
+        "last_sphere_before_first_mismatch": None,
+        "all_sphere_indices": [],
         "error": None
     }
 
@@ -131,15 +137,27 @@ def run_ut_comparison_test(yaml_file: Path, seed: str, port: int, output_dir: Pa
             summary = comparison.get("summary", {})
             result["total_spheres"] = summary.get("python_entries", 0)
             result["spheres_matched"] = summary.get("matched_entries", 0)
+            result["spheres_mismatched"] = summary.get("mismatched_entries", 0)
 
-            # Get first mismatch info if there is one
-            if not result["passed"]:
-                spheres = comparison.get("spheres", [])
-                for sphere in spheres:
-                    if sphere.get("status") != "match":
-                        result["first_mismatch_sphere"] = str(sphere.get("sphere_index", "unknown"))
-                        result["mismatch_details"] = sphere
-                        break
+            # Extract sphere indices and find first mismatch / last match
+            spheres = comparison.get("spheres", [])
+            result["all_sphere_indices"] = [s.get("sphere_index") for s in spheres]
+
+            last_matched = None
+            last_sphere_before_mismatch = None
+            found_first_mismatch = False
+            for sphere in spheres:
+                sphere_index = sphere.get("sphere_index")
+                if sphere.get("status") == "match":
+                    last_matched = sphere_index
+                    if not found_first_mismatch:
+                        last_sphere_before_mismatch = sphere_index
+                elif not found_first_mismatch:
+                    result["first_mismatch_sphere"] = sphere_index
+                    found_first_mismatch = True
+
+            result["last_matched_sphere"] = last_matched
+            result["last_sphere_before_first_mismatch"] = last_sphere_before_mismatch
         else:
             # Include subprocess output to show why comparison file wasn't created
             error_details = []
@@ -147,17 +165,17 @@ def run_ut_comparison_test(yaml_file: Path, seed: str, port: int, output_dir: Pa
             if proc.returncode != 0:
                 error_details.append(f"Exit code: {proc.returncode}")
             if proc.stderr:
-                # Truncate stderr if too long
+                # Show last part of stderr (most relevant for errors)
                 stderr = proc.stderr.strip()
-                if len(stderr) > 500:
-                    stderr = stderr[:500] + "..."
+                if len(stderr) > 1500:
+                    stderr = "..." + stderr[-1500:]
                 error_details.append(f"stderr: {stderr}")
-            if proc.stdout and not proc.stderr:
-                # Only show stdout if no stderr (stdout may contain normal logging)
+            if proc.stdout:
+                # Show last part of stdout (may contain error details)
                 stdout = proc.stdout.strip()
-                if len(stdout) > 500:
-                    stdout = stdout[-500:]  # Show last 500 chars of stdout
-                error_details.append(f"stdout (last): {stdout}")
+                if len(stdout) > 1500:
+                    stdout = "..." + stdout[-1500:]
+                error_details.append(f"stdout: {stdout}")
             result["error"] = " | ".join(error_details)
 
     except subprocess.TimeoutExpired:
@@ -228,6 +246,12 @@ def main():
         default=0,
         help='Skip the first N templates before applying every-nth filter'
     )
+    parser.add_argument(
+        '--runs-per-template',
+        type=int,
+        default=1,
+        help='Number of test runs per template for consistency checking (default: 1)'
+    )
 
     args = parser.parse_args()
 
@@ -276,6 +300,7 @@ def main():
             "last_updated": datetime.now().isoformat(),
             "script_version": "1.0.0",
             "seed": args.seed,
+            "runs_per_template": args.runs_per_template,
             "total_templates": len(template_files)
         },
         "results": {}
@@ -286,31 +311,95 @@ def main():
     failed_count = 0
     error_count = 0
 
+    runs_per_template = args.runs_per_template
+
     # Run tests for each template
     for i, yaml_file in enumerate(template_files, 1):
         template_name = yaml_file.name
         game_name = extract_game_name_from_template(str(yaml_file)) or template_name.replace('.yaml', '')
 
-        print(f"[{i}/{len(template_files)}] Testing {game_name}...")
+        print(f"[{i}/{len(template_files)}] Testing {game_name} ({runs_per_template} run{'s' if runs_per_template > 1 else ''})...")
 
         # Create per-test temp directory
         test_temp_dir = temp_dir / template_name.replace('.yaml', '')
         test_temp_dir.mkdir(parents=True, exist_ok=True)
 
-        # Run the test
-        test_result = run_ut_comparison_test(yaml_file, args.seed, args.port, test_temp_dir)
+        # Run multiple tests and collect results
+        run_results = []
+        for run_num in range(1, runs_per_template + 1):
+            if runs_per_template > 1:
+                print(f"    Run {run_num}/{runs_per_template}...", end=" ", flush=True)
+
+            test_result = run_ut_comparison_test(yaml_file, args.seed, args.port, test_temp_dir)
+            run_results.append(test_result)
+
+            if runs_per_template > 1:
+                if test_result["error"]:
+                    print(f"ERROR")
+                elif test_result["passed"]:
+                    print(f"PASS ({test_result['spheres_matched']}/{test_result['total_spheres']})")
+                else:
+                    first_mismatch = test_result.get("first_mismatch_sphere", "none")
+                    print(f"FAIL (first mismatch: {first_mismatch})")
+
+        # Aggregate results across runs
+        any_passed = any(r["passed"] for r in run_results)
+        all_passed = all(r["passed"] for r in run_results)
+        any_error = any(r["error"] for r in run_results)
+
+        # Get total spheres (should be same across runs)
+        total_spheres = run_results[0]["total_spheres"] if run_results else 0
+        all_sphere_indices = run_results[0].get("all_sphere_indices", []) if run_results else []
+
+        # Find lowest and highest mismatch counts across runs
+        mismatch_counts = [r.get("spheres_mismatched", 0) for r in run_results]
+        lowest_mismatch_count = min(mismatch_counts) if mismatch_counts else 0
+        highest_mismatch_count = max(mismatch_counts) if mismatch_counts else 0
+
+        # Find lowest and highest sphere reached before first mismatch
+        spheres_before_mismatch = [r.get("last_sphere_before_first_mismatch") for r in run_results
+                                   if r.get("last_sphere_before_first_mismatch")]
+        if spheres_before_mismatch and all_sphere_indices:
+            # Sort by position in sphere list
+            sphere_order = {s: idx for idx, s in enumerate(all_sphere_indices)}
+            sorted_spheres = sorted(spheres_before_mismatch, key=lambda s: sphere_order.get(s, -1))
+            lowest_sphere_before_mismatch = sorted_spheres[0] if sorted_spheres else None
+            highest_sphere_before_mismatch = sorted_spheres[-1] if sorted_spheres else None
+        else:
+            lowest_sphere_before_mismatch = None
+            highest_sphere_before_mismatch = None
+
+        # Check if results are consistent (all runs had same mismatch count)
+        unique_mismatch_counts = set(mismatch_counts)
+        results_consistent = len(unique_mismatch_counts) == 1
 
         # Check for re_gen_passthrough support
         has_re_gen_passthrough = check_re_gen_passthrough_support(game_name)
 
-        # Store result
+        # Store aggregated result
         results["results"][template_name] = {
             "ut_comparison": {
-                "passed": test_result["passed"],
-                "total_spheres": test_result["total_spheres"],
-                "spheres_matched": test_result["spheres_matched"],
-                "first_mismatch_sphere": test_result["first_mismatch_sphere"],
-                "mismatch_details": test_result["mismatch_details"]
+                "passed": all_passed,  # Only pass if ALL runs passed
+                "any_passed": any_passed,
+                "total_spheres": total_spheres,
+                "all_sphere_indices": all_sphere_indices,
+                "lowest_mismatch_count": lowest_mismatch_count,
+                "highest_mismatch_count": highest_mismatch_count,
+                "lowest_sphere_before_mismatch": lowest_sphere_before_mismatch,
+                "highest_sphere_before_mismatch": highest_sphere_before_mismatch,
+                "results_consistent": results_consistent,
+                "num_runs": runs_per_template,
+                "run_details": [
+                    {
+                        "passed": r["passed"],
+                        "spheres_matched": r["spheres_matched"],
+                        "spheres_mismatched": r.get("spheres_mismatched", 0),
+                        "last_sphere_before_first_mismatch": r.get("last_sphere_before_first_mismatch"),
+                        "first_mismatch_sphere": r.get("first_mismatch_sphere"),
+                        "error": r.get("error")
+                    }
+                    for r in run_results
+                ]
             },
             "world_info": {
                 "game_name_from_yaml": game_name,
@@ -319,31 +408,40 @@ def main():
             "timestamp": datetime.now().isoformat()
         }
 
-        if test_result["error"]:
-            results["results"][template_name]["error"] = test_result["error"]
+        # Collect any errors
+        errors = [r["error"] for r in run_results if r["error"]]
+        if errors:
+            results["results"][template_name]["errors"] = errors
 
-        # Update statistics
-        if test_result["error"]:
+        # Update statistics (count as failed if ANY run failed)
+        if any_error:
             error_count += 1
             status = "ERROR"
-        elif test_result["passed"]:
+        elif all_passed:
             passed_count += 1
             status = "PASS"
         else:
             failed_count += 1
             status = "FAIL"
 
-        print(f"  {status}: {test_result['spheres_matched']}/{test_result['total_spheres']} spheres matched")
-        if test_result["error"]:
-            # Show more of the error for debugging
-            error_msg = test_result['error']
-            if len(error_msg) > 500:
-                print(f"  Error: {error_msg[:500]}...")
-            else:
-                print(f"  Error: {error_msg}")
+        # Print summary
+        if runs_per_template == 1:
+            mismatches = run_results[0].get("spheres_mismatched", 0) if run_results else 0
+            before_mismatch = run_results[0].get("last_sphere_before_first_mismatch", "none") if run_results else "none"
+            print(f"  {status}: mismatches={mismatches}, last_good={before_mismatch}, total={total_spheres}")
+        else:
+            consistency = "consistent" if results_consistent else "INCONSISTENT"
+            print(f"  {status}: mismatches={lowest_mismatch_count}-{highest_mismatch_count}, last_good={lowest_sphere_before_mismatch}-{highest_sphere_before_mismatch}, total={total_spheres} ({consistency})")
+
+        if errors:
+            for error_msg in errors[:1]:  # Show first error only
+                if len(error_msg) > 500:
+                    print(f"  Error: {error_msg[:500]}...")
+                else:
+                    print(f"  Error: {error_msg}")
         print()
 
-        # Save intermediate results after each test
+        # Save intermediate results after each template
         results["metadata"]["last_updated"] = datetime.now().isoformat()
         with open(output_path, 'w') as f:
             json.dump(results, f, indent=2)
@@ -361,7 +459,7 @@ def main():
     # Generate the markdown chart
     print("\nGenerating test results chart...")
     chart_cmd = [
-        sys.executable, str(PROJECT_ROOT / "scripts/docs/generate-ut-comparison-chart.py")
+        sys.executable, str(PROJECT_ROOT / "scripts/docs/generate_ut_comparison_chart.py")
     ]
     try:
         subprocess.run(chart_cmd, cwd=str(PROJECT_ROOT), check=True)
