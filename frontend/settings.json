@@ -4,7 +4,9 @@
   "generalSettings": {
     "theme": "dark",
     "showDevTools": false,
-    "debugMode": false
+    "debugMode": false,
+    "autoSaveMode": false,
+    "autoLoadMode": false
   },
   "//": "playerId can be a string or number. It is used by StateManager.",
   "playerId": "1",
