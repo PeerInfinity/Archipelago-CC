@@ -5571,6 +5571,22 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      },
+      "AP_54611489483343604102": {
+        "seed": 17,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "The Witness"
+          }
+        ],
+        "files": [
+          "AP_54611489483343604102.archipelago",
+          "AP_54611489483343604102_Spoiler.txt",
+          "AP_54611489483343604102_rules.json",
+          "AP_54611489483343604102_sphere_log.jsonl"
+        ]
       }
     },
     "test_result": {

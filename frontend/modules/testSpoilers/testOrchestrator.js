@@ -194,6 +194,9 @@ export class TestOrchestrator {
     // Disable auto-event collection for the test
     try {
       await stateManager.setAutoCollectEventsConfig(false);
+      // Ping worker to ensure the config change is processed before continuing
+      // This is critical because setAutoCollectEventsConfig is a fire-and-forget command
+      await stateManager.pingWorker('auto_collect_config_set', 5000);
       this.uiCallbacks.log(
         'info',
         '[TestOrchestrator] Disabled auto-collect events for test duration.'
@@ -210,6 +213,8 @@ export class TestOrchestrator {
     // Enable spoiler test mode (filters non-advancement items to match Python CollectionState)
     try {
       await stateManager.setSpoilerTestMode(true);
+      // Ping worker to ensure the config change is processed before continuing
+      await stateManager.pingWorker('spoiler_test_mode_set', 5000);
       this.uiCallbacks.log(
         'info',
         '[TestOrchestrator] Enabled spoiler test mode for test duration.'

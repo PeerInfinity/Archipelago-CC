@@ -285,15 +285,22 @@ export class EventProcessor {
           // Most games get items naturally from checking locations
           const addItemsUpfront = staticData?.settings?.[this.playerIdKey]?.add_sphere_items_upfront || false;
 
-          if (addItemsUpfront && newlyAddedItems.length > 0) {
-            this.logCallback('info', `Adding ${newlyAddedItems.length} items from sphere log to inventory...`);
-            for (const itemName of newlyAddedItems) {
-              await stateManager.addItemToInventory(itemName, 1);
-              if (this.verboseMode) {
-                this.logCallback('debug', `  Added item: ${itemName}`);
+          if (addItemsUpfront) {
+            // For upfront mode, add items from sphere log and compare BEFORE checking locations
+            // This mode is used for games with event locations that auto-collect items
+            if (newlyAddedItems.length > 0) {
+              this.logCallback('info', `Adding ${newlyAddedItems.length} items from sphere log to inventory...`);
+              for (const itemName of newlyAddedItems) {
+                await stateManager.addItemToInventory(itemName, 1);
+                if (this.verboseMode) {
+                  this.logCallback('debug', `  Added item: ${itemName}`);
+                }
               }
+            } else {
+              this.logCallback('info', `[add_sphere_items_upfront] No new items for sphere ${context.sphere_number}, comparing with current inventory state`);
             }
-            // Wait for state to stabilize after adding items
+
+            // Wait for state to stabilize after adding items (or just to sync if no items)
             await stateManager.pingWorker(`sphere_${context.sphere_number}_items_added`, 10000);
 
             // Get fresh snapshot after reachability update
