@@ -2,35 +2,35 @@
 
 [<- Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-12-02 07:42:03
+**Generated:** 2025-12-02 18:58:46
 
-**Source Data Created:** 2025-12-02T07:42:03.429819
+**Source Data Created:** 2025-12-02T18:58:46.373547
 
-**Source Data Last Updated:** 2025-12-02T07:42:03.429825
+**Source Data Last Updated:** 2025-12-02T18:58:46.373552
 
 ## Summary
 
 - **Total Games:** 78
-- **Passed:** 17 (21.8%)
-- **Failed:** 61 (78.2%)
-- **Consistent Results:** 68 (87.2%)
+- **Passed:** 18 (23.1%)
+- **Failed:** 60 (76.9%)
+- **Consistent Results:** 78 (100.0%)
 - **With re_gen_passthrough:** 7 (9.0%)
 
 ## Test Results
 
 | Game Name | Result | Consistent | Spheres | Mismatches (min) | Mismatches (max) | Last Good (min) | Last Good (max) | re_gen |
 |-----------|:------:|:----------:|:-------:|:----------------:|:----------------:|:---------------:|:---------------:|:------:|
-| A Hat in Time | ❌ | ❌ | 5.11 | 23 | 30 | - | - | ⚫ |
-| A Link to the Past | ❌ | ❌ | 22.1 | 52 | 55 | - | - | ⚫ |
+| A Hat in Time | ❌ | ✅ | 5.11 | 26 | 26 | - | - | ⚫ |
+| A Link to the Past | ❌ | ✅ | 22.1 | 54 | 54 | - | - | ⚫ |
 | A Short Hike | ✅ | ✅ | 3.1 | 0 | 0 | 3.1 | 3.1 | ⚫ |
 | APQuest | ❌ | ✅ | 3.1 | 2 | 2 | 0.1 | 0.1 | ⚫ |
-| Adventure | ❌ | ❌ | 6.1 | 0 | 2 | 1.1 | 6.1 | ⚫ |
+| Adventure | ✅ | ✅ | 6.1 | 0 | 0 | 6.1 | 6.1 | ⚫ |
 | Aquaria | ❌ | ✅ | 5.2 | 9 | 9 | 0 | 0 | ⚫ |
 | Blasphemous | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
 | Bomb Rush Cyberfunk | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
 | Bumper Stickers | ✅ | ✅ | 8.2 | 0 | 0 | 8.2 | 8.2 | ⚫ |
 | Castlevania - Circle of the Moon | ✅ | ✅ | 4.4 | 0 | 0 | 4.4 | 4.4 | ⚫ |
-| Castlevania 64 | ❌ | ❌ | 4.5 | 5 | 12 | 1.1 | 1.5 | ⚫ |
+| Castlevania 64 | ❌ | ✅ | 4.5 | 6 | 6 | 1.2 | 1.2 | ⚫ |
 | Celeste (Open World) | ❌ | ✅ | 16.2 | 3 | 3 | 4.3 | 4.3 | ⚫ |
 | Celeste 64 | ❌ | ✅ | 5.2 | 1 | 1 | - | - | ⚫ |
 | ChecksFinder | ✅ | ✅ | 4.5 | 0 | 0 | 4.5 | 4.5 | ⚫ |
@@ -42,8 +42,8 @@
 | DOOM II | ❌ | ✅ | 21.2 | 1 | 1 | - | - | ⚫ |
 | Dark Souls III | ❌ | ✅ | 5.1 | 9 | 9 | 1.3 | 1.3 | ✅ |
 | Donkey Kong Country 3 | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
-| Factorio | ❌ | ❌ | 12.1 | 64 | 66 | 0 | 0 | ⚫ |
-| Faxanadu | ❌ | ❌ | 9.1 | 4 | 6 | 1.2 | 2.1 | ⚫ |
+| Factorio | ❌ | ✅ | 12.1 | 66 | 66 | - | - | ⚫ |
+| Faxanadu | ❌ | ✅ | 9.1 | 6 | 6 | 1.2 | 1.2 | ⚫ |
 | Final Fantasy Mystic Quest | ❌ | ✅ | 18.2 | 38 | 38 | - | - | ⚫ |
 | Heretic | ❌ | ✅ | 24.1 | 1 | 1 | - | - | ⚫ |
 | Hylics 2 | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
@@ -52,7 +52,7 @@
 | Kingdom Hearts | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
 | Kingdom Hearts 2 | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
 | Kirby's Dream Land 3 | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
-| Landstalker - The Treasures of King Nole | ❌ | ❌ | 10.1 | 9 | 11 | 0 | 1.3 | ⚫ |
+| Landstalker - The Treasures of King Nole | ❌ | ✅ | 10.1 | 11 | 11 | 0 | 0 | ⚫ |
 | Lingo | ✅ | ✅ | 5.1 | 0 | 0 | 5.1 | 5.1 | ⚫ |
 | Links Awakening DX | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
 | Lufia II Ancient Cave | ❌ | ✅ | 4.11 | 5 | 5 | - | - | ⚫ |
@@ -62,7 +62,7 @@
 | MegaMan Battle Network 3 | ✅ | ✅ | 6.1 | 0 | 0 | 6.1 | 6.1 | ⚫ |
 | Meritous | ❌ | ✅ | 7.2 | 6 | 6 | 0.1 | 0.1 | ⚫ |
 | Metamath | ❌ | ✅ | 3.1 | 1 | 1 | - | - | ⚫ |
-| Muse Dash | ❌ | ❌ | 8.1 | 21 | 31 | - | - | ⚫ |
+| Muse Dash | ❌ | ✅ | 8.1 | 30 | 30 | - | - | ⚫ |
 | Noita | ✅ | ✅ | 0.15 | 0 | 0 | 0.15 | 0.15 | ⚫ |
 | Old School Runescape | ❌ | ✅ | 7.5 | 13 | 13 | - | - | ✅ |
 | Overcooked! 2 | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
@@ -71,12 +71,12 @@
 | Pokemon Red and Blue | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
 | Raft | ❌ | ✅ | 11.1 | 18 | 18 | 0 | 0 | ⚫ |
 | Risk of Rain 2 | ❌ | ✅ | 8.3 | 1 | 1 | - | - | ⚫ |
-| SMZ3 | ❌ | ❌ | 16.2 | 23 | 25 | 0 | 0 | ⚫ |
+| SMZ3 | ❌ | ✅ | 16.2 | 22 | 22 | 0 | 0 | ⚫ |
 | Saving Princess | ✅ | ✅ | 5.1 | 0 | 0 | 5.1 | 5.1 | ⚫ |
 | Secret of Evermore | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
 | Shivers | ❌ | ✅ | 17.1 | 22 | 22 | 0.4 | 0.4 | ⚫ |
 | Sonic Adventure 2 Battle | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
-| Starcraft 2 | ❌ | ❌ | 15.5 | 20 | 26 | 0.3 | 0.3 | ⚫ |
+| Starcraft 2 | ❌ | ✅ | 15.5 | 25 | 25 | - | - | ⚫ |
 | Stardew Valley | ❌ | ✅ | 0 | 0 | 0 | - | - | ✅ |
 | Subnautica | ✅ | ✅ | 6.1 | 0 | 0 | 6.1 | 6.1 | ⚫ |
 | Super Mario 64 | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
