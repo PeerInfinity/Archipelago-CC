@@ -141,13 +141,24 @@ def run_ut_comparison_test(yaml_file: Path, seed: str, port: int, output_dir: Pa
                         result["mismatch_details"] = sphere
                         break
         else:
-            result["error"] = "Comparison result file not found"
-
-        # If test script returned non-zero and we don't have details, capture the error
-        if proc.returncode != 0 and not result["error"] and not result["passed"]:
-            # Only set error if test failed for reasons other than comparison mismatch
-            if result["total_spheres"] == 0:
-                result["error"] = proc.stderr or proc.stdout or "Test failed with no output"
+            # Include subprocess output to show why comparison file wasn't created
+            error_details = []
+            error_details.append("Comparison result file not found")
+            if proc.returncode != 0:
+                error_details.append(f"Exit code: {proc.returncode}")
+            if proc.stderr:
+                # Truncate stderr if too long
+                stderr = proc.stderr.strip()
+                if len(stderr) > 500:
+                    stderr = stderr[:500] + "..."
+                error_details.append(f"stderr: {stderr}")
+            if proc.stdout and not proc.stderr:
+                # Only show stdout if no stderr (stdout may contain normal logging)
+                stdout = proc.stdout.strip()
+                if len(stdout) > 500:
+                    stdout = stdout[-500:]  # Show last 500 chars of stdout
+                error_details.append(f"stdout (last): {stdout}")
+            result["error"] = " | ".join(error_details)
 
     except subprocess.TimeoutExpired:
         result["error"] = "Test timed out after 10 minutes"
@@ -324,7 +335,12 @@ def main():
 
         print(f"  {status}: {test_result['spheres_matched']}/{test_result['total_spheres']} spheres matched")
         if test_result["error"]:
-            print(f"  Error: {test_result['error'][:100]}...")
+            # Show more of the error for debugging
+            error_msg = test_result['error']
+            if len(error_msg) > 500:
+                print(f"  Error: {error_msg[:500]}...")
+            else:
+                print(f"  Error: {error_msg}")
         print()
 
         # Save intermediate results after each test

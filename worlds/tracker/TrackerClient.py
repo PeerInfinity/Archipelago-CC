@@ -37,27 +37,34 @@ ITEMS_HANDLING = 0b111
 UT_MAP_TAB_KEY = "UT_MAP"
 
 def get_ut_color(color: str)->str:
-    from kvui import Widget
-    from typing import ClassVar
-    from kivy.properties import StringProperty
-    class UTTextColor(Widget):
-        in_logic: ClassVar[str] = StringProperty("")
-        glitched: ClassVar[str] = StringProperty("") 
-        out_of_logic: ClassVar[str] = StringProperty("") 
-        collected: ClassVar[str] = StringProperty("") 
-        in_logic_glitched: ClassVar[str] = StringProperty("") 
-        out_of_logic_glitched: ClassVar[str] = StringProperty("") 
-        mixed_logic: ClassVar[str] = StringProperty("") 
-        collected_light: ClassVar[str] = StringProperty("") 
-        hinted: ClassVar[str] = StringProperty("") 
-        hinted_in_logic: ClassVar[str] = StringProperty("") 
-        hinted_out_of_logic: ClassVar[str] = StringProperty("") 
-        hinted_glitched: ClassVar[str] = StringProperty("") 
-        excluded: ClassVar[str] = StringProperty("")
-        unconnected: ClassVar[str] = StringProperty("") 
-    if not hasattr(get_ut_color,"utTextColor"):
-        get_ut_color.utTextColor = UTTextColor()
-    return str(getattr(get_ut_color.utTextColor,color,"DD00FF"))
+    # Return default color if GUI is disabled (e.g., in CI or nogui mode)
+    if not gui_enabled:
+        return "DD00FF"
+    try:
+        from kvui import Widget
+        from typing import ClassVar
+        from kivy.properties import StringProperty
+        class UTTextColor(Widget):
+            in_logic: ClassVar[str] = StringProperty("")
+            glitched: ClassVar[str] = StringProperty("")
+            out_of_logic: ClassVar[str] = StringProperty("")
+            collected: ClassVar[str] = StringProperty("")
+            in_logic_glitched: ClassVar[str] = StringProperty("")
+            out_of_logic_glitched: ClassVar[str] = StringProperty("")
+            mixed_logic: ClassVar[str] = StringProperty("")
+            collected_light: ClassVar[str] = StringProperty("")
+            hinted: ClassVar[str] = StringProperty("")
+            hinted_in_logic: ClassVar[str] = StringProperty("")
+            hinted_out_of_logic: ClassVar[str] = StringProperty("")
+            hinted_glitched: ClassVar[str] = StringProperty("")
+            excluded: ClassVar[str] = StringProperty("")
+            unconnected: ClassVar[str] = StringProperty("")
+        if not hasattr(get_ut_color,"utTextColor"):
+            get_ut_color.utTextColor = UTTextColor()
+        return str(getattr(get_ut_color.utTextColor,color,"DD00FF"))
+    except Exception:
+        # Fallback if kivy/kvui can't be imported (e.g., in headless environment)
+        return "DD00FF"
     
     
 class TrackerCommandProcessor(ClientCommandProcessor):
