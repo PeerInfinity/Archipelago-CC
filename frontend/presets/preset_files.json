@@ -4122,6 +4122,23 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      },
+      "AP_89757102641179993453": {
+        "seed": 11,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Pokemon Red and Blue"
+          }
+        ],
+        "files": [
+          "AP_89757102641179993453.archipelago",
+          "AP_89757102641179993453_P1_Player1.apred",
+          "AP_89757102641179993453_Spoiler.txt",
+          "AP_89757102641179993453_rules.json",
+          "AP_89757102641179993453_sphere_log.jsonl"
+        ]
       }
     },
     "test_result": {
