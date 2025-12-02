@@ -206,33 +206,26 @@ jobs:
 
       - name: Copy preset files from artifacts
         run: |
-          # Debug: show artifact structure
-          echo "=== Artifact directory structure ==="
-          ls -la artifacts/ || echo "No artifacts directory"
-          echo ""
+          # Check state BEFORE copy
+          echo "=== Sphere log files BEFORE copy ==="
+          find frontend/presets -name "*_sphere_log*.jsonl" -type f 2>/dev/null | wc -l
 
-          # Check what's inside the first preset-files artifact
-          echo "=== First preset-files artifact contents ==="
-          ls -la artifacts/preset-files-ut-comparison-split-1/ 2>/dev/null || echo "No split-1 preset artifact"
-          echo ""
+          # The artifact stores files without the frontend/presets/ prefix
+          # So we need to copy them into the correct location
+          mkdir -p frontend/presets
 
-          # Show deeper structure
-          echo "=== Deeper structure of first artifact ==="
-          find artifacts/preset-files-ut-comparison-split-1 -type f 2>/dev/null | head -10 || echo "No files found"
-          echo ""
-
-          # Copy sphere log files from all split artifacts
+          # Copy sphere log files from all split artifacts into frontend/presets/
           for split_dir in artifacts/preset-files-ut-comparison-split-*; do
             if [ -d "$split_dir" ]; then
-              echo "Copying files from $split_dir"
-              # The artifact preserves directory structure, so copy recursively
-              cp -r "$split_dir"/* . 2>/dev/null || true
+              echo "Copying files from $split_dir to frontend/presets/"
+              cp -r "$split_dir"/* frontend/presets/ 2>/dev/null || true
             fi
           done
 
           # List what was copied
           echo ""
-          echo "=== Sphere log files after copy ==="
+          echo "=== Sphere log files AFTER copy ==="
+          find frontend/presets -name "*_sphere_log*.jsonl" -type f 2>/dev/null | wc -l
           find frontend/presets -name "*_sphere_log*.jsonl" -type f 2>/dev/null | head -20 || echo "No sphere log files found"
 
       - name: Commit and push results
@@ -246,11 +239,23 @@ jobs:
           # Add documentation
           git add docs/json/developer/test-results/*.md || true
 
+          # Debug: check if sphere log files exist before adding
+          echo "=== Sphere log files to add ==="
+          find frontend/presets -name "AP_*_sphere_log*.jsonl" -type f | wc -l
+          find frontend/presets -name "AP_*_sphere_log*.jsonl" -type f | head -5
+
           # Add sphere log files using find to handle nested directories
-          find frontend/presets -name "AP_*_sphere_log.jsonl" -type f -exec git add -f {} \; || true
-          find frontend/presets -name "AP_*_sphere_log_ut.jsonl" -type f -exec git add -f {} \; || true
+          echo "=== Adding sphere log files ==="
+          find frontend/presets -name "AP_*_sphere_log.jsonl" -type f -exec git add -f {} \; 2>&1 || echo "Error adding sphere_log.jsonl files"
+          find frontend/presets -name "AP_*_sphere_log_ut.jsonl" -type f -exec git add -f {} \; 2>&1 || echo "Error adding sphere_log_ut.jsonl files"
+
+          # Debug: show git status
+          echo "=== Git status ==="
+          git status --short | head -20
 
           # Debug: show what was staged
+          echo "=== Staged files ==="
+          git diff --staged --name-only | head -20
           echo "Staged sphere log files:"
           git diff --staged --name-only | grep sphere_log || echo "No sphere log files staged"
 
