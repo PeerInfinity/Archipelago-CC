@@ -1,0 +1,2337 @@
+{
+  "metadata": {
+    "combined_from": 10,
+    "created": "2025-12-02T19:59:17.879793",
+    "last_updated": "2025-12-02T19:59:17.879801",
+    "script_version": "1.0.0",
+    "seed": "1",
+    "total_templates": 78
+  },
+  "results": {
+    "A Hat in Time.yaml": {
+      "timestamp": "2025-12-02T19:49:28.323332",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 27,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "5.11",
+        "lowest_mismatch_count": 27,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 91,
+            "spheres_mismatched": 27
+          }
+        ],
+        "total_spheres": 118
+      },
+      "world_info": {
+        "game_name_from_yaml": "A Hat in Time",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "A Link to the Past.yaml": {
+      "timestamp": "2025-12-02T19:49:58.341087",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 54,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "22.1",
+        "lowest_mismatch_count": 54,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 79,
+            "spheres_mismatched": 54
+          }
+        ],
+        "total_spheres": 133
+      },
+      "world_info": {
+        "game_name_from_yaml": "A Link to the Past",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "A Short Hike.yaml": {
+      "timestamp": "2025-12-02T19:48:53.181548",
+      "ut_comparison": {
+        "any_passed": true,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": "3.1",
+        "last_sphere_index": "3.1",
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": "3.1",
+        "num_runs": 1,
+        "passed": true,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": "3.1",
+            "passed": true,
+            "spheres_matched": 67,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 67
+      },
+      "world_info": {
+        "game_name_from_yaml": "A Short Hike",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "APQuest.yaml": {
+      "timestamp": "2025-12-02T19:47:59.673151",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 2,
+        "highest_sphere_before_mismatch": "0.1",
+        "last_sphere_index": "3.1",
+        "lowest_mismatch_count": 2,
+        "lowest_sphere_before_mismatch": "0.1",
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "1.1",
+            "last_sphere_before_first_mismatch": "0.1",
+            "passed": false,
+            "spheres_matched": 4,
+            "spheres_mismatched": 2
+          }
+        ],
+        "total_spheres": 6
+      },
+      "world_info": {
+        "game_name_from_yaml": "APQuest",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Adventure.yaml": {
+      "timestamp": "2025-12-02T19:48:07.360790",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 2,
+        "highest_sphere_before_mismatch": "1.1",
+        "last_sphere_index": "6.1",
+        "lowest_mismatch_count": 2,
+        "lowest_sphere_before_mismatch": "1.1",
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "1.2",
+            "last_sphere_before_first_mismatch": "1.1",
+            "passed": false,
+            "spheres_matched": 8,
+            "spheres_mismatched": 2
+          }
+        ],
+        "total_spheres": 10
+      },
+      "world_info": {
+        "game_name_from_yaml": "Adventure",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Aquaria.yaml": {
+      "timestamp": "2025-12-02T19:48:34.656902",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 9,
+        "highest_sphere_before_mismatch": "0",
+        "last_sphere_index": "5.2",
+        "lowest_mismatch_count": 9,
+        "lowest_sphere_before_mismatch": "0",
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0.1",
+            "last_sphere_before_first_mismatch": "0",
+            "passed": false,
+            "spheres_matched": 33,
+            "spheres_mismatched": 9
+          }
+        ],
+        "total_spheres": 42
+      },
+      "world_info": {
+        "game_name_from_yaml": "Aquaria",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Blasphemous.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: ...O - [Driver] Starting: /home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Blasphemous\n2025-12-02 19:50:42,381 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:50:42,381 - UTComparisonTest - INFO - Terminating process 3514\n2025-12-02 19:50:42,389 - UTComparisonTest - INFO - Terminating process 3522\n2025-12-02 19:50:42,404 - UTComparisonTest - INFO - Terminating process 3529\n2025-12-02 19:50:42,420 - UTComparisonTest - INFO - Removed Blasphemous.yaml from Players/\n2025-12-02 19:50:42,420 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:50:42,420 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:50:42,420 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:50:42,420 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:50:42,420 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:50:42,420 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:50:42,420 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:50:42,420 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:50:42,420 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed"
+      ],
+      "timestamp": "2025-12-02T19:50:42.437579",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: ...O - [Driver] Starting: /home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Blasphemous\n2025-12-02 19:50:42,381 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:50:42,381 - UTComparisonTest - INFO - Terminating process 3514\n2025-12-02 19:50:42,389 - UTComparisonTest - INFO - Terminating process 3522\n2025-12-02 19:50:42,404 - UTComparisonTest - INFO - Terminating process 3529\n2025-12-02 19:50:42,420 - UTComparisonTest - INFO - Removed Blasphemous.yaml from Players/\n2025-12-02 19:50:42,420 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:50:42,420 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:50:42,420 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:50:42,420 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:50:42,420 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:50:42,420 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:50:42,420 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:50:42,420 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:50:42,420 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Blasphemous",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Bomb Rush Cyberfunk.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: ...home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bomb_rush_cyberfunk/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Bomb Rush Cyberfunk\n2025-12-02 19:49:49,280 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:49:49,280 - UTComparisonTest - INFO - Terminating process 3503\n2025-12-02 19:49:49,296 - UTComparisonTest - INFO - Terminating process 3510\n2025-12-02 19:49:49,311 - UTComparisonTest - INFO - Terminating process 3520\n2025-12-02 19:49:49,327 - UTComparisonTest - INFO - Removed Bomb Rush Cyberfunk.yaml from Players/\n2025-12-02 19:49:49,327 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:49:49,327 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:49:49,327 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:49:49,327 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:49:49,327 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:49:49,327 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:49:49,327 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:49:49,327 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:49:49,327 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed"
+      ],
+      "timestamp": "2025-12-02T19:49:49.344891",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: ...home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bomb_rush_cyberfunk/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Bomb Rush Cyberfunk\n2025-12-02 19:49:49,280 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:49:49,280 - UTComparisonTest - INFO - Terminating process 3503\n2025-12-02 19:49:49,296 - UTComparisonTest - INFO - Terminating process 3510\n2025-12-02 19:49:49,311 - UTComparisonTest - INFO - Terminating process 3520\n2025-12-02 19:49:49,327 - UTComparisonTest - INFO - Removed Bomb Rush Cyberfunk.yaml from Players/\n2025-12-02 19:49:49,327 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:49:49,327 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:49:49,327 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:49:49,327 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:49:49,327 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:49:49,327 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:49:49,327 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:49:49,327 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:49:49,327 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Bomb Rush Cyberfunk",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Bumper Stickers.yaml": {
+      "timestamp": "2025-12-02T19:49:06.257296",
+      "ut_comparison": {
+        "any_passed": true,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": "8.2",
+        "last_sphere_index": "8.2",
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": "8.2",
+        "num_runs": 1,
+        "passed": true,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": "8.2",
+            "passed": true,
+            "spheres_matched": 64,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 64
+      },
+      "world_info": {
+        "game_name_from_yaml": "Bumper Stickers",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Castlevania - Circle of the Moon.yaml": {
+      "timestamp": "2025-12-02T19:48:28.336455",
+      "ut_comparison": {
+        "any_passed": true,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": "4.4",
+        "last_sphere_index": "4.4",
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": "4.4",
+        "num_runs": 1,
+        "passed": true,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": "4.4",
+            "passed": true,
+            "spheres_matched": 15,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 15
+      },
+      "world_info": {
+        "game_name_from_yaml": "Castlevania - Circle of the Moon",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Castlevania 64.yaml": {
+      "timestamp": "2025-12-02T19:50:08.089347",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 7,
+        "highest_sphere_before_mismatch": "1.1",
+        "last_sphere_index": "4.5",
+        "lowest_mismatch_count": 7,
+        "lowest_sphere_before_mismatch": "1.1",
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "1.2",
+            "last_sphere_before_first_mismatch": "1.1",
+            "passed": false,
+            "spheres_matched": 20,
+            "spheres_mismatched": 7
+          }
+        ],
+        "total_spheres": 27
+      },
+      "world_info": {
+        "game_name_from_yaml": "Castlevania 64",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Celeste (Open World).yaml": {
+      "timestamp": "2025-12-02T19:51:46.365209",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 3,
+        "highest_sphere_before_mismatch": "4.3",
+        "last_sphere_index": "16.2",
+        "lowest_mismatch_count": 3,
+        "lowest_sphere_before_mismatch": "4.3",
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "5.1",
+            "last_sphere_before_first_mismatch": "4.3",
+            "passed": false,
+            "spheres_matched": 108,
+            "spheres_mismatched": 3
+          }
+        ],
+        "total_spheres": 111
+      },
+      "world_info": {
+        "game_name_from_yaml": "Celeste (Open World)",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Celeste 64.yaml": {
+      "timestamp": "2025-12-02T19:49:39.730673",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 1,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "5.2",
+        "lowest_mismatch_count": 1,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 34,
+            "spheres_mismatched": 1
+          }
+        ],
+        "total_spheres": 35
+      },
+      "world_info": {
+        "game_name_from_yaml": "Celeste 64",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "ChecksFinder.yaml": {
+      "timestamp": "2025-12-02T19:48:38.407469",
+      "ut_comparison": {
+        "any_passed": true,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": "4.5",
+        "last_sphere_index": "4.5",
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": "4.5",
+        "num_runs": 1,
+        "passed": true,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": "4.5",
+            "passed": true,
+            "spheres_matched": 26,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 26
+      },
+      "world_info": {
+        "game_name_from_yaml": "ChecksFinder",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "ChocolateChipCookies.yaml": {
+      "timestamp": "2025-12-02T19:48:38.911734",
+      "ut_comparison": {
+        "any_passed": true,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": "8.1",
+        "last_sphere_index": "8.1",
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": "8.1",
+        "num_runs": 1,
+        "passed": true,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": "8.1",
+            "passed": true,
+            "spheres_matched": 17,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 17
+      },
+      "world_info": {
+        "game_name_from_yaml": "ChocolateChipCookies",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Choo-Choo Charles.yaml": {
+      "timestamp": "2025-12-02T19:49:21.603783",
+      "ut_comparison": {
+        "any_passed": true,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": "4.1",
+        "last_sphere_index": "4.1",
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": "4.1",
+        "num_runs": 1,
+        "passed": true,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": "4.1",
+            "passed": true,
+            "spheres_matched": 36,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 36
+      },
+      "world_info": {
+        "game_name_from_yaml": "Choo-Choo Charles",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Civilization VI.yaml": {
+      "timestamp": "2025-12-02T19:51:45.415009",
+      "ut_comparison": {
+        "any_passed": true,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": "8.2",
+        "last_sphere_index": "8.2",
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": "8.2",
+        "num_runs": 1,
+        "passed": true,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": "8.2",
+            "passed": true,
+            "spheres_matched": 56,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 56
+      },
+      "world_info": {
+        "game_name_from_yaml": "Civilization VI",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "DLCQuest.yaml": {
+      "timestamp": "2025-12-02T19:50:24.215234",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 16,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "8.1",
+        "lowest_mismatch_count": 16,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 6,
+            "spheres_mismatched": 16
+          }
+        ],
+        "total_spheres": 22
+      },
+      "world_info": {
+        "game_name_from_yaml": "DLCQuest",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "DOOM 1993.yaml": {
+      "timestamp": "2025-12-02T19:50:47.803188",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 1,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "18.2",
+        "lowest_mismatch_count": 1,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 103,
+            "spheres_mismatched": 1
+          }
+        ],
+        "total_spheres": 104
+      },
+      "world_info": {
+        "game_name_from_yaml": "DOOM 1993",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "DOOM II.yaml": {
+      "timestamp": "2025-12-02T19:50:26.148660",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 1,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "21.2",
+        "lowest_mismatch_count": 1,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 122,
+            "spheres_mismatched": 1
+          }
+        ],
+        "total_spheres": 123
+      },
+      "world_info": {
+        "game_name_from_yaml": "DOOM II",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Dark Souls III.yaml": {
+      "timestamp": "2025-12-02T19:51:35.601968",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 9,
+        "highest_sphere_before_mismatch": "1.3",
+        "last_sphere_index": "5.1",
+        "lowest_mismatch_count": 9,
+        "lowest_sphere_before_mismatch": "1.3",
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "1.4",
+            "last_sphere_before_first_mismatch": "1.3",
+            "passed": false,
+            "spheres_matched": 75,
+            "spheres_mismatched": 9
+          }
+        ],
+        "total_spheres": 84
+      },
+      "world_info": {
+        "game_name_from_yaml": "Dark Souls III",
+        "has_re_gen_passthrough": true
+      }
+    },
+    "Donkey Kong Country 3.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: ... - UTComparisonTest - INFO - Detected game name from YAML: Donkey Kong Country 3\n2025-12-02 19:51:46,488 - UTComparisonTest - INFO - Using preset directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/donkey_kong_country_3\n2025-12-02 19:51:46,489 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:51:46,489 - UTComparisonTest - INFO - Step 0: Running game generation\n2025-12-02 19:51:46,489 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:51:46,489 - UTComparisonTest - INFO - YAML file: /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Donkey Kong Country 3.yaml\n2025-12-02 19:51:46,489 - UTComparisonTest - INFO - Seed: 1 -> AP_14089154938208861744\n2025-12-02 19:51:46,489 - UTComparisonTest - INFO - Output directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/donkey_kong_country_3\n2025-12-02 19:51:46,489 - UTComparisonTest - INFO - Running: python Generate.py --weights_file_path /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Donkey Kong Country 3.yaml --multi 1 --seed 1\n2025-12-02 19:51:49,315 - UTComparisonTest - INFO - Generation completed successfully\n2025-12-02 19:51:49,315 - UTComparisonTest - ERROR - Generation failed: Expected game file not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/donkey_kong_country_3/AP_14089154938208861744/AP_14089154938208861744.archipelago"
+      ],
+      "timestamp": "2025-12-02T19:51:49.337311",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: ... - UTComparisonTest - INFO - Detected game name from YAML: Donkey Kong Country 3\n2025-12-02 19:51:46,488 - UTComparisonTest - INFO - Using preset directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/donkey_kong_country_3\n2025-12-02 19:51:46,489 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:51:46,489 - UTComparisonTest - INFO - Step 0: Running game generation\n2025-12-02 19:51:46,489 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:51:46,489 - UTComparisonTest - INFO - YAML file: /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Donkey Kong Country 3.yaml\n2025-12-02 19:51:46,489 - UTComparisonTest - INFO - Seed: 1 -> AP_14089154938208861744\n2025-12-02 19:51:46,489 - UTComparisonTest - INFO - Output directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/donkey_kong_country_3\n2025-12-02 19:51:46,489 - UTComparisonTest - INFO - Running: python Generate.py --weights_file_path /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Donkey Kong Country 3.yaml --multi 1 --seed 1\n2025-12-02 19:51:49,315 - UTComparisonTest - INFO - Generation completed successfully\n2025-12-02 19:51:49,315 - UTComparisonTest - ERROR - Generation failed: Expected game file not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/donkey_kong_country_3/AP_14089154938208861744/AP_14089154938208861744.archipelago",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Donkey Kong Country 3",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Factorio.yaml": {
+      "timestamp": "2025-12-02T19:50:51.702025",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 66,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "12.1",
+        "lowest_mismatch_count": 66,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 1,
+            "spheres_mismatched": 66
+          }
+        ],
+        "total_spheres": 67
+      },
+      "world_info": {
+        "game_name_from_yaml": "Factorio",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Faxanadu.yaml": {
+      "timestamp": "2025-12-02T19:49:19.213026",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 6,
+        "highest_sphere_before_mismatch": "1.2",
+        "last_sphere_index": "9.1",
+        "lowest_mismatch_count": 6,
+        "lowest_sphere_before_mismatch": "1.2",
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "1.3",
+            "last_sphere_before_first_mismatch": "1.2",
+            "passed": false,
+            "spheres_matched": 23,
+            "spheres_mismatched": 6
+          }
+        ],
+        "total_spheres": 29
+      },
+      "world_info": {
+        "game_name_from_yaml": "Faxanadu",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Final Fantasy Mystic Quest.yaml": {
+      "timestamp": "2025-12-02T19:49:52.437584",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 38,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "18.2",
+        "lowest_mismatch_count": 38,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 36,
+            "spheres_mismatched": 38
+          }
+        ],
+        "total_spheres": 74
+      },
+      "world_info": {
+        "game_name_from_yaml": "Final Fantasy Mystic Quest",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Heretic.yaml": {
+      "timestamp": "2025-12-02T19:51:16.546626",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 1,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "24.1",
+        "lowest_mismatch_count": 1,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 119,
+            "spheres_mismatched": 1
+          }
+        ],
+        "total_spheres": 120
+      },
+      "world_info": {
+        "game_name_from_yaml": "Heretic",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Hylics 2.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: 2025-12-02 19:51:45,523 - UTComparisonTest - INFO - Detected game name from YAML: Hylics 2\n2025-12-02 19:51:45,531 - UTComparisonTest - INFO - Using preset directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hylics_2\n2025-12-02 19:51:45,531 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:51:45,531 - UTComparisonTest - INFO - Step 0: Running game generation\n2025-12-02 19:51:45,531 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:51:45,531 - UTComparisonTest - INFO - YAML file: /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Hylics 2.yaml\n2025-12-02 19:51:45,531 - UTComparisonTest - INFO - Seed: 1 -> AP_14089154938208861744\n2025-12-02 19:51:45,531 - UTComparisonTest - INFO - Output directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hylics_2\n2025-12-02 19:51:45,532 - UTComparisonTest - INFO - Running: python Generate.py --weights_file_path /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Hylics 2.yaml --multi 1 --seed 1\n2025-12-02 19:51:49,379 - UTComparisonTest - INFO - Generation completed successfully\n2025-12-02 19:51:49,379 - UTComparisonTest - ERROR - Generation failed: Expected game file not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hylics_2/AP_14089154938208861744/AP_14089154938208861744.archipelago"
+      ],
+      "timestamp": "2025-12-02T19:51:49.401777",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: 2025-12-02 19:51:45,523 - UTComparisonTest - INFO - Detected game name from YAML: Hylics 2\n2025-12-02 19:51:45,531 - UTComparisonTest - INFO - Using preset directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hylics_2\n2025-12-02 19:51:45,531 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:51:45,531 - UTComparisonTest - INFO - Step 0: Running game generation\n2025-12-02 19:51:45,531 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:51:45,531 - UTComparisonTest - INFO - YAML file: /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Hylics 2.yaml\n2025-12-02 19:51:45,531 - UTComparisonTest - INFO - Seed: 1 -> AP_14089154938208861744\n2025-12-02 19:51:45,531 - UTComparisonTest - INFO - Output directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hylics_2\n2025-12-02 19:51:45,532 - UTComparisonTest - INFO - Running: python Generate.py --weights_file_path /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Hylics 2.yaml --multi 1 --seed 1\n2025-12-02 19:51:49,379 - UTComparisonTest - INFO - Generation completed successfully\n2025-12-02 19:51:49,379 - UTComparisonTest - ERROR - Generation failed: Expected game file not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hylics_2/AP_14089154938208861744/AP_14089154938208861744.archipelago",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Hylics 2",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Inscryption.yaml": {
+      "timestamp": "2025-12-02T19:51:07.561895",
+      "ut_comparison": {
+        "any_passed": true,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": "9.2",
+        "last_sphere_index": "9.2",
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": "9.2",
+        "num_runs": 1,
+        "passed": true,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": "9.2",
+            "passed": true,
+            "spheres_matched": 31,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 31
+      },
+      "world_info": {
+        "game_name_from_yaml": "Inscryption",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Jak and Daxter The Precursor Legacy.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: ... Legacy\n2025-12-02 19:50:47,922 - UTComparisonTest - INFO - Using preset directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/jak_and_daxter__the_precursor_legacy\n2025-12-02 19:50:47,923 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:50:47,923 - UTComparisonTest - INFO - Step 0: Running game generation\n2025-12-02 19:50:47,923 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:50:47,923 - UTComparisonTest - INFO - YAML file: /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Jak and Daxter The Precursor Legacy.yaml\n2025-12-02 19:50:47,923 - UTComparisonTest - INFO - Seed: 1 -> AP_14089154938208861744\n2025-12-02 19:50:47,923 - UTComparisonTest - INFO - Output directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/jak_and_daxter__the_precursor_legacy\n2025-12-02 19:50:47,923 - UTComparisonTest - INFO - Running: python Generate.py --weights_file_path /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Jak and Daxter The Precursor Legacy.yaml --multi 1 --seed 1\n2025-12-02 19:50:51,151 - UTComparisonTest - INFO - Generation completed successfully\n2025-12-02 19:50:51,151 - UTComparisonTest - ERROR - Generation failed: Expected game file not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/jak_and_daxter__the_precursor_legacy/AP_14089154938208861744/AP_14089154938208861744.archipelago"
+      ],
+      "timestamp": "2025-12-02T19:50:51.172251",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: ... Legacy\n2025-12-02 19:50:47,922 - UTComparisonTest - INFO - Using preset directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/jak_and_daxter__the_precursor_legacy\n2025-12-02 19:50:47,923 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:50:47,923 - UTComparisonTest - INFO - Step 0: Running game generation\n2025-12-02 19:50:47,923 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:50:47,923 - UTComparisonTest - INFO - YAML file: /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Jak and Daxter The Precursor Legacy.yaml\n2025-12-02 19:50:47,923 - UTComparisonTest - INFO - Seed: 1 -> AP_14089154938208861744\n2025-12-02 19:50:47,923 - UTComparisonTest - INFO - Output directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/jak_and_daxter__the_precursor_legacy\n2025-12-02 19:50:47,923 - UTComparisonTest - INFO - Running: python Generate.py --weights_file_path /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Jak and Daxter The Precursor Legacy.yaml --multi 1 --seed 1\n2025-12-02 19:50:51,151 - UTComparisonTest - INFO - Generation completed successfully\n2025-12-02 19:50:51,151 - UTComparisonTest - ERROR - Generation failed: Expected game file not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/jak_and_daxter__the_precursor_legacy/AP_14089154938208861744/AP_14089154938208861744.archipelago",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Jak and Daxter: The Precursor Legacy",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Kingdom Hearts 2.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: ...- [Driver] Starting: /home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh2/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Kingdom Hearts 2\n2025-12-02 19:52:38,153 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:52:38,153 - UTComparisonTest - INFO - Terminating process 3609\n2025-12-02 19:52:38,168 - UTComparisonTest - INFO - Terminating process 3618\n2025-12-02 19:52:38,184 - UTComparisonTest - INFO - Terminating process 3624\n2025-12-02 19:52:38,200 - UTComparisonTest - INFO - Removed Kingdom Hearts 2.yaml from Players/\n2025-12-02 19:52:38,200 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:52:38,200 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:52:38,200 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:52:38,200 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:52:38,200 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:52:38,200 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:52:38,200 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:52:38,200 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:52:38,200 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed"
+      ],
+      "timestamp": "2025-12-02T19:52:38.219455",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: ...- [Driver] Starting: /home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh2/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Kingdom Hearts 2\n2025-12-02 19:52:38,153 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:52:38,153 - UTComparisonTest - INFO - Terminating process 3609\n2025-12-02 19:52:38,168 - UTComparisonTest - INFO - Terminating process 3618\n2025-12-02 19:52:38,184 - UTComparisonTest - INFO - Terminating process 3624\n2025-12-02 19:52:38,200 - UTComparisonTest - INFO - Removed Kingdom Hearts 2.yaml from Players/\n2025-12-02 19:52:38,200 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:52:38,200 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:52:38,200 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:52:38,200 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:52:38,200 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:52:38,200 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:52:38,200 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:52:38,200 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:52:38,200 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Kingdom Hearts 2",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Kingdom Hearts.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: ...NFO - [Driver] Starting: /home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh1/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Kingdom Hearts\n2025-12-02 19:53:52,462 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:53:52,462 - UTComparisonTest - INFO - Terminating process 3696\n2025-12-02 19:53:52,469 - UTComparisonTest - INFO - Terminating process 3703\n2025-12-02 19:53:52,485 - UTComparisonTest - INFO - Terminating process 3710\n2025-12-02 19:53:52,501 - UTComparisonTest - INFO - Removed Kingdom Hearts.yaml from Players/\n2025-12-02 19:53:52,501 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:53:52,501 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:53:52,501 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:53:52,501 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:53:52,501 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:53:52,501 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:53:52,501 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:53:52,501 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:53:52,501 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed"
+      ],
+      "timestamp": "2025-12-02T19:53:52.516756",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: ...NFO - [Driver] Starting: /home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh1/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Kingdom Hearts\n2025-12-02 19:53:52,462 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:53:52,462 - UTComparisonTest - INFO - Terminating process 3696\n2025-12-02 19:53:52,469 - UTComparisonTest - INFO - Terminating process 3703\n2025-12-02 19:53:52,485 - UTComparisonTest - INFO - Terminating process 3710\n2025-12-02 19:53:52,501 - UTComparisonTest - INFO - Removed Kingdom Hearts.yaml from Players/\n2025-12-02 19:53:52,501 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:53:52,501 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:53:52,501 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:53:52,501 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:53:52,501 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:53:52,501 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:53:52,501 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:53:52,501 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:53:52,501 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Kingdom Hearts",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Kirby's Dream Land 3.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: ...] Starting: /home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kdl3/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Kirby's Dream Land 3\n2025-12-02 19:54:00,866 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:54:00,866 - UTComparisonTest - INFO - Terminating process 3631\n2025-12-02 19:54:00,873 - UTComparisonTest - INFO - Terminating process 3639\n2025-12-02 19:54:00,889 - UTComparisonTest - INFO - Terminating process 3647\n2025-12-02 19:54:00,905 - UTComparisonTest - INFO - Removed Kirby's Dream Land 3.yaml from Players/\n2025-12-02 19:54:00,905 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:54:00,905 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:54:00,905 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:54:00,905 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:54:00,905 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:54:00,905 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:54:00,905 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:54:00,905 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:54:00,905 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed"
+      ],
+      "timestamp": "2025-12-02T19:54:00.922319",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: ...] Starting: /home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kdl3/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Kirby's Dream Land 3\n2025-12-02 19:54:00,866 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:54:00,866 - UTComparisonTest - INFO - Terminating process 3631\n2025-12-02 19:54:00,873 - UTComparisonTest - INFO - Terminating process 3639\n2025-12-02 19:54:00,889 - UTComparisonTest - INFO - Terminating process 3647\n2025-12-02 19:54:00,905 - UTComparisonTest - INFO - Removed Kirby's Dream Land 3.yaml from Players/\n2025-12-02 19:54:00,905 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:54:00,905 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:54:00,905 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:54:00,905 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:54:00,905 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:54:00,905 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:54:00,905 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:54:00,905 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:54:00,905 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Kirby's Dream Land 3",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Landstalker - The Treasures of King Nole.yaml": {
+      "timestamp": "2025-12-02T19:51:51.930996",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 9,
+        "highest_sphere_before_mismatch": "1.3",
+        "last_sphere_index": "10.1",
+        "lowest_mismatch_count": 9,
+        "lowest_sphere_before_mismatch": "1.3",
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "1.4",
+            "last_sphere_before_first_mismatch": "1.3",
+            "passed": false,
+            "spheres_matched": 44,
+            "spheres_mismatched": 9
+          }
+        ],
+        "total_spheres": 53
+      },
+      "world_info": {
+        "game_name_from_yaml": "Landstalker - The Treasures of King Nole",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Lingo.yaml": {
+      "timestamp": "2025-12-02T19:49:47.547455",
+      "ut_comparison": {
+        "any_passed": true,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": "5.1",
+        "last_sphere_index": "5.1",
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": "5.1",
+        "num_runs": 1,
+        "passed": true,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": "5.1",
+            "passed": true,
+            "spheres_matched": 12,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 12
+      },
+      "world_info": {
+        "game_name_from_yaml": "Lingo",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Links Awakening DX.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: ...12-02 19:49:52,569 - UTComparisonTest - INFO - Detected game name from YAML: Links Awakening DX\n2025-12-02 19:49:52,577 - UTComparisonTest - INFO - Using preset directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/links_awakening_dx\n2025-12-02 19:49:52,577 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:49:52,577 - UTComparisonTest - INFO - Step 0: Running game generation\n2025-12-02 19:49:52,577 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:49:52,577 - UTComparisonTest - INFO - YAML file: /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Links Awakening DX.yaml\n2025-12-02 19:49:52,577 - UTComparisonTest - INFO - Seed: 1 -> AP_14089154938208861744\n2025-12-02 19:49:52,577 - UTComparisonTest - INFO - Output directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/links_awakening_dx\n2025-12-02 19:49:52,578 - UTComparisonTest - INFO - Running: python Generate.py --weights_file_path /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 1\n2025-12-02 19:49:59,577 - UTComparisonTest - INFO - Generation completed successfully\n2025-12-02 19:49:59,577 - UTComparisonTest - ERROR - Generation failed: Expected game file not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/links_awakening_dx/AP_14089154938208861744/AP_14089154938208861744.archipelago"
+      ],
+      "timestamp": "2025-12-02T19:49:59.599268",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: ...12-02 19:49:52,569 - UTComparisonTest - INFO - Detected game name from YAML: Links Awakening DX\n2025-12-02 19:49:52,577 - UTComparisonTest - INFO - Using preset directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/links_awakening_dx\n2025-12-02 19:49:52,577 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:49:52,577 - UTComparisonTest - INFO - Step 0: Running game generation\n2025-12-02 19:49:52,577 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:49:52,577 - UTComparisonTest - INFO - YAML file: /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Links Awakening DX.yaml\n2025-12-02 19:49:52,577 - UTComparisonTest - INFO - Seed: 1 -> AP_14089154938208861744\n2025-12-02 19:49:52,577 - UTComparisonTest - INFO - Output directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/links_awakening_dx\n2025-12-02 19:49:52,578 - UTComparisonTest - INFO - Running: python Generate.py --weights_file_path /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 1\n2025-12-02 19:49:59,577 - UTComparisonTest - INFO - Generation completed successfully\n2025-12-02 19:49:59,577 - UTComparisonTest - ERROR - Generation failed: Expected game file not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/links_awakening_dx/AP_14089154938208861744/AP_14089154938208861744.archipelago",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Links Awakening DX",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Lufia II Ancient Cave.yaml": {
+      "timestamp": "2025-12-02T19:51:46.871551",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 5,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "4.11",
+        "lowest_mismatch_count": 5,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 11,
+            "spheres_mismatched": 5
+          }
+        ],
+        "total_spheres": 16
+      },
+      "world_info": {
+        "game_name_from_yaml": "Lufia II Ancient Cave",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Mario & Luigi Superstar Saga.yaml": {
+      "timestamp": "2025-12-02T19:52:39.575154",
+      "ut_comparison": {
+        "any_passed": true,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": "7.3",
+        "last_sphere_index": "7.3",
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": "7.3",
+        "num_runs": 1,
+        "passed": true,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": "7.3",
+            "passed": true,
+            "spheres_matched": 39,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 39
+      },
+      "world_info": {
+        "game_name_from_yaml": "Mario & Luigi Superstar Saga",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "MathProof2p2e4.yaml": {
+      "timestamp": "2025-12-02T19:51:35.306512",
+      "ut_comparison": {
+        "any_passed": true,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": "4.1",
+        "last_sphere_index": "4.1",
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": "4.1",
+        "num_runs": 1,
+        "passed": true,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": "4.1",
+            "passed": true,
+            "spheres_matched": 12,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 12
+      },
+      "world_info": {
+        "game_name_from_yaml": "MathProof2p2e4",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Mega Man 2.yaml": {
+      "timestamp": "2025-12-02T19:51:27.786435",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 8,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "9.1",
+        "lowest_mismatch_count": 8,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 17,
+            "spheres_mismatched": 8
+          }
+        ],
+        "total_spheres": 25
+      },
+      "world_info": {
+        "game_name_from_yaml": "Mega Man 2",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "MegaMan Battle Network 3.yaml": {
+      "timestamp": "2025-12-02T19:53:32.099702",
+      "ut_comparison": {
+        "any_passed": true,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": "6.1",
+        "last_sphere_index": "6.1",
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": "6.1",
+        "num_runs": 1,
+        "passed": true,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": "6.1",
+            "passed": true,
+            "spheres_matched": 44,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 44
+      },
+      "world_info": {
+        "game_name_from_yaml": "MegaMan Battle Network 3",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Meritous.yaml": {
+      "timestamp": "2025-12-02T19:54:22.161804",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 6,
+        "highest_sphere_before_mismatch": "0.1",
+        "last_sphere_index": "7.2",
+        "lowest_mismatch_count": 6,
+        "lowest_sphere_before_mismatch": "0.1",
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0.2",
+            "last_sphere_before_first_mismatch": "0.1",
+            "passed": false,
+            "spheres_matched": 9,
+            "spheres_mismatched": 6
+          }
+        ],
+        "total_spheres": 15
+      },
+      "world_info": {
+        "game_name_from_yaml": "Meritous",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Metamath.yaml": {
+      "timestamp": "2025-12-02T19:54:35.399505",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 1,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "3.1",
+        "lowest_mismatch_count": 1,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 9,
+            "spheres_mismatched": 1
+          }
+        ],
+        "total_spheres": 10
+      },
+      "world_info": {
+        "game_name_from_yaml": "Metamath",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Muse Dash.yaml": {
+      "timestamp": "2025-12-02T19:52:50.328937",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 22,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "8.1",
+        "lowest_mismatch_count": 22,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 28,
+            "spheres_mismatched": 22
+          }
+        ],
+        "total_spheres": 50
+      },
+      "world_info": {
+        "game_name_from_yaml": "Muse Dash",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Noita.yaml": {
+      "timestamp": "2025-12-02T19:50:17.435885",
+      "ut_comparison": {
+        "any_passed": true,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": "0.15",
+        "last_sphere_index": "0.15",
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": "0.15",
+        "num_runs": 1,
+        "passed": true,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": "0.15",
+            "passed": true,
+            "spheres_matched": 16,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 16
+      },
+      "world_info": {
+        "game_name_from_yaml": "Noita",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Old School Runescape.yaml": {
+      "timestamp": "2025-12-02T19:51:09.980848",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 13,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "7.5",
+        "lowest_mismatch_count": 13,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 50,
+            "spheres_mismatched": 13
+          }
+        ],
+        "total_spheres": 63
+      },
+      "world_info": {
+        "game_name_from_yaml": "Old School Runescape",
+        "has_re_gen_passthrough": true
+      }
+    },
+    "Overcooked! 2.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: ...[Driver] Starting: /home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/overcooked2/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Overcooked! 2\n2025-12-02 19:53:57,479 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:53:57,479 - UTComparisonTest - INFO - Terminating process 3693\n2025-12-02 19:53:57,486 - UTComparisonTest - INFO - Terminating process 3700\n2025-12-02 19:53:57,502 - UTComparisonTest - INFO - Terminating process 3706\n2025-12-02 19:53:57,518 - UTComparisonTest - INFO - Removed Overcooked! 2.yaml from Players/\n2025-12-02 19:53:57,518 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:53:57,518 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:53:57,518 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:53:57,518 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:53:57,518 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:53:57,518 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:53:57,518 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:53:57,518 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:53:57,518 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed"
+      ],
+      "timestamp": "2025-12-02T19:53:57.538560",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: ...[Driver] Starting: /home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/overcooked2/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Overcooked! 2\n2025-12-02 19:53:57,479 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:53:57,479 - UTComparisonTest - INFO - Terminating process 3693\n2025-12-02 19:53:57,486 - UTComparisonTest - INFO - Terminating process 3700\n2025-12-02 19:53:57,502 - UTComparisonTest - INFO - Terminating process 3706\n2025-12-02 19:53:57,518 - UTComparisonTest - INFO - Removed Overcooked! 2.yaml from Players/\n2025-12-02 19:53:57,518 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:53:57,518 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:53:57,518 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:53:57,518 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:53:57,518 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:53:57,518 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:53:57,518 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:53:57,518 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:53:57,518 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Overcooked! 2",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Paint.yaml": {
+      "timestamp": "2025-12-02T19:53:19.270546",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 1,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "12.1",
+        "lowest_mismatch_count": 1,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 26,
+            "spheres_mismatched": 1
+          }
+        ],
+        "total_spheres": 27
+      },
+      "world_info": {
+        "game_name_from_yaml": "Paint",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Pokemon Emerald.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: ... Starting: /home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/pokemon_emerald/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Pokemon Emerald\n2025-12-02 19:53:47,844 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:53:47,844 - UTComparisonTest - INFO - Terminating process 3682\n2025-12-02 19:53:47,852 - UTComparisonTest - INFO - Terminating process 3690\n2025-12-02 19:53:47,867 - UTComparisonTest - INFO - Terminating process 3696\n2025-12-02 19:53:47,883 - UTComparisonTest - INFO - Removed Pokemon Emerald.yaml from Players/\n2025-12-02 19:53:47,883 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:53:47,883 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:53:47,883 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:53:47,883 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:53:47,883 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:53:47,883 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:53:47,883 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:53:47,883 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:53:47,883 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed"
+      ],
+      "timestamp": "2025-12-02T19:53:47.906961",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: ... Starting: /home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/pokemon_emerald/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Pokemon Emerald\n2025-12-02 19:53:47,844 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:53:47,844 - UTComparisonTest - INFO - Terminating process 3682\n2025-12-02 19:53:47,852 - UTComparisonTest - INFO - Terminating process 3690\n2025-12-02 19:53:47,867 - UTComparisonTest - INFO - Terminating process 3696\n2025-12-02 19:53:47,883 - UTComparisonTest - INFO - Removed Pokemon Emerald.yaml from Players/\n2025-12-02 19:53:47,883 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:53:47,883 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:53:47,883 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:53:47,883 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:53:47,883 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:53:47,883 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:53:47,883 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:53:47,883 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:53:47,883 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Pokemon Emerald",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Pokemon Red and Blue.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: ...ting: /home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Pokemon Red and Blue\n2025-12-02 19:53:47,785 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:53:47,785 - UTComparisonTest - INFO - Terminating process 3666\n2025-12-02 19:53:47,792 - UTComparisonTest - INFO - Terminating process 3673\n2025-12-02 19:53:47,808 - UTComparisonTest - INFO - Terminating process 3682\n2025-12-02 19:53:47,824 - UTComparisonTest - INFO - Removed Pokemon Red and Blue.yaml from Players/\n2025-12-02 19:53:47,824 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:53:47,824 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:53:47,824 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:53:47,824 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:53:47,824 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:53:47,824 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:53:47,824 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:53:47,824 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:53:47,824 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed"
+      ],
+      "timestamp": "2025-12-02T19:53:47.838550",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: ...ting: /home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Pokemon Red and Blue\n2025-12-02 19:53:47,785 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:53:47,785 - UTComparisonTest - INFO - Terminating process 3666\n2025-12-02 19:53:47,792 - UTComparisonTest - INFO - Terminating process 3673\n2025-12-02 19:53:47,808 - UTComparisonTest - INFO - Terminating process 3682\n2025-12-02 19:53:47,824 - UTComparisonTest - INFO - Removed Pokemon Red and Blue.yaml from Players/\n2025-12-02 19:53:47,824 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:53:47,824 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:53:47,824 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:53:47,824 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:53:47,824 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:53:47,824 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:53:47,824 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:53:47,824 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:53:47,824 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Pokemon Red and Blue",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Raft.yaml": {
+      "timestamp": "2025-12-02T19:54:20.939586",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 18,
+        "highest_sphere_before_mismatch": "0",
+        "last_sphere_index": "11.1",
+        "lowest_mismatch_count": 18,
+        "lowest_sphere_before_mismatch": "0",
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0.1",
+            "last_sphere_before_first_mismatch": "0",
+            "passed": false,
+            "spheres_matched": 20,
+            "spheres_mismatched": 18
+          }
+        ],
+        "total_spheres": 38
+      },
+      "world_info": {
+        "game_name_from_yaml": "Raft",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Risk of Rain 2.yaml": {
+      "timestamp": "2025-12-02T19:55:06.008084",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 1,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "8.3",
+        "lowest_mismatch_count": 1,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 31,
+            "spheres_mismatched": 1
+          }
+        ],
+        "total_spheres": 32
+      },
+      "world_info": {
+        "game_name_from_yaml": "Risk of Rain 2",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "SMZ3.yaml": {
+      "timestamp": "2025-12-02T19:56:32.074423",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 25,
+        "highest_sphere_before_mismatch": "0",
+        "last_sphere_index": "16.2",
+        "lowest_mismatch_count": 25,
+        "lowest_sphere_before_mismatch": "0",
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0.1",
+            "last_sphere_before_first_mismatch": "0",
+            "passed": false,
+            "spheres_matched": 95,
+            "spheres_mismatched": 25
+          }
+        ],
+        "total_spheres": 120
+      },
+      "world_info": {
+        "game_name_from_yaml": "SMZ3",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Saving Princess.yaml": {
+      "timestamp": "2025-12-02T19:53:23.599914",
+      "ut_comparison": {
+        "any_passed": true,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": "5.1",
+        "last_sphere_index": "5.1",
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": "5.1",
+        "num_runs": 1,
+        "passed": true,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": "5.1",
+            "passed": true,
+            "spheres_matched": 19,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 19
+      },
+      "world_info": {
+        "game_name_from_yaml": "Saving Princess",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Secret of Evermore.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: ...12-02 19:50:17,559 - UTComparisonTest - INFO - Detected game name from YAML: Secret of Evermore\n2025-12-02 19:50:17,567 - UTComparisonTest - INFO - Using preset directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/secret_of_evermore\n2025-12-02 19:50:17,567 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:50:17,568 - UTComparisonTest - INFO - Step 0: Running game generation\n2025-12-02 19:50:17,568 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:50:17,568 - UTComparisonTest - INFO - YAML file: /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Secret of Evermore.yaml\n2025-12-02 19:50:17,568 - UTComparisonTest - INFO - Seed: 1 -> AP_14089154938208861744\n2025-12-02 19:50:17,568 - UTComparisonTest - INFO - Output directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/secret_of_evermore\n2025-12-02 19:50:17,568 - UTComparisonTest - INFO - Running: python Generate.py --weights_file_path /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Secret of Evermore.yaml --multi 1 --seed 1\n2025-12-02 19:50:21,975 - UTComparisonTest - INFO - Generation completed successfully\n2025-12-02 19:50:21,975 - UTComparisonTest - ERROR - Generation failed: Expected game file not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/secret_of_evermore/AP_14089154938208861744/AP_14089154938208861744.archipelago"
+      ],
+      "timestamp": "2025-12-02T19:50:21.998393",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: ...12-02 19:50:17,559 - UTComparisonTest - INFO - Detected game name from YAML: Secret of Evermore\n2025-12-02 19:50:17,567 - UTComparisonTest - INFO - Using preset directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/secret_of_evermore\n2025-12-02 19:50:17,567 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:50:17,568 - UTComparisonTest - INFO - Step 0: Running game generation\n2025-12-02 19:50:17,568 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:50:17,568 - UTComparisonTest - INFO - YAML file: /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Secret of Evermore.yaml\n2025-12-02 19:50:17,568 - UTComparisonTest - INFO - Seed: 1 -> AP_14089154938208861744\n2025-12-02 19:50:17,568 - UTComparisonTest - INFO - Output directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/secret_of_evermore\n2025-12-02 19:50:17,568 - UTComparisonTest - INFO - Running: python Generate.py --weights_file_path /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Secret of Evermore.yaml --multi 1 --seed 1\n2025-12-02 19:50:21,975 - UTComparisonTest - INFO - Generation completed successfully\n2025-12-02 19:50:21,975 - UTComparisonTest - ERROR - Generation failed: Expected game file not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/secret_of_evermore/AP_14089154938208861744/AP_14089154938208861744.archipelago",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Secret of Evermore",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Shivers.yaml": {
+      "timestamp": "2025-12-02T19:52:26.882229",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 22,
+        "highest_sphere_before_mismatch": "0.4",
+        "last_sphere_index": "17.1",
+        "lowest_mismatch_count": 22,
+        "lowest_sphere_before_mismatch": "0.4",
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0.5",
+            "last_sphere_before_first_mismatch": "0.4",
+            "passed": false,
+            "spheres_matched": 55,
+            "spheres_mismatched": 22
+          }
+        ],
+        "total_spheres": 77
+      },
+      "world_info": {
+        "game_name_from_yaml": "Shivers",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Sonic Adventure 2 Battle.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: ...t - INFO - Detected game name from YAML: Sonic Adventure 2 Battle\n2025-12-02 19:53:57,729 - UTComparisonTest - INFO - Using preset directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sonic_adventure_2_battle\n2025-12-02 19:53:57,729 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:53:57,729 - UTComparisonTest - INFO - Step 0: Running game generation\n2025-12-02 19:53:57,729 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:53:57,729 - UTComparisonTest - INFO - YAML file: /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Sonic Adventure 2 Battle.yaml\n2025-12-02 19:53:57,729 - UTComparisonTest - INFO - Seed: 1 -> AP_14089154938208861744\n2025-12-02 19:53:57,729 - UTComparisonTest - INFO - Output directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sonic_adventure_2_battle\n2025-12-02 19:53:57,730 - UTComparisonTest - INFO - Running: python Generate.py --weights_file_path /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Sonic Adventure 2 Battle.yaml --multi 1 --seed 1\n2025-12-02 19:54:01,021 - UTComparisonTest - INFO - Generation completed successfully\n2025-12-02 19:54:01,021 - UTComparisonTest - ERROR - Generation failed: Expected game file not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sonic_adventure_2_battle/AP_14089154938208861744/AP_14089154938208861744.archipelago"
+      ],
+      "timestamp": "2025-12-02T19:54:01.044412",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: ...t - INFO - Detected game name from YAML: Sonic Adventure 2 Battle\n2025-12-02 19:53:57,729 - UTComparisonTest - INFO - Using preset directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sonic_adventure_2_battle\n2025-12-02 19:53:57,729 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:53:57,729 - UTComparisonTest - INFO - Step 0: Running game generation\n2025-12-02 19:53:57,729 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:53:57,729 - UTComparisonTest - INFO - YAML file: /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Sonic Adventure 2 Battle.yaml\n2025-12-02 19:53:57,729 - UTComparisonTest - INFO - Seed: 1 -> AP_14089154938208861744\n2025-12-02 19:53:57,729 - UTComparisonTest - INFO - Output directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sonic_adventure_2_battle\n2025-12-02 19:53:57,730 - UTComparisonTest - INFO - Running: python Generate.py --weights_file_path /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Sonic Adventure 2 Battle.yaml --multi 1 --seed 1\n2025-12-02 19:54:01,021 - UTComparisonTest - INFO - Generation completed successfully\n2025-12-02 19:54:01,021 - UTComparisonTest - ERROR - Generation failed: Expected game file not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sonic_adventure_2_battle/AP_14089154938208861744/AP_14089154938208861744.archipelago",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Sonic Adventure 2 Battle",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Starcraft 2.yaml": {
+      "timestamp": "2025-12-02T19:55:26.680666",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 23,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "15.5",
+        "lowest_mismatch_count": 23,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 112,
+            "spheres_mismatched": 23
+          }
+        ],
+        "total_spheres": 135
+      },
+      "world_info": {
+        "game_name_from_yaml": "Starcraft 2",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Stardew Valley.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: ...er] Starting: /home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/stardew_valley/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Stardew Valley\n2025-12-02 19:56:01,895 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:56:01,895 - UTComparisonTest - INFO - Terminating process 3726\n2025-12-02 19:56:01,902 - UTComparisonTest - INFO - Terminating process 3733\n2025-12-02 19:56:01,918 - UTComparisonTest - INFO - Terminating process 3740\n2025-12-02 19:56:01,934 - UTComparisonTest - INFO - Removed Stardew Valley.yaml from Players/\n2025-12-02 19:56:01,934 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:56:01,934 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:56:01,934 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:56:01,934 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:56:01,934 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:56:01,934 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:56:01,934 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:56:01,934 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:56:01,934 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed"
+      ],
+      "timestamp": "2025-12-02T19:56:01.956420",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: ...er] Starting: /home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/stardew_valley/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Stardew Valley\n2025-12-02 19:56:01,895 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:56:01,895 - UTComparisonTest - INFO - Terminating process 3726\n2025-12-02 19:56:01,902 - UTComparisonTest - INFO - Terminating process 3733\n2025-12-02 19:56:01,918 - UTComparisonTest - INFO - Terminating process 3740\n2025-12-02 19:56:01,934 - UTComparisonTest - INFO - Removed Stardew Valley.yaml from Players/\n2025-12-02 19:56:01,934 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:56:01,934 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:56:01,934 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:56:01,934 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:56:01,934 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:56:01,934 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:56:01,934 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:56:01,934 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:56:01,934 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Stardew Valley",
+        "has_re_gen_passthrough": true
+      }
+    },
+    "Subnautica.yaml": {
+      "timestamp": "2025-12-02T19:55:05.684432",
+      "ut_comparison": {
+        "any_passed": true,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": "6.1",
+        "last_sphere_index": "6.1",
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": "6.1",
+        "num_runs": 1,
+        "passed": true,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": "6.1",
+            "passed": true,
+            "spheres_matched": 75,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 75
+      },
+      "world_info": {
+        "game_name_from_yaml": "Subnautica",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Super Mario 64.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: 2025-12-02 19:54:21,061 - UTComparisonTest - INFO - Detected game name from YAML: Super Mario 64\n2025-12-02 19:54:21,069 - UTComparisonTest - INFO - Using preset directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/super_mario_64\n2025-12-02 19:54:21,069 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:54:21,069 - UTComparisonTest - INFO - Step 0: Running game generation\n2025-12-02 19:54:21,069 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:54:21,069 - UTComparisonTest - INFO - YAML file: /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Super Mario 64.yaml\n2025-12-02 19:54:21,069 - UTComparisonTest - INFO - Seed: 1 -> AP_14089154938208861744\n2025-12-02 19:54:21,069 - UTComparisonTest - INFO - Output directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/super_mario_64\n2025-12-02 19:54:21,069 - UTComparisonTest - INFO - Running: python Generate.py --weights_file_path /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Super Mario 64.yaml --multi 1 --seed 1\n2025-12-02 19:54:24,145 - UTComparisonTest - INFO - Generation completed successfully\n2025-12-02 19:54:24,145 - UTComparisonTest - ERROR - Generation failed: Expected game file not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/super_mario_64/AP_14089154938208861744/AP_14089154938208861744.archipelago"
+      ],
+      "timestamp": "2025-12-02T19:54:24.168182",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: 2025-12-02 19:54:21,061 - UTComparisonTest - INFO - Detected game name from YAML: Super Mario 64\n2025-12-02 19:54:21,069 - UTComparisonTest - INFO - Using preset directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/super_mario_64\n2025-12-02 19:54:21,069 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:54:21,069 - UTComparisonTest - INFO - Step 0: Running game generation\n2025-12-02 19:54:21,069 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:54:21,069 - UTComparisonTest - INFO - YAML file: /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Super Mario 64.yaml\n2025-12-02 19:54:21,069 - UTComparisonTest - INFO - Seed: 1 -> AP_14089154938208861744\n2025-12-02 19:54:21,069 - UTComparisonTest - INFO - Output directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/super_mario_64\n2025-12-02 19:54:21,069 - UTComparisonTest - INFO - Running: python Generate.py --weights_file_path /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Super Mario 64.yaml --multi 1 --seed 1\n2025-12-02 19:54:24,145 - UTComparisonTest - INFO - Generation completed successfully\n2025-12-02 19:54:24,145 - UTComparisonTest - ERROR - Generation failed: Expected game file not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/super_mario_64/AP_14089154938208861744/AP_14089154938208861744.archipelago",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Super Mario 64",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Super Mario Land 2.yaml": {
+      "timestamp": "2025-12-02T19:55:53.565067",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 3,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "10.1",
+        "lowest_mismatch_count": 3,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 33,
+            "spheres_mismatched": 3
+          }
+        ],
+        "total_spheres": 36
+      },
+      "world_info": {
+        "game_name_from_yaml": "Super Mario Land 2",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Super Mario World.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: 2025-12-02 19:56:32,203 - UTComparisonTest - INFO - Detected game name from YAML: Super Mario World\n2025-12-02 19:56:32,211 - UTComparisonTest - INFO - Using preset directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/super_mario_world\n2025-12-02 19:56:32,211 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:56:32,211 - UTComparisonTest - INFO - Step 0: Running game generation\n2025-12-02 19:56:32,211 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:56:32,211 - UTComparisonTest - INFO - YAML file: /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Super Mario World.yaml\n2025-12-02 19:56:32,211 - UTComparisonTest - INFO - Seed: 1 -> AP_14089154938208861744\n2025-12-02 19:56:32,211 - UTComparisonTest - INFO - Output directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/super_mario_world\n2025-12-02 19:56:32,211 - UTComparisonTest - INFO - Running: python Generate.py --weights_file_path /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Super Mario World.yaml --multi 1 --seed 1\n2025-12-02 19:56:36,097 - UTComparisonTest - INFO - Generation completed successfully\n2025-12-02 19:56:36,098 - UTComparisonTest - ERROR - Generation failed: Expected game file not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/super_mario_world/AP_14089154938208861744/AP_14089154938208861744.archipelago"
+      ],
+      "timestamp": "2025-12-02T19:56:36.119231",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: 2025-12-02 19:56:32,203 - UTComparisonTest - INFO - Detected game name from YAML: Super Mario World\n2025-12-02 19:56:32,211 - UTComparisonTest - INFO - Using preset directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/super_mario_world\n2025-12-02 19:56:32,211 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:56:32,211 - UTComparisonTest - INFO - Step 0: Running game generation\n2025-12-02 19:56:32,211 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:56:32,211 - UTComparisonTest - INFO - YAML file: /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Super Mario World.yaml\n2025-12-02 19:56:32,211 - UTComparisonTest - INFO - Seed: 1 -> AP_14089154938208861744\n2025-12-02 19:56:32,211 - UTComparisonTest - INFO - Output directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/super_mario_world\n2025-12-02 19:56:32,211 - UTComparisonTest - INFO - Running: python Generate.py --weights_file_path /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Super Mario World.yaml --multi 1 --seed 1\n2025-12-02 19:56:36,097 - UTComparisonTest - INFO - Generation completed successfully\n2025-12-02 19:56:36,098 - UTComparisonTest - ERROR - Generation failed: Expected game file not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/super_mario_world/AP_14089154938208861744/AP_14089154938208861744.archipelago",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Super Mario World",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Super Metroid.yaml": {
+      "timestamp": "2025-12-02T19:54:31.532498",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 10,
+        "highest_sphere_before_mismatch": "2.1",
+        "last_sphere_index": "8.3",
+        "lowest_mismatch_count": 10,
+        "lowest_sphere_before_mismatch": "2.1",
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "3.1",
+            "last_sphere_before_first_mismatch": "2.1",
+            "passed": false,
+            "spheres_matched": 42,
+            "spheres_mismatched": 10
+          }
+        ],
+        "total_spheres": 52
+      },
+      "world_info": {
+        "game_name_from_yaml": "Super Metroid",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "TUNIC.yaml": {
+      "timestamp": "2025-12-02T19:51:45.582292",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 12,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "5.1",
+        "lowest_mismatch_count": 12,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 68,
+            "spheres_mismatched": 12
+          }
+        ],
+        "total_spheres": 80
+      },
+      "world_info": {
+        "game_name_from_yaml": "TUNIC",
+        "has_re_gen_passthrough": true
+      }
+    },
+    "Terraria.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: ...est - INFO - [Driver] Starting: /home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/terraria/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Terraria\n2025-12-02 19:54:37,444 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:54:37,445 - UTComparisonTest - INFO - Terminating process 3741\n2025-12-02 19:54:37,452 - UTComparisonTest - INFO - Terminating process 3749\n2025-12-02 19:54:37,467 - UTComparisonTest - INFO - Terminating process 3755\n2025-12-02 19:54:37,483 - UTComparisonTest - INFO - Removed Terraria.yaml from Players/\n2025-12-02 19:54:37,483 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:54:37,483 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:54:37,483 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:54:37,483 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:54:37,483 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:54:37,483 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:54:37,483 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:54:37,483 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:54:37,483 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed"
+      ],
+      "timestamp": "2025-12-02T19:54:37.505465",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: ...est - INFO - [Driver] Starting: /home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/terraria/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Terraria\n2025-12-02 19:54:37,444 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:54:37,445 - UTComparisonTest - INFO - Terminating process 3741\n2025-12-02 19:54:37,452 - UTComparisonTest - INFO - Terminating process 3749\n2025-12-02 19:54:37,467 - UTComparisonTest - INFO - Terminating process 3755\n2025-12-02 19:54:37,483 - UTComparisonTest - INFO - Removed Terraria.yaml from Players/\n2025-12-02 19:54:37,483 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:54:37,483 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:54:37,483 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:54:37,483 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:54:37,483 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:54:37,483 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:54:37,483 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:54:37,483 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:54:37,483 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Terraria",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "The Legend of Zelda.yaml": {
+      "timestamp": "2025-12-02T19:55:01.313043",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 14,
+        "highest_sphere_before_mismatch": "0",
+        "last_sphere_index": "10.1",
+        "lowest_mismatch_count": 14,
+        "lowest_sphere_before_mismatch": "0",
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0.1",
+            "last_sphere_before_first_mismatch": "0",
+            "passed": false,
+            "spheres_matched": 38,
+            "spheres_mismatched": 14
+          }
+        ],
+        "total_spheres": 52
+      },
+      "world_info": {
+        "game_name_from_yaml": "The Legend of Zelda",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "The Messenger.yaml": {
+      "timestamp": "2025-12-02T19:56:42.349172",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 36,
+        "highest_sphere_before_mismatch": "0.2",
+        "last_sphere_index": "6.3",
+        "lowest_mismatch_count": 36,
+        "lowest_sphere_before_mismatch": "0.2",
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0.3",
+            "last_sphere_before_first_mismatch": "0.2",
+            "passed": false,
+            "spheres_matched": 36,
+            "spheres_mismatched": 36
+          }
+        ],
+        "total_spheres": 72
+      },
+      "world_info": {
+        "game_name_from_yaml": "The Messenger",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "The Wind Waker.yaml": {
+      "timestamp": "2025-12-02T19:57:15.205751",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 1,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "18.1",
+        "lowest_mismatch_count": 1,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 66,
+            "spheres_mismatched": 1
+          }
+        ],
+        "total_spheres": 67
+      },
+      "world_info": {
+        "game_name_from_yaml": "The Wind Waker",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "The Witness.yaml": {
+      "timestamp": "2025-12-02T19:55:51.687624",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 3,
+        "highest_sphere_before_mismatch": "6.3",
+        "last_sphere_index": "9.1",
+        "lowest_mismatch_count": 3,
+        "lowest_sphere_before_mismatch": "6.3",
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "7.1",
+            "last_sphere_before_first_mismatch": "6.3",
+            "passed": false,
+            "spheres_matched": 28,
+            "spheres_mismatched": 3
+          }
+        ],
+        "total_spheres": 31
+      },
+      "world_info": {
+        "game_name_from_yaml": "The Witness",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Timespinner.yaml": {
+      "timestamp": "2025-12-02T19:55:08.154883",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 3,
+        "highest_sphere_before_mismatch": "4.7",
+        "last_sphere_index": "7.1",
+        "lowest_mismatch_count": 3,
+        "lowest_sphere_before_mismatch": "4.7",
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "4.8",
+            "last_sphere_before_first_mismatch": "4.7",
+            "passed": false,
+            "spheres_matched": 29,
+            "spheres_mismatched": 3
+          }
+        ],
+        "total_spheres": 32
+      },
+      "world_info": {
+        "game_name_from_yaml": "Timespinner",
+        "has_re_gen_passthrough": true
+      }
+    },
+    "Undertale.yaml": {
+      "timestamp": "2025-12-02T19:56:24.334347",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 1,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "4.3",
+        "lowest_mismatch_count": 1,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 15,
+            "spheres_mismatched": 1
+          }
+        ],
+        "total_spheres": 16
+      },
+      "world_info": {
+        "game_name_from_yaml": "Undertale",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "VVVVVV.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: 2025-12-02 19:56:36,227 - UTComparisonTest - INFO - Detected game name from YAML: VVVVVV\n2025-12-02 19:56:36,235 - UTComparisonTest - INFO - Using preset directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/vvvvvv\n2025-12-02 19:56:36,235 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:56:36,235 - UTComparisonTest - INFO - Step 0: Running game generation\n2025-12-02 19:56:36,235 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:56:36,235 - UTComparisonTest - INFO - YAML file: /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/VVVVVV.yaml\n2025-12-02 19:56:36,235 - UTComparisonTest - INFO - Seed: 1 -> AP_14089154938208861744\n2025-12-02 19:56:36,235 - UTComparisonTest - INFO - Output directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/vvvvvv\n2025-12-02 19:56:36,235 - UTComparisonTest - INFO - Running: python Generate.py --weights_file_path /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/VVVVVV.yaml --multi 1 --seed 1\n2025-12-02 19:56:38,917 - UTComparisonTest - INFO - Generation completed successfully\n2025-12-02 19:56:38,917 - UTComparisonTest - ERROR - Generation failed: Expected game file not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/vvvvvv/AP_14089154938208861744/AP_14089154938208861744.archipelago"
+      ],
+      "timestamp": "2025-12-02T19:56:38.940172",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: 2025-12-02 19:56:36,227 - UTComparisonTest - INFO - Detected game name from YAML: VVVVVV\n2025-12-02 19:56:36,235 - UTComparisonTest - INFO - Using preset directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/vvvvvv\n2025-12-02 19:56:36,235 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:56:36,235 - UTComparisonTest - INFO - Step 0: Running game generation\n2025-12-02 19:56:36,235 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:56:36,235 - UTComparisonTest - INFO - YAML file: /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/VVVVVV.yaml\n2025-12-02 19:56:36,235 - UTComparisonTest - INFO - Seed: 1 -> AP_14089154938208861744\n2025-12-02 19:56:36,235 - UTComparisonTest - INFO - Output directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/vvvvvv\n2025-12-02 19:56:36,235 - UTComparisonTest - INFO - Running: python Generate.py --weights_file_path /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/VVVVVV.yaml --multi 1 --seed 1\n2025-12-02 19:56:38,917 - UTComparisonTest - INFO - Generation completed successfully\n2025-12-02 19:56:38,917 - UTComparisonTest - ERROR - Generation failed: Expected game file not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/vvvvvv/AP_14089154938208861744/AP_14089154938208861744.archipelago",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "VVVVVV",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Wargroove.yaml": {
+      "timestamp": "2025-12-02T19:55:06.618211",
+      "ut_comparison": {
+        "any_passed": true,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": "9.1",
+        "last_sphere_index": "9.1",
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": "9.1",
+        "num_runs": 1,
+        "passed": true,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": "9.1",
+            "passed": true,
+            "spheres_matched": 21,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 21
+      },
+      "world_info": {
+        "game_name_from_yaml": "Wargroove",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "WebDevJourney.yaml": {
+      "timestamp": "2025-12-02T19:52:54.016802",
+      "ut_comparison": {
+        "any_passed": true,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": "10.1",
+        "last_sphere_index": "10.1",
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": "10.1",
+        "num_runs": 1,
+        "passed": true,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": "10.1",
+            "passed": true,
+            "spheres_matched": 63,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 63
+      },
+      "world_info": {
+        "game_name_from_yaml": "WebDevJourney",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Yacht Dice.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: 2025-12-02 19:54:37,633 - UTComparisonTest - INFO - Detected game name from YAML: Yacht Dice\n2025-12-02 19:54:37,641 - UTComparisonTest - INFO - Using preset directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yacht_dice\n2025-12-02 19:54:37,641 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:54:37,641 - UTComparisonTest - INFO - Step 0: Running game generation\n2025-12-02 19:54:37,642 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:54:37,642 - UTComparisonTest - INFO - YAML file: /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Yacht Dice.yaml\n2025-12-02 19:54:37,642 - UTComparisonTest - INFO - Seed: 1 -> AP_14089154938208861744\n2025-12-02 19:54:37,642 - UTComparisonTest - INFO - Output directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yacht_dice\n2025-12-02 19:54:37,642 - UTComparisonTest - INFO - Running: python Generate.py --weights_file_path /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Yacht Dice.yaml --multi 1 --seed 1\n2025-12-02 19:54:40,876 - UTComparisonTest - INFO - Generation completed successfully\n2025-12-02 19:54:40,876 - UTComparisonTest - ERROR - Generation failed: Expected game file not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yacht_dice/AP_14089154938208861744/AP_14089154938208861744.archipelago"
+      ],
+      "timestamp": "2025-12-02T19:54:40.898471",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: 2025-12-02 19:54:37,633 - UTComparisonTest - INFO - Detected game name from YAML: Yacht Dice\n2025-12-02 19:54:37,641 - UTComparisonTest - INFO - Using preset directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yacht_dice\n2025-12-02 19:54:37,641 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:54:37,641 - UTComparisonTest - INFO - Step 0: Running game generation\n2025-12-02 19:54:37,642 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:54:37,642 - UTComparisonTest - INFO - YAML file: /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Yacht Dice.yaml\n2025-12-02 19:54:37,642 - UTComparisonTest - INFO - Seed: 1 -> AP_14089154938208861744\n2025-12-02 19:54:37,642 - UTComparisonTest - INFO - Output directory: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yacht_dice\n2025-12-02 19:54:37,642 - UTComparisonTest - INFO - Running: python Generate.py --weights_file_path /home/runner/work/Archipelago-CC/Archipelago-CC/Players/Templates/Yacht Dice.yaml --multi 1 --seed 1\n2025-12-02 19:54:40,876 - UTComparisonTest - INFO - Generation completed successfully\n2025-12-02 19:54:40,876 - UTComparisonTest - ERROR - Generation failed: Expected game file not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yacht_dice/AP_14089154938208861744/AP_14089154938208861744.archipelago",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Yacht Dice",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Yoshi's Island.yaml": {
+      "timestamp": "2025-12-02T19:56:02.443386",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 3,
+        "highest_sphere_before_mismatch": "8.3",
+        "last_sphere_index": "12.4",
+        "lowest_mismatch_count": 3,
+        "lowest_sphere_before_mismatch": "8.3",
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "9.1",
+            "last_sphere_before_first_mismatch": "8.3",
+            "passed": false,
+            "spheres_matched": 52,
+            "spheres_mismatched": 3
+          }
+        ],
+        "total_spheres": 55
+      },
+      "world_info": {
+        "game_name_from_yaml": "Yoshi's Island",
+        "has_re_gen_passthrough": false
+      }
+    },
+    "Yu-Gi-Oh! 2006.yaml": {
+      "errors": [
+        "Comparison result file not found | Exit code: 1 | stderr: ... [Driver] Starting: /home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yugioh06/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Yu-Gi-Oh! 2006\n2025-12-02 19:58:54,167 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:58:54,167 - UTComparisonTest - INFO - Terminating process 3820\n2025-12-02 19:58:54,174 - UTComparisonTest - INFO - Terminating process 3827\n2025-12-02 19:58:54,189 - UTComparisonTest - INFO - Terminating process 3834\n2025-12-02 19:58:54,205 - UTComparisonTest - INFO - Removed Yu-Gi-Oh! 2006.yaml from Players/\n2025-12-02 19:58:54,205 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:58:54,205 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:58:54,205 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:58:54,205 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:58:54,205 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:58:54,206 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:58:54,206 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:58:54,206 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:58:54,206 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed"
+      ],
+      "timestamp": "2025-12-02T19:58:54.223349",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": null,
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": "Comparison result file not found | Exit code: 1 | stderr: ... [Driver] Starting: /home/runner/work/Archipelago-CC/Archipelago-CC/.venv/bin/python scripts/test/TestDriverClient.py --connect localhost:38291 --name Player1 --sphere-log /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yugioh06/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl --game Yu-Gi-Oh! 2006\n2025-12-02 19:58:54,167 - UTComparisonTest - INFO - Cleaning up processes...\n2025-12-02 19:58:54,167 - UTComparisonTest - INFO - Terminating process 3820\n2025-12-02 19:58:54,174 - UTComparisonTest - INFO - Terminating process 3827\n2025-12-02 19:58:54,189 - UTComparisonTest - INFO - Terminating process 3834\n2025-12-02 19:58:54,205 - UTComparisonTest - INFO - Removed Yu-Gi-Oh! 2006.yaml from Players/\n2025-12-02 19:58:54,205 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:58:54,205 - UTComparisonTest - INFO - TEST RESULTS\n2025-12-02 19:58:54,205 - UTComparisonTest - INFO - ============================================================\n2025-12-02 19:58:54,205 - UTComparisonTest - INFO - Server started: True\n2025-12-02 19:58:54,205 - UTComparisonTest - INFO - UT started: True\n2025-12-02 19:58:54,206 - UTComparisonTest - INFO - Driver completed: False\n2025-12-02 19:58:54,206 - UTComparisonTest - INFO - Comparison completed: False\n2025-12-02 19:58:54,206 - UTComparisonTest - ERROR - Error: Driver timed out\n2025-12-02 19:58:54,206 - UTComparisonTest - ERROR - RESULT: FAIL - Mismatches found or test failed",
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 0,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 0
+      },
+      "world_info": {
+        "game_name_from_yaml": "Yu-Gi-Oh! 2006",
+        "has_re_gen_passthrough": true
+      }
+    },
+    "shapez.yaml": {
+      "timestamp": "2025-12-02T19:57:58.939191",
+      "ut_comparison": {
+        "any_passed": false,
+        "highest_mismatch_count": 5,
+        "highest_sphere_before_mismatch": null,
+        "last_sphere_index": "5.7",
+        "lowest_mismatch_count": 5,
+        "lowest_sphere_before_mismatch": null,
+        "num_runs": 1,
+        "passed": false,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": "0",
+            "last_sphere_before_first_mismatch": null,
+            "passed": false,
+            "spheres_matched": 26,
+            "spheres_mismatched": 5
+          }
+        ],
+        "total_spheres": 31
+      },
+      "world_info": {
+        "game_name_from_yaml": "shapez",
+        "has_re_gen_passthrough": true
+      }
+    }
+  }
+}
