@@ -141,7 +141,8 @@ jobs:
             --runs-per-template ${{ inputs.runs_per_template }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --output-file scripts/output/ut-comparison/test-results-split-${{ matrix.split_num }}.json
+            --output-file scripts/output/ut-comparison/test-results-split-${{ matrix.split_num }}.json \
+            --skip-chart
 
       - name: Upload test results for split ${{ matrix.split_num }}
         if: ${{ !cancelled() }}
