@@ -338,6 +338,7 @@ async def run_test(args) -> dict:
             "--name", args.slot_name,
             "--sphere-log-mode",
             "--sphere-log-output", str(ut_sphere_log),
+            "--seed", args.seed,  # Pass seed to ensure UT generates with same seed as Python
             "--nogui"
         ]
         ut_proc = pm.start(ut_cmd, "UT")
