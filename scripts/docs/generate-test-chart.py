@@ -18,6 +18,12 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from lib.test_utils import load_template_exclude_list
 
+# Import UT comparison functions from the dedicated script
+from generate_ut_comparison_chart import (
+    extract_ut_comparison_chart_data,
+    generate_ut_comparison_markdown
+)
+
 
 def load_test_results(results_file: str) -> Dict[str, Any]:
     """Load the template test results from JSON file."""
@@ -696,101 +702,6 @@ def generate_multitemplate_markdown(chart_data: Dict[str, List[Tuple[str, str, i
     md_content += "- **Custom GameLogic:** Whether the game has custom JavaScript game logic (✅ Yes) or uses generic logic (⚫ No)\n\n"
     md_content += "**Pass Criteria:** Generation errors = 0, Max spheres > 0, Spoiler test completed successfully\n\n"
     md_content += "**Invalid Configurations:** Templates marked as Invalid have settings that cannot be satisfied by the game's logic (FillError). These represent impossible configurations, not bugs.\n"
-
-    return md_content
-
-
-def extract_ut_comparison_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, int, int, Optional[str], bool]]:
-    """
-    Extract UT comparison test chart data from results.
-
-    Returns list of tuples: (game_name, pass_fail, total_spheres, spheres_matched,
-                             first_mismatch_sphere, has_re_gen_passthrough)
-    """
-    chart_data = []
-
-    if 'results' not in results:
-        return chart_data
-
-    for template_filename, template_data in results['results'].items():
-        world_info = template_data.get('world_info', {})
-        game_name = world_info.get('game_name_from_yaml')
-
-        if not game_name:
-            game_name = template_filename.replace('.yaml', '').replace('_', ' ').title()
-
-        has_re_gen_passthrough = world_info.get('has_re_gen_passthrough', False)
-
-        ut_comparison = template_data.get('ut_comparison', {})
-        passed = ut_comparison.get('passed', False)
-        total_spheres = ut_comparison.get('total_spheres', 0)
-        spheres_matched = ut_comparison.get('spheres_matched', 0)
-        first_mismatch_sphere = ut_comparison.get('first_mismatch_sphere')
-
-        pass_fail = 'Passed' if passed else 'Failed'
-
-        chart_data.append((
-            game_name, pass_fail, total_spheres, spheres_matched,
-            first_mismatch_sphere, has_re_gen_passthrough
-        ))
-
-    chart_data.sort(key=lambda x: x[0])
-    return chart_data
-
-
-def generate_ut_comparison_markdown(chart_data: List[Tuple[str, str, int, int, Optional[str], bool]],
-                                     metadata: Dict[str, Any]) -> str:
-    """Generate a markdown table for UT comparison test data."""
-    md_content = "# Universal Tracker Comparison Test Results\n\n"
-
-    # Add link to summary document
-    md_content += "[<- Back to Test Results Summary](./test-results-summary.md)\n\n"
-
-    if metadata:
-        md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
-        md_content += f"**Source Data Created:** {metadata.get('created', 'Unknown')}\n\n"
-        md_content += f"**Source Data Last Updated:** {metadata.get('last_updated', 'Unknown')}\n\n"
-
-    if chart_data:
-        total_games = len(chart_data)
-        passed = sum(1 for _, pf, *_ in chart_data if pf.lower() == 'passed')
-        failed = total_games - passed
-        with_passthrough = sum(1 for *_, has_pt in chart_data if has_pt)
-
-        md_content += "## Summary\n\n"
-        md_content += f"- **Total Games:** {total_games}\n"
-        md_content += f"- **Passed:** {passed} ({passed/total_games*100:.1f}%)\n"
-        md_content += f"- **Failed:** {failed} ({failed/total_games*100:.1f}%)\n"
-        md_content += f"- **With re_gen_passthrough:** {with_passthrough} ({with_passthrough/total_games*100:.1f}%)\n\n"
-
-    md_content += "## Test Results\n\n"
-    md_content += "| Game Name | Test Result | Total Spheres | Spheres Matched | First Mismatch | re_gen_passthrough |\n"
-    md_content += "|-----------|-------------|---------------|-----------------|----------------|--------------------|\n"
-
-    for (game_name, pass_fail, total_spheres, spheres_matched,
-         first_mismatch_sphere, has_re_gen_passthrough) in chart_data:
-
-        if pass_fail.lower() == 'passed':
-            result_display = "PASS"
-        else:
-            result_display = "FAIL"
-
-        first_mismatch_display = first_mismatch_sphere if first_mismatch_sphere else "-"
-        passthrough_display = "Yes" if has_re_gen_passthrough else "No"
-
-        md_content += f"| {game_name} | {result_display} | {total_spheres} | {spheres_matched} | {first_mismatch_display} | {passthrough_display} |\n"
-
-    if not chart_data:
-        md_content += "| No data available | - | - | - | - | - |\n"
-
-    md_content += "\n## Notes\n\n"
-    md_content += "- **Test Result:** PASS if UT matches Python sphere log exactly, FAIL otherwise\n"
-    md_content += "- **Total Spheres:** Total number of logical spheres in the game\n"
-    md_content += "- **Spheres Matched:** Number of spheres where UT matched Python sphere log\n"
-    md_content += "- **First Mismatch:** The sphere index where the first mismatch occurred\n"
-    md_content += "- **re_gen_passthrough:** Whether the game implements `re_gen_passthrough` for UT support\n\n"
-    md_content += "Games with `re_gen_passthrough` support pass slot data to UT for accurate regeneration.\n"
-    md_content += "Games without this support may have significant mismatches due to randomization differences.\n"
 
     return md_content
 
