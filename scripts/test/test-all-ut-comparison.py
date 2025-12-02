@@ -79,6 +79,22 @@ def get_template_files(templates_dir: Path, skip_list: List[str], include_list: 
     return yaml_files
 
 
+def parse_sphere_index(sphere_index: str) -> tuple:
+    """
+    Parse a sphere index string like "1.2" into a tuple for comparison.
+    Returns (major, minor) where both are integers.
+    """
+    if not sphere_index:
+        return (-1, -1)
+    parts = sphere_index.split('.')
+    try:
+        major = int(parts[0])
+        minor = int(parts[1]) if len(parts) > 1 else 0
+        return (major, minor)
+    except (ValueError, IndexError):
+        return (-1, -1)
+
+
 def run_ut_comparison_test(yaml_file: Path, seed: str, port: int, output_dir: Path) -> Dict:
     """
     Run UT comparison test for a single template.
@@ -91,7 +107,7 @@ def run_ut_comparison_test(yaml_file: Path, seed: str, port: int, output_dir: Pa
         - first_mismatch_sphere: str or None (sphere index where first mismatch occurred)
         - last_matched_sphere: str or None (sphere index of last successful match)
         - last_sphere_before_first_mismatch: str or None (sphere index just before first mismatch)
-        - all_sphere_indices: list of all sphere indices in order
+        - last_sphere_index: str or None (the final sphere index in the game)
         - error: str or None
     """
     result = {
@@ -102,7 +118,7 @@ def run_ut_comparison_test(yaml_file: Path, seed: str, port: int, output_dir: Pa
         "first_mismatch_sphere": None,
         "last_matched_sphere": None,
         "last_sphere_before_first_mismatch": None,
-        "all_sphere_indices": [],
+        "last_sphere_index": None,
         "error": None
     }
 
@@ -141,13 +157,14 @@ def run_ut_comparison_test(yaml_file: Path, seed: str, port: int, output_dir: Pa
 
             # Extract sphere indices and find first mismatch / last match
             spheres = comparison.get("spheres", [])
-            result["all_sphere_indices"] = [s.get("sphere_index") for s in spheres]
 
             last_matched = None
             last_sphere_before_mismatch = None
+            last_sphere_index = None
             found_first_mismatch = False
             for sphere in spheres:
                 sphere_index = sphere.get("sphere_index")
+                last_sphere_index = sphere_index  # Track the last sphere we see
                 if sphere.get("status") == "match":
                     last_matched = sphere_index
                     if not found_first_mismatch:
@@ -158,6 +175,7 @@ def run_ut_comparison_test(yaml_file: Path, seed: str, port: int, output_dir: Pa
 
             result["last_matched_sphere"] = last_matched
             result["last_sphere_before_first_mismatch"] = last_sphere_before_mismatch
+            result["last_sphere_index"] = last_sphere_index
         else:
             # Include subprocess output to show why comparison file wasn't created
             error_details = []
@@ -347,9 +365,9 @@ def main():
         all_passed = all(r["passed"] for r in run_results)
         any_error = any(r["error"] for r in run_results)
 
-        # Get total spheres (should be same across runs)
+        # Get total spheres and last sphere index (should be same across runs)
         total_spheres = run_results[0]["total_spheres"] if run_results else 0
-        all_sphere_indices = run_results[0].get("all_sphere_indices", []) if run_results else []
+        last_sphere_index = run_results[0].get("last_sphere_index") if run_results else None
 
         # Find lowest and highest mismatch counts across runs
         mismatch_counts = [r.get("spheres_mismatched", 0) for r in run_results]
@@ -359,10 +377,9 @@ def main():
         # Find lowest and highest sphere reached before first mismatch
         spheres_before_mismatch = [r.get("last_sphere_before_first_mismatch") for r in run_results
                                    if r.get("last_sphere_before_first_mismatch")]
-        if spheres_before_mismatch and all_sphere_indices:
-            # Sort by position in sphere list
-            sphere_order = {s: idx for idx, s in enumerate(all_sphere_indices)}
-            sorted_spheres = sorted(spheres_before_mismatch, key=lambda s: sphere_order.get(s, -1))
+        if spheres_before_mismatch:
+            # Sort by parsing sphere index (e.g., "1.2" -> (1, 2))
+            sorted_spheres = sorted(spheres_before_mismatch, key=parse_sphere_index)
             lowest_sphere_before_mismatch = sorted_spheres[0] if sorted_spheres else None
             highest_sphere_before_mismatch = sorted_spheres[-1] if sorted_spheres else None
         else:
@@ -382,7 +399,7 @@ def main():
                 "passed": all_passed,  # Only pass if ALL runs passed
                 "any_passed": any_passed,
                 "total_spheres": total_spheres,
-                "all_sphere_indices": all_sphere_indices,
+                "last_sphere_index": last_sphere_index,
                 "lowest_mismatch_count": lowest_mismatch_count,
                 "highest_mismatch_count": highest_mismatch_count,
                 "lowest_sphere_before_mismatch": lowest_sphere_before_mismatch,

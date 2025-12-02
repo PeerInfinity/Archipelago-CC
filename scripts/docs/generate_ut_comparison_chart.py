@@ -37,7 +37,7 @@ def extract_ut_comparison_chart_data(results: Dict[str, Any]) -> List[Dict[str, 
         - passed: bool
         - results_consistent: bool
         - total_spheres: int
-        - all_sphere_indices: list of sphere index strings
+        - last_sphere_index: str or None
         - lowest_mismatch_count: int
         - highest_mismatch_count: int
         - lowest_sphere_before_mismatch: str or None
@@ -52,7 +52,7 @@ def extract_ut_comparison_chart_data(results: Dict[str, Any]) -> List[Dict[str, 
           "ut_comparison": {
             "passed": true,
             "total_spheres": 10,
-            "all_sphere_indices": ["0", "0.1", "0.2", ...],
+            "last_sphere_index": "6.1",
             "lowest_mismatch_count": 0,
             "highest_mismatch_count": 2,
             "lowest_sphere_before_mismatch": "1.1",
@@ -88,7 +88,7 @@ def extract_ut_comparison_chart_data(results: Dict[str, Any]) -> List[Dict[str, 
         ut_comparison = template_data.get('ut_comparison', {})
         passed = ut_comparison.get('passed', False)
         total_spheres = ut_comparison.get('total_spheres', 0)
-        all_sphere_indices = ut_comparison.get('all_sphere_indices', [])
+        last_sphere_index = ut_comparison.get('last_sphere_index')
         lowest_mismatch_count = ut_comparison.get('lowest_mismatch_count', 0)
         highest_mismatch_count = ut_comparison.get('highest_mismatch_count', 0)
         lowest_sphere_before_mismatch = ut_comparison.get('lowest_sphere_before_mismatch')
@@ -100,7 +100,7 @@ def extract_ut_comparison_chart_data(results: Dict[str, Any]) -> List[Dict[str, 
             'passed': passed,
             'results_consistent': results_consistent,
             'total_spheres': total_spheres,
-            'all_sphere_indices': all_sphere_indices,
+            'last_sphere_index': last_sphere_index,
             'lowest_mismatch_count': lowest_mismatch_count,
             'highest_mismatch_count': highest_mismatch_count,
             'lowest_sphere_before_mismatch': lowest_sphere_before_mismatch,
@@ -110,11 +110,6 @@ def extract_ut_comparison_chart_data(results: Dict[str, Any]) -> List[Dict[str, 
 
     chart_data.sort(key=lambda x: x['game_name'])
     return chart_data
-
-
-def get_last_sphere_index(all_sphere_indices: List[str]) -> Optional[str]:
-    """Get the last sphere index from the list."""
-    return all_sphere_indices[-1] if all_sphere_indices else None
 
 
 def generate_ut_comparison_markdown(chart_data: List[Dict[str, Any]],
@@ -156,7 +151,7 @@ def generate_ut_comparison_markdown(chart_data: List[Dict[str, Any]],
         passed = data['passed']
         results_consistent = data['results_consistent']
         total_spheres = data['total_spheres']
-        all_sphere_indices = data['all_sphere_indices']
+        last_sphere_index = data['last_sphere_index']
         lowest_mismatch_count = data['lowest_mismatch_count']
         highest_mismatch_count = data['highest_mismatch_count']
         lowest_sphere_before_mismatch = data['lowest_sphere_before_mismatch']
@@ -170,8 +165,7 @@ def generate_ut_comparison_markdown(chart_data: List[Dict[str, Any]],
         consistent_display = "✅" if results_consistent else "❌"
 
         # Total spheres: show the last sphere index
-        last_sphere = get_last_sphere_index(all_sphere_indices)
-        total_display = last_sphere if last_sphere else str(total_spheres)
+        total_display = last_sphere_index if last_sphere_index else str(total_spheres)
 
         # Mismatch counts
         lowest_mismatch_display = str(lowest_mismatch_count)

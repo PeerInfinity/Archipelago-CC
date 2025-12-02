@@ -206,6 +206,21 @@ jobs:
 
       - name: Copy preset files from artifacts
         run: |
+          # Debug: show artifact structure
+          echo "=== Artifact directory structure ==="
+          ls -la artifacts/ || echo "No artifacts directory"
+          echo ""
+
+          # Check what's inside the first preset-files artifact
+          echo "=== First preset-files artifact contents ==="
+          ls -la artifacts/preset-files-ut-comparison-split-1/ 2>/dev/null || echo "No split-1 preset artifact"
+          echo ""
+
+          # Show deeper structure
+          echo "=== Deeper structure of first artifact ==="
+          find artifacts/preset-files-ut-comparison-split-1 -type f 2>/dev/null | head -10 || echo "No files found"
+          echo ""
+
           # Copy sphere log files from all split artifacts
           for split_dir in artifacts/preset-files-ut-comparison-split-*; do
             if [ -d "$split_dir" ]; then
@@ -216,7 +231,8 @@ jobs:
           done
 
           # List what was copied
-          echo "Sphere log files found:"
+          echo ""
+          echo "=== Sphere log files after copy ==="
           find frontend/presets -name "*_sphere_log*.jsonl" -type f 2>/dev/null | head -20 || echo "No sphere log files found"
 
       - name: Commit and push results
