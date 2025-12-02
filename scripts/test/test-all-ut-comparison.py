@@ -270,6 +270,11 @@ def main():
         default=1,
         help='Number of test runs per template for consistency checking (default: 1)'
     )
+    parser.add_argument(
+        '--skip-chart',
+        action='store_true',
+        help='Skip chart generation (use when running split jobs)'
+    )
 
     args = parser.parse_args()
 
@@ -473,16 +478,17 @@ def main():
     print(f"Errors: {error_count}")
     print(f"Results saved to: {output_path}")
 
-    # Generate the markdown chart
-    print("\nGenerating test results chart...")
-    chart_cmd = [
-        sys.executable, str(PROJECT_ROOT / "scripts/docs/generate_ut_comparison_chart.py")
-    ]
-    try:
-        subprocess.run(chart_cmd, cwd=str(PROJECT_ROOT), check=True)
-        print("Chart generated successfully")
-    except subprocess.CalledProcessError as e:
-        print(f"Failed to generate chart: {e}")
+    # Generate the markdown chart (skip when running split jobs)
+    if not args.skip_chart:
+        print("\nGenerating test results chart...")
+        chart_cmd = [
+            sys.executable, str(PROJECT_ROOT / "scripts/docs/generate_ut_comparison_chart.py")
+        ]
+        try:
+            subprocess.run(chart_cmd, cwd=str(PROJECT_ROOT), check=True)
+            print("Chart generated successfully")
+        except subprocess.CalledProcessError as e:
+            print(f"Failed to generate chart: {e}")
 
     # Only return error exit code for infrastructure errors, not test failures
     # Test failures are expected for games without re_gen_passthrough support
