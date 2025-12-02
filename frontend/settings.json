@@ -177,7 +177,7 @@
       "autoRestart": false,
       "loopModeEnabled": false
     },
-    "testSpoilers": {
+    "spoilerTest": {
       "verboseSpoilerTests": false
     }
   }

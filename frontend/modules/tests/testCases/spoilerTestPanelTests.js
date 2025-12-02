@@ -1,23 +1,23 @@
 import { registerTest } from '../testRegistry.js';
 
 // Constants for test configuration
-const PANEL_ID = 'testSpoilersPanel';
+const PANEL_ID = 'spoilerTestPanel';
 const MAX_WAIT_TIME_TEST_COMPLETION = 300000; // 5 minutes
 
 /**
- * Test case for running a full spoiler log test from the Test Spoilers panel.
+ * Test case for running a full spoiler log test from the Spoiler Test panel.
  * @param {object} testController - The test controller object provided by the test runner.
  * @returns {Promise<boolean>} - True if the test passed, false otherwise.
  */
-export async function testSpoilersPanelFullRun(testController) {
+export async function spoilerTestPanelFullRun(testController) {
   let overallResult = true;
   const testRunId = `spoilers-full-run-${Date.now()}`;
 
   try {
-    testController.log(`[${testRunId}] Starting testSpoilersPanelFullRun...`);
+    testController.log(`[${testRunId}] Starting spoilerTestPanelFullRun...`);
     testController.reportCondition('Test started', true);
 
-    // 1. Activate the Test Spoilers panel
+    // 1. Activate the Spoiler Test panel
     testController.log(`[${testRunId}] Activating ${PANEL_ID} panel...`);
     const eventBusModule = await import('../../../app/core/eventBus.js');
     const eventBus = eventBusModule.default;
@@ -26,15 +26,15 @@ export async function testSpoilersPanelFullRun(testController) {
     // Poll for panel initialization instead of arbitrary delay
     if (!(await testController.pollForCondition(
       () => {
-        const panelElement = document.querySelector('.test-spoilers-module-root');
+        const panelElement = document.querySelector('.spoiler-test-module-root');
         const isInitialized = panelElement && panelElement.querySelector('#load-suggested-spoiler-log');
         return !!isInitialized;
       },
-      'Test Spoilers panel initialization',
+      'Spoiler Test panel initialization',
       10000,
       250
     ))) {
-      throw new Error('Test Spoilers panel failed to initialize properly');
+      throw new Error('Spoiler Test panel failed to initialize properly');
     }
 
     let spoilersPanelElement = null;
@@ -42,18 +42,18 @@ export async function testSpoilersPanelFullRun(testController) {
       !(await testController.pollForCondition(
         () => {
           spoilersPanelElement = document.querySelector(
-            '.test-spoilers-module-root'
+            '.spoiler-test-module-root'
           );
           return spoilersPanelElement !== null;
         },
-        'Test Spoilers panel DOM element',
+        'Spoiler Test panel DOM element',
         5000,
         250
       ))
     ) {
-      throw new Error('Test Spoilers panel not found in DOM');
+      throw new Error('Spoiler Test panel not found in DOM');
     }
-    testController.reportCondition('Test Spoilers panel found in DOM', true);
+    testController.reportCondition('Spoiler Test panel found in DOM', true);
 
     // 2. Click the "Load Suggested Log" button
     let loadSuggestedButton = null;
@@ -87,7 +87,7 @@ export async function testSpoilersPanelFullRun(testController) {
     // Poll for log loading completion instead of arbitrary delay
     if (!(await testController.pollForCondition(
       () => {
-        const currentSpoilersPanelElement = document.querySelector('.test-spoilers-module-root');
+        const currentSpoilersPanelElement = document.querySelector('.spoiler-test-module-root');
         if (!currentSpoilersPanelElement) return false;
         
         // Check for indicators that the log has loaded
@@ -307,7 +307,7 @@ export async function testSpoilersPanelFullRun(testController) {
     }
   } catch (error) {
     testController.log(
-      `[${testRunId}] Error in testSpoilersPanelFullRun: ${
+      `[${testRunId}] Error in spoilerTestPanelFullRun: ${
         error.message
       } (Stack: ${error.stack || 'N/A'})`,
       'error'
@@ -316,7 +316,7 @@ export async function testSpoilersPanelFullRun(testController) {
     overallResult = false;
   } finally {
     testController.log(
-      `[${testRunId}] testSpoilersPanelFullRun finished. Overall Result: ${overallResult}.`
+      `[${testRunId}] spoilerTestPanelFullRun finished. Overall Result: ${overallResult}.`
     );
     await testController.completeTest(overallResult);
   }
@@ -325,11 +325,11 @@ export async function testSpoilersPanelFullRun(testController) {
 
 registerTest({
   id: 'test_spoiler_full_run',
-  name: 'Test Spoilers Panel - Full Run',
+  name: 'Spoiler Test Panel - Full Run',
   description:
-    'Activates the Test Spoilers panel, loads the suggested log, runs the full test, and reports the result.',
-  testFunction: testSpoilersPanelFullRun,
-  category: 'Test Spoilers Panel',
+    'Activates the Spoiler Test panel, loads the suggested log, runs the full test, and reports the result.',
+  testFunction: spoilerTestPanelFullRun,
+  category: 'Spoiler Test Panel',
   //enabled: false,
   //order: 1,
 });

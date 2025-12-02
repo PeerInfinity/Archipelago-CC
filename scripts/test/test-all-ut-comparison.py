@@ -139,7 +139,7 @@ def run_ut_comparison_test(yaml_file: Path, seed: str, port: int, output_dir: Pa
             cmd,
             capture_output=True,
             text=True,
-            timeout=600,  # 10 minute timeout per test
+            timeout=1500,  # 25 minute timeout per test (generation: 10min + driver: 10min + overhead)
             cwd=str(PROJECT_ROOT)
         )
 

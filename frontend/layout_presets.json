@@ -86,8 +86,8 @@
             },
             {
               "type": "component",
-              "componentType": "testSpoilersPanel",
-              "title": "Test Spoilers"
+              "componentType": "spoilerTestPanel",
+              "title": "Spoiler Test"
             },
             {
               "type": "component",

@@ -338,6 +338,7 @@ async def run_test(args) -> dict:
             "--name", args.slot_name,
             "--sphere-log-mode",
             "--sphere-log-output", str(ut_sphere_log),
+            "--seed", args.seed,  # Pass seed to ensure UT generates with same seed as Python
             "--nogui"
         ]
         ut_proc = pm.start(ut_cmd, "UT")
@@ -369,7 +370,7 @@ async def run_test(args) -> dict:
 
         # Wait for driver to complete (with timeout)
         try:
-            driver_proc.wait(timeout=120)
+            driver_proc.wait(timeout=600)
             results["driver_completed"] = driver_proc.returncode == 0
             if not results["driver_completed"]:
                 stdout, _ = driver_proc.communicate()

@@ -5,7 +5,7 @@
  * Allows step-by-step or full test execution to verify location accessibility calculations
  * match the game's actual randomization results.
  *
- * @module testSpoilers
+ * @module spoilerTest
  */
 
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
@@ -46,7 +46,7 @@ function log(level, message, ...data) {
  * to verify that state manager's accessibility calculations match spoiler log data.
  *
  * @class TestSpoilerUI
- * @memberof module:testSpoilers
+ * @memberof module:spoilerTest
  */
 export class TestSpoilerUI {
   constructor(container, componentState) {
@@ -54,7 +54,7 @@ export class TestSpoilerUI {
     this.componentState = componentState;
 
     this.initialized = false;
-    this.testSpoilersContainer = null;
+    this.spoilerTestContainer = null;
     this.currentSpoilerFile = null;
     this.currentSpoilerLogPath = null;
     this.logContainer = null;
@@ -105,7 +105,7 @@ export class TestSpoilerUI {
     // Create UI callbacks object for orchestrator
     const uiCallbacks = {
       clearContainer: () => {
-        this.testSpoilersContainer.innerHTML = '';
+        this.spoilerTestContainer.innerHTML = '';
       },
       ensureLogContainerReady: () => this.ensureLogContainerReady(),
       clearLog: () => {
@@ -157,7 +157,7 @@ export class TestSpoilerUI {
     );
 
     // Create and append root element immediately
-    this.getRootElement(); // This creates this.rootElement and sets this.testSpoilersContainer
+    this.getRootElement(); // This creates this.rootElement and sets this.spoilerTestContainer
     if (this.rootElement) {
       this.container.element.appendChild(this.rootElement);
     } else {
@@ -174,7 +174,7 @@ export class TestSpoilerUI {
 
       eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'testSpoilers');
+    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'spoilerTest');
 
     this.container.on('destroy', () => {
       this.dispose();
@@ -184,22 +184,22 @@ export class TestSpoilerUI {
   getRootElement() {
     if (!this.rootElement) {
       this.rootElement = document.createElement('div');
-      this.rootElement.className = 'test-spoilers-module-root';
-      this.testSpoilersContainer = document.createElement('div');
-      this.testSpoilersContainer.className = 'test-spoilers-container';
-      this.rootElement.appendChild(this.testSpoilersContainer);
+      this.rootElement.className = 'spoiler-test-module-root';
+      this.spoilerTestContainer = document.createElement('div');
+      this.spoilerTestContainer.className = 'spoiler-test-container';
+      this.rootElement.appendChild(this.spoilerTestContainer);
 
       // Add styles for the module
       const style = document.createElement('style');
       style.textContent = `
-        .test-spoilers-module-root {
+        .spoiler-test-module-root {
           display: flex;
           flex-direction: column;
           height: 100%;
           background-color: #2c2c2c; /* Dark theme background */
           color: #e0e0e0; /* Light text for dark theme */
         }
-        .test-spoilers-container {
+        .spoiler-test-container {
           flex-grow: 1;
           display: flex;
           flex-direction: column;
@@ -277,7 +277,7 @@ export class TestSpoilerUI {
     }
 
     // Clear container and set up basic structure initially
-    this.testSpoilersContainer.innerHTML = '';
+    this.spoilerTestContainer.innerHTML = '';
     this.ensureLogContainerReady();
 
     // Check for existing ruleset immediately on initialization
@@ -337,7 +337,7 @@ export class TestSpoilerUI {
           }
         }
       }
-      , 'testSpoilers');
+      , 'spoilerTest');
 
     if (this.rawJsonDataUnsub) this.rawJsonDataUnsub();
     this.rawJsonDataUnsub = this.eventBus.subscribe(
@@ -356,7 +356,7 @@ export class TestSpoilerUI {
           }
         }
       }
-      , 'testSpoilers');
+      , 'spoilerTest');
 
     this.initialized = true;
     this.log(
@@ -366,12 +366,12 @@ export class TestSpoilerUI {
   }
 
   async attemptAutoLoadSpoilerLog(rulesetPath) {
-    if (!this.testSpoilersContainer) return;
+    if (!this.spoilerTestContainer) return;
 
     // Handle no ruleset path case
     if (!rulesetPath) {
       logger.warn('Cannot attempt auto-load: rulesetPath is undefined or invalid');
-      this.testSpoilersContainer.innerHTML = '';
+      this.spoilerTestContainer.innerHTML = '';
       this.ensureLogContainerReady();
       this.renderManualFileSelectionView(
         'Cannot determine ruleset for auto-load. Please select a log file.'
@@ -397,7 +397,7 @@ export class TestSpoilerUI {
       logger.info(
         `Spoiler log for ${result.logPath} is already loaded and processed. Refreshing UI.`
       );
-      this.testSpoilersContainer.innerHTML = '';
+      this.spoilerTestContainer.innerHTML = '';
       this.ensureLogContainerReady();
       this.renderResultsControls();
       logger.info(`Displaying already loaded test: ${this.currentSpoilerLogPath}`);
@@ -462,7 +462,7 @@ export class TestSpoilerUI {
       );
       this.spoilerLogData = null;
       this.currentSpoilerLogPath = null;
-      this.testSpoilersContainer.innerHTML = '';
+      this.spoilerTestContainer.innerHTML = '';
       this.ensureLogContainerReady();
       this.renderManualFileSelectionView(
         `Auto-load failed for ${result.logPath}. ${error.message}. Please select a spoiler log file.`
@@ -480,7 +480,7 @@ export class TestSpoilerUI {
   renderManualFileSelectionView(
     message = 'Select a Spoiler Log File (.jsonl)'
   ) {
-    this.testSpoilersContainer.innerHTML = ''; // Clear previous content
+    this.spoilerTestContainer.innerHTML = ''; // Clear previous content
     this.ensureLogContainerReady(); // Setup basic structure including log container
 
     this.log('info', message); // Log the message to the log area
@@ -576,7 +576,7 @@ export class TestSpoilerUI {
   }
 
   renderResultsControls() {
-    // this.testSpoilersContainer.innerHTML = ''; // prepareSpoilerTest will clear the main container
+    // this.spoilerTestContainer.innerHTML = ''; // prepareSpoilerTest will clear the main container
 
     const controlsDiv = document.createElement('div');
     controlsDiv.className = 'spoiler-test-controls'; // Use a class for styling
@@ -1165,23 +1165,23 @@ export class TestSpoilerUI {
   ensureLogContainerReady() {
     // Ensures the basic DOM structure for controls and log output exists.
 
-    if (!this.testSpoilersContainer) {
+    if (!this.spoilerTestContainer) {
       console.error(
-        '[TestSpoilerUI ensureLogContainerReady] this.testSpoilersContainer is null. Cannot proceed.'
+        '[TestSpoilerUI ensureLogContainerReady] this.spoilerTestContainer is null. Cannot proceed.'
       );
       // Attempt to recover or log verbosely
       if (this.rootElement) {
         let foundContainer = this.rootElement.querySelector(
-          '.test-spoilers-container'
+          '.spoiler-test-container'
         );
         if (foundContainer) {
-          this.testSpoilersContainer = foundContainer;
+          this.spoilerTestContainer = foundContainer;
           console.warn(
-            '[TestSpoilerUI ensureLogContainerReady] Recovered testSpoilersContainer from rootElement.'
+            '[TestSpoilerUI ensureLogContainerReady] Recovered spoilerTestContainer from rootElement.'
           );
         } else {
           console.error(
-            '[TestSpoilerUI ensureLogContainerReady] Could not find .test-spoilers-container in rootElement.'
+            '[TestSpoilerUI ensureLogContainerReady] Could not find .spoiler-test-container in rootElement.'
           );
           this.rootElement.innerHTML =
             '<p>Error: UI container misconfigured.</p>'; // Fallback error message
@@ -1197,26 +1197,26 @@ export class TestSpoilerUI {
     // Create controls container if it doesn't exist
     if (
       !this.controlsContainer ||
-      !this.testSpoilersContainer.contains(this.controlsContainer)
+      !this.spoilerTestContainer.contains(this.controlsContainer)
     ) {
       this.controlsContainer = document.createElement('div');
       this.controlsContainer.id = 'spoiler-controls-container';
       this.controlsContainer.className = 'spoiler-controls-container'; // For potential specific styling
       // Prepend controls so log is at the bottom
-      this.testSpoilersContainer.insertBefore(
+      this.spoilerTestContainer.insertBefore(
         this.controlsContainer,
-        this.testSpoilersContainer.firstChild
+        this.spoilerTestContainer.firstChild
       );
     }
 
     // Create log container if it doesn't exist
     if (
       !this.logContainer ||
-      !this.testSpoilersContainer.contains(this.logContainer)
+      !this.spoilerTestContainer.contains(this.logContainer)
     ) {
       this.logContainer = document.createElement('div');
       this.logContainer.id = 'spoiler-log-output';
-      this.testSpoilersContainer.appendChild(this.logContainer); // Append log container at the end
+      this.spoilerTestContainer.appendChild(this.logContainer); // Append log container at the end
     }
   }
 }

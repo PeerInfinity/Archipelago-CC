@@ -1881,6 +1881,11 @@ async def main(args):
         ctx.sphere_log_verbose = getattr(args, 'sphere_log_verbose', False)
         logger.info(f"[UT_TEST_SYNC] Sphere log mode enabled, output: {ctx.sphere_log_output_path}")
 
+    # Set seed override for internal generation (for UT comparison testing)
+    if hasattr(args, 'seed') and args.seed is not None:
+        ctx.tracker_core.seed_override = args.seed
+        logger.info(f"[UT_TEST_SYNC] Seed override set to: {args.seed}")
+
     ctx.server_task = asyncio.create_task(server_loop(ctx), name="server loop")
     ctx.run_generator()
 
@@ -1905,6 +1910,8 @@ def launch(*args):
                         help="Path to write sphere_log_ut.jsonl (required with --sphere-log-mode)")
     parser.add_argument('--sphere-log-verbose', default=False, action='store_true',
                         help="Use verbose (full state) format instead of deltas")
+    parser.add_argument('--seed', default=None, type=int,
+                        help="Seed number to use for internal generation (for UT comparison testing)")
     parser.add_argument("url", nargs="?", help="Archipelago connection url")
     args = handle_url_arg(parser.parse_args(args))
 
