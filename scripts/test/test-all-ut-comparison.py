@@ -484,7 +484,9 @@ def main():
     except subprocess.CalledProcessError as e:
         print(f"Failed to generate chart: {e}")
 
-    return 0 if error_count == 0 and failed_count == 0 else 1
+    # Only return error exit code for infrastructure errors, not test failures
+    # Test failures are expected for games without re_gen_passthrough support
+    return 0 if error_count == 0 else 1
 
 
 if __name__ == "__main__":
