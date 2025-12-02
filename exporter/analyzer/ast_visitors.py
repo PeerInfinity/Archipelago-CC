@@ -500,7 +500,65 @@ class ASTVisitorMixin:
                                 else:
                                     return {'type': 'or', 'conditions': analyzed_items}
 
-                        # NEW: Handle simple values (strings, numbers, etc.) - expand the comprehension
+                        # NEW: Handle nested comprehensions - list of lists of callables
+                        # This pattern appears in The Witness: any(all(condition(state) for condition in sub_req) for sub_req in fully_converted_rules)
+                        # where fully_converted_rules is a list of lists of lambda functions
+                        elif all(isinstance(item, (list, tuple)) for item in resolved_value):
+                            # Check if each inner list contains callables
+                            if all(all(callable(inner_item) for inner_item in item) for item in resolved_value):
+                                logging.debug(f"any(GeneratorExp): Detected list of lists of callables, analyzing nested pattern")
+                                from .analysis import analyze_rule
+                                outer_conditions = []
+                                analysis_failed = False
+
+                                for inner_list in resolved_value:
+                                    # Analyze each callable in the inner list
+                                    inner_conditions = []
+                                    for item_func in inner_list:
+                                        try:
+                                            item_result = analyze_rule(
+                                                rule_func=item_func,
+                                                closure_vars=self.closure_vars.copy(),
+                                                seen_funcs=self.seen_funcs,
+                                                game_handler=self.game_handler,
+                                                player_context=self.player_context
+                                            )
+                                            if item_result and item_result.get('type') != 'error':
+                                                inner_conditions.append(item_result)
+                                            else:
+                                                logging.debug(f"Could not analyze item in nested list, falling back to unresolved")
+                                                analysis_failed = True
+                                                break
+                                        except Exception as e:
+                                            logging.debug(f"Error analyzing item in nested list: {e}")
+                                            analysis_failed = True
+                                            break
+
+                                    if analysis_failed:
+                                        break
+
+                                    # Combine inner conditions with 'and' (since inner is all())
+                                    if len(inner_conditions) == 0:
+                                        # Empty inner list - all() of empty is True
+                                        inner_result = {'type': 'constant', 'value': True}
+                                    elif len(inner_conditions) == 1:
+                                        inner_result = inner_conditions[0]
+                                    else:
+                                        inner_result = {'type': 'and', 'conditions': inner_conditions}
+
+                                    outer_conditions.append(inner_result)
+
+                                if not analysis_failed and outer_conditions:
+                                    # Combine outer conditions with 'or' (since outer is any())
+                                    logging.debug(f"any(GeneratorExp): Successfully analyzed nested pattern, {len(outer_conditions)} outer conditions")
+                                    if len(outer_conditions) == 0:
+                                        return {'type': 'constant', 'value': False}
+                                    elif len(outer_conditions) == 1:
+                                        return outer_conditions[0]
+                                    else:
+                                        return {'type': 'or', 'conditions': outer_conditions}
+
+                        # Handle simple values (strings, numbers, etc.) - expand the comprehension
                         else:
                             logging.debug(f"any(GeneratorExp): Iterator contains non-callable values, expanding comprehension")
                             target_name = iterator_info.get('target', {}).get('name')
