@@ -616,8 +616,8 @@ Act Completion (Train Rush)
 Act Completion (Welcome to Mafia Town)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 5
-   =>   The Big Parade -> Subcon Forest - Finale: Connection 5
+   =>   Subcon Forest -> Subcon Forest - Act 2
+   =>   Dead Bird Studio Basement -> Subcon Forest - Finale: Connection 2
    =>   Welcome to Mafia Town
 Act Completion (Your Contract has Expired)
         Menu -> Save File -> Spaceship
@@ -627,21 +627,30 @@ Act Completion (Your Contract has Expired)
    =>   Your Contract has Expired - Post Fight
 Alpine Skyline (Rift) - Page: Below Aqueduct
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 2
-   =>   Dead Bird Studio Basement -> Time Rift - Dead Bird Studio Portal - Entrance 2
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
+   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
+   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
    =>   Time Rift - Alpine Skyline
 Alpine Skyline (Rift) - Page: Lonely Birdhouse Top
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 2
-   =>   Dead Bird Studio Basement -> Time Rift - Dead Bird Studio Portal - Entrance 2
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
+   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
+   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
    =>   Time Rift - Alpine Skyline
 Alpine Skyline (Rift) - Page: Waterfall Wooden Pillar
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 2
-   =>   Dead Bird Studio Basement -> Time Rift - Dead Bird Studio Portal - Entrance 2
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
+   =>   The Golden Vault -> Mafia Town - Act 7: Connection 1
+   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
    =>   Time Rift - Alpine Skyline
 Alpine Skyline - Ember Summit
         Menu -> Save File -> Spaceship
@@ -1006,15 +1015,15 @@ Mafia Town - Yellow Sphere Building Chest
 Mafia of Cooks - Page: Below Dock
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 5
-   =>   The Big Parade -> Subcon Forest - Finale: Connection 5
+   =>   Subcon Forest -> Subcon Forest - Act 2
+   =>   Dead Bird Studio Basement -> Subcon Forest - Finale: Connection 2
    =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Mafia of Cooks - Page: Top of Boat
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 5
-   =>   The Big Parade -> Subcon Forest - Finale: Connection 5
+   =>   Subcon Forest -> Subcon Forest - Act 2
+   =>   Dead Bird Studio Basement -> Subcon Forest - Finale: Connection 2
    =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Murder on the Owl Express - Cafeteria
