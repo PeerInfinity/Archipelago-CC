@@ -58,6 +58,7 @@ class TrackerCore():
 
         self.ignored_locations: set[int] = set()
         self.missing_locations: set[int] = set()
+        self.seed_override: int | None = None  # Optional seed to use for generation (for UT comparison testing)
 
     def disconnect(self):
         self.re_gen_passthrough = None
@@ -209,6 +210,10 @@ class TrackerCore():
             if self.quit_after_update:
                 from logging import ERROR
                 args.log_level = ERROR
+
+            # Use seed_override if set (for UT comparison testing)
+            if self.seed_override is not None:
+                args.seed = self.seed_override
 
             g_args, seed = GMain(args)
             if slot_data or override_yaml_path:
