@@ -264,7 +264,7 @@ async function timerOfflineTestGanonImmediateCheck(testController) {
     const stateManager = testController.stateManager;
     const eventBus = testController.eventBus;
 
-    // Get dispatcher from window (same as testSpoilers does)
+    // Get dispatcher from window (same as spoilerTest does)
     if (!window.eventDispatcher) {
       throw new Error('Event dispatcher not available on window');
     }
@@ -425,7 +425,7 @@ async function timerOfflineTestCheckRejection(testController) {
     const stateManager = testController.stateManager;
     const eventBus = testController.eventBus;
 
-    // Get dispatcher from window (same as testSpoilers does)
+    // Get dispatcher from window (same as spoilerTest does)
     if (!window.eventDispatcher) {
       throw new Error('Event dispatcher not available on window');
     }
@@ -626,7 +626,7 @@ async function timerOfflineTestCheckRejection(testController) {
 /**
  * Timer Offline Test with Sphere Order and Accessibility Check
  *
- * This test iterates through locations in sphere order (like testSpoilers),
+ * This test iterates through locations in sphere order (like spoilerTest),
  * but only checks each location if the snapshot shows it as accessible.
  * This will help determine if the issue is:
  * - The order of checking (sphere vs staticData)
@@ -649,7 +649,7 @@ async function timerOfflineTestWithSphereOrderAndAccessibilityCheck(testControll
     const stateManager = testController.stateManager;
     const eventBus = testController.eventBus;
 
-    // Get dispatcher from window (same as testSpoilers does)
+    // Get dispatcher from window (same as spoilerTest does)
     if (!window.eventDispatcher) {
       throw new Error('Event dispatcher not available on window');
     }
@@ -733,7 +733,7 @@ async function timerOfflineTestWithSphereOrderAndAccessibilityCheck(testControll
         // Get region for the location
         const locationRegion = locationDef.parent_region || locationDef.region || null;
 
-        // Dispatch location check via event (using same API as testSpoilers)
+        // Dispatch location check via event (using same API as spoilerTest)
         testController.log(`  - Checking: ${locationName} (accessible per snapshot)`);
 
         dispatcher.publish(
@@ -850,7 +850,7 @@ async function timerOfflineTestWithSnapshotOrder(testController) {
     const stateManager = testController.stateManager;
     const eventBus = testController.eventBus;
 
-    // Get dispatcher from window (same as testSpoilers does)
+    // Get dispatcher from window (same as spoilerTest does)
     if (!window.eventDispatcher) {
       throw new Error('Event dispatcher not available on window');
     }
@@ -960,7 +960,7 @@ async function timerOfflineTestWithSnapshotOrder(testController) {
       // Get region for the location
       const locationRegion = locationToCheck.parent_region || locationToCheck.region || null;
 
-      // Dispatch location check via event (using same API as testSpoilers)
+      // Dispatch location check via event (using same API as spoilerTest)
       dispatcher.publish(
         'tests', // originModuleId
         'user:locationCheck', // eventName
@@ -1183,7 +1183,7 @@ async function timerOfflineTestWithSnapshotOrder(testController) {
 /**
  * Timer Offline Test with Sphere Order and No Auto-Collect
  *
- * This test checks locations in sphere order (like testSpoilers) but with
+ * This test checks locations in sphere order (like spoilerTest) but with
  * auto-collect events DISABLED. This tests if auto-collect events are
  * causing the accessibility mismatch between snapshots and location checks.
  */
@@ -1209,7 +1209,7 @@ async function timerOfflineTestWithSphereOrderNoAutoCollect(testController) {
     await stateManager.setAutoCollectEventsConfig(false);
     testController.reportCondition('Auto-collect events disabled', true);
 
-    // Get dispatcher from window (same as testSpoilers does)
+    // Get dispatcher from window (same as spoilerTest does)
     if (!window.eventDispatcher) {
       throw new Error('Event dispatcher not available on window');
     }
@@ -1272,7 +1272,7 @@ async function timerOfflineTestWithSphereOrderNoAutoCollect(testController) {
         // Get region for the location
         const locationRegion = locationDef.parent_region || locationDef.region || null;
 
-        // Dispatch location check via event (using same API as testSpoilers)
+        // Dispatch location check via event (using same API as spoilerTest)
         testController.log(`  - Checking: ${locationName}`);
 
         dispatcher.publish(
@@ -1373,7 +1373,7 @@ async function timerOfflineTestWithSphereOrderNoAutoCollect(testController) {
 /**
  * Timer Offline Test with Sphere Order
  *
- * This test checks locations in the same order as testSpoilers by using
+ * This test checks locations in the same order as spoilerTest by using
  * the sphereState module to iterate through spheres.
  */
 async function timerOfflineTestWithSphereOrder(testController) {
@@ -1394,7 +1394,7 @@ async function timerOfflineTestWithSphereOrder(testController) {
     const stateManager = testController.stateManager;
     const eventBus = testController.eventBus;
 
-    // Get dispatcher from window (same as testSpoilers does)
+    // Get dispatcher from window (same as spoilerTest does)
     if (!window.eventDispatcher) {
       throw new Error('Event dispatcher not available on window');
     }
@@ -1457,7 +1457,7 @@ async function timerOfflineTestWithSphereOrder(testController) {
         // Get region for the location
         const locationRegion = locationDef.parent_region || locationDef.region || null;
 
-        // Dispatch location check via event (using same API as testSpoilers)
+        // Dispatch location check via event (using same API as spoilerTest)
         testController.log(`  - Checking: ${locationName}`);
 
         dispatcher.publish(

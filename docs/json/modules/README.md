@@ -48,7 +48,7 @@ These modules each correspond to a UI panel that the user can interact with in t
 -   **[Presets](./presets.md):** Handles loading of pre-configured game files (`rules.json`).
 -   **[Regions](./regions.md):** Displays the game world organized by regions and their connections.
 -   **[Settings](./settings.md):** Provides a UI for editing application settings.
--   **[Test Spoilers](./testSpoilers.md):** The primary tool for validating game logic by replaying a game's progression against its spoiler log.
+-   **[Spoiler Test](./spoilerTest.md):** The primary tool for validating game logic by replaying a game's progression against its spoiler log.
 -   **[Tests](./tests.md):** A developer panel that provides an in-app framework for running automated feature tests and integrates with Playwright for end-to-end validation.
 -   **[Text Adventure](./textAdventure.md):** Provides a text-based interface for interacting with the game world.
 -   **[Timer Panel](./timerPanel.md):** A dedicated panel that can host the Timer UI component.

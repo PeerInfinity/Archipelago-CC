@@ -20,7 +20,7 @@
  *   - Array of event objects: [{type: 'state_update', ...}, {type: 'location_check', ...}, ...]
  *   - Each event has a 'type' property and event-specific data
  *
- * @module testSpoilers/fileLoader
+ * @module spoilerTest/fileLoader
  */
 
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
@@ -34,7 +34,7 @@ const logger = createUniversalLogger('testSpoilerUI:FileLoader');
  * Parses JSONL format where each line is a JSON event object.
  *
  * @class FileLoader
- * @memberof module:testSpoilers/fileLoader
+ * @memberof module:spoilerTest/fileLoader
  */
 export class FileLoader {
   constructor() {
