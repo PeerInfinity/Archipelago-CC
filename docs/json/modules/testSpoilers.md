@@ -12,7 +12,7 @@
 
 #### Responsibilities
 
-- **Load Spoiler Log:** Provides a UI for the user to load a spoiler log. It can automatically suggest the correct log file based on the currently active `rules.json` (e.g., suggesting `MySeed_spheres_log.jsonl` if `MySeed_rules.json` is loaded).
+- **Load Spoiler Log:** Provides a UI for the user to load a spoiler log. It can automatically suggest the correct log file based on the currently active `rules.json` (e.g., suggesting `MySeed_sphere_log.jsonl` if `MySeed_rules.json` is loaded).
 - **Parse Spoiler Spheres:** Reads the loaded spoiler log and extracts the sequence of "spheres"—groups of locations that become accessible at each stage of progression.
 - **Simulate Progression:** The core function of the module. It simulates a full playthrough by:
   1.  Starting with an empty inventory.
@@ -40,4 +40,4 @@ This module does not register any public functions.
 #### Dependencies & Interactions
 
 - **StateManager**: The `Test Spoilers` module uses the `StateManager` as its test subject. It loads a ruleset, then iteratively sends `checkLocation` commands and queries the resulting state snapshot to perform its validation. It is a key tool for verifying the integrity of the `RuleEngine` and `StateManager` against authoritative data.
-- **Spoiler Log Generation:** It depends on the generation process creating a `_spheres_log.jsonl` file alongside the `rules.json`. This file contains the ground-truth data that the module validates against.
+- **Spoiler Log Generation:** It depends on the generation process creating a `_sphere_log.jsonl` file alongside the `rules.json`. This file contains the ground-truth data that the module validates against.

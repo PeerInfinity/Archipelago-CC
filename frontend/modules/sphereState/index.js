@@ -197,7 +197,7 @@ function handleRulesLoaded(data, propagationOptions) {
   // Expected formats:
   //   Single-player: "./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json"
   //   Multiworld:    "./presets/multiworld/AP_14089154938208861744/AP_14089154938208861744_P2_rules.json"
-  // The sphere log is shared and named: AP_14089154938208861744_spheres_log.jsonl (without _P{N})
+  // The sphere log is shared and named: AP_14089154938208861744_sphere_log.jsonl (without _P{N})
   const match = sourceName.match(/presets\/([^/]+)\/([^/]+)\/\2(?:_P\d+)?_rules\.json$/);
   if (!match) {
     // If sourceName indicates data loaded from localStorage, this is expected
@@ -215,7 +215,7 @@ function handleRulesLoaded(data, propagationOptions) {
 
   log('info', `Extracted game: ${gameDir}, preset: ${presetId}`);
 
-  const sphereLogPath = `./presets/${gameDir}/${presetId}/${presetId}_spheres_log.jsonl`;
+  const sphereLogPath = `./presets/${gameDir}/${presetId}/${presetId}_sphere_log.jsonl`;
   log('info', `Attempting to auto-load sphere log from: ${sphereLogPath}`);
 
   // Load sphere log (async, but we don't await)

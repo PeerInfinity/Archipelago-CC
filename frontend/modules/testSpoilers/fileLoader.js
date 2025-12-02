@@ -6,7 +6,7 @@
  *
  * DATA FLOW:
  * Input: Spoiler log file (.jsonl format) from URL or File object
- *   - URL: Derived from ruleset path (e.g., "path/to/seed_rules.json" → "path/to/seed_spheres_log.jsonl")
+ *   - URL: Derived from ruleset path (e.g., "path/to/seed_rules.json" → "path/to/seed_sphere_log.jsonl")
  *   - File: Selected by user via file input
  *
  * Processing:
@@ -55,7 +55,7 @@ export class FileLoader {
    * Processing:
    *   ├─> Clean ruleset path (remove leading "./")
    *   ├─> Extract directory and filename
-   *   ├─> Derive log path: replace "_rules.json" with "_spheres_log.jsonl"
+   *   ├─> Derive log path: replace "_rules.json" with "_sphere_log.jsonl"
    *   ├─> Check if already loading or loaded (with data verification)
    *   ├─> Fetch from URL
    *   ├─> Parse text into lines
@@ -129,11 +129,11 @@ export class FileLoader {
       }
 
       if (directoryPath) {
-        // If rulesetPath was "presets/foo/bar_rules.json", logPath becomes "presets/foo/bar_spheres_log.jsonl"
-        logPath = `${directoryPath}/${baseNameForLog}_spheres_log.jsonl`;
+        // If rulesetPath was "presets/foo/bar_rules.json", logPath becomes "presets/foo/bar_sphere_log.jsonl"
+        logPath = `${directoryPath}/${baseNameForLog}_sphere_log.jsonl`;
       } else {
-        // If rulesetPath was "bar_rules.json", logPath becomes "./bar_spheres_log.jsonl"
-        logPath = `./${baseNameForLog}_spheres_log.jsonl`;
+        // If rulesetPath was "bar_rules.json", logPath becomes "./bar_sphere_log.jsonl"
+        logPath = `./${baseNameForLog}_sphere_log.jsonl`;
       }
       logger.info(`Derived logPath: "${logPath}" from rulesetPath: "${rulesetPath}"`);
     } else {
@@ -211,6 +211,7 @@ export class FileLoader {
       return {
         success: true,
         logData: parsedResult.logData,
+        rawContent: fileContent,
         logPath
       };
     } catch (error) {

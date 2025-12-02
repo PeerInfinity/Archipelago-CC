@@ -125,7 +125,7 @@ These commands need to be run from the project root directory.
 
 The rules.json file already exists for this game, in frontend/presets/{world_dir}/{seed_id}/{seed_id}_rules.json
 
-The sphere log file already exists for this game, in frontend/presets/{world_dir}/{seed_id}/{seed_id}_spheres_log.jsonl
+The sphere log file already exists for this game, in frontend/presets/{world_dir}/{seed_id}/{seed_id}_sphere_log.jsonl
 
 As you work on this task, please keep these documents up to date:
 

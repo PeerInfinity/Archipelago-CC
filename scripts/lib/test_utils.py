@@ -410,13 +410,13 @@ def run_command(cmd: List[str], cwd: str = None, timeout: int = 300, env: Dict =
         return -1, "", str(e)
 
 
-def count_total_spheres(spheres_log_path: str, player_num: int = None) -> float:
+def count_total_spheres(sphere_log_path: str, player_num: int = None) -> float:
     """
-    Get the highest sphere_index from spheres_log.jsonl file.
+    Get the highest sphere_index from sphere_log.jsonl file.
     Returns the sphere_index value from the last line in the file.
 
     Args:
-        spheres_log_path: Path to the spheres_log.jsonl file
+        sphere_log_path: Path to the sphere_log.jsonl file
         player_num: Optional player number for multiworld games. If specified,
                    only counts spheres where the player had activity (new items,
                    locations, or regions)
@@ -425,10 +425,10 @@ def count_total_spheres(spheres_log_path: str, player_num: int = None) -> float:
         The highest sphere index found
     """
     try:
-        if not os.path.exists(spheres_log_path):
+        if not os.path.exists(sphere_log_path):
             return 0
 
-        with open(spheres_log_path, 'r') as f:
+        with open(sphere_log_path, 'r') as f:
             last_sphere = 0
             for line in f:
                 line = line.strip()

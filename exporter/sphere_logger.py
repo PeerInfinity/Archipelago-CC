@@ -193,7 +193,7 @@ def log_sphere_details(file_handler, multiworld: "MultiWorld", sphere_index: Uni
 
         log_entry = {
             "type": "state_update",
-            "sphere_index": sphere_index,
+            "sphere_index": str(sphere_index),
             "player_data": player_specific_data,
         }
 
@@ -202,6 +202,43 @@ def log_sphere_details(file_handler, multiworld: "MultiWorld", sphere_index: Uni
 
     except Exception as e:
         logging.error(f"Error during spoiler sphere logging for sphere {sphere_index}: {e}")
+
+
+def _collect_event_metadata(multiworld: "MultiWorld") -> Dict[str, List[str]]:
+    """Collect event items and locations from the multiworld for all players.
+
+    Events are detected by:
+    1. location.event == True (explicit event flag)
+    2. location.address is None (common indicator of event locations)
+
+    Returns a dict with:
+        - event_locations: List of location names that are events (per player)
+        - event_items: List of item names that are events (per player)
+    """
+    metadata = {
+        "event_locations": {},
+        "event_items": {}
+    }
+
+    for player_id in multiworld.player_ids:
+        player_event_locations = []
+        player_event_items = set()
+
+        for location in multiworld.get_locations(player_id):
+            # Locations with event=True or address=None are event locations
+            is_event = getattr(location, 'event', False) or getattr(location, 'address', 'not_none') is None
+            if is_event:
+                player_event_locations.append(location.name)
+                # If the location has an item, that item is an event item
+                if location.item:
+                    player_event_items.add(location.item.name)
+
+        if player_event_locations:
+            metadata["event_locations"][str(player_id)] = sorted(player_event_locations)
+        if player_event_items:
+            metadata["event_items"][str(player_id)] = sorted(player_event_items)
+
+    return metadata
 
 
 def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = True) -> None:
@@ -230,15 +267,15 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
     log_file_path = ""
 
     try:
-        # Use temp_dir from multiworld if available for spheres_log.jsonl, otherwise fallback to output_path
-        log_output_directory = getattr(spoiler.multiworld, 'temp_dir_for_spheres_log', None)
+        # Use temp_dir from multiworld if available for sphere_log.jsonl, otherwise fallback to output_path
+        log_output_directory = getattr(spoiler.multiworld, 'temp_dir_for_sphere_log', None)
 
         if log_output_directory is None:
             log_output_directory = getattr(spoiler.multiworld, 'output_path', 'output')
             if not os.path.exists(log_output_directory):
                 os.makedirs(log_output_directory, exist_ok=True)
         
-        log_filename = f"AP_{spoiler.multiworld.seed_name}_spheres_log.jsonl"
+        log_filename = f"AP_{spoiler.multiworld.seed_name}_sphere_log.jsonl"
         log_file_path = os.path.join(log_output_directory, log_filename)
         
         logging.info(f"Attempting to open spoiler log file for sphere data at: {log_file_path}")
@@ -251,6 +288,21 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
     try:
         # Main implementation with logging
         multiworld = spoiler.multiworld
+
+        # Write metadata header as first entry (before any sphere data)
+        if spoiler_log_file_handler:
+            event_metadata = _collect_event_metadata(multiworld)
+            metadata_entry = {
+                "type": "metadata",
+                "seed": multiworld.seed,  # Input seed (e.g., 1)
+                "seed_name": str(multiworld.seed_name),  # Generated seed name (e.g., "14089154938208861744")
+                "event_locations": event_metadata["event_locations"],
+                "event_items": event_metadata["event_items"]
+            }
+            spoiler_log_file_handler.write(json.dumps(metadata_entry) + "\n")
+            spoiler_log_file_handler.flush()
+            logging.debug(f"Wrote sphere log metadata with {sum(len(v) for v in event_metadata['event_locations'].values())} event locations and {sum(len(v) for v in event_metadata['event_items'].values())} event items")
+
         if extend_sphere_log_to_all_locations:
             prog_locations = set(multiworld.get_filled_locations())
         else:

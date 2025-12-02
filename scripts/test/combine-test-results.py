@@ -31,6 +31,24 @@ def load_results_file(file_path: str) -> Dict[str, Any]:
         return None
 
 
+def is_ut_comparison_structure(results: Dict[str, Any]) -> bool:
+    """
+    Detect if results have UT comparison structure.
+
+    UT comparison structure: results -> template_name -> {ut_comparison: {...}, world_info: {...}}
+    """
+    if 'results' not in results or not results['results']:
+        return False
+
+    # Check the first item in results
+    first_value = next(iter(results['results'].values()))
+
+    if isinstance(first_value, dict) and 'ut_comparison' in first_value:
+        return True
+
+    return False
+
+
 def is_multitemplate_structure(results: Dict[str, Any]) -> bool:
     """
     Detect if results have multitemplate structure (nested by game name).
@@ -47,9 +65,9 @@ def is_multitemplate_structure(results: Dict[str, Any]) -> bool:
     # If it's a dict and has nested dicts (not result fields like 'generation', 'spoiler_test'),
     # it's likely multitemplate
     if isinstance(first_value, dict):
-        # Check if it looks like a template result (has 'generation' or 'spoiler_test')
+        # Check if it looks like a template result (has 'generation' or 'spoiler_test' or 'ut_comparison')
         # or a game container (has template names as keys)
-        if 'generation' in first_value or 'spoiler_test' in first_value or 'multiclient_test' in first_value or 'multiworld_test' in first_value:
+        if 'generation' in first_value or 'spoiler_test' in first_value or 'multiclient_test' in first_value or 'multiworld_test' in first_value or 'ut_comparison' in first_value:
             return False
         # If values are dicts with these fields, it's multitemplate
         for value in first_value.values():
@@ -85,15 +103,54 @@ def combine_results(input_files: List[str]) -> Dict[str, Any]:
 
     print(f"Loaded {len(all_results)} test result files")
 
-    # Detect if we're dealing with multitemplate structure
-    is_multitemplate = is_multitemplate_structure(all_results[0])
-
-    if is_multitemplate:
+    # Detect structure type
+    if is_ut_comparison_structure(all_results[0]):
+        print("Detected UT comparison structure")
+        return combine_ut_comparison_results(all_results)
+    elif is_multitemplate_structure(all_results[0]):
         print("Detected multitemplate structure (nested by game name)")
         return combine_multitemplate_results(all_results)
     else:
         print("Detected standard structure")
         return combine_standard_results(all_results)
+
+
+def combine_ut_comparison_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """
+    Combine UT comparison results from parallel runs.
+
+    Since UT comparison tests split templates across jobs (not seeds),
+    we simply merge all template results together.
+    """
+    combined_results = {}
+
+    # Get seed from first file's metadata (should be same across all)
+    seed = all_results[0].get('metadata', {}).get('seed', '1')
+
+    # Merge all template results
+    for result_data in all_results:
+        for template_name, template_result in result_data.get('results', {}).items():
+            if template_name not in combined_results:
+                combined_results[template_name] = template_result
+            else:
+                # If template appears in multiple files, keep the one with more data
+                # (shouldn't happen with proper splitting, but handle it gracefully)
+                print(f"Warning: Template {template_name} appears in multiple result files")
+
+    # Create combined output structure
+    combined = {
+        'metadata': {
+            'created': datetime.now().isoformat(),
+            'last_updated': datetime.now().isoformat(),
+            'script_version': '1.0.0',
+            'seed': seed,
+            'combined_from': len(all_results),
+            'total_templates': len(combined_results)
+        },
+        'results': combined_results
+    }
+
+    return combined
 
 
 def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any]:

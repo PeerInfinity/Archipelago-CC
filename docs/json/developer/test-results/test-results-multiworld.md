@@ -4,14 +4,14 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-12-01 09:37:41
+**Generated:** 2025-12-01 01:02:53
 
 ## Summary
 
 - **Total Games:** 78
-- **Passed:** 70 (89.7%)
-- **Failed:** 2 (2.6%)
-- **Skipped (Prerequisites):** 6 (7.7%)
+- **Passed:** 73 (93.6%)
+- **Failed:** 4 (5.1%)
+- **Skipped (Prerequisites):** 1 (1.3%)
 
 ## Test Results
 
@@ -23,7 +23,7 @@
 | APQuest | ✅ Passed | 4 | 4 | 1 | 0 | ⚫ | ⚫ |
 | Adventure | ✅ Passed | 5 | 5 | 1 | 0 | ✅ | ⚫ |
 | Aquaria | ✅ Passed | 6 | 6 | 1 | 0 | ✅ | ✅ |
-| Blasphemous | ⚫ Skipped | 7 | N/A | N/A | N/A | ✅ | ✅ |
+| Blasphemous | ❌ Failed | 7 | 7 | 0 | 1 | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | 7 | 7 | 1 | 0 | ✅ | ⚫ |
 | Bumper Stickers | ✅ Passed | 8 | 8 | 1 | 0 | ✅ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed | 9 | 9 | 1 | 0 | ✅ | ✅ |
@@ -65,7 +65,7 @@
 | Overcooked! 2 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Paint | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Pokemon Emerald | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
-| Pokemon Red and Blue | ⚫ Skipped | 11 | N/A | N/A | N/A | ✅ | ✅ |
+| Pokemon Red and Blue | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Raft | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed | 10 | 10 | 1 | 0 | ⚫ | ⚫ |
 | SMZ3 | ⚫ Skipped | 11 | N/A | N/A | N/A | ✅ | ✅ |
@@ -73,19 +73,19 @@
 | Secret of Evermore | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Shivers | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ⚫ |
-| Starcraft 2 | ⚫ Skipped | 11 | N/A | N/A | N/A | ✅ | ✅ |
+| Starcraft 2 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Stardew Valley | ❌ Failed | 10 | 10 | 0 | 1 | ✅ | ⚫ |
 | Subnautica | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Super Mario World | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ⚫ |
-| Super Metroid | ⚫ Skipped | 11 | N/A | N/A | N/A | ✅ | ✅ |
+| Super Metroid | ❌ Failed | 10 | 10 | 0 | 1 | ✅ | ✅ |
 | TUNIC | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ⚫ |
 | Terraria | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | The Legend of Zelda | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | The Messenger | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | The Wind Waker | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
-| The Witness | ⚫ Skipped | 11 | N/A | N/A | N/A | ✅ | ✅ |
+| The Witness | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Timespinner | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Undertale | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ⚫ |
 | VVVVVV | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |

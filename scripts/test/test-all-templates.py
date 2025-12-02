@@ -303,7 +303,7 @@ def main():
     parser.add_argument(
         '--test-consistency',
         action='store_true',
-        help='Test generation consistency by comparing rules.json and spheres_log.jsonl files from multiple generation runs'
+        help='Test generation consistency by comparing rules.json and sphere_log.jsonl files from multiple generation runs'
     )
 
     args = parser.parse_args()

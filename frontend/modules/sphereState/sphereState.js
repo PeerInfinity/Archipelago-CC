@@ -213,6 +213,11 @@ export class SphereState {
           continue; // Don't add header to entries
         }
 
+        // Skip metadata entries (contains seed info, event locations/items, etc.)
+        if (entry.type === 'metadata') {
+          continue;
+        }
+
         if (entry.type !== 'state_update') {
           log('warn', `Unexpected entry type at line ${i + 1}: ${entry.type}`);
           continue;

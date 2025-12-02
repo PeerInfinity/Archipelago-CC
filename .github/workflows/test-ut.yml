@@ -1,0 +1,243 @@
+name: Test Universal Tracker Comparison
+
+on:
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: 'Seed number for generation'
+        required: true
+        type: number
+        default: 1
+
+      delete_existing_results:
+        description: 'Delete existing ut-comparison test results before testing'
+        type: boolean
+        default: true
+
+permissions:
+  contents: write  # Allow pushing commits and creating branches
+
+jobs:
+  # Initial setup job - creates/updates branch
+  setup-branch:
+    name: Setup UT Test Branch
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Create or switch to ut-test branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin
+
+          if git ls-remote --exit-code --heads origin ut-test; then
+            git checkout ut-test
+            git pull origin ut-test
+            git rm -rf .
+            git checkout origin/main -- .
+            if ! git diff --staged --quiet; then
+              git commit -m "Sync ut-test with main"
+              git push origin ut-test
+            fi
+          else
+            git checkout -b ut-test origin/main
+            git push -u origin ut-test
+          fi
+
+      - name: Delete existing test results
+        if: inputs.delete_existing_results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Delete ut-comparison test results
+          git rm -f scripts/output/ut-comparison/test-results.json || true
+
+          # Commit if there are changes
+          if ! git diff --staged --quiet; then
+            git commit -m "Delete existing UT comparison test results before new test run"
+            git push origin ut-test
+          fi
+
+  # UT Comparison Tests (10 parallel jobs)
+  test-ut-comparison:
+    name: Test UT Comparison Split ${{ matrix.split_num }}
+    runs-on: ubuntu-latest
+    needs: setup-branch
+    timeout-minutes: 180
+
+    strategy:
+      fail-fast: false
+      matrix:
+        split_num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        split_total: [10]
+
+    steps:
+      - name: Checkout ut-test branch
+        uses: actions/checkout@v4
+        with:
+          ref: ut-test
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Create virtual environment and install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python ModuleUpdate.py --yes
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py minimal-spoilers
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Start HTTP server
+        run: |
+          python -m http.server 8000 &
+          sleep 2
+
+      - name: Run UT comparison test
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-all-ut-comparison.py \
+            --seed ${{ inputs.seed }} \
+            --every-nth ${{ matrix.split_total }} \
+            --skip-first $((${{ matrix.split_num }} - 1)) \
+            --output-file scripts/output/ut-comparison/test-results-split-${{ matrix.split_num }}.json
+
+      - name: Upload test results for split ${{ matrix.split_num }}
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-ut-comparison-split-${{ matrix.split_num }}
+          path: scripts/output/ut-comparison/test-results-split-${{ matrix.split_num }}.json
+          retention-days: 7
+
+      - name: Upload generated preset files for split ${{ matrix.split_num }}
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: preset-files-ut-comparison-split-${{ matrix.split_num }}
+          path: |
+            frontend/presets/**/AP_*_sphere_log.jsonl
+            frontend/presets/**/AP_*_sphere_log_ut.jsonl
+          retention-days: 7
+
+  # Combine UT comparison results
+  combine-ut-comparison:
+    name: Combine UT Comparison Results
+    runs-on: ubuntu-latest
+    needs: test-ut-comparison
+    if: ${{ !cancelled() }}
+
+    steps:
+      - name: Checkout ut-test branch
+        uses: actions/checkout@v4
+        with:
+          ref: ut-test
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Download all test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Combine test results
+        run: |
+          mkdir -p /tmp/merged-results/scripts/output/ut-comparison
+          python scripts/test/combine-test-results.py \
+            --input-files artifacts/test-results-ut-comparison-split-*/test-results-split-*.json \
+            --output-file /tmp/merged-results/scripts/output/ut-comparison/test-results.json
+
+      - name: Copy results and generate documentation
+        run: |
+          mkdir -p scripts/output/ut-comparison
+          cp /tmp/merged-results/scripts/output/ut-comparison/test-results.json \
+             scripts/output/ut-comparison/test-results.json
+          python scripts/docs/generate-ut-comparison-chart.py
+
+      - name: Copy preset files from artifacts
+        run: |
+          # Copy sphere log files from all split artifacts
+          for split_dir in artifacts/preset-files-ut-comparison-split-*; do
+            if [ -d "$split_dir" ]; then
+              echo "Copying files from $split_dir"
+              # The artifact preserves directory structure, so copy recursively
+              cp -r "$split_dir"/* . 2>/dev/null || true
+            fi
+          done
+
+          # List what was copied
+          echo "Sphere log files found:"
+          find frontend/presets -name "*_sphere_log*.jsonl" -type f 2>/dev/null | head -20 || echo "No sphere log files found"
+
+      - name: Commit and push results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Add test results
+          git add -f scripts/output/ut-comparison/test-results.json
+
+          # Add documentation
+          git add docs/json/developer/test-results/*.md || true
+
+          # Add sphere log files
+          git add frontend/presets/**/AP_*_sphere_log.jsonl || true
+          git add frontend/presets/**/AP_*_sphere_log_ut.jsonl || true
+
+          if ! git diff --staged --quiet; then
+            git commit -m "Update UT comparison test results
+
+            Generated by workflow run: ${{ github.run_id }}
+            Seed: ${{ inputs.seed }}
+
+            Includes:
+            - Test results JSON
+            - Generated documentation
+            - Python sphere logs
+            - UT sphere logs
+            "
+            git push origin ut-test
+          fi

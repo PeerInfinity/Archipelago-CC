@@ -423,10 +423,10 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
             if include_error_details:
                 result['analysis']['first_error_line'] = "playwright-analysis.txt not found"
 
-        # Read total spheres from spheres_log.jsonl file
+        # Read total spheres from sphere_log.jsonl file
         # Use preset_dir (world_directory) instead of game_name for correct path
-        spheres_log_path = os.path.join(project_root, 'frontend', 'presets', preset_dir, seed_id, f'{seed_id}_spheres_log.jsonl')
-        total_spheres = count_total_spheres(spheres_log_path)
+        sphere_log_path = os.path.join(project_root, 'frontend', 'presets', preset_dir, seed_id, f'{seed_id}_sphere_log.jsonl')
+        total_spheres = count_total_spheres(sphere_log_path)
         result['spoiler_test']['total_spheres'] = total_spheres
 
         # If test passed, sphere_reached should equal total_spheres
@@ -984,11 +984,11 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
             except IOError:
                 pass
 
-        # Read total spheres from spheres_log.jsonl file
-        # For multiworld, there's a single spheres_log file with data for all players
-        spheres_log_path = os.path.join(project_root, 'frontend', 'presets', 'multiworld', seed_id,
-                                       f'{seed_id}_spheres_log.jsonl')
-        total_spheres = count_total_spheres(spheres_log_path, player_num=player_num)
+        # Read total spheres from sphere_log.jsonl file
+        # For multiworld, there's a single sphere_log file with data for all players
+        sphere_log_path = os.path.join(project_root, 'frontend', 'presets', 'multiworld', seed_id,
+                                       f'{seed_id}_sphere_log.jsonl')
+        total_spheres = count_total_spheres(sphere_log_path, player_num=player_num)
 
         # If test passed, sphere_reached should equal total_spheres
         if pass_fail == 'passed':
@@ -1061,7 +1061,7 @@ def test_generation_consistency(template_file: str, templates_dir: str, project_
 
     Returns a dict with:
         - rules_identical: bool (True if rules.json files are identical)
-        - spoilers_identical: bool (True if spheres_log.jsonl files are identical)
+        - spoilers_identical: bool (True if sphere_log.jsonl files are identical)
         - seed: str (the seed tested)
         - timestamp: str (ISO format timestamp)
     """
@@ -1089,9 +1089,9 @@ def test_generation_consistency(template_file: str, templates_dir: str, project_
 
     # Paths to the generated files
     rules_path = f"./presets/{preset_dir}/{seed_id}/{seed_id}_rules.json"
-    spheres_path = f"./presets/{preset_dir}/{seed_id}/{seed_id}_spheres_log.jsonl"
+    sphere_log_path = f"./presets/{preset_dir}/{seed_id}/{seed_id}_sphere_log.jsonl"
     full_rules_path = os.path.join(project_root, 'frontend', rules_path.lstrip('./'))
-    full_spheres_path = os.path.join(project_root, 'frontend', spheres_path.lstrip('./'))
+    full_sphere_log_path = os.path.join(project_root, 'frontend', sphere_log_path.lstrip('./'))
 
     print(f"\n=== Testing Generation Consistency for {template_filename} (seed {seed}) ===")
 
@@ -1106,14 +1106,14 @@ def test_generation_consistency(template_file: str, templates_dir: str, project_
             'error': 'Original rules file not found'
         }
 
-    if not os.path.exists(full_spheres_path):
-        print(f"Error: Original spheres log file not found: {full_spheres_path}")
+    if not os.path.exists(full_sphere_log_path):
+        print(f"Error: Original sphere log file not found: {full_sphere_log_path}")
         return {
             'seed': seed,
             'timestamp': datetime.now().isoformat(),
             'rules_identical': None,
             'spoilers_identical': None,
-            'error': 'Original spheres log file not found'
+            'error': 'Original sphere log file not found'
         }
 
     # Helper function to compute file hash
@@ -1128,8 +1128,8 @@ def test_generation_consistency(template_file: str, templates_dir: str, project_
     # Compute hashes of original files
     print(f"Computing hash of original rules file...")
     original_rules_hash = compute_file_hash(full_rules_path)
-    print(f"Computing hash of original spheres log file...")
-    original_spheres_hash = compute_file_hash(full_spheres_path)
+    print(f"Computing hash of original sphere log file...")
+    original_sphere_log_hash = compute_file_hash(full_sphere_log_path)
 
     # Run generation again (no need to backup files, we only need the hashes)
     template_file_with_ext = template_filename if template_filename.endswith(('.yaml', '.yml')) else f"{template_filename}.yaml"
@@ -1167,15 +1167,15 @@ def test_generation_consistency(template_file: str, templates_dir: str, project_
     # Compute hashes of new files
     print(f"Computing hash of new rules file...")
     new_rules_hash = compute_file_hash(full_rules_path)
-    print(f"Computing hash of new spheres log file...")
-    new_spheres_hash = compute_file_hash(full_spheres_path)
+    print(f"Computing hash of new sphere log file...")
+    new_sphere_log_hash = compute_file_hash(full_sphere_log_path)
 
     # Compare hashes
     rules_identical = (original_rules_hash == new_rules_hash)
-    spoilers_identical = (original_spheres_hash == new_spheres_hash)
+    spoilers_identical = (original_sphere_log_hash == new_sphere_log_hash)
 
     print(f"\n  Rules files identical: {rules_identical}")
-    print(f"  Spheres log files identical: {spoilers_identical}")
+    print(f"  Sphere log files identical: {spoilers_identical}")
 
     result = {
         'seed': seed,
@@ -1184,11 +1184,11 @@ def test_generation_consistency(template_file: str, templates_dir: str, project_
         'spoilers_identical': spoilers_identical,
         'original_rules_hash': original_rules_hash,
         'new_rules_hash': new_rules_hash,
-        'original_spheres_hash': original_spheres_hash,
-        'new_spheres_hash': new_spheres_hash
+        'original_sphere_log_hash': original_sphere_log_hash,
+        'new_sphere_log_hash': new_sphere_log_hash
     }
 
     print(f"\nCompleted consistency test for {template_filename}: Rules={'IDENTICAL' if rules_identical else 'DIFFERENT'}, "
-          f"Spheres={'IDENTICAL' if spoilers_identical else 'DIFFERENT'}")
+          f"Sphere Log={'IDENTICAL' if spoilers_identical else 'DIFFERENT'}")
 
     return result
