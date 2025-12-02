@@ -2060,7 +2060,12 @@ export const helperFunctions = {
   knowsNorfairReserveDBoost,
   knowsDoubleChamberWallJump,
   knowsPuyoClip,
+  knowsPuyoClipXRay,
+  knowsSuitlessPuyoClip,
   knowsAccessSpringBallWithHiJump,
+  knowsAccessSpringBallWithBombJumps,
+  knowsAccessSpringBallWithGravJump,
+  knowsAccessSpringBallWithFlatley,
   knowsHiJumpGauntletAccess,
   knowsHiJumpLessGauntletAccess,
   // New helper functions (21 total)
@@ -2520,22 +2525,57 @@ export function canUseCrocRoomToChargeSpeed(snapshot, staticData) {
  * @returns {Object} SMBool
  */
 export function canAccessShaktoolFromPantsRoom(snapshot, staticData) {
-  // Simplified version - full implementation requires many tech checks
+  // Full implementation matching Python graph_helpers.py:823-843
+  // Two main paths: Puyo Clip (Ice-based) or Grapple Block path
   return wor(snapshot, staticData,
+    // Puyo clip path: Ice + (Gravity+PuyoClip OR Gravity+XRay+PuyoClipXRay OR SuitlessPuyoClip)
     wand(snapshot, staticData,
       haveItem(snapshot, staticData, 'Ice'),
-      haveItem(snapshot, staticData, 'Gravity'),
-      knowsPuyoClip(snapshot, staticData)
-    ),
-    wand(snapshot, staticData,
-      haveItem(snapshot, staticData, 'Grapple'),
-      haveItem(snapshot, staticData, 'Gravity'),
       wor(snapshot, staticData,
         wand(snapshot, staticData,
-          haveItem(snapshot, staticData, 'HiJump'),
-          knowsAccessSpringBallWithHiJump(snapshot, staticData)
+          haveItem(snapshot, staticData, 'Gravity'),
+          knowsPuyoClip(snapshot, staticData)
         ),
-        haveItem(snapshot, staticData, 'SpaceJump')
+        wand(snapshot, staticData,
+          haveItem(snapshot, staticData, 'Gravity'),
+          haveItem(snapshot, staticData, 'XRayScope'),
+          knowsPuyoClipXRay(snapshot, staticData)
+        ),
+        knowsSuitlessPuyoClip(snapshot, staticData)
+      )
+    ),
+    // Grapple block path: Grapple + various methods to get through
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Grapple'),
+      wor(snapshot, staticData,
+        // With Gravity suit
+        wand(snapshot, staticData,
+          haveItem(snapshot, staticData, 'Gravity'),
+          wor(snapshot, staticData,
+            // HiJump + technique
+            wand(snapshot, staticData,
+              haveItem(snapshot, staticData, 'HiJump'),
+              knowsAccessSpringBallWithHiJump(snapshot, staticData)
+            ),
+            // SpaceJump
+            haveItem(snapshot, staticData, 'SpaceJump'),
+            // GravJump technique
+            knowsAccessSpringBallWithGravJump(snapshot, staticData),
+            // Bomb jumps path
+            wand(snapshot, staticData,
+              haveItem(snapshot, staticData, 'Bomb'),
+              wor(snapshot, staticData,
+                knowsAccessSpringBallWithBombJumps(snapshot, staticData),
+                canInfiniteBombJump(snapshot, staticData)
+              )
+            )
+          )
+        ),
+        // Suitless Flatley jump with SpaceJump
+        wand(snapshot, staticData,
+          haveItem(snapshot, staticData, 'SpaceJump'),
+          knowsAccessSpringBallWithFlatley(snapshot, staticData)
+        )
       )
     )
   );
@@ -3053,4 +3093,70 @@ export function knowsPuyoClip(snapshot, staticData) {
 
 export function knowsAccessSpringBallWithHiJump(snapshot, staticData) {
   return { bool: true, difficulty: 3 };
+}
+
+export function knowsPuyoClipXRay(snapshot, staticData) {
+  // Check exported knows settings for PuyoClipXRay technique
+  const playerId = getPlayerId(snapshot, staticData);
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('PuyoClipXRay' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.PuyoClipXRay;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  // Default: disabled (not in Regular preset)
+  return { bool: false, difficulty: 0 };
+}
+
+export function knowsSuitlessPuyoClip(snapshot, staticData) {
+  // Check exported knows settings for SuitlessPuyoClip technique
+  const playerId = getPlayerId(snapshot, staticData);
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('SuitlessPuyoClip' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.SuitlessPuyoClip;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  // Default: disabled (not in Regular preset)
+  return { bool: false, difficulty: 0 };
+}
+
+export function knowsAccessSpringBallWithBombJumps(snapshot, staticData) {
+  // Check exported knows settings for AccessSpringBallWithBombJumps technique
+  const playerId = getPlayerId(snapshot, staticData);
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('AccessSpringBallWithBombJumps' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.AccessSpringBallWithBombJumps;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  // Default: disabled (not in Regular preset)
+  return { bool: false, difficulty: 0 };
+}
+
+export function knowsAccessSpringBallWithGravJump(snapshot, staticData) {
+  // Check exported knows settings for AccessSpringBallWithGravJump technique
+  const playerId = getPlayerId(snapshot, staticData);
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('AccessSpringBallWithGravJump' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.AccessSpringBallWithGravJump;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  // Default: disabled (not in Regular preset)
+  return { bool: false, difficulty: 0 };
+}
+
+export function knowsAccessSpringBallWithFlatley(snapshot, staticData) {
+  // Check exported knows settings for AccessSpringBallWithFlatley technique
+  // Requires Grapple and SpaceJump (suitless flatley jump)
+  const playerId = getPlayerId(snapshot, staticData);
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('AccessSpringBallWithFlatley' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.AccessSpringBallWithFlatley;
+    return { bool: enabled, difficulty: enabled ? difficulty : 0 };
+  }
+  // Default: disabled (not in Regular preset)
+  return { bool: false, difficulty: 0 };
 }
