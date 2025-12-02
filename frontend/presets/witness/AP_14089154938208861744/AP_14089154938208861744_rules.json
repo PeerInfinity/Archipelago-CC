@@ -1558,8 +1558,45 @@
             "name": "Quarry Elevator to Outside Quarry",
             "connected_region": "Outside Quarry",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "can_reach",
+                      "region": "Main Island"
+                    },
+                    {
+                      "type": "can_reach",
+                      "region": "Quarry"
+                    }
+                  ]
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "can_reach",
+                      "region": "Quarry Stoneworks Upper Floor"
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Colored Squares",
+                            "Eraser",
+                            "Progressive Dots"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
@@ -3740,46 +3777,30 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "helper",
-                    "name": "condition",
-                    "args": []
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "condition"
-                    },
-                    "iterator": {
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
                       "type": "constant",
                       "value": [
-                        "<function convert_requirement_option.<locals>.<lambda>>"
+                        "Black/White Squares",
+                        "Eraser"
                       ]
                     }
-                  }
+                  ]
                 },
                 {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "helper",
-                    "name": "condition",
-                    "args": []
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "condition"
-                    },
-                    "iterator": {
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
                       "type": "constant",
                       "value": [
-                        "<function convert_requirement_option.<locals>.<lambda>>"
+                        "Black/White Squares",
+                        "Shapers"
                       ]
                     }
-                  }
+                  ]
                 }
               ]
             }
@@ -4214,8 +4235,43 @@
             "name": "Bunker Elevator Section to Bunker Under Elevator",
             "connected_region": "Bunker Under Elevator",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "can_reach",
+                      "region": "Bunker Elevator"
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Black/White Squares",
+                            "Colored Squares"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "can_reach",
+                  "region": "Bunker Cyan Room"
+                },
+                {
+                  "type": "can_reach",
+                  "region": "Bunker Green Room"
+                },
+                {
+                  "type": "can_reach",
+                  "region": "Bunker Laser Platform"
+                }
+              ]
             }
           }
         ],
@@ -4228,8 +4284,43 @@
             "name": "Bunker Under Elevator to Bunker Elevator Section",
             "connected_region": "Bunker Elevator Section",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "can_reach",
+                      "region": "Bunker Elevator"
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Black/White Squares",
+                            "Colored Squares"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "can_reach",
+                  "region": "Bunker Cyan Room"
+                },
+                {
+                  "type": "can_reach",
+                  "region": "Bunker Green Room"
+                },
+                {
+                  "type": "can_reach",
+                  "region": "Bunker Laser Platform"
+                }
+              ]
             }
           }
         ],
@@ -10947,7 +11038,8 @@
     "1": {
       "game": "The Witness",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "add_sphere_items_upfront": true
     }
   },
   "game_info": {
