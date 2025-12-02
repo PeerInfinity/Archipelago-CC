@@ -230,9 +230,13 @@ jobs:
           # Add documentation
           git add docs/json/developer/test-results/*.md || true
 
-          # Add sphere log files
-          git add frontend/presets/**/AP_*_sphere_log.jsonl || true
-          git add frontend/presets/**/AP_*_sphere_log_ut.jsonl || true
+          # Add sphere log files using find to handle nested directories
+          find frontend/presets -name "AP_*_sphere_log.jsonl" -type f -exec git add -f {} \; || true
+          find frontend/presets -name "AP_*_sphere_log_ut.jsonl" -type f -exec git add -f {} \; || true
+
+          # Debug: show what was staged
+          echo "Staged sphere log files:"
+          git diff --staged --name-only | grep sphere_log || echo "No sphere log files staged"
 
           if ! git diff --staged --quiet; then
             git commit -m "Update UT comparison test results
