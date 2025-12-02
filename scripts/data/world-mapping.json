@@ -531,6 +531,13 @@
     "has_custom_game_logic": false,
     "world_directory": "undertale"
   },
+  "Universal Tracker": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "tracker"
+  },
   "VVVVVV": {
     "exporter_path": "exporter/games/v6.py",
     "game_logic_path": "frontend/modules/shared/gameLogic/v6/v6Logic.js",

@@ -37,7 +37,7 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
     multiworld = MultiWorld(args.multi)
 
     # Set output directory for sphere logging
-    multiworld.temp_dir_for_spheres_log = args.outputpath
+    multiworld.temp_dir_for_sphere_log = args.outputpath
 
     logger = logging.getLogger()
     multiworld.set_seed(seed, args.race, str(args.outputname) if args.outputname else None)
@@ -390,9 +390,9 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
                     logger.info(f'Generating output files ({i}/{len(output_file_futures)}).')
                 future.result()
 
-        # Make temp_dir available for spheres_log.jsonl in Spoiler.create_playthrough
+        # Make temp_dir available for sphere_log.jsonl in Spoiler.create_playthrough
         if hasattr(multiworld, 'spoiler'): # Ensure spoiler object exists
-            multiworld.temp_dir_for_spheres_log = temp_dir
+            multiworld.temp_dir_for_sphere_log = temp_dir
 
         if args.spoiler > 1:
             logger.info('Calculating playthrough.')

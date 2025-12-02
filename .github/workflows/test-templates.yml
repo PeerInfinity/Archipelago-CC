@@ -85,6 +85,8 @@ jobs:
           npx playwright install chromium
 
       - name: Run quick test (with HTTP server)
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           # Start HTTP server in background
           python -m http.server 8000 &
@@ -224,6 +226,8 @@ jobs:
           sleep 2
 
       - name: Run test - ${{ matrix.test_name }}
+        env:
+          PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           ${{ matrix.test_command }}

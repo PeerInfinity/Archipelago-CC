@@ -18,6 +18,12 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from lib.test_utils import load_template_exclude_list
 
+# Import UT comparison functions from the dedicated script
+from generate_ut_comparison_chart import (
+    extract_ut_comparison_chart_data,
+    generate_ut_comparison_markdown
+)
+
 
 def load_test_results(results_file: str) -> Dict[str, Any]:
     """Load the template test results from JSON file."""
@@ -700,24 +706,33 @@ def generate_multitemplate_markdown(chart_data: Dict[str, List[Tuple[str, str, i
     return md_content
 
 
-def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None) -> str:
+def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None, ut_comparison_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None) -> str:
     """Generate a combined summary chart with all test results."""
     md_content = "# Archipelago Template Test Results Summary\n\n"
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
 
+    # Build test types list dynamically
+    test_types = [
+        ("Minimal Spoiler Test", "Tests with advancement items only", "./test-results-spoilers-minimal.md"),
+        ("Full Spoiler Test", "Tests with all locations", "./test-results-spoilers-full.md"),
+        ("Multiclient Test", "Tests in multiclient mode", "./test-results-multiclient.md"),
+    ]
     if multiworld_data is not None:
-        md_content += "This summary combines results from four types of tests:\n"
-        md_content += "- **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)\n"
-        md_content += "- **Full Spoiler Test:** Tests with all locations - [View Details](./test-results-spoilers-full.md)\n"
-        md_content += "- **Multiclient Test:** Tests in multiclient mode - [View Details](./test-results-multiclient.md)\n"
-        md_content += "- **Multiworld Test:** Tests in multiworld mode with multiple games - [View Details](./test-results-multiworld.md)\n\n"
-    else:
-        md_content += "This summary combines results from three types of tests:\n"
-        md_content += "- **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)\n"
-        md_content += "- **Full Spoiler Test:** Tests with all locations - [View Details](./test-results-spoilers-full.md)\n"
-        md_content += "- **Multiclient Test:** Tests in multiclient mode - [View Details](./test-results-multiclient.md)\n\n"
+        test_types.append(("Multiworld Test", "Tests in multiworld mode with multiple games", "./test-results-multiworld.md"))
+
+    md_content += f"This summary combines results from {len(test_types)} types of tests:\n"
+    for name, desc, link in test_types:
+        md_content += f"- **{name}:** {desc} - [View Details]({link})\n"
+
+    # Add link to UT comparison (separate from main test types - not included in statistics)
+    if ut_comparison_data is not None:
+        md_content += "\nAdditional test results:\n"
+        md_content += "- **UT Comparison Test:** Validates Universal Tracker matches Python sphere log - [View Details](./test-results-ut-comparison.md)\n"
+
+    md_content += "\n"
 
     # Create a unified game list with exporter/logic info
+    # Note: UT comparison data is NOT included in statistics - it has its own separate report
     games_minimal = {name: result for name, result, *_ in minimal_data}
     games_full = {name: result for name, result, *_ in full_data}
     games_multiclient = {name: result for name, result, *_ in multiclient_data}
@@ -745,8 +760,11 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
     mp_total, mp_passed, mp_pct = calc_stats(games_multiclient)
 
     # Calculate templates by number of tests passed
+    # Note: UT comparison is NOT included in these statistics
     tests_passed_count = {}
-    num_tests = 4 if multiworld_data is not None else 3
+    num_tests = 3  # Base: minimal, full, multiclient
+    if multiworld_data is not None:
+        num_tests += 1
 
     for game in all_games:
         passed_count = 0
@@ -929,7 +947,7 @@ def main():
     parser = argparse.ArgumentParser(description='Generate test results charts from template test results')
     parser.add_argument('--input-file', type=str, help='Input JSON file path (processes only this file)')
     parser.add_argument('--output-file', type=str, help='Output markdown file path')
-    parser.add_argument('--test-type', type=str, choices=['minimal', 'full', 'multiclient', 'multiworld', 'multitemplate-minimal', 'multitemplate-full'],
+    parser.add_argument('--test-type', type=str, choices=['minimal', 'full', 'multiclient', 'multiworld', 'multitemplate-minimal', 'multitemplate-full', 'ut-comparison'],
                        help='Test type when using --input-file')
 
     args = parser.parse_args()
@@ -974,6 +992,9 @@ def main():
             chart_data = extract_multitemplate_chart_data(results)
             subtitle = "Multi-Template Test - Advancement Items Only" if args.test_type == 'multitemplate-minimal' else "Multi-Template Test - All Locations"
             md_content = generate_multitemplate_markdown(chart_data, metadata, subtitle)
+        elif args.test_type == 'ut-comparison':
+            chart_data = extract_ut_comparison_chart_data(results)
+            md_content = generate_ut_comparison_markdown(chart_data, metadata)
         else:  # multiworld
             chart_data = extract_multiworld_chart_data(results)
             # Extract top-level metadata for multiworld
@@ -1097,8 +1118,23 @@ def main():
     else:
         print(f"Info: Multitemplate full test results not found: {mtfull_input}")
 
+    # Load UT comparison test results
+    ut_input = os.path.join(project_root, 'scripts/output/ut-comparison/test-results.json')
+    ut_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-ut-comparison.md')
+
+    ut_data = None
+    if os.path.exists(ut_input):
+        ut_results = load_test_results(ut_input)
+        ut_data = extract_ut_comparison_chart_data(ut_results)
+        ut_md = generate_ut_comparison_markdown(ut_data, ut_results.get('metadata', {}))
+        os.makedirs(os.path.dirname(ut_output), exist_ok=True)
+        with open(ut_output, 'w') as f:
+            f.write(ut_md)
+    else:
+        print(f"Info: UT comparison test results not found: {ut_input}")
+
     # Generate summary chart
-    if minimal_data or full_data or mp_data or mw_data or mtmin_data or mtfull_data:
+    if minimal_data or full_data or mp_data or mw_data or mtmin_data or mtfull_data or ut_data:
         # Load the exclude list with reasons
         excluded_games = load_template_exclude_list(project_root, include_reasons=True)
 
@@ -1107,7 +1143,7 @@ def main():
         full_meta = full_results.get('metadata', {}) if 'full_results' in locals() else None
 
         summary_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary.md')
-        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data, excluded_games, minimal_meta, full_meta)
+        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data, ut_data, excluded_games, minimal_meta, full_meta)
         with open(summary_output, 'w') as f:
             f.write(summary_md)
 

@@ -2,6 +2,16 @@ name: Generate Presets
 
 on:
   workflow_dispatch:
+    inputs:
+      generate_multiworld:
+        description: 'Generate multiworld presets'
+        type: boolean
+        default: true
+
+      generate_extra_seeds:
+        description: 'Generate seeds 2 and 3 for templates that support them'
+        type: boolean
+        default: true
 
 permissions:
   contents: write  # Allow pushing commits and creating branches
@@ -65,6 +75,10 @@ jobs:
           python scripts/setup/update_host_settings.py minimal-spoilers
 
       - name: Run generate script
+        env:
+          PYTHONUNBUFFERED: "1"
+          GENERATE_MULTIWORLD: ${{ inputs.generate_multiworld }}
+          GENERATE_EXTRA_SEEDS: ${{ inputs.generate_extra_seeds }}
         run: |
           source .venv/bin/activate
           chmod +x scripts/utils/generate_all_templates.sh

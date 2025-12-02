@@ -8,9 +8,15 @@ on:
         required: true
         type: choice
         options:
-          - 'seed-1'
-          - 'seeds-1-10'
-        default: 'seeds-1-10'
+          - 'single-seed'
+          - '10-seeds'
+        default: '10-seeds'
+
+      start_seed:
+        description: 'Starting seed number (single-seed uses this seed, 10-seeds uses this through start+9)'
+        required: true
+        type: number
+        default: 1
 
       delete_existing_results:
         description: 'Delete existing test-results.json files before testing'
@@ -32,15 +38,15 @@ on:
           - '3-times'
         default: '2-times'
 
-      enable_minimal_spoiler:
-        description: 'Run minimal spoiler tests'
-        type: boolean
-        default: true
-
-      enable_full_spoiler:
-        description: 'Run full spoiler tests'
-        type: boolean
-        default: true
+      spoiler_tests:
+        description: 'Spoiler tests'
+        type: choice
+        options:
+          - 'skip'
+          - 'minimal-only'
+          - 'full-only'
+          - 'both'
+        default: 'both'
 
       enable_multiclient:
         description: 'Run multiclient tests'
@@ -133,7 +139,7 @@ jobs:
     name: Test Minimal Spoiler Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     needs: setup-branch
-    if: inputs.enable_minimal_spoiler
+    if: inputs.spoiler_tests == 'minimal-only' || inputs.spoiler_tests == 'both'
     timeout-minutes: 180
 
     strategy:
@@ -189,22 +195,22 @@ jobs:
           python -m http.server 8000 &
           sleep 2
 
-      - name: Run minimal spoiler test (seed-1 mode)
-        if: inputs.spoiler_mode == 'seed-1'
+      - name: Run minimal spoiler test (single-seed mode)
+        if: inputs.spoiler_mode == 'single-seed'
         env:
           PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
-            --seed 1 \
+            --seed ${{ inputs.start_seed }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
             --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
             --no-backup \
             -p
 
-      - name: Retest minimal spoiler failures (seed-1 mode)
-        if: inputs.spoiler_mode == 'seed-1' && inputs.retest_failures != 'disabled'
+      - name: Retest minimal spoiler failures (single-seed mode)
+        if: inputs.spoiler_mode == 'single-seed' && inputs.retest_failures != 'disabled'
         env:
           PYTHONUNBUFFERED: "1"
         run: |
@@ -217,20 +223,20 @@ jobs:
               --retest-seed-specific \
               --retest-from-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
               --retest-continue-after-failure \
-              --seed 1 \
+              --seed ${{ inputs.start_seed }} \
               --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
               --no-backup \
               -p
           done
 
-      - name: Run generation consistency test (seed-1 mode)
-        if: inputs.spoiler_mode == 'seed-1' && inputs.test_generation_consistency
+      - name: Run generation consistency test (single-seed mode)
+        if: inputs.spoiler_mode == 'single-seed' && inputs.test_generation_consistency
         env:
           PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
-            --seed 1 \
+            --seed ${{ inputs.start_seed }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
             --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
@@ -238,20 +244,20 @@ jobs:
             --test-consistency \
             -p
 
-      - name: Run minimal spoiler test (seeds-1-10 mode)
-        if: inputs.spoiler_mode == 'seeds-1-10'
+      - name: Run minimal spoiler test (10-seeds mode)
+        if: inputs.spoiler_mode == '10-seeds'
         env:
           PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
-            --seed ${{ matrix.split_num }} \
+            --seed $((${{ inputs.start_seed }} + ${{ matrix.split_num }} - 1)) \
             --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
             --no-backup \
             -p
 
-      - name: Retest minimal spoiler failures (seeds-1-10 mode)
-        if: inputs.spoiler_mode == 'seeds-1-10' && inputs.retest_failures != 'disabled'
+      - name: Retest minimal spoiler failures (10-seeds mode)
+        if: inputs.spoiler_mode == '10-seeds' && inputs.retest_failures != 'disabled'
         env:
           PYTHONUNBUFFERED: "1"
         run: |
@@ -264,20 +270,20 @@ jobs:
               --retest-seed-specific \
               --retest-from-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
               --retest-continue-after-failure \
-              --seed ${{ matrix.split_num }} \
+              --seed $((${{ inputs.start_seed }} + ${{ matrix.split_num }} - 1)) \
               --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
               --no-backup \
               -p
           done
 
-      - name: Run generation consistency test (seeds-1-10 mode)
-        if: inputs.spoiler_mode == 'seeds-1-10' && inputs.test_generation_consistency
+      - name: Run generation consistency test (10-seeds mode)
+        if: inputs.spoiler_mode == '10-seeds' && inputs.test_generation_consistency
         env:
           PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
-            --seed ${{ matrix.split_num }} \
+            --seed $((${{ inputs.start_seed }} + ${{ matrix.split_num }} - 1)) \
             --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
             --no-backup \
             --test-consistency \
@@ -296,7 +302,7 @@ jobs:
     name: Combine Minimal Spoiler Results
     runs-on: ubuntu-latest
     needs: test-minimal-spoiler
-    if: ${{ !cancelled() && inputs.enable_minimal_spoiler }}
+    if: ${{ !cancelled() && (inputs.spoiler_tests == 'minimal-only' || inputs.spoiler_tests == 'both') }}
 
     steps:
       - name: Checkout test-results-update branch
@@ -346,6 +352,7 @@ jobs:
 
             Generated by workflow run: ${{ github.run_id }}
             Spoiler mode: ${{ inputs.spoiler_mode }}
+            Start seed: ${{ inputs.start_seed }}
             "
             git push origin test-results-update
           fi
@@ -355,7 +362,7 @@ jobs:
     name: Test Full Spoiler Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     needs: [setup-branch, combine-minimal-spoiler]
-    if: ${{ !cancelled() && inputs.enable_full_spoiler && (needs.setup-branch.result == 'success') }}
+    if: ${{ !cancelled() && (inputs.spoiler_tests == 'full-only' || inputs.spoiler_tests == 'both') && (needs.setup-branch.result == 'success') }}
     timeout-minutes: 180
 
     strategy:
@@ -413,22 +420,22 @@ jobs:
           python -m http.server 8000 &
           sleep 2
 
-      - name: Run full spoiler test (seed-1 mode)
-        if: inputs.spoiler_mode == 'seed-1'
+      - name: Run full spoiler test (single-seed mode)
+        if: inputs.spoiler_mode == 'single-seed'
         env:
           PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
-            --seed 1 \
+            --seed ${{ inputs.start_seed }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
             --output-file scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json \
             --no-backup \
             -p
 
-      - name: Retest full spoiler failures (seed-1 mode)
-        if: inputs.spoiler_mode == 'seed-1' && inputs.retest_failures != 'disabled'
+      - name: Retest full spoiler failures (single-seed mode)
+        if: inputs.spoiler_mode == 'single-seed' && inputs.retest_failures != 'disabled'
         env:
           PYTHONUNBUFFERED: "1"
         run: |
@@ -441,26 +448,26 @@ jobs:
               --retest-seed-specific \
               --retest-from-file scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json \
               --retest-continue-after-failure \
-              --seed 1 \
+              --seed ${{ inputs.start_seed }} \
               --output-file scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json \
               --no-backup \
               -p
           done
 
-      - name: Run full spoiler test (seeds-1-10 mode)
-        if: inputs.spoiler_mode == 'seeds-1-10'
+      - name: Run full spoiler test (10-seeds mode)
+        if: inputs.spoiler_mode == '10-seeds'
         env:
           PYTHONUNBUFFERED: "1"
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
-            --seed ${{ matrix.split_num }} \
+            --seed $((${{ inputs.start_seed }} + ${{ matrix.split_num }} - 1)) \
             --output-file scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json \
             --no-backup \
             -p
 
-      - name: Retest full spoiler failures (seeds-1-10 mode)
-        if: inputs.spoiler_mode == 'seeds-1-10' && inputs.retest_failures != 'disabled'
+      - name: Retest full spoiler failures (10-seeds mode)
+        if: inputs.spoiler_mode == '10-seeds' && inputs.retest_failures != 'disabled'
         env:
           PYTHONUNBUFFERED: "1"
         run: |
@@ -473,7 +480,7 @@ jobs:
               --retest-seed-specific \
               --retest-from-file scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json \
               --retest-continue-after-failure \
-              --seed ${{ matrix.split_num }} \
+              --seed $((${{ inputs.start_seed }} + ${{ matrix.split_num }} - 1)) \
               --output-file scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json \
               --no-backup \
               -p
@@ -492,7 +499,7 @@ jobs:
     name: Combine Full Spoiler Results
     runs-on: ubuntu-latest
     needs: test-full-spoiler
-    if: ${{ !cancelled() && inputs.enable_full_spoiler }}
+    if: ${{ !cancelled() && (inputs.spoiler_tests == 'full-only' || inputs.spoiler_tests == 'both') }}
 
     steps:
       - name: Checkout test-results-update branch
@@ -542,6 +549,7 @@ jobs:
 
             Generated by workflow run: ${{ github.run_id }}
             Spoiler mode: ${{ inputs.spoiler_mode }}
+            Start seed: ${{ inputs.start_seed }}
             "
             git push origin test-results-update
           fi

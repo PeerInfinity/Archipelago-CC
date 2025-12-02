@@ -238,6 +238,8 @@ set.mm
 
 !scripts/build/
 !scripts/lib/
+!scripts/test/lib/
+!frontend/modules/testSpoilers/lib/
 
 scripts/output/spoiler-minimal/test-results-*
 scripts/output/spoiler-minimal/test-results_*
