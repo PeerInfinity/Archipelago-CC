@@ -107,80 +107,86 @@ export async function testSpoilersPanelFullRun(testController) {
       throw new Error('Spoiler log failed to load within expected time');
     }
 
-    // 3. Wait for the "Run Full Test" button to appear, which indicates the log has loaded
-    let runFullTestButton = null;
+    // Check if UT comparison mode is requested via URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const useUtComparison = urlParams.get('ut') === 'true';
+    const targetButtonId = useUtComparison ? '#ut-comparison-btn' : '#run-full-spoiler-test';
+    const targetButtonText = useUtComparison ? 'Compare with UT' : 'Run Full Test';
+
+    // 3. Wait for the target button to appear, which indicates the log has loaded
+    let targetButton = null;
     if (
       !(await testController.pollForCondition(
         () => {
           // Try multiple strategies to find the button
-          
+
           // Strategy 1: By ID in spoilers panel
           const currentSpoilersPanelElement = document.querySelector(
             '.test-spoilers-module-root'
           );
           if (currentSpoilersPanelElement) {
-            runFullTestButton = currentSpoilersPanelElement.querySelector(
-              '#run-full-spoiler-test'
+            targetButton = currentSpoilersPanelElement.querySelector(
+              targetButtonId
             );
           }
-          
+
           // Strategy 2: By ID globally
-          if (!runFullTestButton) {
-            runFullTestButton = document.querySelector('#run-full-spoiler-test');
+          if (!targetButton) {
+            targetButton = document.querySelector(targetButtonId);
           }
-          
+
           // Strategy 3: By text content in spoilers panel
-          if (!runFullTestButton && currentSpoilersPanelElement) {
+          if (!targetButton && currentSpoilersPanelElement) {
             const allButtons = currentSpoilersPanelElement.querySelectorAll('button');
-            runFullTestButton = Array.from(allButtons).find(btn => 
-              btn.textContent.includes('Run Full Test')
+            targetButton = Array.from(allButtons).find(btn =>
+              btn.textContent.includes(targetButtonText)
             );
           }
-          
+
           // Strategy 4: By text content globally
-          if (!runFullTestButton) {
+          if (!targetButton) {
             const allButtons = document.querySelectorAll('button');
-            runFullTestButton = Array.from(allButtons).find(btn => 
-              btn.textContent.includes('Run Full Test')
+            targetButton = Array.from(allButtons).find(btn =>
+              btn.textContent.includes(targetButtonText)
             );
           }
-          
-          return runFullTestButton !== null;
+
+          return targetButton !== null;
         },
-        '"Run Full Test" button to appear',
+        `"${targetButtonText}" button to appear`,
         10000,
         250
       ))
     ) {
       // Final debug attempt - list all buttons on the page
       const allButtons = document.querySelectorAll('button');
-      const buttonInfo = Array.from(allButtons).map(btn => 
+      const buttonInfo = Array.from(allButtons).map(btn =>
         `"${btn.textContent}" (id: ${btn.id || 'none'}, class: ${btn.className || 'none'})`
       );
       testController.log(`[${testRunId}] FINAL DEBUG: All buttons on page (${allButtons.length}): ${buttonInfo.join(', ')}`);
-      
+
       throw new Error(
-        '"Run Full Test" button did not appear after loading log.'
+        `"${targetButtonText}" button did not appear after loading log.`
       );
     }
-    testController.reportCondition('"Run Full Test" button appeared', true);
+    testController.reportCondition(`"${targetButtonText}" button appeared`, true);
 
-    // 4. Click the "Run Full Test" button
-    testController.log(`[${testRunId}] Clicking "Run Full Test" button...`);
-    runFullTestButton.click();
+    // 4. Click the target button
+    testController.log(`[${testRunId}] Clicking "${targetButtonText}" button...`);
+    targetButton.click();
     
     // Poll for test start instead of arbitrary delay
     if (!(await testController.pollForCondition(
       () => {
-        const isDisabled = runFullTestButton && runFullTestButton.disabled;
-        const hasStartedProcessing = typeof window !== 'undefined' && 
-                                    (window.__spoilerTestResults__ || 
+        const isDisabled = targetButton && targetButton.disabled;
+        const hasStartedProcessing = typeof window !== 'undefined' &&
+                                    (window.__spoilerTestResults__ ||
                                      document.querySelector('#spoiler-log-output .log-entry'));
-        
-        
+
+
         return isDisabled || hasStartedProcessing;
       },
-      'Full spoiler test to start processing',
+      'Spoiler test to start processing',
       5000,
       100
     ))) {
@@ -189,13 +195,13 @@ export async function testSpoilersPanelFullRun(testController) {
 
     // 5. Wait for the test to complete by polling for detailed results AND button re-enablement
     testController.log(
-      `[${testRunId}] Waiting for full spoiler test to complete...`
+      `[${testRunId}] Waiting for spoiler test to complete...`
     );
     if (
       !(await testController.pollForCondition(
         () => {
           // Check both button state AND detailed results availability
-          const buttonReady = runFullTestButton && !runFullTestButton.disabled;
+          const buttonReady = targetButton && !targetButton.disabled;
           const detailedResults = typeof window !== 'undefined' && window.__spoilerTestResults__;
           const hasProcessedEvents = detailedResults && detailedResults.processedEvents !== undefined;
           
@@ -220,16 +226,16 @@ export async function testSpoilersPanelFullRun(testController) {
           
           return buttonReady && detailedResults && hasProcessedEvents;
         },
-        'Full spoiler test completion with detailed results',
+        'Spoiler test completion with detailed results',
         MAX_WAIT_TIME_TEST_COMPLETION,
         1000
       ))
     ) {
       throw new Error(
-        'Full spoiler test did not complete within the maximum wait time.'
+        'Spoiler test did not complete within the maximum wait time.'
       );
     }
-    testController.reportCondition('Full spoiler test completed', true);
+    testController.reportCondition('Spoiler test completed', true);
 
     // 6. Collect and analyze results from the log container and window.__spoilerTestResults__
     const logContainer = spoilersPanelElement.querySelector(

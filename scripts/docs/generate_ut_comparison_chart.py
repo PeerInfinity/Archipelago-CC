@@ -28,6 +28,25 @@ def load_test_results(results_file: str) -> Dict[str, Any]:
         return {}
 
 
+def load_world_mapping(project_root: str) -> Dict[str, str]:
+    """
+    Load the world mapping from JSON file.
+
+    Returns a dict mapping game names to world directory names.
+    """
+    mapping_file = os.path.join(project_root, 'scripts/data/world-mapping.json')
+    try:
+        with open(mapping_file, 'r') as f:
+            data = json.load(f)
+            # Extract just the game_name -> world_directory mapping
+            return {game_name: info['world_directory']
+                    for game_name, info in data.items()
+                    if 'world_directory' in info}
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        print(f"Warning: Could not load world mapping file {mapping_file}: {e}")
+        return {}
+
+
 def extract_ut_comparison_chart_data(results: Dict[str, Any]) -> List[Dict[str, Any]]:
     """
     Extract UT comparison test chart data from results.
@@ -113,7 +132,8 @@ def extract_ut_comparison_chart_data(results: Dict[str, Any]) -> List[Dict[str, 
 
 
 def generate_ut_comparison_markdown(chart_data: List[Dict[str, Any]],
-                                     metadata: Dict[str, Any]) -> str:
+                                     metadata: Dict[str, Any],
+                                     world_mapping: Dict[str, str]) -> str:
     """Generate a markdown table for UT comparison test data."""
     md_content = "# Universal Tracker Comparison Test Results\n\n"
 
@@ -143,11 +163,19 @@ def generate_ut_comparison_markdown(chart_data: List[Dict[str, Any]],
         md_content += f"- **With re_gen_passthrough:** {with_passthrough} ({with_passthrough/total_games*100:.1f}%)\n\n"
 
     md_content += "## Test Results\n\n"
+    md_content += "Click on a game name to load the JSON frontend and run the UT comparison spoiler test, "
+    md_content += "which will stop at the sphere with the first conflict.\n\n"
     md_content += "| Game Name | Result | Consistent | Spheres | Mismatches (min) | Mismatches (max) | Last Good (min) | Last Good (max) | re_gen |\n"
     md_content += "|-----------|:------:|:----------:|:-------:|:----------------:|:----------------:|:---------------:|:---------------:|:------:|\n"
 
     for data in chart_data:
         game_name = data['game_name']
+        # Get world directory for creating the link
+        world_dir = world_mapping.get(game_name)
+        if world_dir:
+            game_link = f"[{game_name}](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game={world_dir}&ut=true)"
+        else:
+            game_link = game_name  # No link if world directory not found
         passed = data['passed']
         results_consistent = data['results_consistent']
         total_spheres = data['total_spheres']
@@ -178,7 +206,7 @@ def generate_ut_comparison_markdown(chart_data: List[Dict[str, Any]],
         # re_gen_passthrough: green checkmark or black dot
         passthrough_display = "✅" if has_re_gen_passthrough else "⚫"
 
-        md_content += f"| {game_name} | {result_display} | {consistent_display} | {total_display} | {lowest_mismatch_display} | {highest_mismatch_display} | {lowest_before_display} | {highest_before_display} | {passthrough_display} |\n"
+        md_content += f"| {game_link} | {result_display} | {consistent_display} | {total_display} | {lowest_mismatch_display} | {highest_mismatch_display} | {lowest_before_display} | {highest_before_display} | {passthrough_display} |\n"
 
     if not chart_data:
         md_content += "| No data available | - | - | - | - | - | - | - | - |\n"
@@ -225,10 +253,13 @@ def main():
     if not results:
         return 1
 
+    # Load world mapping for creating game links
+    world_mapping = load_world_mapping(project_root)
+
     metadata = results.get('metadata', {})
     chart_data = extract_ut_comparison_chart_data(results)
 
-    md_content = generate_ut_comparison_markdown(chart_data, metadata)
+    md_content = generate_ut_comparison_markdown(chart_data, metadata, world_mapping)
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     with open(output_path, 'w') as f:

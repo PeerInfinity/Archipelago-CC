@@ -84,6 +84,16 @@ def log_sphere_details(file_handler, multiworld: "MultiWorld", sphere_index: Uni
                         item_name = location.item.name
                         base_items[item_name] = base_items.get(item_name, 0) + 1
 
+            # Also include precollected items (starting items) in base_items
+            # These are items the player starts with (e.g., Compass Badge in A Hat in Time)
+            # This ensures base_items matches the starting_items field in rules.json
+            # and is consistent with how UT TrackerClient reports inventory
+            if player_id in multiworld.precollected_items:
+                for item in multiworld.precollected_items[player_id]:
+                    # Include all precollected items (same as starting_items in rules.json)
+                    item_name = item.name
+                    base_items[item_name] = base_items.get(item_name, 0) + 1
+
             inventory_details = {
                 "base_items": base_items,
                 "resolved_items": resolved_items
