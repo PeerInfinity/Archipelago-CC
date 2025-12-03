@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "combined_from": 1,
+    "created": "2025-12-03T16:23:40.170336",
+    "last_updated": "2025-12-03T16:23:40.170340",
+    "script_version": "1.0.0",
+    "seed": "random",
+    "total_templates": 1
+  },
+  "results": {
+    "Adventure.yaml": {
+      "timestamp": "2025-12-03T16:23:20.325342",
+      "ut_comparison": {
+        "any_passed": true,
+        "highest_mismatch_count": 0,
+        "highest_sphere_before_mismatch": "6.1",
+        "last_sphere_index": "6.1",
+        "lowest_mismatch_count": 0,
+        "lowest_sphere_before_mismatch": "6.1",
+        "num_runs": 1,
+        "passed": true,
+        "results_consistent": true,
+        "run_details": [
+          {
+            "error": null,
+            "first_mismatch_sphere": null,
+            "last_sphere_before_first_mismatch": "6.1",
+            "passed": true,
+            "seed": null,
+            "spheres_matched": 10,
+            "spheres_mismatched": 0
+          }
+        ],
+        "total_spheres": 10
+      },
+      "world_info": {
+        "game_name_from_yaml": "Adventure",
+        "has_re_gen_passthrough": false
+      }
+    }
+  }
+}
