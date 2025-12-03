@@ -96,6 +96,11 @@
             },
             {
               "type": "component",
+              "componentType": "discoveryPanel",
+              "title": "Discovery"
+            },
+            {
+              "type": "component",
               "componentType": "progressBarPanel",
               "title": "Progress Bars"
             },

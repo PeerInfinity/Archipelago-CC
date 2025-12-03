@@ -422,8 +422,8 @@ def main():
     parser.add_argument(
         '--output-file',
         type=str,
-        required=True,
-        help='Output file path for combined results'
+        default=None,
+        help='Output file path for combined results (auto-computed if not specified)'
     )
     parser.add_argument(
         '--dry-run',
@@ -449,6 +449,20 @@ def main():
     if not input_files:
         print("Error: No input files specified")
         sys.exit(1)
+
+    # Auto-compute output filename if not specified
+    if args.output_file is None:
+        # Detect seed type from input filenames
+        input_files_str = " ".join(input_files)
+        if "random" in input_files_str:
+            seed_type = "random"
+        elif "fixed" in input_files_str:
+            seed_type = "fixed"
+        else:
+            # Default to the first file's directory for output
+            seed_type = "combined"
+        args.output_file = f"scripts/output/ut-comparison/test-results-{seed_type}-seed.json"
+        print(f"Auto-computed output file: {args.output_file}")
 
     print(f"Combining {len(input_files)} test result files:")
     for f in input_files:
