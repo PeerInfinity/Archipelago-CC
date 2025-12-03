@@ -7,6 +7,9 @@ markdown reports showing the comparison status for each game template.
 
 The UT comparison test validates that Universal Tracker's accessibility
 calculations match the Python-generated sphere log at each step.
+
+This script can process both random seed and fixed seed test results,
+generating separate markdown files for each with cross-links between them.
 """
 
 import argparse
@@ -133,17 +136,52 @@ def extract_ut_comparison_chart_data(results: Dict[str, Any]) -> List[Dict[str, 
 
 def generate_ut_comparison_markdown(chart_data: List[Dict[str, Any]],
                                      metadata: Dict[str, Any],
-                                     world_mapping: Dict[str, str]) -> str:
-    """Generate a markdown table for UT comparison test data."""
-    md_content = "# Universal Tracker Comparison Test Results\n\n"
+                                     world_mapping: Dict[str, str],
+                                     seed_type: str = None,
+                                     other_results_link: str = None) -> str:
+    """
+    Generate a markdown table for UT comparison test data.
 
-    # Add link to summary document
+    Args:
+        chart_data: List of test result data dicts
+        metadata: Metadata from the test results
+        world_mapping: Mapping of game names to world directories
+        seed_type: Either "random" or "fixed" to indicate which seed type this is
+        other_results_link: Relative path to the other results file for cross-linking
+    """
+    # Determine title based on seed type
+    if seed_type == "random":
+        title_suffix = " (Random Seed)"
+    elif seed_type == "fixed":
+        title_suffix = " (Fixed Seed)"
+    else:
+        title_suffix = ""
+
+    md_content = f"# Universal Tracker Comparison Test Results{title_suffix}\n\n"
+
+    # Add navigation links
     md_content += "[<- Back to Test Results Summary](./test-results-summary.md)\n\n"
+
+    # Add cross-link to other results if available
+    if other_results_link:
+        if seed_type == "random":
+            md_content += f"**See also:** [Fixed Seed Results]({other_results_link}) - Tests run with seed=1 for reproducibility\n\n"
+        elif seed_type == "fixed":
+            md_content += f"**See also:** [Random Seed Results]({other_results_link}) - Tests run with random seeds for variety\n\n"
 
     if metadata:
         md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
         md_content += f"**Source Data Created:** {metadata.get('created', 'Unknown')}\n\n"
         md_content += f"**Source Data Last Updated:** {metadata.get('last_updated', 'Unknown')}\n\n"
+
+        # Show seed information
+        seed_mode = metadata.get('seed_mode', metadata.get('seed', 'Unknown'))
+        if seed_type == "random":
+            md_content += f"**Seed Mode:** Random (different seed for each test)\n\n"
+        elif seed_type == "fixed":
+            fixed_seed = metadata.get('seed', '1')
+            md_content += f"**Seed Mode:** Fixed (seed={fixed_seed})\n\n"
+
         runs_per_template = metadata.get('runs_per_template', 1)
         if runs_per_template > 1:
             md_content += f"**Runs Per Template:** {runs_per_template}\n\n"
@@ -226,47 +264,146 @@ def generate_ut_comparison_markdown(chart_data: List[Dict[str, Any]],
 
 def main():
     parser = argparse.ArgumentParser(description='Generate UT comparison test results chart')
-    parser.add_argument('--input-file', type=str, help='Input JSON file path')
-    parser.add_argument('--output-file', type=str, help='Output markdown file path')
+    parser.add_argument('--input-file', type=str,
+                        help='Input JSON file path (legacy single-file mode)')
+    parser.add_argument('--output-file', type=str,
+                        help='Output markdown file path (legacy single-file mode)')
+    parser.add_argument('--random-results', type=str,
+                        help='Path to random seed test results JSON')
+    parser.add_argument('--fixed-results', type=str,
+                        help='Path to fixed seed test results JSON')
 
     args = parser.parse_args()
 
     # Script is at scripts/docs/generate_ut_comparison_chart.py, go up 2 levels to reach project root
     project_root = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
-    # Default paths
-    if args.input_file:
-        input_path = os.path.join(project_root, args.input_file) if not os.path.isabs(args.input_file) else args.input_file
-    else:
-        input_path = os.path.join(project_root, 'scripts/output/ut-comparison/test-results.json')
-
-    if args.output_file:
-        output_path = os.path.join(project_root, args.output_file) if not os.path.isabs(args.output_file) else args.output_file
-    else:
-        output_path = os.path.join(project_root, 'docs/json/developer/test-results/test-results-ut-comparison.md')
-
-    if not os.path.exists(input_path):
-        print(f"Error: Input file not found: {input_path}")
-        return 1
-
-    results = load_test_results(input_path)
-    if not results:
-        return 1
-
     # Load world mapping for creating game links
     world_mapping = load_world_mapping(project_root)
 
-    metadata = results.get('metadata', {})
-    chart_data = extract_ut_comparison_chart_data(results)
+    # Determine which mode we're in
+    if args.input_file or args.output_file:
+        # Legacy single-file mode
+        if args.input_file:
+            input_path = os.path.join(project_root, args.input_file) if not os.path.isabs(args.input_file) else args.input_file
+        else:
+            input_path = os.path.join(project_root, 'scripts/output/ut-comparison/test-results.json')
 
-    md_content = generate_ut_comparison_markdown(chart_data, metadata, world_mapping)
+        if args.output_file:
+            output_path = os.path.join(project_root, args.output_file) if not os.path.isabs(args.output_file) else args.output_file
+        else:
+            output_path = os.path.join(project_root, 'docs/json/developer/test-results/test-results-ut-comparison.md')
 
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    with open(output_path, 'w') as f:
-        f.write(md_content)
+        if not os.path.exists(input_path):
+            print(f"Error: Input file not found: {input_path}")
+            return 1
 
-    print(f"UT comparison chart saved to: {output_path}")
-    return 0
+        results = load_test_results(input_path)
+        if not results:
+            return 1
+
+        metadata = results.get('metadata', {})
+        chart_data = extract_ut_comparison_chart_data(results)
+
+        md_content = generate_ut_comparison_markdown(chart_data, metadata, world_mapping)
+
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        with open(output_path, 'w') as f:
+            f.write(md_content)
+
+        print(f"UT comparison chart saved to: {output_path}")
+        return 0
+
+    # New dual-file mode: process both random and fixed results
+    # Default paths for results files
+    random_results_path = args.random_results
+    if random_results_path:
+        random_results_path = os.path.join(project_root, random_results_path) if not os.path.isabs(random_results_path) else random_results_path
+    else:
+        random_results_path = os.path.join(project_root, 'scripts/output/ut-comparison/test-results-random-seed.json')
+
+    fixed_results_path = args.fixed_results
+    if fixed_results_path:
+        fixed_results_path = os.path.join(project_root, fixed_results_path) if not os.path.isabs(fixed_results_path) else fixed_results_path
+    else:
+        fixed_results_path = os.path.join(project_root, 'scripts/output/ut-comparison/test-results-fixed-seed.json')
+
+    # Output paths for markdown files
+    output_dir = os.path.join(project_root, 'docs/json/developer/test-results')
+    random_output_path = os.path.join(output_dir, 'test-results-ut-comparison-random-seed.md')
+    fixed_output_path = os.path.join(output_dir, 'test-results-ut-comparison-fixed-seed.md')
+
+    # Check which result files exist
+    has_random = os.path.exists(random_results_path)
+    has_fixed = os.path.exists(fixed_results_path)
+
+    if not has_random and not has_fixed:
+        print(f"Error: No result files found.")
+        print(f"  Looked for random: {random_results_path}")
+        print(f"  Looked for fixed: {fixed_results_path}")
+        return 1
+
+    os.makedirs(output_dir, exist_ok=True)
+    files_generated = []
+
+    # Process random seed results
+    if has_random:
+        random_results = load_test_results(random_results_path)
+        if random_results:
+            random_metadata = random_results.get('metadata', {})
+            random_chart_data = extract_ut_comparison_chart_data(random_results)
+
+            # Determine cross-link (only if fixed results also exist)
+            other_link = './test-results-ut-comparison-fixed-seed.md' if has_fixed else None
+
+            random_md = generate_ut_comparison_markdown(
+                random_chart_data,
+                random_metadata,
+                world_mapping,
+                seed_type="random",
+                other_results_link=other_link
+            )
+
+            with open(random_output_path, 'w') as f:
+                f.write(random_md)
+
+            print(f"Random seed chart saved to: {random_output_path}")
+            files_generated.append(random_output_path)
+    else:
+        print(f"Skipping random seed results (file not found: {random_results_path})")
+
+    # Process fixed seed results
+    if has_fixed:
+        fixed_results = load_test_results(fixed_results_path)
+        if fixed_results:
+            fixed_metadata = fixed_results.get('metadata', {})
+            fixed_chart_data = extract_ut_comparison_chart_data(fixed_results)
+
+            # Determine cross-link (only if random results also exist)
+            other_link = './test-results-ut-comparison-random-seed.md' if has_random else None
+
+            fixed_md = generate_ut_comparison_markdown(
+                fixed_chart_data,
+                fixed_metadata,
+                world_mapping,
+                seed_type="fixed",
+                other_results_link=other_link
+            )
+
+            with open(fixed_output_path, 'w') as f:
+                f.write(fixed_md)
+
+            print(f"Fixed seed chart saved to: {fixed_output_path}")
+            files_generated.append(fixed_output_path)
+    else:
+        print(f"Skipping fixed seed results (file not found: {fixed_results_path})")
+
+    if files_generated:
+        print(f"\nGenerated {len(files_generated)} markdown file(s)")
+        return 0
+    else:
+        print("No files were generated due to errors loading results")
+        return 1
 
 
 if __name__ == '__main__':
