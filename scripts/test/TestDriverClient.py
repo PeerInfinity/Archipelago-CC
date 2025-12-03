@@ -86,9 +86,12 @@ class TestDriverContext(CommonContext):
                 sphere = data.get("sphere")
 
                 if action == "READY":
-                    logger.debug(f"[TestDriver] Received READY for sphere {sphere}")
+                    logger.info(f"[TestDriver] Received READY for sphere {sphere}")
                     if sphere in self.ready_events:
+                        logger.info(f"[TestDriver] Setting event for sphere {sphere}")
                         self.ready_events[sphere].set()
+                    else:
+                        logger.warning(f"[TestDriver] No event registered for sphere {sphere}, known: {list(self.ready_events.keys())[-5:]}")
 
     def load_sphere_log(self) -> bool:
         """Load and parse the Python sphere log file."""
@@ -127,10 +130,12 @@ class TestDriverContext(CommonContext):
         # Wait for READY response with timeout
         try:
             await asyncio.wait_for(self.ready_events[sphere].wait(), timeout=30.0)
-            logger.debug(f"[TestDriver] Received READY for sphere {sphere}")
+            logger.info(f"[TestDriver] Got READY, continuing from sphere {sphere}")
             return True
         except asyncio.TimeoutError:
             logger.error(f"[TestDriver] Timeout waiting for READY for sphere {sphere}")
+            logger.error(f"[TestDriver] Event state: {self.ready_events[sphere].is_set()}")
+            logger.error(f"[TestDriver] Known events: {list(self.ready_events.keys())[-10:]}")
             return False
 
     async def send_complete_bounce(self):
