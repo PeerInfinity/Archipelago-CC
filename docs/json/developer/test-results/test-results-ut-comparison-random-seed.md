@@ -2,19 +2,19 @@
 
 [<- Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-12-03 01:45:18
+**Generated:** 2025-12-03 17:11:06
 
-**Source Data Created:** 2025-12-03T01:45:18.847958
+**Source Data Created:** 2025-12-03T17:11:05.953736
 
-**Source Data Last Updated:** 2025-12-03T01:45:18.847965
+**Source Data Last Updated:** 2025-12-03T17:11:05.953743
 
 **Seed Mode:** Random (different seed for each test)
 
 ## Summary
 
 - **Total Games:** 78
-- **Passed:** 29 (37.2%)
-- **Failed:** 49 (62.8%)
+- **Passed:** 36 (46.2%)
+- **Failed:** 42 (53.8%)
 - **Consistent Results:** 78 (100.0%)
 - **With re_gen_passthrough:** 7 (9.0%)
 
@@ -45,12 +45,12 @@ Click on a game name to load the JSON frontend and run the UT comparison spoiler
 | [DOOM 1993](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=doom_1993&ut=true) | ✅ | ✅ | 18.2 | 0 | 0 | 18.2 | 18.2 | ⚫ |
 | [DOOM II](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=doom_ii&ut=true) | ✅ | ✅ | 21.2 | 0 | 0 | 21.2 | 21.2 | ⚫ |
 | [Dark Souls III](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=dark_souls_3&ut=true) | ❌ | ✅ | 5.1 | 9 | 9 | 1.3 | 1.3 | ✅ |
-| [Donkey Kong Country 3](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=dkc3&ut=true) | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
+| [Donkey Kong Country 3](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=dkc3&ut=true) | ✅ | ✅ | 3.1 | 0 | 0 | 3.1 | 3.1 | ⚫ |
 | [Factorio](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=factorio&ut=true) | ❌ | ✅ | 12.1 | 54 | 54 | - | - | ⚫ |
 | [Faxanadu](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=faxanadu&ut=true) | ❌ | ✅ | 9.1 | 4 | 4 | 2.1 | 2.1 | ⚫ |
 | [Final Fantasy Mystic Quest](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=ffmq&ut=true) | ❌ | ✅ | 18.2 | 38 | 38 | - | - | ⚫ |
 | [Heretic](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=heretic&ut=true) | ✅ | ✅ | 24.1 | 0 | 0 | 24.1 | 24.1 | ⚫ |
-| [Hylics 2](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=hylics2&ut=true) | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
+| [Hylics 2](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=hylics2&ut=true) | ✅ | ✅ | 7.2 | 0 | 0 | 7.2 | 7.2 | ⚫ |
 | [Inscryption](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=inscryption&ut=true) | ✅ | ✅ | 9.2 | 0 | 0 | 9.2 | 9.2 | ⚫ |
 | [Jak and Daxter: The Precursor Legacy](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=jakanddaxter&ut=true) | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
 | [Kingdom Hearts](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=kh1&ut=true) | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
@@ -77,15 +77,15 @@ Click on a game name to load the JSON frontend and run the UT comparison spoiler
 | [Risk of Rain 2](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=ror2&ut=true) | ✅ | ✅ | 8.3 | 0 | 0 | 8.3 | 8.3 | ⚫ |
 | [SMZ3](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=smz3&ut=true) | ❌ | ✅ | 16.2 | 19 | 19 | - | - | ⚫ |
 | [Saving Princess](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=saving_princess&ut=true) | ✅ | ✅ | 5.1 | 0 | 0 | 5.1 | 5.1 | ⚫ |
-| [Secret of Evermore](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=soe&ut=true) | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
+| [Secret of Evermore](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=soe&ut=true) | ✅ | ✅ | 5.2 | 0 | 0 | 5.2 | 5.2 | ⚫ |
 | [Shivers](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=shivers&ut=true) | ❌ | ✅ | 17.1 | 22 | 22 | 0.4 | 0.4 | ⚫ |
-| [Sonic Adventure 2 Battle](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sa2b&ut=true) | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
+| [Sonic Adventure 2 Battle](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sa2b&ut=true) | ✅ | ✅ | 7.11 | 0 | 0 | 7.11 | 7.11 | ⚫ |
 | [Starcraft 2](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sc2&ut=true) | ❌ | ✅ | 15.5 | 23 | 23 | 0.3 | 0.3 | ⚫ |
 | [Stardew Valley](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=stardew_valley&ut=true) | ❌ | ✅ | 0 | 0 | 0 | - | - | ✅ |
 | [Subnautica](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=subnautica&ut=true) | ✅ | ✅ | 6.1 | 0 | 0 | 6.1 | 6.1 | ⚫ |
-| [Super Mario 64](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sm64ex&ut=true) | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
+| [Super Mario 64](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sm64ex&ut=true) | ✅ | ✅ | 5.4 | 0 | 0 | 5.4 | 5.4 | ⚫ |
 | [Super Mario Land 2](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=marioland2&ut=true) | ❌ | ✅ | 10.1 | 2 | 2 | 8.2 | 8.2 | ⚫ |
-| [Super Mario World](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=smw&ut=true) | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
+| [Super Mario World](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=smw&ut=true) | ✅ | ✅ | 8.2 | 0 | 0 | 8.2 | 8.2 | ⚫ |
 | [Super Metroid](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=sm&ut=true) | ❌ | ✅ | 8.3 | 10 | 10 | 2.1 | 2.1 | ⚫ |
 | [TUNIC](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=tunic&ut=true) | ❌ | ✅ | 5.1 | 12 | 12 | - | - | ✅ |
 | [Terraria](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=terraria&ut=true) | ❌ | ✅ | 9.5 | 23 | 23 | - | - | ⚫ |
@@ -95,10 +95,10 @@ Click on a game name to load the JSON frontend and run the UT comparison spoiler
 | [The Witness](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=witness&ut=true) | ❌ | ✅ | 9.1 | 3 | 3 | 6.3 | 6.3 | ⚫ |
 | [Timespinner](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=timespinner&ut=true) | ❌ | ✅ | 7.1 | 3 | 3 | 4.7 | 4.7 | ✅ |
 | [Undertale](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=undertale&ut=true) | ✅ | ✅ | 4.3 | 0 | 0 | 4.3 | 4.3 | ⚫ |
-| [VVVVVV](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=v6&ut=true) | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
+| [VVVVVV](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=v6&ut=true) | ✅ | ✅ | 2.4 | 0 | 0 | 2.4 | 2.4 | ⚫ |
 | [Wargroove](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=wargroove&ut=true) | ✅ | ✅ | 9.1 | 0 | 0 | 9.1 | 9.1 | ⚫ |
 | [WebDevJourney](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=codingadventure&ut=true) | ✅ | ✅ | 10.1 | 0 | 0 | 10.1 | 10.1 | ⚫ |
-| [Yacht Dice](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=yachtdice&ut=true) | ❌ | ✅ | 0 | 0 | 0 | - | - | ⚫ |
+| [Yacht Dice](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=yachtdice&ut=true) | ❌ | ✅ | 21.1 | 23 | 23 | - | - | ⚫ |
 | [Yoshi's Island](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=yoshisisland&ut=true) | ❌ | ✅ | 12.4 | 3 | 3 | 8.3 | 8.3 | ⚫ |
 | [Yu-Gi-Oh! 2006](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=yugioh06&ut=true) | ❌ | ✅ | 0 | 0 | 0 | - | - | ✅ |
 | [shapez](https://peerinfinity.github.io/Archipelago-CC/?mode=test-spoilers-headed&game=shapez&ut=true) | ❌ | ✅ | 5.7 | 4 | 4 | 1.1 | 1.1 | ✅ |

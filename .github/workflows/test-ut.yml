@@ -24,6 +24,11 @@ on:
         type: boolean
         default: true
 
+      debug_mode:
+        description: 'Debug mode: only process Adventure.yaml (for quick testing)'
+        type: boolean
+        default: false
+
 permissions:
   contents: write  # Allow pushing commits and creating branches
 
@@ -90,8 +95,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        split_num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        split_total: [10]
+        # In debug mode, only run 1 split since we're only testing Adventure.yaml
+        split_num: ${{ fromJSON(inputs.debug_mode && '[1]' || '[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]') }}
+        split_total: ${{ fromJSON(inputs.debug_mode && '[1]' || '[10]') }}
 
     steps:
       - name: Checkout ut-test branch
@@ -148,7 +154,8 @@ jobs:
             --runs-per-template ${{ inputs.runs_per_template }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --skip-chart
+            --skip-chart \
+            ${{ inputs.debug_mode && '--include-list Adventure.yaml' || '' }}
 
       - name: Upload test results for split ${{ matrix.split_num }}
         if: ${{ !cancelled() }}
@@ -237,8 +244,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        split_num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        split_total: [10]
+        # In debug mode, only run 1 split since we're only testing Adventure.yaml
+        split_num: ${{ fromJSON(inputs.debug_mode && '[1]' || '[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]') }}
+        split_total: ${{ fromJSON(inputs.debug_mode && '[1]' || '[10]') }}
 
     steps:
       - name: Checkout ut-test branch
@@ -296,7 +304,8 @@ jobs:
             --runs-per-template ${{ inputs.runs_per_template }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --skip-chart
+            --skip-chart \
+            ${{ inputs.debug_mode && '--include-list Adventure.yaml' || '' }}
 
       - name: Upload test results for split ${{ matrix.split_num }}
         if: ${{ !cancelled() }}
@@ -321,8 +330,7 @@ jobs:
     name: Combine UT Fixed Seed Results
     runs-on: ubuntu-latest
     needs: [setup-branch, test-ut-comparison-fixed]
-    # Use always() to ensure we check the condition even if earlier jobs were skipped
-    if: ${{ always() && !cancelled() && inputs.run_fixed_seed_test && needs.setup-branch.result == 'success' && needs.test-ut-comparison-fixed.result == 'success' }}
+    if: ${{ inputs.run_fixed_seed_test && !cancelled() }}
 
     steps:
       - name: Checkout ut-test branch
