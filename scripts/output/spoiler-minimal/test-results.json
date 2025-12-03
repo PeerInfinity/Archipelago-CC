@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-03T00:16:04.676957",
-    "last_updated": "2025-12-03T00:16:04.676964",
+    "last_updated": "2025-12-03T22:52:41.011787",
     "script_version": "1.0.0"
   },
   "results": {
@@ -37416,27 +37416,15 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "1": {
-              "new_rules_hash": "29e09a6ec663f18fd232bec177dba95877bbad30cf55993e8c7937d375b144ed",
-              "new_sphere_log_hash": "0672cb629e07d4da229c82462f276dffbba49de7363686eb150495736552fec1",
-              "original_rules_hash": "29e09a6ec663f18fd232bec177dba95877bbad30cf55993e8c7937d375b144ed",
-              "original_sphere_log_hash": "0672cb629e07d4da229c82462f276dffbba49de7363686eb150495736552fec1",
-              "rules_identical": true,
-              "seed": "1",
-              "spoilers_identical": true,
-              "timestamp": "2025-12-03T00:12:33.865055"
-            }
-          },
           "game_name_from_filename": "smz3",
           "game_name_from_yaml": "SMZ3",
           "generation": {
             "error_count": 0,
-            "error_type": null,
-            "processing_time_seconds": 4.52,
-            "return_code": 0,
-            "success": true,
-            "warning_count": 1
+            "note": "Skipped in test-only mode",
+            "processing_time_seconds": 0,
+            "return_code": null,
+            "success": false,
+            "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/smz3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -37448,7 +37436,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 16.89,
+            "processing_time_seconds": 21.44,
             "return_code": 0,
             "sphere_reached": 16.2,
             "success": true,
@@ -37456,7 +37444,7 @@
             "warning_count": 0
           },
           "template_filename": "SMZ3.yaml",
-          "timestamp": "2025-12-02T23:59:03.436204",
+          "timestamp": "2025-12-03T22:52:19.063521",
           "world_info": {
             "exporter_path": "exporter/games/smz3.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
@@ -38007,7 +37995,7 @@
         "failure_rate": 0.0
       },
       "template_filename": "SMZ3.yaml",
-      "timestamp": "2025-12-02T23:59:03.436204",
+      "timestamp": "2025-12-03T22:52:19.063521",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/smz3.py",

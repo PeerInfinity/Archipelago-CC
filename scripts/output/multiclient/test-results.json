@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-03T01:14:12.958838",
-    "last_updated": "2025-12-03T01:14:12.958844",
+    "last_updated": "2025-12-03T22:47:32.334089",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2563,10 +2563,10 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.52,
+        "processing_time_seconds": 7.72,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "multiclient_test": {
         "client1_event_locations": 0,
@@ -2576,17 +2576,17 @@
         "client1_manually_checkable_checked": 70,
         "client1_passed": false,
         "client1_total_locations": 316,
-        "client2_locations_received": 70,
+        "client2_locations_received": 0,
         "client2_passed": false,
-        "client2_total_locations": 316,
-        "error_count": 9,
+        "client2_total_locations": 0,
+        "error_count": 2,
         "locations_checked": 70,
-        "processing_time_seconds": 186.41,
+        "processing_time_seconds": 65.84,
         "return_code": 1,
-        "single_client_mode": false,
+        "single_client_mode": true,
         "success": false,
         "total_locations": 316,
-        "warning_count": 0
+        "warning_count": 87
       },
       "rules_file": {
         "path": "frontend/presets/smz3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -2596,7 +2596,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "SMZ3.yaml",
-      "timestamp": "2025-12-03T01:09:35.531839",
+      "timestamp": "2025-12-03T22:46:18.750353",
       "world_info": {
         "exporter_path": "exporter/games/smz3.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
