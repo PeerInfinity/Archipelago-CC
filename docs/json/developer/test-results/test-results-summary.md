@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-03 03:09:09
+**Generated:** 2025-12-03 03:42:49
 
 This summary combines results from 4 types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -122,7 +122,7 @@ These tests check multiple template configurations for the same game.
 
 | Game Name | Minimal (Advancement Items Only) | Full (All Locations) |
 |-----------|----------------------------------|-------------------------------|
-| A Link to the Past | [168/203 passed](./test-results-multitemplate-minimal.md#a-link-to-the-past) | ❓ N/A |
+| A Link to the Past | [168/203 passed](./test-results-multitemplate-minimal.md#a-link-to-the-past) | [168/203 passed](./test-results-multitemplate-full.md#a-link-to-the-past) |
 
 ## Excluded Games
 
