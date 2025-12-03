@@ -4,7 +4,7 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-12-03 12:12:25
+**Generated:** 2025-12-03 20:46:57
 
 ## Summary
 
@@ -1209,6 +1209,107 @@ Shows which templates were in the multiworld when each game was tested:
 | 8 | Yoshi's Island.yaml |
 | 9 | Yu-Gi-Oh! 2006.yaml |
 | 10 | shapez.yaml |
+
+
+## Bisection Results
+
+When a multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
+
+### Kingdom Hearts (Kingdom Hearts.yaml)
+
+**Failing pairs found:** 9
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| A Short Hike.yaml | ❌ | ✅ | ✅ | ❌ |
+| DOOM II.yaml | ❌ | ✅ | ✅ | ❌ |
+| Factorio.yaml | ❌ | ✅ | ✅ | ❌ |
+| Faxanadu.yaml | ❌ | ✅ | ✅ | ❌ |
+| Final Fantasy Mystic Quest.yaml | ❌ | ✅ | ✅ | ❌ |
+| Heretic.yaml | ❌ | ✅ | ✅ | ❌ |
+| Hylics 2.yaml | ❌ | ✅ | ✅ | ❌ |
+| Inscryption.yaml | ❌ | ✅ | ✅ | ❌ |
+| Jak and Daxter The Precursor Legacy.yaml | ❌ | ✅ | ✅ | ❌ |
+
+### Kingdom Hearts 2 (Kingdom Hearts 2.yaml)
+
+**Failing pairs found:** 6
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| A Short Hike.yaml | ❌ | ✅ | ✅ | ❌ |
+| DOOM II.yaml | ✅ | ✅ | ✅ | ✅ |
+| Factorio.yaml | ❌ | ✅ | ✅ | ❌ |
+| Faxanadu.yaml | ❌ | ✅ | ✅ | ❌ |
+| Final Fantasy Mystic Quest.yaml | ❌ | ✅ | ✅ | ❌ |
+| Heretic.yaml | ✅ | ✅ | ✅ | ✅ |
+| Hylics 2.yaml | ✅ | ✅ | ✅ | ✅ |
+| Inscryption.yaml | ❌ | ✅ | ✅ | ❌ |
+| Jak and Daxter The Precursor Legacy.yaml | ❌ | ✅ | ✅ | ❌ |
+
+### Paint (Paint.yaml)
+
+**Failing pairs found:** 9
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| A Short Hike.yaml | ❌ | ✅ | ✅ | ❌ |
+| Mario & Luigi Superstar Saga.yaml | ❌ | ✅ | ✅ | ❌ |
+| Mega Man 2.yaml | ❌ | ✅ | ✅ | ❌ |
+| MegaMan Battle Network 3.yaml | ❌ | ✅ | ✅ | ❌ |
+| Metamath.yaml | ❌ | ✅ | ✅ | ❌ |
+| Muse Dash.yaml | ❌ | ✅ | ✅ | ❌ |
+| Noita.yaml | ❌ | ✅ | ✅ | ❌ |
+| Old School Runescape.yaml | ❌ | ✅ | ✅ | ❌ |
+| Overcooked! 2.yaml | ❌ | ✅ | ✅ | ❌ |
+
+### Stardew Valley (Stardew Valley.yaml)
+
+**Failing pairs found:** 9
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| A Short Hike.yaml | ❌ | ✅ | ✅ | ❌ |
+| Pokemon Red and Blue.yaml | ❌ | ✅ | ✅ | ❌ |
+| Raft.yaml | ❌ | ✅ | ✅ | ❌ |
+| Risk of Rain 2.yaml | ❌ | ✅ | ✅ | ❌ |
+| Saving Princess.yaml | ❌ | ✅ | ✅ | ❌ |
+| Secret of Evermore.yaml | ❌ | ✅ | ✅ | ❌ |
+| Shivers.yaml | ❌ | ✅ | ✅ | ❌ |
+| Sonic Adventure 2 Battle.yaml | ❌ | ✅ | ✅ | ❌ |
+| Starcraft 2.yaml | ❌ | ✅ | ✅ | ❌ |
+
+### Super Metroid (Super Metroid.yaml)
+
+**Failing pairs found:** 7
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| A Short Hike.yaml | ✅ | ✅ | ✅ | ✅ |
+| Saving Princess.yaml | ❌ | ✅ | ✅ | ❌ |
+| Secret of Evermore.yaml | ❌ | ✅ | ✅ | ❌ |
+| Shivers.yaml | ❌ | ✅ | ✅ | ❌ |
+| Sonic Adventure 2 Battle.yaml | ✅ | ✅ | ✅ | ✅ |
+| Starcraft 2.yaml | ❌ | ✅ | ✅ | ❌ |
+| Subnautica.yaml | ❌ | ✅ | ✅ | ❌ |
+| Super Mario 64.yaml | ❌ | ✅ | ✅ | ❌ |
+| Super Mario World.yaml | ❌ | ✅ | ✅ | ❌ |
+
+### Yacht Dice (Yacht Dice.yaml)
+
+**Failing pairs found:** 9
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| TUNIC.yaml | ❌ | ✅ | ✅ | ❌ |
+| Terraria.yaml | ❌ | ✅ | ✅ | ❌ |
+| The Legend of Zelda.yaml | ❌ | ✅ | ✅ | ❌ |
+| The Wind Waker.yaml | ❌ | ✅ | ✅ | ❌ |
+| The Witness.yaml | ❌ | ✅ | ✅ | ❌ |
+| Timespinner.yaml | ❌ | ✅ | ✅ | ❌ |
+| Undertale.yaml | ❌ | ✅ | ✅ | ❌ |
+| VVVVVV.yaml | ❌ | ✅ | ✅ | ❌ |
+| Wargroove.yaml | ❌ | ✅ | ✅ | ❌ |
 
 
 ## Notes
