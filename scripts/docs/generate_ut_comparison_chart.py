@@ -8,8 +8,10 @@ markdown reports showing the comparison status for each game template.
 The UT comparison test validates that Universal Tracker's accessibility
 calculations match the Python-generated sphere log at each step.
 
-This script can process both random seed and fixed seed test results,
-generating separate markdown files for each with cross-links between them.
+This script processes both random seed and fixed seed test results,
+generating separate markdown files for each with cross-links between them:
+- test-results-ut-comparison-random-seed.md
+- test-results-ut-comparison-fixed-seed.md
 """
 
 import argparse
@@ -264,10 +266,6 @@ def generate_ut_comparison_markdown(chart_data: List[Dict[str, Any]],
 
 def main():
     parser = argparse.ArgumentParser(description='Generate UT comparison test results chart')
-    parser.add_argument('--input-file', type=str,
-                        help='Input JSON file path (legacy single-file mode)')
-    parser.add_argument('--output-file', type=str,
-                        help='Output markdown file path (legacy single-file mode)')
     parser.add_argument('--random-results', type=str,
                         help='Path to random seed test results JSON')
     parser.add_argument('--fixed-results', type=str,
@@ -281,40 +279,6 @@ def main():
     # Load world mapping for creating game links
     world_mapping = load_world_mapping(project_root)
 
-    # Determine which mode we're in
-    if args.input_file or args.output_file:
-        # Legacy single-file mode
-        if args.input_file:
-            input_path = os.path.join(project_root, args.input_file) if not os.path.isabs(args.input_file) else args.input_file
-        else:
-            input_path = os.path.join(project_root, 'scripts/output/ut-comparison/test-results.json')
-
-        if args.output_file:
-            output_path = os.path.join(project_root, args.output_file) if not os.path.isabs(args.output_file) else args.output_file
-        else:
-            output_path = os.path.join(project_root, 'docs/json/developer/test-results/test-results-ut-comparison.md')
-
-        if not os.path.exists(input_path):
-            print(f"Error: Input file not found: {input_path}")
-            return 1
-
-        results = load_test_results(input_path)
-        if not results:
-            return 1
-
-        metadata = results.get('metadata', {})
-        chart_data = extract_ut_comparison_chart_data(results)
-
-        md_content = generate_ut_comparison_markdown(chart_data, metadata, world_mapping)
-
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        with open(output_path, 'w') as f:
-            f.write(md_content)
-
-        print(f"UT comparison chart saved to: {output_path}")
-        return 0
-
-    # New dual-file mode: process both random and fixed results
     # Default paths for results files
     random_results_path = args.random_results
     if random_results_path:

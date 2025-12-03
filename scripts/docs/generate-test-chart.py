@@ -794,7 +794,7 @@ def generate_multitemplate_markdown(chart_data: Dict[str, List[Tuple[str, str, i
     return md_content
 
 
-def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None, ut_comparison_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None) -> str:
+def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None, ut_comparison_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None, has_ut_random=False, has_ut_fixed=False) -> str:
     """Generate a combined summary chart with all test results."""
     md_content = "# Archipelago Template Test Results Summary\n\n"
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
@@ -815,7 +815,10 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
     # Add link to UT comparison (separate from main test types - not included in statistics)
     if ut_comparison_data is not None:
         md_content += "\nAdditional test results:\n"
-        md_content += "- **UT Comparison Test:** Validates Universal Tracker matches Python sphere log - [View Details](./test-results-ut-comparison.md)\n"
+        if has_ut_fixed:
+            md_content += "- **UT Comparison Test (Fixed Seed):** Validates Universal Tracker matches Python sphere log with seed=1 - [View Details](./test-results-ut-comparison-fixed-seed.md)\n"
+        if has_ut_random:
+            md_content += "- **UT Comparison Test (Random Seed):** Validates Universal Tracker matches Python sphere log with random seeds - [View Details](./test-results-ut-comparison-random-seed.md)\n"
 
     md_content += "\n"
 
@@ -1208,21 +1211,56 @@ def main():
     else:
         print(f"Info: Multitemplate full test results not found: {mtfull_input}")
 
-    # Load UT comparison test results
-    ut_input = os.path.join(project_root, 'scripts/output/ut-comparison/test-results.json')
-    ut_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-ut-comparison.md')
+    # Load UT comparison test results (both random and fixed seed)
+    ut_random_input = os.path.join(project_root, 'scripts/output/ut-comparison/test-results-random-seed.json')
+    ut_fixed_input = os.path.join(project_root, 'scripts/output/ut-comparison/test-results-fixed-seed.json')
+    ut_output_dir = os.path.join(project_root, 'docs/json/developer/test-results')
 
-    ut_data = None
-    if os.path.exists(ut_input):
-        ut_results = load_test_results(ut_input)
-        ut_data = extract_ut_comparison_chart_data(ut_results)
-        world_mapping = load_world_mapping(project_root)
-        ut_md = generate_ut_comparison_markdown(ut_data, ut_results.get('metadata', {}), world_mapping)
-        os.makedirs(os.path.dirname(ut_output), exist_ok=True)
-        with open(ut_output, 'w') as f:
-            f.write(ut_md)
+    ut_random_data = None
+    ut_fixed_data = None
+    world_mapping = load_world_mapping(project_root)
+
+    has_random = os.path.exists(ut_random_input)
+    has_fixed = os.path.exists(ut_fixed_input)
+
+    if has_random:
+        ut_random_results = load_test_results(ut_random_input)
+        ut_random_data = extract_ut_comparison_chart_data(ut_random_results)
+        other_link = './test-results-ut-comparison-fixed-seed.md' if has_fixed else None
+        ut_random_md = generate_ut_comparison_markdown(
+            ut_random_data,
+            ut_random_results.get('metadata', {}),
+            world_mapping,
+            seed_type="random",
+            other_results_link=other_link
+        )
+        ut_random_output = os.path.join(ut_output_dir, 'test-results-ut-comparison-random-seed.md')
+        os.makedirs(ut_output_dir, exist_ok=True)
+        with open(ut_random_output, 'w') as f:
+            f.write(ut_random_md)
     else:
-        print(f"Info: UT comparison test results not found: {ut_input}")
+        print(f"Info: UT comparison random seed results not found: {ut_random_input}")
+
+    if has_fixed:
+        ut_fixed_results = load_test_results(ut_fixed_input)
+        ut_fixed_data = extract_ut_comparison_chart_data(ut_fixed_results)
+        other_link = './test-results-ut-comparison-random-seed.md' if has_random else None
+        ut_fixed_md = generate_ut_comparison_markdown(
+            ut_fixed_data,
+            ut_fixed_results.get('metadata', {}),
+            world_mapping,
+            seed_type="fixed",
+            other_results_link=other_link
+        )
+        ut_fixed_output = os.path.join(ut_output_dir, 'test-results-ut-comparison-fixed-seed.md')
+        os.makedirs(ut_output_dir, exist_ok=True)
+        with open(ut_fixed_output, 'w') as f:
+            f.write(ut_fixed_md)
+    else:
+        print(f"Info: UT comparison fixed seed results not found: {ut_fixed_input}")
+
+    # For the summary, use fixed seed data if available, otherwise random
+    ut_data = ut_fixed_data if ut_fixed_data else ut_random_data
 
     # Generate summary chart
     if minimal_data or full_data or mp_data or mw_data or mtmin_data or mtfull_data or ut_data:
@@ -1234,7 +1272,7 @@ def main():
         full_meta = full_results.get('metadata', {}) if 'full_results' in locals() else None
 
         summary_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary.md')
-        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data, ut_data, excluded_games, minimal_meta, full_meta)
+        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data, ut_data, excluded_games, minimal_meta, full_meta, has_ut_random=has_random, has_ut_fixed=has_fixed)
         with open(summary_output, 'w') as f:
             f.write(summary_md)
 

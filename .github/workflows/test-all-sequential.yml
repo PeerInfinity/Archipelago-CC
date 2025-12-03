@@ -760,6 +760,7 @@ jobs:
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
             --multiworld \
+            --multiworld-bisect-failures \
             --output-file scripts/output/multiworld/test-results.json \
             --no-backup \
             -p
@@ -893,6 +894,7 @@ jobs:
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
             --multiworld \
+            --multiworld-bisect-failures \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
             --output-file scripts/output/multiworld/test-results-split-${{ matrix.split_num }}.json \

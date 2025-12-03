@@ -278,6 +278,3 @@
 {"type": "state_update", "sphere_index": "9.22", "player_data": {"1": {"new_inventory_details": {"base_items": {}, "resolved_items": {}}, "new_accessible_locations": [], "new_accessible_regions": [], "sphere_locations": []}}}
 {"type": "state_update", "sphere_index": "9.23", "player_data": {"1": {"new_inventory_details": {"base_items": {}, "resolved_items": {}}, "new_accessible_locations": [], "new_accessible_regions": [], "sphere_locations": []}}}
 {"type": "state_update", "sphere_index": "9.24", "player_data": {"1": {"new_inventory_details": {"base_items": {}, "resolved_items": {}}, "new_accessible_locations": [], "new_accessible_regions": [], "sphere_locations": []}}}
-{"type": "state_update", "sphere_index": "9.25", "player_data": {"1": {"new_inventory_details": {"base_items": {}, "resolved_items": {}}, "new_accessible_locations": [], "new_accessible_regions": [], "sphere_locations": []}}}
-{"type": "state_update", "sphere_index": "9.26", "player_data": {"1": {"new_inventory_details": {"base_items": {}, "resolved_items": {}}, "new_accessible_locations": [], "new_accessible_regions": [], "sphere_locations": []}}}
-{"type": "state_update", "sphere_index": "9.27", "player_data": {"1": {"new_inventory_details": {"base_items": {}, "resolved_items": {}}, "new_accessible_locations": [], "new_accessible_regions": [], "sphere_locations": []}}}

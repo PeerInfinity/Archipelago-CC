@@ -1,0 +1,58 @@
+# Upstream Feature Proposals
+
+This directory contains feature proposals for the upstream Archipelago project that would reduce the modifications needed in this fork.
+
+## Proposals
+
+### 1. [Generation Pipeline Hooks](./generation-hooks-proposal.md)
+
+**Status:** Draft
+
+Proposes adding a hook system to `Main.py` that allows APWorlds to register callbacks for generation events. This would enable:
+- Distributing the JSON exporter as an APWorld
+- Other post-generation utilities as APWorlds
+- Cleaner separation between core Archipelago and extensions
+
+**Impact if accepted:** Eliminates modifications to `Main.py` and `BaseClasses.py` for exporter integration.
+
+### 2. [ROM-less Generation Mode](./skip-required-files-proposal.md)
+
+**Status:** Draft
+
+Proposes adding a `skip_required_files` setting that allows generation to proceed without ROM files. This would enable:
+- CI/CD testing without ROM distribution
+- Logic development and debugging
+- Tool development and analytics
+
+**Impact if accepted:** Eliminates modifications to 11 world `__init__.py` files.
+
+### 3. [APWorld Settings Extension](./settings-extension-proposal.md)
+
+**Status:** Draft (may not require upstream changes)
+
+Analyzes options for APWorlds to define their own settings. Concludes that the existing `settings_key` pattern already supports this for hidden utility worlds - only documentation updates are needed.
+
+**Impact:** Clarifies that no upstream changes are needed for APWorld settings.
+
+## Current Fork Modifications
+
+These proposals aim to eliminate the following modifications from the upstream. For detailed diffs, see the [diffs documentation](../diffs/README.md).
+
+| File | Proposal | Diff File |
+|------|----------|-----------|
+| Main.py | Generation Hooks | [core-files.diff](../diffs/core-files.diff) |
+| BaseClasses.py | Generation Hooks | [core-files.diff](../diffs/core-files.diff) |
+| settings.py | Both proposals | [core-files.diff](../diffs/core-files.diff) |
+| worlds/alttp/\_\_init\_\_.py | ROM-less Generation | [world-init-files.diff](../diffs/world-init-files.diff) |
+| worlds/dkc3/\_\_init\_\_.py | ROM-less Generation | [world-init-files.diff](../diffs/world-init-files.diff) |
+| worlds/smw/\_\_init\_\_.py | ROM-less Generation | [world-init-files.diff](../diffs/world-init-files.diff) |
+| (8 more world files) | ROM-less Generation | [world-init-files.diff](../diffs/world-init-files.diff) |
+
+For a complete overview of all repository changes, see [repository-changes.md](../diffs/repository-changes.md).
+
+## Notes
+
+- These proposals are designed to be minimal and non-breaking
+- Each can be implemented independently
+- The Generation Hooks proposal has higher priority for this project
+- Both are designed to benefit the broader Archipelago ecosystem

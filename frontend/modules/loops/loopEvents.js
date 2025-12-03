@@ -35,10 +35,7 @@ export function initializeLoopEvents(eventBus) {
     }
   }, 'loops');
 
-  // Subscribe to exit click events from the Exits module
-  eventBus.subscribe('user:exitClicked', (eventData) => {
-    handleUserExitClicked(eventBus, eventData);
-  }, 'loops');
+  // Note: user:exitClicked is now handled via dispatcher (handleUserExitClickedForLoops)
 }
 
 /**
@@ -154,19 +151,35 @@ export function handleUserItemCheckForLoops(eventData, propagationOptions) {
 }
 
 /**
- * Handles the 'user:exitClicked' event from the Exits module.
- * When loop mode is active, builds a path to the exit and publishes region move events.
- * @param {EventBus} eventBus - The event bus instance
+ * Handles the 'user:exitClicked' event from the Exits module via dispatcher.
+ * When loop mode is active, intercepts the event and builds a path to the exit.
+ * When loop mode is not active, propagates to the next handler (regions module).
  * @param {object} eventData - The exit click data
+ * @param {object} propagationOptions - Options related to event propagation
  */
-function handleUserExitClicked(eventBus, eventData) {
+export function handleUserExitClickedForLoops(eventData, propagationOptions) {
   log('info', '[LoopEvents] Received user:exitClicked event:', eventData);
 
-  // Only process if loop mode is active
+  const dispatcher = getLoopsModuleDispatcher();
+
+  // If loop mode is NOT active, propagate to next handler (regions module will handle it)
   if (!isLoopModeActive) {
-    log('info', '[LoopEvents] Loop mode not active, ignoring exit click');
+    log('info', '[LoopEvents] Loop mode not active, propagating to next handler');
+    if (dispatcher) {
+      dispatcher.publishToNextModule(
+        moduleInfo.name,
+        'user:exitClicked',
+        eventData,
+        { direction: 'up' }
+      );
+    } else {
+      log('error', '[LoopEvents] Dispatcher not available for propagation');
+    }
     return;
   }
+
+  // Loop mode IS active - intercept and handle the event (don't propagate)
+  log('info', '[LoopEvents] Loop mode active, intercepting exit click');
 
   const { exitName, sourceRegion, destinationRegion, isDiscovered } = eventData;
 
@@ -265,13 +278,13 @@ function handleUserExitClicked(eventBus, eventData) {
     }
 
     // Publish all the region move events
-    const dispatcher = getLoopsModuleDispatcher();
-    if (dispatcher && moves.length > 0) {
+    const loopDispatcher = getLoopsModuleDispatcher();
+    if (loopDispatcher && moves.length > 0) {
       moves.forEach((move, index) => {
         log('info', `[LoopEvents] Publishing user:regionMove ${index + 1}/${moves.length}: ${move.sourceRegion} -> ${move.targetRegion}`);
 
         // Publish via dispatcher (like regionGraph does)
-        dispatcher.publish('user:regionMove', {
+        loopDispatcher.publish('user:regionMove', {
           sourceRegion: move.sourceRegion,
           targetRegion: move.targetRegion,
           exitUsed: move.exitUsed
