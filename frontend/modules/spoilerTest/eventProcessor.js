@@ -1004,7 +1004,12 @@ export class EventProcessor {
 
     // Step 2: Add cross-player items (items we received from other players' locations)
     // These are items in our new_inventory_details that we didn't get from checking our own locations
-    if (Object.keys(newItems).length > 0) {
+    // NOTE: Skip this for sphere 0 because starting items are already added by the main processing loop
+    // The base_items at sphere 0 ARE the starting items, not cross-player items
+    const sphereNumberInt = parseInt(String(context.sphere_number), 10);
+    const isBaseSphere = sphereNumberInt === 0 && String(context.sphere_number) === '0';
+
+    if (Object.keys(newItems).length > 0 && !isBaseSphere) {
       // Get snapshot to see what we currently have
       const beforeSnapshot = await stateManager.getFullSnapshot();
       const beforeInventory = beforeSnapshot.inventory || {};
