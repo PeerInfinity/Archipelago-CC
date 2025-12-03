@@ -330,8 +330,7 @@ jobs:
     name: Combine UT Fixed Seed Results
     runs-on: ubuntu-latest
     needs: [setup-branch, test-ut-comparison-fixed]
-    # Use always() to ensure we check the condition even if earlier jobs were skipped
-    if: ${{ always() && !cancelled() && inputs.run_fixed_seed_test && needs.setup-branch.result == 'success' && needs.test-ut-comparison-fixed.result == 'success' }}
+    if: ${{ inputs.run_fixed_seed_test && !cancelled() }}
 
     steps:
       - name: Checkout ut-test branch
