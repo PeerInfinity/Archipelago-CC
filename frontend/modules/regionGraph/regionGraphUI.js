@@ -11,6 +11,7 @@ import { GraphInteractionManager } from './graphInteractionManager.js';
 import { NavigationManager } from './navigationManager.js';
 import { LayoutControlsManager } from './layoutControlsManager.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
+import discoveryStateSingleton from '../discovery/singleton.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -52,6 +53,14 @@ export class RegionGraphUI {
     this.showName = true;
     this.showLabel1 = false;
     this.showLabel2 = false;
+
+    // Discovery mode state
+    this.isDiscoveryModeActive = false;
+    this.discoverySettings = {
+      undiscoveredDisplay: 'hidden',
+      clickDiscoversLocation: true,
+      showUndiscoveredDetails: false
+    };
     
     this.rootElement = document.createElement('div');
     this.rootElement.classList.add('region-graph-panel-container', 'panel-container');
@@ -246,6 +255,9 @@ export class RegionGraphUI {
 
     // Load display settings
     await this.loadDisplaySettings();
+
+    // Load discovery settings
+    await this.loadDiscoverySettings();
 
     try {
       if (!this.cytoscape) {
@@ -560,6 +572,54 @@ export class RegionGraphUI {
             'opacity': 1.0,
             'z-index': 10
           }
+        },
+        // Undiscovered region node styles (Discovery Mode)
+        {
+          selector: 'node.undiscovered',
+          style: {
+            'background-color': '#444',
+            'border-color': '#333',
+            'opacity': 0.5,
+            'font-style': 'italic',
+            'color': '#888'
+          }
+        },
+        {
+          selector: 'node.undiscovered-placeholder',
+          style: {
+            'background-color': '#555',
+            'border-color': '#444',
+            'opacity': 0.6,
+            'font-style': 'italic',
+            'color': '#999'
+          }
+        },
+        // Undiscovered edge styles (Discovery Mode)
+        {
+          selector: 'edge.undiscovered',
+          style: {
+            'line-color': '#444',
+            'target-arrow-color': '#444',
+            'line-style': 'dashed',
+            'opacity': 0.3,
+            'width': 1
+          }
+        },
+        {
+          selector: 'edge.undiscovered.bidirectional',
+          style: {
+            'source-arrow-color': '#444'
+          }
+        },
+        // Undiscovered location node styles
+        {
+          selector: '.location-node.undiscovered',
+          style: {
+            'background-color': '#444',
+            'border-color': '#333',
+            'opacity': 0.4,
+            'font-style': 'italic'
+          }
         }
       ],
       
@@ -643,33 +703,36 @@ export class RegionGraphUI {
   
   subscribeToEvents() {
     logger.debug('Subscribing to events...');
-    
+
     // Clear any existing subscriptions
     if (this.unsubscribeStateUpdate) this.unsubscribeStateUpdate();
     if (this.unsubscribeRegionChange) this.unsubscribeRegionChange();
     if (this.unsubscribeRulesLoaded) this.unsubscribeRulesLoaded();
     if (this.unsubscribeStateReady) this.unsubscribeStateReady();
-    
+    if (this.unsubscribeDiscoveryMode) this.unsubscribeDiscoveryMode();
+    if (this.unsubscribeDiscoverySettings) this.unsubscribeDiscoverySettings();
+    if (this.unsubscribeDiscoveryChanged) this.unsubscribeDiscoveryChanged();
+
     // Subscribe to state updates
-    this.unsubscribeStateUpdate = eventBus.subscribe('stateManager:snapshotUpdated', 
+    this.unsubscribeStateUpdate = eventBus.subscribe('stateManager:snapshotUpdated',
       (data) => this.onStateUpdate(data), 'regionGraph');
-    
+
     this.unsubscribeRegionChange = eventBus.subscribe('playerState:regionChanged',
       (data) => this.updatePlayerLocation(data.newRegion), 'regionGraph');
-    
+
     // Subscribe to path updates to track the full path
     this.unsubscribePathUpdate = eventBus.subscribe('playerState:pathUpdated',
       (data) => this.onPathUpdate(data), 'regionGraph');
-      
+
     // Subscribe to rules loaded event (like Regions module)
-    this.unsubscribeRulesLoaded = eventBus.subscribe('stateManager:rulesLoaded', 
+    this.unsubscribeRulesLoaded = eventBus.subscribe('stateManager:rulesLoaded',
       (event) => {
         logger.info('Received stateManager:rulesLoaded, initializing graph data');
         if (this.cy) {
           this.loadGraphData();
         }
       }, 'regionGraph');
-      
+
     // Subscribe to state ready event
     this.unsubscribeStateReady = eventBus.subscribe('stateManager:ready',
       () => {
@@ -678,6 +741,16 @@ export class RegionGraphUI {
           this.loadGraphData();
         }
       }, 'regionGraph');
+
+    // Subscribe to discovery mode events
+    this.unsubscribeDiscoveryMode = eventBus.subscribe('discovery:modeChanged',
+      (data) => this.onDiscoveryModeChanged(data), 'regionGraph');
+
+    this.unsubscribeDiscoverySettings = eventBus.subscribe('discovery:settingsChanged',
+      (data) => this.onDiscoverySettingsChanged(data), 'regionGraph');
+
+    this.unsubscribeDiscoveryChanged = eventBus.subscribe('discovery:changed',
+      () => this.onDiscoveryChanged(), 'regionGraph');
   }
 
   async loadGraphData() {
@@ -838,6 +911,64 @@ export class RegionGraphUI {
     return this.dataManager.updateLocationNodeZOrder();
   }
 
+  // Discovery mode event handlers
+  onDiscoveryModeChanged(data) {
+    if (data && typeof data.active === 'boolean') {
+      this.isDiscoveryModeActive = data.active;
+      logger.info(`Discovery mode changed: ${this.isDiscoveryModeActive}`);
+      // Update visibility of discovery-specific controls
+      this.layoutControlsManager.updateDiscoveryControlsVisibility();
+      // Rebuild the graph with discovery filtering
+      if (this.cy && this.graphInitialized) {
+        this.loadGraphData();
+      }
+    }
+  }
+
+  onDiscoverySettingsChanged(data) {
+    if (data && data.settings) {
+      this.discoverySettings.undiscoveredDisplay = data.settings.undiscoveredDisplay ?? 'hidden';
+      this.discoverySettings.clickDiscoversLocation = data.settings.clickDiscoversLocation ?? true;
+      this.discoverySettings.showUndiscoveredDetails = data.settings.showUndiscoveredDetails ?? false;
+      logger.info('Discovery settings updated:', this.discoverySettings);
+      // Rebuild the graph with new settings
+      if (this.cy && this.graphInitialized) {
+        this.loadGraphData();
+      }
+    }
+  }
+
+  onDiscoveryChanged() {
+    // Discovery state changed (region/location/exit discovered)
+    // Update the graph to reflect new discovery state
+    if (this.cy && this.graphInitialized) {
+      const snapshot = stateManager.getLatestStateSnapshot();
+      if (snapshot) {
+        this.dataManager.onStateUpdate({ snapshot });
+      }
+    }
+  }
+
+  async loadDiscoverySettings() {
+    try {
+      this.discoverySettings.undiscoveredDisplay = await settingsManager.getSetting(
+        'moduleSettings.discovery.undiscoveredDisplay', 'hidden');
+      this.discoverySettings.clickDiscoversLocation = await settingsManager.getSetting(
+        'moduleSettings.discovery.clickDiscoversLocation', true);
+      this.discoverySettings.showUndiscoveredDetails = await settingsManager.getSetting(
+        'moduleSettings.discovery.showUndiscoveredDetails', false);
+
+      // Check if discovery mode is currently enabled
+      this.isDiscoveryModeActive = await settingsManager.getSetting(
+        'moduleSettings.discovery.enableDiscoveryMode', false);
+
+      logger.debug('Loaded discovery settings:', this.discoverySettings,
+        'mode active:', this.isDiscoveryModeActive);
+    } catch (error) {
+      logger.error('Failed to load discovery settings:', error);
+    }
+  }
+
   destroy() {
     if (this.unsubscribeStateUpdate) {
       this.unsubscribeStateUpdate();
@@ -853,6 +984,15 @@ export class RegionGraphUI {
     }
     if (this.unsubscribeStateReady) {
       this.unsubscribeStateReady();
+    }
+    if (this.unsubscribeDiscoveryMode) {
+      this.unsubscribeDiscoveryMode();
+    }
+    if (this.unsubscribeDiscoverySettings) {
+      this.unsubscribeDiscoverySettings();
+    }
+    if (this.unsubscribeDiscoveryChanged) {
+      this.unsubscribeDiscoveryChanged();
     }
     if (this.cy) {
       this.cy.destroy();

@@ -3,6 +3,7 @@ import { evaluateRule } from '../shared/ruleEngine.js';
 import { createStateSnapshotInterface } from '../shared/stateInterface.js';
 import { getPlayerStateSingleton } from '../playerState/singleton.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
+import discoveryStateSingleton from '../discovery/singleton.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -156,27 +157,77 @@ export class GraphDataManager {
     const assumeBidirectional = playerSettings?.assume_bidirectional_exits === true;
     logger.debug('Exit configuration', { assumeBidirectional });
 
+    // Get discovery mode state and settings
+    const isDiscoveryModeActive = this.ui.isDiscoveryModeActive || false;
+    const discoverySettings = this.ui.discoverySettings || {
+      undiscoveredDisplay: 'hidden',
+      clickDiscoversLocation: true,
+      showUndiscoveredDetails: false
+    };
+
+    // Check if "Show Undiscovered" checkbox is checked (default to true if not found)
+    const showUndiscoveredCheckbox = this.ui.controlPanel?.querySelector('#graph-show-undiscovered');
+    const showUndiscovered = showUndiscoveredCheckbox?.checked ?? true;
+
+    // Track which regions are included for edge filtering
+    const includedRegions = new Set();
+
     // Create nodes for each region with location counts
     for (const [regionName, regionData] of regions.entries()) {
+      // Check discovery state
+      const isRegionDiscovered = discoveryStateSingleton.isRegionDiscovered(regionName);
+
+      // Filter undiscovered regions in discovery mode
+      if (isDiscoveryModeActive && !isRegionDiscovered) {
+        if (discoverySettings.undiscoveredDisplay === 'hidden' && !showUndiscovered) {
+          // Skip this region entirely
+          continue;
+        }
+      }
+
+      // Track included region
+      includedRegions.add(regionName);
+
       // Calculate location counts
       const locationCounts = this.calculateLocationCounts(regionName, regionData);
 
-      // Get display text based on settings
-      const displayText = this.ui.getRegionDisplayText(regionData);
+      // Determine display text based on discovery state
+      let displayText;
+      let nodeClasses = 'region';
 
-      // Add location counts if there are locations
-      const countLabel = `${locationCounts.checked}, ${locationCounts.accessible}, ${locationCounts.inaccessible} / ${locationCounts.total}`;
-      const fullLabel = locationCounts.total > 0 ? `${displayText}\n${countLabel}` : displayText;
+      if (isDiscoveryModeActive && !isRegionDiscovered) {
+        // Undiscovered region - show placeholder or full details based on settings
+        if (!discoverySettings.showUndiscoveredDetails) {
+          displayText = '???';
+          nodeClasses += ' undiscovered-placeholder';
+        } else {
+          displayText = this.ui.getRegionDisplayText(regionData);
+          nodeClasses += ' undiscovered';
+        }
+      } else {
+        // Discovered region - show normal display
+        displayText = this.ui.getRegionDisplayText(regionData);
+      }
+
+      // Add location counts if there are locations (only for discovered or showUndiscoveredDetails)
+      let fullLabel;
+      if (isDiscoveryModeActive && !isRegionDiscovered && !discoverySettings.showUndiscoveredDetails) {
+        fullLabel = displayText; // Just "???" for undiscovered placeholders
+      } else {
+        const countLabel = `${locationCounts.checked}, ${locationCounts.accessible}, ${locationCounts.inaccessible} / ${locationCounts.total}`;
+        fullLabel = locationCounts.total > 0 ? `${displayText}\n${countLabel}` : displayText;
+      }
 
       elements.nodes.push({
         data: {
           id: regionName,
           label: fullLabel,
           regionName: regionName,
-          locationCounts: locationCounts
+          locationCounts: locationCounts,
+          isDiscovered: isRegionDiscovered
         },
         position: this.ui.nodePositions.get(regionName) || { x: Math.random() * 500, y: Math.random() * 500 },
-        classes: 'region'
+        classes: nodeClasses
       });
     }
 
@@ -191,7 +242,8 @@ export class GraphDataManager {
           const fromRegion = regionName;
           const toRegion = exitDef.connected_region;
 
-          if (fromRegion && toRegion && regions.has(fromRegion) && regions.has(toRegion)) {
+          // Only include exits between included regions
+          if (fromRegion && toRegion && includedRegions.has(fromRegion) && includedRegions.has(toRegion)) {
             const exitKey = `${fromRegion}->${toRegion}`;
             exitMap.set(exitKey, {
               fromRegion,
@@ -210,7 +262,8 @@ export class GraphDataManager {
         const fromRegion = exitData.parentRegion;
         const toRegion = exitData.connectedRegion;
 
-        if (fromRegion && toRegion && regions.has(fromRegion) && regions.has(toRegion)) {
+        // Only include exits between included regions
+        if (fromRegion && toRegion && includedRegions.has(fromRegion) && includedRegions.has(toRegion)) {
           const exitKey = `${fromRegion}->${toRegion}`;
           if (!exitMap.has(exitKey)) {
             exitMap.set(exitKey, {
@@ -261,6 +314,26 @@ export class GraphDataManager {
         edgeLabel = reverseExit.exitName;
       }
 
+      // Check discovery state for exits
+      let edgeClasses = '';
+      if (isDiscoveryModeActive) {
+        // Check if either exit in this edge is discovered
+        const forwardExitDiscovered = primaryExit ?
+          discoveryStateSingleton.isExitDiscovered(primaryExit.fromRegion, primaryExit.exitName) : false;
+        const reverseExitDiscovered = reverseExit ?
+          discoveryStateSingleton.isExitDiscovered(reverseExit.fromRegion, reverseExit.exitName) : false;
+
+        // Edge is undiscovered if neither direction's exit is discovered
+        const exitDiscovered = forwardExitDiscovered || reverseExitDiscovered;
+        if (!exitDiscovered) {
+          edgeClasses = 'undiscovered';
+          // Replace label with "???" if not showing undiscovered details
+          if (!discoverySettings.showUndiscoveredDetails) {
+            edgeLabel = '???';
+          }
+        }
+      }
+
       // Create edge data
       const edgeData = {
         id: edgeId,
@@ -278,7 +351,7 @@ export class GraphDataManager {
         reverseExitName: isForwardDirection ? (reverseExit ? reverseExit.exitName : '') : exitData.exitName
       };
 
-      elements.edges.push({ data: edgeData });
+      elements.edges.push({ data: edgeData, classes: edgeClasses });
       processedEdges.add(edgeId);
       processedEdges.add(reverseEdgeId); // Mark both directions as processed
     }
@@ -383,6 +456,13 @@ export class GraphDataManager {
     const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
     if (!snapshotInterface) return;
 
+    // Get discovery mode state
+    const isDiscoveryModeActive = this.ui.isDiscoveryModeActive || false;
+    const discoverySettings = this.ui.discoverySettings || {
+      undiscoveredDisplay: 'hidden',
+      showUndiscoveredDetails: false
+    };
+
     // Update node colors based on region accessibility and location status
     this.ui.cy.nodes().forEach(node => {
       const regionName = node.id();
@@ -406,9 +486,17 @@ export class GraphDataManager {
             const regionIsAccessible = parentNode.hasClass('accessible');
             const regionAccessClass = regionIsAccessible ? 'region-accessible' : 'region-inaccessible';
 
+            // Check discovery state for location
+            const isLocationDiscovered = discoveryStateSingleton.isLocationDiscovered(locationName);
+
             // Update location node classes
-            node.removeClass('location-checked location-accessible location-inaccessible region-accessible region-inaccessible');
+            node.removeClass('location-checked location-accessible location-inaccessible region-accessible region-inaccessible undiscovered');
             node.addClass(`${regionAccessClass} location-${locationStatus}`);
+
+            // Add undiscovered class if in discovery mode and not discovered
+            if (isDiscoveryModeActive && !isLocationDiscovered) {
+              node.addClass('undiscovered');
+            }
           }
         }
         return;
@@ -423,20 +511,43 @@ export class GraphDataManager {
       const isVisited = snapshot.visitedRegions &&
                        snapshot.visitedRegions.includes(regionName);
 
+      // Check discovery state for region
+      const isRegionDiscovered = discoveryStateSingleton.isRegionDiscovered(regionName);
+
       // Recalculate location counts for updated state
       const locationCounts = this.calculateLocationCounts(regionName, regionData);
 
-      // Get display text based on settings
-      const displayText = this.ui.getRegionDisplayText(regionData);
+      // Determine display text based on discovery state
+      let displayText;
+      if (isDiscoveryModeActive && !isRegionDiscovered && !discoverySettings.showUndiscoveredDetails) {
+        displayText = '???';
+      } else {
+        displayText = this.ui.getRegionDisplayText(regionData);
+      }
 
-      // Add location counts if there are locations
-      const countLabel = `${locationCounts.checked}, ${locationCounts.accessible}, ${locationCounts.inaccessible} / ${locationCounts.total}`;
-      const fullLabel = locationCounts.total > 0 ? `${displayText}\n${countLabel}` : displayText;
+      // Add location counts if there are locations (only for discovered or showUndiscoveredDetails)
+      let fullLabel;
+      if (isDiscoveryModeActive && !isRegionDiscovered && !discoverySettings.showUndiscoveredDetails) {
+        fullLabel = displayText; // Just "???" for undiscovered placeholders
+      } else {
+        const countLabel = `${locationCounts.checked}, ${locationCounts.accessible}, ${locationCounts.inaccessible} / ${locationCounts.total}`;
+        fullLabel = locationCounts.total > 0 ? `${displayText}\n${countLabel}` : displayText;
+      }
       node.data('label', fullLabel);
       node.data('locationCounts', locationCounts);
+      node.data('isDiscovered', isRegionDiscovered);
 
-      // Clear all classes
-      node.removeClass('accessible inaccessible completed all-accessible mixed-locations all-inaccessible');
+      // Clear all classes (preserve undiscovered classes if in discovery mode)
+      node.removeClass('accessible inaccessible completed all-accessible mixed-locations all-inaccessible undiscovered undiscovered-placeholder');
+
+      // Apply discovery classes first
+      if (isDiscoveryModeActive && !isRegionDiscovered) {
+        if (!discoverySettings.showUndiscoveredDetails) {
+          node.addClass('undiscovered-placeholder');
+        } else {
+          node.addClass('undiscovered');
+        }
+      }
 
       // Apply base accessibility class
       if (isReachable) {
@@ -455,12 +566,19 @@ export class GraphDataManager {
 
     // Update edge colors based on exit accessibility and directionality
     this.ui.cy.edges().forEach(edge => {
+      // Skip location edges
+      if (edge.hasClass('region-location-edge')) {
+        return;
+      }
+
       const sourceRegion = edge.source().id();
       const targetRegion = edge.target().id();
       const edgeData = edge.data();
       const isBidirectional = edgeData.isBidirectional;
       const forwardExitRule = edgeData.forwardExitRule;
       const reverseExitRule = edgeData.reverseExitRule;
+      const forwardExitName = edgeData.forwardExitName;
+      const reverseExitName = edgeData.reverseExitName;
 
       // Check if regions are reachable
       const sourceReachable = snapshot.regionReachability?.[sourceRegion] === true ||
@@ -494,7 +612,21 @@ export class GraphDataManager {
       }
 
       // Clear all classes
-      edge.removeClass('accessible inaccessible bidirectional');
+      edge.removeClass('accessible inaccessible bidirectional undiscovered');
+
+      // Check discovery state for exits
+      if (isDiscoveryModeActive) {
+        const forwardExitDiscovered = forwardExitName ?
+          discoveryStateSingleton.isExitDiscovered(sourceRegion, forwardExitName) : false;
+        const reverseExitDiscovered = reverseExitName ?
+          discoveryStateSingleton.isExitDiscovered(targetRegion, reverseExitName) : false;
+
+        // Edge is undiscovered if neither direction's exit is discovered
+        const exitDiscovered = forwardExitDiscovered || reverseExitDiscovered;
+        if (!exitDiscovered) {
+          edge.addClass('undiscovered');
+        }
+      }
 
       // Add bidirectional class if applicable
       if (isBidirectional) {
