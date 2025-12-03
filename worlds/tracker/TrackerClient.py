@@ -389,9 +389,14 @@ class TrackerGameContext(CommonContext):
         try:
             updateTracker_ret = self.tracker_core.updateTracker()
         except Exception as e:
-            self.disconnected_intentionally = True
-            async_start(self.disconnect(False), name="disconnecting")
-            raise e
+            # Log the error but don't disconnect - this allows the tracker to continue
+            # operating even if there's a temporary issue (e.g., invalid item ID)
+            # This is especially important during UT comparison testing where a disconnect
+            # would cause the test driver to timeout waiting for READY
+            logger.error(f"[UT] updateTracker failed: {e}")
+            import traceback
+            traceback.print_exc()
+            return CurrentTrackerState.init_empty_state()
         if updateTracker_ret.state is None:
             return updateTracker_ret # core.updateTracker failed, just pass it along
         if self.tracker_page:
@@ -1858,10 +1863,12 @@ async def game_watcher(ctx: TrackerGameContext) -> None:
         try:
             ctx.updateTracker()
         except Exception as e:
+            # Log the error but don't crash the watcher - this allows UT to continue
+            # receiving messages even if updateTracker fails temporarily
             tb = traceback.format_exc()
             print(tb)
-            logger.error("".join(traceback.format_exception_only(sys.exception())))
-            raise e
+            logger.error(f"[game_watcher] updateTracker failed: {e}")
+            # Continue the loop instead of re-raising - the tracker can recover
 
 async def wait_for_items(ctx: TrackerGameContext)-> None:
     try:

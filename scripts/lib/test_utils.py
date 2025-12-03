@@ -174,6 +174,24 @@ def get_world_directory_name_from_game_name(game_name: str) -> str:
                     if found_game_name == game_name:
                         return world_dir_name
 
+                # Pattern for: game: str = "Game Name"
+                pattern = r'game:\s*str\s*=\s*"([^"]*)"'
+                match = re.search(pattern, content, re.MULTILINE)
+
+                if match:
+                    found_game_name = match.group(1)
+                    if found_game_name == game_name:
+                        return world_dir_name
+
+                # Pattern for: game: str = 'Game Name'
+                pattern = r'game:\s*str\s*=\s*\'([^\']*)\''
+                match = re.search(pattern, content, re.MULTILINE)
+
+                if match:
+                    found_game_name = match.group(1)
+                    if found_game_name == game_name:
+                        return world_dir_name
+
                 # Fallback: look for simpler pattern: game = "Game Name"
                 pattern = r'game\s*=\s*"([^"]*)"'
                 match = re.search(pattern, content, re.MULTILINE)

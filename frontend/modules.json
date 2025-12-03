@@ -81,6 +81,11 @@
       "path": "./modules/discovery/index.js",
       "enabled": true
     },
+    "discoveryPanel": {
+      "path": "./modules/discoveryPanel/index.js",
+      "enabled": true,
+      "requires": ["discovery"]
+    },
     "playerState": {
       "path": "./modules/playerState/index.js",
       "enabled": true
@@ -188,6 +193,7 @@
     "dungeons",
     "regionGraph",
     "discovery",
+    "discoveryPanel",
     "playerState",
     "playerStatePanel",
     "loops",
