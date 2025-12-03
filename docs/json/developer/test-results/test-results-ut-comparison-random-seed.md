@@ -2,7 +2,9 @@
 
 [<- Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-12-03 22:03:21
+**See also:** [Fixed Seed Results](./test-results-ut-comparison-fixed-seed.md) - Tests run with seed=1 for reproducibility
+
+**Generated:** 2025-12-03 23:48:38
 
 **Source Data Created:** 2025-12-03T22:03:21.789849
 
