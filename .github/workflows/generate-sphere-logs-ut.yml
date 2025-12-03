@@ -87,6 +87,8 @@ jobs:
           sleep 2
 
       - name: Run UT comparison tests with fixed seed
+        # Continue even if some tests fail/error - we still want to commit the generated files
+        continue-on-error: true
         env:
           PYTHONUNBUFFERED: "1"
         run: |
