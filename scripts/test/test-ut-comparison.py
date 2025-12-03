@@ -50,6 +50,7 @@ sys.path.insert(0, PROJECT_ROOT)
 
 from scripts.lib.seed_utils import get_seed_id
 from scripts.lib.test_utils import (
+    build_and_load_world_mapping,
     extract_game_name_from_template,
     get_world_directory_name_from_game_name
 )
@@ -502,7 +503,18 @@ def main():
 
         # Derive preset directory if not provided
         if not args.preset_dir:
-            world_directory = get_world_directory_name_from_game_name(args.game)
+            # Use world mapping for accurate world directory resolution
+            # This handles variable references in game declarations (e.g., game = CONSTANT)
+            world_directory = None
+            world_mapping = build_and_load_world_mapping(PROJECT_ROOT)
+            if args.game in world_mapping:
+                world_directory = world_mapping[args.game].get('world_directory')
+                if world_directory:
+                    logger.info(f"Found world directory from mapping: {world_directory}")
+            if not world_directory:
+                # Fallback to regex-based resolution
+                world_directory = get_world_directory_name_from_game_name(args.game)
+                logger.info(f"Using world directory from fallback: {world_directory}")
             args.preset_dir = os.path.join(PROJECT_ROOT, 'frontend', 'presets', world_directory)
             logger.info(f"Using preset directory: {args.preset_dir}")
 
