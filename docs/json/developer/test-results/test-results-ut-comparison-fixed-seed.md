@@ -1,16 +1,16 @@
-# Universal Tracker Comparison Test Results (Random Seed)
+# Universal Tracker Comparison Test Results (Fixed Seed)
 
 [<- Back to Test Results Summary](./test-results-summary.md)
 
-**See also:** [Fixed Seed Results](./test-results-ut-comparison-fixed-seed.md) - Tests run with seed=1 for reproducibility
+**See also:** [Random Seed Results](./test-results-ut-comparison-random-seed.md) - Tests run with random seeds for variety
 
 **Generated:** 2025-12-03 19:40:41
 
-**Source Data Created:** 2025-12-03T19:04:09.698968
+**Source Data Created:** 2025-12-03T19:40:41.211916
 
-**Source Data Last Updated:** 2025-12-03T19:04:09.698975
+**Source Data Last Updated:** 2025-12-03T19:40:41.211923
 
-**Seed Mode:** Random (different seed for each test)
+**Seed Mode:** Fixed (seed=1)
 
 ## Summary
 
