@@ -313,12 +313,13 @@ class TrackerCore():
 
         invalid_items = [str(item.item) for item in self.tracker_items_received if item.item not in item_id_to_name]
         if invalid_items:
-            print(invalid_items)
-            self.logger.error("Your datapackage is incorrect, please correct the apworld for "+str(self.game))
-            self.logger.error("The Following items are unknown [" + ",".join(invalid_items)+"]")
-            raise Exception("Your datapackage is incorrect, please correct the apworld for "+str(self.game))
+            # Log warning but don't throw - filter out invalid items and continue
+            # This allows the tracker to continue operating even with datapackage mismatches
+            self.logger.warning(f"Skipping {len(invalid_items)} unknown items (datapackage mismatch?): {invalid_items[:5]}{'...' if len(invalid_items) > 5 else ''}")
 
-        for item_name, item_flags, item_loc, item_player in [(item_id_to_name[item.item],item.flags,item.location, item.player) for item in self.tracker_items_received] + [(name,ItemClassification.progression,-1,-1) for name in self.manual_items]:
+        # Filter to only valid items before processing
+        valid_items = [item for item in self.tracker_items_received if item.item in item_id_to_name]
+        for item_name, item_flags, item_loc, item_player in [(item_id_to_name[item.item],item.flags,item.location, item.player) for item in valid_items] + [(name,ItemClassification.progression,-1,-1) for name in self.manual_items]:
             try:
                 world_item = self.multiworld.create_item(item_name, self.player_id)
                 if item_loc>0 and item_player == self.slot and item_loc in location_id_to_name:

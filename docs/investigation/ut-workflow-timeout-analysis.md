@@ -132,3 +132,22 @@ The test should complete without the "Driver timeout" error, or at minimum, show
 - `scripts/test/TestDriverClient.py` - Test driver that sends STEP/waits for READY
 - `worlds/tracker/TrackerClient.py` - Universal Tracker client
 - `worlds/tracker/TrackerCore.py` - Core tracker logic
+
+## Implemented Fixes
+
+The following fixes have been implemented:
+
+### 1. TrackerClient.updateTracker() - No Auto-Disconnect (Option 2)
+**File:** `worlds/tracker/TrackerClient.py` lines 389-399
+
+Changed exception handling to log the error and return an empty state instead of triggering a disconnect. This allows UT to continue operating even if `updateTracker()` fails.
+
+### 2. game_watcher - No Crash on Exception (Option 1)
+**File:** `worlds/tracker/TrackerClient.py` lines 1856-1871
+
+Changed exception handling to log the error and continue the watcher loop instead of re-raising the exception. This prevents the background task from crashing and keeps UT responsive to messages.
+
+### 3. TrackerCore.updateTracker() - Graceful Invalid Item Handling (Option 3)
+**File:** `worlds/tracker/TrackerCore.py` lines 314-322
+
+Changed to log a warning about invalid items and filter them out, then continue processing with valid items only. No longer throws an exception for datapackage mismatches.
