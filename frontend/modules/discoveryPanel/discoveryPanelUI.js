@@ -30,7 +30,10 @@ export class DiscoveryPanelUI {
       regionDiscoveryTrigger: 'onEnter',
       autoDiscoverLocations: false,
       autoDiscoverExits: false,
-      undiscoveredDisplay: 'hidden'
+      undiscoveredDisplay: 'hidden',
+      showDebugOptions: true,
+      clickDiscoversLocation: true,
+      showUndiscoveredDetails: false
     };
 
     // Section collapse state
@@ -289,6 +292,15 @@ export class DiscoveryPanelUI {
       this.settings.undiscoveredDisplay = await settingsManager.getSetting(
         'moduleSettings.discovery.undiscoveredDisplay', 'hidden'
       );
+      this.settings.showDebugOptions = await settingsManager.getSetting(
+        'moduleSettings.discovery.showDebugOptions', true
+      );
+      this.settings.clickDiscoversLocation = await settingsManager.getSetting(
+        'moduleSettings.discovery.clickDiscoversLocation', true
+      );
+      this.settings.showUndiscoveredDetails = await settingsManager.getSetting(
+        'moduleSettings.discovery.showUndiscoveredDetails', false
+      );
       log('info', '[DiscoveryPanelUI] Settings loaded:', this.settings);
     } catch (error) {
       log('error', '[DiscoveryPanelUI] Error loading settings:', error);
@@ -388,19 +400,57 @@ export class DiscoveryPanelUI {
       'Automatically discover all exits when their region is discovered'
     ));
 
-    // Undiscovered Display
+    // Undiscovered Display (for items in undiscovered regions)
     content.appendChild(this.createRadioSetting(
       'undiscoveredDisplay',
-      'Undiscovered Item Display',
-      'How should undiscovered items be shown?',
+      'Items in Undiscovered Regions',
+      'How should items in undiscovered regions be displayed?',
       [
-        { value: 'hidden', label: 'Hide undiscovered items' },
+        { value: 'hidden', label: 'Hide entirely' },
         { value: 'placeholder', label: 'Show as "???"' }
       ]
     ));
 
+    // Show Debug Options toggle
+    content.appendChild(this.createBooleanSetting(
+      'showDebugOptions',
+      'Show Debug Options',
+      'Show debug settings and discovery state lists below'
+    ));
+
     section.appendChild(content);
     this.contentContainer.appendChild(section);
+  }
+
+  buildDebugSettingsSection() {
+    const section = document.createElement('div');
+    section.className = 'discovery-section discovery-debug-settings';
+    section.id = 'discovery-debug-settings-section';
+
+    const header = document.createElement('div');
+    header.className = 'discovery-section-header';
+    header.innerHTML = '<span>Debug Settings</span><span class="discovery-section-toggle"></span>';
+    section.appendChild(header);
+
+    const content = document.createElement('div');
+    content.className = 'discovery-settings-content';
+
+    // Click Discovers Location
+    content.appendChild(this.createBooleanSetting(
+      'clickDiscoversLocation',
+      'Click Discovers Location',
+      'When clicking an undiscovered location in the Locations panel, automatically discover it'
+    ));
+
+    // Show Undiscovered Details
+    content.appendChild(this.createBooleanSetting(
+      'showUndiscoveredDetails',
+      'Show Undiscovered Details',
+      'Show full details (region, rules, status) for undiscovered locations instead of minimal "???" info'
+    ));
+
+    section.appendChild(content);
+    return section;
   }
 
   createBooleanSetting(settingKey, label, description) {
@@ -522,17 +572,27 @@ export class DiscoveryPanelUI {
   }
 
   buildDataSections() {
+    // Create debug container to wrap debug settings and data sections
+    this.debugContainer = document.createElement('div');
+    this.debugContainer.id = 'discovery-debug-container';
+    this.debugContainer.style.display = this.settings.showDebugOptions ? 'block' : 'none';
+    this.contentContainer.appendChild(this.debugContainer);
+
+    // Add debug settings section
+    this.debugSettingsSection = this.buildDebugSettingsSection();
+    this.debugContainer.appendChild(this.debugSettingsSection);
+
     // Regions section
     this.regionSection = this.createDataSection('Discovered Regions', 'regions');
-    this.contentContainer.appendChild(this.regionSection);
+    this.debugContainer.appendChild(this.regionSection);
 
     // Locations section
     this.locationSection = this.createDataSection('Discovered Locations', 'locations');
-    this.contentContainer.appendChild(this.locationSection);
+    this.debugContainer.appendChild(this.locationSection);
 
     // Exits section
     this.exitSection = this.createDataSection('Discovered Exits', 'exits');
-    this.contentContainer.appendChild(this.exitSection);
+    this.debugContainer.appendChild(this.exitSection);
 
     // Initial data population
     this.updateDataDisplay();
@@ -777,6 +837,11 @@ export class DiscoveryPanelUI {
         const input = this.rootElement.querySelector(`#discovery-${key}-${value}`);
         if (input) input.checked = true;
       }
+    }
+
+    // Update debug container visibility
+    if (this.debugContainer) {
+      this.debugContainer.style.display = this.settings.showDebugOptions ? 'block' : 'none';
     }
   }
 
