@@ -1009,6 +1009,11 @@ export class EventProcessor {
       const beforeSnapshot = await stateManager.getFullSnapshot();
       const beforeInventory = beforeSnapshot.inventory || {};
 
+      // Get starting items to avoid double-adding them
+      // The sphere log's new_inventory_details for sphere 0 includes starting items,
+      // but we already added them from staticData.starting_items
+      const startingItemsSet = new Set(staticData?.starting_items?.[playerIdKey] || []);
+
       // Check each new item from the sphere log
       for (const [itemName, count] of Object.entries(newItems)) {
         const currentCount = beforeInventory[itemName] || 0;
@@ -1025,6 +1030,16 @@ export class EventProcessor {
               fromOwnLocation = true;
               break;
             }
+          }
+
+          // Skip items that are in starting_items (already added at sphere 0 start)
+          // The sphere log includes starting items in new_inventory_details, but we don't
+          // want to add them twice
+          if (startingItemsSet.has(itemName)) {
+            if (this.verboseMode) {
+              this.logCallback('debug', `  [Player ${this.playerId}] Skipping starting item "${itemName}" (already added)`);
+            }
+            continue;
           }
 
           // If not from own location, it's a cross-player item - add it

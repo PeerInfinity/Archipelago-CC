@@ -409,7 +409,11 @@ export function _createSelfSnapshotInterface(sm) {
       // Logic object (game-specific helper functions)
       if (name === 'logic') {
         // Get game-specific helpers from the game logic module
-        const gameName = sm.rules?.game_name;
+        // For multiworld, use the player-specific game from settings instead of the top-level game_name
+        let gameName = sm.rules?.game_name;
+        if (gameName === 'Multiworld' && sm.settings?.game) {
+          gameName = sm.settings.game;
+        }
         if (gameName) {
           const gameLogic = getGameLogic(gameName);
           if (gameLogic && gameLogic.helperFunctions) {
