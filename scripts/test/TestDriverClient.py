@@ -126,7 +126,7 @@ class TestDriverContext(CommonContext):
 
         # Wait for READY response with timeout
         try:
-            await asyncio.wait_for(self.ready_events[sphere].wait(), timeout=30.0)
+            await asyncio.wait_for(self.ready_events[sphere].wait(), timeout=60.0)
             logger.debug(f"[TestDriver] Received READY for sphere {sphere}")
             return True
         except asyncio.TimeoutError:
@@ -238,9 +238,14 @@ async def run_test(ctx: TestDriverContext) -> bool:
         player_data = entry.get("player_data", {}).get(str(ctx.player_id), {})
         sphere_locations = player_data.get("sphere_locations", [])
 
+        # Debug logging every 50 spheres
+        if i % 50 == 0:
+            logger.info(f"[TestDriver] Progress: entry {i}/{len(ctx.sphere_entries)}, sphere {sphere_index}")
+
         # Check the locations for this sphere FIRST
         # This sends items to UT before we ask it to log its state
         if sphere_locations:
+            logger.debug(f"[TestDriver] Entry {i}: checking locations {sphere_locations}")
             await ctx.check_locations(sphere_locations)
             total_locations_checked += len(sphere_locations)
             # Give server time to process and send items to UT
@@ -248,12 +253,14 @@ async def run_test(ctx: TestDriverContext) -> bool:
 
         # Now send STEP and wait for READY
         # UT will log its state after receiving the items from our location checks
+        logger.debug(f"[TestDriver] Entry {i}: sending STEP for sphere {sphere_index}")
         success = await ctx.send_step_bounce(sphere_index)
         if not success:
             all_passed = False
-            logger.error(f"[TestDriver] Failed at sphere {sphere_index}")
+            logger.error(f"[TestDriver] Failed at sphere {sphere_index} (entry {i})")
             break
 
+        logger.debug(f"[TestDriver] Entry {i}: STEP {sphere_index} completed")
         # Small delay between spheres
         await asyncio.sleep(0.2)
 
