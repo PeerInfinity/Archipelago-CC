@@ -866,12 +866,28 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
 
         # Return early if export_only mode
         if export_only:
+            # Still capture templates for export_only mode
+            templates_in_dir = sorted([f for f in os.listdir(multiworld_dir) if f.endswith('.yaml')])
+            templates_in_multiworld = {}
+            for i, template in enumerate(templates_in_dir, start=1):
+                templates_in_multiworld[f"player_{i}"] = template
+            result['multiworld_test']['templates_in_multiworld'] = templates_in_multiworld
             print(f"Template copied for {template_filename} (export-only mode)")
+            print(f"Templates in multiworld: {templates_in_dir}")
             return result
     else:
         print(f"Skipping template copy (--multiworld-keep-templates mode)")
         # In keep_templates mode, we don't add new templates
         # So we shouldn't increment the player count
+
+    # Capture the exact set of templates in the multiworld directory before generation
+    # Templates are sorted alphabetically, which determines player number assignment
+    templates_in_dir = sorted([f for f in os.listdir(multiworld_dir) if f.endswith('.yaml')])
+    templates_in_multiworld = {}
+    for i, template in enumerate(templates_in_dir, start=1):
+        templates_in_multiworld[f"player_{i}"] = template
+    result['multiworld_test']['templates_in_multiworld'] = templates_in_multiworld
+    print(f"Templates in multiworld: {templates_in_dir}")
 
     # Step 1: Run Generate.py with all templates in multiworld directory (skip if test_only mode)
     if not test_only:
@@ -1053,6 +1069,243 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
           f"Players Passed={result['multiworld_test']['players_passed']}/{result['multiworld_test']['total_players_tested']}")
 
     return result
+
+
+def test_template_multiworld_bisect(template_file: str, templates_dir: str, project_root: str,
+                                    world_mapping: Dict[str, Dict], seed: str,
+                                    multiworld_dir: str, other_templates: List[str],
+                                    headed: bool = False,
+                                    include_error_details: bool = False) -> Dict:
+    """
+    Run bisection tests to find which specific template pair causes a failure.
+
+    When a template fails in a multiworld with N templates, this function tests
+    the failing template with each other template individually (2-template tests)
+    to identify which specific combination causes the failure.
+
+    Args:
+        template_file: Name of the template file that failed (the one being tested)
+        templates_dir: Path to templates directory
+        project_root: Path to project root
+        world_mapping: World mapping dictionary
+        seed: Seed number to use
+        multiworld_dir: Path to Players/presets/Multiworld directory
+        other_templates: List of other template filenames that were in the multiworld
+        headed: If True, run Playwright tests in headed mode
+        include_error_details: If True, include first error/warning lines in results
+
+    Returns:
+        Dictionary with bisection results:
+        {
+            'triggered': True,
+            'tested_pairs': [
+                {'partner_template': 'TemplateA.yaml', 'success': True/False, 'error': ...},
+                ...
+            ],
+            'failing_pairs': ['TemplateB.yaml', ...]
+        }
+    """
+    template_filename = os.path.basename(template_file)
+
+    print(f"\n{'='*60}")
+    print(f"=== BISECTION: Testing {template_filename} with each partner ===")
+    print(f"{'='*60}")
+    print(f"Partners to test: {len(other_templates)}")
+
+    bisection_result = {
+        'triggered': True,
+        'tested_pairs': [],
+        'failing_pairs': [],
+        'timestamp': datetime.now().isoformat()
+    }
+
+    # Compute seed ID
+    try:
+        seed_id = compute_seed_id(int(seed))
+    except (ValueError, TypeError):
+        print(f"Error: Seed '{seed}' is not a valid number")
+        seed_id = None
+
+    source_template_path = os.path.join(templates_dir, template_filename)
+
+    for partner_template in other_templates:
+        print(f"\n--- Testing pair: {template_filename} + {partner_template} ---")
+
+        pair_result = {
+            'partner_template': partner_template,
+            'success': False,
+            'generation_success': False,
+            'player_results': {}
+        }
+
+        # Clear the multiworld directory
+        print(f"  Clearing multiworld directory...")
+        for f in os.listdir(multiworld_dir):
+            if f.endswith('.yaml'):
+                try:
+                    os.remove(os.path.join(multiworld_dir, f))
+                except Exception as e:
+                    print(f"    Warning: Could not remove {f}: {e}")
+
+        # Copy the two templates to the multiworld directory
+        print(f"  Setting up 2-template test...")
+        try:
+            # Copy the failing template
+            shutil.copy2(source_template_path, os.path.join(multiworld_dir, template_filename))
+            # Copy the partner template
+            partner_source_path = os.path.join(templates_dir, partner_template)
+            shutil.copy2(partner_source_path, os.path.join(multiworld_dir, partner_template))
+        except Exception as e:
+            print(f"  Error setting up templates: {e}")
+            pair_result['error'] = f"Failed to copy templates: {e}"
+            bisection_result['tested_pairs'].append(pair_result)
+            continue
+
+        # Determine player order (sorted alphabetically)
+        sorted_templates = sorted([template_filename, partner_template])
+        pair_result['player_1_template'] = sorted_templates[0]
+        pair_result['player_2_template'] = sorted_templates[1]
+
+        # Run generation
+        print(f"  Running generation...")
+        generate_cmd = [
+            "python", "Generate.py",
+            "--player_files_path", "Players/presets/Multiworld",
+            "--seed", seed
+        ]
+
+        gen_start_time = time.time()
+        gen_return_code, gen_stdout, gen_stderr = run_command(generate_cmd, cwd=project_root, timeout=600)
+        gen_end_time = time.time()
+        gen_processing_time = round(gen_end_time - gen_start_time, 2)
+
+        # Analyze generation output
+        full_output = gen_stdout + "\n" + gen_stderr
+        gen_error_count, gen_warning_count, gen_first_error, gen_first_warning = count_errors_and_warnings(full_output)
+        gen_error_type = classify_generation_error(full_output) if gen_return_code != 0 else None
+
+        pair_result['generation'] = {
+            'success': gen_return_code == 0,
+            'return_code': gen_return_code,
+            'error_count': gen_error_count,
+            'warning_count': gen_warning_count,
+            'error_type': gen_error_type,
+            'processing_time_seconds': gen_processing_time
+        }
+        if include_error_details:
+            pair_result['generation']['first_error_line'] = gen_first_error
+            pair_result['generation']['first_warning_line'] = gen_first_warning
+
+        if gen_return_code != 0:
+            print(f"  Generation FAILED (return code {gen_return_code})")
+            pair_result['generation_success'] = False
+            pair_result['error'] = 'Generation failed'
+            bisection_result['tested_pairs'].append(pair_result)
+            bisection_result['failing_pairs'].append(partner_template)
+            continue
+
+        pair_result['generation_success'] = True
+
+        # Test both players
+        print(f"  Running spoiler tests for both players...")
+        all_players_passed = True
+
+        for player_num in [1, 2]:
+            print(f"    Testing Player {player_num}...")
+
+            if headed:
+                spoiler_cmd = ["npm", "run", "test:headed", "--mode=test-spoilers",
+                             f"--game=multiworld", f"--seed={seed}", f"--player={player_num}"]
+            else:
+                spoiler_cmd = ["npm", "test", "--mode=test-spoilers",
+                             f"--game=multiworld", f"--seed={seed}", f"--player={player_num}"]
+
+            spoiler_env = os.environ.copy()
+            spoiler_return_code, spoiler_stdout, spoiler_stderr = run_command(
+                spoiler_cmd, cwd=project_root, timeout=900, env=spoiler_env
+            )
+
+            player_passed = spoiler_return_code == 0
+
+            # Analyze test output
+            full_output = spoiler_stdout + "\n" + spoiler_stderr
+            test_error_count, test_warning_count, test_first_error, test_first_warning = count_errors_and_warnings(full_output)
+
+            # Run test analysis
+            analysis_cmd = ["npm", "run", "test:analyze"]
+            analysis_return_code, analysis_stdout, analysis_stderr = run_command(
+                analysis_cmd, cwd=project_root, timeout=60
+            )
+
+            sphere_reached = 0
+            total_spheres = 0
+            pass_fail = 'unknown'
+
+            # Read playwright-analysis.txt if it exists
+            analysis_file = os.path.join(project_root, "playwright-analysis.txt")
+            if os.path.exists(analysis_file):
+                try:
+                    with open(analysis_file, 'r') as f:
+                        analysis_text = f.read()
+                    analysis_result = parse_playwright_analysis(analysis_text)
+                    sphere_reached = analysis_result.get('sphere_reached', 0)
+                    pass_fail = analysis_result.get('pass_fail', 'unknown')
+                except IOError:
+                    pass
+
+            # Read total spheres from sphere_log.jsonl file
+            if seed_id:
+                sphere_log_path = os.path.join(project_root, 'frontend', 'presets', 'multiworld', seed_id,
+                                               f'{seed_id}_sphere_log.jsonl')
+                total_spheres = count_total_spheres(sphere_log_path, player_num=player_num)
+
+            # If test passed, sphere_reached should equal total_spheres
+            if pass_fail == 'passed':
+                sphere_reached = total_spheres
+
+            player_result = {
+                'player_number': player_num,
+                'template': sorted_templates[player_num - 1],
+                'passed': player_passed and pass_fail == 'passed',
+                'return_code': spoiler_return_code,
+                'sphere_reached': sphere_reached,
+                'total_spheres': total_spheres,
+                'pass_fail': pass_fail,
+                'error_count': test_error_count,
+                'warning_count': test_warning_count
+            }
+
+            if include_error_details:
+                player_result['first_error_line'] = test_first_error
+                player_result['first_warning_line'] = test_first_warning
+
+            pair_result['player_results'][f'player_{player_num}'] = player_result
+
+            if player_result['passed']:
+                print(f"      Player {player_num}: PASS (sphere {sphere_reached}/{total_spheres})")
+            else:
+                print(f"      Player {player_num}: FAIL (sphere {sphere_reached}/{total_spheres})")
+                all_players_passed = False
+
+        pair_result['success'] = all_players_passed
+        bisection_result['tested_pairs'].append(pair_result)
+
+        if not all_players_passed:
+            bisection_result['failing_pairs'].append(partner_template)
+            print(f"  Pair FAILED: {template_filename} + {partner_template}")
+        else:
+            print(f"  Pair PASSED: {template_filename} + {partner_template}")
+
+    # Summary
+    print(f"\n{'='*60}")
+    print(f"=== BISECTION COMPLETE ===")
+    print(f"{'='*60}")
+    print(f"Total pairs tested: {len(bisection_result['tested_pairs'])}")
+    print(f"Failing pairs: {len(bisection_result['failing_pairs'])}")
+    if bisection_result['failing_pairs']:
+        print(f"Failing partners: {bisection_result['failing_pairs']}")
+
+    return bisection_result
 
 
 def test_generation_consistency(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed: str = "1") -> Dict:
