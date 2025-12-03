@@ -24,7 +24,6 @@ Usage:
 import argparse
 import json
 import os
-import random
 import subprocess
 import sys
 from datetime import datetime
@@ -96,9 +95,15 @@ def parse_sphere_index(sphere_index: str) -> tuple:
         return (-1, -1)
 
 
-def run_ut_comparison_test(yaml_file: Path, seed: str, port: int, output_dir: Path) -> Dict:
+def run_ut_comparison_test(yaml_file: Path, seed: Optional[str], port: int, output_dir: Path) -> Dict:
     """
     Run UT comparison test for a single template.
+
+    Args:
+        yaml_file: Path to the YAML template file
+        seed: Seed for generation (None = let UT generate random seed)
+        port: Server port
+        output_dir: Output directory for results
 
     Returns a dict with:
         - passed: bool
@@ -127,11 +132,14 @@ def run_ut_comparison_test(yaml_file: Path, seed: str, port: int, output_dir: Pa
     cmd = [
         sys.executable, str(PROJECT_ROOT / "scripts/test/test-ut-comparison.py"),
         "--yaml-file", str(yaml_file),
-        "--seed", seed,
         "--port", str(port),
         "--output-dir", str(output_dir),
         "--auto-ignore-events"
     ]
+
+    # Only pass seed if specified (otherwise let UT generate its own random seed)
+    if seed is not None:
+        cmd.extend(["--seed", seed])
 
     print(f"  Running: {' '.join(cmd[:6])}...")  # Show truncated command
 
@@ -369,18 +377,15 @@ def main():
         # Run multiple tests and collect results
         run_results = []
         for run_num in range(1, runs_per_template + 1):
-            # Generate seed for this run
-            if is_random_seed_mode:
-                # Generate a random seed for this test run
-                test_seed = str(random.randint(1, 2**31 - 1))
-            else:
-                test_seed = args.seed
+            # Use provided seed or None (let UT generate its own random seed)
+            test_seed = args.seed  # None in random mode, specific value in fixed mode
 
             if runs_per_template > 1:
-                print(f"    Run {run_num}/{runs_per_template} (seed={test_seed})...", end=" ", flush=True)
+                seed_display = test_seed if test_seed else "random"
+                print(f"    Run {run_num}/{runs_per_template} (seed={seed_display})...", end=" ", flush=True)
 
             test_result = run_ut_comparison_test(yaml_file, test_seed, args.port, test_temp_dir)
-            test_result["seed_used"] = test_seed  # Track which seed was used for this run
+            test_result["seed_used"] = test_seed  # None means UT generated its own
             run_results.append(test_result)
 
             if runs_per_template > 1:

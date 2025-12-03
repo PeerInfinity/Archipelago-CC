@@ -195,14 +195,22 @@ jobs:
           python scripts/test/combine-test-results.py \
             --input-files artifacts/test-results-ut-random-split-*/test-results-random-split-*.json
 
+      - name: Generate documentation (random seed)
+        run: |
+          # Generate MD for random results (if fixed tests run later, they'll regenerate with cross-links)
+          python scripts/docs/generate_ut_comparison_chart.py
+
       - name: Commit random seed results
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git pull origin ut-test || true
 
-          # Add test results (documentation will be generated in final combine step)
+          # Add test results
           git add -f scripts/output/ut-comparison/test-results-random-seed.json
+
+          # Add documentation (will be regenerated with cross-links if fixed tests also run)
+          git add docs/json/developer/test-results/test-results-ut-comparison-random-seed.md || true
 
           if ! git diff --staged --quiet; then
             git commit -m "Update UT comparison test results (random seed)
@@ -212,6 +220,7 @@ jobs:
 
             Includes:
             - Test results JSON (random seed)
+            - Generated documentation (random seed)
             "
             git push origin ut-test
           fi
@@ -221,7 +230,8 @@ jobs:
     name: Test UT Fixed Seed Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     needs: [setup-branch, combine-ut-comparison-random]
-    if: ${{ inputs.run_fixed_seed_test && !cancelled() }}
+    # Use always() to run even if combine-ut-comparison-random was skipped (random tests disabled)
+    if: ${{ always() && !cancelled() && inputs.run_fixed_seed_test && needs.setup-branch.result == 'success' }}
     timeout-minutes: 180
 
     strategy:
@@ -311,7 +321,8 @@ jobs:
     name: Combine UT Fixed Seed Results
     runs-on: ubuntu-latest
     needs: [setup-branch, test-ut-comparison-fixed]
-    if: ${{ inputs.run_fixed_seed_test && !cancelled() }}
+    # Use always() to ensure we check the condition even if earlier jobs were skipped
+    if: ${{ always() && !cancelled() && inputs.run_fixed_seed_test && needs.setup-branch.result == 'success' && needs.test-ut-comparison-fixed.result == 'success' }}
 
     steps:
       - name: Checkout ut-test branch
