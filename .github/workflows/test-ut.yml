@@ -143,11 +143,11 @@ jobs:
         run: |
           source .venv/bin/activate
           echo "Using random seed (auto-generated per test)"
+          # Script auto-computes output filename based on seed mode and split parameters
           python scripts/test/test-all-ut-comparison.py \
             --runs-per-template ${{ inputs.runs_per_template }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --output-file scripts/output/ut-comparison/test-results-random-split-${{ matrix.split_num }}.json \
             --skip-chart
 
       - name: Upload test results for split ${{ matrix.split_num }}
@@ -190,19 +190,10 @@ jobs:
 
       - name: Combine test results (random seed)
         run: |
-          mkdir -p /tmp/merged-results/scripts/output/ut-comparison
-          python scripts/test/combine-test-results.py \
-            --input-files artifacts/test-results-ut-random-split-*/test-results-random-split-*.json \
-            --output-file /tmp/merged-results/scripts/output/ut-comparison/test-results-random-seed.json
-
-      - name: Copy results and generate documentation (random seed)
-        run: |
           mkdir -p scripts/output/ut-comparison
-          cp /tmp/merged-results/scripts/output/ut-comparison/test-results-random-seed.json \
-             scripts/output/ut-comparison/test-results-random-seed.json
-          python scripts/docs/generate_ut_comparison_chart.py \
-            --input-file scripts/output/ut-comparison/test-results-random-seed.json \
-            --output-file docs/json/developer/test-results/test-results-ut-comparison-random-seed.md
+          # Script auto-detects seed type from input filenames and computes output path
+          python scripts/test/combine-test-results.py \
+            --input-files artifacts/test-results-ut-random-split-*/test-results-random-split-*.json
 
       - name: Commit random seed results
         run: |
@@ -210,11 +201,8 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git pull origin ut-test || true
 
-          # Add test results
+          # Add test results (documentation will be generated in final combine step)
           git add -f scripts/output/ut-comparison/test-results-random-seed.json
-
-          # Add documentation
-          git add docs/json/developer/test-results/test-results-ut-comparison-random-seed.md || true
 
           if ! git diff --staged --quiet; then
             git commit -m "Update UT comparison test results (random seed)
@@ -224,7 +212,6 @@ jobs:
 
             Includes:
             - Test results JSON (random seed)
-            - Generated documentation (random seed)
             "
             git push origin ut-test
           fi
@@ -293,12 +280,12 @@ jobs:
         run: |
           source .venv/bin/activate
           echo "Using fixed seed: 1"
+          # Script auto-computes output filename based on seed mode and split parameters
           python scripts/test/test-all-ut-comparison.py \
             --seed 1 \
             --runs-per-template ${{ inputs.runs_per_template }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --output-file scripts/output/ut-comparison/test-results-fixed-split-${{ matrix.split_num }}.json \
             --skip-chart
 
       - name: Upload test results for split ${{ matrix.split_num }}
@@ -357,19 +344,15 @@ jobs:
 
       - name: Combine test results (fixed seed)
         run: |
-          mkdir -p /tmp/merged-results/scripts/output/ut-comparison
-          python scripts/test/combine-test-results.py \
-            --input-files artifacts/test-results-ut-fixed-split-*/test-results-fixed-split-*.json \
-            --output-file /tmp/merged-results/scripts/output/ut-comparison/test-results-fixed-seed.json
-
-      - name: Copy results and generate documentation (fixed seed)
-        run: |
           mkdir -p scripts/output/ut-comparison
-          cp /tmp/merged-results/scripts/output/ut-comparison/test-results-fixed-seed.json \
-             scripts/output/ut-comparison/test-results-fixed-seed.json
-          python scripts/docs/generate_ut_comparison_chart.py \
-            --input-file scripts/output/ut-comparison/test-results-fixed-seed.json \
-            --output-file docs/json/developer/test-results/test-results-ut-comparison-fixed-seed.md
+          # Script auto-detects seed type from input filenames and computes output path
+          python scripts/test/combine-test-results.py \
+            --input-files artifacts/test-results-ut-fixed-split-*/test-results-fixed-split-*.json
+
+      - name: Generate documentation for both seed types
+        run: |
+          # Script auto-discovers both result files and generates both markdown files with cross-links
+          python scripts/docs/generate_ut_comparison_chart.py
 
       - name: Copy preset files from artifacts
         run: |
@@ -404,7 +387,8 @@ jobs:
           # Add test results
           git add -f scripts/output/ut-comparison/test-results-fixed-seed.json
 
-          # Add documentation
+          # Add documentation (both random and fixed seed markdown files)
+          git add docs/json/developer/test-results/test-results-ut-comparison-random-seed.md || true
           git add docs/json/developer/test-results/test-results-ut-comparison-fixed-seed.md || true
 
           # Debug: check if sphere log files exist before adding
@@ -435,7 +419,7 @@ jobs:
 
             Includes:
             - Test results JSON (fixed seed)
-            - Generated documentation (fixed seed)
+            - Generated documentation (both random and fixed seed with cross-links)
             - Python sphere logs (from fixed seed test)
             - UT sphere logs (from fixed seed test)
             "

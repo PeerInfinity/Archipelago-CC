@@ -24,6 +24,7 @@ Usage:
 import argparse
 import json
 import os
+import random
 import subprocess
 import sys
 from datetime import datetime
@@ -219,8 +220,8 @@ def main():
     parser.add_argument(
         '--output-file',
         type=str,
-        default='scripts/output/ut-comparison/test-results.json',
-        help='Output JSON file path'
+        default=None,
+        help='Output JSON file path (auto-computed if not specified)'
     )
     parser.add_argument(
         '--skip-list',
@@ -237,8 +238,8 @@ def main():
     parser.add_argument(
         '--seed',
         type=str,
-        default='1',
-        help='Seed to use for generation (default: 1)'
+        default=None,
+        help='Seed to use for generation (if not specified, a random seed is used for each test)'
     )
     parser.add_argument(
         '--port',
@@ -277,6 +278,23 @@ def main():
     )
 
     args = parser.parse_args()
+
+    # Determine seed mode: if --seed is provided, use fixed mode; otherwise use random mode
+    is_random_seed_mode = args.seed is None
+    seed_type = "random" if is_random_seed_mode else "fixed"
+
+    # Compute output filename if not specified
+    if args.output_file is None:
+        # Determine if this is a split job
+        is_split_job = args.every_nth > 1
+        if is_split_job:
+            # Split number is skip_first + 1 (e.g., skip_first=0 -> split 1)
+            split_num = args.skip_first + 1
+            output_filename = f"test-results-{seed_type}-split-{split_num}.json"
+        else:
+            output_filename = f"test-results-{seed_type}-seed.json"
+        args.output_file = f"scripts/output/ut-comparison/{output_filename}"
+        print(f"Auto-computed output file: {args.output_file}")
 
     # Get templates directory
     templates_dir = PROJECT_ROOT / args.templates_dir
@@ -322,7 +340,8 @@ def main():
             "created": datetime.now().isoformat(),
             "last_updated": datetime.now().isoformat(),
             "script_version": "1.0.0",
-            "seed": args.seed,
+            "seed_mode": seed_type,
+            "seed": args.seed if not is_random_seed_mode else "random",
             "runs_per_template": args.runs_per_template,
             "total_templates": len(template_files)
         },
@@ -350,10 +369,18 @@ def main():
         # Run multiple tests and collect results
         run_results = []
         for run_num in range(1, runs_per_template + 1):
-            if runs_per_template > 1:
-                print(f"    Run {run_num}/{runs_per_template}...", end=" ", flush=True)
+            # Generate seed for this run
+            if is_random_seed_mode:
+                # Generate a random seed for this test run
+                test_seed = str(random.randint(1, 2**31 - 1))
+            else:
+                test_seed = args.seed
 
-            test_result = run_ut_comparison_test(yaml_file, args.seed, args.port, test_temp_dir)
+            if runs_per_template > 1:
+                print(f"    Run {run_num}/{runs_per_template} (seed={test_seed})...", end=" ", flush=True)
+
+            test_result = run_ut_comparison_test(yaml_file, test_seed, args.port, test_temp_dir)
+            test_result["seed_used"] = test_seed  # Track which seed was used for this run
             run_results.append(test_result)
 
             if runs_per_template > 1:
@@ -413,6 +440,7 @@ def main():
                 "num_runs": runs_per_template,
                 "run_details": [
                     {
+                        "seed": r.get("seed_used"),
                         "passed": r["passed"],
                         "spheres_matched": r["spheres_matched"],
                         "spheres_mismatched": r.get("spheres_mismatched", 0),
