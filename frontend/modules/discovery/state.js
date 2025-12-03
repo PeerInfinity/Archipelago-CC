@@ -23,12 +23,26 @@ export class DiscoveryState {
     this.stateManager = null;
     this.eventBus = null;
 
-    // State
-    this.discoveredRegions = new Set(['Menu']); // Start with Menu discovered
+    // State - start with empty sets, will be initialized with start regions
+    this.discoveredRegions = new Set();
     this.discoveredLocations = new Set();
     this.discoveredExits = new Map(); // regionName -> Set of exit names
 
     log('info', '[DiscoveryState] Constructed');
+  }
+
+  /**
+   * Get the start regions from stateManager, or default to ['Menu']
+   * @returns {string[]} Array of starting region names
+   */
+  getStartRegions() {
+    if (this.stateManager && typeof this.stateManager.getStartRegions === 'function') {
+      const startRegions = this.stateManager.getStartRegions();
+      if (Array.isArray(startRegions) && startRegions.length > 0) {
+        return startRegions;
+      }
+    }
+    return ['Menu'];
   }
 
   /**
@@ -62,34 +76,41 @@ export class DiscoveryState {
       return;
     }
 
-    // Ensure Menu region starts as discovered with its exits visible
-    this.discoveredRegions.add('Menu');
+    // Get start regions and ensure they are discovered
+    const startRegions = this.getStartRegions();
+    log('info', '[DiscoveryState] Using start regions:', startRegions);
 
-    if (!this.discoveredExits.has('Menu')) {
-      this.discoveredExits.set('Menu', new Set());
+    for (const regionName of startRegions) {
+      this.discoveredRegions.add(regionName);
+
+      if (!this.discoveredExits.has(regionName)) {
+        this.discoveredExits.set(regionName, new Set());
+      }
     }
 
-    // Add all exits from Menu to the discovered exits
+    // Add all exits from start regions to the discovered exits
     try {
       const staticData = this.stateManager.getStaticData(); // Get static data from proxy
       if (!staticData || !staticData.regions) {
         throw new Error('StateManager static data is not available.');
       }
 
-      const menuRegion = staticData.regions.get('Menu');
-      if (menuRegion && menuRegion.exits) {
-        const menuExits = this.discoveredExits.get('Menu');
-        menuRegion.exits.forEach((exit) => {
-          if (!menuExits.has(exit.name)) {
-            menuExits.add(exit.name);
-          }
-        });
-        log('info', '[DiscoveryState] Initialized Menu exits:', menuExits);
-      } else {
-        log(
-          'warn',
-          '[DiscoveryState] Menu region or its exits not found during initialization.'
-        );
+      for (const regionName of startRegions) {
+        const region = staticData.regions.get(regionName);
+        if (region && region.exits) {
+          const regionExits = this.discoveredExits.get(regionName);
+          region.exits.forEach((exit) => {
+            if (!regionExits.has(exit.name)) {
+              regionExits.add(exit.name);
+            }
+          });
+          log('info', `[DiscoveryState] Initialized ${regionName} exits:`, regionExits);
+        } else {
+          log(
+            'warn',
+            `[DiscoveryState] Region ${regionName} or its exits not found during initialization.`
+          );
+        }
       }
     } catch (error) {
       log(
@@ -186,7 +207,16 @@ export class DiscoveryState {
   loadFromSerializedState(state) {
     if (!state) return;
     log('info', '[DiscoveryState] Loading state...');
-    this.discoveredRegions = new Set(state.regions || ['Menu']); // Ensure Menu is always there
+
+    // Get start regions to ensure they are always included
+    const startRegions = this.getStartRegions();
+
+    // Load regions, ensuring start regions are included
+    this.discoveredRegions = new Set(state.regions || startRegions);
+    for (const startRegion of startRegions) {
+      this.discoveredRegions.add(startRegion);
+    }
+
     this.discoveredLocations = new Set(state.locations || []);
     this.discoveredExits = new Map(
       (state.exits || []).map(([region, exitsArray]) => [
@@ -194,10 +224,14 @@ export class DiscoveryState {
         new Set(exitsArray),
       ])
     );
-    // Ensure Menu exists in exits map after load
-    if (!this.discoveredExits.has('Menu')) {
-      this.discoveredExits.set('Menu', new Set());
+
+    // Ensure start regions exist in exits map after load
+    for (const startRegion of startRegions) {
+      if (!this.discoveredExits.has(startRegion)) {
+        this.discoveredExits.set(startRegion, new Set());
+      }
     }
+
     log('info', '[DiscoveryState] State loaded.');
     if (this.eventBus) {
       this.eventBus.publish('discovery:changed', {}, 'discovery'); // Notify UI after loading
@@ -211,11 +245,15 @@ export class DiscoveryState {
 
   clearDiscovery() {
     log('info', '[DiscoveryState] Clearing discovery state.');
-    this.discoveredRegions = new Set(['Menu']);
+
+    // Reset to empty state
+    this.discoveredRegions = new Set();
     this.discoveredLocations = new Set();
     this.discoveredExits = new Map();
-    this.discoveredExits.set('Menu', new Set()); // Re-initialize Menu exits map
-    this.initialize(); // Re-initialize based on current game data
+
+    // Re-initialize with start regions
+    this.initialize();
+
     if (this.eventBus) {
       this.eventBus.publish('discovery:changed', {}, 'discovery');
     } else {
@@ -224,6 +262,146 @@ export class DiscoveryState {
         '[DiscoveryState] Cannot publish discovery:changed after clear, eventBus not set.'
       );
     }
+  }
+
+  // --- Manual Discovery Toggle Methods ---
+
+  /**
+   * Manually undiscover a region
+   * @param {string} regionName - Name of the region to undiscover
+   * @returns {boolean} True if state changed
+   */
+  undiscoverRegion(regionName) {
+    // Don't allow undiscovering start regions
+    const startRegions = this.getStartRegions();
+    if (startRegions.includes(regionName)) {
+      log('warn', `[DiscoveryState] Cannot undiscover start region: ${regionName}`);
+      return false;
+    }
+
+    if (this.discoveredRegions.has(regionName)) {
+      this.discoveredRegions.delete(regionName);
+      this.discoveredExits.delete(regionName);
+      log('info', `[DiscoveryState] Undiscovered Region: ${regionName}`);
+
+      if (this.eventBus) {
+        this.eventBus.publish('discovery:changed', {}, 'discovery');
+      }
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Manually undiscover a location
+   * @param {string} locationName - Name of the location to undiscover
+   * @returns {boolean} True if state changed
+   */
+  undiscoverLocation(locationName) {
+    if (this.discoveredLocations.has(locationName)) {
+      this.discoveredLocations.delete(locationName);
+      log('info', `[DiscoveryState] Undiscovered Location: ${locationName}`);
+
+      if (this.eventBus) {
+        this.eventBus.publish('discovery:changed', {}, 'discovery');
+      }
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Manually undiscover an exit
+   * @param {string} regionName - Name of the region containing the exit
+   * @param {string} exitName - Name of the exit to undiscover
+   * @returns {boolean} True if state changed
+   */
+  undiscoverExit(regionName, exitName) {
+    const exits = this.discoveredExits.get(regionName);
+    if (exits && exits.has(exitName)) {
+      exits.delete(exitName);
+      log('info', `[DiscoveryState] Undiscovered Exit: ${regionName} -> ${exitName}`);
+
+      if (this.eventBus) {
+        this.eventBus.publish('discovery:changed', {}, 'discovery');
+      }
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Toggle discovery state of a region
+   * @param {string} regionName - Name of the region
+   * @returns {boolean} New discovery state (true = discovered)
+   */
+  toggleRegionDiscovery(regionName) {
+    if (this.discoveredRegions.has(regionName)) {
+      this.undiscoverRegion(regionName);
+      return false;
+    } else {
+      this.discoverRegion(regionName);
+      return true;
+    }
+  }
+
+  /**
+   * Toggle discovery state of a location
+   * @param {string} locationName - Name of the location
+   * @returns {boolean} New discovery state (true = discovered)
+   */
+  toggleLocationDiscovery(locationName) {
+    if (this.discoveredLocations.has(locationName)) {
+      this.undiscoverLocation(locationName);
+      return false;
+    } else {
+      this.discoverLocation(locationName);
+      return true;
+    }
+  }
+
+  /**
+   * Toggle discovery state of an exit
+   * @param {string} regionName - Name of the region containing the exit
+   * @param {string} exitName - Name of the exit
+   * @returns {boolean} New discovery state (true = discovered)
+   */
+  toggleExitDiscovery(regionName, exitName) {
+    if (this.isExitDiscovered(regionName, exitName)) {
+      this.undiscoverExit(regionName, exitName);
+      return false;
+    } else {
+      this.discoverExit(regionName, exitName);
+      return true;
+    }
+  }
+
+  /**
+   * Get all discovered regions
+   * @returns {Set<string>} Set of discovered region names
+   */
+  getDiscoveredRegions() {
+    return new Set(this.discoveredRegions);
+  }
+
+  /**
+   * Get all discovered locations
+   * @returns {Set<string>} Set of discovered location names
+   */
+  getDiscoveredLocations() {
+    return new Set(this.discoveredLocations);
+  }
+
+  /**
+   * Get all discovered exits
+   * @returns {Map<string, Set<string>>} Map of region name to set of exit names
+   */
+  getDiscoveredExits() {
+    const result = new Map();
+    for (const [region, exits] of this.discoveredExits) {
+      result.set(region, new Set(exits));
+    }
+    return result;
   }
 
   /**
