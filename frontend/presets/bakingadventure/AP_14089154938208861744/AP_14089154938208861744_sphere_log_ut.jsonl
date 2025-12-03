@@ -1,4 +1,4 @@
-{"type": "metadata", "seed": 27054142907229229293, "seed_name": "05323851009044082555", "source": "universal_tracker"}
+{"type": "metadata", "seed": 1, "seed_name": "14089154938208861744", "source": "universal_tracker"}
 {"type": "state_update", "sphere_index": "0", "player_data": {"1": {"new_inventory_details": {"base_items": {}, "resolved_items": {}}, "new_accessible_locations": ["Find Measuring Tools", "Gather Mixing Bowls", "Get Electric Mixer", "Line Baking Sheets", "Preheat Oven to 375F", "Soften Butter"], "new_accessible_regions": ["DryIngredients", "Kitchen", "Menu", "Preparation", "WetIngredients"], "sphere_locations": []}}}
 {"type": "state_update", "sphere_index": "0.1", "player_data": {"1": {"new_inventory_details": {"base_items": {"Measuring Tools": 1}, "resolved_items": {"Measuring Tools": 1}}, "new_accessible_locations": ["Measure Flour"], "new_accessible_regions": [], "sphere_locations": []}}}
 {"type": "state_update", "sphere_index": "0.2", "player_data": {"1": {"new_inventory_details": {"base_items": {"Mixing Bowls": 1}, "resolved_items": {"Mixing Bowls": 1}}, "new_accessible_locations": [], "new_accessible_regions": [], "sphere_locations": []}}}

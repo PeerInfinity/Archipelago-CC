@@ -24,6 +24,11 @@ on:
         type: boolean
         default: true
 
+      debug_mode:
+        description: 'Debug mode: only process Adventure.yaml (for quick testing)'
+        type: boolean
+        default: false
+
 permissions:
   contents: write  # Allow pushing commits and creating branches
 
@@ -148,7 +153,8 @@ jobs:
             --runs-per-template ${{ inputs.runs_per_template }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --skip-chart
+            --skip-chart \
+            ${{ inputs.debug_mode && '--include-list Adventure.yaml' || '' }}
 
       - name: Upload test results for split ${{ matrix.split_num }}
         if: ${{ !cancelled() }}
@@ -296,7 +302,8 @@ jobs:
             --runs-per-template ${{ inputs.runs_per_template }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --skip-chart
+            --skip-chart \
+            ${{ inputs.debug_mode && '--include-list Adventure.yaml' || '' }}
 
       - name: Upload test results for split ${{ matrix.split_num }}
         if: ${{ !cancelled() }}
