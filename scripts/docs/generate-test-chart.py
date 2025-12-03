@@ -816,7 +816,7 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
     if ut_comparison_data is not None:
         md_content += "\nAdditional test results:\n"
         if has_ut_fixed:
-            md_content += "- **UT Comparison Test (Fixed Seed):** Validates Universal Tracker matches Python sphere log with seed=1 - [View Details](./test-results-ut-comparison.md)\n"
+            md_content += "- **UT Comparison Test (Fixed Seed):** Validates Universal Tracker matches Python sphere log with seed=1 - [View Details](./test-results-ut-comparison-fixed-seed.md)\n"
         if has_ut_random:
             md_content += "- **UT Comparison Test (Random Seed):** Validates Universal Tracker matches Python sphere log with random seeds - [View Details](./test-results-ut-comparison-random-seed.md)\n"
 
@@ -1226,7 +1226,7 @@ def main():
     if has_random:
         ut_random_results = load_test_results(ut_random_input)
         ut_random_data = extract_ut_comparison_chart_data(ut_random_results)
-        other_link = './test-results-ut-comparison.md' if has_fixed else None
+        other_link = './test-results-ut-comparison-fixed-seed.md' if has_fixed else None
         ut_random_md = generate_ut_comparison_markdown(
             ut_random_data,
             ut_random_results.get('metadata', {}),
@@ -1252,8 +1252,7 @@ def main():
             seed_type="fixed",
             other_results_link=other_link
         )
-        # Use the standard name (without -fixed-seed) for the fixed seed results
-        ut_fixed_output = os.path.join(ut_output_dir, 'test-results-ut-comparison.md')
+        ut_fixed_output = os.path.join(ut_output_dir, 'test-results-ut-comparison-fixed-seed.md')
         os.makedirs(ut_output_dir, exist_ok=True)
         with open(ut_fixed_output, 'w') as f:
             f.write(ut_fixed_md)
