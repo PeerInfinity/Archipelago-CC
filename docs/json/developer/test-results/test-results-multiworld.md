@@ -4,13 +4,13 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-12-01 01:02:53
+**Generated:** 2025-12-03 03:42:49
 
 ## Summary
 
 - **Total Games:** 78
-- **Passed:** 73 (93.6%)
-- **Failed:** 4 (5.1%)
+- **Passed:** 71 (91.0%)
+- **Failed:** 6 (7.7%)
 - **Skipped (Prerequisites):** 1 (1.3%)
 
 ## Test Results
@@ -23,10 +23,10 @@
 | APQuest | ✅ Passed | 4 | 4 | 1 | 0 | ⚫ | ⚫ |
 | Adventure | ✅ Passed | 5 | 5 | 1 | 0 | ✅ | ⚫ |
 | Aquaria | ✅ Passed | 6 | 6 | 1 | 0 | ✅ | ✅ |
-| Blasphemous | ❌ Failed | 7 | 7 | 0 | 1 | ✅ | ✅ |
-| Bomb Rush Cyberfunk | ✅ Passed | 7 | 7 | 1 | 0 | ✅ | ⚫ |
-| Bumper Stickers | ✅ Passed | 8 | 8 | 1 | 0 | ✅ | ⚫ |
-| Castlevania - Circle of the Moon | ✅ Passed | 9 | 9 | 1 | 0 | ✅ | ✅ |
+| Blasphemous | ✅ Passed | 7 | 7 | 1 | 0 | ✅ | ✅ |
+| Bomb Rush Cyberfunk | ✅ Passed | 8 | 8 | 1 | 0 | ✅ | ⚫ |
+| Bumper Stickers | ✅ Passed | 9 | 9 | 1 | 0 | ✅ | ⚫ |
+| Castlevania - Circle of the Moon | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Castlevania 64 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Celeste (Open World) | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ⚫ |
 | Celeste 64 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
@@ -47,7 +47,7 @@
 | Inscryption | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Kingdom Hearts | ❌ Failed | 10 | 10 | 0 | 1 | ✅ | ✅ |
-| Kingdom Hearts 2 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
+| Kingdom Hearts 2 | ❌ Failed | 10 | 10 | 0 | 1 | ✅ | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Lingo | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
@@ -63,7 +63,7 @@
 | Noita | ✅ Passed | 10 | 10 | 1 | 0 | ⚫ | ⚫ |
 | Old School Runescape | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Overcooked! 2 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
-| Paint | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
+| Paint | ❌ Failed | 10 | 10 | 0 | 1 | ✅ | ✅ |
 | Pokemon Emerald | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Pokemon Red and Blue | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Raft | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
@@ -91,7 +91,7 @@
 | VVVVVV | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Wargroove | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | WebDevJourney | ✅ Passed | 10 | 10 | 1 | 0 | ⚫ | ⚫ |
-| Yacht Dice | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
+| Yacht Dice | ❌ Failed | 10 | 10 | 0 | 1 | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Yu-Gi-Oh! 2006 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | shapez | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |

@@ -1,12 +1,15 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-01 01:02:53
+**Generated:** 2025-12-03 03:42:49
 
-This summary combines results from four types of tests:
+This summary combines results from 4 types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
 - **Full Spoiler Test:** Tests with all locations - [View Details](./test-results-spoilers-full.md)
 - **Multiclient Test:** Tests in multiclient mode - [View Details](./test-results-multiclient.md)
 - **Multiworld Test:** Tests in multiworld mode with multiple games - [View Details](./test-results-multiworld.md)
+
+Additional test results:
+- **UT Comparison Test:** Validates Universal Tracker matches Python sphere log - [View Details](./test-results-ut-comparison.md)
 
 ## Summary Statistics
 
@@ -15,7 +18,7 @@ This summary combines results from four types of tests:
 - **Minimal Test:** 78/78 passed (100.0%)
 - **Full Test:** 78/78 passed (100.0%)
 - **Multiclient Test:** 77/78 passed (98.7%)
-- **Multiworld Test:** 73/78 passed (93.6%)
+- **Multiworld Test:** 71/78 passed (91.0%)
 
 ### Intermittent Failures
 
@@ -24,8 +27,8 @@ This summary combines results from four types of tests:
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 73/78 (93.6%)
-- **Templates passing 3 tests:** 4/78 (5.1%)
+- **Templates passing all 4 tests:** 71/78 (91.0%)
+- **Templates passing 3 tests:** 6/78 (7.7%)
 - **Templates passing 2 tests:** 1/78 (1.3%)
 - **Templates passing 1 test:** 0/78 (0.0%)
 - **Templates passing 0 tests:** 0/78 (0.0%)
@@ -40,7 +43,7 @@ This summary combines results from four types of tests:
 | APQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ⚫ | ⚫ |
 | Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Aquaria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Blasphemous | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ |
+| Blasphemous | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Bumper Stickers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
@@ -64,7 +67,7 @@ This summary combines results from four types of tests:
 | Inscryption | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ |
-| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Lingo | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
@@ -80,7 +83,7 @@ This summary combines results from four types of tests:
 | Noita | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ⚫ | ⚫ |
 | Old School Runescape | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Overcooked! 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Paint | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Paint | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ |
 | Pokemon Emerald | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Pokemon Red and Blue | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Raft | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
@@ -108,7 +111,7 @@ This summary combines results from four types of tests:
 | VVVVVV | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Wargroove | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | WebDevJourney | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ⚫ | ⚫ |
-| Yacht Dice | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Yacht Dice | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Yu-Gi-Oh! 2006 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | shapez | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
