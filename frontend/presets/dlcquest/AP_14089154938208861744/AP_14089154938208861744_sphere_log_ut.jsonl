@@ -1,4 +1,4 @@
-{"type": "metadata", "seed": 61560232595698664680, "seed_name": "45879418185845925892", "source": "universal_tracker"}
+{"type": "metadata", "seed": 1, "seed_name": "14089154938208861744", "source": "universal_tracker"}
 {"type": "state_update", "sphere_index": "0", "player_data": {"1": {"new_inventory_details": {"base_items": {}, "resolved_items": {}}, "new_accessible_locations": ["Movement Pack"], "new_accessible_regions": ["Menu", "Move Right"], "sphere_locations": []}}}
 {"type": "state_update", "sphere_index": "0.1", "player_data": {"1": {"new_inventory_details": {"base_items": {}, "resolved_items": {}}, "new_accessible_locations": [], "new_accessible_regions": [], "sphere_locations": []}}}
 {"type": "state_update", "sphere_index": "1.1", "player_data": {"1": {"new_inventory_details": {"base_items": {"Movement Pack": 1}, "resolved_items": {"Movement Pack": 1}}, "new_accessible_locations": ["Animation Pack", "Audio Pack", "Pause Menu Pack", "Psychological Warfare Pack", "Time is Money Pack"], "new_accessible_regions": ["Movement Pack"], "sphere_locations": []}}}
