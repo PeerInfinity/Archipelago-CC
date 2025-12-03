@@ -30,7 +30,10 @@ let _settings = {
   regionDiscoveryTrigger: 'onEnter',
   autoDiscoverLocations: false,
   autoDiscoverExits: false,
-  undiscoveredDisplay: 'hidden'
+  undiscoveredDisplay: 'hidden',
+  showDebugOptions: true,
+  clickDiscoversLocation: true,
+  showUndiscoveredDetails: false
 };
 
 // --- Module Info ---
@@ -52,6 +55,7 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('discovery:regionDiscovered');
   registrationApi.registerEventBusPublisher('discovery:exitDiscovered');
   registrationApi.registerEventBusPublisher('discovery:modeChanged');
+  registrationApi.registerEventBusPublisher('discovery:settingsChanged');
 
   // Register settings schema for discovery module
   registrationApi.registerSettingsSchema(moduleInfo.name, {
@@ -78,7 +82,22 @@ export function register(registrationApi) {
     undiscoveredDisplay: {
       type: 'string',
       default: 'hidden',
-      description: 'How to display undiscovered items: hidden or placeholder (shows as ???)'
+      description: 'How to display items in undiscovered regions: hidden (not shown) or placeholder (shown as ???)'
+    },
+    showDebugOptions: {
+      type: 'boolean',
+      default: true,
+      description: 'Show debug options in Discovery Panel (region/location/exit lists and debug settings)'
+    },
+    clickDiscoversLocation: {
+      type: 'boolean',
+      default: true,
+      description: 'Clicking an undiscovered location in the Locations panel discovers it'
+    },
+    showUndiscoveredDetails: {
+      type: 'boolean',
+      default: false,
+      description: 'Show full details (region, rules, status) for undiscovered locations instead of minimal info'
     }
   });
 
@@ -354,6 +373,15 @@ async function loadSettings() {
     _settings.undiscoveredDisplay = await settingsManager.getSetting(
       'moduleSettings.discovery.undiscoveredDisplay', 'hidden'
     );
+    _settings.showDebugOptions = await settingsManager.getSetting(
+      'moduleSettings.discovery.showDebugOptions', true
+    );
+    _settings.clickDiscoversLocation = await settingsManager.getSetting(
+      'moduleSettings.discovery.clickDiscoversLocation', true
+    );
+    _settings.showUndiscoveredDetails = await settingsManager.getSetting(
+      'moduleSettings.discovery.showUndiscoveredDetails', false
+    );
     log('info', '[Discovery Module] Settings loaded:', _settings);
   } catch (error) {
     log('error', '[Discovery Module] Error loading settings:', error);
@@ -373,6 +401,13 @@ async function handleSettingsChanged({ key }) {
     if (_settings.enableDiscoveryMode !== previousEnableMode && _moduleEventBus) {
       _moduleEventBus.publish('discovery:modeChanged', {
         active: _settings.enableDiscoveryMode
+      }, 'discovery');
+    }
+
+    // Always publish settingsChanged with current settings so other modules can react
+    if (_moduleEventBus) {
+      _moduleEventBus.publish('discovery:settingsChanged', {
+        settings: { ..._settings }
       }, 'discovery');
     }
   }

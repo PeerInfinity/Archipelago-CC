@@ -72,6 +72,19 @@ export class EventCoordinator {
       if (data && typeof data.active === 'boolean') {
         this.regionUI.isDiscoveryModeActive = data.active;
         logger.info(`Discovery mode changed: ${this.regionUI.isDiscoveryModeActive}`);
+        // Show/hide discovery-specific controls
+        this.updateDiscoveryControlsVisibility();
+        debouncedUpdate();
+      }
+    });
+
+    // --- discovery:settingsChanged handler ---
+    subscribe('discovery:settingsChanged', (data) => {
+      if (data && data.settings) {
+        this.regionUI.discoverySettings.undiscoveredDisplay = data.settings.undiscoveredDisplay ?? 'hidden';
+        this.regionUI.discoverySettings.clickDiscoversLocation = data.settings.clickDiscoversLocation ?? true;
+        this.regionUI.discoverySettings.showUndiscoveredDetails = data.settings.showUndiscoveredDetails ?? false;
+        logger.info('Discovery settings updated:', this.regionUI.discoverySettings);
         debouncedUpdate();
       }
     });
@@ -239,6 +252,21 @@ export class EventCoordinator {
       }, 300); // Wait for region expansion animation
     } else {
       logger.warn('Received ui:navigateToLocation with missing data', eventPayload);
+    }
+  }
+
+  /**
+   * Update visibility of discovery-specific controls
+   */
+  updateDiscoveryControlsVisibility() {
+    const rootElement = this.regionUI.rootElement;
+    if (!rootElement) return;
+
+    const undiscoveredCheckbox = rootElement.querySelector('#region-show-undiscovered');
+    if (undiscoveredCheckbox?.parentElement) {
+      undiscoveredCheckbox.parentElement.style.display = this.regionUI.isDiscoveryModeActive
+        ? 'inline-block'
+        : 'none';
     }
   }
 
