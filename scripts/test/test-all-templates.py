@@ -43,6 +43,7 @@ from lib.test_runner import (
     test_template_single_seed,
     test_template_seed_range,
     test_template_multiworld,
+    test_template_multiworld_bisect,
     test_generation_consistency
 )
 from lib.seed_utils import get_seed_id as compute_seed_id
@@ -212,6 +213,11 @@ def main():
         help='Maximum number of templates to keep in multiworld directory (default: 10). When exceeded, oldest templates are removed.'
     )
     parser.add_argument(
+        '--multiworld-bisect-failures',
+        action='store_true',
+        help='When a multiworld test fails, run bisection tests to find which specific template pair causes the failure'
+    )
+    parser.add_argument(
         '--dry-run',
         action='store_true',
         help='Show what would be done without actually making changes (useful for testing)'
@@ -331,6 +337,10 @@ def main():
 
     if args.multiworld_test_all_players and not args.multiworld:
         print("Error: --multiworld-test-all-players can only be used with --multiworld")
+        sys.exit(1)
+
+    if args.multiworld_bisect_failures and not args.multiworld:
+        print("Error: --multiworld-bisect-failures can only be used with --multiworld")
         sys.exit(1)
 
     if args.multitemplate and not args.templates_dir:
@@ -1167,6 +1177,46 @@ def main():
                 if not args.multiworld_keep_templates:
                     actual_templates = [f for f in os.listdir(multiworld_dir) if f.endswith('.yaml')]
                     multiworld_player_count = len(actual_templates)
+
+                # If bisection is enabled and the test failed, run bisection tests
+                if args.multiworld_bisect_failures and not template_result.get('multiworld_test', {}).get('success', True):
+                    # Get the list of templates that were in the multiworld (excluding the current one)
+                    templates_in_multiworld = template_result.get('multiworld_test', {}).get('templates_in_multiworld', {})
+                    other_templates = [t for t in templates_in_multiworld.values() if t != yaml_file]
+
+                    if other_templates:
+                        print(f"\n=== Running bisection tests for {yaml_file} ===")
+                        bisection_result = test_template_multiworld_bisect(
+                            yaml_file, templates_dir, project_root, world_mapping,
+                            str(seed_list[0]), multiworld_dir, other_templates,
+                            headed=args.headed,
+                            include_error_details=args.include_error_details
+                        )
+                        template_result['bisection_results'] = bisection_result
+
+                        # After bisection, restore the multiworld directory to its previous state
+                        # (clear it and re-copy the templates that were there before, minus the failed one)
+                        print(f"\nRestoring multiworld directory after bisection...")
+                        for f in os.listdir(multiworld_dir):
+                            if f.endswith('.yaml'):
+                                try:
+                                    os.remove(os.path.join(multiworld_dir, f))
+                                except Exception as e:
+                                    print(f"  Warning: Could not remove {f}: {e}")
+
+                        for other_template in other_templates:
+                            try:
+                                source_path = os.path.join(templates_dir, other_template)
+                                dest_path = os.path.join(multiworld_dir, other_template)
+                                shutil.copy2(source_path, dest_path)
+                            except Exception as e:
+                                print(f"  Warning: Could not restore {other_template}: {e}")
+
+                        # Update player count after restoration
+                        actual_templates = [f for f in os.listdir(multiworld_dir) if f.endswith('.yaml')]
+                        multiworld_player_count = len(actual_templates)
+                    else:
+                        print(f"\n=== Skipping bisection for {yaml_file} (no other templates to test with) ===")
             elif len(seed_list) > 1:
                 # Test with seed range (normal mode)
                 template_result = test_template_seed_range(
