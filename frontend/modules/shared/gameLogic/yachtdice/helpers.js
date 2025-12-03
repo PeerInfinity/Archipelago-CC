@@ -71,6 +71,7 @@ export function dice_simulation_state_change(snapshot, staticData, fragsPerDice,
     // Create a cache key based on the current inventory state
     // BUGFIX: Use snapshot.inventory (which exists) instead of snapshot.items (which doesn't)
     const inventory = snapshot?.items || snapshot?.inventory || {};
+
     const inventoryKey = JSON.stringify(inventory);
     const cacheKey = `${inventoryKey}_${fragsPerDice}_${fragsPerRoll}_${difficulty}`;
 
