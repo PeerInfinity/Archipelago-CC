@@ -33,13 +33,13 @@ def load_results(results_file: str) -> Dict:
 def get_status_emoji(success: bool, pass_fail: str = None) -> str:
     """Get status emoji for display."""
     if pass_fail == 'pass':
-        return ':white_check_mark:'
+        return '✅'
     elif pass_fail == 'fail':
-        return ':x:'
+        return '❌'
     elif success:
-        return ':white_check_mark:'
+        return '✅'
     else:
-        return ':x:'
+        return '❌'
 
 
 def get_status_text(result: Dict, key: str) -> str:
@@ -162,7 +162,7 @@ def generate_results_table(results: Dict) -> str:
 
         # Original generation
         orig_gen = result.get('original', {}).get('generation', {})
-        orig_gen_status = ':white_check_mark:' if orig_gen.get('success') else ':x:'
+        orig_gen_status = '✅' if orig_gen.get('success') else '❌'
 
         # Original spoiler test
         orig_test = result.get('original', {}).get('spoiler_test', {})
@@ -172,13 +172,13 @@ def generate_results_table(results: Dict) -> str:
 
         # World generation
         world_gen = result.get('test_world', {}).get('world_generation', {})
-        world_gen_status = ':white_check_mark:' if world_gen.get('success') else ':x:'
+        world_gen_status = '✅' if world_gen.get('success') else '❌'
         if not orig_gen.get('success'):
             world_gen_status = '-'
 
         # Test world seed generation
         test_gen = result.get('test_world', {}).get('seed_generation', {})
-        test_gen_status = ':white_check_mark:' if test_gen.get('success') else ':x:'
+        test_gen_status = '✅' if test_gen.get('success') else '❌'
         if not world_gen.get('success'):
             test_gen_status = '-'
 
@@ -277,8 +277,8 @@ def generate_report(results: Dict) -> str:
         "",
         "## Legend",
         "",
-        "- :white_check_mark: - Success/Pass",
-        "- :x: - Failure",
+        "- ✅ - Success/Pass",
+        "- ❌ - Failure",
         "- `-` - Not applicable (previous step failed)",
         "- `Skipped` - Test was skipped",
         "- `Error` - An error occurred",
