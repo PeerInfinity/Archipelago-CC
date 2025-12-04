@@ -19,6 +19,13 @@ Practical guides for common development tasks:
 - **[Testing Pipeline](./testing-pipeline.md)**: How the automated testing system validates game logic accuracy
 - **[Test Results](./test-results.md)**: Understanding and generating test result reports
 
+## Conversion Tools
+
+Tools for converting between formats and generating code:
+
+- **[Rule Format Converter](./format-converter.md)**: Bidirectional conversion between Archipelago-CC and Rule Builder JSON formats
+- **[World Generator](./world-generator.md)**: Generate complete Archipelago world packages from JSON rules files
+
 ## Reference Documents
 
 - **[Module Info Status](./module_info_status.md)**: Auto-generated report on module metadata completeness
