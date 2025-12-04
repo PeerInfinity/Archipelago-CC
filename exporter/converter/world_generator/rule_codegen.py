@@ -11,10 +11,10 @@ from typing import Any, Dict, List, Set, Tuple, Optional
 class RuleCodeGenerator:
     """Generates Python Rule Builder code from CC format rules."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.required_imports: Set[str] = set()
 
-    def reset(self):
+    def reset(self) -> None:
         """Reset state for a new generation run."""
         self.required_imports = set()
 
@@ -201,7 +201,7 @@ class RuleCodeGenerator:
         # Unknown state method - generate placeholder
         return f'True_()  # TODO: state_method {method}'
 
-    def _extract_item_list(self, class_name: str, args: List[Dict]) -> str:
+    def _extract_item_list(self, class_name: str, args: List[Dict[str, Any]]) -> str:
         """Extract item list for HasAll/HasAny."""
         if not args:
             return f'{class_name}([])'
@@ -215,7 +215,7 @@ class RuleCodeGenerator:
 
         return f'{class_name}([])  # TODO: complex args'
 
-    def _extract_item_dict(self, class_name: str, args: List[Dict]) -> str:
+    def _extract_item_dict(self, class_name: str, args: List[Dict[str, Any]]) -> str:
         """Extract item dict for HasAllCounts."""
         if not args:
             return f'{class_name}({{}})'
@@ -228,7 +228,7 @@ class RuleCodeGenerator:
 
         return f'{class_name}({{}})  # TODO: complex args'
 
-    def _extract_item_list_with_count(self, class_name: str, args: List[Dict]) -> str:
+    def _extract_item_list_with_count(self, class_name: str, args: List[Dict[str, Any]]) -> str:
         """Extract item list and count for HasFromList."""
         items = []
         count = 1
@@ -240,7 +240,7 @@ class RuleCodeGenerator:
 
         return f'{class_name}({repr(items)}, {count})'
 
-    def _extract_group_with_count(self, class_name: str, args: List[Dict]) -> str:
+    def _extract_group_with_count(self, class_name: str, args: List[Dict[str, Any]]) -> str:
         """Extract group and count for HasGroupUnique."""
         group = ''
         count = 1

@@ -6,6 +6,7 @@ Usage:
 """
 
 import argparse
+import json
 import logging
 import sys
 from pathlib import Path
@@ -85,6 +86,12 @@ Examples:
     )
 
     parser.add_argument(
+        '--canonical-seed1',
+        action='store_true',
+        help='Enable seed=1 canonical placement (places items in original locations when seed is 1)'
+    )
+
+    parser.add_argument(
         '-v', '--verbose',
         action='store_true',
         help='Enable verbose output'
@@ -111,6 +118,7 @@ Examples:
             output_dir=args.output,
             game_name=args.game_name,
             force=args.force,
+            canonical_seed1=args.canonical_seed1,
         )
 
         # Load and validate

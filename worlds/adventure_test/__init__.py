@@ -47,11 +47,6 @@ class AdventureTestWorld(RuleWorldMixin, World):
         if data.location_id is not None
     }
 
-    def generate_early(self) -> None:
-        """Disable randomization for seed 1 (canonical placement)."""
-        if self.multiworld.seed == 1:
-            self.options.randomize_items.value = False
-
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
@@ -61,55 +56,6 @@ class AdventureTestWorld(RuleWorldMixin, World):
         set_rules(self)
 
     def create_items(self) -> None:
-        """Create the item pool."""
-        if not self.options.randomize_items.value:
-            self._place_original_items()
-        else:
-            self._create_item_pool()
-
-    def _place_original_items(self) -> None:
-        """Place items in their original locations (for seed=1)."""
-        original_placements = {
-        "Adjacent to Catacombs": "Slow Grundle",
-        "Black Castle Foyer": "Bridge",
-        "Black Castle Gate": "Black Key",
-        "Blue Labyrinth 0": "Left Difficulty Switch",
-        "Blue Labyrinth 1": "Slow Yorgle",
-        "Catacombs": "Sword",
-        "Chalice Home": "Victory",
-        "Credits Left Side": "Freeincarnate",
-        "Credits Right Side": "Chalice",
-        "Dungeon Vault": "White Key",
-        "Dungeon0": "Freeincarnate",
-        "Dungeon1": "Right Difficulty Switch",
-        "Inside Yellow Castle": "Magnet",
-        "Northeast of Catacombs": "Freeincarnate",
-        "Red Maze Vault": "Freeincarnate",
-        "Red Maze Vault Entrance": "Freeincarnate",
-        "RedMaze0": "Freeincarnate",
-        "RedMaze1": "Freeincarnate",
-        "Slay Grundle": "Yellow Key",
-        "Slay Rhindle": "Slow Rhindle",
-        "Slay Yorgle": "Freeincarnate",
-        "Southeast of Catacombs": "Freeincarnate",
-        "Southwest of Catacombs": "Freeincarnate",
-        "White Castle Gate": "Freeincarnate",
-        "Yellow Castle Gate": "Freeincarnate",
-        }
-
-        for location_name, item_name in original_placements.items():
-            if item_name and item_name in item_table:
-                location = self.multiworld.get_location(location_name, self.player)
-                item_data = item_table[item_name]
-                item = AdventureTestItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                location.place_locked_item(item)
-
-    def _create_item_pool(self) -> None:
         """Create randomized item pool."""
         item_pool = []
 
@@ -151,6 +97,6 @@ class AdventureTestWorld(RuleWorldMixin, World):
         data = item_table[name]
         return AdventureTestItem(name, data.classification, data.id, self.player)
 
-    def fill_slot_data(self) -> Dict:
+    def fill_slot_data(self) -> Dict[str, object]:
         """Return data for the client."""
         return {}

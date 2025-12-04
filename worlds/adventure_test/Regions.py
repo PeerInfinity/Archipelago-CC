@@ -30,9 +30,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
             region
         )
 
-        # Mark event locations
-        if location_data.event:
-            location.event = True
+        # Mark event locations - use place_locked_item in __init__.py instead
 
         region.locations.append(location)
 

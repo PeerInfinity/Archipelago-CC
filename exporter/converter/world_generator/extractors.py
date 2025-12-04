@@ -216,7 +216,7 @@ def extract_start_region(json_data: Dict[str, Any]) -> str:
     default_starts = start_regions.get('default', [])
 
     if default_starts:
-        return default_starts[0]
+        return str(default_starts[0])
 
     # Fallback to Menu if it exists
     regions = json_data.get('regions', {}).get('1', {})
@@ -225,7 +225,7 @@ def extract_start_region(json_data: Dict[str, Any]) -> str:
 
     # Return first region as fallback
     if regions:
-        return list(regions.keys())[0]
+        return str(list(regions.keys())[0])
 
     return 'Menu'
 

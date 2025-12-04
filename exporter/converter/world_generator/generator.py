@@ -9,7 +9,7 @@ import json
 import os
 import logging
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
 from .extractors import extract_all, ExtractedData
 from .templates import (
@@ -39,6 +39,7 @@ class WorldGenerator:
         output_dir: Optional[str] = None,
         game_name: Optional[str] = None,
         force: bool = False,
+        canonical_seed1: bool = False,
     ):
         """
         Initialize the generator.
@@ -48,10 +49,12 @@ class WorldGenerator:
             output_dir: Output directory for generated files. If None, derived from JSON.
             game_name: Override the game name (useful to avoid conflicts with existing worlds)
             force: If True, overwrite existing files
+            canonical_seed1: If True, generated world will place items in original locations when seed=1
         """
         self.json_path = Path(json_path)
         self.game_name_override = game_name
         self.force = force
+        self.canonical_seed1 = canonical_seed1
         self.data: Optional[ExtractedData] = None
         self._output_dir: Optional[Path] = Path(output_dir) if output_dir else None
 
@@ -66,9 +69,9 @@ class WorldGenerator:
 
         # Fallback - extract from JSON without full parsing
         with open(self.json_path, 'r') as f:
-            data = json.load(f)
-            game_dir = data.get('game_directory', 'unknown_game')
-            return Path('worlds') / game_dir
+            json_data = json.load(f)
+            game_dir = json_data.get('game_directory', 'unknown_game')
+            return Path('worlds') / str(game_dir)
 
     def load(self) -> ExtractedData:
         """Load and parse the JSON rules file."""
@@ -91,6 +94,9 @@ class WorldGenerator:
 
     def _apply_game_name_override(self, new_name: str) -> None:
         """Apply a game name override to the extracted metadata."""
+        if self.data is None:
+            raise RuntimeError("Cannot apply game name override before loading data")
+
         old_name = self.data.metadata.game_name
 
         # Update game name
@@ -115,6 +121,9 @@ class WorldGenerator:
         if self.data is None:
             self.load()
 
+        # After load(), self.data is guaranteed to be set
+        assert self.data is not None
+
         output_dir = self.output_dir
 
         logger.info(f"Generating world in {output_dir}")
@@ -129,7 +138,7 @@ class WorldGenerator:
             'Regions.py': generate_regions_py(self.data),
             'Rules.py': generate_rules_py(self.data),
             'Options.py': generate_options_py(self.data),
-            '__init__.py': generate_init_py(self.data),
+            '__init__.py': generate_init_py(self.data, canonical_seed1=self.canonical_seed1),
         }
 
         for filename, content in files.items():
@@ -149,6 +158,8 @@ class WorldGenerator:
             print(f"\nGenerated world files in: {output_dir}")
             print("\nNext steps:")
             print("1. Review generated files and make any necessary adjustments")
+            # self.data is guaranteed non-None here due to the assert above
+            assert self.data is not None
             print("2. Test with: python -c \"from worlds.{} import *\"".format(
                 self.data.metadata.game_directory))
             print("3. Generate template: python -c \"from Options import generate_yaml_templates; "
@@ -175,6 +186,8 @@ class WorldGenerator:
         # Create a basic setup.md
         setup_md = docs_dir / 'setup.md'
         if not setup_md.exists() or self.force:
+            # self.data is guaranteed non-None when this method is called from generate()
+            assert self.data is not None
             setup_content = f"""# {self.data.metadata.game_name} Setup Guide
 
 ## Required Software
@@ -204,7 +217,7 @@ class WorldGenerator:
         logger.info(f"Writing: {file_path}")
         file_path.write_text(content)
 
-    def validate(self) -> list:
+    def validate(self) -> List[str]:
         """
         Validate the extracted data for common issues.
 
@@ -214,7 +227,10 @@ class WorldGenerator:
         if self.data is None:
             self.load()
 
-        issues = []
+        # After load(), self.data is guaranteed to be set
+        assert self.data is not None
+
+        issues: List[str] = []
 
         # Check for items
         if not self.data.items:
@@ -230,7 +246,7 @@ class WorldGenerator:
 
         # Check item/location balance
         regular_items = sum(1 for i in self.data.items.values() if not i.is_event)
-        regular_locations = sum(1 for l in self.data.locations.values() if not l.is_event)
+        regular_locations = sum(1 for loc in self.data.locations.values() if not loc.is_event)
 
         if regular_items != regular_locations:
             issues.append(
