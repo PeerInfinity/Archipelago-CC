@@ -1669,6 +1669,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         'schema_version',
         'game_name',
         'game_directory',
+        'playerId',  # Player ID for player-specific exports
         'archipelago_version',
         'generation_seed',
         'player_names',
@@ -1728,6 +1729,12 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                     # Use the get_world_directory_name function to get the directory name
                     game_directory = get_world_directory_name(game_name)
                     ordered_data[key] = game_directory
+                continue
+
+            # Special handling for playerId - only include in player-specific exports
+            if key == 'playerId':
+                if player_id is not None:
+                    ordered_data[key] = player_id
                 continue
 
             # Special handling for dungeons (only include if it exists)
