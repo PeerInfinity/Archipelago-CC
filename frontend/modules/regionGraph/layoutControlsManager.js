@@ -23,6 +23,13 @@ export class LayoutControlsManager {
           <button id="exportPositions" style="margin: 2px; padding: 4px 8px;">Export Positions</button>
         </div>
         <div id="layoutEditorContainer"></div>
+        <div id="discoveryControls" style="display: none; margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
+          <div style="font-weight: bold; margin-bottom: 5px;">Discovery Mode:</div>
+          <label style="display: block; margin: 3px 0; cursor: pointer;">
+            <input type="checkbox" id="graph-show-undiscovered" checked style="margin-right: 5px;">
+            Show undiscovered regions/exits
+          </label>
+        </div>
         <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
           <div style="font-weight: bold; margin-bottom: 5px;">Location Visibility:</div>
           <label style="display: block; margin: 3px 0; cursor: pointer;">
@@ -88,7 +95,8 @@ export class LayoutControlsManager {
       { id: '#addToPath', setting: 'regionGraph.addToPath', default: true },
       { id: '#overwritePath', setting: 'regionGraph.overwritePath', default: false },
       { id: '#addLocationsToPath', setting: 'regionGraph.addLocationsToPath', default: false },
-      { id: '#checkAllLocationsInRegion', setting: 'regionGraph.checkAllLocationsInRegion', default: false }
+      { id: '#checkAllLocationsInRegion', setting: 'regionGraph.checkAllLocationsInRegion', default: false },
+      { id: '#graph-show-undiscovered', setting: 'regionGraph.showUndiscovered', default: true }
     ];
 
     for (const checkbox of checkboxes) {
@@ -102,6 +110,31 @@ export class LayoutControlsManager {
           element.checked = checkbox.default;
         }
       }
+    }
+
+    // Setup change handler for discovery checkbox to trigger graph rebuild
+    const showUndiscoveredCheckbox = this.ui.controlPanel.querySelector('#graph-show-undiscovered');
+    if (showUndiscoveredCheckbox) {
+      showUndiscoveredCheckbox.addEventListener('change', async (e) => {
+        await this.saveCheckboxSetting('#graph-show-undiscovered', 'regionGraph.showUndiscovered', e.target.checked);
+        // Rebuild the graph with new filtering
+        if (this.ui.cy && this.ui.graphInitialized) {
+          this.ui.loadGraphData();
+        }
+      });
+    }
+
+    // Update discovery controls visibility based on current mode
+    this.updateDiscoveryControlsVisibility();
+  }
+
+  /**
+   * Update visibility of discovery-specific controls based on discovery mode state
+   */
+  updateDiscoveryControlsVisibility() {
+    const discoveryControls = this.ui.controlPanel?.querySelector('#discoveryControls');
+    if (discoveryControls) {
+      discoveryControls.style.display = this.ui.isDiscoveryModeActive ? 'block' : 'none';
     }
   }
 

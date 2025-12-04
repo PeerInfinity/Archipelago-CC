@@ -164,7 +164,8 @@ def generate_ut_comparison_markdown(chart_data: List[Dict[str, Any]],
     md_content = f"# Universal Tracker Comparison Test Results{title_suffix}\n\n"
 
     # Add navigation links
-    md_content += "[<- Back to Test Results Summary](./test-results-summary.md)\n\n"
+    md_content += "[<- Back to Test Results Summary](./test-results-summary.md) | "
+    md_content += "[How This Test Works](../guides/ut-comparison-testing.md)\n\n"
 
     # Add cross-link to other results if available
     if other_results_link:
@@ -206,7 +207,7 @@ def generate_ut_comparison_markdown(chart_data: List[Dict[str, Any]],
         md_content += f"- **Total Games:** {total_games}\n"
         md_content += f"- **Passed:** {passed} ({passed/total_games*100:.1f}%)\n"
         md_content += f"- **Failed:** {failed} ({failed/total_games*100:.1f}%)\n"
-        md_content += f"- **Consistent Results:** {consistent} ({consistent/total_games*100:.1f}%)\n"
+        md_content += f"- **Consistent Across Runs:** {consistent} ({consistent/total_games*100:.1f}%) - UT produced same result each run\n"
         md_content += f"- **With re_gen_passthrough:** {with_passthrough} ({with_passthrough/total_games*100:.1f}%)\n\n"
 
     md_content += "## Test Results\n\n"
@@ -260,13 +261,18 @@ def generate_ut_comparison_markdown(chart_data: List[Dict[str, Any]],
 
     md_content += "\n## Notes\n\n"
     md_content += "- **Result:** ✅ if UT matches Python sphere log exactly in ALL runs, ❌ otherwise\n"
-    md_content += "- **Consistent:** ✅ if all test runs had the same mismatch count, ❌ if results varied\n"
+    md_content += "- **Consistent:** ✅ if UT produced the same mismatch count across all test runs, ❌ if results varied between runs. "
+    md_content += "Inconsistent results indicate UT's world regeneration differs between runs (not a determinism bug in generation).\n"
     md_content += "- **Spheres:** The last sphere index in the game (shows sphere numbering from logs)\n"
     md_content += "- **Mismatches (min/max):** Lowest and highest number of mismatched spheres across all runs\n"
     md_content += "- **Last Good (min/max):** Lowest and highest sphere index reached before first mismatch across all runs\n"
     md_content += "- **re_gen:** ✅ if game implements `re_gen_passthrough` for UT support, ⚫ otherwise\n\n"
-    md_content += "Games with `re_gen_passthrough` support pass slot data to UT for accurate regeneration.\n"
-    md_content += "Games without this support may have significant mismatches due to randomization differences.\n"
+    md_content += "### Understanding Results\n\n"
+    md_content += "Games with `re_gen_passthrough` support pass slot data to UT for accurate world regeneration. "
+    md_content += "For these games, any mismatch is a bug that should be reported.\n\n"
+    md_content += "Games **without** `re_gen_passthrough` may have mismatches due to randomization differences when UT regenerates the world. "
+    md_content += "This is expected behavior, not a bug. The fixed seed tests help isolate whether mismatches are due to "
+    md_content += "randomization (inconsistent results) or logic differences (consistent failures).\n"
 
     return md_content
 
