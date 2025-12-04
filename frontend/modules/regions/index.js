@@ -1,5 +1,9 @@
 // UI Class for this module
 import { RegionUI } from './regionUI.js';
+import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import { evaluateRule } from '../shared/ruleEngine.js';
+import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import eventBus from '../../app/core/eventBus.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -75,6 +79,15 @@ export function register(registrationApi) {
     { direction: 'up', condition: 'unconditional', timing: 'immediate' }
   );
 
+  // Register dispatcher receiver for user:exitClicked events
+  // This is the default handler - it only runs if no other module (like loops) intercepted the event
+  registrationApi.registerDispatcherReceiver(
+    moduleId,
+    'user:exitClicked',
+    handleExitClicked,
+    { direction: 'up', condition: 'unconditional', timing: 'immediate' }
+  );
+
   // Register settings schema if needed
   // registrationApi.registerSettingsSchema(moduleId, { /* ... schema ... */ });
 }
@@ -90,7 +103,7 @@ function handleRegionMove(data, propagationOptions) {
   } else if (!regionUIInstance) {
     log('warn', `[${moduleId} Module] Cannot process region move - UI instance not available`);
   }
-  
+
   // Propagate the event to the next module (up direction)
   if (moduleDispatcher) {
     moduleDispatcher.publishToNextModule(
@@ -102,6 +115,105 @@ function handleRegionMove(data, propagationOptions) {
   } else {
     log('error', `[${moduleId} Module] Dispatcher not available for propagation of user:regionMove event`);
   }
+}
+
+// Handler for user:exitClicked events (default handler)
+// This performs the same action as clicking an exit in the Regions panel
+function handleExitClicked(data, propagationOptions) {
+  log('info', `[${moduleId} Module] Received user:exitClicked event`, data);
+
+  const { exitName, sourceRegion, destinationRegion, accessRule } = data;
+
+  if (!sourceRegion || !destinationRegion) {
+    log('warn', `[${moduleId} Module] Cannot process exit click - missing source or destination region`);
+    return;
+  }
+
+  // Check if the exit is traversable
+  const snapshot = stateManager.getLatestStateSnapshot();
+  const staticData = stateManager.getStaticData();
+
+  if (!snapshot || !staticData) {
+    log('warn', `[${moduleId} Module] Cannot determine traversability - no snapshot or static data`);
+    return;
+  }
+
+  // Check parent region reachability
+  const parentRegionStatus = snapshot.regionReachability?.[sourceRegion];
+  const parentRegionReachable =
+    parentRegionStatus === true ||
+    parentRegionStatus === 'reachable' ||
+    parentRegionStatus === 'checked';
+
+  // Check connected region reachability
+  const connectedRegionStatus = snapshot.regionReachability?.[destinationRegion];
+  const connectedRegionReachable =
+    connectedRegionStatus === true ||
+    connectedRegionStatus === 'reachable' ||
+    connectedRegionStatus === 'checked';
+
+  // Evaluate access rule
+  let rulePasses = true;
+  if (accessRule) {
+    try {
+      const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+      rulePasses = evaluateRule(accessRule, snapshotInterface);
+    } catch (e) {
+      log('error', `[${moduleId} Module] Error evaluating rule for exit ${exitName}:`, e);
+      rulePasses = false;
+    }
+  }
+
+  const isTraversable = parentRegionReachable && rulePasses && connectedRegionReachable;
+
+  if (!isTraversable) {
+    log('info', `[${moduleId} Module] Exit ${exitName} is not traversable, skipping move action`);
+    return;
+  }
+
+  // Check if "Show All Regions" mode is enabled
+  const showAllCheckbox = document.querySelector('#show-all-regions');
+  const showAllEnabled = showAllCheckbox && showAllCheckbox.checked;
+
+  if (showAllEnabled) {
+    // In "Show All" mode, navigate to the region instead of moving
+    log('info', `[${moduleId} Module] Navigating to region: ${destinationRegion} (Show All mode)`);
+
+    // First activate the regions panel if not already active
+    eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' }, 'regions');
+
+    // Then navigate to the target region
+    eventBus.publish('ui:navigateToRegion', {
+      regionName: destinationRegion
+    }, 'regions');
+  } else {
+    // Normal mode - execute region move via dispatcher
+    log('info', `[${moduleId} Module] Processing exit click: moving to ${destinationRegion} via ${exitName}`);
+
+    // Get the actual current region from playerState
+    import('../playerState/singleton.js').then(({ getPlayerStateSingleton }) => {
+      const playerState = getPlayerStateSingleton();
+      const currentRegion = playerState.getCurrentRegion();
+
+      if (moduleDispatcher) {
+        moduleDispatcher.publish('user:regionMove', {
+          sourceRegion: currentRegion,
+          sourceUID: null, // Exit panel doesn't have UID context
+          targetRegion: destinationRegion,
+          exitName: exitName,
+          updatePath: true,
+          source: 'regionsModule:exitClicked'
+        });
+        log('info', `[${moduleId} Module] Published user:regionMove from ${currentRegion} to ${destinationRegion} via ${exitName}`);
+      } else {
+        log('error', `[${moduleId} Module] Dispatcher not available for publishing user:regionMove`);
+      }
+    }).catch(error => {
+      log('error', `[${moduleId} Module] Error importing playerState:`, error);
+    });
+  }
+
+  // Note: We don't propagate user:exitClicked further - this is the terminal handler
 }
 
 /**

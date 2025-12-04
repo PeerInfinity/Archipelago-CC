@@ -409,7 +409,11 @@ export function _createSelfSnapshotInterface(sm) {
       // Logic object (game-specific helper functions)
       if (name === 'logic') {
         // Get game-specific helpers from the game logic module
-        const gameName = sm.rules?.game_name;
+        // For multiworld, use the player-specific game from settings instead of the top-level game_name
+        let gameName = sm.rules?.game_name;
+        if (gameName === 'Multiworld' && sm.settings?.game) {
+          gameName = sm.settings.game;
+        }
         if (gameName) {
           const gameLogic = getGameLogic(gameName);
           if (gameLogic && gameLogic.helperFunctions) {
@@ -712,7 +716,7 @@ export function getStaticGameData(sm) {
     mode: sm.mode,
     // Game-specific information
     game_info: sm.gameInfo,
-    settings: sm.rules?.settings,
+    settings: sm.rules?.settings,  // Full settings object (keyed by player ID for multiworld)
     // Starting items (precollected items)
     starting_items: sm.rules?.starting_items,
     // ID mappings

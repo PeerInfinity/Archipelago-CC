@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-03 20:46:57
+**Generated:** 2025-12-03 12:12:25
 
 This summary combines results from 4 types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -9,7 +9,8 @@ This summary combines results from 4 types of tests:
 - **Multiworld Test:** Tests in multiworld mode with multiple games - [View Details](./test-results-multiworld.md)
 
 Additional test results:
-- **UT Comparison Test:** Validates Universal Tracker matches Python sphere log - [View Details](./test-results-ut-comparison.md)
+- **UT Comparison Test (Fixed Seed):** Validates Universal Tracker matches Python sphere log with seed=1 - [View Details](./test-results-ut-comparison-fixed-seed.md)
+- **UT Comparison Test (Random Seed):** Validates Universal Tracker matches Python sphere log with random seeds - [View Details](./test-results-ut-comparison-random-seed.md)
 
 ## Summary Statistics
 

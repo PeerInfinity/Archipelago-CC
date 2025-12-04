@@ -137,9 +137,14 @@ def run_ut_comparison_test(yaml_file: Path, seed: Optional[str], port: int, outp
         "--auto-ignore-events"
     ]
 
-    # Only pass seed if specified (otherwise let UT generate its own random seed)
+    # Pass seed for generation (always uses seed 1 for consistent game generation)
+    # For UT seed: pass the same seed in fixed mode, or empty string in random mode
     if seed is not None:
+        # Fixed seed mode: use same seed for both generation and UT
         cmd.extend(["--seed", seed])
+    else:
+        # Random seed mode: use seed 1 for generation, let UT generate its own random seed
+        cmd.extend(["--seed", "1", "--ut-seed", ""])
 
     print(f"  Running: {' '.join(cmd[:6])}...")  # Show truncated command
 

@@ -60,6 +60,13 @@ export class RegionUI {
     this.navigationTarget = null; // Add navigation target state
     this.isDiscoveryModeActive = false; // Track discovery mode state
 
+    // Discovery settings cache
+    this.discoverySettings = {
+      undiscoveredDisplay: 'hidden',
+      clickDiscoversLocation: true,
+      showUndiscoveredDetails: false
+    };
+
     // Create root element first (needed for DisplaySettingsManager)
     this.rootElement = this.createRootElement();
 
@@ -115,6 +122,11 @@ export class RegionUI {
         log('info', '[RegionUI] Display settings loaded and synced');
       }).catch(error => {
         log('error', '[RegionUI] Failed to initialize display settings:', error);
+      });
+
+      // Load initial discovery settings
+      this.loadDiscoverySettings().catch(error => {
+        log('error', '[RegionUI] Failed to load discovery settings:', error);
       });
 
       this.isInitialized = true; // Mark that basic panel setup is done.
@@ -213,6 +225,10 @@ export class RegionUI {
             <label style="margin-right: 10px;">
               <input type="checkbox" id="show-paths" checked />
               Show Paths
+            </label>
+            <label style="margin-right: 10px; display: none;"> <!-- Controlled by discovery mode -->
+              <input type="checkbox" id="region-show-undiscovered" checked />
+              Show Undiscovered
             </label>
           </div>
           <div style="border-top: 1px solid #555; padding-top: 10px;">
@@ -355,6 +371,12 @@ export class RegionUI {
         this.displaySettings.setSetting('showPaths', this.showPaths, true);
         this.renderAllRegions();
       });
+    }
+
+    // Show Undiscovered checkbox (discovery mode)
+    const showUndiscoveredCheckbox = this.rootElement.querySelector('#region-show-undiscovered');
+    if (showUndiscoveredCheckbox) {
+      showUndiscoveredCheckbox.addEventListener('change', () => this.renderAllRegions());
     }
 
     // Visibility checkboxes for region block elements
@@ -797,7 +819,8 @@ export class RegionUI {
         sortMethod,
         originalRegionOrder: this.originalRegionOrder,
         useColorblind,
-        sectionOrder
+        sectionOrder,
+        discoverySettings: this.discoverySettings
       }
     );
 
@@ -1019,6 +1042,29 @@ export class RegionUI {
         node.insertBefore(symbolSpan, node.firstChild); // Insert at beginning
       }
     });
+  }
+
+  /**
+   * Load discovery settings from settingsManager
+   */
+  async loadDiscoverySettings() {
+    try {
+      this.discoverySettings.undiscoveredDisplay = await settingsManager.getSetting(
+        'moduleSettings.discovery.undiscoveredDisplay', 'hidden'
+      );
+      this.discoverySettings.clickDiscoversLocation = await settingsManager.getSetting(
+        'moduleSettings.discovery.clickDiscoversLocation', true
+      );
+      this.discoverySettings.showUndiscoveredDetails = await settingsManager.getSetting(
+        'moduleSettings.discovery.showUndiscoveredDetails', false
+      );
+      this.isDiscoveryModeActive = await settingsManager.getSetting(
+        'moduleSettings.discovery.enableDiscoveryMode', false
+      );
+      log('info', '[RegionUI] Discovery settings loaded:', this.discoverySettings);
+    } catch (error) {
+      log('error', '[RegionUI] Error loading discovery settings:', error);
+    }
   }
 
   /**

@@ -240,7 +240,19 @@ export function createStateSnapshotInterface(
   stateManager = null
 ) {
   // Legacy snapshotHelpersInstance removed - using agnostic helpers directly
-  const gameName = staticData?.game_name || snapshot?.game; // Get game name from static data or snapshot
+  let gameName = staticData?.game_name || snapshot?.game; // Get game name from static data or snapshot
+
+  // In multiworld mode, get the player-specific game name
+  // The overall game_name will be "Multiworld", but each player has their own game
+  if (gameName === 'Multiworld') {
+    const rawPlayerId = snapshot?.player?.id || snapshot?.player?.slot ||
+                     staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
+    // Normalize to string since settings keys are strings ('1', '2', etc.)
+    const playerId = String(rawPlayerId);
+    if (staticData?.settings?.[playerId]?.game) {
+      gameName = staticData.settings[playerId].game;
+    }
+  }
 
   function findLocationDataInStatic(locationName) {
     if (!staticData) return null;

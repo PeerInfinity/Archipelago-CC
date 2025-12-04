@@ -1004,6 +1004,12 @@ export class EventProcessor {
 
     // Step 2: Add cross-player items (items we received from other players' locations)
     // These are items in our new_inventory_details that we didn't get from checking our own locations
+    // Get starting items to avoid double-counting them as cross-player items ONLY at the exact sphere "0"
+    const startingItems = staticData?.starting_items?.[playerIdKey] || [];
+    // Note: Only skip starting items at EXACT sphere "0", not sub-spheres like "0.1", "0.23", etc.
+    // because starting items are added ONCE at the beginning of sphere 0 processing
+    const isSphere0Exact = String(context.sphere_number) === '0';
+
     if (Object.keys(newItems).length > 0) {
       // Get snapshot to see what we currently have
       const beforeSnapshot = await stateManager.getFullSnapshot();
@@ -1027,12 +1033,19 @@ export class EventProcessor {
             }
           }
 
-          // If not from own location, it's a cross-player item - add it
-          if (!fromOwnLocation) {
+          // Check if this is a starting item that was already added at sphere 0
+          // IMPORTANT: Only skip starting items at EXACT sphere "0", not at sub-spheres or later spheres
+          // because we can receive additional copies of starting items from other players
+          const isStartingItemAtSphere0 = isSphere0Exact && startingItems.includes(itemName);
+
+          // If not from own location AND not a starting item at sphere 0, it's a cross-player item - add it
+          if (!fromOwnLocation && !isStartingItemAtSphere0) {
             this.logCallback('info', `  [Player ${this.playerId}] Receiving ${itemsToAdd}x cross-player item: "${itemName}"`);
             for (let i = 0; i < itemsToAdd; i++) {
               await stateManager.addItemToInventory(itemName, 1);
             }
+          } else if (isStartingItemAtSphere0 && this.verboseMode) {
+            this.logCallback('debug', `  [Player ${this.playerId}] Skipping "${itemName}" at sphere 0 - already added as starting item`);
           }
         }
       }

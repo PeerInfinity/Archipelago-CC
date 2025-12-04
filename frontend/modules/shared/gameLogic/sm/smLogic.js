@@ -1783,17 +1783,41 @@ export function knowsGravLessLevel2(snapshot, staticData) {
 
 export function knowsSpongeBathBombJump(snapshot, staticData) {
   // Sponge Bath bomb jump technique
+  // Check exported knows settings - disabled by default in regular preset
+  const playerId = getPlayerId(snapshot, staticData);
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('SpongeBathBombJump' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.SpongeBathBombJump;
+    return { bool: enabled, difficulty };
+  }
   return { bool: true, difficulty: 0 };
 }
 
 export function knowsSpongeBathHiJump(snapshot, staticData) {
   // Sponge Bath high jump technique
-  return { bool: true, difficulty: 0 };
+  // Check exported knows settings - enabled by default with difficulty 1
+  const playerId = getPlayerId(snapshot, staticData);
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('SpongeBathHiJump' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.SpongeBathHiJump;
+    return { bool: enabled, difficulty };
+  }
+  return { bool: true, difficulty: 1 };
 }
 
 export function knowsSpongeBathSpeed(snapshot, staticData) {
   // Sponge Bath speed technique
-  return { bool: true, difficulty: 0 };
+  // Check exported knows settings - enabled by default with difficulty 5
+  const playerId = getPlayerId(snapshot, staticData);
+  const knowsSettings = staticData?.settings?.[playerId]?.knows || {};
+
+  if ('SpongeBathSpeed' in knowsSettings) {
+    const [enabled, difficulty] = knowsSettings.SpongeBathSpeed;
+    return { bool: enabled, difficulty };
+  }
+  return { bool: true, difficulty: 5 };
 }
 
 export function knowsWestSandHoleSuitlessWallJumps(snapshot, staticData) {

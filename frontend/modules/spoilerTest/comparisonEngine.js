@@ -129,7 +129,8 @@ export class ComparisonEngine {
     const stateAccessibleUnchecked = [];
     const snapshotInterface = createStateSnapshotInterface(
       currentWorkerSnapshot, // Use the authoritative snapshot directly
-      staticData
+      staticData,
+      { playerId: playerId } // Pass playerId for multiworld game logic selection
     );
 
     if (!snapshotInterface) {
@@ -163,7 +164,7 @@ export class ComparisonEngine {
         const locationSnapshotInterface = createStateSnapshotInterface(
           currentWorkerSnapshot,
           staticData,
-          { location: locDef } // Pass the location definition as context
+          { location: locDef, playerId: playerId } // Pass location and playerId for multiworld
         );
 
         locationRuleEvalResult = evaluateRule(

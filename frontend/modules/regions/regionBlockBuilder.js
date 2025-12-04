@@ -50,7 +50,8 @@ export class RegionBlockBuilder {
     currentExpandedState,
     staticData,
     isSkipIndicator = false,
-    sectionOrder = 'entrances-exits-locations'
+    sectionOrder = 'entrances-exits-locations',
+    discoverySettings = null
   ) {
     // Handle skip indicator specially
     if (isSkipIndicator || currentUid === 'skip_indicator') {
@@ -120,19 +121,25 @@ export class RegionBlockBuilder {
 
     // Check if Discovery Mode is active
     const isDiscoveryModeActive = this.regionUI.isDiscoveryModeActive || false;
+    const settings = discoverySettings || this.regionUI.discoverySettings || {
+      undiscoveredDisplay: 'hidden',
+      clickDiscoversLocation: true,
+      showUndiscoveredDetails: false
+    };
 
-    // In Discovery Mode, skip rendering if undiscovered
-    if (
-      isDiscoveryModeActive &&
-      !discoveryStateSingleton.isRegionDiscovered(regionName)
-    ) {
-      if (regionName === 'Menu') {
-        log(
-          'warn',
-          '[RegionBlockBuilder] Menu region is considered undiscovered in discovery mode. Returning null.'
-        );
+    // In Discovery Mode, handle undiscovered regions based on settings
+    const isRegionDiscovered = discoveryStateSingleton.isRegionDiscovered(regionName);
+    if (isDiscoveryModeActive && !isRegionDiscovered) {
+      if (settings.undiscoveredDisplay === 'hidden') {
+        // Check if Show Undiscovered is enabled
+        const showUndiscoveredCheckbox = this.regionUI.rootElement?.querySelector('#region-show-undiscovered');
+        const showUndiscovered = showUndiscoveredCheckbox?.checked ?? true;
+
+        if (!showUndiscovered) {
+          return null; // Hide undiscovered regions
+        }
       }
-      return null;
+      // If undiscoveredDisplay is 'placeholder' or showUndiscovered is checked, continue to render as placeholder
     }
 
     // Determine completion status
@@ -157,7 +164,10 @@ export class RegionBlockBuilder {
       useColorblind,
       expanded,
       isComplete,
-      regionStaticData
+      regionStaticData,
+      isDiscoveryModeActive,
+      isRegionDiscovered,
+      settings
     );
 
     // Build content
@@ -172,7 +182,9 @@ export class RegionBlockBuilder {
       expanded,
       staticData,
       isDiscoveryModeActive,
-      sectionOrder
+      sectionOrder,
+      isRegionDiscovered,
+      settings
     );
 
     // Append header and content
@@ -197,13 +209,17 @@ export class RegionBlockBuilder {
     useColorblind,
     expanded,
     isComplete,
-    regionStaticData
+    regionStaticData,
+    isDiscoveryModeActive = false,
+    isRegionDiscovered = true,
+    discoverySettings = {}
   ) {
     const headerEl = document.createElement('div');
     headerEl.classList.add('region-header');
 
-    // Get display elements from regionUI
-    const displayElements = this.regionUI.getRegionDisplayElements(regionStaticData || regionName);
+    // Check if we should show placeholder for undiscovered region
+    const showAsPlaceholder = isDiscoveryModeActive && !isRegionDiscovered;
+    const showFullDetails = discoverySettings.showUndiscoveredDetails ?? false;
 
     // Create container for region text lines
     const regionTextContainer = document.createElement('span');
@@ -212,15 +228,29 @@ export class RegionBlockBuilder {
     regionTextContainer.style.flexDirection = 'column';
     regionTextContainer.style.gap = '2px';
 
-    // Add each display element as a separate line
-    const suffix = this._suffixIfDuplicate(regionName, uid);
-    displayElements.forEach((element, index) => {
+    if (showAsPlaceholder && !showFullDetails) {
+      // Show placeholder text for undiscovered region
       const lineSpan = document.createElement('span');
-      lineSpan.className = `region-${element.type}`;
-      // Only add suffix to the first line
-      lineSpan.textContent = index === 0 ? element.text + suffix : element.text;
+      lineSpan.className = 'region-name region-placeholder';
+      lineSpan.textContent = '???';
+      lineSpan.style.fontStyle = 'italic';
+      lineSpan.style.color = '#888';
       regionTextContainer.appendChild(lineSpan);
-    });
+      regionTextContainer.title = 'Undiscovered region';
+    } else {
+      // Get display elements from regionUI
+      const displayElements = this.regionUI.getRegionDisplayElements(regionStaticData || regionName);
+
+      // Add each display element as a separate line
+      const suffix = this._suffixIfDuplicate(regionName, uid);
+      displayElements.forEach((element, index) => {
+        const lineSpan = document.createElement('span');
+        lineSpan.className = `region-${element.type}`;
+        // Only add suffix to the first line
+        lineSpan.textContent = index === 0 ? element.text + suffix : element.text;
+        regionTextContainer.appendChild(lineSpan);
+      });
+    }
 
     headerEl.appendChild(regionTextContainer);
 
@@ -266,7 +296,9 @@ export class RegionBlockBuilder {
     expanded,
     staticData,
     isDiscoveryModeActive,
-    sectionOrder = 'entrances-exits-locations'
+    sectionOrder = 'entrances-exits-locations',
+    isRegionDiscovered = true,
+    discoverySettings = {}
   ) {
     const contentEl = document.createElement('div');
     contentEl.classList.add('region-content');
@@ -296,7 +328,9 @@ export class RegionBlockBuilder {
             regionIsReachable,
             useColorblind,
             uid,
-            isDiscoveryModeActive
+            isDiscoveryModeActive,
+            isRegionDiscovered,
+            discoverySettings
           );
           break;
         case 'locations':
@@ -309,7 +343,9 @@ export class RegionBlockBuilder {
             regionIsReachable,
             useColorblind,
             isDiscoveryModeActive,
-            staticData
+            staticData,
+            isRegionDiscovered,
+            discoverySettings
           );
           break;
       }
@@ -603,7 +639,9 @@ export class RegionBlockBuilder {
     regionIsReachable,
     useColorblind,
     uid,
-    isDiscoveryModeActive
+    isDiscoveryModeActive,
+    isRegionDiscovered = true,
+    discoverySettings = {}
   ) {
     const exitsHeader = document.createElement('h4');
     exitsHeader.textContent = 'Exits:';
@@ -642,14 +680,32 @@ export class RegionBlockBuilder {
           regionIsReachable && exitAccessible && connectedRegionReachable;
 
         // Discovery mode discovery check
-        const isExitDiscovered =
-          !isDiscoveryModeActive ||
-          discoveryStateSingleton.isExitDiscovered(regionName, exitDef.name);
+        const isExitDiscovered = discoveryStateSingleton.isExitDiscovered(regionName, exitDef.name);
+
+        // Determine if this exit should be shown as a placeholder
+        let showAsPlaceholder = false;
+        if (isDiscoveryModeActive) {
+          if (!isRegionDiscovered) {
+            // Region is undiscovered - respect undiscoveredDisplay setting
+            if (discoverySettings.undiscoveredDisplay === 'hidden') {
+              // Check if Show Undiscovered is enabled
+              const showUndiscoveredCheckbox = this.regionUI.rootElement?.querySelector('#region-show-undiscovered');
+              const showUndiscovered = showUndiscoveredCheckbox?.checked ?? true;
+              if (!showUndiscovered) {
+                return; // Skip this exit entirely (using forEach, so return continues to next)
+              }
+            }
+            showAsPlaceholder = true;
+          } else if (!isExitDiscovered) {
+            // Region is discovered but exit is not
+            showAsPlaceholder = true;
+          }
+        }
 
         const li = document.createElement('li');
         li.classList.add('exit-item');
-        const exitNameDisplay =
-          isDiscoveryModeActive && !isExitDiscovered ? '???' : exitDef.name;
+        const showFullDetails = discoverySettings.showUndiscoveredDetails ?? false;
+        const exitNameDisplay = showAsPlaceholder && !showFullDetails ? '???' : exitDef.name;
         
         // Create a wrapper div for the entire clickable area
         const exitWrapper = document.createElement('div');
@@ -689,10 +745,7 @@ export class RegionBlockBuilder {
         // Apply classes and styling
         li.classList.toggle('accessible', isTraversable);
         li.classList.toggle('inaccessible', !isTraversable);
-        li.classList.toggle(
-          'undiscovered',
-          isDiscoveryModeActive && !isExitDiscovered
-        );
+        li.classList.toggle('undiscovered', showAsPlaceholder);
         
         // Apply border color based on status
         if (isTraversable) {
@@ -708,12 +761,12 @@ export class RegionBlockBuilder {
         exitWrapper.style.borderRadius = '4px';
         exitWrapper.style.padding = '8px 12px';
         exitWrapper.style.margin = '4px 0';
-        exitWrapper.style.cursor = isTraversable && connectedRegionName && (!isDiscoveryModeActive || isExitDiscovered) ? 'pointer' : 'default';
+        exitWrapper.style.cursor = isTraversable && connectedRegionName && !showAsPlaceholder ? 'pointer' : 'default';
         exitWrapper.style.display = 'block';
         exitWrapper.style.transition = 'all 0.2s ease';
         
         // Add hover effect for traversable exits
-        if (isTraversable && connectedRegionName && (!isDiscoveryModeActive || isExitDiscovered)) {
+        if (isTraversable && connectedRegionName && !showAsPlaceholder) {
           exitWrapper.addEventListener('mouseenter', () => {
             exitWrapper.style.transform = 'translateX(4px)';
             exitWrapper.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
@@ -823,7 +876,9 @@ export class RegionBlockBuilder {
     regionIsReachable,
     useColorblind,
     isDiscoveryModeActive,
-    staticData
+    staticData,
+    isRegionDiscovered = true,
+    discoverySettings = {}
   ) {
     const locationsHeader = document.createElement('h4');
     locationsHeader.textContent = 'Locations:';
@@ -857,15 +912,33 @@ export class RegionBlockBuilder {
         const locChecked = snapshot.checkedLocations?.includes(locationDef.name) ?? false;
 
         // Discovery mode discovery check
-        const isLocationDiscovered =
-          !isDiscoveryModeActive ||
-          discoveryStateSingleton.isLocationDiscovered(locationDef.name);
+        const isLocationDiscovered = discoveryStateSingleton.isLocationDiscovered(locationDef.name);
+
+        // Determine if this location should be shown as a placeholder
+        let showAsPlaceholder = false;
+        if (isDiscoveryModeActive) {
+          if (!isRegionDiscovered) {
+            // Region is undiscovered - respect undiscoveredDisplay setting
+            if (discoverySettings.undiscoveredDisplay === 'hidden') {
+              // Check if Show Undiscovered is enabled
+              const showUndiscoveredCheckbox = this.regionUI.rootElement?.querySelector('#region-show-undiscovered');
+              const showUndiscovered = showUndiscoveredCheckbox?.checked ?? true;
+              if (!showUndiscovered) {
+                return; // Skip this location entirely (using forEach, so return continues to next)
+              }
+            }
+            showAsPlaceholder = true;
+          } else if (!isLocationDiscovered) {
+            // Region is discovered but location is not
+            showAsPlaceholder = true;
+          }
+        }
 
         const li = document.createElement('li');
         li.classList.add('location-item');
         li.dataset.locationName = locationDef.name; // Add data attribute for easy targeting
-        const locationNameDisplay =
-          isDiscoveryModeActive && !isLocationDiscovered ? '???' : locationDef.name;
+        const showFullDetails = discoverySettings.showUndiscoveredDetails ?? false;
+        const locationNameDisplay = showAsPlaceholder && !showFullDetails ? '???' : locationDef.name;
         
         // Create a wrapper div for the entire clickable area
         const locationWrapper = document.createElement('div');
@@ -955,10 +1028,7 @@ export class RegionBlockBuilder {
         li.classList.toggle('accessible', locAccessible && !locChecked);
         li.classList.toggle('inaccessible', !locAccessible);
         li.classList.toggle('checked-location', locChecked);
-        li.classList.toggle(
-          'undiscovered',
-          isDiscoveryModeActive && !isLocationDiscovered
-        );
+        li.classList.toggle('undiscovered', showAsPlaceholder);
         
         // Apply border color based on status
         if (locChecked) {
@@ -994,7 +1064,7 @@ export class RegionBlockBuilder {
         }
         
         // Make entire wrapper clickable if location is accessible and not checked
-        if (locAccessible && !locChecked && (!isDiscoveryModeActive || isLocationDiscovered)) {
+        if (locAccessible && !locChecked && !showAsPlaceholder) {
           locationWrapper.addEventListener('click', async () => {
             try {
               log(
