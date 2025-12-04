@@ -384,6 +384,15 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     def create_items(self) -> None:
 '''
 
+    # Build itempool_counts dictionary
+    itempool_entries = []
+    for item_name, count in sorted(data.itempool_counts.items()):
+        if count > 0:
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            itempool_entries.append(f'    "{item_escaped}": {count},')
+
+    itempool_content = '\n'.join(itempool_entries)
+
     return f'''"""
 {game_name} world implementation for Archipelago.
 
@@ -400,6 +409,12 @@ from .Locations import location_table, {class_name}Location
 from .Options import {class_name}Options
 from .Regions import create_regions
 from .Rules import set_rules
+
+
+# Item pool counts from original generation
+ITEMPOOL_COUNTS: Dict[str, int] = {{
+{itempool_content}
+}}
 
 
 class {class_name}Web(WebWorld):
@@ -443,18 +458,20 @@ class {world_class}(RuleWorldMixin, World):
 {create_items_section}        """Create randomized item pool."""
         item_pool = []
 
-        for item_name, item_data in item_table.items():
+        for item_name, count in ITEMPOOL_COUNTS.items():
             # Skip event items
-            if item_data.id is None:
+            if item_name not in item_table or item_table[item_name].id is None:
                 continue
 
-            item = {class_name}Item(
-                item_name,
-                item_data.classification,
-                item_data.id,
-                self.player
-            )
-            item_pool.append(item)
+            item_data = item_table[item_name]
+            for _ in range(count):
+                item = {class_name}Item(
+                    item_name,
+                    item_data.classification,
+                    item_data.id,
+                    self.player
+                )
+                item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 {victory_section}

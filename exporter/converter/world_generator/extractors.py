@@ -69,6 +69,7 @@ class ExtractedData:
     item_groups: List[str]
     start_region: str
     original_placements: Dict[str, str]  # location -> item
+    itempool_counts: Dict[str, int] = field(default_factory=dict)  # item -> count
 
 
 def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
@@ -230,6 +231,28 @@ def extract_start_region(json_data: Dict[str, Any]) -> str:
     return 'Menu'
 
 
+def extract_itempool_counts(json_data: Dict[str, Any]) -> Dict[str, int]:
+    """
+    Extract item pool counts from JSON.
+
+    The itempool_counts field contains the actual number of each item
+    that should be created in the item pool.
+
+    Returns:
+        Dict mapping item name to count
+    """
+    itempool_counts: Dict[str, int] = {}
+
+    # Get itempool_counts for player 1
+    counts_data = json_data.get('itempool_counts', {}).get('1', {})
+
+    for item_name, count in counts_data.items():
+        if isinstance(count, int) and count > 0:
+            itempool_counts[item_name] = count
+
+    return itempool_counts
+
+
 def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
     """
     Extract all data from a JSON rules file.
@@ -245,6 +268,7 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
     locations, original_placements = extract_locations(json_data)
     regions, exits = extract_regions(json_data)
     start_region = extract_start_region(json_data)
+    itempool_counts = extract_itempool_counts(json_data)
 
     return ExtractedData(
         metadata=metadata,
@@ -255,4 +279,5 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
         item_groups=item_groups,
         start_region=start_region,
         original_placements=original_placements,
+        itempool_counts=itempool_counts,
     )
