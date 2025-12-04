@@ -118,6 +118,7 @@ def extract_ut_comparison_chart_data(results: Dict[str, Any]) -> List[Dict[str, 
         lowest_sphere_before_mismatch = ut_comparison.get('lowest_sphere_before_mismatch')
         highest_sphere_before_mismatch = ut_comparison.get('highest_sphere_before_mismatch')
         results_consistent = ut_comparison.get('results_consistent', True)
+        num_runs = ut_comparison.get('num_runs', 1)
 
         chart_data.append({
             'game_name': game_name,
@@ -129,7 +130,8 @@ def extract_ut_comparison_chart_data(results: Dict[str, Any]) -> List[Dict[str, 
             'highest_mismatch_count': highest_mismatch_count,
             'lowest_sphere_before_mismatch': lowest_sphere_before_mismatch,
             'highest_sphere_before_mismatch': highest_sphere_before_mismatch,
-            'has_re_gen_passthrough': has_re_gen_passthrough
+            'has_re_gen_passthrough': has_re_gen_passthrough,
+            'num_runs': num_runs
         })
 
     chart_data.sort(key=lambda x: x['game_name'])
@@ -184,9 +186,14 @@ def generate_ut_comparison_markdown(chart_data: List[Dict[str, Any]],
             fixed_seed = metadata.get('seed', '1')
             md_content += f"**Seed Mode:** Fixed (seed={fixed_seed})\n\n"
 
-        runs_per_template = metadata.get('runs_per_template', 1)
-        if runs_per_template > 1:
-            md_content += f"**Runs Per Template:** {runs_per_template}\n\n"
+        # Get runs_per_template from metadata, or fall back to num_runs from first result
+        runs_per_template = metadata.get('runs_per_template')
+        if runs_per_template is None and chart_data:
+            # Fall back: check num_runs from the first result's ut_comparison data
+            runs_per_template = chart_data[0].get('num_runs', 1)
+        if runs_per_template is None:
+            runs_per_template = 1
+        md_content += f"**Test Runs Per Game:** {runs_per_template}\n\n"
 
     if chart_data:
         total_games = len(chart_data)

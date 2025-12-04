@@ -339,9 +339,13 @@ async def run_test(args) -> dict:
             "--name", args.slot_name,
             "--sphere-log-mode",
             "--sphere-log-output", str(ut_sphere_log),
-            "--seed", args.seed,  # Pass seed to ensure UT generates with same seed as Python
             "--nogui"
         ]
+        # Determine UT seed: use --ut-seed if specified, otherwise use --seed
+        # Empty string means let UT generate its own random seed
+        ut_seed = args.ut_seed if args.ut_seed is not None else args.seed
+        if ut_seed:  # Only pass seed if non-empty
+            ut_cmd.extend(["--seed", ut_seed])
         ut_proc = pm.start(ut_cmd, "UT")
 
         # Give UT time to connect
@@ -449,6 +453,8 @@ def main():
                         help='Path to YAML config file for game generation')
     parser.add_argument('--seed', default='1',
                         help='Seed for game generation (default: 1)')
+    parser.add_argument('--ut-seed', default=None,
+                        help='Seed for UT internal generation. If not specified, uses --seed value. Pass empty string to let UT use random seed.')
     parser.add_argument('--preset-dir',
                         help='Directory to store generated preset files (derived from YAML if not specified)')
 

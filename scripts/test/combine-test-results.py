@@ -124,8 +124,10 @@ def combine_ut_comparison_results(all_results: List[Dict[str, Any]]) -> Dict[str
     """
     combined_results = {}
 
-    # Get seed from first file's metadata (should be same across all)
-    seed = all_results[0].get('metadata', {}).get('seed', '1')
+    # Get metadata from first file (should be same across all)
+    first_metadata = all_results[0].get('metadata', {})
+    seed = first_metadata.get('seed', '1')
+    runs_per_template = first_metadata.get('runs_per_template', 1)
 
     # Merge all template results
     for result_data in all_results:
@@ -144,6 +146,7 @@ def combine_ut_comparison_results(all_results: List[Dict[str, Any]]) -> Dict[str
             'last_updated': datetime.now().isoformat(),
             'script_version': '1.0.0',
             'seed': seed,
+            'runs_per_template': runs_per_template,
             'combined_from': len(all_results),
             'total_templates': len(combined_results)
         },
