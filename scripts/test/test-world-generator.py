@@ -424,7 +424,7 @@ def process_template(
 
 
 def run_test_world_tests(
-    template_results: List[Dict],
+    template_results: Dict[str, Dict],
     project_root: str,
     seed: int,
     skip_spoiler_test: bool = False
@@ -435,7 +435,7 @@ def run_test_world_tests(
     This is called after all _test worlds have been created and
     templates have been regenerated.
     """
-    for result in template_results:
+    for game_name, result in template_results.items():
         if not result['test_world']['world_generation'].get('success'):
             continue
 
@@ -600,7 +600,7 @@ def main():
     print(f"Output file: {args.output_file}")
     print(f"Phase: {args.phase}")
 
-    # Initialize results
+    # Initialize results - use dict keyed by game name for compatibility with combine-test-results.py
     results = {
         'metadata': {
             'timestamp': datetime.now().isoformat(),
@@ -614,7 +614,7 @@ def main():
             'cross_validation_passed': 0,
             'cross_validation_failed': 0
         },
-        'results': []
+        'results': {}
     }
 
     # Phase: Setup
@@ -673,7 +673,9 @@ def main():
                 skip_generation=args.skip_generation,
                 skip_spoiler_test=True  # We'll do spoiler tests in the test phase
             )
-            results['results'].append(template_result)
+            # Use game_name as key for dictionary structure
+            game_name = template_result.get('game_name', template.replace('.yaml', ''))
+            results['results'][game_name] = template_result
 
             if template_result['original']['generation'].get('success'):
                 results['metadata']['successful_generations'] += 1
@@ -829,14 +831,15 @@ def main():
                     print(f"  FAILED: {gen_result.get('error', 'Unknown error')}")
                     template_result['errors'].append(f"Test world seed generation failed: {gen_result.get('error', '')}")
 
-                results['results'].append(template_result)
+                # Use game_name as key for dictionary structure
+                results['results'][game_name_display] = template_result
 
             results['metadata']['total_templates'] = len(test_templates)
 
         else:
             # Original flow for 'all' phase or when we have results from previous phases
             # Run spoiler tests on original worlds
-            for result in results['results']:
+            for game_name, result in results['results'].items():
                 if result['original']['generation'].get('success'):
                     template_name = result['template']
                     print(f"\nTesting original: {template_name}")
@@ -853,7 +856,7 @@ def main():
             )
 
         # Update cross-validation counts
-        for result in results['results']:
+        for game_name, result in results['results'].items():
             if result['test_world']['cross_validation'].get('pass_fail') == 'pass':
                 results['metadata']['cross_validation_passed'] += 1
             elif result['test_world']['cross_validation'].get('pass_fail') == 'fail':

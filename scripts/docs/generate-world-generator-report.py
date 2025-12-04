@@ -84,7 +84,7 @@ def generate_summary_table(results: Dict) -> str:
 
 def generate_results_table(results: Dict) -> str:
     """Generate the detailed results table."""
-    template_results = results.get('results', [])
+    template_results = results.get('results', {})
 
     if not template_results:
         return "No test results available.\n"
@@ -96,7 +96,13 @@ def generate_results_table(results: Dict) -> str:
         "|------|--------------|---------------|-----------|----------|--------------|------------------|",
     ]
 
-    for result in sorted(template_results, key=lambda x: x.get('game_name', '')):
+    # Handle both dict and list formats
+    if isinstance(template_results, dict):
+        sorted_results = sorted(template_results.values(), key=lambda x: x.get('game_name', ''))
+    else:
+        sorted_results = sorted(template_results, key=lambda x: x.get('game_name', ''))
+
+    for result in sorted_results:
         game_name = result.get('game_name', 'Unknown')
 
         # Original generation
@@ -150,10 +156,16 @@ def generate_results_table(results: Dict) -> str:
 
 def generate_failures_section(results: Dict) -> str:
     """Generate section listing all failures with details."""
-    template_results = results.get('results', [])
+    template_results = results.get('results', {})
+
+    # Handle both dict and list formats
+    if isinstance(template_results, dict):
+        results_list = template_results.values()
+    else:
+        results_list = template_results
 
     failures = []
-    for result in template_results:
+    for result in results_list:
         errors = result.get('errors', [])
         if errors:
             failures.append({
