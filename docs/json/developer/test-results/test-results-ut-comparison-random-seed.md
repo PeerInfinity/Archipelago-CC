@@ -4,13 +4,15 @@
 
 **See also:** [Fixed Seed Results](./test-results-ut-comparison-fixed-seed.md) - Tests run with seed=1 for reproducibility
 
-**Generated:** 2025-12-03 12:12:25
+**Generated:** 2025-12-03 16:51:37
 
-**Source Data Created:** 2025-12-03T19:04:09.698968
+**Source Data Created:** 2025-12-03T22:03:21.789849
 
-**Source Data Last Updated:** 2025-12-03T19:04:09.698975
+**Source Data Last Updated:** 2025-12-03T22:03:21.789854
 
 **Seed Mode:** Random (different seed for each test)
+
+**Test Runs Per Game:** 3
 
 ## Summary
 
