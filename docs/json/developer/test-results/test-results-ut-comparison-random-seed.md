@@ -1,10 +1,10 @@
 # Universal Tracker Comparison Test Results (Random Seed)
 
-[<- Back to Test Results Summary](./test-results-summary.md)
+[<- Back to Test Results Summary](./test-results-summary.md) | [How This Test Works](../guides/ut-comparison-testing.md)
 
 **See also:** [Fixed Seed Results](./test-results-ut-comparison-fixed-seed.md) - Tests run with seed=1 for reproducibility
 
-**Generated:** 2025-12-03 18:57:23
+**Generated:** 2025-12-03 19:38:58
 
 **Source Data Created:** 2025-12-04T02:55:16.194200
 
@@ -19,7 +19,7 @@
 - **Total Games:** 78
 - **Passed:** 32 (41.0%)
 - **Failed:** 46 (59.0%)
-- **Consistent Results:** 69 (88.5%)
+- **Consistent Across Runs:** 69 (88.5%) - UT produced same result each run
 - **With re_gen_passthrough:** 7 (9.0%)
 
 ## Test Results
@@ -110,11 +110,14 @@ Click on a game name to load the JSON frontend and run the UT comparison spoiler
 ## Notes
 
 - **Result:** ✅ if UT matches Python sphere log exactly in ALL runs, ❌ otherwise
-- **Consistent:** ✅ if all test runs had the same mismatch count, ❌ if results varied
+- **Consistent:** ✅ if UT produced the same mismatch count across all test runs, ❌ if results varied between runs. Inconsistent results indicate UT's world regeneration differs between runs (not a determinism bug in generation).
 - **Spheres:** The last sphere index in the game (shows sphere numbering from logs)
 - **Mismatches (min/max):** Lowest and highest number of mismatched spheres across all runs
 - **Last Good (min/max):** Lowest and highest sphere index reached before first mismatch across all runs
 - **re_gen:** ✅ if game implements `re_gen_passthrough` for UT support, ⚫ otherwise
 
-Games with `re_gen_passthrough` support pass slot data to UT for accurate regeneration.
-Games without this support may have significant mismatches due to randomization differences.
+### Understanding Results
+
+Games with `re_gen_passthrough` support pass slot data to UT for accurate world regeneration. For these games, any mismatch is a bug that should be reported.
+
+Games **without** `re_gen_passthrough` may have mismatches due to randomization differences when UT regenerates the world. This is expected behavior, not a bug. The fixed seed tests help isolate whether mismatches are due to randomization (inconsistent results) or logic differences (consistent failures).
