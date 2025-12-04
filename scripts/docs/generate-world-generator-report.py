@@ -33,13 +33,13 @@ def load_results(results_file: str) -> Dict:
 def get_status_emoji(success: bool, pass_fail: str = None) -> str:
     """Get status emoji for display."""
     if pass_fail == 'pass':
-        return ':white_check_mark:'
+        return '✅'
     elif pass_fail == 'fail':
-        return ':x:'
+        return '❌'
     elif success:
-        return ':white_check_mark:'
+        return '✅'
     else:
-        return ':x:'
+        return '❌'
 
 
 def get_status_text(result: Dict, key: str) -> str:
@@ -60,22 +60,75 @@ def get_status_text(result: Dict, key: str) -> str:
     return 'N/A'
 
 
+def compute_summary_stats(results: Dict) -> Dict:
+    """Compute summary statistics from results data."""
+    template_results = results.get('results', {})
+
+    stats = {
+        'total_templates': 0,
+        'successful_generations': 0,
+        'failed_generations': 0,
+        'successful_test_worlds': 0,
+        'failed_test_worlds': 0,
+        'cross_validation_passed': 0,
+        'cross_validation_failed': 0,
+    }
+
+    # Handle both dict and list formats
+    if isinstance(template_results, dict):
+        results_items = list(template_results.values())
+    else:
+        results_items = template_results
+
+    stats['total_templates'] = len(results_items)
+
+    for result in results_items:
+        # Original generation
+        orig_gen = result.get('original', {}).get('generation', {})
+        if orig_gen.get('success'):
+            stats['successful_generations'] += 1
+        elif orig_gen:  # Only count as failed if there was an attempt
+            stats['failed_generations'] += 1
+
+        # Test world generation
+        world_gen = result.get('test_world', {}).get('world_generation', {})
+        if world_gen.get('success'):
+            stats['successful_test_worlds'] += 1
+        elif world_gen:
+            stats['failed_test_worlds'] += 1
+
+        # Cross-validation
+        cross_val = result.get('test_world', {}).get('cross_validation', {})
+        if cross_val.get('pass_fail') == 'pass':
+            stats['cross_validation_passed'] += 1
+        elif cross_val.get('pass_fail') == 'fail':
+            stats['cross_validation_failed'] += 1
+
+    return stats
+
+
 def generate_summary_table(results: Dict) -> str:
     """Generate the summary statistics table."""
     meta = results.get('metadata', {})
+
+    # If metadata has counts, use them; otherwise compute from results
+    if meta.get('total_templates', 0) > 0:
+        stats = meta
+    else:
+        stats = compute_summary_stats(results)
 
     lines = [
         "## Summary",
         "",
         "| Metric | Count |",
         "|--------|-------|",
-        f"| Total Templates | {meta.get('total_templates', 0)} |",
-        f"| Successful Original Generations | {meta.get('successful_generations', 0)} |",
-        f"| Failed Original Generations | {meta.get('failed_generations', 0)} |",
-        f"| Successful Test World Generations | {meta.get('successful_test_worlds', 0)} |",
-        f"| Failed Test World Generations | {meta.get('failed_test_worlds', 0)} |",
-        f"| Cross-Validation Passed | {meta.get('cross_validation_passed', 0)} |",
-        f"| Cross-Validation Failed | {meta.get('cross_validation_failed', 0)} |",
+        f"| Total Templates | {stats.get('total_templates', 0)} |",
+        f"| Successful Original Generations | {stats.get('successful_generations', 0)} |",
+        f"| Failed Original Generations | {stats.get('failed_generations', 0)} |",
+        f"| Successful Test World Generations | {stats.get('successful_test_worlds', 0)} |",
+        f"| Failed Test World Generations | {stats.get('failed_test_worlds', 0)} |",
+        f"| Cross-Validation Passed | {stats.get('cross_validation_passed', 0)} |",
+        f"| Cross-Validation Failed | {stats.get('cross_validation_failed', 0)} |",
         "",
     ]
 
@@ -98,16 +151,18 @@ def generate_results_table(results: Dict) -> str:
 
     # Handle both dict and list formats
     if isinstance(template_results, dict):
-        sorted_results = sorted(template_results.values(), key=lambda x: x.get('game_name', ''))
+        # Dict format: key is game name, value is result
+        sorted_items = sorted(template_results.items(), key=lambda x: x[0])
+        sorted_results = [(key, value) for key, value in sorted_items]
     else:
-        sorted_results = sorted(template_results, key=lambda x: x.get('game_name', ''))
+        # List format: game_name is inside each result
+        sorted_results = [(r.get('game_name', 'Unknown'), r) for r in sorted(template_results, key=lambda x: x.get('game_name', ''))]
 
-    for result in sorted_results:
-        game_name = result.get('game_name', 'Unknown')
+    for game_name, result in sorted_results:
 
         # Original generation
         orig_gen = result.get('original', {}).get('generation', {})
-        orig_gen_status = ':white_check_mark:' if orig_gen.get('success') else ':x:'
+        orig_gen_status = '✅' if orig_gen.get('success') else '❌'
 
         # Original spoiler test
         orig_test = result.get('original', {}).get('spoiler_test', {})
@@ -117,13 +172,13 @@ def generate_results_table(results: Dict) -> str:
 
         # World generation
         world_gen = result.get('test_world', {}).get('world_generation', {})
-        world_gen_status = ':white_check_mark:' if world_gen.get('success') else ':x:'
+        world_gen_status = '✅' if world_gen.get('success') else '❌'
         if not orig_gen.get('success'):
             world_gen_status = '-'
 
         # Test world seed generation
         test_gen = result.get('test_world', {}).get('seed_generation', {})
-        test_gen_status = ':white_check_mark:' if test_gen.get('success') else ':x:'
+        test_gen_status = '✅' if test_gen.get('success') else '❌'
         if not world_gen.get('success'):
             test_gen_status = '-'
 
@@ -160,16 +215,18 @@ def generate_failures_section(results: Dict) -> str:
 
     # Handle both dict and list formats
     if isinstance(template_results, dict):
-        results_list = template_results.values()
+        # Dict format: key is game name, value is result
+        results_items = [(key, value) for key, value in template_results.items()]
     else:
-        results_list = template_results
+        # List format: game_name is inside each result
+        results_items = [(r.get('game_name', 'Unknown'), r) for r in template_results]
 
     failures = []
-    for result in results_list:
+    for game_name, result in results_items:
         errors = result.get('errors', [])
         if errors:
             failures.append({
-                'game_name': result.get('game_name', 'Unknown'),
+                'game_name': game_name,
                 'errors': errors
             })
 
@@ -220,8 +277,8 @@ def generate_report(results: Dict) -> str:
         "",
         "## Legend",
         "",
-        "- :white_check_mark: - Success/Pass",
-        "- :x: - Failure",
+        "- ✅ - Success/Pass",
+        "- ❌ - Failure",
         "- `-` - Not applicable (previous step failed)",
         "- `Skipped` - Test was skipped",
         "- `Error` - An error occurred",
