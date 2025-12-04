@@ -665,6 +665,34 @@ class Rule(Generic[TWorld]):
         def __str__(self) -> str:
             return self.rule_name
 
+        @property
+        def _rule_class_name(self) -> str:
+            """Get the rule class name without '.Resolved' suffix"""
+            qualname = self.__class__.__qualname__
+            # Handle nested class names like "Has.Resolved" -> "Has"
+            if '.Resolved' in qualname:
+                return qualname.replace('.Resolved', '')
+            return qualname
+
+        def to_dict(self) -> dict[str, Any]:
+            """Returns a JSON compatible dict representation of this resolved rule.
+
+            This enables the exporter to serialize Rule Builder rules without
+            needing AST analysis.
+            """
+            return {
+                "rule": self._rule_class_name,
+                "options": [],
+                "args": self._get_args_dict(),
+            }
+
+        def _get_args_dict(self) -> dict[str, Any]:
+            """Override in subclasses to provide serializable args.
+
+            Default implementation returns empty dict.
+            """
+            return {}
+
 
 @dataclasses.dataclass()
 class True_(Rule[TWorld], game="Archipelago"):  # noqa: N801
@@ -798,6 +826,15 @@ class NestedRule(Rule[TWorld], game="Archipelago"):
                     else:
                         combined_deps[entrance_name] = {id(self), *rules}
             return combined_deps
+
+        @override
+        def to_dict(self) -> dict[str, Any]:
+            """Override to serialize children instead of args."""
+            return {
+                "rule": self._rule_class_name,
+                "options": [],
+                "children": [c.to_dict() for c in self.children],
+            }
 
 
 @dataclasses.dataclass(init=False)
@@ -952,6 +989,15 @@ class WrapperRule(Rule[TWorld], game="Archipelago"):
             return f"{self.rule_name}[{self.child.explain_str(state)}]"
 
         @override
+        def to_dict(self) -> dict[str, Any]:
+            """Override to serialize child instead of args."""
+            return {
+                "rule": self._rule_class_name,
+                "options": [],
+                "child": self.child.to_dict(),
+            }
+
+        @override
         def __str__(self) -> str:
             return f"{self.rule_name}[{self.child}]"
 
@@ -1030,6 +1076,10 @@ class Has(Rule[TWorld], game="Archipelago"):
         def __str__(self) -> str:
             count = f"{self.count}x " if self.count > 1 else ""
             return f"Has {count}{self.item_name}"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"item_name": self.item_name, "count": self.count}
 
 
 @dataclasses.dataclass(init=False)
@@ -1140,6 +1190,10 @@ class HasAll(Rule[TWorld], game="Archipelago"):
             items = ", ".join(self.item_names)
             return f"Has all of ({items})"
 
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"items": list(self.item_names)}
+
 
 @dataclasses.dataclass(init=False)
 class HasAny(Rule[TWorld], game="Archipelago"):
@@ -1249,6 +1303,10 @@ class HasAny(Rule[TWorld], game="Archipelago"):
             items = ", ".join(self.item_names)
             return f"Has any of ({items})"
 
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"items": list(self.item_names)}
+
 
 @dataclasses.dataclass()
 class HasAllCounts(Rule[TWorld], game="Archipelago"):
@@ -1354,6 +1412,10 @@ class HasAllCounts(Rule[TWorld], game="Archipelago"):
             items = ", ".join([f"{item} x{count}" for item, count in self.item_counts])
             return f"Has all of ({items})"
 
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"items": dict(self.item_counts)}
+
 
 @dataclasses.dataclass()
 class HasAnyCount(Rule[TWorld], game="Archipelago"):
@@ -1458,6 +1520,10 @@ class HasAnyCount(Rule[TWorld], game="Archipelago"):
         def __str__(self) -> str:
             items = ", ".join([f"{item} x{count}" for item, count in self.item_counts])
             return f"Has any of ({items})"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"items": dict(self.item_counts)}
 
 
 @dataclasses.dataclass(init=False)
@@ -1587,6 +1653,10 @@ class HasFromList(Rule[TWorld], game="Archipelago"):
             count = f"{self.count}x items" if self.count > 1 else "an item"
             return f"Has {count} from ({items})"
 
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"items": list(self.item_names), "count": self.count}
+
 
 @dataclasses.dataclass(init=False)
 class HasFromListUnique(Rule[TWorld], game="Archipelago"):
@@ -1711,6 +1781,10 @@ class HasFromListUnique(Rule[TWorld], game="Archipelago"):
             count = f"{self.count}x unique items" if self.count > 1 else "a unique item"
             return f"Has {count} from ({items})"
 
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"items": list(self.item_names), "count": self.count}
+
 
 @dataclasses.dataclass()
 class HasGroup(Rule[TWorld], game="Archipelago"):
@@ -1783,6 +1857,10 @@ class HasGroup(Rule[TWorld], game="Archipelago"):
         def __str__(self) -> str:
             count = f"{self.count}x items" if self.count > 1 else "an item"
             return f"Has {count} from {self.item_name_group}"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"group": self.item_name_group, "count": self.count}
 
 
 @dataclasses.dataclass()
@@ -1857,6 +1935,10 @@ class HasGroupUnique(Rule[TWorld], game="Archipelago"):
         def __str__(self) -> str:
             count = f"{self.count}x unique items" if self.count > 1 else "a unique item"
             return f"Has {count} from {self.item_name_group}"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"group": self.item_name_group, "count": self.count}
 
 
 @dataclasses.dataclass()
@@ -1936,6 +2018,10 @@ class CanReachLocation(Rule[TWorld], game="Archipelago"):
         def __str__(self) -> str:
             return f"Can reach location {self.location_name}"
 
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"location_name": self.location_name}
+
 
 @dataclasses.dataclass()
 class CanReachRegion(Rule[TWorld], game="Archipelago"):
@@ -1987,6 +2073,10 @@ class CanReachRegion(Rule[TWorld], game="Archipelago"):
         @override
         def __str__(self) -> str:
             return f"Can reach region {self.region_name}"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"region_name": self.region_name}
 
 
 @dataclasses.dataclass()
@@ -2060,6 +2150,10 @@ class CanReachEntrance(Rule[TWorld], game="Archipelago"):
         @override
         def __str__(self) -> str:
             return f"Can reach entrance {self.entrance_name}"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"entrance_name": self.entrance_name}
 
 
 DEFAULT_RULES = {
