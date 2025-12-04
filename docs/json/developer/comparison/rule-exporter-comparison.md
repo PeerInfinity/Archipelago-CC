@@ -248,6 +248,17 @@ The Archipelago-CC exporter solves the problem of extracting rules from existing
 
 ## References
 
+### PR #5048 Resources
 - [PR #5048: Core: Add rule builder](https://github.com/ArchipelagoMW/Archipelago/pull/5048)
+- [Source code (rules-engine branch)](https://github.com/drtchops/Archipelago/tree/rules-engine)
+- [rule_builder.py](https://github.com/drtchops/Archipelago/blob/rules-engine/rule_builder.py)
+
+### Example Implementations
+- [TOEM - Original implementation](https://github.com/drtchops/Archipelago/tree/toem-benchmark/worlds/toem_original) - Traditional lambda rules
+- [TOEM - Rule Builder version](https://github.com/drtchops/Archipelago/tree/toem-benchmark/worlds/toem_rule_builder) - Same world using Rule Builder
+- [Astalon - Main campaign logic](https://github.com/drtchops/Archipelago/blob/astalon-rule-builder/worlds/astalon/logic/main_campaign.py)
+- [Astalon - Custom rule definitions](https://github.com/drtchops/Archipelago/blob/astalon-rule-builder/worlds/astalon/logic/custom_rules.py)
+
+### Archipelago Core
 - [Archipelago World API Documentation](https://github.com/ArchipelagoMW/Archipelago/blob/main/docs/world%20api.md)
 - [Archipelago BaseClasses.py](https://github.com/ArchipelagoMW/Archipelago/blob/main/BaseClasses.py)

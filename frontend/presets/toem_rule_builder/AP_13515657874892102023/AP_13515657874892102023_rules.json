@@ -1,0 +1,4486 @@
+{
+  "schema_version": 3,
+  "game_name": "TOEM rule builder",
+  "game_directory": "toem_rule_builder",
+  "archipelago_version": "0.6.5",
+  "generation_seed": 12345,
+  "player_names": {
+    "1": "Player1"
+  },
+  "world_classes": {
+    "1": "ToemWorld"
+  },
+  "regions": {
+    "1": {
+      "Homelanda": {
+        "name": "Homelanda",
+        "exits": [
+          {
+            "name": "Homelanda -> Oaklaville",
+            "connected_region": "Oaklaville",
+            "access_rule": null
+          }
+        ],
+        "locations": [
+          {
+            "name": "Casette - Jamal Green - Photo of Home",
+            "id": 11,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Toad photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Flies",
+            "id": 5,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Seagull photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Tato",
+            "id": 7,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Pet rock photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Cow",
+            "id": 4,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Oaklaville stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Home bird",
+            "id": 6,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Clogs",
+            "id": 10,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Camera",
+            "id": 9,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Homelanda stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Backpack",
+            "id": 8,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Puffer hat",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Take a photo of Nana!",
+            "id": 1,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Dragonfly photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - A hidden gift",
+            "id": 2,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Willemijn photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Experience TOEM",
+            "id": 3,
+            "access_rule": null,
+            "item": {
+              "name": "Kiiruberg stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Oaklaville": {
+        "name": "Oaklaville",
+        "exits": [
+          {
+            "name": "Oaklaville -> Stanhamn",
+            "connected_region": "Stanhamn",
+            "access_rule": null
+          }
+        ],
+        "locations": [
+          {
+            "name": "Casette - Launchable Socks - Squirrel Photography",
+            "id": 52,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Business pigeon photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Stag beetle",
+            "id": 41,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Oaklaville stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Forest bird",
+            "id": 34,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kiiruberg stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Squirrel",
+            "id": 40,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Oaklaville stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Tom",
+            "id": 36,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Stag beetle photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Pet rock",
+            "id": 38,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Butterfly",
+            "id": 31,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Fia photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Tato fly",
+            "id": 43,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Snail",
+            "id": 39,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Punky parrot photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Sero",
+            "id": 33,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Flies photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Tato bug",
+            "id": 42,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Sunday swan photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Nestworm",
+            "id": 37,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Nariko photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Ladybug",
+            "id": 35,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Tato photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Ant",
+            "id": 29,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Cinnamon bun",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Oskar",
+            "id": 32,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Beehive",
+            "id": 30,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Supreme deluxe sandwich",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Fj\u00e4llbj\u00f6rn hat",
+            "id": 48,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Reporter hat",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Monster mask",
+            "id": 51,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Fishing hat",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Soaked sock",
+            "id": 50,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Oaklaville stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Lost sock",
+            "id": 47,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Ski goggles",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Ghost glasses",
+            "id": 49,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Scarf",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Foam finger",
+            "id": 44,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Paper hat",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Tripod",
+            "id": 45,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Cowboy hat",
+            "id": 46,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Missing socks",
+            "id": 16,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Cow photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Capture the hotel's beauty",
+            "id": 23,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Tato alien photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Hide-and-seek",
+            "id": 18,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Oaklaville stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Cup champion",
+            "id": 27,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Hotel chef",
+            "id": 24,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Fj\u00e4llbj\u00f6rn hat",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Become a paparazzi",
+            "id": 22,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Oaklaville stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Photo challenge #1",
+            "id": 20,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kiiruberg stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Ghost helper!",
+            "id": 26,
+            "access_rule": null,
+            "item": {
+              "name": "Kiiruberg stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Become a flower",
+            "id": 28,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Tato skateboard photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Become a scout",
+            "id": 17,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Oaklaville stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Photo challenge #2",
+            "id": 21,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Squirrel photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - A courageous stallion",
+            "id": 25,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Suspicious activity - forest",
+            "id": 14,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Tripod",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Log blocking a path",
+            "id": 19,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Oaklaville stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Monster spotting",
+            "id": 15,
+            "access_rule": null,
+            "item": {
+              "name": "Kiiruberg stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Stanhamn": {
+        "name": "Stanhamn",
+        "exits": [
+          {
+            "name": "Stanhamn -> Logcity",
+            "connected_region": "Logcity",
+            "access_rule": null
+          }
+        ],
+        "locations": [
+          {
+            "name": "Compendium - Fia",
+            "id": 78,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kiiruberg stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Tato scuba",
+            "id": 89,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Oaklaville stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Jellyfish",
+            "id": 84,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Mik\u00e9e photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - King fish",
+            "id": 85,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Launchable Socks - Squirrel Photography",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Tato swim",
+            "id": 90,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Old key",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Crab",
+            "id": 81,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Willemijn",
+            "id": 80,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Camera",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Seahorse",
+            "id": 87,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Fr\u00e4s",
+            "id": 79,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Tom photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Dragonfly",
+            "id": 82,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Portillo photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Seagull",
+            "id": 86,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Toad",
+            "id": 91,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Owl photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Bubble fly",
+            "id": 77,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kiiruberg stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Sunday swan",
+            "id": 88,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Muddy camera",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Happy carp",
+            "id": 83,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Sneakers",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Umbrella",
+            "id": 95,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Fluff ball photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Pirate hat",
+            "id": 102,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Snow bird photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Supreme deluxe sandwich",
+            "id": 101,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Tato bug photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Paper hat",
+            "id": 103,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Fishing hat",
+            "id": 93,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Frames & filters",
+            "id": 92,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Pigeon photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Rubber boots",
+            "id": 99,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Hotbean hat",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Honk attachment",
+            "id": 94,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Ant photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Diving helmet",
+            "id": 98,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Hard hat",
+            "id": 97,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kiiruberg stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Fisherman's whisle",
+            "id": 100,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Cosmo deer photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Photo challenger flag",
+            "id": 104,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Oaklaville stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Old key",
+            "id": 96,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Tato swim photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Frames & filters!",
+            "id": 67,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Rubber boots",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - A whistling dilemma",
+            "id": 75,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Diving helmet",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - A layered melody",
+            "id": 76,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Suspicious activity - harbor",
+            "id": 63,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Ghost glasses",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - A good spot with no sun",
+            "id": 62,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Climbing boots",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Supreme deluxe sandwich?!",
+            "id": 73,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Meteopal photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Solve the chaos",
+            "id": 71,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kiiruberg stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - A lost dog",
+            "id": 69,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Homelanda stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - The king of fishes",
+            "id": 61,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Tato scuba photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Power shortage?!",
+            "id": 70,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Space helmet",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Photo challenge #3",
+            "id": 65,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Jellyfish photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Queen of paper hats",
+            "id": 64,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Scorching flame?",
+            "id": 72,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Umbrella",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Ocean garbage",
+            "id": 74,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Fisherman's whisle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Photo challenge #4",
+            "id": 66,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Nestworm photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Make someone take a bath",
+            "id": 68,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Home bird photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Logcity": {
+        "name": "Logcity",
+        "exits": [
+          {
+            "name": "Logcity -> Kiiruberg",
+            "connected_region": "Kiiruberg",
+            "access_rule": null
+          }
+        ],
+        "locations": [
+          {
+            "name": "Compendium - Portillo",
+            "id": 132,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Snail photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Punky parrot",
+            "id": 135,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Pigeon",
+            "id": 134,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Teddy photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Tato skateboard",
+            "id": 136,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Pirate hat",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Turtle",
+            "id": 138,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Homelanda stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Tato tourist",
+            "id": 137,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kiiruberg stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Business pigeon",
+            "id": 131,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Mountain goat photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Mouse",
+            "id": 133,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kiiruberg stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Hotbean hat",
+            "id": 139,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Tato ski photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Cinnamon bun",
+            "id": 143,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Crab photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Sneakers",
+            "id": 142,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Happy carp photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Frisbee",
+            "id": 144,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Reporter hat",
+            "id": 140,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Oaklaville stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Muddy camera",
+            "id": 141,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Sero photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Young and inspiring!",
+            "id": 125,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Always tumbled granny",
+            "id": 128,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Art exhibition",
+            "id": 124,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Bubble fly photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - A thieving crow",
+            "id": 130,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - A mouse bakery",
+            "id": 129,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Hard hat",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Photo challenge #5",
+            "id": 116,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - A design problem",
+            "id": 126,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Oaklaville stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Punk rocker bread crumbs",
+            "id": 115,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Forest bird photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Cleaning away the stress",
+            "id": 127,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Tato tourist photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Sewer stumble!",
+            "id": 119,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Photo challenger flag",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Spooky scary city",
+            "id": 122,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Photo challenge #6",
+            "id": 117,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Press-ing news",
+            "id": 118,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Clogs",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Hang in there, buddy",
+            "id": 121,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Suspicious activity - city",
+            "id": 113,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Frisbee",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - A ghostly date",
+            "id": 123,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Oaklaville stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Ratskullz crew",
+            "id": 114,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Cowboy hat",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Super Hotbean Bros.",
+            "id": 120,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Beehive photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Kiiruberg": {
+        "name": "Kiiruberg",
+        "exits": [
+          {
+            "name": "Kiiruberg -> Mountain Top",
+            "connected_region": "Mountain Top",
+            "access_rule": null
+          }
+        ],
+        "locations": [
+          {
+            "name": "Compendium - Owl",
+            "id": 172,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Fr\u00e4s photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Mik\u00e9e",
+            "id": 164,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Turtle photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Nariko",
+            "id": 165,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Hedgehog",
+            "id": 169,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Oaklaville stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Meteopal",
+            "id": 170,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Oskar photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Tato ski",
+            "id": 175,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Monster mask",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Teddy",
+            "id": 167,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Oaklaville stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Mountain goat",
+            "id": 171,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Cosmo deer",
+            "id": 166,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Hedgehog photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Tato alien",
+            "id": 174,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Jamal Green - Photo of Home",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Fluff ball",
+            "id": 168,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Soaked sock",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Compendium - Snow bird",
+            "id": 173,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Honk attachment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Scarf",
+            "id": 178,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Ladybug photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Ski goggles",
+            "id": 179,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Backpack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Space helmet",
+            "id": 180,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Foam finger",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Puffer hat",
+            "id": 177,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Item - Climbing boots",
+            "id": 176,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Snowball memories",
+            "id": 159,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "King fish photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Military suspicions",
+            "id": 153,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Photo challenge #7",
+            "id": 155,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Frames & filters",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Yeti cuteness",
+            "id": 151,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Tato fly photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Listen to the goat choir",
+            "id": 158,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Mouse photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Become a yeti",
+            "id": 162,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kiiruberg stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Play astronaut",
+            "id": 154,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Ice wizard's research",
+            "id": 152,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Butterfly photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Locating an asteroid",
+            "id": 157,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kiiruberg stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Birthday in distress",
+            "id": 160,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Assemble a snowman",
+            "id": 163,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Ancient paintings",
+            "id": 161,
+            "access_rule": null,
+            "item": {
+              "name": "Seahorse photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Quest - Photo challenge #8",
+            "id": 156,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Lost sock",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Mountain Top": {
+        "name": "Mountain Top",
+        "exits": [],
+        "locations": [
+          {
+            "name": "TOEM Experienced",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "TOEM Experienced",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Homelanda"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "Homelanda stamp": {
+        "name": "Homelanda stamp",
+        "id": 1,
+        "groups": [
+          "Everything",
+          "Homelanda",
+          "Stamp"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 6
+      },
+      "Oaklaville stamp": {
+        "name": "Oaklaville stamp",
+        "id": 2,
+        "groups": [
+          "Everything",
+          "Oaklaville",
+          "Stamp"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 30
+      },
+      "Stanhamn stamp": {
+        "name": "Stanhamn stamp",
+        "id": 3,
+        "groups": [
+          "Everything",
+          "Stamp",
+          "Stanhamn"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 32
+      },
+      "Logcity stamp": {
+        "name": "Logcity stamp",
+        "id": 4,
+        "groups": [
+          "Everything",
+          "Logcity",
+          "Stamp"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 36
+      },
+      "Kiiruberg stamp": {
+        "name": "Kiiruberg stamp",
+        "id": 5,
+        "groups": [
+          "Everything",
+          "Kiiruberg",
+          "Stamp"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 26
+      },
+      "Basto stamp": {
+        "name": "Basto stamp",
+        "id": 6,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Stamp"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cow photo": {
+        "name": "Cow photo",
+        "id": 7,
+        "groups": [
+          "Everything",
+          "Homelanda",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Flies photo": {
+        "name": "Flies photo",
+        "id": 8,
+        "groups": [
+          "Everything",
+          "Homelanda",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Home bird photo": {
+        "name": "Home bird photo",
+        "id": 9,
+        "groups": [
+          "Everything",
+          "Homelanda",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Tato photo": {
+        "name": "Tato photo",
+        "id": 10,
+        "groups": [
+          "Everything",
+          "Homelanda",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Ant photo": {
+        "name": "Ant photo",
+        "id": 11,
+        "groups": [
+          "Everything",
+          "Oaklaville",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Beehive photo": {
+        "name": "Beehive photo",
+        "id": 12,
+        "groups": [
+          "Everything",
+          "Oaklaville",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Butterfly photo": {
+        "name": "Butterfly photo",
+        "id": 13,
+        "groups": [
+          "Everything",
+          "Oaklaville",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Oskar photo": {
+        "name": "Oskar photo",
+        "id": 14,
+        "groups": [
+          "Everything",
+          "Oaklaville",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Sero photo": {
+        "name": "Sero photo",
+        "id": 15,
+        "groups": [
+          "Everything",
+          "Oaklaville",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Forest bird photo": {
+        "name": "Forest bird photo",
+        "id": 16,
+        "groups": [
+          "Everything",
+          "Oaklaville",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Ladybug photo": {
+        "name": "Ladybug photo",
+        "id": 17,
+        "groups": [
+          "Everything",
+          "Oaklaville",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Tom photo": {
+        "name": "Tom photo",
+        "id": 18,
+        "groups": [
+          "Everything",
+          "Oaklaville",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Nestworm photo": {
+        "name": "Nestworm photo",
+        "id": 19,
+        "groups": [
+          "Everything",
+          "Oaklaville",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Pet rock photo": {
+        "name": "Pet rock photo",
+        "id": 20,
+        "groups": [
+          "Everything",
+          "Oaklaville",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Snail photo": {
+        "name": "Snail photo",
+        "id": 21,
+        "groups": [
+          "Everything",
+          "Oaklaville",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Squirrel photo": {
+        "name": "Squirrel photo",
+        "id": 22,
+        "groups": [
+          "Everything",
+          "Oaklaville",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Stag beetle photo": {
+        "name": "Stag beetle photo",
+        "id": 23,
+        "groups": [
+          "Everything",
+          "Oaklaville",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Tato bug photo": {
+        "name": "Tato bug photo",
+        "id": 24,
+        "groups": [
+          "Everything",
+          "Oaklaville",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Tato fly photo": {
+        "name": "Tato fly photo",
+        "id": 25,
+        "groups": [
+          "Everything",
+          "Oaklaville",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Bubble fly photo": {
+        "name": "Bubble fly photo",
+        "id": 26,
+        "groups": [
+          "Everything",
+          "Photo",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Fia photo": {
+        "name": "Fia photo",
+        "id": 27,
+        "groups": [
+          "Everything",
+          "Photo",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Fr\u00e4s photo": {
+        "name": "Fr\u00e4s photo",
+        "id": 28,
+        "groups": [
+          "Everything",
+          "Photo",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Willemijn photo": {
+        "name": "Willemijn photo",
+        "id": 29,
+        "groups": [
+          "Everything",
+          "Photo",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Crab photo": {
+        "name": "Crab photo",
+        "id": 30,
+        "groups": [
+          "Everything",
+          "Photo",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Dragonfly photo": {
+        "name": "Dragonfly photo",
+        "id": 31,
+        "groups": [
+          "Everything",
+          "Photo",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Happy carp photo": {
+        "name": "Happy carp photo",
+        "id": 32,
+        "groups": [
+          "Everything",
+          "Photo",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Jellyfish photo": {
+        "name": "Jellyfish photo",
+        "id": 33,
+        "groups": [
+          "Everything",
+          "Photo",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "King fish photo": {
+        "name": "King fish photo",
+        "id": 34,
+        "groups": [
+          "Everything",
+          "Photo",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Seagull photo": {
+        "name": "Seagull photo",
+        "id": 35,
+        "groups": [
+          "Everything",
+          "Photo",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Seahorse photo": {
+        "name": "Seahorse photo",
+        "id": 36,
+        "groups": [
+          "Everything",
+          "Photo",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Sunday swan photo": {
+        "name": "Sunday swan photo",
+        "id": 37,
+        "groups": [
+          "Everything",
+          "Photo",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Tato scuba photo": {
+        "name": "Tato scuba photo",
+        "id": 38,
+        "groups": [
+          "Everything",
+          "Photo",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Tato swim photo": {
+        "name": "Tato swim photo",
+        "id": 39,
+        "groups": [
+          "Everything",
+          "Photo",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Toad photo": {
+        "name": "Toad photo",
+        "id": 40,
+        "groups": [
+          "Everything",
+          "Photo",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Business pigeon photo": {
+        "name": "Business pigeon photo",
+        "id": 41,
+        "groups": [
+          "Everything",
+          "Logcity",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Portillo photo": {
+        "name": "Portillo photo",
+        "id": 42,
+        "groups": [
+          "Everything",
+          "Logcity",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Mouse photo": {
+        "name": "Mouse photo",
+        "id": 43,
+        "groups": [
+          "Everything",
+          "Logcity",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Pigeon photo": {
+        "name": "Pigeon photo",
+        "id": 44,
+        "groups": [
+          "Everything",
+          "Logcity",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Punky parrot photo": {
+        "name": "Punky parrot photo",
+        "id": 45,
+        "groups": [
+          "Everything",
+          "Logcity",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Tato skateboard photo": {
+        "name": "Tato skateboard photo",
+        "id": 46,
+        "groups": [
+          "Everything",
+          "Logcity",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Tato tourist photo": {
+        "name": "Tato tourist photo",
+        "id": 47,
+        "groups": [
+          "Everything",
+          "Logcity",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Turtle photo": {
+        "name": "Turtle photo",
+        "id": 48,
+        "groups": [
+          "Everything",
+          "Logcity",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Mik\u00e9e photo": {
+        "name": "Mik\u00e9e photo",
+        "id": 49,
+        "groups": [
+          "Everything",
+          "Kiiruberg",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Nariko photo": {
+        "name": "Nariko photo",
+        "id": 50,
+        "groups": [
+          "Everything",
+          "Kiiruberg",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Cosmo deer photo": {
+        "name": "Cosmo deer photo",
+        "id": 51,
+        "groups": [
+          "Everything",
+          "Kiiruberg",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Teddy photo": {
+        "name": "Teddy photo",
+        "id": 52,
+        "groups": [
+          "Everything",
+          "Kiiruberg",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Fluff ball photo": {
+        "name": "Fluff ball photo",
+        "id": 53,
+        "groups": [
+          "Everything",
+          "Kiiruberg",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Hedgehog photo": {
+        "name": "Hedgehog photo",
+        "id": 54,
+        "groups": [
+          "Everything",
+          "Kiiruberg",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Meteopal photo": {
+        "name": "Meteopal photo",
+        "id": 55,
+        "groups": [
+          "Everything",
+          "Kiiruberg",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Mountain goat photo": {
+        "name": "Mountain goat photo",
+        "id": 56,
+        "groups": [
+          "Everything",
+          "Kiiruberg",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Owl photo": {
+        "name": "Owl photo",
+        "id": 57,
+        "groups": [
+          "Everything",
+          "Kiiruberg",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Snow bird photo": {
+        "name": "Snow bird photo",
+        "id": 58,
+        "groups": [
+          "Everything",
+          "Kiiruberg",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Tato alien photo": {
+        "name": "Tato alien photo",
+        "id": 59,
+        "groups": [
+          "Everything",
+          "Kiiruberg",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Tato ski photo": {
+        "name": "Tato ski photo",
+        "id": 60,
+        "groups": [
+          "Everything",
+          "Kiiruberg",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Bat photo": {
+        "name": "Bat photo",
+        "id": 61,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Beach snake photo": {
+        "name": "Beach snake photo",
+        "id": 62,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Beak bird photo": {
+        "name": "Beak bird photo",
+        "id": 63,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Bitling frog photo": {
+        "name": "Bitling frog photo",
+        "id": 64,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Bitling mouse photo": {
+        "name": "Bitling mouse photo",
+        "id": 65,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Bitling snail photo": {
+        "name": "Bitling snail photo",
+        "id": 66,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Bitling tato photo": {
+        "name": "Bitling tato photo",
+        "id": 67,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Coco crab photo": {
+        "name": "Coco crab photo",
+        "id": 68,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Day lizard photo": {
+        "name": "Day lizard photo",
+        "id": 69,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Drill mole photo": {
+        "name": "Drill mole photo",
+        "id": 70,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Eggert photo": {
+        "name": "Eggert photo",
+        "id": 71,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Fire fly photo": {
+        "name": "Fire fly photo",
+        "id": 72,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Glow worm photo": {
+        "name": "Glow worm photo",
+        "id": 73,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Itsy bitsy photo": {
+        "name": "Itsy bitsy photo",
+        "id": 74,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mud frog photo": {
+        "name": "Mud frog photo",
+        "id": 75,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Night lizard photo": {
+        "name": "Night lizard photo",
+        "id": 76,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Snout bug photo": {
+        "name": "Snout bug photo",
+        "id": 77,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Tato coco photo": {
+        "name": "Tato coco photo",
+        "id": 78,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Tato king photo": {
+        "name": "Tato king photo",
+        "id": 79,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Water strider photo": {
+        "name": "Water strider photo",
+        "id": 80,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Photo"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Backpack": {
+        "name": "Backpack",
+        "id": 81,
+        "groups": [
+          "Everything",
+          "Homelanda",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Camera": {
+        "name": "Camera",
+        "id": 82,
+        "groups": [
+          "Everything",
+          "Homelanda",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Clogs": {
+        "name": "Clogs",
+        "id": 83,
+        "groups": [
+          "Everything",
+          "Homelanda",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Foam finger": {
+        "name": "Foam finger",
+        "id": 84,
+        "groups": [
+          "Everything",
+          "Item",
+          "Oaklaville"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Tripod": {
+        "name": "Tripod",
+        "id": 85,
+        "groups": [
+          "Everything",
+          "Item",
+          "Oaklaville"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Cowboy hat": {
+        "name": "Cowboy hat",
+        "id": 86,
+        "groups": [
+          "Everything",
+          "Item",
+          "Oaklaville"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Lost sock": {
+        "name": "Lost sock",
+        "id": 87,
+        "groups": [
+          "Everything",
+          "Item",
+          "Oaklaville"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Fj\u00e4llbj\u00f6rn hat": {
+        "name": "Fj\u00e4llbj\u00f6rn hat",
+        "id": 88,
+        "groups": [
+          "Everything",
+          "Item",
+          "Oaklaville"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Ghost glasses": {
+        "name": "Ghost glasses",
+        "id": 89,
+        "groups": [
+          "Everything",
+          "Item",
+          "Oaklaville"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Soaked sock": {
+        "name": "Soaked sock",
+        "id": 90,
+        "groups": [
+          "Everything",
+          "Item",
+          "Oaklaville"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Monster mask": {
+        "name": "Monster mask",
+        "id": 91,
+        "groups": [
+          "Everything",
+          "Item",
+          "Oaklaville"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Frames & filters": {
+        "name": "Frames & filters",
+        "id": 92,
+        "groups": [
+          "Everything",
+          "Item",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Fishing hat": {
+        "name": "Fishing hat",
+        "id": 93,
+        "groups": [
+          "Everything",
+          "Item",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Honk attachment": {
+        "name": "Honk attachment",
+        "id": 94,
+        "groups": [
+          "Everything",
+          "Item",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Umbrella": {
+        "name": "Umbrella",
+        "id": 95,
+        "groups": [
+          "Everything",
+          "Item",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Old key": {
+        "name": "Old key",
+        "id": 96,
+        "groups": [
+          "Everything",
+          "Item",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Hard hat": {
+        "name": "Hard hat",
+        "id": 97,
+        "groups": [
+          "Everything",
+          "Item",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Diving helmet": {
+        "name": "Diving helmet",
+        "id": 98,
+        "groups": [
+          "Everything",
+          "Item",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Rubber boots": {
+        "name": "Rubber boots",
+        "id": 99,
+        "groups": [
+          "Everything",
+          "Item",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Fisherman's whisle": {
+        "name": "Fisherman's whisle",
+        "id": 100,
+        "groups": [
+          "Everything",
+          "Item",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Supreme deluxe sandwich": {
+        "name": "Supreme deluxe sandwich",
+        "id": 101,
+        "groups": [
+          "Everything",
+          "Item",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Pirate hat": {
+        "name": "Pirate hat",
+        "id": 102,
+        "groups": [
+          "Everything",
+          "Item",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Paper hat": {
+        "name": "Paper hat",
+        "id": 103,
+        "groups": [
+          "Everything",
+          "Item",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Photo challenger flag": {
+        "name": "Photo challenger flag",
+        "id": 104,
+        "groups": [
+          "Everything",
+          "Item",
+          "Stanhamn"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Hotbean hat": {
+        "name": "Hotbean hat",
+        "id": 105,
+        "groups": [
+          "Everything",
+          "Item",
+          "Logcity"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Reporter hat": {
+        "name": "Reporter hat",
+        "id": 106,
+        "groups": [
+          "Everything",
+          "Item",
+          "Logcity"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Muddy camera": {
+        "name": "Muddy camera",
+        "id": 107,
+        "groups": [
+          "Everything",
+          "Item",
+          "Logcity"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Sneakers": {
+        "name": "Sneakers",
+        "id": 108,
+        "groups": [
+          "Everything",
+          "Item",
+          "Logcity"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Cinnamon bun": {
+        "name": "Cinnamon bun",
+        "id": 109,
+        "groups": [
+          "Everything",
+          "Item",
+          "Logcity"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Frisbee": {
+        "name": "Frisbee",
+        "id": 110,
+        "groups": [
+          "Everything",
+          "Item",
+          "Logcity"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Climbing boots": {
+        "name": "Climbing boots",
+        "id": 111,
+        "groups": [
+          "Everything",
+          "Item",
+          "Kiiruberg"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Puffer hat": {
+        "name": "Puffer hat",
+        "id": 112,
+        "groups": [
+          "Everything",
+          "Item",
+          "Kiiruberg"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Scarf": {
+        "name": "Scarf",
+        "id": 113,
+        "groups": [
+          "Everything",
+          "Item",
+          "Kiiruberg"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Ski goggles": {
+        "name": "Ski goggles",
+        "id": 114,
+        "groups": [
+          "Everything",
+          "Item",
+          "Kiiruberg"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Space helmet": {
+        "name": "Space helmet",
+        "id": 115,
+        "groups": [
+          "Everything",
+          "Item",
+          "Kiiruberg"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Water popper attachment": {
+        "name": "Water popper attachment",
+        "id": 116,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sun hat": {
+        "name": "Sun hat",
+        "id": 117,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Melonear": {
+        "name": "Melonear",
+        "id": 118,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Banakin": {
+        "name": "Banakin",
+        "id": 119,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Oranganas": {
+        "name": "Oranganas",
+        "id": 120,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Beanut": {
+        "name": "Beanut",
+        "id": 121,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Pickaxe": {
+        "name": "Pickaxe",
+        "id": 122,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sun cap": {
+        "name": "Sun cap",
+        "id": 123,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Flip-flops": {
+        "name": "Flip-flops",
+        "id": 124,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ice cream": {
+        "name": "Ice cream",
+        "id": 125,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Royal cape": {
+        "name": "Royal cape",
+        "id": 126,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "minigame ticket": {
+        "name": "minigame ticket",
+        "id": 127,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Lei": {
+        "name": "Lei",
+        "id": 128,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Vacation shirt": {
+        "name": "Vacation shirt",
+        "id": 129,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Royal cane": {
+        "name": "Royal cane",
+        "id": 130,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Empty bottle": {
+        "name": "Empty bottle",
+        "id": 131,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Water bottle": {
+        "name": "Water bottle",
+        "id": 132,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Viking helmet": {
+        "name": "Viking helmet",
+        "id": 133,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Foot cast": {
+        "name": "Foot cast",
+        "id": 134,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Beret": {
+        "name": "Beret",
+        "id": 135,
+        "groups": [
+          "Basto",
+          "Everything",
+          "Item"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Jamal Green - Photo of Home": {
+        "name": "Jamal Green - Photo of Home",
+        "id": 136,
+        "groups": [
+          "CASETTE",
+          "Everything",
+          "Homelanda"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Launchable Socks - Squirrel Photography": {
+        "name": "Launchable Socks - Squirrel Photography",
+        "id": 137,
+        "groups": [
+          "CASETTE",
+          "Everything",
+          "Oaklaville"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "TOEM Experienced": {
+        "name": "TOEM Experienced",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Basto",
+      "CASETTE",
+      "Everything",
+      "Homelanda",
+      "Item",
+      "Kiiruberg",
+      "Logcity",
+      "Oaklaville",
+      "Photo",
+      "Stamp",
+      "Stanhamn"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "Ant photo": 2,
+      "Backpack": 2,
+      "Beehive photo": 2,
+      "Bubble fly photo": 2,
+      "Business pigeon photo": 2,
+      "Butterfly photo": 2,
+      "Camera": 2,
+      "Cinnamon bun": 2,
+      "Climbing boots": 2,
+      "Clogs": 2,
+      "Cosmo deer photo": 2,
+      "Cow photo": 2,
+      "Cowboy hat": 2,
+      "Crab photo": 2,
+      "Diving helmet": 2,
+      "Dragonfly photo": 2,
+      "Fia photo": 2,
+      "Fisherman's whisle": 2,
+      "Fishing hat": 2,
+      "Fj\u00e4llbj\u00f6rn hat": 2,
+      "Flies photo": 2,
+      "Fluff ball photo": 2,
+      "Foam finger": 2,
+      "Forest bird photo": 2,
+      "Frames & filters": 2,
+      "Frisbee": 2,
+      "Fr\u00e4s photo": 2,
+      "Ghost glasses": 2,
+      "Happy carp photo": 2,
+      "Hard hat": 2,
+      "Hedgehog photo": 2,
+      "Home bird photo": 2,
+      "Homelanda stamp": 6,
+      "Honk attachment": 2,
+      "Hotbean hat": 2,
+      "Jamal Green - Photo of Home": 2,
+      "Jellyfish photo": 2,
+      "Kiiruberg stamp": 26,
+      "King fish photo": 2,
+      "Ladybug photo": 2,
+      "Launchable Socks - Squirrel Photography": 2,
+      "Logcity stamp": 36,
+      "Lost sock": 2,
+      "Meteopal photo": 2,
+      "Mik\u00e9e photo": 2,
+      "Monster mask": 2,
+      "Mountain goat photo": 2,
+      "Mouse photo": 2,
+      "Muddy camera": 2,
+      "Nariko photo": 2,
+      "Nestworm photo": 2,
+      "Oaklaville stamp": 30,
+      "Old key": 2,
+      "Oskar photo": 2,
+      "Owl photo": 2,
+      "Paper hat": 2,
+      "Pet rock photo": 2,
+      "Photo challenger flag": 2,
+      "Pigeon photo": 2,
+      "Pirate hat": 2,
+      "Portillo photo": 2,
+      "Puffer hat": 2,
+      "Punky parrot photo": 2,
+      "Reporter hat": 2,
+      "Rubber boots": 2,
+      "Scarf": 2,
+      "Seagull photo": 2,
+      "Seahorse photo": 2,
+      "Sero photo": 2,
+      "Ski goggles": 2,
+      "Snail photo": 2,
+      "Sneakers": 2,
+      "Snow bird photo": 2,
+      "Soaked sock": 2,
+      "Space helmet": 2,
+      "Squirrel photo": 2,
+      "Stag beetle photo": 2,
+      "Stanhamn stamp": 32,
+      "Sunday swan photo": 2,
+      "Supreme deluxe sandwich": 2,
+      "TOEM Experienced": 1,
+      "Tato alien photo": 2,
+      "Tato bug photo": 2,
+      "Tato fly photo": 2,
+      "Tato photo": 2,
+      "Tato scuba photo": 2,
+      "Tato skateboard photo": 2,
+      "Tato ski photo": 2,
+      "Tato swim photo": 2,
+      "Tato tourist photo": 2,
+      "Teddy photo": 2,
+      "Toad photo": 2,
+      "Tom photo": 2,
+      "Tripod": 2,
+      "Turtle photo": 2,
+      "Umbrella": 2,
+      "Willemijn photo": 2
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "settings": {
+    "1": {
+      "game": "TOEM rule builder",
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {
+      "name": "TOEM rule builder",
+      "rule_format": {
+        "version": "1.0"
+      }
+    }
+  }
+}
