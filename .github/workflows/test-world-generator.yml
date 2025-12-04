@@ -1,0 +1,461 @@
+name: Test World Generator
+
+on:
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: 'Seed number to use for testing'
+        required: true
+        type: number
+        default: 1
+
+      delete_existing_results:
+        description: 'Delete existing test-results.json before testing'
+        type: boolean
+        default: true
+
+      debug_mode:
+        description: 'Debug mode - only process Adventure template'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write  # Allow pushing commits and creating branches
+
+jobs:
+  # Initial setup job - creates/updates branch and cleans artifacts
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Create or switch to test-results-update branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin
+
+          if git ls-remote --exit-code --heads origin test-results-update; then
+            git checkout test-results-update
+            git pull origin test-results-update
+            git rm -rf .
+            git checkout origin/main -- .
+            if ! git diff --staged --quiet; then
+              git commit -m "Sync test-results-update with main"
+              git push origin test-results-update
+            fi
+          else
+            git checkout -b test-results-update origin/main
+          fi
+
+      - name: Delete existing test results
+        if: inputs.delete_existing_results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Delete world generator test results
+          git rm -f scripts/output/world-generator/test-results.json || true
+          git rm -f docs/json/developer/test-results/test-results-world-generator.md || true
+
+          # Commit if there are changes
+          if ! git diff --staged --quiet; then
+            git commit -m "Delete existing world generator test results before new test run"
+            git push origin test-results-update
+          fi
+
+  # Phase 1: Generate original seeds and create test worlds (10 parallel jobs)
+  generate-and-create-test-worlds:
+    name: Generate & Create Test Worlds (Split ${{ matrix.split_num }})
+    runs-on: ubuntu-latest
+    needs: setup
+    timeout-minutes: 180
+
+    strategy:
+      fail-fast: false
+      matrix:
+        split_num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        split_total: [10]
+
+    steps:
+      - name: Checkout test-results-update branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-results-update
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Create virtual environment and install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python ModuleUpdate.py --yes
+
+      - name: Setup - Clean test artifacts and generate templates
+        if: matrix.split_num == 1
+        run: |
+          source .venv/bin/activate
+
+          # Clean _test worlds
+          find worlds -maxdepth 1 -type d -name '*_test' -exec rm -rf {} + 2>/dev/null || true
+
+          # Clean _test templates
+          find Players/Templates -name '* Test.yaml' -delete 2>/dev/null || true
+
+          # Clean _test presets
+          find frontend/presets -maxdepth 1 -type d -name '*_test' -exec rm -rf {} + 2>/dev/null || true
+
+          # Clear and regenerate templates
+          rm -f Players/Templates/*.yaml
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Wait for setup to complete
+        if: matrix.split_num != 1
+        run: sleep 30
+
+      - name: Generate templates (non-first splits)
+        if: matrix.split_num != 1
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Generate original seeds and create test worlds
+        if: ${{ !inputs.debug_mode || matrix.split_num == 1 }}
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-world-generator.py \
+            --seed ${{ inputs.seed }} \
+            --every-nth ${{ matrix.split_total }} \
+            --skip-first $((${{ matrix.split_num }} - 1)) \
+            --output-file scripts/output/world-generator/test-results-split-${{ matrix.split_num }}.json \
+            --phase generate-original \
+            --skip-spoiler-test \
+            --skip-cleanup \
+            ${{ inputs.debug_mode && '--include-list Adventure.yaml' || '' }}
+
+      - name: Upload test worlds as artifact
+        if: ${{ !cancelled() && (!inputs.debug_mode || matrix.split_num == 1) }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-worlds-split-${{ matrix.split_num }}
+          path: |
+            worlds/*_test/
+            frontend/presets/*/AP_*/
+            scripts/output/world-generator/test-results-split-${{ matrix.split_num }}.json
+          retention-days: 1
+
+  # Phase 2: Combine test worlds and regenerate templates
+  combine-test-worlds:
+    name: Combine Test Worlds
+    runs-on: ubuntu-latest
+    needs: generate-and-create-test-worlds
+    if: ${{ !cancelled() }}
+
+    steps:
+      - name: Checkout test-results-update branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-results-update
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Create virtual environment and install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python ModuleUpdate.py --yes
+
+      - name: Download all test world artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Combine test worlds and presets
+        run: |
+          # Copy all _test worlds from artifacts to worlds/
+          for dir in artifacts/test-worlds-split-*/worlds/*_test; do
+            if [ -d "$dir" ]; then
+              world_name=$(basename "$dir")
+              echo "Copying world: $world_name..."
+              cp -r "$dir" "worlds/"
+            fi
+          done
+
+          # Copy all presets from artifacts to frontend/presets/
+          mkdir -p frontend/presets
+          for preset_dir in artifacts/test-worlds-split-*/frontend/presets/*; do
+            if [ -d "$preset_dir" ]; then
+              game_name=$(basename "$preset_dir")
+              echo "Copying presets for: $game_name..."
+              mkdir -p "frontend/presets/$game_name"
+              cp -r "$preset_dir"/* "frontend/presets/$game_name/" 2>/dev/null || true
+            fi
+          done
+
+          # List test worlds
+          echo "Test worlds created:"
+          ls -la worlds/*_test/ 2>/dev/null || echo "No test worlds found"
+
+          # List presets
+          echo "Presets available:"
+          ls frontend/presets/ 2>/dev/null || echo "No presets found"
+
+      - name: Regenerate templates to include test worlds
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+          # List test templates
+          echo "Test templates:"
+          ls Players/Templates/*Test.yaml 2>/dev/null || echo "No test templates found"
+
+      - name: Combine partial results
+        run: |
+          source .venv/bin/activate
+          mkdir -p scripts/output/world-generator
+
+          # Combine split result files
+          python scripts/test/combine-test-results.py \
+            --input-files artifacts/test-worlds-split-*/scripts/output/world-generator/test-results-split-*.json \
+            --output-file scripts/output/world-generator/test-results-phase1.json \
+            || echo "Warning: Could not combine results"
+
+      - name: Upload combined state as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: combined-test-worlds
+          path: |
+            worlds/*_test/
+            Players/Templates/*Test.yaml
+            frontend/presets/*/AP_*/
+            scripts/output/world-generator/test-results-phase1.json
+          retention-days: 1
+
+  # Phase 3: Run spoiler tests (10 parallel jobs)
+  run-spoiler-tests:
+    name: Run Spoiler Tests (Split ${{ matrix.split_num }})
+    runs-on: ubuntu-latest
+    needs: combine-test-worlds
+    if: ${{ !cancelled() }}
+    timeout-minutes: 180
+
+    strategy:
+      fail-fast: false
+      matrix:
+        split_num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        split_total: [10]
+
+    steps:
+      - name: Checkout test-results-update branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-results-update
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Create virtual environment and install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python ModuleUpdate.py --yes
+
+      - name: Download combined test worlds
+        uses: actions/download-artifact@v4
+        with:
+          name: combined-test-worlds
+          path: .
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py minimal-spoilers
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: |
+          source .venv/bin/activate
+          npx playwright install chromium
+
+      - name: Start HTTP server
+        run: |
+          python -m http.server 8000 &
+          sleep 2
+
+      - name: Run spoiler tests
+        if: ${{ !inputs.debug_mode || matrix.split_num == 1 }}
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-world-generator.py \
+            --seed ${{ inputs.seed }} \
+            --every-nth ${{ matrix.split_total }} \
+            --skip-first $((${{ matrix.split_num }} - 1)) \
+            --output-file scripts/output/world-generator/test-results-split-${{ matrix.split_num }}.json \
+            --phase test \
+            --skip-generation \
+            --skip-cleanup \
+            ${{ inputs.debug_mode && '--include-list "Adventure Test.yaml"' || '' }}
+
+      - name: Upload test results
+        if: ${{ !cancelled() && (!inputs.debug_mode || matrix.split_num == 1) }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-split-${{ matrix.split_num }}
+          path: scripts/output/world-generator/test-results-split-${{ matrix.split_num }}.json
+          retention-days: 7
+
+  # Phase 4: Combine results and generate report
+  combine-results:
+    name: Combine Results and Generate Report
+    runs-on: ubuntu-latest
+    needs: run-spoiler-tests
+    if: ${{ !cancelled() }}
+
+    steps:
+      - name: Checkout test-results-update branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-results-update
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Download all test result artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Combine test results
+        run: |
+          mkdir -p scripts/output/world-generator
+
+          # Combine split result files
+          python scripts/test/combine-test-results.py \
+            --input-files artifacts/test-results-split-*/test-results-split-*.json \
+            --output-file scripts/output/world-generator/test-results.json
+
+      - name: Generate markdown report
+        run: |
+          python scripts/docs/generate-world-generator-report.py
+
+      - name: Commit and push results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f scripts/output/world-generator/test-results.json
+          git add -f docs/json/developer/test-results/test-results-world-generator.md || true
+
+          if ! git diff --staged --quiet; then
+            git commit -m "Update world generator test results
+
+            Generated by workflow run: ${{ github.run_id }}
+            Seed: ${{ inputs.seed }}
+            "
+            git push origin test-results-update
+          fi
+
+  # Phase 5: Cleanup (runs even if previous steps failed)
+  cleanup:
+    name: Cleanup
+    runs-on: ubuntu-latest
+    needs: [combine-results]
+    if: ${{ always() }}
+
+    steps:
+      - name: Checkout test-results-update branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-results-update
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Create virtual environment and install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python ModuleUpdate.py --yes
+
+      - name: Cleanup test artifacts
+        run: |
+          source .venv/bin/activate
+
+          # Clean _test worlds (if any were committed)
+          find worlds -maxdepth 1 -type d -name '*_test' -exec rm -rf {} + 2>/dev/null || true
+
+          # Clean _test templates
+          find Players/Templates -name '* Test.yaml' -delete 2>/dev/null || true
+
+          # Clean _test presets
+          find frontend/presets -maxdepth 1 -type d -name '*_test' -exec rm -rf {} + 2>/dev/null || true
+
+          # Regenerate clean templates
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+          echo "Cleanup complete."
