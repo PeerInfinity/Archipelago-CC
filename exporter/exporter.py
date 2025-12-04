@@ -906,6 +906,23 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
             if cache_key in _rule_analysis_cache:
                 return _rule_analysis_cache[cache_key]
 
+            # Check if this is a Rule Builder Resolved rule with native serialization
+            # Rule Builder rules have a to_dict() method that provides native JSON serialization
+            if hasattr(rule_func, 'to_dict') and callable(rule_func.to_dict):
+                try:
+                    rb_dict = rule_func.to_dict()
+                    # Convert Rule Builder format to Archipelago-CC format for frontend compatibility
+                    from exporter.converter import convert_rule_builder_to_cc
+                    cc_dict, warnings = convert_rule_builder_to_cc(rb_dict)
+                    for warning in warnings:
+                        logger.debug(f"Rule Builder conversion warning for {target_type} '{rule_target_name}': {warning}")
+                    # Cache and return the converted CC format
+                    _rule_analysis_cache[cache_key] = cc_dict
+                    return cc_dict
+                except Exception as e:
+                    logger.warning(f"Rule Builder to_dict() failed for {target_type} '{rule_target_name}': {e}")
+                    # Fall through to AST analysis as fallback
+
             # Check if game handler has an override for rule analysis (e.g., Blasphemous, Terraria)
             if game_handler and hasattr(game_handler, 'override_rule_analysis'):
                 override_result = game_handler.override_rule_analysis(rule_func, rule_target_name)

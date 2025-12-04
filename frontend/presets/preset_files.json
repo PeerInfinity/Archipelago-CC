@@ -6681,5 +6681,68 @@
         "first_failure_player": null
       }
     }
+  },
+  "toem_rule_builder": {
+    "name": "TOEM rule builder",
+    "folders": {
+      "AP_13515657874892102023": {
+        "seed": 12345,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "TOEM rule builder"
+          }
+        ],
+        "files": [
+          "AP_13515657874892102023.archipelago",
+          "AP_13515657874892102023_Spoiler.txt",
+          "AP_13515657874892102023_rules.json",
+          "AP_13515657874892102023_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "toem_original": {
+    "name": "TOEM original",
+    "folders": {
+      "AP_13515657874892102023": {
+        "seed": 12345,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "TOEM original"
+          }
+        ],
+        "files": [
+          "AP_13515657874892102023.archipelago",
+          "AP_13515657874892102023_Spoiler.txt",
+          "AP_13515657874892102023_rules.json",
+          "AP_13515657874892102023_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "adventure_test": {
+    "name": "Adventure Test",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Adventure Test"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
   }
 }
