@@ -4,13 +4,13 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-12-03 18:57:23
+**Generated:** 2025-12-03 20:36:57
 
 ## Summary
 
 - **Total Games:** 78
-- **Passed:** 71 (91.0%)
-- **Failed:** 6 (7.7%)
+- **Passed:** 74 (94.9%)
+- **Failed:** 3 (3.8%)
 - **Skipped (Prerequisites):** 1 (1.3%)
 
 ## Test Results
@@ -46,8 +46,8 @@
 | Hylics 2 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Inscryption | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
-| Kingdom Hearts | ❌ Failed | 10 | 10 | 0 | 1 | ✅ | ✅ |
-| Kingdom Hearts 2 | ❌ Failed | 10 | 10 | 0 | 1 | ✅ | ✅ |
+| Kingdom Hearts | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
+| Kingdom Hearts 2 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Lingo | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
@@ -63,7 +63,7 @@
 | Noita | ✅ Passed | 10 | 10 | 1 | 0 | ⚫ | ⚫ |
 | Old School Runescape | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Overcooked! 2 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
-| Paint | ❌ Failed | 10 | 10 | 0 | 1 | ✅ | ✅ |
+| Paint | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Pokemon Emerald | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Pokemon Red and Blue | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Raft | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
@@ -495,14 +495,14 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
-| 2 | DOOM II.yaml |
-| 3 | Factorio.yaml |
-| 4 | Faxanadu.yaml |
-| 5 | Final Fantasy Mystic Quest.yaml |
-| 6 | Heretic.yaml |
-| 7 | Hylics 2.yaml |
-| 8 | Inscryption.yaml |
-| 9 | Jak and Daxter The Precursor Legacy.yaml |
+| 2 | Factorio.yaml |
+| 3 | Faxanadu.yaml |
+| 4 | Final Fantasy Mystic Quest.yaml |
+| 5 | Heretic.yaml |
+| 6 | Hylics 2.yaml |
+| 7 | Inscryption.yaml |
+| 8 | Jak and Daxter The Precursor Legacy.yaml |
+| 9 | Kingdom Hearts 2.yaml |
 | 10 | Kingdom Hearts.yaml |
 
 ### Kingdom Hearts 2
@@ -525,47 +525,17 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
-| 2 | DOOM II.yaml |
-| 3 | Factorio.yaml |
-| 4 | Faxanadu.yaml |
-| 5 | Final Fantasy Mystic Quest.yaml |
-| 6 | Heretic.yaml |
-| 7 | Hylics 2.yaml |
-| 8 | Inscryption.yaml |
-| 9 | Jak and Daxter The Precursor Legacy.yaml |
-| 10 | Kirby's Dream Land 3.yaml |
-
-### Landstalker - The Treasures of King Nole
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Short Hike.yaml |
-| 2 | Factorio.yaml |
-| 3 | Faxanadu.yaml |
-| 4 | Final Fantasy Mystic Quest.yaml |
-| 5 | Heretic.yaml |
-| 6 | Hylics 2.yaml |
-| 7 | Inscryption.yaml |
-| 8 | Jak and Daxter The Precursor Legacy.yaml |
-| 9 | Kirby's Dream Land 3.yaml |
-| 10 | Landstalker - The Treasures of King Nole.yaml |
-
-### Lingo
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Short Hike.yaml |
 | 2 | Faxanadu.yaml |
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Heretic.yaml |
 | 5 | Hylics 2.yaml |
 | 6 | Inscryption.yaml |
 | 7 | Jak and Daxter The Precursor Legacy.yaml |
-| 8 | Kirby's Dream Land 3.yaml |
-| 9 | Landstalker - The Treasures of King Nole.yaml |
-| 10 | Lingo.yaml |
+| 8 | Kingdom Hearts 2.yaml |
+| 9 | Kingdom Hearts.yaml |
+| 10 | Kirby's Dream Land 3.yaml |
 
-### Links Awakening DX
+### Landstalker - The Treasures of King Nole
 
 | Player # | Template |
 |----------|----------|
@@ -575,6 +545,36 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Hylics 2.yaml |
 | 5 | Inscryption.yaml |
 | 6 | Jak and Daxter The Precursor Legacy.yaml |
+| 7 | Kingdom Hearts 2.yaml |
+| 8 | Kingdom Hearts.yaml |
+| 9 | Kirby's Dream Land 3.yaml |
+| 10 | Landstalker - The Treasures of King Nole.yaml |
+
+### Lingo
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Short Hike.yaml |
+| 2 | Heretic.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Inscryption.yaml |
+| 5 | Jak and Daxter The Precursor Legacy.yaml |
+| 6 | Kingdom Hearts 2.yaml |
+| 7 | Kingdom Hearts.yaml |
+| 8 | Kirby's Dream Land 3.yaml |
+| 9 | Landstalker - The Treasures of King Nole.yaml |
+| 10 | Lingo.yaml |
+
+### Links Awakening DX
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Short Hike.yaml |
+| 2 | Hylics 2.yaml |
+| 3 | Inscryption.yaml |
+| 4 | Jak and Daxter The Precursor Legacy.yaml |
+| 5 | Kingdom Hearts 2.yaml |
+| 6 | Kingdom Hearts.yaml |
 | 7 | Kirby's Dream Land 3.yaml |
 | 8 | Landstalker - The Treasures of King Nole.yaml |
 | 9 | Lingo.yaml |
@@ -585,10 +585,10 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
-| 2 | Heretic.yaml |
-| 3 | Hylics 2.yaml |
-| 4 | Inscryption.yaml |
-| 5 | Jak and Daxter The Precursor Legacy.yaml |
+| 2 | Inscryption.yaml |
+| 3 | Jak and Daxter The Precursor Legacy.yaml |
+| 4 | Kingdom Hearts 2.yaml |
+| 5 | Kingdom Hearts.yaml |
 | 6 | Kirby's Dream Land 3.yaml |
 | 7 | Landstalker - The Treasures of King Nole.yaml |
 | 8 | Lingo.yaml |
@@ -600,9 +600,9 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
-| 2 | Hylics 2.yaml |
-| 3 | Inscryption.yaml |
-| 4 | Jak and Daxter The Precursor Legacy.yaml |
+| 2 | Jak and Daxter The Precursor Legacy.yaml |
+| 3 | Kingdom Hearts 2.yaml |
+| 4 | Kingdom Hearts.yaml |
 | 5 | Kirby's Dream Land 3.yaml |
 | 6 | Landstalker - The Treasures of King Nole.yaml |
 | 7 | Lingo.yaml |
@@ -615,8 +615,8 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
-| 2 | Inscryption.yaml |
-| 3 | Jak and Daxter The Precursor Legacy.yaml |
+| 2 | Kingdom Hearts 2.yaml |
+| 3 | Kingdom Hearts.yaml |
 | 4 | Kirby's Dream Land 3.yaml |
 | 5 | Landstalker - The Treasures of King Nole.yaml |
 | 6 | Lingo.yaml |
@@ -630,8 +630,8 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
-| 2 | Jak and Daxter The Precursor Legacy.yaml |
-| 3 | Kirby's Dream Land 3.yaml |
+| 2 | Kingdom Hearts 2.yaml |
+| 3 | Kingdom Hearts.yaml |
 | 4 | Landstalker - The Treasures of King Nole.yaml |
 | 5 | Lingo.yaml |
 | 6 | Links Awakening DX.yaml |
@@ -645,7 +645,7 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
-| 2 | Kirby's Dream Land 3.yaml |
+| 2 | Kingdom Hearts 2.yaml |
 | 3 | Landstalker - The Treasures of King Nole.yaml |
 | 4 | Lingo.yaml |
 | 5 | Links Awakening DX.yaml |
@@ -768,29 +768,14 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Mario & Luigi Superstar Saga.yaml |
 | 3 | Mega Man 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
-| 5 | Metamath.yaml |
-| 6 | Muse Dash.yaml |
-| 7 | Noita.yaml |
-| 8 | Old School Runescape.yaml |
-| 9 | Overcooked! 2.yaml |
-| 10 | Pokemon Emerald.yaml |
-
-### Pokemon Red and Blue
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Short Hike.yaml |
-| 2 | Mario & Luigi Superstar Saga.yaml |
-| 3 | Mega Man 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
 | 5 | Muse Dash.yaml |
 | 6 | Noita.yaml |
 | 7 | Old School Runescape.yaml |
 | 8 | Overcooked! 2.yaml |
-| 9 | Pokemon Emerald.yaml |
-| 10 | Pokemon Red and Blue.yaml |
+| 9 | Paint.yaml |
+| 10 | Pokemon Emerald.yaml |
 
-### Raft
+### Pokemon Red and Blue
 
 | Player # | Template |
 |----------|----------|
@@ -801,11 +786,11 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Noita.yaml |
 | 6 | Old School Runescape.yaml |
 | 7 | Overcooked! 2.yaml |
-| 8 | Pokemon Emerald.yaml |
-| 9 | Pokemon Red and Blue.yaml |
-| 10 | Raft.yaml |
+| 8 | Paint.yaml |
+| 9 | Pokemon Emerald.yaml |
+| 10 | Pokemon Red and Blue.yaml |
 
-### Risk of Rain 2
+### Raft
 
 | Player # | Template |
 |----------|----------|
@@ -815,6 +800,21 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Noita.yaml |
 | 5 | Old School Runescape.yaml |
 | 6 | Overcooked! 2.yaml |
+| 7 | Paint.yaml |
+| 8 | Pokemon Emerald.yaml |
+| 9 | Pokemon Red and Blue.yaml |
+| 10 | Raft.yaml |
+
+### Risk of Rain 2
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Short Hike.yaml |
+| 2 | Muse Dash.yaml |
+| 3 | Noita.yaml |
+| 4 | Old School Runescape.yaml |
+| 5 | Overcooked! 2.yaml |
+| 6 | Paint.yaml |
 | 7 | Pokemon Emerald.yaml |
 | 8 | Pokemon Red and Blue.yaml |
 | 9 | Raft.yaml |
@@ -825,10 +825,10 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
-| 2 | Muse Dash.yaml |
-| 3 | Noita.yaml |
-| 4 | Old School Runescape.yaml |
-| 5 | Overcooked! 2.yaml |
+| 2 | Noita.yaml |
+| 3 | Old School Runescape.yaml |
+| 4 | Overcooked! 2.yaml |
+| 5 | Paint.yaml |
 | 6 | Pokemon Emerald.yaml |
 | 7 | Pokemon Red and Blue.yaml |
 | 8 | Raft.yaml |
@@ -840,9 +840,9 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
-| 2 | Noita.yaml |
-| 3 | Old School Runescape.yaml |
-| 4 | Overcooked! 2.yaml |
+| 2 | Old School Runescape.yaml |
+| 3 | Overcooked! 2.yaml |
+| 4 | Paint.yaml |
 | 5 | Pokemon Emerald.yaml |
 | 6 | Pokemon Red and Blue.yaml |
 | 7 | Raft.yaml |
@@ -855,8 +855,8 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
-| 2 | Old School Runescape.yaml |
-| 3 | Overcooked! 2.yaml |
+| 2 | Overcooked! 2.yaml |
+| 3 | Paint.yaml |
 | 4 | Pokemon Emerald.yaml |
 | 5 | Pokemon Red and Blue.yaml |
 | 6 | Raft.yaml |
@@ -870,7 +870,7 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
-| 2 | Overcooked! 2.yaml |
+| 2 | Paint.yaml |
 | 3 | Pokemon Emerald.yaml |
 | 4 | Pokemon Red and Blue.yaml |
 | 5 | Raft.yaml |
@@ -1215,54 +1215,6 @@ Shows which templates were in the multiworld when each game was tested:
 
 When a multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
 
-### Kingdom Hearts (Kingdom Hearts.yaml)
-
-**Failing pairs found:** 9
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| A Short Hike.yaml | ❌ | ✅ | ✅ | ❌ |
-| DOOM II.yaml | ❌ | ✅ | ✅ | ❌ |
-| Factorio.yaml | ❌ | ✅ | ✅ | ❌ |
-| Faxanadu.yaml | ❌ | ✅ | ✅ | ❌ |
-| Final Fantasy Mystic Quest.yaml | ❌ | ✅ | ✅ | ❌ |
-| Heretic.yaml | ❌ | ✅ | ✅ | ❌ |
-| Hylics 2.yaml | ❌ | ✅ | ✅ | ❌ |
-| Inscryption.yaml | ❌ | ✅ | ✅ | ❌ |
-| Jak and Daxter The Precursor Legacy.yaml | ❌ | ✅ | ✅ | ❌ |
-
-### Kingdom Hearts 2 (Kingdom Hearts 2.yaml)
-
-**Failing pairs found:** 6
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| A Short Hike.yaml | ❌ | ✅ | ✅ | ❌ |
-| DOOM II.yaml | ✅ | ✅ | ✅ | ✅ |
-| Factorio.yaml | ❌ | ✅ | ✅ | ❌ |
-| Faxanadu.yaml | ❌ | ✅ | ✅ | ❌ |
-| Final Fantasy Mystic Quest.yaml | ❌ | ✅ | ✅ | ❌ |
-| Heretic.yaml | ✅ | ✅ | ✅ | ✅ |
-| Hylics 2.yaml | ✅ | ✅ | ✅ | ✅ |
-| Inscryption.yaml | ❌ | ✅ | ✅ | ❌ |
-| Jak and Daxter The Precursor Legacy.yaml | ❌ | ✅ | ✅ | ❌ |
-
-### Paint (Paint.yaml)
-
-**Failing pairs found:** 9
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| A Short Hike.yaml | ❌ | ✅ | ✅ | ❌ |
-| Mario & Luigi Superstar Saga.yaml | ❌ | ✅ | ✅ | ❌ |
-| Mega Man 2.yaml | ❌ | ✅ | ✅ | ❌ |
-| MegaMan Battle Network 3.yaml | ❌ | ✅ | ✅ | ❌ |
-| Metamath.yaml | ❌ | ✅ | ✅ | ❌ |
-| Muse Dash.yaml | ❌ | ✅ | ✅ | ❌ |
-| Noita.yaml | ❌ | ✅ | ✅ | ❌ |
-| Old School Runescape.yaml | ❌ | ✅ | ✅ | ❌ |
-| Overcooked! 2.yaml | ❌ | ✅ | ✅ | ❌ |
-
 ### Stardew Valley (Stardew Valley.yaml)
 
 **Failing pairs found:** 9
@@ -1281,12 +1233,12 @@ When a multiworld test fails, bisection tests each pair of templates to find whi
 
 ### Super Metroid (Super Metroid.yaml)
 
-**Failing pairs found:** 7
+**Failing pairs found:** 6
 
 | Partner Template | Result | Generation | Player 1 | Player 2 |
 |------------------|--------|------------|----------|----------|
 | A Short Hike.yaml | ✅ | ✅ | ✅ | ✅ |
-| Saving Princess.yaml | ❌ | ✅ | ✅ | ❌ |
+| Saving Princess.yaml | ✅ | ✅ | ✅ | ✅ |
 | Secret of Evermore.yaml | ❌ | ✅ | ✅ | ❌ |
 | Shivers.yaml | ❌ | ✅ | ✅ | ❌ |
 | Sonic Adventure 2 Battle.yaml | ✅ | ✅ | ✅ | ✅ |
@@ -1297,19 +1249,19 @@ When a multiworld test fails, bisection tests each pair of templates to find whi
 
 ### Yacht Dice (Yacht Dice.yaml)
 
-**Failing pairs found:** 9
+**No failing pairs found** (failure may be due to combination of 3+ templates)
 
 | Partner Template | Result | Generation | Player 1 | Player 2 |
 |------------------|--------|------------|----------|----------|
-| TUNIC.yaml | ❌ | ✅ | ✅ | ❌ |
-| Terraria.yaml | ❌ | ✅ | ✅ | ❌ |
-| The Legend of Zelda.yaml | ❌ | ✅ | ✅ | ❌ |
-| The Wind Waker.yaml | ❌ | ✅ | ✅ | ❌ |
-| The Witness.yaml | ❌ | ✅ | ✅ | ❌ |
-| Timespinner.yaml | ❌ | ✅ | ✅ | ❌ |
-| Undertale.yaml | ❌ | ✅ | ✅ | ❌ |
-| VVVVVV.yaml | ❌ | ✅ | ✅ | ❌ |
-| Wargroove.yaml | ❌ | ✅ | ✅ | ❌ |
+| TUNIC.yaml | ✅ | ✅ | ✅ | ✅ |
+| Terraria.yaml | ✅ | ✅ | ✅ | ✅ |
+| The Legend of Zelda.yaml | ✅ | ✅ | ✅ | ✅ |
+| The Wind Waker.yaml | ✅ | ✅ | ✅ | ✅ |
+| The Witness.yaml | ✅ | ✅ | ✅ | ✅ |
+| Timespinner.yaml | ✅ | ✅ | ✅ | ✅ |
+| Undertale.yaml | ✅ | ✅ | ✅ | ✅ |
+| VVVVVV.yaml | ✅ | ✅ | ✅ | ✅ |
+| Wargroove.yaml | ✅ | ✅ | ✅ | ✅ |
 
 
 ## Notes
