@@ -255,6 +255,18 @@ export class TestSpoilerUI {
         .log-step { color: #ffc107; }
         .log-state { color: #5cacee; } /* Light blue for state */
         .log-mismatch { background-color: rgba(255, 107, 107, 0.2); padding: 2px 4px; border-radius: 3px; }
+        /* Clickable links in log entries - make them clearly identifiable */
+        #spoiler-log-output .region-link,
+        #spoiler-log-output .location-link {
+          color: #6cb6ff; /* Light blue link color */
+          text-decoration: underline;
+          cursor: pointer;
+        }
+        #spoiler-log-output .region-link:hover,
+        #spoiler-log-output .location-link:hover {
+          color: #9dd1ff; /* Lighter blue on hover */
+          text-decoration: underline;
+        }
       `;
       this.rootElement.appendChild(style);
     }
@@ -910,6 +922,7 @@ export class TestSpoilerUI {
       const textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
 
       // Check for location and region lists to make them clickable
+      // Standard spoiler test prefixes
       const prefixLocationMismatch =
         ' > Locations accessible in LOG but NOT in STATE (or checked): ';
       const prefixLocationExtra =
@@ -918,6 +931,11 @@ export class TestSpoilerUI {
         ' > Regions accessible in LOG but NOT in STATE: ';
       const prefixRegionExtra =
         ' > Regions accessible in STATE but NOT in LOG: ';
+      // UT comparison mode prefixes
+      const prefixUtLocationMissing = '  Missing in UT: ';
+      const prefixUtLocationExtra = '  Extra in UT: ';
+      const prefixUtRegionMissing = '  Regions missing in UT: ';
+      const prefixUtRegionExtra = '  Regions extra in UT: ';
       let isSpecialList = false;
 
       if (message.startsWith(prefixLocationMismatch)) {
@@ -955,6 +973,46 @@ export class TestSpoilerUI {
           )
         );
         const regions = message.substring(prefixRegionExtra.length).split(', ');
+        this._addRegionLinksToElement(entry, regions);
+      } else if (message.startsWith(prefixUtLocationMissing)) {
+        // UT mode: locations missing in UT
+        isSpecialList = true;
+        entry.appendChild(
+          document.createTextNode(
+            `[${new Date().toLocaleTimeString()}]` + prefixUtLocationMissing
+          )
+        );
+        const locations = message.substring(prefixUtLocationMissing.length).split(', ');
+        this._addLocationLinksToElement(entry, locations);
+      } else if (message.startsWith(prefixUtLocationExtra)) {
+        // UT mode: locations extra in UT
+        isSpecialList = true;
+        entry.appendChild(
+          document.createTextNode(
+            `[${new Date().toLocaleTimeString()}]` + prefixUtLocationExtra
+          )
+        );
+        const locations = message.substring(prefixUtLocationExtra.length).split(', ');
+        this._addLocationLinksToElement(entry, locations);
+      } else if (message.startsWith(prefixUtRegionMissing)) {
+        // UT mode: regions missing in UT
+        isSpecialList = true;
+        entry.appendChild(
+          document.createTextNode(
+            `[${new Date().toLocaleTimeString()}]` + prefixUtRegionMissing
+          )
+        );
+        const regions = message.substring(prefixUtRegionMissing.length).split(', ');
+        this._addRegionLinksToElement(entry, regions);
+      } else if (message.startsWith(prefixUtRegionExtra)) {
+        // UT mode: regions extra in UT
+        isSpecialList = true;
+        entry.appendChild(
+          document.createTextNode(
+            `[${new Date().toLocaleTimeString()}]` + prefixUtRegionExtra
+          )
+        );
+        const regions = message.substring(prefixUtRegionExtra.length).split(', ');
         this._addRegionLinksToElement(entry, regions);
       }
 
