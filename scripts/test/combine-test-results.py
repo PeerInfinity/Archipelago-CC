@@ -67,7 +67,10 @@ def is_multitemplate_structure(results: Dict[str, Any]) -> bool:
     if isinstance(first_value, dict):
         # Check if it looks like a template result (has 'generation' or 'spoiler_test' or 'ut_comparison')
         # or a game container (has template names as keys)
-        if 'generation' in first_value or 'spoiler_test' in first_value or 'multiclient_test' in first_value or 'multiworld_test' in first_value or 'ut_comparison' in first_value:
+        # Also check for world generator format ('original', 'test_world')
+        template_result_keys = {'generation', 'spoiler_test', 'multiclient_test', 'multiworld_test',
+                                'ut_comparison', 'original', 'test_world'}
+        if any(key in first_value for key in template_result_keys):
             return False
         # If values are dicts with these fields, it's multitemplate
         for value in first_value.values():
@@ -538,6 +541,9 @@ def _print_template_summary(template_name: str, result: Dict[str, Any], indent: 
             passed = result['multiclient_test'].get('success', False)
         elif 'multiworld_test' in result:
             passed = result['multiworld_test'].get('success', False)
+        elif 'original' in result:
+            # World generator format - check original generation success
+            passed = result.get('original', {}).get('generation', {}).get('success', False)
         else:
             passed = result.get('generation', {}).get('success', False)
 
