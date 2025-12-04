@@ -2,7 +2,7 @@
 Command-line interface for the world generator.
 
 Usage:
-    python -m exporter.converter.world_generator input.json [-o output_dir] [--force] [--dry-run]
+    python -m exporter.converter.world_generator input.json [-o output_dir] [--game-name NAME] [--force] [--dry-run]
 """
 
 import argparse
@@ -35,6 +35,9 @@ Examples:
   # Specify output directory
   python -m exporter.converter.world_generator input.json -o worlds/mygame/
 
+  # Rename the game (to avoid conflicts with existing worlds)
+  python -m exporter.converter.world_generator input.json --game-name "My Game Test"
+
   # Preview what would be generated
   python -m exporter.converter.world_generator input.json --dry-run
 
@@ -54,6 +57,13 @@ Examples:
         type=str,
         default=None,
         help='Output directory for generated world (default: worlds/<game_directory>/)'
+    )
+
+    parser.add_argument(
+        '--game-name',
+        type=str,
+        default=None,
+        help='Override the game name (useful to avoid conflicts with existing worlds)'
     )
 
     parser.add_argument(
@@ -99,6 +109,7 @@ Examples:
         generator = WorldGenerator(
             json_path=str(input_path),
             output_dir=args.output,
+            game_name=args.game_name,
             force=args.force,
         )
 

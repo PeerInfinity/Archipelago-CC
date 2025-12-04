@@ -51,38 +51,43 @@ python Generate.py --weights_file_path "Templates/Adventure.yaml" --multi 1 --se
 ### Step 2: Generate World from JSON
 
 ```bash
-# Generate the world package
+# Generate the world package with a new game name (to avoid conflicts)
 python -m exporter.converter.world_generator \
     frontend/presets/adventure/AP_Adventure/AP_Adventure_rules.json \
-    --output worlds/adventure_generated/
+    --output worlds/adventure_test/ \
+    --game-name "Adventure Test"
 
 # Expected output:
-# Created worlds/adventure_generated/__init__.py
-# Created worlds/adventure_generated/Items.py
-# Created worlds/adventure_generated/Locations.py
-# Created worlds/adventure_generated/Regions.py
-# Created worlds/adventure_generated/Rules.py
-# Created worlds/adventure_generated/Options.py
+# INFO: Renamed game from 'Adventure' to 'Adventure Test'
+# Created worlds/adventure_test/__init__.py
+# Created worlds/adventure_test/Items.py
+# Created worlds/adventure_test/Locations.py
+# Created worlds/adventure_test/Regions.py
+# Created worlds/adventure_test/Rules.py
+# Created worlds/adventure_test/Options.py
 # Generation complete!
 ```
 
-### Step 3: Create a Template YAML
-
-Create a player template file for testing:
-
-```yaml
-# Templates/Adventure Generated.yaml
-name: Player{number}
-game: Adventure Generated
-Adventure Generated:
-  randomize_items: true
+The `--game-name` parameter automatically renames the game and updates all class names to avoid conflicts with the original world. Without this, you would get:
 ```
+RuntimeError: Game Adventure already registered in worlds/adventure/__init__.py
+```
+
+### Step 3: Generate Template YAML
+
+Generate a player template file for the new world:
+
+```bash
+python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+```
+
+This creates `Players/Templates/Adventure Test.yaml` with all available options.
 
 ### Step 4: Test Generation
 
 ```bash
 # Generate a seed with the new world
-python Generate.py --weights_file_path "Templates/Adventure Generated.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Adventure Test.yaml" --multi 1 --seed 1
 ```
 
 ## Generated File Structure
@@ -149,8 +154,9 @@ def set_rules(world) -> None:
 ## CLI Reference
 
 ```
-usage: python -m exporter.converter.world_generator [-h] [-o OUTPUT] [--force]
-                                                     [--dry-run] input
+usage: python -m exporter.converter.world_generator [-h] [-o OUTPUT]
+                                                     [--game-name NAME]
+                                                     [--force] [--dry-run] input
 
 Generate Archipelago world from JSON rules file
 
@@ -161,6 +167,7 @@ optional arguments:
   -h, --help            show this help message and exit
   -o OUTPUT, --output OUTPUT
                         Output directory (default: worlds/{game_name}/)
+  --game-name NAME      Override the game name (to avoid conflicts)
   --force               Overwrite existing files
   --dry-run             Show what would be generated without writing files
 ```
@@ -170,6 +177,9 @@ optional arguments:
 ```bash
 # Generate to default location
 python -m exporter.converter.world_generator game_rules.json
+
+# Generate with a new game name (to avoid conflicts with existing worlds)
+python -m exporter.converter.world_generator game_rules.json --game-name "My Game Test"
 
 # Generate to specific directory
 python -m exporter.converter.world_generator game_rules.json -o worlds/my_game/
@@ -191,7 +201,8 @@ from exporter.converter.world_generator import WorldGenerator
 # Create generator
 generator = WorldGenerator(
     json_path="path/to/rules.json",
-    output_dir="worlds/my_game/"
+    output_dir="worlds/my_game/",
+    game_name="My Game Test"  # Optional: override game name
 )
 
 # Generate all files

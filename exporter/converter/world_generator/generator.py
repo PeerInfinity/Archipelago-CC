@@ -37,6 +37,7 @@ class WorldGenerator:
         self,
         json_path: str,
         output_dir: Optional[str] = None,
+        game_name: Optional[str] = None,
         force: bool = False,
     ):
         """
@@ -45,9 +46,11 @@ class WorldGenerator:
         Args:
             json_path: Path to the JSON rules file
             output_dir: Output directory for generated files. If None, derived from JSON.
+            game_name: Override the game name (useful to avoid conflicts with existing worlds)
             force: If True, overwrite existing files
         """
         self.json_path = Path(json_path)
+        self.game_name_override = game_name
         self.force = force
         self.data: Optional[ExtractedData] = None
         self._output_dir: Optional[Path] = Path(output_dir) if output_dir else None
@@ -76,11 +79,31 @@ class WorldGenerator:
 
         self.data = extract_all(json_data)
 
+        # Apply game name override if specified
+        if self.game_name_override:
+            self._apply_game_name_override(self.game_name_override)
+
         logger.info(f"Extracted: {len(self.data.items)} items, "
                    f"{len(self.data.locations)} locations, "
                    f"{len(self.data.regions)} regions")
 
         return self.data
+
+    def _apply_game_name_override(self, new_name: str) -> None:
+        """Apply a game name override to the extracted metadata."""
+        old_name = self.data.metadata.game_name
+
+        # Update game name
+        self.data.metadata.game_name = new_name
+
+        # Update world class name: "My Game Test" -> "MyGameTestWorld"
+        class_base = new_name.replace(' ', '').replace('-', '')
+        self.data.metadata.world_class_name = class_base + 'World'
+
+        # Update game directory: "My Game Test" -> "my_game_test"
+        self.data.metadata.game_directory = new_name.lower().replace(' ', '_').replace('-', '_')
+
+        logger.info(f"Renamed game from '{old_name}' to '{new_name}'")
 
     def generate(self, dry_run: bool = False) -> None:
         """
