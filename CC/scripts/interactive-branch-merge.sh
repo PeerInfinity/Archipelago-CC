@@ -204,11 +204,11 @@ perform_merge_only() {
         echo
 
         # Ask if user wants to clean temporary files
-        read -p "Do you want to clean temporary files? [Y/n]: " clean_confirm
+        read -p "Do you want to clean temporary files? [y/N]: " clean_confirm
 
-        # Default to Y if user just presses enter
+        # Default to N if user just presses enter
         if [ -z "$clean_confirm" ]; then
-            clean_confirm="Y"
+            clean_confirm="N"
         fi
 
         if [[ "$clean_confirm" =~ ^[Yy]$ ]]; then
@@ -396,11 +396,11 @@ fetch_and_merge() {
         echo
 
         # Ask if user wants to clean temporary files
-        read -p "Do you want to clean temporary files? [Y/n]: " clean_confirm
+        read -p "Do you want to clean temporary files? [y/N]: " clean_confirm
 
-        # Default to Y if user just presses enter
+        # Default to N if user just presses enter
         if [ -z "$clean_confirm" ]; then
-            clean_confirm="Y"
+            clean_confirm="N"
         fi
 
         if [[ "$clean_confirm" =~ ^[Yy]$ ]]; then
