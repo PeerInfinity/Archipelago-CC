@@ -10,16 +10,16 @@ The World Generator automates the process of converting a JSON rules file (expor
 
 ```bash
 # Basic usage - generate world to default location (worlds/{game_name}/)
-python -m exporter.converter.world_generator path/to/rules.json
+python -m world_generator path/to/rules.json
 
 # Specify output directory
-python -m exporter.converter.world_generator rules.json --output worlds/mygame/
+python -m world_generator rules.json --output worlds/mygame/
 
 # Force overwrite existing files
-python -m exporter.converter.world_generator rules.json --output worlds/mygame/ --force
+python -m world_generator rules.json --output worlds/mygame/ --force
 
 # Dry run - see what would be generated without writing files
-python -m exporter.converter.world_generator rules.json --dry-run
+python -m world_generator rules.json --dry-run
 ```
 
 ### Test the Generated World
@@ -52,7 +52,7 @@ python Generate.py --weights_file_path "Templates/Adventure.yaml" --multi 1 --se
 
 ```bash
 # Generate the world package with a new game name (to avoid conflicts)
-python -m exporter.converter.world_generator \
+python -m world_generator \
     frontend/presets/adventure/AP_Adventure/AP_Adventure_rules.json \
     --output worlds/adventure_test/ \
     --game-name "Adventure Test"
@@ -154,7 +154,7 @@ def set_rules(world) -> None:
 ## CLI Reference
 
 ```
-usage: python -m exporter.converter.world_generator [-h] [-o OUTPUT]
+usage: python -m world_generator [-h] [-o OUTPUT]
                                                      [--game-name NAME]
                                                      [--force] [--dry-run]
                                                      [--canonical-seed1] input
@@ -179,22 +179,22 @@ optional arguments:
 
 ```bash
 # Generate to default location
-python -m exporter.converter.world_generator game_rules.json
+python -m world_generator game_rules.json
 
 # Generate with a new game name (to avoid conflicts with existing worlds)
-python -m exporter.converter.world_generator game_rules.json --game-name "My Game Test"
+python -m world_generator game_rules.json --game-name "My Game Test"
 
 # Generate to specific directory
-python -m exporter.converter.world_generator game_rules.json -o worlds/my_game/
+python -m world_generator game_rules.json -o worlds/my_game/
 
 # Preview generation without writing
-python -m exporter.converter.world_generator game_rules.json --dry-run
+python -m world_generator game_rules.json --dry-run
 
 # Overwrite existing world
-python -m exporter.converter.world_generator game_rules.json -o worlds/my_game/ --force
+python -m world_generator game_rules.json -o worlds/my_game/ --force
 
 # Enable canonical placement for seed=1 (for testing/validation)
-python -m exporter.converter.world_generator game_rules.json --canonical-seed1
+python -m world_generator game_rules.json --canonical-seed1
 ```
 
 ## Python API
@@ -202,7 +202,7 @@ python -m exporter.converter.world_generator game_rules.json --canonical-seed1
 ### Basic Usage
 
 ```python
-from exporter.converter.world_generator import WorldGenerator
+from world_generator import WorldGenerator
 
 # Create generator
 generator = WorldGenerator(
@@ -219,7 +219,7 @@ generator.generate()
 ### Accessing Extracted Data
 
 ```python
-from exporter.converter.world_generator import WorldGenerator
+from world_generator import WorldGenerator
 
 generator = WorldGenerator("rules.json", "worlds/my_game/")
 
@@ -300,7 +300,7 @@ The generator maps JSON item flags to Archipelago classifications:
 By default, generated worlds always randomize items. However, you can enable "canonical placement" mode using the `--canonical-seed1` flag:
 
 ```bash
-python -m exporter.converter.world_generator game_rules.json --canonical-seed1
+python -m world_generator game_rules.json --canonical-seed1
 ```
 
 When this flag is enabled, the generated world will:
@@ -375,7 +375,7 @@ This is required because the Rule Builder's caching system uses `CollectionState
 The world generator is located at:
 
 ```
-exporter/converter/world_generator/
+world_generator/
 ├── __init__.py      # Module exports
 ├── __main__.py      # Entry point for python -m
 ├── generator.py     # Main WorldGenerator class

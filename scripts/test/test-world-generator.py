@@ -279,7 +279,7 @@ def run_world_generator(
     }
 
     cmd = [
-        sys.executable, '-m', 'exporter.converter.world_generator',
+        sys.executable, '-m', 'world_generator',
         rules_path,
         '--output', output_dir,
         '--game-name', game_name,
