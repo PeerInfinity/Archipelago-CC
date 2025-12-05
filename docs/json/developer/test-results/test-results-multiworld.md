@@ -4,14 +4,14 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-12-03 20:36:57
+**Generated:** 2025-12-05 09:39:24
 
 ## Summary
 
-- **Total Games:** 78
-- **Passed:** 74 (94.9%)
-- **Failed:** 3 (3.8%)
-- **Skipped (Prerequisites):** 1 (1.3%)
+- **Total Games:** 81
+- **Passed:** 79 (97.5%)
+- **Failed:** 0 (0.0%)
+- **Skipped (Prerequisites):** 2 (2.5%)
 
 ## Test Results
 
@@ -22,6 +22,7 @@
 | A Short Hike | ✅ Passed | 3 | 3 | 1 | 0 | ✅ | ⚫ |
 | APQuest | ✅ Passed | 4 | 4 | 1 | 0 | ⚫ | ⚫ |
 | Adventure | ✅ Passed | 5 | 5 | 1 | 0 | ✅ | ⚫ |
+| Adventure Test | ⚫ Skipped | 5 | N/A | N/A | N/A | ⚫ | ⚫ |
 | Aquaria | ✅ Passed | 6 | 6 | 1 | 0 | ✅ | ✅ |
 | Blasphemous | ✅ Passed | 7 | 7 | 1 | 0 | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | 8 | 8 | 1 | 0 | ✅ | ⚫ |
@@ -74,12 +75,14 @@
 | Shivers | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ⚫ |
 | Starcraft 2 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
-| Stardew Valley | ❌ Failed | 10 | 10 | 0 | 1 | ✅ | ⚫ |
+| Stardew Valley | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ⚫ |
 | Subnautica | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Super Mario World | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ⚫ |
-| Super Metroid | ❌ Failed | 10 | 10 | 0 | 1 | ✅ | ✅ |
+| Super Metroid | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
+| TOEM original | ✅ Passed | 10 | 10 | 1 | 0 | ⚫ | ⚫ |
+| TOEM rule builder | ✅ Passed | 10 | 10 | 1 | 0 | ⚫ | ⚫ |
 | TUNIC | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ⚫ |
 | Terraria | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | The Legend of Zelda | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
@@ -91,7 +94,7 @@
 | VVVVVV | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Wargroove | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | WebDevJourney | ✅ Passed | 10 | 10 | 1 | 0 | ⚫ | ⚫ |
-| Yacht Dice | ❌ Failed | 10 | 10 | 0 | 1 | ✅ | ✅ |
+| Yacht Dice | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | Yu-Gi-Oh! 2006 | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
 | shapez | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ✅ |
@@ -915,21 +918,6 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
-| 2 | Pokemon Red and Blue.yaml |
-| 3 | Raft.yaml |
-| 4 | Risk of Rain 2.yaml |
-| 5 | Saving Princess.yaml |
-| 6 | Secret of Evermore.yaml |
-| 7 | Shivers.yaml |
-| 8 | Sonic Adventure 2 Battle.yaml |
-| 9 | Starcraft 2.yaml |
-| 10 | Subnautica.yaml |
-
-### Super Mario 64
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Short Hike.yaml |
 | 2 | Raft.yaml |
 | 3 | Risk of Rain 2.yaml |
 | 4 | Saving Princess.yaml |
@@ -937,10 +925,10 @@ Shows which templates were in the multiworld when each game was tested:
 | 6 | Shivers.yaml |
 | 7 | Sonic Adventure 2 Battle.yaml |
 | 8 | Starcraft 2.yaml |
-| 9 | Subnautica.yaml |
-| 10 | Super Mario 64.yaml |
+| 9 | Stardew Valley.yaml |
+| 10 | Subnautica.yaml |
 
-### Super Mario Land 2
+### Super Mario 64
 
 | Player # | Template |
 |----------|----------|
@@ -951,6 +939,21 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Shivers.yaml |
 | 6 | Sonic Adventure 2 Battle.yaml |
 | 7 | Starcraft 2.yaml |
+| 8 | Stardew Valley.yaml |
+| 9 | Subnautica.yaml |
+| 10 | Super Mario 64.yaml |
+
+### Super Mario Land 2
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Short Hike.yaml |
+| 2 | Saving Princess.yaml |
+| 3 | Secret of Evermore.yaml |
+| 4 | Shivers.yaml |
+| 5 | Sonic Adventure 2 Battle.yaml |
+| 6 | Starcraft 2.yaml |
+| 7 | Stardew Valley.yaml |
 | 8 | Subnautica.yaml |
 | 9 | Super Mario 64.yaml |
 | 10 | Super Mario Land 2.yaml |
@@ -960,12 +963,12 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
-| 2 | Risk of Rain 2.yaml |
-| 3 | Saving Princess.yaml |
-| 4 | Secret of Evermore.yaml |
-| 5 | Shivers.yaml |
-| 6 | Sonic Adventure 2 Battle.yaml |
-| 7 | Starcraft 2.yaml |
+| 2 | Saving Princess.yaml |
+| 3 | Secret of Evermore.yaml |
+| 4 | Shivers.yaml |
+| 5 | Sonic Adventure 2 Battle.yaml |
+| 6 | Starcraft 2.yaml |
+| 7 | Stardew Valley.yaml |
 | 8 | Subnautica.yaml |
 | 9 | Super Mario 64.yaml |
 | 10 | Super Mario World.yaml |
@@ -978,44 +981,14 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Saving Princess.yaml |
 | 3 | Secret of Evermore.yaml |
 | 4 | Shivers.yaml |
-| 5 | Sonic Adventure 2 Battle.yaml |
-| 6 | Starcraft 2.yaml |
+| 5 | Starcraft 2.yaml |
+| 6 | Stardew Valley.yaml |
 | 7 | Subnautica.yaml |
 | 8 | Super Mario 64.yaml |
 | 9 | Super Mario World.yaml |
 | 10 | Super Metroid.yaml |
 
-### TUNIC
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Short Hike.yaml |
-| 2 | Saving Princess.yaml |
-| 3 | Secret of Evermore.yaml |
-| 4 | Shivers.yaml |
-| 5 | Sonic Adventure 2 Battle.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | Subnautica.yaml |
-| 8 | Super Mario 64.yaml |
-| 9 | Super Mario World.yaml |
-| 10 | TUNIC.yaml |
-
-### Terraria
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Short Hike.yaml |
-| 2 | Saving Princess.yaml |
-| 3 | Secret of Evermore.yaml |
-| 4 | Shivers.yaml |
-| 5 | Starcraft 2.yaml |
-| 6 | Subnautica.yaml |
-| 7 | Super Mario 64.yaml |
-| 8 | Super Mario World.yaml |
-| 9 | TUNIC.yaml |
-| 10 | Terraria.yaml |
-
-### The Legend of Zelda
+### TOEM original
 
 | Player # | Template |
 |----------|----------|
@@ -1023,9 +996,69 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Secret of Evermore.yaml |
 | 3 | Shivers.yaml |
 | 4 | Starcraft 2.yaml |
+| 5 | Stardew Valley.yaml |
+| 6 | Subnautica.yaml |
+| 7 | Super Mario 64.yaml |
+| 8 | Super Mario World.yaml |
+| 9 | Super Metroid.yaml |
+| 10 | TOEM original.yaml |
+
+### TOEM rule builder
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Short Hike.yaml |
+| 2 | Secret of Evermore.yaml |
+| 3 | Shivers.yaml |
+| 4 | Stardew Valley.yaml |
 | 5 | Subnautica.yaml |
 | 6 | Super Mario 64.yaml |
 | 7 | Super Mario World.yaml |
+| 8 | Super Metroid.yaml |
+| 9 | TOEM original.yaml |
+| 10 | TOEM rule builder.yaml |
+
+### TUNIC
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Short Hike.yaml |
+| 2 | Secret of Evermore.yaml |
+| 3 | Stardew Valley.yaml |
+| 4 | Subnautica.yaml |
+| 5 | Super Mario 64.yaml |
+| 6 | Super Mario World.yaml |
+| 7 | Super Metroid.yaml |
+| 8 | TOEM original.yaml |
+| 9 | TOEM rule builder.yaml |
+| 10 | TUNIC.yaml |
+
+### Terraria
+
+| Player # | Template |
+|----------|----------|
+| 1 | Secret of Evermore.yaml |
+| 2 | Stardew Valley.yaml |
+| 3 | Subnautica.yaml |
+| 4 | Super Mario 64.yaml |
+| 5 | Super Mario World.yaml |
+| 6 | Super Metroid.yaml |
+| 7 | TOEM original.yaml |
+| 8 | TOEM rule builder.yaml |
+| 9 | TUNIC.yaml |
+| 10 | Terraria.yaml |
+
+### The Legend of Zelda
+
+| Player # | Template |
+|----------|----------|
+| 1 | Secret of Evermore.yaml |
+| 2 | Stardew Valley.yaml |
+| 3 | Subnautica.yaml |
+| 4 | Super Mario 64.yaml |
+| 5 | Super Mario World.yaml |
+| 6 | TOEM original.yaml |
+| 7 | TOEM rule builder.yaml |
 | 8 | TUNIC.yaml |
 | 9 | Terraria.yaml |
 | 10 | The Legend of Zelda.yaml |
@@ -1034,12 +1067,12 @@ Shows which templates were in the multiworld when each game was tested:
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Short Hike.yaml |
-| 2 | Secret of Evermore.yaml |
-| 3 | Shivers.yaml |
-| 4 | Subnautica.yaml |
-| 5 | Super Mario 64.yaml |
-| 6 | Super Mario World.yaml |
+| 1 | Secret of Evermore.yaml |
+| 2 | Stardew Valley.yaml |
+| 3 | Subnautica.yaml |
+| 4 | Super Mario World.yaml |
+| 5 | TOEM original.yaml |
+| 6 | TOEM rule builder.yaml |
 | 7 | TUNIC.yaml |
 | 8 | Terraria.yaml |
 | 9 | The Legend of Zelda.yaml |
@@ -1049,12 +1082,12 @@ Shows which templates were in the multiworld when each game was tested:
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Short Hike.yaml |
-| 2 | Secret of Evermore.yaml |
-| 3 | Shivers.yaml |
-| 4 | Subnautica.yaml |
-| 5 | Super Mario 64.yaml |
-| 6 | Super Mario World.yaml |
+| 1 | Secret of Evermore.yaml |
+| 2 | Stardew Valley.yaml |
+| 3 | Subnautica.yaml |
+| 4 | Super Mario World.yaml |
+| 5 | TOEM original.yaml |
+| 6 | TOEM rule builder.yaml |
 | 7 | TUNIC.yaml |
 | 8 | Terraria.yaml |
 | 9 | The Legend of Zelda.yaml |
@@ -1064,11 +1097,11 @@ Shows which templates were in the multiworld when each game was tested:
 
 | Player # | Template |
 |----------|----------|
-| 1 | A Short Hike.yaml |
-| 2 | Secret of Evermore.yaml |
+| 1 | Secret of Evermore.yaml |
+| 2 | Stardew Valley.yaml |
 | 3 | Subnautica.yaml |
-| 4 | Super Mario 64.yaml |
-| 5 | Super Mario World.yaml |
+| 4 | TOEM original.yaml |
+| 5 | TOEM rule builder.yaml |
 | 6 | TUNIC.yaml |
 | 7 | Terraria.yaml |
 | 8 | The Legend of Zelda.yaml |
@@ -1079,10 +1112,10 @@ Shows which templates were in the multiworld when each game was tested:
 
 | Player # | Template |
 |----------|----------|
-| 1 | Secret of Evermore.yaml |
+| 1 | Stardew Valley.yaml |
 | 2 | Subnautica.yaml |
-| 3 | Super Mario 64.yaml |
-| 4 | Super Mario World.yaml |
+| 3 | TOEM original.yaml |
+| 4 | TOEM rule builder.yaml |
 | 5 | TUNIC.yaml |
 | 6 | Terraria.yaml |
 | 7 | The Legend of Zelda.yaml |
@@ -1094,9 +1127,9 @@ Shows which templates were in the multiworld when each game was tested:
 
 | Player # | Template |
 |----------|----------|
-| 1 | Secret of Evermore.yaml |
-| 2 | Subnautica.yaml |
-| 3 | Super Mario World.yaml |
+| 1 | Subnautica.yaml |
+| 2 | TOEM original.yaml |
+| 3 | TOEM rule builder.yaml |
 | 4 | TUNIC.yaml |
 | 5 | Terraria.yaml |
 | 6 | The Legend of Zelda.yaml |
@@ -1109,8 +1142,8 @@ Shows which templates were in the multiworld when each game was tested:
 
 | Player # | Template |
 |----------|----------|
-| 1 | Secret of Evermore.yaml |
-| 2 | Subnautica.yaml |
+| 1 | TOEM original.yaml |
+| 2 | TOEM rule builder.yaml |
 | 3 | TUNIC.yaml |
 | 4 | Terraria.yaml |
 | 5 | The Legend of Zelda.yaml |
@@ -1124,9 +1157,9 @@ Shows which templates were in the multiworld when each game was tested:
 
 | Player # | Template |
 |----------|----------|
-| 1 | Subnautica.yaml |
-| 2 | TUNIC.yaml |
-| 3 | Terraria.yaml |
+| 1 | TOEM original.yaml |
+| 2 | TOEM rule builder.yaml |
+| 3 | TUNIC.yaml |
 | 4 | The Legend of Zelda.yaml |
 | 5 | The Wind Waker.yaml |
 | 6 | The Witness.yaml |
@@ -1139,12 +1172,12 @@ Shows which templates were in the multiworld when each game was tested:
 
 | Player # | Template |
 |----------|----------|
-| 1 | TUNIC.yaml |
-| 2 | Terraria.yaml |
-| 3 | The Legend of Zelda.yaml |
-| 4 | The Wind Waker.yaml |
-| 5 | The Witness.yaml |
-| 6 | Timespinner.yaml |
+| 1 | TOEM original.yaml |
+| 2 | TOEM rule builder.yaml |
+| 3 | TUNIC.yaml |
+| 4 | The Legend of Zelda.yaml |
+| 5 | The Wind Waker.yaml |
+| 6 | The Witness.yaml |
 | 7 | Undertale.yaml |
 | 8 | VVVVVV.yaml |
 | 9 | Wargroove.yaml |
@@ -1154,12 +1187,12 @@ Shows which templates were in the multiworld when each game was tested:
 
 | Player # | Template |
 |----------|----------|
-| 1 | TUNIC.yaml |
-| 2 | Terraria.yaml |
-| 3 | The Legend of Zelda.yaml |
-| 4 | The Wind Waker.yaml |
-| 5 | The Witness.yaml |
-| 6 | Timespinner.yaml |
+| 1 | TOEM original.yaml |
+| 2 | TOEM rule builder.yaml |
+| 3 | TUNIC.yaml |
+| 4 | The Legend of Zelda.yaml |
+| 5 | The Wind Waker.yaml |
+| 6 | The Witness.yaml |
 | 7 | Undertale.yaml |
 | 8 | VVVVVV.yaml |
 | 9 | Wargroove.yaml |
@@ -1169,29 +1202,29 @@ Shows which templates were in the multiworld when each game was tested:
 
 | Player # | Template |
 |----------|----------|
-| 1 | TUNIC.yaml |
-| 2 | Terraria.yaml |
-| 3 | The Legend of Zelda.yaml |
+| 1 | TOEM original.yaml |
+| 2 | TOEM rule builder.yaml |
+| 3 | TUNIC.yaml |
 | 4 | The Wind Waker.yaml |
 | 5 | The Witness.yaml |
-| 6 | Timespinner.yaml |
-| 7 | Undertale.yaml |
-| 8 | VVVVVV.yaml |
-| 9 | Wargroove.yaml |
+| 6 | Undertale.yaml |
+| 7 | VVVVVV.yaml |
+| 8 | Wargroove.yaml |
+| 9 | Yacht Dice.yaml |
 | 10 | Yoshi's Island.yaml |
 
 ### Yu-Gi-Oh! 2006
 
 | Player # | Template |
 |----------|----------|
-| 1 | TUNIC.yaml |
-| 2 | The Legend of Zelda.yaml |
+| 1 | TOEM rule builder.yaml |
+| 2 | TUNIC.yaml |
 | 3 | The Wind Waker.yaml |
 | 4 | The Witness.yaml |
-| 5 | Timespinner.yaml |
-| 6 | Undertale.yaml |
-| 7 | VVVVVV.yaml |
-| 8 | Wargroove.yaml |
+| 5 | Undertale.yaml |
+| 6 | VVVVVV.yaml |
+| 7 | Wargroove.yaml |
+| 8 | Yacht Dice.yaml |
 | 9 | Yoshi's Island.yaml |
 | 10 | Yu-Gi-Oh! 2006.yaml |
 
@@ -1200,68 +1233,15 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | TUNIC.yaml |
-| 2 | The Legend of Zelda.yaml |
-| 3 | The Wind Waker.yaml |
-| 4 | The Witness.yaml |
-| 5 | Undertale.yaml |
-| 6 | VVVVVV.yaml |
-| 7 | Wargroove.yaml |
+| 2 | The Wind Waker.yaml |
+| 3 | The Witness.yaml |
+| 4 | Undertale.yaml |
+| 5 | VVVVVV.yaml |
+| 6 | Wargroove.yaml |
+| 7 | Yacht Dice.yaml |
 | 8 | Yoshi's Island.yaml |
 | 9 | Yu-Gi-Oh! 2006.yaml |
 | 10 | shapez.yaml |
-
-
-## Bisection Results
-
-When a multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
-
-### Stardew Valley (Stardew Valley.yaml)
-
-**Failing pairs found:** 9
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| A Short Hike.yaml | ❌ | ✅ | ✅ | ❌ |
-| Pokemon Red and Blue.yaml | ❌ | ✅ | ✅ | ❌ |
-| Raft.yaml | ❌ | ✅ | ✅ | ❌ |
-| Risk of Rain 2.yaml | ❌ | ✅ | ✅ | ❌ |
-| Saving Princess.yaml | ❌ | ✅ | ✅ | ❌ |
-| Secret of Evermore.yaml | ❌ | ✅ | ✅ | ❌ |
-| Shivers.yaml | ❌ | ✅ | ✅ | ❌ |
-| Sonic Adventure 2 Battle.yaml | ❌ | ✅ | ✅ | ❌ |
-| Starcraft 2.yaml | ❌ | ✅ | ✅ | ❌ |
-
-### Super Metroid (Super Metroid.yaml)
-
-**Failing pairs found:** 6
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| A Short Hike.yaml | ✅ | ✅ | ✅ | ✅ |
-| Saving Princess.yaml | ✅ | ✅ | ✅ | ✅ |
-| Secret of Evermore.yaml | ❌ | ✅ | ✅ | ❌ |
-| Shivers.yaml | ❌ | ✅ | ✅ | ❌ |
-| Sonic Adventure 2 Battle.yaml | ✅ | ✅ | ✅ | ✅ |
-| Starcraft 2.yaml | ❌ | ✅ | ✅ | ❌ |
-| Subnautica.yaml | ❌ | ✅ | ✅ | ❌ |
-| Super Mario 64.yaml | ❌ | ✅ | ✅ | ❌ |
-| Super Mario World.yaml | ❌ | ✅ | ✅ | ❌ |
-
-### Yacht Dice (Yacht Dice.yaml)
-
-**No failing pairs found** (failure may be due to combination of 3+ templates)
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| TUNIC.yaml | ✅ | ✅ | ✅ | ✅ |
-| Terraria.yaml | ✅ | ✅ | ✅ | ✅ |
-| The Legend of Zelda.yaml | ✅ | ✅ | ✅ | ✅ |
-| The Wind Waker.yaml | ✅ | ✅ | ✅ | ✅ |
-| The Witness.yaml | ✅ | ✅ | ✅ | ✅ |
-| Timespinner.yaml | ✅ | ✅ | ✅ | ✅ |
-| Undertale.yaml | ✅ | ✅ | ✅ | ✅ |
-| VVVVVV.yaml | ✅ | ✅ | ✅ | ✅ |
-| Wargroove.yaml | ✅ | ✅ | ✅ | ✅ |
 
 
 ## Notes

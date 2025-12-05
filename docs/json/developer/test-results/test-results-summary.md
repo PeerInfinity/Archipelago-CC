@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-03 20:36:57
+**Generated:** 2025-12-05 09:39:24
 
 This summary combines results from 4 types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -16,10 +16,10 @@ Additional test results:
 
 ### Individual Test Results
 
-- **Minimal Test:** 78/78 passed (100.0%)
-- **Full Test:** 78/78 passed (100.0%)
-- **Multiclient Test:** 77/78 passed (98.7%)
-- **Multiworld Test:** 74/78 passed (94.9%)
+- **Minimal Test:** 80/81 passed (98.8%)
+- **Full Test:** 80/81 passed (98.8%)
+- **Multiclient Test:** 79/81 passed (97.5%)
+- **Multiworld Test:** 79/81 passed (97.5%)
 
 ### Intermittent Failures
 
@@ -28,11 +28,11 @@ Additional test results:
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 74/78 (94.9%)
-- **Templates passing 3 tests:** 3/78 (3.8%)
-- **Templates passing 2 tests:** 1/78 (1.3%)
-- **Templates passing 1 test:** 0/78 (0.0%)
-- **Templates passing 0 tests:** 0/78 (0.0%)
+- **Templates passing all 4 tests:** 79/81 (97.5%)
+- **Templates passing 3 tests:** 0/81 (0.0%)
+- **Templates passing 2 tests:** 1/81 (1.2%)
+- **Templates passing 1 test:** 0/81 (0.0%)
+- **Templates passing 0 tests:** 1/81 (1.2%)
 
 ## Test Results
 
@@ -43,6 +43,7 @@ Additional test results:
 | A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | APQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ⚫ | ⚫ |
 | Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
+| Adventure Test | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ | ⚫ | ⚫ |
 | Aquaria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Blasphemous | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
@@ -95,12 +96,14 @@ Additional test results:
 | Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Starcraft 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Stardew Valley | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ⚫ |
+| Stardew Valley | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Subnautica | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Super Mario World | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
-| Super Metroid | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ |
+| Super Metroid | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| TOEM original | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ⚫ | ⚫ |
+| TOEM rule builder | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ⚫ | ⚫ |
 | TUNIC | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ⚫ |
 | Terraria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
@@ -112,7 +115,7 @@ Additional test results:
 | VVVVVV | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Wargroove | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | WebDevJourney | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ⚫ | ⚫ |
-| Yacht Dice | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ |
+| Yacht Dice | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Yu-Gi-Oh! 2006 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | shapez | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |

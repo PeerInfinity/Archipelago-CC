@@ -4,13 +4,13 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-12-03 20:36:57
+**Generated:** 2025-12-05 09:39:24
 
 ## Summary
 
-- **Total Games:** 78
-- **Passed:** 77 (98.7%)
-- **Failed:** 1 (1.3%)
+- **Total Games:** 81
+- **Passed:** 79 (97.5%)
+- **Failed:** 2 (2.5%)
 
 ## Test Results
 
@@ -21,6 +21,7 @@
 | A Short Hike | ✅ Passed | 0 | ✅ | 131/131 | 131/131 | 0/0 | ✅ | 131/131 | ✅ | ⚫ |
 | APQuest | ✅ Passed | 0 | ✅ | 8/8 | 6/6 | 2/2 | ✅ | 8/8 | ⚫ | ⚫ |
 | Adventure | ✅ Passed | 0 | ✅ | 25/25 | 24/24 | 1/1 | ✅ | 25/25 | ✅ | ⚫ |
+| Adventure Test | ❌ Failed | 3 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ⚫ | ⚫ |
 | Aquaria | ✅ Passed | 0 | ✅ | 237/237 | 218/218 | 19/19 | ✅ | 237/237 | ✅ | ✅ |
 | Blasphemous | ✅ Passed | 0 | ✅ | 305/305 | 304/304 | 1/1 | ✅ | 305/305 | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | 0 | ✅ | 252/252 | 247/247 | 5/5 | ✅ | 252/252 | ✅ | ⚫ |
@@ -79,6 +80,8 @@
 | Super Mario Land 2 | ✅ Passed | 0 | ✅ | 60/60 | 59/59 | 7/7 | ✅ | 60/60 | ✅ | ✅ |
 | Super Mario World | ✅ Passed | 0 | ✅ | 108/108 | 108/108 | 0/0 | ✅ | 108/108 | ✅ | ⚫ |
 | Super Metroid | ✅ Passed | 0 | ✅ | 109/109 | 101/101 | 9/9 | ✅ | 109/109 | ✅ | ✅ |
+| TOEM original | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ⚫ | ⚫ |
+| TOEM rule builder | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ⚫ | ⚫ |
 | TUNIC | ✅ Passed | 0 | ✅ | 317/317 | 302/302 | 15/15 | ✅ | 317/317 | ✅ | ⚫ |
 | Terraria | ✅ Passed | 0 | ✅ | 244/244 | 63/63 | 181/181 | ✅ | 244/244 | ✅ | ✅ |
 | The Legend of Zelda | ✅ Passed | 0 | ✅ | 165/165 | 155/155 | 10/10 | ✅ | 165/165 | ✅ | ✅ |
