@@ -101,9 +101,9 @@
               ]
             },
             "item": {
-              "name": "Slow Rhindle",
+              "name": "Yellow Key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -130,9 +130,9 @@
               "value": true
             },
             "item": {
-              "name": "White Key",
+              "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -196,9 +196,9 @@
               "value": true
             },
             "item": {
-              "name": "Chalice",
+              "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -272,7 +272,7 @@
               "value": true
             },
             "item": {
-              "name": "Slow Grundle",
+              "name": "Freeincarnate",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -286,9 +286,9 @@
               "value": true
             },
             "item": {
-              "name": "Black Key",
+              "name": "Left Difficulty Switch",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -300,7 +300,7 @@
               "value": true
             },
             "item": {
-              "name": "Left Difficulty Switch",
+              "name": "Freeincarnate",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -314,9 +314,9 @@
               "value": true
             },
             "item": {
-              "name": "Slow Yorgle",
+              "name": "Chalice",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -365,7 +365,7 @@
               ]
             },
             "item": {
-              "name": "Freeincarnate",
+              "name": "Slow Yorgle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -393,7 +393,7 @@
               "value": true
             },
             "item": {
-              "name": "Freeincarnate",
+              "name": "Slow Grundle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -407,9 +407,9 @@
               "value": true
             },
             "item": {
-              "name": "Freeincarnate",
+              "name": "Magnet",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -421,9 +421,9 @@
               "value": true
             },
             "item": {
-              "name": "Freeincarnate",
+              "name": "Black Key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -489,7 +489,7 @@
               "value": true
             },
             "item": {
-              "name": "Freeincarnate",
+              "name": "Slow Rhindle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -570,9 +570,9 @@
               ]
             },
             "item": {
-              "name": "Yellow Key",
+              "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -622,7 +622,7 @@
               "value": true
             },
             "item": {
-              "name": "Magnet",
+              "name": "White Key",
               "player": 1,
               "advancement": true,
               "type": "None"
