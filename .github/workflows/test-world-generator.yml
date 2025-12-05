@@ -123,6 +123,12 @@ jobs:
           source .venv/bin/activate
           python ModuleUpdate.py --yes
 
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py minimal-spoilers
+
       - name: Setup - Clean test artifacts and generate templates
         if: matrix.split_num == 1
         run: |
