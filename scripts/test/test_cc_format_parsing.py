@@ -280,6 +280,9 @@ def main():
         ("checksfinder", "ChecksFinder"),
         ("aquaria", "Aquaria"),
         ("landstalker", "Landstalker - The Treasures of King Nole"),
+        ("bomb_rush_cyberfunk", "Bomb Rush Cyberfunk"),
+        ("ffmq", "Final Fantasy Mystic Quest"),
+        ("kdl3", "Kirby's Dream Land 3"),
     ]
 
     for game_dir, game_name in games_to_test:

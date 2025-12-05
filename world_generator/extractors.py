@@ -5,8 +5,17 @@ These functions extract structured data from the JSON rules file format
 and prepare it for code generation.
 """
 
+import re
 from typing import Any, Dict, List, Optional, Tuple
 from dataclasses import dataclass, field
+
+
+def sanitize_identifier(name: str) -> str:
+    """Sanitize a name to be a valid Python identifier.
+
+    Removes all characters that are not alphanumeric (keeps letters and digits).
+    """
+    return re.sub(r'[^a-zA-Z0-9]', '', name)
 
 
 @dataclass
@@ -88,7 +97,7 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
 
     if not world_class_name:
         # Derive from game name: "My Game" -> "MyGameWorld"
-        world_class_name = game_name.replace(' ', '').replace('-', '') + 'World'
+        world_class_name = sanitize_identifier(game_name) + 'World'
 
     return GameMetadata(
         game_name=game_name,

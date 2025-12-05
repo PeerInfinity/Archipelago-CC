@@ -5,15 +5,24 @@ Each template function takes extracted data and returns the Python source code
 for that file.
 """
 
+import re
 from typing import Dict, List, Set
 from .extractors import ExtractedData, ItemData, LocationData, ExitData
 from .rule_codegen import RuleCodeGenerator, is_trivial_rule
 
 
+def sanitize_class_name(name: str) -> str:
+    """Sanitize a name to be a valid Python identifier.
+
+    Removes all characters that are not alphanumeric (keeps letters and digits).
+    """
+    return re.sub(r'[^a-zA-Z0-9]', '', name)
+
+
 def generate_items_py(data: ExtractedData) -> str:
     """Generate Items.py file content."""
     game_name = data.metadata.game_name
-    class_name = game_name.replace(' ', '').replace('-', '')
+    class_name = sanitize_class_name(game_name)
 
     # Build item table entries
     item_entries = []
@@ -62,7 +71,7 @@ item_table: Dict[str, ItemData] = {{
 def generate_locations_py(data: ExtractedData) -> str:
     """Generate Locations.py file content."""
     game_name = data.metadata.game_name
-    class_name = game_name.replace(' ', '').replace('-', '')
+    class_name = sanitize_class_name(game_name)
 
     # Build location table entries
     location_entries = []
@@ -112,7 +121,7 @@ location_table: Dict[str, LocationData] = {{
 def generate_regions_py(data: ExtractedData) -> str:
     """Generate Regions.py file content."""
     game_name = data.metadata.game_name
-    class_name = game_name.replace(' ', '').replace('-', '')
+    class_name = sanitize_class_name(game_name)
 
     # Build region list - always include Menu (required by Archipelago)
     region_names_set = set(data.regions.keys())
@@ -270,7 +279,7 @@ def set_rules(world: "World") -> None:
 def generate_options_py(data: ExtractedData) -> str:
     """Generate Options.py file content."""
     game_name = data.metadata.game_name
-    class_name = game_name.replace(' ', '').replace('-', '')
+    class_name = sanitize_class_name(game_name)
 
     return f'''"""
 Game options for {game_name}.
@@ -306,7 +315,7 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
         canonical_seed1: If True, include seed=1 canonical placement behavior
     """
     game_name = data.metadata.game_name
-    class_name = game_name.replace(' ', '').replace('-', '')
+    class_name = sanitize_class_name(game_name)
     world_class = data.metadata.world_class_name
 
     # Build original placements dict (only needed if canonical_seed1 is enabled)

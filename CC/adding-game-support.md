@@ -431,6 +431,9 @@ Games with full world generator support:
 | ChecksFinder | 0 | ✓ Pass |
 | Aquaria | 0 | ✓ Pass |
 | Landstalker | 0 | ✓ Pass |
+| Bomb Rush Cyberfunk | 0 | ✓ Pass |
+| Final Fantasy Mystic Quest | 0 | ✓ Pass |
+| Kirby's Dream Land 3 | 0 | ✓ Pass |
 
 ---
 

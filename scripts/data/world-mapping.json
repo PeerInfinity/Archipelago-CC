@@ -83,6 +83,13 @@
     "has_custom_game_logic": false,
     "world_directory": "bomb_rush_cyberfunk"
   },
+  "Bomb Rush Cyberfunk Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "bomb_rush_cyberfunk_test"
+  },
   "Bumper Stickers": {
     "exporter_path": "exporter/games/bumpstik.py",
     "game_logic_path": null,
@@ -237,6 +244,13 @@
     "has_custom_game_logic": false,
     "world_directory": "ffmq"
   },
+  "Final Fantasy Mystic Quest Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "ffmq_test"
+  },
   "Heretic": {
     "exporter_path": null,
     "game_logic_path": null,
@@ -306,6 +320,13 @@
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "kdl3"
+  },
+  "Kirby's Dream Land 3 Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "kdl3_test"
   },
   "Landstalker - The Treasures of King Nole": {
     "exporter_path": "exporter/games/landstalker.py",
