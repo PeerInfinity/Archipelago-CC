@@ -462,7 +462,7 @@ def process_template(
         print(f"  FAILED: {world_gen_result.get('error', 'Unknown error')}")
         return template_result
 
-    print(f"  OK (created worlds/{game_name}_test/)")
+    print(f"  OK (created worlds/{game_dir}_test/)")
 
     # Store info for later cleanup and testing
     template_result['test_world']['world_dir'] = test_world_dir
