@@ -89,12 +89,30 @@ class RuleCodeGenerator:
             self.required_imports.add('False_')
             return 'False_()'
 
+    def _extract_constant_value(self, value: Any, default: Any = None) -> Any:
+        """
+        Extract a constant value from either a raw value or a constant rule dict.
+
+        Args:
+            value: Either a raw value (int, str, etc.) or a dict like {"type": "constant", "value": X}
+            default: Default value if extraction fails
+
+        Returns:
+            The extracted constant value
+        """
+        if isinstance(value, dict):
+            if value.get('type') == 'constant':
+                return value.get('value', default)
+            return default
+        return value if value is not None else default
+
     def _convert_item_check(self, rule: Dict[str, Any]) -> str:
         """Convert item_check to Has()."""
         self.required_imports.add('Has')
 
         item = rule.get('item', '')
-        count = rule.get('count', 1)
+        count_raw = rule.get('count', 1)
+        count = self._extract_constant_value(count_raw, 1)
 
         # Escape item name for Python string
         item_escaped = item.replace('\\', '\\\\').replace('"', '\\"')
@@ -109,7 +127,8 @@ class RuleCodeGenerator:
         self.required_imports.add('HasGroup')
 
         group = rule.get('group', '')
-        count = rule.get('count', 1)
+        count_raw = rule.get('count', 1)
+        count = self._extract_constant_value(count_raw, 1)
 
         group_escaped = group.replace('\\', '\\\\').replace('"', '\\"')
 
@@ -202,18 +221,24 @@ class RuleCodeGenerator:
         return f'True_()  # TODO: state_method {method}'
 
     def _extract_item_list(self, class_name: str, args: List[Dict[str, Any]]) -> str:
-        """Extract item list for HasAll/HasAny."""
+        """Extract item list for HasAll/HasAny.
+
+        Note: HasAll/HasAny expect unpacked arguments (*item_names), not a list.
+        """
         if not args:
-            return f'{class_name}([])'
+            return f'{class_name}()'
 
         # First arg should be a constant with the list
         first_arg = args[0]
         if first_arg.get('type') == 'constant':
             items = first_arg.get('value', [])
-            items_repr = repr(items)
+            if not items:
+                return f'{class_name}()'
+            # Unpack the items as separate arguments
+            items_repr = ', '.join(repr(item) for item in items)
             return f'{class_name}({items_repr})'
 
-        return f'{class_name}([])  # TODO: complex args'
+        return f'{class_name}()  # TODO: complex args'
 
     def _extract_item_dict(self, class_name: str, args: List[Dict[str, Any]]) -> str:
         """Extract item dict for HasAllCounts."""
