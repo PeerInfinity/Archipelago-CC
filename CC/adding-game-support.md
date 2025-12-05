@@ -425,6 +425,7 @@ Games with full world generator support:
 | Lingo | 610 | ✓ Pass |
 | Timespinner | 307 | ✓ Pass |
 | Hylics 2 | 184 | ✓ Pass |
+| Shivers | 247 | ✓ Pass |
 
 ---
 
