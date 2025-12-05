@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2025-12-05T21:20:38.372107",
+    "timestamp": "2025-12-05T21:25:15.386779",
     "seed": 1,
     "phase": "test",
     "total_templates": 1,
@@ -12,10 +12,10 @@
     "cross_validation_failed": 0
   },
   "results": {
-    "TUNIC": {
-      "template": "TUNIC.yaml",
-      "game_name": "TUNIC",
-      "timestamp": "2025-12-05T21:20:38.909437",
+    "Lingo": {
+      "template": "Lingo.yaml",
+      "game_name": "Lingo",
+      "timestamp": "2025-12-05T21:25:15.929021",
       "original": {
         "generation": {
           "success": true,
@@ -27,7 +27,7 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": null,
-          "processing_time_seconds": 8.56
+          "processing_time_seconds": 8.57
         }
       },
       "test_world": {
@@ -38,11 +38,11 @@
         "seed_generation": {
           "success": true,
           "seed_id": "AP_14089154938208861744",
-          "rules_path": "/home/user/Archipelago-CC/frontend/presets/tunic_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/tunic_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
-          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/tunic_test/AP_14089154938208861744",
+          "rules_path": "/home/user/Archipelago-CC/frontend/presets/lingo_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/lingo_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/lingo_test/AP_14089154938208861744",
           "error": null,
-          "processing_time_seconds": 5.69
+          "processing_time_seconds": 5.89
         },
         "spoiler_test": {
           "success": true,
@@ -50,7 +50,7 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": null,
-          "processing_time_seconds": 8.53
+          "processing_time_seconds": 8.67
         },
         "cross_validation": {
           "success": true,
@@ -58,10 +58,10 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": null,
-          "processing_time_seconds": 8.49
+          "processing_time_seconds": 8.66
         },
-        "test_template_name": "TUNIC Test.yaml",
-        "test_game_name": "TUNIC Test"
+        "test_template_name": "Lingo Test.yaml",
+        "test_game_name": "Lingo Test"
       },
       "errors": {
         "generation": [],

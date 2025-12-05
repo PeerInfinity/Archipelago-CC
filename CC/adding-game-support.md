@@ -422,6 +422,7 @@ Games with full world generator support:
 | Faxanadu | 142 | ✓ Pass |
 | The Witness | 387 | ✓ Pass |
 | TUNIC | 816 | ✓ Pass |
+| Lingo | 610 | ✓ Pass |
 
 ---
 

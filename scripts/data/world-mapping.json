@@ -300,6 +300,13 @@
     "has_custom_game_logic": true,
     "world_directory": "lingo"
   },
+  "Lingo Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "lingo_test"
+  },
   "Links Awakening DX": {
     "exporter_path": "exporter/games/ladx.py",
     "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",

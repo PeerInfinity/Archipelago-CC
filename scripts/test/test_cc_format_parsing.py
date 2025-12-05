@@ -271,6 +271,7 @@ def main():
         ("faxanadu", "Faxanadu"),
         ("witness", "The Witness"),
         ("tunic", "TUNIC"),
+        ("lingo", "Lingo"),
     ]
 
     for game_dir, game_name in games_to_test:
