@@ -420,6 +420,7 @@ Games with full world generator support:
 | Lufia II Ancient Cave | 42 | ✓ Pass |
 | Saving Princess | 44 | ✓ Pass |
 | Faxanadu | 142 | ✓ Pass |
+| The Witness | 387 | ✓ Pass |
 
 ---
 

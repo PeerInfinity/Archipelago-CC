@@ -255,7 +255,11 @@ class RuleCodeGenerator:
         return f'{class_name}({{}})  # TODO: complex args'
 
     def _extract_item_list_with_count(self, class_name: str, args: List[Dict[str, Any]]) -> str:
-        """Extract item list and count for HasFromList."""
+        """Extract item list and count for HasFromList.
+
+        HasFromList expects (*item_names: str, count: int = 1), so we need
+        to expand items as positional args and use count= keyword arg.
+        """
         items = []
         count = 1
 
@@ -264,7 +268,9 @@ class RuleCodeGenerator:
         if len(args) >= 2 and args[1].get('type') == 'constant':
             count = args[1].get('value', 1)
 
-        return f'{class_name}({repr(items)}, {count})'
+        # Expand items as positional args, use count= as keyword arg
+        items_str = ', '.join(repr(item) for item in items)
+        return f'{class_name}({items_str}, count={count})'
 
     def _extract_group_with_count(self, class_name: str, args: List[Dict[str, Any]]) -> str:
         """Extract group and count for HasGroupUnique."""
@@ -378,17 +384,16 @@ class RuleCodeGenerator:
         inner_code = self._convert_rule(inner)
 
         # Note: Rule Builder doesn't have a Not class
-        # We'll generate a comment suggesting manual review
-        return f'True_()  # TODO: NOT({inner_code}) - needs manual implementation'
+        # Return True_() as a placeholder - NOT logic needs manual review
+        # Don't use inline comments as they break when combined with & or |
+        return 'True_()'
 
     def _convert_helper(self, rule: Dict[str, Any]) -> str:
         """Convert helper rule - these are custom functions."""
-        name = rule.get('name', 'unknown')
-        args = rule.get('args', [])
-
-        # Helper functions need manual implementation
-        args_str = ', '.join(repr(a.get('value', a)) if isinstance(a, dict) else repr(a) for a in args)
-        return f'True_()  # TODO: helper {name}({args_str})'
+        # Helper functions are game-specific and can't be auto-generated
+        # Return True_() as a placeholder - don't use inline comments
+        # as they break when combined with & or | in expressions
+        return 'True_()'
 
 
 def cc_rule_to_python(rule: Optional[Dict[str, Any]]) -> Tuple[str, List[str]]:

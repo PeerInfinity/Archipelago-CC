@@ -114,12 +114,22 @@ def generate_regions_py(data: ExtractedData) -> str:
     game_name = data.metadata.game_name
     class_name = game_name.replace(' ', '').replace('-', '')
 
-    # Build region list
-    region_names = sorted(data.regions.keys())
+    # Build region list - always include Menu (required by Archipelago)
+    region_names_set = set(data.regions.keys())
+    region_names_set.add("Menu")
+    region_names = sorted(region_names_set)
     region_list = ', '.join(f'"{r}"' for r in region_names)
 
     # Build entrance connections
     entrance_lines = []
+
+    # Add entrance from Menu to start region if Menu wasn't in original data
+    if "Menu" not in data.regions:
+        start_region = data.start_region.replace('"', '\\"')
+        entrance_lines.append(
+            f'    _create_entrance(regions["Menu"], regions["{start_region}"], "MenuToStart")'
+        )
+
     for exit_name, exit_data in sorted(data.exits.items()):
         source = exit_data.source_region.replace('"', '\\"')
         target = exit_data.target_region.replace('"', '\\"')

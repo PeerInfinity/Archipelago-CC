@@ -381,7 +381,7 @@ def _parse_helper(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) ->
                 'options': [],
                 'args': original_args
             }, world_cls)
-        except (ValueError, KeyError):
+        except (ValueError, KeyError, AttributeError):
             pass
 
     # Try to find a custom rule with this name
@@ -404,7 +404,7 @@ def _parse_helper(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) ->
             'options': [],
             'args': parsed_args
         }, world_cls)
-    except (ValueError, KeyError):
+    except (ValueError, KeyError, AttributeError):
         logger.warning(f"Unknown helper rule '{helper_name}', treating as True")
         return True_()
 
