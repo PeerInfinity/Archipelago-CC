@@ -398,7 +398,10 @@ def process_template(
             'spoiler_test': {'success': False, 'pass_fail': 'unknown'},
             'cross_validation': {'success': False, 'pass_fail': 'unknown'}
         },
-        'errors': []
+        'errors': {
+            'generation': [],
+            'testing': []
+        }
     }
 
     # Step 1: Generate original seed
@@ -408,7 +411,7 @@ def process_template(
         template_result['original']['generation'] = gen_result
 
         if not gen_result['success']:
-            template_result['errors'].append(f"Original generation failed: {gen_result.get('error', 'Unknown error')}")
+            template_result['errors']['generation'].append(f"Original generation failed: {gen_result.get('error', 'Unknown error')}")
             print(f"  FAILED: {gen_result.get('error', 'Unknown error')}")
             return template_result
 
@@ -428,7 +431,7 @@ def process_template(
             print(f"  PASS")
         else:
             print(f"  FAIL: {spoiler_result.get('error', 'Unknown error')}")
-            template_result['errors'].append(f"Original spoiler test failed: {spoiler_result.get('error', '')}")
+            template_result['errors']['generation'].append(f"Original spoiler test failed: {spoiler_result.get('error', '')}")
     else:
         print("  Skipped (--skip-spoiler-test)")
         template_result['original']['spoiler_test']['note'] = 'Skipped'
@@ -446,7 +449,7 @@ def process_template(
         )
 
     if not os.path.exists(rules_path):
-        template_result['errors'].append(f"Rules file not found: {rules_path}")
+        template_result['errors']['generation'].append(f"Rules file not found: {rules_path}")
         print(f"  FAILED: Rules file not found")
         return template_result
 
@@ -459,7 +462,7 @@ def process_template(
     template_result['test_world']['world_generation'] = world_gen_result
 
     if not world_gen_result['success']:
-        template_result['errors'].append(f"World generation failed: {world_gen_result.get('error', 'Unknown error')}")
+        template_result['errors']['generation'].append(f"World generation failed: {world_gen_result.get('error', 'Unknown error')}")
         print(f"  FAILED: {world_gen_result.get('error', 'Unknown error')}")
         return template_result
 
@@ -506,7 +509,7 @@ def run_test_world_tests(
         result['test_world']['seed_generation'] = gen_result
 
         if not gen_result['success']:
-            result['errors'].append(f"Test world generation failed: {gen_result.get('error', 'Unknown error')}")
+            result['errors']['testing'].append(f"Test world generation failed: {gen_result.get('error', 'Unknown error')}")
             print(f"  FAILED: {gen_result.get('error', 'Unknown error')}")
             continue
 
@@ -522,7 +525,7 @@ def run_test_world_tests(
                 print(f"  PASS")
             else:
                 print(f"  FAIL: {spoiler_result.get('error', 'Unknown error')}")
-                result['errors'].append(f"Test world spoiler test failed: {spoiler_result.get('error', '')}")
+                result['errors']['testing'].append(f"Test world spoiler test failed: {spoiler_result.get('error', '')}")
         else:
             print("  Skipped (--skip-spoiler-test)")
             result['test_world']['spoiler_test']['note'] = 'Skipped'
@@ -560,7 +563,7 @@ def run_test_world_tests(
                         print(f"  PASS - Original sphere log validates against _test world")
                     else:
                         print(f"  FAIL - Original sphere log does not validate")
-                        result['errors'].append("Cross-validation failed: original sphere log incompatible with _test world")
+                        result['errors']['testing'].append("Cross-validation failed: original sphere log incompatible with _test world")
 
                     # Restore test sphere log
                     if os.path.exists(test_sphere_log_backup):
@@ -582,6 +585,52 @@ def save_results(results: Dict, output_file: str) -> None:
     with open(output_file, 'w') as f:
         json.dump(results, f, indent=2)
     print(f"\nResults saved to: {output_file}")
+
+
+def load_phase1_results(phase1_results_path: str) -> Optional[Dict]:
+    """Load phase 1 results from JSON file."""
+    if not phase1_results_path or not os.path.exists(phase1_results_path):
+        return None
+
+    try:
+        with open(phase1_results_path, 'r') as f:
+            return json.load(f)
+    except (IOError, json.JSONDecodeError) as e:
+        print(f"Warning: Could not load phase 1 results from {phase1_results_path}: {e}")
+        return None
+
+
+def check_phase1_success(phase1_results: Optional[Dict], game_name: str) -> Tuple[bool, Optional[str]]:
+    """
+    Check if a template succeeded in phase 1.
+
+    Returns:
+        (success, error_message) - True if phase 1 succeeded or no phase 1 results,
+                                   False with error message if phase 1 failed
+    """
+    if phase1_results is None:
+        return True, None
+
+    results = phase1_results.get('results', {})
+    if game_name not in results:
+        # Template not in phase 1 results - this could mean it was skipped
+        return True, None
+
+    template_result = results[game_name]
+
+    # Check original generation
+    original_gen = template_result.get('original', {}).get('generation', {})
+    if not original_gen.get('success', False):
+        error = original_gen.get('error', 'Unknown error')
+        return False, f"Phase 1 original generation failed: {error}"
+
+    # Check test world generation
+    test_world_gen = template_result.get('test_world', {}).get('world_generation', {})
+    if not test_world_gen.get('success', False):
+        error = test_world_gen.get('error', 'Unknown error')
+        return False, f"Phase 1 test world generation failed: {error}"
+
+    return True, None
 
 
 def main():
@@ -636,6 +685,10 @@ def main():
     parser.add_argument(
         '--no-backup', action='store_true',
         help='Do not create backup of existing results file'
+    )
+    parser.add_argument(
+        '--phase1-results', type=str,
+        help='Path to phase 1 results JSON file (for test phase to skip failed templates)'
     )
     parser.add_argument(
         '-v', '--verbose', action='store_true',
@@ -786,6 +839,16 @@ def main():
 
             print(f"Found {len(test_templates)} test templates to process")
 
+            # Load phase 1 results if provided
+            phase1_results = None
+            if args.phase1_results:
+                print(f"\nLoading phase 1 results from: {args.phase1_results}")
+                phase1_results = load_phase1_results(args.phase1_results)
+                if phase1_results:
+                    print(f"  Loaded results for {len(phase1_results.get('results', {}))} templates")
+                else:
+                    print("  Warning: Could not load phase 1 results")
+
             for test_template in test_templates:
                 original_template = get_original_for_test_template(test_template)
                 game_name_display = original_template.replace('.yaml', '')
@@ -811,8 +874,26 @@ def main():
                         'test_template_name': test_template,
                         'test_game_name': test_game_name
                     },
-                    'errors': []
+                    'errors': {
+                        'generation': [],
+                        'testing': []
+                    }
                 }
+
+                # Check if phase 1 succeeded for this template
+                phase1_success, phase1_error = check_phase1_success(phase1_results, game_name_display)
+                if not phase1_success:
+                    print(f"  SKIPPED: {phase1_error}")
+                    template_result['errors']['testing'].append(f"Skipped because phase 1 failed: {phase1_error}")
+                    template_result['original']['generation']['success'] = False
+                    template_result['original']['generation']['note'] = 'Failed in Phase 1'
+                    template_result['test_world']['world_generation']['success'] = False
+                    template_result['test_world']['world_generation']['note'] = 'Failed in Phase 1'
+                    template_result['test_world']['seed_generation']['note'] = 'Skipped - Phase 1 failed'
+                    template_result['test_world']['spoiler_test']['note'] = 'Skipped - Phase 1 failed'
+                    template_result['test_world']['cross_validation']['note'] = 'Skipped - Phase 1 failed'
+                    results['results'][game_name_display] = template_result
+                    continue
 
                 # Run original spoiler test first
                 print(f"\n[1/4] Running spoiler test on original ({original_template})...")
@@ -869,7 +950,7 @@ def main():
                                     print(f"  PASS - Original sphere log validates against _test world")
                                 else:
                                     print(f"  FAIL - Original sphere log does not validate")
-                                    template_result['errors'].append("Cross-validation failed")
+                                    template_result['errors']['testing'].append("Cross-validation failed")
 
                                 if os.path.exists(test_sphere_log_backup):
                                     shutil.move(test_sphere_log_backup, test_sphere_log)
@@ -882,7 +963,7 @@ def main():
                         template_result['test_world']['cross_validation']['note'] = 'Skipped'
                 else:
                     print(f"  FAILED: {gen_result.get('error', 'Unknown error')}")
-                    template_result['errors'].append(f"Test world seed generation failed: {gen_result.get('error', '')}")
+                    template_result['errors']['testing'].append(f"Test world seed generation failed: {gen_result.get('error', '')}")
 
                 # Use game_name as key for dictionary structure
                 results['results'][game_name_display] = template_result

@@ -31,6 +31,52 @@ def load_results_file(file_path: str) -> Dict[str, Any]:
         return None
 
 
+def merge_errors(existing_errors: Any, new_errors: Any) -> Dict[str, List[str]]:
+    """
+    Merge errors from two results, handling both old (list) and new (dict) formats.
+
+    The new format is: {'generation': [...], 'testing': [...]}
+    The old format is: [...]
+
+    Returns the new dict format with merged errors.
+    """
+    # Normalize existing_errors to dict format
+    if existing_errors is None:
+        existing_dict = {'generation': [], 'testing': []}
+    elif isinstance(existing_errors, list):
+        # Old format - treat as generation errors
+        existing_dict = {'generation': list(existing_errors), 'testing': []}
+    elif isinstance(existing_errors, dict):
+        existing_dict = {
+            'generation': list(existing_errors.get('generation', [])),
+            'testing': list(existing_errors.get('testing', []))
+        }
+    else:
+        existing_dict = {'generation': [], 'testing': []}
+
+    # Normalize new_errors to dict format
+    if new_errors is None:
+        new_dict = {'generation': [], 'testing': []}
+    elif isinstance(new_errors, list):
+        # Old format - treat as generation errors
+        new_dict = {'generation': list(new_errors), 'testing': []}
+    elif isinstance(new_errors, dict):
+        new_dict = {
+            'generation': list(new_errors.get('generation', [])),
+            'testing': list(new_errors.get('testing', []))
+        }
+    else:
+        new_dict = {'generation': [], 'testing': []}
+
+    # Merge, avoiding duplicates
+    merged = {
+        'generation': existing_dict['generation'] + [e for e in new_dict['generation'] if e not in existing_dict['generation']],
+        'testing': existing_dict['testing'] + [e for e in new_dict['testing'] if e not in existing_dict['testing']]
+    }
+
+    return merged
+
+
 def is_ut_comparison_structure(results: Dict[str, Any]) -> bool:
     """
     Detect if results have UT comparison structure.
@@ -191,11 +237,17 @@ def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any
                 break
 
     if is_overlay_mode:
-        # In overlay mode, keep only the last result for each (template, seed) combination
+        # In overlay mode, merge results for each (template, seed) combination
+        # Later results take precedence but errors are merged from all phases
         for template_name in template_results:
             seed_to_result = {}
             for seed, result in template_results[template_name]:
-                seed_to_result[seed] = result  # Later results overwrite earlier ones
+                if seed in seed_to_result:
+                    # Merge errors from previous result into new result
+                    existing_errors = seed_to_result[seed].get('errors')
+                    new_errors = result.get('errors')
+                    result['errors'] = merge_errors(existing_errors, new_errors)
+                seed_to_result[seed] = result
             template_results[template_name] = [(seed, result) for seed, result in seed_to_result.items()]
 
     # Sort each template's results by seed number

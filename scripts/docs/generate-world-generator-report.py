@@ -209,6 +209,32 @@ def generate_results_table(results: Dict) -> str:
     return '\n'.join(lines)
 
 
+def normalize_errors(errors) -> Dict[str, List[str]]:
+    """
+    Normalize errors to dict format with 'generation' and 'testing' keys.
+
+    Handles both old format (list) and new format (dict with phase keys).
+    """
+    if errors is None:
+        return {'generation': [], 'testing': []}
+    elif isinstance(errors, list):
+        # Old format - treat all as generation errors
+        return {'generation': errors, 'testing': []}
+    elif isinstance(errors, dict):
+        return {
+            'generation': errors.get('generation', []),
+            'testing': errors.get('testing', [])
+        }
+    else:
+        return {'generation': [], 'testing': []}
+
+
+def has_errors(errors) -> bool:
+    """Check if there are any errors (handles both old and new formats)."""
+    normalized = normalize_errors(errors)
+    return bool(normalized['generation']) or bool(normalized['testing'])
+
+
 def generate_failures_section(results: Dict) -> str:
     """Generate section listing all failures with details."""
     template_results = results.get('results', {})
@@ -223,11 +249,11 @@ def generate_failures_section(results: Dict) -> str:
 
     failures = []
     for game_name, result in results_items:
-        errors = result.get('errors', [])
-        if errors:
+        errors = result.get('errors')
+        if has_errors(errors):
             failures.append({
                 'game_name': game_name,
-                'errors': errors
+                'errors': normalize_errors(errors)
             })
 
     if not failures:
@@ -243,12 +269,28 @@ def generate_failures_section(results: Dict) -> str:
     for failure in sorted(failures, key=lambda x: x['game_name']):
         lines.append(f"### {failure['game_name']}")
         lines.append("")
-        for error in failure['errors']:
-            # Truncate long error messages
-            if len(error) > 200:
-                error = error[:200] + "..."
-            lines.append(f"- {error}")
-        lines.append("")
+
+        errors = failure['errors']
+
+        # Display generation errors
+        if errors['generation']:
+            lines.append("**Generation phase:**")
+            for error in errors['generation']:
+                # Truncate long error messages
+                if len(error) > 200:
+                    error = error[:200] + "..."
+                lines.append(f"- {error}")
+            lines.append("")
+
+        # Display testing errors
+        if errors['testing']:
+            lines.append("**Testing phase:**")
+            for error in errors['testing']:
+                # Truncate long error messages
+                if len(error) > 200:
+                    error = error[:200] + "..."
+                lines.append(f"- {error}")
+            lines.append("")
 
     return '\n'.join(lines)
 

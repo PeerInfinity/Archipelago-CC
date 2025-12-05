@@ -400,6 +400,7 @@ jobs:
             --phase test \
             --skip-generation \
             --skip-cleanup \
+            --phase1-results scripts/output/world-generator/test-results-phase1.json \
             ${{ inputs.debug_mode && '--include-list "Adventure Test.yaml"' || '' }}
 
       - name: Upload test results
