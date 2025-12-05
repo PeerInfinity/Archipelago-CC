@@ -1,6 +1,6 @@
 # World Generator Test Results
 
-**Generated:** 2025-12-05 04:16:09 UTC
+**Generated:** 2025-12-05 04:53:45 UTC
 **Seed:** N/A
 
 This report shows the results of round-trip testing the world generator.
@@ -33,7 +33,7 @@ world is validated to produce equivalent game logic.
 | Failed Original Generations | 15 |
 | Successful Test World Generations | 67 |
 | Failed Test World Generations | 20 |
-| Cross-Validation Passed | 7 |
+| Cross-Validation Passed | 11 |
 | Cross-Validation Failed | 0 |
 
 ## Detailed Results
@@ -56,8 +56,8 @@ world is validated to produce equivalent game logic.
 | Celeste 64 | ✅ | ✅ | ✅ | ❌ | - | - |
 | ChecksFinder | ✅ | ✅ | ✅ | ❌ | - | - |
 | ChocolateChipCookies | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Choo-Choo Charles | ✅ | ✅ | ✅ | ❌ | - | - |
-| Civilization VI | ✅ | ✅ | ✅ | ❌ | - | - |
+| Choo-Choo Charles | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Civilization VI | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | DLCQuest | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | DOOM 1993 | ✅ | ✅ | ✅ | ❌ | - | - |
 | DOOM II | ✅ | ✅ | ✅ | ❌ | - | - |
@@ -69,8 +69,8 @@ world is validated to produce equivalent game logic.
 | Final Fantasy Mystic Quest | ✅ | ✅ | ✅ | ❌ | - | - |
 | Heretic | ✅ | ✅ | ✅ | ❌ | - | - |
 | Hollow Knight | ✅ | Skipped | ❌ | - | - | - |
-| Hylics 2 | ✅ | ✅ | ✅ | ❌ | - | - |
-| Inscryption | ✅ | ✅ | ✅ | ❌ | - | - |
+| Hylics 2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Inscryption | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Jak and Daxter The Precursor Legacy | ✅ | Skipped | ✅ | ❌ | - | - |
 | Kingdom Hearts | ✅ | Skipped | ✅ | ❌ | - | - |
 | Kingdom Hearts 2 | ✅ | Skipped | ✅ | ❌ | - | - |
@@ -130,7 +130,7 @@ world is validated to produce equivalent game logic.
 
 ## Failures
 
-**45 games had errors:**
+**41 games had errors:**
 
 ### A Link to the Past
 
@@ -169,14 +169,6 @@ world is validated to produce equivalent game logic.
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### ChecksFinder
-
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
-
-### Choo-Choo Charles
-
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
-
-### Civilization VI
 
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
@@ -224,14 +216,6 @@ Traceback (most recent call last):
 
 - World generation failed: World generator failed: 
 /home/runner/work/Archipelago-CC/Archipelago-CC/ModuleUpdate.py:76: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io...
-
-### Hylics 2
-
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
-
-### Inscryption
-
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### Landstalker - The Treasures of King Nole
 

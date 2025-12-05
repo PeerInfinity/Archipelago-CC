@@ -2,8 +2,8 @@
   "metadata": {
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 11,
-    "created": "2025-12-05T04:16:09.549628",
-    "last_updated": "2025-12-05T04:16:09.549636",
+    "created": "2025-12-05T04:53:45.718395",
+    "last_updated": "2025-12-05T04:53:45.718401",
     "script_version": "1.0.0"
   },
   "results": {
@@ -14,7 +14,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ahit/AP_14089154938208861744",
-          "processing_time_seconds": 2.89,
+          "processing_time_seconds": 2.85,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ahit/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ahit/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -44,12 +44,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/ahit_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.56,
+          "processing_time_seconds": 2.55,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/ahit_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:09.421396"
+      "timestamp": "2025-12-05T04:48:25.131621"
     },
     "A Link to the Past": {
       "errors": [
@@ -60,7 +60,7 @@
         "generation": {
           "error": "raise FileNotFoundError(f\"{attr} does not exist, but \"",
           "preset_dir": null,
-          "processing_time_seconds": 3.14,
+          "processing_time_seconds": 2.84,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -88,7 +88,7 @@
           "success": false
         }
       },
-      "timestamp": "2025-12-05T04:11:32.927010"
+      "timestamp": "2025-12-05T04:48:48.298775"
     },
     "A Short Hike": {
       "errors": [
@@ -103,7 +103,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 7.1,
+          "processing_time_seconds": 9.49,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -118,7 +118,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 3.35,
+          "processing_time_seconds": 3.06,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -135,7 +135,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:14:51.036454"
+      "timestamp": "2025-12-05T04:52:14.416988"
     },
     "APQuest": {
       "errors": [
@@ -150,7 +150,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.46,
+          "processing_time_seconds": 8.86,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -165,7 +165,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 3.17,
+          "processing_time_seconds": 3.09,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -182,7 +182,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:14:48.518958"
+      "timestamp": "2025-12-05T04:52:17.962471"
     },
     "Adventure": {
       "errors": [
@@ -197,7 +197,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.98,
+          "processing_time_seconds": 8.69,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -212,7 +212,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 3.16,
+          "processing_time_seconds": 3.29,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -229,7 +229,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:14:57.495357"
+      "timestamp": "2025-12-05T04:52:19.523511"
     },
     "Aquaria": {
       "errors": [
@@ -244,7 +244,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 9.25,
+          "processing_time_seconds": 7.93,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -259,7 +259,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 3.19,
+          "processing_time_seconds": 3.3,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -276,7 +276,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:14:52.352186"
+      "timestamp": "2025-12-05T04:52:06.181252"
     },
     "Archipelago": {
       "errors": [
@@ -287,7 +287,7 @@
         "generation": {
           "error": "Preset directory not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/generic/AP_14089154938208861744",
           "preset_dir": null,
-          "processing_time_seconds": 2.99,
+          "processing_time_seconds": 3.14,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -315,7 +315,7 @@
           "success": false
         }
       },
-      "timestamp": "2025-12-05T04:11:34.695637"
+      "timestamp": "2025-12-05T04:48:58.912267"
     },
     "Blasphemous": {
       "errors": [],
@@ -324,7 +324,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/blasphemous/AP_14089154938208861744",
-          "processing_time_seconds": 5.02,
+          "processing_time_seconds": 4.83,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -354,12 +354,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/blasphemous_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.9,
+          "processing_time_seconds": 2.73,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/blasphemous_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:34.905101"
+      "timestamp": "2025-12-05T04:48:53.552467"
     },
     "Bomb Rush Cyberfunk": {
       "errors": [
@@ -374,7 +374,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.32,
+          "processing_time_seconds": 11.32,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -389,7 +389,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 2.91,
+          "processing_time_seconds": 3.88,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -406,7 +406,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:14:53.098030"
+      "timestamp": "2025-12-05T04:52:10.139938"
     },
     "Bumper Stickers": {
       "errors": [
@@ -421,7 +421,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.23,
+          "processing_time_seconds": 8.49,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -453,7 +453,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:14:53.162571"
+      "timestamp": "2025-12-05T04:52:04.309830"
     },
     "Castlevania - Circle of the Moon": {
       "errors": [],
@@ -462,7 +462,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cvcotm/AP_14089154938208861744",
-          "processing_time_seconds": 2.62,
+          "processing_time_seconds": 2.6,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cvcotm/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cvcotm/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -492,12 +492,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/cvcotm_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.57,
+          "processing_time_seconds": 2.53,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/cvcotm_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:14.915948"
+      "timestamp": "2025-12-05T04:48:30.578698"
     },
     "Castlevania 64": {
       "errors": [],
@@ -506,7 +506,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cv64/AP_14089154938208861744",
-          "processing_time_seconds": 2.94,
+          "processing_time_seconds": 2.61,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cv64/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cv64/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -536,12 +536,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/cv64_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.73,
+          "processing_time_seconds": 2.58,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/cv64_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:36.086966"
+      "timestamp": "2025-12-05T04:48:51.165240"
     },
     "Celeste (Open World)": {
       "errors": [],
@@ -550,7 +550,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste_open_world/AP_14089154938208861744",
-          "processing_time_seconds": 3.05,
+          "processing_time_seconds": 2.74,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste_open_world/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste_open_world/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -580,12 +580,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/celeste_open_world_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.65,
+          "processing_time_seconds": 2.4,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/celeste_open_world_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:40.195368"
+      "timestamp": "2025-12-05T04:49:00.914462"
     },
     "Celeste 64": {
       "errors": [
@@ -600,7 +600,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 9.37,
+          "processing_time_seconds": 9.12,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -615,7 +615,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 3.37,
+          "processing_time_seconds": 3.13,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -632,7 +632,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:14:57.185328"
+      "timestamp": "2025-12-05T04:52:10.445601"
     },
     "ChecksFinder": {
       "errors": [
@@ -647,7 +647,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 8.82,
+          "processing_time_seconds": 8.98,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -662,7 +662,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 3.11,
+          "processing_time_seconds": 3.13,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -679,7 +679,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:14:48.660197"
+      "timestamp": "2025-12-05T04:52:07.385107"
     },
     "ChocolateChipCookies": {
       "errors": [],
@@ -692,7 +692,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.67,
+          "processing_time_seconds": 6.33,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -703,7 +703,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.78,
+          "processing_time_seconds": 5.84,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -711,7 +711,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bakingadventure_test/AP_14089154938208861744",
-          "processing_time_seconds": 3.54,
+          "processing_time_seconds": 3.62,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bakingadventure_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bakingadventure_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -720,7 +720,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.83,
+          "processing_time_seconds": 5.87,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -732,12 +732,10 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:14:54.078035"
+      "timestamp": "2025-12-05T04:52:12.903925"
     },
     "Choo-Choo Charles": {
-      "errors": [
-        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
-      ],
+      "errors": [],
       "game_name": "Choo-Choo Charles",
       "original": {
         "generation": {
@@ -747,7 +745,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 8.72,
+          "processing_time_seconds": 8.21,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -756,21 +754,29 @@
       "template": "Choo-Choo Charles.yaml",
       "test_world": {
         "cross_validation": {
-          "pass_fail": "unknown",
-          "success": false
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.92,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
         },
         "seed_generation": {
-          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
-          "preset_dir": null,
-          "processing_time_seconds": 2.88,
-          "rules_path": null,
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cccharles_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.49,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cccharles_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
-          "sphere_log_path": null,
-          "success": false
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cccharles_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
         },
         "spoiler_test": {
-          "pass_fail": "unknown",
-          "success": false
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.79,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
         },
         "test_game_name": "Choo-Choo Charles Test",
         "test_template_name": "Choo-Choo Charles Test.yaml",
@@ -779,12 +785,10 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:14:57.631643"
+      "timestamp": "2025-12-05T04:52:09.719514"
     },
     "Civilization VI": {
-      "errors": [
-        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
-      ],
+      "errors": [],
       "game_name": "Civilization VI",
       "original": {
         "generation": {
@@ -794,7 +798,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.87,
+          "processing_time_seconds": 5.77,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -803,21 +807,29 @@
       "template": "Civilization VI.yaml",
       "test_world": {
         "cross_validation": {
-          "pass_fail": "unknown",
-          "success": false
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.75,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
         },
         "seed_generation": {
-          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
-          "preset_dir": null,
-          "processing_time_seconds": 3.22,
-          "rules_path": null,
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/civ_6_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.12,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/civ_6_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
-          "sphere_log_path": null,
-          "success": false
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/civ_6_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
         },
         "spoiler_test": {
-          "pass_fail": "unknown",
-          "success": false
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.76,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
         },
         "test_game_name": "Civilization VI Test",
         "test_template_name": "Civilization VI Test.yaml",
@@ -826,7 +838,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:01.503626"
+      "timestamp": "2025-12-05T04:52:26.972367"
     },
     "DLCQuest": {
       "errors": [],
@@ -839,7 +851,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.85,
+          "processing_time_seconds": 5.77,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -850,7 +862,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.86,
+          "processing_time_seconds": 6.14,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -858,7 +870,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dlcquest_test/AP_14089154938208861744",
-          "processing_time_seconds": 3.32,
+          "processing_time_seconds": 3.17,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dlcquest_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dlcquest_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -867,7 +879,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.85,
+          "processing_time_seconds": 5.8,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -879,7 +891,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:14:58.163375"
+      "timestamp": "2025-12-05T04:52:29.919142"
     },
     "DOOM 1993": {
       "errors": [
@@ -894,7 +906,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.78,
+          "processing_time_seconds": 5.86,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -909,7 +921,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 2.98,
+          "processing_time_seconds": 3.33,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -926,7 +938,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:07.641407"
+      "timestamp": "2025-12-05T04:52:31.513394"
     },
     "DOOM II": {
       "errors": [
@@ -941,7 +953,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.77,
+          "processing_time_seconds": 5.82,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -956,7 +968,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 2.92,
+          "processing_time_seconds": 3.5,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -973,7 +985,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:04.806220"
+      "timestamp": "2025-12-05T04:52:17.417938"
     },
     "Dark Souls III": {
       "errors": [
@@ -984,7 +996,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dark_souls_3/AP_14089154938208861744",
-          "processing_time_seconds": 2.97,
+          "processing_time_seconds": 2.73,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dark_souls_3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dark_souls_3/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1011,12 +1023,12 @@
         },
         "world_generation": {
           "error": "World generator failed: \nERROR:root:Could not load world WorldSource(cv64_test, is_zip=False, relative=True):\nTraceback (most recent call last):\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/__init__.py\", line 70, in load\n    importlib.import_module(f\".{self.path}\", \"worlds\")\n  File \"/opt/hostedtoolcache/Python/3.12.12/x64/lib/python3.12/importlib/__init__.py\", line 90, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
-          "processing_time_seconds": 2.75,
+          "processing_time_seconds": 2.57,
           "success": false,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/dark_souls_3_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:41.792439"
+      "timestamp": "2025-12-05T04:48:56.390911"
     },
     "Donkey Kong Country 3": {
       "errors": [
@@ -1027,7 +1039,7 @@
         "generation": {
           "error": "SyntaxError: invalid syntax",
           "preset_dir": null,
-          "processing_time_seconds": 3.15,
+          "processing_time_seconds": 2.81,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -1055,7 +1067,7 @@
           "success": false
         }
       },
-      "timestamp": "2025-12-05T04:11:45.926734"
+      "timestamp": "2025-12-05T04:49:06.080757"
     },
     "Factorio": {
       "errors": [
@@ -1066,7 +1078,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/factorio/AP_14089154938208861744",
-          "processing_time_seconds": 2.96,
+          "processing_time_seconds": 2.89,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/factorio/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/factorio/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1093,12 +1105,12 @@
         },
         "world_generation": {
           "error": "World generator failed: \n/home/runner/work/Archipelago-CC/Archipelago-CC/ModuleUpdate.py:76: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.\n  import pkg_resources  # noqa: F401\nINFO: Loading JSON from /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/factorio/AP_14089154938208861744/AP_14089154938208861744_rules.",
-          "processing_time_seconds": 2.76,
+          "processing_time_seconds": 2.64,
           "success": false,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/factorio_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:51.444630"
+      "timestamp": "2025-12-05T04:49:01.379411"
     },
     "Faxanadu": {
       "errors": [
@@ -1113,7 +1125,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.59,
+          "processing_time_seconds": 5.78,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1128,7 +1140,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 2.76,
+          "processing_time_seconds": 2.96,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -1145,7 +1157,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:02.330527"
+      "timestamp": "2025-12-05T04:52:25.348974"
     },
     "Final Fantasy": {
       "errors": [
@@ -1156,7 +1168,7 @@
         "generation": {
           "error": "raise AssertionError(f\"FFR settings submitted with no key items ({multiworld.get_player_name(player)}). Please ensure you \" \\",
           "preset_dir": null,
-          "processing_time_seconds": 2.79,
+          "processing_time_seconds": 2.86,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -1184,7 +1196,7 @@
           "success": false
         }
       },
-      "timestamp": "2025-12-05T04:11:43.422065"
+      "timestamp": "2025-12-05T04:49:07.828376"
     },
     "Final Fantasy Mystic Quest": {
       "errors": [
@@ -1199,7 +1211,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.78,
+          "processing_time_seconds": 5.75,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1231,7 +1243,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:02.585075"
+      "timestamp": "2025-12-05T04:52:15.990181"
     },
     "Heretic": {
       "errors": [
@@ -1246,7 +1258,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.89,
+          "processing_time_seconds": 5.82,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1261,7 +1273,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 3.16,
+          "processing_time_seconds": 3.47,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -1278,7 +1290,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:09.930613"
+      "timestamp": "2025-12-05T04:52:22.701232"
     },
     "Hollow Knight": {
       "errors": [
@@ -1289,7 +1301,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hk/AP_14089154938208861744",
-          "processing_time_seconds": 9.86,
+          "processing_time_seconds": 9.83,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hk/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hk/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1316,17 +1328,15 @@
         },
         "world_generation": {
           "error": "World generator failed: \n/home/runner/work/Archipelago-CC/Archipelago-CC/ModuleUpdate.py:76: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.\n  import pkg_resources  # noqa: F401\nINFO: Loading JSON from /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hk/AP_14089154938208861744/AP_14089154938208861744_rules.json\nI",
-          "processing_time_seconds": 2.63,
+          "processing_time_seconds": 2.64,
           "success": false,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/hk_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:45.607038"
+      "timestamp": "2025-12-05T04:48:59.241398"
     },
     "Hylics 2": {
-      "errors": [
-        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
-      ],
+      "errors": [],
       "game_name": "Hylics 2",
       "original": {
         "generation": {
@@ -1336,7 +1346,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.77,
+          "processing_time_seconds": 5.81,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1345,21 +1355,29 @@
       "template": "Hylics 2.yaml",
       "test_world": {
         "cross_validation": {
-          "pass_fail": "unknown",
-          "success": false
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.79,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
         },
         "seed_generation": {
-          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
-          "preset_dir": null,
-          "processing_time_seconds": 2.96,
-          "rules_path": null,
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hylics2_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.31,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hylics2_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
-          "sphere_log_path": null,
-          "success": false
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hylics2_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
         },
         "spoiler_test": {
-          "pass_fail": "unknown",
-          "success": false
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.93,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
         },
         "test_game_name": "Hylics 2 Test",
         "test_template_name": "Hylics 2 Test.yaml",
@@ -1368,12 +1386,10 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:00.603965"
+      "timestamp": "2025-12-05T04:52:19.504983"
     },
     "Inscryption": {
-      "errors": [
-        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
-      ],
+      "errors": [],
       "game_name": "Inscryption",
       "original": {
         "generation": {
@@ -1383,7 +1399,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.8,
+          "processing_time_seconds": 5.83,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1392,21 +1408,29 @@
       "template": "Inscryption.yaml",
       "test_world": {
         "cross_validation": {
-          "pass_fail": "unknown",
-          "success": false
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.83,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
         },
         "seed_generation": {
-          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
-          "preset_dir": null,
-          "processing_time_seconds": 2.99,
-          "rules_path": null,
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/inscryption_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.45,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/inscryption_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
-          "sphere_log_path": null,
-          "success": false
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/inscryption_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
         },
         "spoiler_test": {
-          "pass_fail": "unknown",
-          "success": false
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.97,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
         },
         "test_game_name": "Inscryption Test",
         "test_template_name": "Inscryption Test.yaml",
@@ -1415,7 +1439,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:16.336513"
+      "timestamp": "2025-12-05T04:52:35.013488"
     },
     "Jak and Daxter The Precursor Legacy": {
       "errors": [],
@@ -1424,7 +1448,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/jakanddaxter/AP_14089154938208861744",
-          "processing_time_seconds": 3.12,
+          "processing_time_seconds": 2.9,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/jakanddaxter/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/jakanddaxter/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1454,12 +1478,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/jakanddaxter_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.74,
+          "processing_time_seconds": 2.57,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/jakanddaxter_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:47.542443"
+      "timestamp": "2025-12-05T04:49:01.723441"
     },
     "Kingdom Hearts": {
       "errors": [],
@@ -1468,7 +1492,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh1/AP_14089154938208861744",
-          "processing_time_seconds": 3.01,
+          "processing_time_seconds": 2.93,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh1/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh1/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1503,7 +1527,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/kh1_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:57.226328"
+      "timestamp": "2025-12-05T04:49:06.972982"
     },
     "Kingdom Hearts 2": {
       "errors": [],
@@ -1512,7 +1536,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh2/AP_14089154938208861744",
-          "processing_time_seconds": 3.57,
+          "processing_time_seconds": 3.02,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh2/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1542,12 +1566,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/kh2_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.72,
+          "processing_time_seconds": 2.31,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/kh2_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:49.095034"
+      "timestamp": "2025-12-05T04:49:08.912369"
     },
     "Kirby's Dream Land 3": {
       "errors": [],
@@ -1586,12 +1610,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/kdl3_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.68,
+          "processing_time_seconds": 2.67,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/kdl3_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:47.986812"
+      "timestamp": "2025-12-05T04:49:09.304767"
     },
     "Landstalker - The Treasures of King Nole": {
       "errors": [
@@ -1606,7 +1630,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.58,
+          "processing_time_seconds": 5.85,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1621,7 +1645,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 2.7,
+          "processing_time_seconds": 3.28,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -1638,7 +1662,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:09.233249"
+      "timestamp": "2025-12-05T04:52:33.578789"
     },
     "Lingo": {
       "errors": [],
@@ -1651,7 +1675,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.87,
+          "processing_time_seconds": 5.78,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1662,7 +1686,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.86,
+          "processing_time_seconds": 5.77,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1670,7 +1694,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lingo_test/AP_14089154938208861744",
-          "processing_time_seconds": 3.36,
+          "processing_time_seconds": 3.09,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lingo_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lingo_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1679,7 +1703,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.87,
+          "processing_time_seconds": 5.73,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1691,7 +1715,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:10.599355"
+      "timestamp": "2025-12-05T04:52:47.796145"
     },
     "Links Awakening DX": {
       "errors": [
@@ -1706,7 +1730,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.87,
+          "processing_time_seconds": 5.75,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1721,7 +1745,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 3.11,
+          "processing_time_seconds": 4.37,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -1738,7 +1762,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:19.491536"
+      "timestamp": "2025-12-05T04:52:51.254059"
     },
     "Lufia II Ancient Cave": {
       "errors": [
@@ -1749,7 +1773,7 @@
         "generation": {
           "error": "raise FileNotFoundError(f\"{attr} does not exist, but \"",
           "preset_dir": null,
-          "processing_time_seconds": 2.93,
+          "processing_time_seconds": 3.54,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -1777,7 +1801,7 @@
           "success": false
         }
       },
-      "timestamp": "2025-12-05T04:11:58.152540"
+      "timestamp": "2025-12-05T04:49:11.770730"
     },
     "Mario & Luigi Superstar Saga": {
       "errors": [],
@@ -1786,7 +1810,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mlss/AP_14089154938208861744",
-          "processing_time_seconds": 2.71,
+          "processing_time_seconds": 2.68,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mlss/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mlss/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1816,12 +1840,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/mlss_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.61,
+          "processing_time_seconds": 2.6,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/mlss_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:47.424456"
+      "timestamp": "2025-12-05T04:49:04.936941"
     },
     "MathProof2p2e4": {
       "errors": [],
@@ -1834,7 +1858,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.9,
+          "processing_time_seconds": 5.87,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1845,7 +1869,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.8,
+          "processing_time_seconds": 5.88,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1853,7 +1877,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mathadventure_test/AP_14089154938208861744",
-          "processing_time_seconds": 3.16,
+          "processing_time_seconds": 3.36,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mathadventure_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mathadventure_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -1874,7 +1898,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:16.418147"
+      "timestamp": "2025-12-05T04:52:40.710912"
     },
     "Mega Man 2": {
       "errors": [
@@ -1889,7 +1913,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.77,
+          "processing_time_seconds": 5.94,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1904,7 +1928,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 2.93,
+          "processing_time_seconds": 2.98,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -1921,7 +1945,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:13.510293"
+      "timestamp": "2025-12-05T04:52:26.750847"
     },
     "MegaMan Battle Network 3": {
       "errors": [
@@ -1932,7 +1956,7 @@
         "generation": {
           "error": "SyntaxError: invalid syntax",
           "preset_dir": null,
-          "processing_time_seconds": 2.69,
+          "processing_time_seconds": 2.36,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -1960,7 +1984,7 @@
           "success": false
         }
       },
-      "timestamp": "2025-12-05T04:11:55.402327"
+      "timestamp": "2025-12-05T04:49:14.263370"
     },
     "Meritous": {
       "errors": [
@@ -1975,7 +1999,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.6,
+          "processing_time_seconds": 5.79,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -1990,7 +2014,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 2.79,
+          "processing_time_seconds": 2.96,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -2007,7 +2031,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:10.692701"
+      "timestamp": "2025-12-05T04:52:34.092249"
     },
     "Metamath": {
       "errors": [
@@ -2018,7 +2042,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/metamath/AP_14089154938208861744",
-          "processing_time_seconds": 9.83,
+          "processing_time_seconds": 9.85,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/metamath/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/metamath/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2045,12 +2069,12 @@
         },
         "world_generation": {
           "error": "World generator failed: \n/home/runner/work/Archipelago-CC/Archipelago-CC/ModuleUpdate.py:76: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.\n  import pkg_resources  # noqa: F401\nERROR:root:Could not load world WorldSource(kdl3_test, is_zip=False, relative=True):\nTraceback (most recent call last):\n  File \"/home/runner/work/Archip",
-          "processing_time_seconds": 2.68,
+          "processing_time_seconds": 2.81,
           "success": false,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/metamath_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:53.715139"
+      "timestamp": "2025-12-05T04:49:15.012762"
     },
     "Muse Dash": {
       "errors": [
@@ -2065,7 +2089,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.78,
+          "processing_time_seconds": 5.8,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2080,7 +2104,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 2.94,
+          "processing_time_seconds": 2.96,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -2097,7 +2121,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:11.373873"
+      "timestamp": "2025-12-05T04:52:24.741957"
     },
     "Noita": {
       "errors": [],
@@ -2110,7 +2134,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.89,
+          "processing_time_seconds": 5.82,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2121,7 +2145,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.85,
+          "processing_time_seconds": 5.74,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2129,7 +2153,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/noita_test/AP_14089154938208861744",
-          "processing_time_seconds": 3.49,
+          "processing_time_seconds": 3.26,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/noita_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/noita_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2138,7 +2162,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.91,
+          "processing_time_seconds": 5.77,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2150,7 +2174,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:18.988019"
+      "timestamp": "2025-12-05T04:52:31.993091"
     },
     "Ocarina of Time": {
       "errors": [
@@ -2161,7 +2185,7 @@
         "generation": {
           "error": "SyntaxError: too many nested parentheses",
           "preset_dir": null,
-          "processing_time_seconds": 3.35,
+          "processing_time_seconds": 3.44,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -2189,7 +2213,7 @@
           "success": false
         }
       },
-      "timestamp": "2025-12-05T04:12:00.616464"
+      "timestamp": "2025-12-05T04:49:18.197003"
     },
     "Old School Runescape": {
       "errors": [],
@@ -2198,7 +2222,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/osrs/AP_14089154938208861744",
-          "processing_time_seconds": 2.82,
+          "processing_time_seconds": 2.74,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/osrs/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/osrs/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2228,12 +2252,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/osrs_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.6,
+          "processing_time_seconds": 2.62,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/osrs_test"
         }
       },
-      "timestamp": "2025-12-05T04:12:01.107223"
+      "timestamp": "2025-12-05T04:49:15.338482"
     },
     "Overcooked! 2": {
       "errors": [],
@@ -2242,7 +2266,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/overcooked2/AP_14089154938208861744",
-          "processing_time_seconds": 2.84,
+          "processing_time_seconds": 2.83,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/overcooked2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/overcooked2/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2272,12 +2296,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/overcooked2_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.61,
+          "processing_time_seconds": 2.58,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/overcooked2_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:52.761568"
+      "timestamp": "2025-12-05T04:49:10.239457"
     },
     "Paint": {
       "errors": [
@@ -2292,7 +2316,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.91,
+          "processing_time_seconds": 5.85,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2307,7 +2331,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 2.93,
+          "processing_time_seconds": 2.9,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -2324,7 +2348,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:09.344300"
+      "timestamp": "2025-12-05T04:52:40.760493"
     },
     "Pokemon Emerald": {
       "errors": [],
@@ -2333,7 +2357,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/pokemon_emerald/AP_14089154938208861744",
-          "processing_time_seconds": 4.1,
+          "processing_time_seconds": 3.9,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/pokemon_emerald/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/pokemon_emerald/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2363,12 +2387,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/pokemon_emerald_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.83,
+          "processing_time_seconds": 2.59,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/pokemon_emerald_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:59.048550"
+      "timestamp": "2025-12-05T04:49:12.455560"
     },
     "Pokemon Red and Blue": {
       "errors": [],
@@ -2377,7 +2401,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/pokemon_rb/AP_14089154938208861744",
-          "processing_time_seconds": 3.23,
+          "processing_time_seconds": 2.9,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2407,12 +2431,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/pokemon_rb_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.74,
+          "processing_time_seconds": 2.37,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/pokemon_rb_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:58.133390"
+      "timestamp": "2025-12-05T04:49:16.660356"
     },
     "Raft": {
       "errors": [],
@@ -2421,7 +2445,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/raft/AP_14089154938208861744",
-          "processing_time_seconds": 3.43,
+          "processing_time_seconds": 2.8,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/raft/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/raft/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2451,12 +2475,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/raft_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.86,
+          "processing_time_seconds": 2.67,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/raft_test"
         }
       },
-      "timestamp": "2025-12-05T04:12:09.612606"
+      "timestamp": "2025-12-05T04:49:18.078137"
     },
     "Risk of Rain 2": {
       "errors": [],
@@ -2465,7 +2489,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ror2/AP_14089154938208861744",
-          "processing_time_seconds": 2.76,
+          "processing_time_seconds": 2.73,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ror2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ror2/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2495,12 +2519,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/ror2_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.68,
+          "processing_time_seconds": 2.61,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/ror2_test"
         }
       },
-      "timestamp": "2025-12-05T04:12:06.247921"
+      "timestamp": "2025-12-05T04:49:27.703241"
     },
     "SMZ3": {
       "errors": [],
@@ -2509,7 +2533,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/smz3/AP_14089154938208861744",
-          "processing_time_seconds": 3.43,
+          "processing_time_seconds": 2.97,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/smz3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/smz3/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2539,12 +2563,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/smz3_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.98,
+          "processing_time_seconds": 2.61,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/smz3_test"
         }
       },
-      "timestamp": "2025-12-05T04:12:10.577916"
+      "timestamp": "2025-12-05T04:49:30.002648"
     },
     "Saving Princess": {
       "errors": [
@@ -2559,7 +2583,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.9,
+          "processing_time_seconds": 5.96,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -2574,7 +2598,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 2.9,
+          "processing_time_seconds": 3.08,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -2591,7 +2615,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:25.135178"
+      "timestamp": "2025-12-05T04:52:56.128322"
     },
     "Secret of Evermore": {
       "errors": [
@@ -2602,7 +2626,7 @@
         "generation": {
           "error": "SyntaxError: too many nested parentheses",
           "preset_dir": null,
-          "processing_time_seconds": 2.79,
+          "processing_time_seconds": 2.68,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -2630,7 +2654,7 @@
           "success": false
         }
       },
-      "timestamp": "2025-12-05T04:12:03.977256"
+      "timestamp": "2025-12-05T04:49:21.655867"
     },
     "Shivers": {
       "errors": [],
@@ -2639,7 +2663,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shivers/AP_14089154938208861744",
-          "processing_time_seconds": 2.72,
+          "processing_time_seconds": 2.76,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shivers/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shivers/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2669,12 +2693,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/shivers_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.61,
+          "processing_time_seconds": 2.66,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/shivers_test"
         }
       },
-      "timestamp": "2025-12-05T04:12:06.555955"
+      "timestamp": "2025-12-05T04:49:20.728468"
     },
     "Sonic Adventure 2 Battle": {
       "errors": [],
@@ -2683,7 +2707,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sa2b/AP_14089154938208861744",
-          "processing_time_seconds": 2.76,
+          "processing_time_seconds": 2.75,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sa2b/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sa2b/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2713,12 +2737,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sa2b_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.61,
+          "processing_time_seconds": 2.59,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sa2b_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:58.259332"
+      "timestamp": "2025-12-05T04:49:15.705363"
     },
     "Starcraft 2": {
       "errors": [],
@@ -2727,7 +2751,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sc2/AP_14089154938208861744",
-          "processing_time_seconds": 3.16,
+          "processing_time_seconds": 3.14,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sc2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sc2/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2757,12 +2781,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sc2_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.62,
+          "processing_time_seconds": 2.6,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sc2_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:41.641286"
+      "timestamp": "2025-12-05T04:48:56.746956"
     },
     "Stardew Valley": {
       "errors": [],
@@ -2771,7 +2795,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/stardew_valley/AP_14089154938208861744",
-          "processing_time_seconds": 5.36,
+          "processing_time_seconds": 5.19,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/stardew_valley/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/stardew_valley/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2801,12 +2825,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/stardew_valley_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.85,
+          "processing_time_seconds": 2.65,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/stardew_valley_test"
         }
       },
-      "timestamp": "2025-12-05T04:12:06.036448"
+      "timestamp": "2025-12-05T04:49:19.004770"
     },
     "Subnautica": {
       "errors": [],
@@ -2815,7 +2839,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/subnautica/AP_14089154938208861744",
-          "processing_time_seconds": 2.81,
+          "processing_time_seconds": 2.5,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/subnautica/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/subnautica/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2845,12 +2869,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/subnautica_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.69,
+          "processing_time_seconds": 2.4,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/subnautica_test"
         }
       },
-      "timestamp": "2025-12-05T04:12:04.153653"
+      "timestamp": "2025-12-05T04:49:21.980550"
     },
     "Sudoku": {
       "errors": [
@@ -2861,7 +2885,7 @@
         "generation": {
           "error": "SyntaxError: too many nested parentheses",
           "preset_dir": null,
-          "processing_time_seconds": 3.04,
+          "processing_time_seconds": 2.72,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -2889,7 +2913,7 @@
           "success": false
         }
       },
-      "timestamp": "2025-12-05T04:12:15.907121"
+      "timestamp": "2025-12-05T04:49:23.563677"
     },
     "Super Mario 64": {
       "errors": [],
@@ -2898,7 +2922,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm64ex/AP_14089154938208861744",
-          "processing_time_seconds": 2.79,
+          "processing_time_seconds": 2.73,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm64ex/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm64ex/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2928,12 +2952,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sm64ex_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.68,
+          "processing_time_seconds": 2.59,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sm64ex_test"
         }
       },
-      "timestamp": "2025-12-05T04:12:11.713202"
+      "timestamp": "2025-12-05T04:49:33.070657"
     },
     "Super Mario Land 2": {
       "errors": [],
@@ -2942,7 +2966,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/marioland2/AP_14089154938208861744",
-          "processing_time_seconds": 3.23,
+          "processing_time_seconds": 2.79,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/marioland2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/marioland2/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -2972,12 +2996,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/marioland2_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 3.08,
+          "processing_time_seconds": 2.62,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/marioland2_test"
         }
       },
-      "timestamp": "2025-12-05T04:12:17.003096"
+      "timestamp": "2025-12-05T04:49:35.599200"
     },
     "Super Mario World": {
       "errors": [
@@ -2988,7 +3012,7 @@
         "generation": {
           "error": "raise FileNotFoundError(f\"{attr} does not exist, but \"",
           "preset_dir": null,
-          "processing_time_seconds": 3.26,
+          "processing_time_seconds": 3.19,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -3016,7 +3040,7 @@
           "success": false
         }
       },
-      "timestamp": "2025-12-05T04:12:02.976806"
+      "timestamp": "2025-12-05T04:49:28.386077"
     },
     "Super Metroid": {
       "errors": [],
@@ -3025,7 +3049,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm/AP_14089154938208861744",
-          "processing_time_seconds": 3.25,
+          "processing_time_seconds": 3.11,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3055,12 +3079,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sm_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.86,
+          "processing_time_seconds": 2.65,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sm_test"
         }
       },
-      "timestamp": "2025-12-05T04:12:06.789460"
+      "timestamp": "2025-12-05T04:49:24.359480"
     },
     "TOEM original": {
       "errors": [
@@ -3071,7 +3095,7 @@
         "generation": {
           "error": "Preset directory not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_original/AP_14089154938208861744",
           "preset_dir": null,
-          "processing_time_seconds": 2.68,
+          "processing_time_seconds": 2.69,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -3099,7 +3123,7 @@
           "success": false
         }
       },
-      "timestamp": "2025-12-05T04:12:11.897462"
+      "timestamp": "2025-12-05T04:49:26.169489"
     },
     "TOEM rule builder": {
       "errors": [
@@ -3110,7 +3134,7 @@
         "generation": {
           "error": "Preset directory not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_rule_builder/AP_14089154938208861744",
           "preset_dir": null,
-          "processing_time_seconds": 2.68,
+          "processing_time_seconds": 2.65,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -3138,7 +3162,7 @@
           "success": false
         }
       },
-      "timestamp": "2025-12-05T04:12:03.682830"
+      "timestamp": "2025-12-05T04:49:21.093414"
     },
     "TUNIC": {
       "errors": [],
@@ -3147,7 +3171,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tunic/AP_14089154938208861744",
-          "processing_time_seconds": 2.91,
+          "processing_time_seconds": 2.89,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tunic/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tunic/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3177,12 +3201,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/tunic_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.61,
+          "processing_time_seconds": 2.62,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/tunic_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:47.486246"
+      "timestamp": "2025-12-05T04:49:02.552970"
     },
     "Terraria": {
       "errors": [],
@@ -3191,7 +3215,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/terraria/AP_14089154938208861744",
-          "processing_time_seconds": 2.96,
+          "processing_time_seconds": 2.73,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/terraria/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/terraria/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3221,12 +3245,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/terraria_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.84,
+          "processing_time_seconds": 2.6,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/terraria_test"
         }
       },
-      "timestamp": "2025-12-05T04:12:14.285041"
+      "timestamp": "2025-12-05T04:49:26.879935"
     },
     "The Legend of Zelda": {
       "errors": [
@@ -3237,7 +3261,7 @@
         "generation": {
           "error": "SyntaxError: invalid syntax",
           "preset_dir": null,
-          "processing_time_seconds": 2.65,
+          "processing_time_seconds": 2.38,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -3265,7 +3289,7 @@
           "success": false
         }
       },
-      "timestamp": "2025-12-05T04:12:09.668294"
+      "timestamp": "2025-12-05T04:49:26.891918"
     },
     "The Messenger": {
       "errors": [
@@ -3276,7 +3300,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/messenger/AP_14089154938208861744",
-          "processing_time_seconds": 3.36,
+          "processing_time_seconds": 2.81,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/messenger/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/messenger/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3303,12 +3327,12 @@
         },
         "world_generation": {
           "error": "World generator failed: \nWARNING:root:excluding factorio_test from world sources because it has no __init__.py\n/home/runner/work/Archipelago-CC/Archipelago-CC/ModuleUpdate.py:76: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.\n  import pkg_resources  # noqa: F401\nERROR:root:Could not load world WorldSource(kh1_test, is_zip=False",
-          "processing_time_seconds": 3.18,
+          "processing_time_seconds": 2.67,
           "success": false,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/messenger_test"
         }
       },
-      "timestamp": "2025-12-05T04:12:18.960036"
+      "timestamp": "2025-12-05T04:49:26.288898"
     },
     "The Wind Waker": {
       "errors": [],
@@ -3317,7 +3341,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tww/AP_14089154938208861744",
-          "processing_time_seconds": 2.84,
+          "processing_time_seconds": 2.75,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tww/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tww/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3347,12 +3371,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/tww_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.72,
+          "processing_time_seconds": 2.6,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/tww_test"
         }
       },
-      "timestamp": "2025-12-05T04:12:17.213971"
+      "timestamp": "2025-12-05T04:49:38.421192"
     },
     "The Witness": {
       "errors": [],
@@ -3361,7 +3385,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/witness/AP_14089154938208861744",
-          "processing_time_seconds": 3.61,
+          "processing_time_seconds": 2.97,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/witness/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/witness/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3391,12 +3415,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/witness_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.99,
+          "processing_time_seconds": 2.63,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/witness_test"
         }
       },
-      "timestamp": "2025-12-05T04:12:23.347948"
+      "timestamp": "2025-12-05T04:49:41.033475"
     },
     "Timespinner": {
       "errors": [],
@@ -3405,7 +3429,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/timespinner/AP_14089154938208861744",
-          "processing_time_seconds": 2.99,
+          "processing_time_seconds": 2.96,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/timespinner/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/timespinner/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3435,12 +3459,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/timespinner_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.82,
+          "processing_time_seconds": 2.81,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/timespinner_test"
         }
       },
-      "timestamp": "2025-12-05T04:12:06.261071"
+      "timestamp": "2025-12-05T04:49:31.598940"
     },
     "Undertale": {
       "errors": [],
@@ -3449,7 +3473,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/undertale/AP_14089154938208861744",
-          "processing_time_seconds": 2.88,
+          "processing_time_seconds": 2.74,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/undertale/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/undertale/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3479,12 +3503,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/undertale_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.82,
+          "processing_time_seconds": 2.76,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/undertale_test"
         }
       },
-      "timestamp": "2025-12-05T04:12:12.924213"
+      "timestamp": "2025-12-05T04:49:30.150544"
     },
     "Universal Tracker": {
       "errors": [
@@ -3495,7 +3519,7 @@
         "generation": {
           "error": "Preset directory not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tracker/AP_14089154938208861744",
           "preset_dir": null,
-          "processing_time_seconds": 2.64,
+          "processing_time_seconds": 2.66,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -3523,7 +3547,7 @@
           "success": false
         }
       },
-      "timestamp": "2025-12-05T04:12:14.584293"
+      "timestamp": "2025-12-05T04:49:28.865298"
     },
     "VVVVVV": {
       "errors": [],
@@ -3567,7 +3591,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/v6_test"
         }
       },
-      "timestamp": "2025-12-05T04:12:06.376556"
+      "timestamp": "2025-12-05T04:49:23.751041"
     },
     "Wargroove": {
       "errors": [],
@@ -3576,7 +3600,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/wargroove/AP_14089154938208861744",
-          "processing_time_seconds": 2.68,
+          "processing_time_seconds": 2.66,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/wargroove/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/wargroove/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3611,7 +3635,7 @@
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/wargroove_test"
         }
       },
-      "timestamp": "2025-12-05T04:11:53.030116"
+      "timestamp": "2025-12-05T04:49:08.078193"
     },
     "WebDevJourney": {
       "errors": [],
@@ -3624,7 +3648,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.59,
+          "processing_time_seconds": 5.74,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3635,7 +3659,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.58,
+          "processing_time_seconds": 5.75,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3643,7 +3667,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure_test/AP_14089154938208861744",
-          "processing_time_seconds": 2.91,
+          "processing_time_seconds": 3.14,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3652,7 +3676,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.6,
+          "processing_time_seconds": 5.77,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3664,7 +3688,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:17.525461"
+      "timestamp": "2025-12-05T04:52:42.722591"
     },
     "Yacht Dice": {
       "errors": [
@@ -3679,7 +3703,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.8,
+          "processing_time_seconds": 5.78,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3694,7 +3718,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 3.06,
+          "processing_time_seconds": 2.92,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -3711,7 +3735,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:31.988362"
+      "timestamp": "2025-12-05T04:53:08.185932"
     },
     "Yoshi's Island": {
       "errors": [
@@ -3722,7 +3746,7 @@
         "generation": {
           "error": "SyntaxError: too many nested parentheses",
           "preset_dir": null,
-          "processing_time_seconds": 3.47,
+          "processing_time_seconds": 3.33,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -3750,7 +3774,7 @@
           "success": false
         }
       },
-      "timestamp": "2025-12-05T04:12:25.524357"
+      "timestamp": "2025-12-05T04:49:31.791651"
     },
     "Yu-Gi-Oh! 2006": {
       "errors": [],
@@ -3759,7 +3783,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yugioh06/AP_14089154938208861744",
-          "processing_time_seconds": 3.4,
+          "processing_time_seconds": 3.35,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yugioh06/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yugioh06/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3789,12 +3813,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/yugioh06_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.73,
+          "processing_time_seconds": 2.6,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/yugioh06_test"
         }
       },
-      "timestamp": "2025-12-05T04:12:22.807380"
+      "timestamp": "2025-12-05T04:49:43.793624"
     },
     "Zillion": {
       "errors": [],
@@ -3807,7 +3831,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.97,
+          "processing_time_seconds": 5.84,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3818,7 +3842,7 @@
         "cross_validation": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.82,
+          "processing_time_seconds": 5.84,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3826,7 +3850,7 @@
         "seed_generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/zillion_test/AP_14089154938208861744",
-          "processing_time_seconds": 3.33,
+          "processing_time_seconds": 3.34,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/zillion_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/zillion_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3835,7 +3859,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 5.83,
+          "processing_time_seconds": 5.8,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -3847,7 +3871,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T04:15:28.481886"
+      "timestamp": "2025-12-05T04:53:01.395526"
     },
     "shapez": {
       "errors": [],
@@ -3856,7 +3880,7 @@
         "generation": {
           "error": null,
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shapez/AP_14089154938208861744",
-          "processing_time_seconds": 3.39,
+          "processing_time_seconds": 3.53,
           "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shapez/AP_14089154938208861744/AP_14089154938208861744_rules.json",
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shapez/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
@@ -3886,12 +3910,12 @@
         "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/shapez_test",
         "world_generation": {
           "error": null,
-          "processing_time_seconds": 2.77,
+          "processing_time_seconds": 2.84,
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/shapez_test"
         }
       },
-      "timestamp": "2025-12-05T04:12:12.111058"
+      "timestamp": "2025-12-05T04:49:37.399563"
     }
   }
 }
