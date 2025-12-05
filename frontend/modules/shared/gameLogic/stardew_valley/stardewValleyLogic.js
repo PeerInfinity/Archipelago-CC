@@ -2,8 +2,13 @@
  * Stardew Valley game-specific logic module
  *
  * Handles virtual event items that are computed based on progression item collection:
- * - "Received Progression Item": Incremented by 1 for each advancement item collected
+ * - "Received Progression Item": Incremented by 1 for each item collected (ALL items, not just advancement)
  * - "Received Progression Percent": Computed as (received_progression_item_count * 100) // total_progression_items
+ *
+ * IMPORTANT: In Python's StardewValleyWorld.collect(), the received_progression_item counter
+ * is incremented for EVERY item that gets successfully collected, not just advancement items.
+ * The total_progression_items denominator only counts advancement items, but the numerator
+ * (received_progression_item) counts all received items.
  *
  * These items are tracked by the Python CollectionState and need to be mirrored in JavaScript.
  */
@@ -61,25 +66,35 @@ export const stardewValleyStateModule = {
 
   /**
    * Hook called after an item is added to inventory.
-   * Updates virtual progression items if the added item is an advancement item.
+   * Updates virtual progression items for EVERY item added (not just advancement items).
+   *
+   * IMPORTANT: Python's StardewValleyWorld.collect() increments received_progression_item
+   * for ALL items that get successfully collected, regardless of advancement status.
+   * This matches the behavior where total_progression_items counts advancement items,
+   * but received_progression_item counts all received items.
    *
    * @param {Object} sm - StateManager instance
    * @param {string} itemName - Name of the item that was added
    * @param {number} count - How many were added
    */
   afterItemAdded(sm, itemName, count) {
-    // Check if this is an advancement item
+    // Check if this item is a known game item
+    // We count ALL items toward progression, not just advancement items
+    // This matches Python's StardewValleyWorld.collect() behavior
     const itemDef = sm.itemData[itemName];
 
-    if (!itemDef || !itemDef.advancement) {
-      // Not an advancement item
+    if (!itemDef) {
+      // Unknown item (e.g., virtual items like "Received Progression Percent" itself)
+      // Don't count these to avoid infinite recursion
       return;
     }
 
-    // NOTE: We DO count event items if they have advancement=true
-    // Python's CollectionState counts all advancement items, including events like "Copper Ore (Logic event)"
+    // Skip virtual progression items to avoid counting them recursively
+    if (itemName === 'Received Progression Item' || itemName === 'Received Progression Percent') {
+      return;
+    }
 
-    // Update "Received Progression Item"
+    // Update "Received Progression Item" for ALL items (matches Python behavior)
     const currentProgItemCount = sm.inventory['Received Progression Item'] || 0;
     sm.inventory['Received Progression Item'] = currentProgItemCount + count;
 
@@ -98,24 +113,26 @@ export const stardewValleyStateModule = {
 
   /**
    * Hook called after an item is removed from inventory.
-   * Updates virtual progression items if the removed item was an advancement item.
+   * Updates virtual progression items for EVERY item removed (not just advancement items).
    *
    * @param {Object} sm - StateManager instance
    * @param {string} itemName - Name of the item that was removed
    * @param {number} count - How many were removed
    */
   afterItemRemoved(sm, itemName, count) {
-    // Check if this is an advancement item
+    // Check if this item is a known game item
     const itemDef = sm.itemData[itemName];
-    if (!itemDef || !itemDef.advancement) {
-      // Not an advancement item
+    if (!itemDef) {
+      // Unknown item - don't count
       return;
     }
 
-    // NOTE: We DO count event items if they have advancement=true
-    // Python's CollectionState counts all advancement items, including events
+    // Skip virtual progression items to avoid counting them recursively
+    if (itemName === 'Received Progression Item' || itemName === 'Received Progression Percent') {
+      return;
+    }
 
-    // Update "Received Progression Item"
+    // Update "Received Progression Item" for ALL items (matches Python behavior)
     const currentProgItemCount = sm.inventory['Received Progression Item'] || 0;
     sm.inventory['Received Progression Item'] = Math.max(0, currentProgItemCount - count);
 
