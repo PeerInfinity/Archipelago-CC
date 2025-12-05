@@ -270,6 +270,7 @@ def main():
         ("saving_princess", "Saving Princess"),
         ("faxanadu", "Faxanadu"),
         ("witness", "The Witness"),
+        ("tunic", "TUNIC"),
     ]
 
     for game_dir, game_name in games_to_test:

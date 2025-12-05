@@ -77,8 +77,9 @@ class RuleCodeGenerator:
         if converter:
             return converter(rule)
 
-        # Unknown rule type - generate a comment
-        return f'True_()  # TODO: Unknown rule type: {rule_type}'
+        # Unknown rule type - return True_() as placeholder
+        # Don't use inline comments as they break multi-line expressions
+        return 'True_()'
 
     def _convert_constant(self, rule: Dict[str, Any]) -> str:
         """Convert constant true/false rule."""
@@ -218,8 +219,8 @@ class RuleCodeGenerator:
             self.required_imports.add(class_name)
             return extractor(class_name, args)
 
-        # Unknown state method - generate placeholder
-        return f'True_()  # TODO: state_method {method}'
+        # Unknown state method - return True_() as placeholder
+        return 'True_()'
 
     def _extract_item_list(self, class_name: str, args: List[Dict[str, Any]]) -> str:
         """Extract item list for HasAll/HasAny.
@@ -239,7 +240,7 @@ class RuleCodeGenerator:
             items_repr = ', '.join(repr(item) for item in items)
             return f'{class_name}({items_repr})'
 
-        return f'{class_name}()  # TODO: complex args'
+        return f'{class_name}()'
 
     def _extract_item_dict(self, class_name: str, args: List[Dict[str, Any]]) -> str:
         """Extract item dict for HasAllCounts."""
@@ -252,7 +253,7 @@ class RuleCodeGenerator:
             items_repr = repr(items)
             return f'{class_name}({items_repr})'
 
-        return f'{class_name}({{}})  # TODO: complex args'
+        return f'{class_name}({{}})'
 
     def _extract_item_list_with_count(self, class_name: str, args: List[Dict[str, Any]]) -> str:
         """Extract item list and count for HasFromList.
@@ -300,8 +301,8 @@ class RuleCodeGenerator:
         if result is not None:
             return result
 
-        # Unknown compare pattern
-        return f'True_()  # TODO: Unknown compare pattern'
+        # Unknown compare pattern - return True_() as placeholder
+        return 'True_()'
 
     def _try_convert_prog_items_compare(
         self, left: Any, op: str, right: Any

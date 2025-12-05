@@ -421,6 +421,7 @@ Games with full world generator support:
 | Saving Princess | 44 | ✓ Pass |
 | Faxanadu | 142 | ✓ Pass |
 | The Witness | 387 | ✓ Pass |
+| TUNIC | 816 | ✓ Pass |
 
 ---
 

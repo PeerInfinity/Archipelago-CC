@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2025-12-05T20:59:41.202836",
+    "timestamp": "2025-12-05T21:20:38.372107",
     "seed": 1,
     "phase": "test",
     "total_templates": 1,
@@ -12,10 +12,10 @@
     "cross_validation_failed": 0
   },
   "results": {
-    "The Witness": {
-      "template": "The Witness.yaml",
-      "game_name": "The Witness",
-      "timestamp": "2025-12-05T20:59:41.748071",
+    "TUNIC": {
+      "template": "TUNIC.yaml",
+      "game_name": "TUNIC",
+      "timestamp": "2025-12-05T21:20:38.909437",
       "original": {
         "generation": {
           "success": true,
@@ -27,7 +27,7 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": null,
-          "processing_time_seconds": 8.76
+          "processing_time_seconds": 8.56
         }
       },
       "test_world": {
@@ -38,11 +38,11 @@
         "seed_generation": {
           "success": true,
           "seed_id": "AP_14089154938208861744",
-          "rules_path": "/home/user/Archipelago-CC/frontend/presets/witness_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/witness_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
-          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/witness_test/AP_14089154938208861744",
+          "rules_path": "/home/user/Archipelago-CC/frontend/presets/tunic_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/tunic_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/tunic_test/AP_14089154938208861744",
           "error": null,
-          "processing_time_seconds": 5.79
+          "processing_time_seconds": 5.69
         },
         "spoiler_test": {
           "success": true,
@@ -50,7 +50,7 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": null,
-          "processing_time_seconds": 8.8
+          "processing_time_seconds": 8.53
         },
         "cross_validation": {
           "success": true,
@@ -58,10 +58,10 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": null,
-          "processing_time_seconds": 8.86
+          "processing_time_seconds": 8.49
         },
-        "test_template_name": "The Witness Test.yaml",
-        "test_game_name": "The Witness Test"
+        "test_template_name": "TUNIC Test.yaml",
+        "test_game_name": "TUNIC Test"
       },
       "errors": {
         "generation": [],

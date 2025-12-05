@@ -68,6 +68,7 @@ class ExtractedData:
     regions: Dict[str, RegionData]
     exits: Dict[str, ExitData]
     item_groups: List[str]
+    item_name_groups: Dict[str, List[str]]  # group_name -> [item_names]
     start_region: str
     original_placements: Dict[str, str]  # location -> item
     itempool_counts: Dict[str, int] = field(default_factory=dict)  # item -> count
@@ -111,15 +112,16 @@ def _determine_classification(item_data: Dict[str, Any]) -> str:
     return 'filler'
 
 
-def extract_items(json_data: Dict[str, Any]) -> Tuple[Dict[str, ItemData], List[str]]:
+def extract_items(json_data: Dict[str, Any]) -> Tuple[Dict[str, ItemData], List[str], Dict[str, List[str]]]:
     """
     Extract items and item groups from JSON.
 
     Returns:
-        Tuple of (items dict, item_groups list)
+        Tuple of (items dict, item_groups list, item_name_groups dict)
     """
     items: Dict[str, ItemData] = {}
     item_groups: List[str] = []
+    item_name_groups: Dict[str, List[str]] = {}
 
     # Get items for player 1
     items_data = json_data.get('items', {}).get('1', {})
@@ -127,21 +129,28 @@ def extract_items(json_data: Dict[str, Any]) -> Tuple[Dict[str, ItemData], List[
     for item_name, item_info in items_data.items():
         item_id = item_info.get('id')
         is_event = item_id is None or item_info.get('event', False)
+        groups = item_info.get('groups', [])
 
         items[item_name] = ItemData(
             name=item_name,
             item_id=item_id,
             classification=_determine_classification(item_info),
-            groups=item_info.get('groups', []),
+            groups=groups,
             max_count=item_info.get('max_count', 1),
             is_event=is_event,
         )
+
+        # Build item_name_groups mapping
+        for group in groups:
+            if group not in item_name_groups:
+                item_name_groups[group] = []
+            item_name_groups[group].append(item_name)
 
     # Get item groups
     groups_data = json_data.get('item_groups', {}).get('1', [])
     item_groups = list(groups_data) if groups_data else []
 
-    return items, item_groups
+    return items, item_groups, item_name_groups
 
 
 def extract_locations(json_data: Dict[str, Any]) -> Tuple[Dict[str, LocationData], Dict[str, str], Dict[str, str]]:
@@ -273,7 +282,7 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
         ExtractedData containing all extracted information
     """
     metadata = extract_game_metadata(json_data)
-    items, item_groups = extract_items(json_data)
+    items, item_groups, item_name_groups = extract_items(json_data)
     locations, original_placements, locked_placements = extract_locations(json_data)
     regions, exits = extract_regions(json_data)
     start_region = extract_start_region(json_data)
@@ -286,6 +295,7 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
         regions=regions,
         exits=exits,
         item_groups=item_groups,
+        item_name_groups=item_name_groups,
         start_region=start_region,
         original_placements=original_placements,
         itempool_counts=itempool_counts,

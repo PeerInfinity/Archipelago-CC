@@ -421,6 +421,15 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
 
     itempool_content = '\n'.join(itempool_entries)
 
+    # Build item_name_groups dictionary
+    item_name_groups_entries = []
+    for group_name, item_names in sorted(data.item_name_groups.items()):
+        group_escaped = group_name.replace('\\', '\\\\').replace('"', '\\"')
+        items_list = ', '.join(f'"{item.replace(chr(92), chr(92)+chr(92)).replace(chr(34), chr(92)+chr(34))}"' for item in sorted(item_names))
+        item_name_groups_entries.append(f'        "{group_escaped}": frozenset([{items_list}]),')
+
+    item_name_groups_content = '\n'.join(item_name_groups_entries)
+
     return f'''"""
 {game_name} world implementation for Archipelago.
 
@@ -479,6 +488,10 @@ class {world_class}(RuleWorldMixin, World):
     location_name_to_id: ClassVar[Dict[str, int]] = {{
         name: data.location_id for name, data in location_table.items()
         if data.location_id is not None
+    }}
+
+    item_name_groups: ClassVar[Dict[str, frozenset]] = {{
+{item_name_groups_content}
     }}
 {generate_early_section}
     def create_regions(self) -> None:

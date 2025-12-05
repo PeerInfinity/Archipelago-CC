@@ -552,6 +552,13 @@
     "has_custom_game_logic": false,
     "world_directory": "tunic"
   },
+  "TUNIC Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "tunic_test"
+  },
   "Terraria": {
     "exporter_path": "exporter/games/terraria.py",
     "game_logic_path": "frontend/modules/shared/gameLogic/terraria/terrariaLogic.js",
