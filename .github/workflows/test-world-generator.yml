@@ -385,9 +385,12 @@ jobs:
         run: |
           mkdir -p scripts/output/world-generator
 
-          # Combine split result files
+          # Combine phase 1 results (all templates, including failures) with phase 3 results (test runs)
+          # Phase 1 results provide the base, phase 3 results overlay with test data
           python scripts/test/combine-test-results.py \
-            --input-files artifacts/test-results-split-*/test-results-split-*.json \
+            --input-files \
+              artifacts/combined-test-worlds/scripts/output/world-generator/test-results-phase1.json \
+              artifacts/test-results-split-*/test-results-split-*.json \
             --output-file scripts/output/world-generator/test-results.json
 
       - name: Generate markdown report
