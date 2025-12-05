@@ -118,7 +118,8 @@ def generate_regions_py(data: ExtractedData) -> str:
     region_names_set = set(data.regions.keys())
     region_names_set.add("Menu")
     region_names = sorted(region_names_set)
-    region_list = ', '.join(f'"{r}"' for r in region_names)
+    # Escape quotes in region names
+    region_list = ', '.join(f'"{r.replace(chr(34), chr(92)+chr(34))}"' for r in region_names)
 
     # Build entrance connections
     entrance_lines = []
