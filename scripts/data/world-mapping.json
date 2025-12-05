@@ -202,6 +202,13 @@
     "has_custom_game_logic": false,
     "world_directory": "faxanadu"
   },
+  "Faxanadu Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "faxanadu_test"
+  },
   "Final Fantasy": {
     "exporter_path": null,
     "game_logic_path": null,

@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2025-12-05T20:34:33.997060",
+    "timestamp": "2025-12-05T20:38:11.813500",
     "seed": 1,
     "phase": "test",
     "total_templates": 1,
@@ -12,10 +12,10 @@
     "cross_validation_failed": 0
   },
   "results": {
-    "Saving Princess": {
-      "template": "Saving Princess.yaml",
-      "game_name": "Saving Princess",
-      "timestamp": "2025-12-05T20:34:34.538228",
+    "Faxanadu": {
+      "template": "Faxanadu.yaml",
+      "game_name": "Faxanadu",
+      "timestamp": "2025-12-05T20:38:12.361050",
       "original": {
         "generation": {
           "success": true,
@@ -27,7 +27,7 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": null,
-          "processing_time_seconds": 8.85
+          "processing_time_seconds": 8.86
         }
       },
       "test_world": {
@@ -38,11 +38,11 @@
         "seed_generation": {
           "success": true,
           "seed_id": "AP_14089154938208861744",
-          "rules_path": "/home/user/Archipelago-CC/frontend/presets/saving_princess_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/saving_princess_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
-          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/saving_princess_test/AP_14089154938208861744",
+          "rules_path": "/home/user/Archipelago-CC/frontend/presets/faxanadu_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/faxanadu_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/faxanadu_test/AP_14089154938208861744",
           "error": null,
-          "processing_time_seconds": 5.99
+          "processing_time_seconds": 5.79
         },
         "spoiler_test": {
           "success": true,
@@ -50,7 +50,7 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": null,
-          "processing_time_seconds": 8.87
+          "processing_time_seconds": 8.82
         },
         "cross_validation": {
           "success": true,
@@ -58,10 +58,10 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": null,
-          "processing_time_seconds": 8.91
+          "processing_time_seconds": 8.97
         },
-        "test_template_name": "Saving Princess Test.yaml",
-        "test_game_name": "Saving Princess Test"
+        "test_template_name": "Faxanadu Test.yaml",
+        "test_game_name": "Faxanadu Test"
       },
       "errors": {
         "generation": [],

@@ -268,6 +268,7 @@ def main():
         ("inscryption", "Inscryption"),
         ("lufia2ac", "Lufia II Ancient Cave"),
         ("saving_princess", "Saving Princess"),
+        ("faxanadu", "Faxanadu"),
     ]
 
     for game_dir, game_name in games_to_test:
