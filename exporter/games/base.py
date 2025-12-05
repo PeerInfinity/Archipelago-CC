@@ -158,14 +158,22 @@ class BaseGameExportHandler:
         pass
 
     def get_itempool_counts(self, world, multiworld, player) -> Dict[str, int]:
-        """Calculate and return item counts for the player's pool."""
+        """Calculate and return item counts for the player's pool.
+
+        Note: After the fill process, multiworld.itempool still contains all original items
+        because distribute_items_restrictive operates on a sorted copy. We only count items
+        that are actually placed in locations (plus precollected items) to get accurate counts.
+        """
         itempool_counts = collections.defaultdict(int)
-        for item in multiworld.itempool:
-            if item.player == player:
-                itempool_counts[item.name] += 1
+
+        # Count precollected items (items player starts with)
         if hasattr(multiworld, 'precollected_items'):
             for item in multiworld.precollected_items.get(player, []):
                 itempool_counts[item.name] += 1
+
+        # Count items placed in locations
+        # Note: We don't count from multiworld.itempool because after fill it still contains
+        # the original items (fill operates on a copy), which would cause double-counting.
         for location in multiworld.get_locations(player):
             if location.item and location.item.player == player:
                 itempool_counts[location.item.name] += 1
