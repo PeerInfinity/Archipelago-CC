@@ -82,6 +82,7 @@ class ExtractedData:
     original_placements: Dict[str, str]  # location -> item
     itempool_counts: Dict[str, int] = field(default_factory=dict)  # item -> count
     locked_placements: Dict[str, str] = field(default_factory=dict)  # location -> item (must be placed via place_locked_item)
+    starting_items: Dict[str, int] = field(default_factory=dict)  # item -> count (precollected items)
 
 
 def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
@@ -280,6 +281,76 @@ def extract_itempool_counts(json_data: Dict[str, Any]) -> Dict[str, int]:
     return itempool_counts
 
 
+def extract_starting_items(json_data: Dict[str, Any]) -> Dict[str, int]:
+    """Extract starting items from JSON (precollected items)."""
+    starting = {}
+    starting_data = json_data.get('starting_items', {}).get('1', [])
+
+    for item in starting_data:
+        if isinstance(item, str):
+            starting[item] = starting.get(item, 0) + 1
+        elif isinstance(item, dict):
+            name = item.get('name', '')
+            count = item.get('count', 1)
+            if name:
+                starting[name] = starting.get(name, 0) + count
+
+    return starting
+
+
+def compute_state_counter_starting_items(
+    json_data: Dict[str, Any],
+    items: Dict[str, 'ItemData'],
+    locked_placements: Dict[str, str]
+) -> Dict[str, int]:
+    """
+    Compute starting items needed for state counter patterns.
+
+    Some games (like DLCQuest) use state counters where collecting items like
+    "60 coins" contributes to a " coins" counter. The rules check Has(" coins", X)
+    which expects X copies of the " coins" item, but the actual items are
+    individual coin amounts.
+
+    This function detects such patterns and computes the total count needed
+    as a starting item.
+    """
+    starting = {}
+
+    # Find items that are used in rules but have id=None (event/counter items)
+    # and have a name pattern like " coins" or " coins freemium"
+    counter_items = {}
+    for item_name, item_data in items.items():
+        if item_data.item_id is None and item_name.startswith(' '):
+            # This looks like a counter item (e.g., " coins")
+            counter_items[item_name] = 0
+
+    if not counter_items:
+        return starting
+
+    # Calculate total contribution from locked placements
+    # e.g., "60 coins" contributes 60 to " coins"
+    for loc_name, item_name in locked_placements.items():
+        for counter_name in counter_items:
+            suffix = counter_name.strip()  # e.g., "coins" from " coins"
+            if item_name.endswith(suffix):
+                # Try to extract the number from the item name
+                # e.g., "60 coins" -> 60
+                try:
+                    parts = item_name.split()
+                    if len(parts) >= 2 and parts[-1] == suffix:
+                        count = int(parts[0])
+                        counter_items[counter_name] += count
+                except (ValueError, IndexError):
+                    pass
+
+    # Add non-zero counters as starting items
+    for counter_name, total in counter_items.items():
+        if total > 0:
+            starting[counter_name] = total
+
+    return starting
+
+
 def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
     """
     Extract all data from a JSON rules file.
@@ -297,6 +368,14 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
     start_region = extract_start_region(json_data)
     itempool_counts = extract_itempool_counts(json_data)
 
+    # Get starting items from JSON
+    starting_items = extract_starting_items(json_data)
+
+    # Compute additional starting items for state counter patterns
+    counter_starting = compute_state_counter_starting_items(json_data, items, locked_placements)
+    for item, count in counter_starting.items():
+        starting_items[item] = starting_items.get(item, 0) + count
+
     return ExtractedData(
         metadata=metadata,
         items=items,
@@ -309,4 +388,5 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
         original_placements=original_placements,
         itempool_counts=itempool_counts,
         locked_placements=locked_placements,
+        starting_items=starting_items,
     )

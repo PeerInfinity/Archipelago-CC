@@ -283,6 +283,7 @@ def main():
         ("bomb_rush_cyberfunk", "Bomb Rush Cyberfunk"),
         ("ffmq", "Final Fantasy Mystic Quest"),
         ("kdl3", "Kirby's Dream Land 3"),
+        ("dlcquest", "DLCQuest"),
     ]
 
     for game_dir, game_name in games_to_test:

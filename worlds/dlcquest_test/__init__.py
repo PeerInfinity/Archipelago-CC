@@ -16,20 +16,8 @@ from .Regions import create_regions
 from .Rules import set_rules
 
 
-# Item pool counts from original generation
+# Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
-    "10 coins": 1,
-    "100 coins": 1,
-    "171 coins": 1,
-    "203 coins": 1,
-    "4 coins": 1,
-    "46 coins": 1,
-    "50 coins": 1,
-    "60 coins": 1,
-    "7 coins": 1,
-    "76 coins": 1,
-    "89 coins": 1,
-    "9 coins": 1,
     "Animation Pack": 1,
     "Armor for your Horse Pack": 1,
     "Audio Pack": 1,
@@ -38,7 +26,6 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Gun Pack": 1,
     "Loading Screen": 7,
     "Map Pack": 1,
-    "Movement Pack": 1,
     "Name Change Pack": 4,
     "Night Map Pack": 1,
     "Pause Menu Pack": 1,
@@ -49,8 +36,30 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "The Zombie Pack": 1,
     "Time is Money Pack": 1,
     "Top Hat Pack": 1,
-    "Victory Basic": 1,
     "Zombie Sheep": 1,
+}
+
+# Locked placements - items that must be placed via place_locked_item
+LOCKED_PLACEMENTS: Dict[str, str] = {
+    "Behind Tree coins": "60 coins",
+    "Double Jump Behind Tree coins": "89 coins",
+    "Double Jump Total Left Cave coins": "9 coins",
+    "Double Jump Total Left Roof coins": "10 coins",
+    "Double Jump Total Left coins": "50 coins",
+    "Move Right coins": "4 coins",
+    "Movement Pack": "Movement Pack",
+    "Movement Pack coins": "46 coins",
+    "Psychological Warfare coins": "100 coins",
+    "The Forest coins": "171 coins",
+    "The Forest with double Jump Part 2 coins": "203 coins",
+    "The Forest with double Jump coins": "76 coins",
+    "True Double Jump Behind Tree coins": "7 coins",
+    "Winning Basic": "Victory Basic",
+}
+
+# Starting items - items the player begins with (precollected)
+STARTING_ITEMS: Dict[str, int] = {
+    " coins": 825,
 }
 
 
@@ -85,6 +94,16 @@ class DLCQuestTestWorld(RuleWorldMixin, World):
         if data.location_id is not None
     }
 
+    item_name_groups: ClassVar[Dict[str, frozenset]] = {
+        "Event": frozenset(["Victory Basic"]),
+        "Everything": frozenset(["Animation Pack", "Armor for your Horse Pack", "Audio Pack", "Big Sword Pack", "Box of Various Supplies", "Canadian Dialog Pack", "Checkpoint Pack", "Cut Content Pack", "DLC NPC Pack", "DLC Quest: Coin Bundle", "DLC Quest: Coin Piece", "DLC Quest: Progressive Weapon", "Day One Patch Pack", "Death of Comedy Pack", "Double Jump Pack", "Finish the Fight Pack", "Gun", "Gun Pack", "Harmless Plants Pack", "Health Bar Pack", "High Definition Next Gen Pack", "Humble Indie Bindle", "Increased HP Pack", "Incredibly Important Pack", "Live Freemium or Die: Coin Bundle", "Live Freemium or Die: Coin Piece", "Live Freemium or Die: Progressive Weapon", "Loading Screen", "Map Pack", "Movement Pack", "Name Change Pack", "Night Map Pack", "Parallax Pack", "Particles Pack", "Pause Menu Pack", "Pet Pack", "Pickaxe", "Psychological Warfare Pack", "Really Big Sword Pack", "Removed Ads Pack", "Season Pass", "Sexy Outfits Pack", "Sword", "Temporary Spike", "The Zombie Pack", "Time is Money Pack", "Top Hat Pack", "Unfathomable Sword Pack", "Wall Jump Pack", "Wooden Sword", "Zombie Sheep"]),
+        "coins": frozenset([" coins", " coins freemium", "10 coins", "100 coins", "171 coins", "203 coins", "4 coins", "46 coins", "50 coins", "60 coins", "7 coins", "76 coins", "89 coins", "9 coins"]),
+    }
+
+    def generate_early(self) -> None:
+        """Push starting items as precollected."""
+        self._push_starting_items()
+
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
@@ -95,6 +114,10 @@ class DLCQuestTestWorld(RuleWorldMixin, World):
 
     def create_items(self) -> None:
         """Create randomized item pool."""
+        # First, place any locked items
+        self._place_locked_items()
+
+        # Then create the random item pool
         item_pool = []
 
         for item_name, count in ITEMPOOL_COUNTS.items():
@@ -113,6 +136,28 @@ class DLCQuestTestWorld(RuleWorldMixin, World):
                 item_pool.append(item)
 
         self.multiworld.itempool += item_pool
+
+    def _place_locked_items(self) -> None:
+        """Place items that must be in specific locations (locked placements)."""
+        for location_name, item_name in LOCKED_PLACEMENTS.items():
+            if item_name and item_name in item_table:
+                location = self.multiworld.get_location(location_name, self.player)
+                item_data = item_table[item_name]
+                item = DLCQuestTestItem(
+                    item_name,
+                    item_data.classification,
+                    item_data.id,
+                    self.player
+                )
+                location.place_locked_item(item)
+
+    def _push_starting_items(self) -> None:
+        """Push starting items as precollected (for state counters like coins)."""
+        for item_name, count in STARTING_ITEMS.items():
+            if item_name in item_table:
+                for _ in range(count):
+                    item = self.create_item(item_name)
+                    self.multiworld.push_precollected(item)
 
     def generate_basic(self) -> None:
         """Place victory event item."""

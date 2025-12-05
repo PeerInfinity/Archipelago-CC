@@ -366,7 +366,8 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     if canonical_seed1:
         generate_early_section = '''
     def generate_early(self) -> None:
-        """Disable randomization for seed 1 (canonical placement)."""
+        """Push starting items and disable randomization for seed 1."""
+        self._push_starting_items()
         if self.multiworld.seed == 1:
             self.options.randomize_items.value = False
 '''
@@ -399,7 +400,11 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     def _create_item_pool(self) -> None:
 '''
     else:
-        generate_early_section = ''
+        generate_early_section = '''
+    def generate_early(self) -> None:
+        """Push starting items as precollected."""
+        self._push_starting_items()
+'''
         create_items_section = '''
     def create_items(self) -> None:
 '''
@@ -413,6 +418,15 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
             locked_entries.append(f'    "{loc_escaped}": "{item_escaped}",')
 
     locked_content = '\n'.join(locked_entries)
+
+    # Build starting_items dictionary (precollected items)
+    starting_entries = []
+    for item_name, count in sorted(data.starting_items.items()):
+        if count > 0:
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            starting_entries.append(f'    "{item_escaped}": {count},')
+
+    starting_content = '\n'.join(starting_entries)
 
     # Count locked items to subtract from itempool_counts
     locked_item_counts: Dict[str, int] = {}
@@ -466,6 +480,11 @@ ITEMPOOL_COUNTS: Dict[str, int] = {{
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {{
 {locked_content}
+}}
+
+# Starting items - items the player begins with (precollected)
+STARTING_ITEMS: Dict[str, int] = {{
+{starting_content}
 }}
 
 
@@ -548,6 +567,14 @@ class {world_class}(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+
+    def _push_starting_items(self) -> None:
+        """Push starting items as precollected (for state counters like coins)."""
+        for item_name, count in STARTING_ITEMS.items():
+            if item_name in item_table:
+                for _ in range(count):
+                    item = self.create_item(item_name)
+                    self.multiworld.push_precollected(item)
 {victory_section}
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

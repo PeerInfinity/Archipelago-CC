@@ -434,6 +434,7 @@ Games with full world generator support:
 | Bomb Rush Cyberfunk | 0 | ✓ Pass |
 | Final Fantasy Mystic Quest | 0 | ✓ Pass |
 | Kirby's Dream Land 3 | 0 | ✓ Pass |
+| DLCQuest | 0 | ✓ Pass |
 
 ---
 
