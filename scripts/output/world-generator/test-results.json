@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2025-12-05T21:59:04.580724",
+    "timestamp": "2025-12-05T22:05:25.423586",
     "seed": 1,
     "phase": "test",
     "total_templates": 1,
@@ -12,10 +12,10 @@
     "cross_validation_failed": 0
   },
   "results": {
-    "Shivers": {
-      "template": "Shivers.yaml",
-      "game_name": "Shivers",
-      "timestamp": "2025-12-05T21:59:05.124152",
+    "Wargroove": {
+      "template": "Wargroove.yaml",
+      "game_name": "Wargroove",
+      "timestamp": "2025-12-05T22:05:25.964638",
       "original": {
         "generation": {
           "success": true,
@@ -27,7 +27,7 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": null,
-          "processing_time_seconds": 8.44
+          "processing_time_seconds": 8.74
         }
       },
       "test_world": {
@@ -38,11 +38,11 @@
         "seed_generation": {
           "success": true,
           "seed_id": "AP_14089154938208861744",
-          "rules_path": "/home/user/Archipelago-CC/frontend/presets/shivers_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/shivers_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
-          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/shivers_test/AP_14089154938208861744",
+          "rules_path": "/home/user/Archipelago-CC/frontend/presets/wargroove_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/wargroove_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/wargroove_test/AP_14089154938208861744",
           "error": null,
-          "processing_time_seconds": 5.55
+          "processing_time_seconds": 5.37
         },
         "spoiler_test": {
           "success": true,
@@ -50,7 +50,7 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": null,
-          "processing_time_seconds": 8.58
+          "processing_time_seconds": 8.74
         },
         "cross_validation": {
           "success": true,
@@ -58,10 +58,10 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": null,
-          "processing_time_seconds": 8.58
+          "processing_time_seconds": 8.6
         },
-        "test_template_name": "Shivers Test.yaml",
-        "test_game_name": "Shivers Test"
+        "test_template_name": "Wargroove Test.yaml",
+        "test_game_name": "Wargroove Test"
       },
       "errors": {
         "generation": [],

@@ -275,6 +275,7 @@ def main():
         ("timespinner", "Timespinner"),
         ("hylics2", "Hylics 2"),
         ("shivers", "Shivers"),
+        ("wargroove", "Wargroove"),
     ]
 
     for game_dir, game_name in games_to_test:

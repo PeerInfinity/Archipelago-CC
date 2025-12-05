@@ -426,6 +426,7 @@ Games with full world generator support:
 | Timespinner | 307 | ✓ Pass |
 | Hylics 2 | 184 | ✓ Pass |
 | Shivers | 247 | ✓ Pass |
+| Wargroove | 64 | ✓ Pass |
 
 ---
 
