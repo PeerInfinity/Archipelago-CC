@@ -59,6 +59,8 @@ export class EventProcessor {
     this.focusedMode = false; // True if this is a focused regression test
     this.focusLocations = []; // Locations to focus on in focused mode
     this._sphere0Cleared = false; // Track if sphere 0 has been cleared
+    this._pendingSphereItems = []; // Items to add when transitioning to next integer sphere
+    this._pendingIntSphere = undefined; // The integer sphere the pending items belong to
     logger.debug('EventProcessor constructor called');
 
     // Load verbose mode setting
@@ -298,31 +300,44 @@ export class EventProcessor {
           const addItemsUpfront = staticData?.settings?.[this.playerIdKey]?.add_sphere_items_upfront || false;
 
           if (addItemsUpfront) {
-            // For upfront mode, add items from sphere log and compare BEFORE checking locations
-            // This mode is used for games with event locations that auto-collect items
-            if (newlyAddedItems.length > 0) {
-              this.logCallback('info', `Adding ${newlyAddedItems.length} items from sphere log to inventory...`);
+            // For upfront mode with incremental sub-spheres:
+            // Python's sphere calculation works as follows:
+            // - Sphere 0: give starting items → calculate accessible_0 (what becomes accessible with starting items)
+            // - Sphere 0.1: give items_0 → calculate accessible_0.1 (what becomes accessible after adding items_0)
+            // - Sphere 0.M: give items_0.M → calculate accessible_0.M (what becomes accessible after adding items_0.M)
+            //
+            // So accessible_from_log for N.M is based on inventory AFTER adding N.M's items.
+            // This means we need to add items from THIS sphere BEFORE comparing.
+            //
+            // SPECIAL CASE: At sphere 0, newlyAddedItems contains starting items that were already
+            // added during initialization. We must NOT add them again.
+            const sphereStr = String(context.sphere_number);
+            const intSphere = parseInt(sphereStr.split('.')[0], 10);
+            const isSphere0Base = (intSphere === 0 && !sphereStr.includes('.'));
+
+            // Add items from THIS sphere BEFORE comparison
+            if (isSphere0Base) {
+              // Sphere 0 (base): Skip adding items - starting items already added during init
+              this.logCallback('info', `[add_sphere_items_upfront] Sphere 0 - skipping item addition (starting items already added during init)`);
+            } else if (newlyAddedItems.length > 0) {
+              this.logCallback('info', `Adding ${newlyAddedItems.length} items from sphere ${context.sphere_number} BEFORE comparison...`);
               for (const itemName of newlyAddedItems) {
                 await stateManager.addItemToInventory(itemName, 1);
                 if (this.verboseMode) {
                   this.logCallback('debug', `  Added item: ${itemName}`);
                 }
               }
+              // Wait for state to stabilize after adding items
+              await stateManager.pingWorker(`sphere_${context.sphere_number}_items_added`, 10000);
             } else {
-              this.logCallback('info', `[add_sphere_items_upfront] No new items for sphere ${context.sphere_number}, comparing with current inventory state`);
+              this.logCallback('info', `[add_sphere_items_upfront] No new items in sphere ${context.sphere_number}`);
             }
 
-            // Wait for state to stabilize after adding items (or just to sync if no items)
-            await stateManager.pingWorker(`sphere_${context.sphere_number}_items_added`, 10000);
-
-            // Get fresh snapshot after reachability update
+            // NOW sync state and get snapshot (AFTER adding items)
+            await stateManager.pingWorker(`sphere_${context.sphere_number}_pre_compare`, 10000);
             const snapshot = await stateManager.getFullSnapshot();
 
-            // CRITICAL: For add_sphere_items_upfront mode, do the comparison NOW,
-            // before checking any locations, because the sphere log shows what's
-            // accessible with just the items added upfront
-
-            // Compare using the snapshot we just got
+            // Compare using the snapshot with current inventory (including items just added)
             const locationComparisonResult = await this.comparisonEngine.compareAccessibleLocations(
               accessible_from_log,
               snapshot,
@@ -1106,7 +1121,9 @@ export class EventProcessor {
    */
   resetInventoryTracking() {
     this.previousInventory = {};
-    logger.debug('Previous inventory tracking reset');
+    this._pendingSphereItems = [];
+    this._pendingIntSphere = undefined;
+    logger.debug('Inventory tracking reset (previous inventory and pending sphere items)');
   }
 
   /**
