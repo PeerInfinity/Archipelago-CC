@@ -1,0 +1,66 @@
+{
+  "metadata": {
+    "timestamp": "2025-12-05T19:01:13.950670",
+    "seed": 1,
+    "phase": "test",
+    "total_templates": 1,
+    "successful_generations": 0,
+    "failed_generations": 0,
+    "successful_test_worlds": 0,
+    "failed_test_worlds": 0,
+    "cross_validation_passed": 0,
+    "cross_validation_failed": 0
+  },
+  "results": {
+    "DLCQuest": {
+      "template": "DLCQuest.yaml",
+      "game_name": "DLCQuest",
+      "timestamp": "2025-12-05T19:01:13.975413",
+      "original": {
+        "generation": {
+          "success": true,
+          "note": "Phase 1"
+        },
+        "spoiler_test": {
+          "success": true,
+          "pass_fail": "pass",
+          "sphere_reached": 0,
+          "total_spheres": 0,
+          "error": null,
+          "processing_time_seconds": 8.63
+        }
+      },
+      "test_world": {
+        "world_generation": {
+          "success": true,
+          "note": "Phase 1"
+        },
+        "seed_generation": {
+          "success": false,
+          "seed_id": "AP_14089154938208861744",
+          "rules_path": null,
+          "sphere_log_path": null,
+          "preset_dir": null,
+          "error": "raise FillError(",
+          "processing_time_seconds": 5.46
+        },
+        "spoiler_test": {
+          "success": false,
+          "pass_fail": "unknown"
+        },
+        "cross_validation": {
+          "success": false,
+          "pass_fail": "unknown"
+        },
+        "test_template_name": "DLCQuest Test.yaml",
+        "test_game_name": "DLCQuest Test"
+      },
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Test world seed generation failed: raise FillError("
+        ]
+      }
+    }
+  }
+}

@@ -70,6 +70,7 @@ class RuleCodeGenerator:
             'state_method': self._convert_state_method,
             'not': self._convert_not,
             'helper': self._convert_helper,
+            'compare': self._convert_compare,
         }
 
         converter = converters.get(rule_type)
@@ -276,6 +277,100 @@ class RuleCodeGenerator:
             count = args[1].get('value', 1)
 
         return f'{class_name}("{group}", {count})'
+
+    def _convert_compare(self, rule: Dict[str, Any]) -> str:
+        """
+        Convert compare rule to Has() if it matches the prog_items pattern.
+
+        Pattern: state.prog_items[player][item_name] OP count
+        Converts to: Has(item_name, count)
+        """
+        left = rule.get('left', {})
+        op = rule.get('op', '')
+        right = rule.get('right', {})
+
+        # Try to recognize the pattern: state.prog_items[player][item_name] >= count
+        result = self._try_convert_prog_items_compare(left, op, right)
+        if result is not None:
+            return result
+
+        # Unknown compare pattern
+        return f'True_()  # TODO: Unknown compare pattern'
+
+    def _try_convert_prog_items_compare(
+        self, left: Any, op: str, right: Any
+    ) -> Optional[str]:
+        """
+        Try to convert a prog_items comparison to Has().
+
+        Returns None if the pattern doesn't match.
+        """
+        # Check if right side is a constant (the count)
+        if not isinstance(right, dict) or right.get('type') != 'constant':
+            return None
+        count = right.get('value', 0)
+
+        # Extract item name from the left side
+        item_name = self._extract_prog_items_item_name(left)
+        if item_name is None:
+            return None
+
+        # Convert based on operator
+        if op == '>=':
+            pass  # count stays as is
+        elif op == '>':
+            count = count + 1  # > n means >= n+1
+        elif op == '==' and count > 0:
+            pass  # approximate as "has at least count"
+        else:
+            return None
+
+        self.required_imports.add('Has')
+
+        # Escape item name for Python string
+        item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+
+        if count == 1:
+            return f'Has("{item_escaped}")'
+        else:
+            return f'Has("{item_escaped}", {count})'
+
+    def _extract_prog_items_item_name(self, expr: Any) -> Optional[str]:
+        """
+        Extract the item name from a prog_items subscript expression.
+
+        Pattern: state.prog_items[player][item_name]
+        Returns the item_name string if the pattern matches, None otherwise.
+        """
+        # Expected structure:
+        # {"type": "subscript", "value": {...}, "index": {"type": "constant", "value": "item_name"}}
+        if not isinstance(expr, dict) or expr.get('type') != 'subscript':
+            return None
+
+        # Get the item name from the outer subscript index
+        index = expr.get('index', {})
+        if not isinstance(index, dict) or index.get('type') != 'constant':
+            return None
+        item_name = index.get('value')
+
+        # Check that the inner expression is state.prog_items[player]
+        inner = expr.get('value', {})
+        if not isinstance(inner, dict) or inner.get('type') != 'subscript':
+            return None
+
+        # Check the innermost expression is state.prog_items
+        innermost = inner.get('value', {})
+        if not isinstance(innermost, dict) or innermost.get('type') != 'attribute':
+            return None
+
+        if innermost.get('attr') != 'prog_items':
+            return None
+
+        obj = innermost.get('object', {})
+        if not isinstance(obj, dict) or obj.get('type') != 'name' or obj.get('name') != 'state':
+            return None
+
+        return item_name
 
     def _convert_not(self, rule: Dict[str, Any]) -> str:
         """Convert not rule - Rule Builder doesn't have Not, use lambda fallback."""

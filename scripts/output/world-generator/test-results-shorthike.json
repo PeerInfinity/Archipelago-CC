@@ -1,0 +1,72 @@
+{
+  "metadata": {
+    "timestamp": "2025-12-05T19:05:35.862991",
+    "seed": 1,
+    "phase": "test",
+    "total_templates": 1,
+    "successful_generations": 0,
+    "failed_generations": 0,
+    "successful_test_worlds": 0,
+    "failed_test_worlds": 0,
+    "cross_validation_passed": 1,
+    "cross_validation_failed": 0
+  },
+  "results": {
+    "A Short Hike": {
+      "template": "A Short Hike.yaml",
+      "game_name": "A Short Hike",
+      "timestamp": "2025-12-05T19:05:35.885206",
+      "original": {
+        "generation": {
+          "success": true,
+          "note": "Phase 1"
+        },
+        "spoiler_test": {
+          "success": true,
+          "pass_fail": "pass",
+          "sphere_reached": 0,
+          "total_spheres": 0,
+          "error": null,
+          "processing_time_seconds": 8.5
+        }
+      },
+      "test_world": {
+        "world_generation": {
+          "success": true,
+          "note": "Phase 1"
+        },
+        "seed_generation": {
+          "success": true,
+          "seed_id": "AP_14089154938208861744",
+          "rules_path": "/home/user/Archipelago-CC/frontend/presets/shorthike_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/shorthike_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/shorthike_test/AP_14089154938208861744",
+          "error": null,
+          "processing_time_seconds": 5.41
+        },
+        "spoiler_test": {
+          "success": true,
+          "pass_fail": "pass",
+          "sphere_reached": 0,
+          "total_spheres": 0,
+          "error": null,
+          "processing_time_seconds": 8.54
+        },
+        "cross_validation": {
+          "success": true,
+          "pass_fail": "pass",
+          "sphere_reached": 0,
+          "total_spheres": 0,
+          "error": null,
+          "processing_time_seconds": 8.59
+        },
+        "test_template_name": "A Short Hike Test.yaml",
+        "test_game_name": "A Short Hike Test"
+      },
+      "errors": {
+        "generation": [],
+        "testing": []
+      }
+    }
+  }
+}

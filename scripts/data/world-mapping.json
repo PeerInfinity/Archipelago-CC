@@ -20,6 +20,13 @@
     "has_custom_game_logic": false,
     "world_directory": "shorthike"
   },
+  "A Short Hike Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "shorthike_test"
+  },
   "APQuest": {
     "exporter_path": null,
     "game_logic_path": null,
@@ -145,6 +152,13 @@
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "dlcquest"
+  },
+  "DLCQuest Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "dlcquest_test"
   },
   "DOOM 1993": {
     "exporter_path": "exporter/games/doom_1993.py",

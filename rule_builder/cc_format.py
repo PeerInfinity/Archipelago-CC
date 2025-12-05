@@ -110,6 +110,9 @@ def parse_cc_rule(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) ->
     elif rule_type == 'helper':
         return _parse_helper(data, world_cls)
 
+    elif rule_type == 'compare':
+        return _parse_compare(data, world_cls)
+
     else:
         # Unknown type - log warning and return True_ as fallback
         logger.warning(f"Unknown CC rule type '{rule_type}', treating as True: {data}")
@@ -404,3 +407,106 @@ def _parse_helper(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) ->
     except (ValueError, KeyError):
         logger.warning(f"Unknown helper rule '{helper_name}', treating as True")
         return True_()
+
+
+def _parse_compare(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) -> "Rule[Any]":
+    """
+    Parse a compare rule (comparison expression).
+
+    CC Format:
+        {"type": "compare", "left": {...}, "op": ">=", "right": {...}}
+
+    Common patterns:
+    - state.prog_items[player][item_name] >= count -> Has(item_name, count)
+    - state.prog_items[player][item_name] > 0 -> Has(item_name, 1)
+
+    For other patterns, we log a warning and return True_ as fallback.
+    """
+    from rule_builder.rules import Has, True_
+
+    left = data.get('left', {})
+    op = data.get('op', '')
+    right = data.get('right', {})
+
+    # Try to recognize the pattern: state.prog_items[player][item_name] >= count
+    item_check = _try_parse_prog_items_check(left, op, right)
+    if item_check is not None:
+        return item_check
+
+    # Unknown compare pattern - return True_ as fallback
+    logger.warning(f"Unrecognized compare pattern, treating as True: {data}")
+    return True_()
+
+
+def _try_parse_prog_items_check(left: Any, op: str, right: Any) -> "Rule[Any] | None":
+    """
+    Try to parse a compare expression as a prog_items item check.
+
+    Pattern: state.prog_items[player][item_name] OP count
+    """
+    from rule_builder.rules import Has
+
+    # Check if right side is a constant (the count)
+    if not isinstance(right, dict) or right.get('type') != 'constant':
+        return None
+    count = right.get('value', 0)
+
+    # Handle >= operator (Has with count)
+    if op == '>=':
+        item_name = _extract_prog_items_item_name(left)
+        if item_name is not None:
+            return Has(item_name=item_name, count=count)
+
+    # Handle > operator (Has with count + 1)
+    elif op == '>':
+        item_name = _extract_prog_items_item_name(left)
+        if item_name is not None:
+            return Has(item_name=item_name, count=count + 1)
+
+    # Handle == operator with positive count
+    elif op == '==' and count > 0:
+        item_name = _extract_prog_items_item_name(left)
+        if item_name is not None:
+            # == count means "has exactly count", approximate as "has at least count"
+            return Has(item_name=item_name, count=count)
+
+    return None
+
+
+def _extract_prog_items_item_name(expr: Any) -> str | None:
+    """
+    Extract the item name from a prog_items subscript expression.
+
+    Pattern: state.prog_items[player][item_name]
+
+    Returns the item_name string if the pattern matches, None otherwise.
+    """
+    # Expected structure:
+    # {"type": "subscript", "value": {...}, "index": {"type": "constant", "value": "item_name"}}
+    if not isinstance(expr, dict) or expr.get('type') != 'subscript':
+        return None
+
+    # Get the item name from the outer subscript index
+    index = expr.get('index', {})
+    if not isinstance(index, dict) or index.get('type') != 'constant':
+        return None
+    item_name = index.get('value')
+
+    # Check that the inner expression is state.prog_items[player]
+    inner = expr.get('value', {})
+    if not isinstance(inner, dict) or inner.get('type') != 'subscript':
+        return None
+
+    # Check the innermost expression is state.prog_items
+    innermost = inner.get('value', {})
+    if not isinstance(innermost, dict) or innermost.get('type') != 'attribute':
+        return None
+
+    if innermost.get('attr') != 'prog_items':
+        return None
+
+    obj = innermost.get('object', {})
+    if not isinstance(obj, dict) or obj.get('type') != 'name' or obj.get('name') != 'state':
+        return None
+
+    return item_name

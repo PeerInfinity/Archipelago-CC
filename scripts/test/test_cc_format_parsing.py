@@ -264,6 +264,7 @@ def main():
     games_to_test = [
         ("adventure", "Adventure"),
         ("bumpstik", "Bumper Stickers"),
+        ("shorthike", "A Short Hike"),
     ]
 
     for game_dir, game_name in games_to_test:
