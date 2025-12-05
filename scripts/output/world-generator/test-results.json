@@ -2,8 +2,8 @@
   "metadata": {
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
-    "created": "2025-12-05T03:30:21.696426",
-    "last_updated": "2025-12-05T03:30:21.696430",
+    "created": "2025-12-05T00:01:02.238187",
+    "last_updated": "2025-12-05T00:01:02.238194",
     "script_version": "1.0.0"
   },
   "results": {
@@ -20,7 +20,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.9,
+          "processing_time_seconds": 6.69,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -35,7 +35,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 2.55,
+          "processing_time_seconds": 3.22,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -52,7 +52,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T03:29:40.724194"
+      "timestamp": "2025-12-04T23:59:28.090272"
     },
     "APQuest": {
       "errors": [
@@ -67,7 +67,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.63,
+          "processing_time_seconds": 6.79,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -82,7 +82,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 2.77,
+          "processing_time_seconds": 2.95,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -99,7 +99,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T03:29:36.728849"
+      "timestamp": "2025-12-04T23:59:25.950092"
     },
     "Adventure": {
       "errors": [
@@ -114,7 +114,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 7.02,
+          "processing_time_seconds": 6.69,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -129,7 +129,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 2.9,
+          "processing_time_seconds": 3.15,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -146,7 +146,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T03:29:44.560506"
+      "timestamp": "2025-12-04T23:59:23.382880"
     },
     "Aquaria": {
       "errors": [
@@ -161,7 +161,7 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.83,
+          "processing_time_seconds": 6.68,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
@@ -176,7 +176,7 @@
         "seed_generation": {
           "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
           "preset_dir": null,
-          "processing_time_seconds": 3.02,
+          "processing_time_seconds": 3.07,
           "rules_path": null,
           "seed_id": "AP_14089154938208861744",
           "sphere_log_path": null,
@@ -193,7 +193,7 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T03:29:35.907011"
+      "timestamp": "2025-12-04T23:59:32.043765"
     },
     "Bomb Rush Cyberfunk": {
       "errors": [
@@ -208,13 +208,254 @@
         "spoiler_test": {
           "error": null,
           "pass_fail": "pass",
-          "processing_time_seconds": 6.68,
+          "processing_time_seconds": 6.65,
           "sphere_reached": 0,
           "success": true,
           "total_spheres": 0
         }
       },
       "template": "Bomb Rush Cyberfunk.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
+          "preset_dir": null,
+          "processing_time_seconds": 3.27,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Bomb Rush Cyberfunk Test",
+        "test_template_name": "Bomb Rush Cyberfunk Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:24.145221"
+    },
+    "Bumper Stickers": {
+      "errors": [
+        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
+      ],
+      "game_name": "Bumper Stickers",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.36,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Bumper Stickers.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
+          "preset_dir": null,
+          "processing_time_seconds": 3.03,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Bumper Stickers Test",
+        "test_template_name": "Bumper Stickers Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:24.336780"
+    },
+    "Celeste 64": {
+      "errors": [
+        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
+      ],
+      "game_name": "Celeste 64",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.14,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Celeste 64.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
+          "preset_dir": null,
+          "processing_time_seconds": 3.2,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Celeste 64 Test",
+        "test_template_name": "Celeste 64 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:32.217615"
+    },
+    "ChecksFinder": {
+      "errors": [
+        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
+      ],
+      "game_name": "ChecksFinder",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.94,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "ChecksFinder.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
+          "preset_dir": null,
+          "processing_time_seconds": 3.2,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "ChecksFinder Test",
+        "test_template_name": "ChecksFinder Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:20.482338"
+    },
+    "ChocolateChipCookies": {
+      "errors": [],
+      "game_name": "ChocolateChipCookies",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.25,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "ChocolateChipCookies.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.79,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bakingadventure_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.24,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bakingadventure_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bakingadventure_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.76,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "ChocolateChipCookies Test",
+        "test_template_name": "ChocolateChipCookies Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:43.576137"
+    },
+    "Choo-Choo Charles": {
+      "errors": [
+        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
+      ],
+      "game_name": "Choo-Choo Charles",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.16,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Choo-Choo Charles.yaml",
       "test_world": {
         "cross_validation": {
           "pass_fail": "unknown",
@@ -233,100 +474,6 @@
           "pass_fail": "unknown",
           "success": false
         },
-        "test_game_name": "Bomb Rush Cyberfunk Test",
-        "test_template_name": "Bomb Rush Cyberfunk Test.yaml",
-        "world_generation": {
-          "note": "Phase 1",
-          "success": true
-        }
-      },
-      "timestamp": "2025-12-05T03:29:47.032278"
-    },
-    "Bumper Stickers": {
-      "errors": [
-        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
-      ],
-      "game_name": "Bumper Stickers",
-      "original": {
-        "generation": {
-          "note": "Phase 1",
-          "success": true
-        },
-        "spoiler_test": {
-          "error": null,
-          "pass_fail": "pass",
-          "processing_time_seconds": 6.79,
-          "sphere_reached": 0,
-          "success": true,
-          "total_spheres": 0
-        }
-      },
-      "template": "Bumper Stickers.yaml",
-      "test_world": {
-        "cross_validation": {
-          "pass_fail": "unknown",
-          "success": false
-        },
-        "seed_generation": {
-          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
-          "preset_dir": null,
-          "processing_time_seconds": 2.79,
-          "rules_path": null,
-          "seed_id": "AP_14089154938208861744",
-          "sphere_log_path": null,
-          "success": false
-        },
-        "spoiler_test": {
-          "pass_fail": "unknown",
-          "success": false
-        },
-        "test_game_name": "Bumper Stickers Test",
-        "test_template_name": "Bumper Stickers Test.yaml",
-        "world_generation": {
-          "note": "Phase 1",
-          "success": true
-        }
-      },
-      "timestamp": "2025-12-05T03:29:40.181281"
-    },
-    "Choo-Choo Charles": {
-      "errors": [
-        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
-      ],
-      "game_name": "Choo-Choo Charles",
-      "original": {
-        "generation": {
-          "note": "Phase 1",
-          "success": true
-        },
-        "spoiler_test": {
-          "error": null,
-          "pass_fail": "pass",
-          "processing_time_seconds": 6.61,
-          "sphere_reached": 0,
-          "success": true,
-          "total_spheres": 0
-        }
-      },
-      "template": "Choo-Choo Charles.yaml",
-      "test_world": {
-        "cross_validation": {
-          "pass_fail": "unknown",
-          "success": false
-        },
-        "seed_generation": {
-          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
-          "preset_dir": null,
-          "processing_time_seconds": 2.73,
-          "rules_path": null,
-          "seed_id": "AP_14089154938208861744",
-          "sphere_log_path": null,
-          "success": false
-        },
-        "spoiler_test": {
-          "pass_fail": "unknown",
-          "success": false
-        },
         "test_game_name": "Choo-Choo Charles Test",
         "test_template_name": "Choo-Choo Charles Test.yaml",
         "world_generation": {
@@ -334,7 +481,1030 @@
           "success": true
         }
       },
-      "timestamp": "2025-12-05T03:29:43.505610"
+      "timestamp": "2025-12-04T23:59:26.611024"
+    },
+    "Civilization VI": {
+      "errors": [
+        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
+      ],
+      "game_name": "Civilization VI",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.83,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Civilization VI.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
+          "preset_dir": null,
+          "processing_time_seconds": 3.04,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Civilization VI Test",
+        "test_template_name": "Civilization VI Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:38.009481"
+    },
+    "DLCQuest": {
+      "errors": [],
+      "game_name": "DLCQuest",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.77,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "DLCQuest.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.81,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dlcquest_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.1,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dlcquest_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dlcquest_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.8,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "DLCQuest Test",
+        "test_template_name": "DLCQuest Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:35.711456"
+    },
+    "DOOM 1993": {
+      "errors": [
+        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
+      ],
+      "game_name": "DOOM 1993",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.84,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "DOOM 1993.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
+          "preset_dir": null,
+          "processing_time_seconds": 2.99,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "DOOM 1993 Test",
+        "test_template_name": "DOOM 1993 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:33.231640"
+    },
+    "DOOM II": {
+      "errors": [
+        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
+      ],
+      "game_name": "DOOM II",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.79,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "DOOM II.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
+          "preset_dir": null,
+          "processing_time_seconds": 2.9,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "DOOM II Test",
+        "test_template_name": "DOOM II Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:41.797951"
+    },
+    "Faxanadu": {
+      "errors": [
+        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
+      ],
+      "game_name": "Faxanadu",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.85,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Faxanadu.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
+          "preset_dir": null,
+          "processing_time_seconds": 3.19,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Faxanadu Test",
+        "test_template_name": "Faxanadu Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:34.067643"
+    },
+    "Final Fantasy Mystic Quest": {
+      "errors": [
+        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
+      ],
+      "game_name": "Final Fantasy Mystic Quest",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.88,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Final Fantasy Mystic Quest.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
+          "preset_dir": null,
+          "processing_time_seconds": 2.92,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Final Fantasy Mystic Quest Test",
+        "test_template_name": "Final Fantasy Mystic Quest Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:33.742498"
+    },
+    "Heretic": {
+      "errors": [
+        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
+      ],
+      "game_name": "Heretic",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.79,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Heretic.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
+          "preset_dir": null,
+          "processing_time_seconds": 2.9,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Heretic Test",
+        "test_template_name": "Heretic Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:41.564002"
+    },
+    "Hylics 2": {
+      "errors": [
+        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
+      ],
+      "game_name": "Hylics 2",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.87,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Hylics 2.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
+          "preset_dir": null,
+          "processing_time_seconds": 3.15,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Hylics 2 Test",
+        "test_template_name": "Hylics 2 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:30.633535"
+    },
+    "Inscryption": {
+      "errors": [
+        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
+      ],
+      "game_name": "Inscryption",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.76,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Inscryption.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
+          "preset_dir": null,
+          "processing_time_seconds": 2.93,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Inscryption Test",
+        "test_template_name": "Inscryption Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-05T00:00:06.683839"
+    },
+    "Landstalker - The Treasures of King Nole": {
+      "errors": [
+        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
+      ],
+      "game_name": "Landstalker - The Treasures of King Nole",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.77,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Landstalker - The Treasures of King Nole.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
+          "preset_dir": null,
+          "processing_time_seconds": 2.93,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Landstalker - The Treasures of King Nole Test",
+        "test_template_name": "Landstalker - The Treasures of King Nole Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:35.823185"
+    },
+    "Lingo": {
+      "errors": [],
+      "game_name": "Lingo",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.81,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Lingo.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.8,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lingo_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.24,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lingo_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lingo_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.82,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Lingo Test",
+        "test_template_name": "Lingo Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:46.883241"
+    },
+    "MathProof2p2e4": {
+      "errors": [],
+      "game_name": "MathProof2p2e4",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.8,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "MathProof2p2e4.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.77,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mathadventure_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.15,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mathadventure_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mathadventure_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.81,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "MathProof2p2e4 Test",
+        "test_template_name": "MathProof2p2e4 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:56.224511"
+    },
+    "Mega Man 2": {
+      "errors": [
+        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
+      ],
+      "game_name": "Mega Man 2",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.83,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Mega Man 2.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
+          "preset_dir": null,
+          "processing_time_seconds": 2.99,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Mega Man 2 Test",
+        "test_template_name": "Mega Man 2 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:42.075368"
+    },
+    "Meritous": {
+      "errors": [
+        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
+      ],
+      "game_name": "Meritous",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.95,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Meritous.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
+          "preset_dir": null,
+          "processing_time_seconds": 2.93,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Meritous Test",
+        "test_template_name": "Meritous Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:50.494508"
+    },
+    "Muse Dash": {
+      "errors": [
+        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
+      ],
+      "game_name": "Muse Dash",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.06,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Muse Dash.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
+          "preset_dir": null,
+          "processing_time_seconds": 3.11,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Muse Dash Test",
+        "test_template_name": "Muse Dash Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:43.117841"
+    },
+    "Noita": {
+      "errors": [],
+      "game_name": "Noita",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.78,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Noita.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.77,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/noita_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.04,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/noita_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/noita_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.74,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Noita Test",
+        "test_template_name": "Noita Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:42.545788"
+    },
+    "Paint": {
+      "errors": [
+        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
+      ],
+      "game_name": "Paint",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.79,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Paint.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
+          "preset_dir": null,
+          "processing_time_seconds": 2.95,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Paint Test",
+        "test_template_name": "Paint Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:50.256951"
+    },
+    "Saving Princess": {
+      "errors": [
+        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
+      ],
+      "game_name": "Saving Princess",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.89,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Saving Princess.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
+          "preset_dir": null,
+          "processing_time_seconds": 3.09,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Saving Princess Test",
+        "test_template_name": "Saving Princess Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:39.650648"
+    },
+    "WebDevJourney": {
+      "errors": [],
+      "game_name": "WebDevJourney",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.77,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "WebDevJourney.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.78,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.09,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.76,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "WebDevJourney Test",
+        "test_template_name": "WebDevJourney Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-05T00:00:15.376556"
+    },
+    "Yacht Dice": {
+      "errors": [
+        "Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?"
+      ],
+      "game_name": "Yacht Dice",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.78,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Yacht Dice.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "SyntaxError: invalid syntax. Perhaps you forgot a comma?",
+          "preset_dir": null,
+          "processing_time_seconds": 2.89,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Yacht Dice Test",
+        "test_template_name": "Yacht Dice Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-04T23:59:44.537747"
+    },
+    "Zillion": {
+      "errors": [],
+      "game_name": "Zillion",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.81,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Zillion.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.83,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/zillion_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.23,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/zillion_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/zillion_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.82,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Zillion Test",
+        "test_template_name": "Zillion Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-05T00:00:07.561455"
     }
   }
 }
