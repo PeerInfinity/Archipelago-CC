@@ -34,6 +34,13 @@
     "has_custom_game_logic": false,
     "world_directory": "adventure"
   },
+  "Adventure Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "adventure_test"
+  },
   "Aquaria": {
     "exporter_path": "exporter/games/aquaria.py",
     "game_logic_path": "frontend/modules/shared/gameLogic/aquaria/aquariaLogic.js",
@@ -474,6 +481,20 @@
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "sm"
+  },
+  "TOEM original": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "toem_original"
+  },
+  "TOEM rule builder": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "toem_rule_builder"
   },
   "TUNIC": {
     "exporter_path": "exporter/games/tunic.py",
