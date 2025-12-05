@@ -1,6 +1,6 @@
 # World Generator Test Results
 
-**Generated:** 2025-12-05 05:04:13 UTC
+**Generated:** 2025-12-05 15:55:04 UTC
 **Seed:** N/A
 
 This report shows the results of round-trip testing the world generator.
@@ -127,46 +127,57 @@ world is validated to produce equivalent game logic.
 
 ### A Short Hike
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### APQuest
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### Adventure
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### Aquaria
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### Bomb Rush Cyberfunk
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### Bumper Stickers
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### Celeste 64
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### ChecksFinder
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### DOOM 1993
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### DOOM II
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### Dark Souls III
 
+**Generation phase:**
 - World generation failed: World generator failed: 
 ERROR:root:Could not load world WorldSource(ahit_test, is_zip=False, relative=True):
 Traceback (most recent call last):
@@ -174,47 +185,58 @@ Traceback (most recent call last):
 
 ### Donkey Kong Country 3
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### Factorio
 
+**Generation phase:**
 - World generation failed: World generator failed: 
 /home/runner/work/Archipelago-CC/Archipelago-CC/ModuleUpdate.py:76: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io...
 
 ### Faxanadu
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### Final Fantasy Mystic Quest
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### Heretic
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### Landstalker - The Treasures of King Nole
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### Links Awakening DX
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### Lufia II Ancient Cave
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### Mega Man 2
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### Meritous
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### Metamath
 
+**Generation phase:**
 - World generation failed: World generator failed: 
 ERROR:root:Could not load world WorldSource(alttp_test, is_zip=False, relative=True):
 Traceback (most recent call last):
@@ -222,31 +244,38 @@ Traceback (most recent call last):
 
 ### Muse Dash
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### Paint
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### Saving Princess
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### TOEM original
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### TOEM rule builder
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### The Legend of Zelda
 
+**Generation phase:**
 - World generation failed: World generator failed: 
 /home/runner/work/Archipelago-CC/Archipelago-CC/ModuleUpdate.py:76: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io...
 
 ### The Messenger
 
+**Generation phase:**
 - World generation failed: World generator failed: 
 ERROR:root:Could not load world WorldSource(jakanddaxter_test, is_zip=False, relative=True):
 Traceback (most recent call last):
@@ -254,4 +283,5 @@ Traceback (most recent call last):
 
 ### Yacht Dice
 
+**Testing phase:**
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
