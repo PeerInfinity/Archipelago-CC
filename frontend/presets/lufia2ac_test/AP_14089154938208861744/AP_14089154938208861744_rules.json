@@ -1,31 +1,17 @@
 {
   "schema_version": 3,
-  "game_name": "Lufia II Ancient Cave",
-  "game_directory": "lufia2ac",
+  "game_name": "Lufia II Ancient Cave Test",
+  "game_directory": "lufia2ac_test",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
   "player_names": {
     "1": "Player1"
   },
   "world_classes": {
-    "1": "L2ACWorld"
+    "1": "LufiaIIAncientCaveTestWorld"
   },
   "regions": {
     "1": {
-      "Menu": {
-        "name": "Menu",
-        "exits": [
-          {
-            "name": "AncientDungeonEntrance",
-            "connected_region": "AncientDungeon",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
       "AncientDungeon": {
         "name": "AncientDungeon",
         "exits": [
@@ -35,10 +21,7 @@
             "access_rule": {
               "type": "item_check",
               "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 4
-              }
+              "count": 4
             }
           }
         ],
@@ -59,6 +42,165 @@
             "locked": false
           },
           {
+            "name": "Blue chest 10",
+            "id": 11272201,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access"
+            },
+            "item": {
+              "name": "Dragon spear",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Blue chest 11",
+            "id": 11272202,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 2
+            },
+            "item": {
+              "name": "Dark mirror",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Blue chest 12",
+            "id": 11272203,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 2
+            },
+            "item": {
+              "name": "Flame shield",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Blue chest 13",
+            "id": 11272204,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 2
+            },
+            "item": {
+              "name": "Dragon spear",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Blue chest 14",
+            "id": 11272205,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 2
+            },
+            "item": {
+              "name": "Boom turban",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Blue chest 15",
+            "id": 11272206,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 2
+            },
+            "item": {
+              "name": "Dark mirror",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Blue chest 16",
+            "id": 11272207,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 3
+            },
+            "item": {
+              "name": "Air whip",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Blue chest 17",
+            "id": 11272208,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 3
+            },
+            "item": {
+              "name": "Agony helm",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Blue chest 18",
+            "id": 11272209,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 3
+            },
+            "item": {
+              "name": "Sizzle sword",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Blue chest 19",
+            "id": 11272210,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 3
+            },
+            "item": {
+              "name": "Gades blade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
             "name": "Blue chest 2",
             "id": 11272193,
             "access_rule": {
@@ -67,6 +209,102 @@
             },
             "item": {
               "name": "Sizzle sword",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Blue chest 20",
+            "id": 11272211,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 3
+            },
+            "item": {
+              "name": "Dia ring",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Blue chest 21",
+            "id": 11272212,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Catfish jwl.",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Blue chest 22",
+            "id": 11272213,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Dragon spear",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Blue chest 23",
+            "id": 11272214,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Agony helm",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Blue chest 24",
+            "id": 11272215,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Sky sword",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Blue chest 25",
+            "id": 11272216,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Earth jewel",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -123,11 +361,7 @@
             "id": 11272197,
             "access_rule": {
               "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 1
-              }
+              "item": "Progressive chest access"
             },
             "item": {
               "name": "Boom turban",
@@ -142,11 +376,7 @@
             "id": 11272198,
             "access_rule": {
               "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 1
-              }
+              "item": "Progressive chest access"
             },
             "item": {
               "name": "Snow sword",
@@ -161,11 +391,7 @@
             "id": 11272199,
             "access_rule": {
               "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 1
-              }
+              "item": "Progressive chest access"
             },
             "item": {
               "name": "Agony helm",
@@ -180,11 +406,7 @@
             "id": 11272200,
             "access_rule": {
               "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 1
-              }
+              "item": "Progressive chest access"
             },
             "item": {
               "name": "Aqua helm",
@@ -195,308 +417,51 @@
             "locked": false
           },
           {
-            "name": "Blue chest 10",
-            "id": 11272201,
+            "name": "Chest access 11-15",
+            "id": null,
             "access_rule": {
               "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 1
-              }
+              "item": "Progressive chest access"
             },
             "item": {
-              "name": "Dragon spear",
+              "name": "Progressive chest access",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
-            "name": "Blue chest 11",
-            "id": 11272202,
+            "name": "Chest access 16-20",
+            "id": null,
             "access_rule": {
               "type": "item_check",
               "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 2
-              }
+              "count": 2
             },
             "item": {
-              "name": "Dark mirror",
+              "name": "Progressive chest access",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
-            "name": "Blue chest 12",
-            "id": 11272203,
+            "name": "Chest access 21-25",
+            "id": null,
             "access_rule": {
               "type": "item_check",
               "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 2
-              }
+              "count": 3
             },
             "item": {
-              "name": "Flame shield",
+              "name": "Progressive chest access",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": false
-          },
-          {
-            "name": "Blue chest 13",
-            "id": 11272204,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 2
-              }
-            },
-            "item": {
-              "name": "Dragon spear",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Blue chest 14",
-            "id": 11272205,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 2
-              }
-            },
-            "item": {
-              "name": "Boom turban",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Blue chest 15",
-            "id": 11272206,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 2
-              }
-            },
-            "item": {
-              "name": "Dark mirror",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Blue chest 16",
-            "id": 11272207,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 3
-              }
-            },
-            "item": {
-              "name": "Air whip",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Blue chest 17",
-            "id": 11272208,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 3
-              }
-            },
-            "item": {
-              "name": "Agony helm",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Blue chest 18",
-            "id": 11272209,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 3
-              }
-            },
-            "item": {
-              "name": "Sizzle sword",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Blue chest 19",
-            "id": 11272210,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 3
-              }
-            },
-            "item": {
-              "name": "Gades blade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Blue chest 20",
-            "id": 11272211,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 3
-              }
-            },
-            "item": {
-              "name": "Dia ring",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Blue chest 21",
-            "id": 11272212,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 4
-              }
-            },
-            "item": {
-              "name": "Catfish jwl.",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Blue chest 22",
-            "id": 11272213,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 4
-              }
-            },
-            "item": {
-              "name": "Dragon spear",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Blue chest 23",
-            "id": 11272214,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 4
-              }
-            },
-            "item": {
-              "name": "Agony helm",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Blue chest 24",
-            "id": 11272215,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 4
-              }
-            },
-            "item": {
-              "name": "Sky sword",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Blue chest 25",
-            "id": 11272216,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 4
-              }
-            },
-            "item": {
-              "name": "Earth jewel",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Chest access 6-10",
@@ -514,151 +479,15 @@
             "locked": true
           },
           {
-            "name": "Chest access 11-15",
-            "id": null,
+            "name": "Iris treasure 1",
+            "id": 11273116,
             "access_rule": {
               "type": "item_check",
               "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 1
-              }
+              "count": 4
             },
             "item": {
-              "name": "Progressive chest access",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Chest access 16-20",
-            "id": null,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 2
-              }
-            },
-            "item": {
-              "name": "Progressive chest access",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Chest access 21-25",
-            "id": null,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 3
-              }
-            },
-            "item": {
-              "name": "Progressive chest access",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Iris treasure 4",
-            "id": 11273119,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 4
-              }
-            },
-            "item": {
-              "name": "Iris armor",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Iris treasure 3",
-            "id": 11273118,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 4
-              }
-            },
-            "item": {
-              "name": "Iris helmet",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Iris treasure 6",
-            "id": 11273121,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 4
-              }
-            },
-            "item": {
-              "name": "Iris jewel",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Iris treasure 8",
-            "id": 11273123,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 4
-              }
-            },
-            "item": {
-              "name": "Iris pot",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Iris treasure 5",
-            "id": 11273120,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 4
-              }
-            },
-            "item": {
-              "name": "Iris ring",
+              "name": "Iris sword",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -671,13 +500,74 @@
             "access_rule": {
               "type": "item_check",
               "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 4
-              }
+              "count": 4
             },
             "item": {
               "name": "Iris shield",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Iris treasure 3",
+            "id": 11273118,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Iris helmet",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Iris treasure 4",
+            "id": 11273119,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Iris armor",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Iris treasure 5",
+            "id": 11273120,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Iris ring",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Iris treasure 6",
+            "id": 11273121,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Iris jewel",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -690,10 +580,7 @@
             "access_rule": {
               "type": "item_check",
               "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 4
-              }
+              "count": 4
             },
             "item": {
               "name": "Iris staff",
@@ -704,18 +591,15 @@
             "locked": true
           },
           {
-            "name": "Iris treasure 1",
-            "id": 11273116,
+            "name": "Iris treasure 8",
+            "id": 11273123,
             "access_rule": {
               "type": "item_check",
               "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 4
-              }
+              "count": 4
             },
             "item": {
-              "name": "Iris sword",
+              "name": "Iris pot",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -728,10 +612,7 @@
             "access_rule": {
               "type": "item_check",
               "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 4
-              }
+              "count": 4
             },
             "item": {
               "name": "Iris tiara",
@@ -748,6 +629,22 @@
         "exits": [],
         "locations": [
           {
+            "name": "Boss",
+            "id": 11272642,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Ancient key",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
             "name": "Final Floor reached",
             "id": null,
             "access_rule": {
@@ -761,27 +658,22 @@
               "type": "None"
             },
             "locked": true
-          },
-          {
-            "name": "Boss",
-            "id": 11272642,
-            "access_rule": {
-              "type": "item_check",
-              "item": "Progressive chest access",
-              "count": {
-                "type": "constant",
-                "value": 4
-              }
-            },
-            "item": {
-              "name": "Ancient key",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
           }
         ]
+      },
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "AncientDungeonEntrance",
+            "connected_region": "AncientDungeon",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
       }
     }
   },
@@ -4907,8 +4799,7 @@
         "name": "Selan",
         "id": 11272626,
         "groups": [
-          "Everything",
-          "Party members"
+          "Everything"
         ],
         "advancement": false,
         "useful": false,
@@ -4921,8 +4812,7 @@
         "name": "Guy",
         "id": 11272627,
         "groups": [
-          "Everything",
-          "Party members"
+          "Everything"
         ],
         "advancement": false,
         "useful": false,
@@ -4935,8 +4825,7 @@
         "name": "Arty",
         "id": 11272628,
         "groups": [
-          "Everything",
-          "Party members"
+          "Everything"
         ],
         "advancement": false,
         "useful": false,
@@ -4949,8 +4838,7 @@
         "name": "Dekar",
         "id": 11272629,
         "groups": [
-          "Everything",
-          "Party members"
+          "Everything"
         ],
         "advancement": false,
         "useful": false,
@@ -4963,8 +4851,7 @@
         "name": "Tia",
         "id": 11272630,
         "groups": [
-          "Everything",
-          "Party members"
+          "Everything"
         ],
         "advancement": false,
         "useful": false,
@@ -4977,8 +4864,7 @@
         "name": "Lexis",
         "id": 11272631,
         "groups": [
-          "Everything",
-          "Party members"
+          "Everything"
         ],
         "advancement": false,
         "useful": false,
@@ -4991,7 +4877,6 @@
         "name": "JELZE",
         "id": 11272632,
         "groups": [
-          "Capsule monsters",
           "Everything"
         ],
         "advancement": false,
@@ -5005,7 +4890,6 @@
         "name": "FLASH",
         "id": 11272633,
         "groups": [
-          "Capsule monsters",
           "Everything"
         ],
         "advancement": false,
@@ -5019,7 +4903,6 @@
         "name": "GUSTO",
         "id": 11272634,
         "groups": [
-          "Capsule monsters",
           "Everything"
         ],
         "advancement": false,
@@ -5033,7 +4916,6 @@
         "name": "ZEPPY",
         "id": 11272635,
         "groups": [
-          "Capsule monsters",
           "Everything"
         ],
         "advancement": false,
@@ -5047,7 +4929,6 @@
         "name": "DARBI",
         "id": 11272636,
         "groups": [
-          "Capsule monsters",
           "Everything"
         ],
         "advancement": false,
@@ -5061,7 +4942,6 @@
         "name": "SULLY",
         "id": 11272637,
         "groups": [
-          "Capsule monsters",
           "Everything"
         ],
         "advancement": false,
@@ -5075,7 +4955,6 @@
         "name": "BLAZE",
         "id": 11272638,
         "groups": [
-          "Capsule monsters",
           "Everything"
         ],
         "advancement": false,
@@ -5102,8 +4981,7 @@
         "name": "Iris sword",
         "id": 11273116,
         "groups": [
-          "Everything",
-          "Iris treasures"
+          "Everything"
         ],
         "advancement": true,
         "useful": false,
@@ -5116,8 +4994,7 @@
         "name": "Iris shield",
         "id": 11273117,
         "groups": [
-          "Everything",
-          "Iris treasures"
+          "Everything"
         ],
         "advancement": true,
         "useful": false,
@@ -5130,8 +5007,7 @@
         "name": "Iris helmet",
         "id": 11273118,
         "groups": [
-          "Everything",
-          "Iris treasures"
+          "Everything"
         ],
         "advancement": true,
         "useful": false,
@@ -5144,8 +5020,7 @@
         "name": "Iris armor",
         "id": 11273119,
         "groups": [
-          "Everything",
-          "Iris treasures"
+          "Everything"
         ],
         "advancement": true,
         "useful": false,
@@ -5158,8 +5033,7 @@
         "name": "Iris ring",
         "id": 11273120,
         "groups": [
-          "Everything",
-          "Iris treasures"
+          "Everything"
         ],
         "advancement": true,
         "useful": false,
@@ -5172,8 +5046,7 @@
         "name": "Iris jewel",
         "id": 11273121,
         "groups": [
-          "Everything",
-          "Iris treasures"
+          "Everything"
         ],
         "advancement": true,
         "useful": false,
@@ -5186,8 +5059,7 @@
         "name": "Iris staff",
         "id": 11273122,
         "groups": [
-          "Everything",
-          "Iris treasures"
+          "Everything"
         ],
         "advancement": true,
         "useful": false,
@@ -5200,8 +5072,7 @@
         "name": "Iris pot",
         "id": 11273123,
         "groups": [
-          "Everything",
-          "Iris treasures"
+          "Everything"
         ],
         "advancement": true,
         "useful": false,
@@ -5214,8 +5085,7 @@
         "name": "Iris tiara",
         "id": 11273124,
         "groups": [
-          "Everything",
-          "Iris treasures"
+          "Everything"
         ],
         "advancement": true,
         "useful": false,
@@ -5228,7 +5098,6 @@
         "name": "Sizzle sword",
         "id": 11288681,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5242,7 +5111,6 @@
         "name": "Blaze sword",
         "id": 11288682,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5256,7 +5124,6 @@
         "name": "Gades blade",
         "id": 11288684,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5270,7 +5137,6 @@
         "name": "Sky sword",
         "id": 11288685,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5284,7 +5150,6 @@
         "name": "Snow sword",
         "id": 11288686,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5298,7 +5163,6 @@
         "name": "Fry sword",
         "id": 11288687,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5312,7 +5176,6 @@
         "name": "Mega ax",
         "id": 11288697,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5326,7 +5189,6 @@
         "name": "Spark staff",
         "id": 11288712,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5340,7 +5202,6 @@
         "name": "Air whip",
         "id": 11288721,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5354,7 +5215,6 @@
         "name": "Water spear",
         "id": 11288728,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5368,7 +5228,6 @@
         "name": "Dragon spear",
         "id": 11288729,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5382,7 +5241,6 @@
         "name": "Mirak plate",
         "id": 11288800,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5396,7 +5254,6 @@
         "name": "Ruse armor",
         "id": 11288801,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5410,7 +5267,6 @@
         "name": "Flame shield",
         "id": 11288838,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5424,7 +5280,6 @@
         "name": "Water gaunt",
         "id": 11288839,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5438,7 +5293,6 @@
         "name": "Bolt shield",
         "id": 11288840,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5452,7 +5306,6 @@
         "name": "Cryst shield",
         "id": 11288841,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5466,7 +5319,6 @@
         "name": "Dark mirror",
         "id": 11288843,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5480,7 +5332,6 @@
         "name": "Apron shield",
         "id": 11288845,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5494,7 +5345,6 @@
         "name": "Agony helm",
         "id": 11288891,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5508,7 +5358,6 @@
         "name": "Boom turban",
         "id": 11288892,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5522,7 +5371,6 @@
         "name": "Aqua helm",
         "id": 11288893,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5536,7 +5384,6 @@
         "name": "Ice hairband",
         "id": 11288894,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5550,7 +5397,6 @@
         "name": "Hairpin",
         "id": 11288896,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5564,7 +5410,6 @@
         "name": "Earring",
         "id": 11288902,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5578,7 +5423,6 @@
         "name": "Dia ring",
         "id": 11288932,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5592,7 +5436,6 @@
         "name": "Sea ring",
         "id": 11288933,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5606,7 +5449,6 @@
         "name": "Engage ring",
         "id": 11288935,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5620,7 +5462,6 @@
         "name": "Water jewel",
         "id": 11288950,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5634,7 +5475,6 @@
         "name": "Thundo jewel",
         "id": 11288951,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5648,7 +5488,6 @@
         "name": "Earth jewel",
         "id": 11288952,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5662,7 +5501,6 @@
         "name": "Twist jewel",
         "id": 11288953,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5676,7 +5514,6 @@
         "name": "Gloom jewel",
         "id": 11288954,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5690,7 +5527,6 @@
         "name": "Tidal jewel",
         "id": 11288955,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5704,7 +5540,6 @@
         "name": "Catfish jwl.",
         "id": 11288962,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5718,7 +5553,6 @@
         "name": "Camu jewel",
         "id": 11288963,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5732,7 +5566,6 @@
         "name": "Spido jewel",
         "id": 11288964,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5746,7 +5579,6 @@
         "name": "Gorgan rock",
         "id": 11288965,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5760,7 +5592,6 @@
         "name": "Black eye",
         "id": 11288967,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5774,7 +5605,6 @@
         "name": "Silver eye",
         "id": 11288968,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -5788,7 +5618,6 @@
         "name": "Gold eye",
         "id": 11288969,
         "groups": [
-          "Blue chest items",
           "Everything"
         ],
         "advancement": false,
@@ -6283,11 +6112,7 @@
   },
   "item_groups": {
     "1": [
-      "Blue chest items",
-      "Capsule monsters",
-      "Everything",
-      "Iris treasures",
-      "Party members"
+      "Everything"
     ]
   },
   "itempool_counts": {
@@ -6331,14 +6156,14 @@
   },
   "settings": {
     "1": {
-      "game": "Lufia II Ancient Cave",
+      "game": "Lufia II Ancient Cave Test",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false
     }
   },
   "game_info": {
     "1": {
-      "name": "Lufia II Ancient Cave",
+      "name": "Lufia II Ancient Cave Test",
       "rule_format": {
         "version": "1.0"
       }

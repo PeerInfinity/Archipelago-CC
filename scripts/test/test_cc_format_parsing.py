@@ -266,6 +266,7 @@ def main():
         ("bumpstik", "Bumper Stickers"),
         ("shorthike", "A Short Hike"),
         ("inscryption", "Inscryption"),
+        ("lufia2ac", "Lufia II Ancient Cave"),
     ]
 
     for game_dir, game_name in games_to_test:

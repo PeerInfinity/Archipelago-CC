@@ -1319,7 +1319,8 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                 'id': location_name_to_id.get(location_name, None),  # Add location ID from mapping
                                 'access_rule': access_rule_result,
                                 'item_rule': item_rule_result,
-                                'item': None
+                                'item': None,
+                                'locked': getattr(location, 'locked', False)  # True if item was placed via place_locked_item
                             }
 
                             # Add game-specific location attributes from the handler

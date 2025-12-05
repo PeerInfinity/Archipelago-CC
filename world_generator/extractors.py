@@ -39,6 +39,7 @@ class LocationData:
     access_rule: Optional[Dict[str, Any]] = None
     is_event: bool = False
     original_item: Optional[str] = None  # For seed=1 placement
+    locked: bool = False  # True if item was placed via place_locked_item
 
 
 @dataclass
@@ -70,6 +71,7 @@ class ExtractedData:
     start_region: str
     original_placements: Dict[str, str]  # location -> item
     itempool_counts: Dict[str, int] = field(default_factory=dict)  # item -> count
+    locked_placements: Dict[str, str] = field(default_factory=dict)  # location -> item (must be placed via place_locked_item)
 
 
 def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
@@ -142,15 +144,16 @@ def extract_items(json_data: Dict[str, Any]) -> Tuple[Dict[str, ItemData], List[
     return items, item_groups
 
 
-def extract_locations(json_data: Dict[str, Any]) -> Tuple[Dict[str, LocationData], Dict[str, str]]:
+def extract_locations(json_data: Dict[str, Any]) -> Tuple[Dict[str, LocationData], Dict[str, str], Dict[str, str]]:
     """
     Extract locations from JSON regions.
 
     Returns:
-        Tuple of (locations dict, original_placements dict)
+        Tuple of (locations dict, original_placements dict, locked_placements dict)
     """
     locations: Dict[str, LocationData] = {}
     original_placements: Dict[str, str] = {}
+    locked_placements: Dict[str, str] = {}
 
     regions_data = json_data.get('regions', {}).get('1', {})
 
@@ -159,6 +162,7 @@ def extract_locations(json_data: Dict[str, Any]) -> Tuple[Dict[str, LocationData
             loc_name = loc_info.get('name', '')
             loc_id = loc_info.get('id')
             is_event = loc_id is None
+            is_locked = loc_info.get('locked', False)
 
             locations[loc_name] = LocationData(
                 name=loc_name,
@@ -166,14 +170,19 @@ def extract_locations(json_data: Dict[str, Any]) -> Tuple[Dict[str, LocationData
                 region=region_name,
                 access_rule=loc_info.get('access_rule'),
                 is_event=is_event,
+                locked=is_locked,
             )
 
             # Track original item placement for seed=1 mode
             item_info = loc_info.get('item')
             if item_info:
-                original_placements[loc_name] = item_info.get('name', '')
+                item_name = item_info.get('name', '')
+                original_placements[loc_name] = item_name
+                # If the location is locked, also track it as a locked placement
+                if is_locked and item_name:
+                    locked_placements[loc_name] = item_name
 
-    return locations, original_placements
+    return locations, original_placements, locked_placements
 
 
 def extract_regions(json_data: Dict[str, Any]) -> Tuple[Dict[str, RegionData], Dict[str, ExitData]]:
@@ -265,7 +274,7 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
     """
     metadata = extract_game_metadata(json_data)
     items, item_groups = extract_items(json_data)
-    locations, original_placements = extract_locations(json_data)
+    locations, original_placements, locked_placements = extract_locations(json_data)
     regions, exits = extract_regions(json_data)
     start_region = extract_start_region(json_data)
     itempool_counts = extract_itempool_counts(json_data)
@@ -280,4 +289,5 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
         start_region=start_region,
         original_placements=original_placements,
         itempool_counts=itempool_counts,
+        locked_placements=locked_placements,
     )

@@ -384,12 +384,30 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     def create_items(self) -> None:
 '''
 
-    # Build itempool_counts dictionary
+    # Build locked_placements dictionary
+    locked_entries = []
+    for loc_name, item_name in sorted(data.locked_placements.items()):
+        if item_name:
+            loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            locked_entries.append(f'    "{loc_escaped}": "{item_escaped}",')
+
+    locked_content = '\n'.join(locked_entries)
+
+    # Count locked items to subtract from itempool_counts
+    locked_item_counts: Dict[str, int] = {}
+    for loc_name, item_name in data.locked_placements.items():
+        if item_name:
+            locked_item_counts[item_name] = locked_item_counts.get(item_name, 0) + 1
+
+    # Build itempool_counts dictionary (excluding locked items)
     itempool_entries = []
     for item_name, count in sorted(data.itempool_counts.items()):
-        if count > 0:
+        # Subtract locked items from the count
+        adjusted_count = count - locked_item_counts.get(item_name, 0)
+        if adjusted_count > 0:
             item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
-            itempool_entries.append(f'    "{item_escaped}": {count},')
+            itempool_entries.append(f'    "{item_escaped}": {adjusted_count},')
 
     itempool_content = '\n'.join(itempool_entries)
 
@@ -411,9 +429,14 @@ from .Regions import create_regions
 from .Rules import set_rules
 
 
-# Item pool counts from original generation
+# Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {{
 {itempool_content}
+}}
+
+# Locked placements - items that must be placed via place_locked_item
+LOCKED_PLACEMENTS: Dict[str, str] = {{
+{locked_content}
 }}
 
 
@@ -456,6 +479,10 @@ class {world_class}(RuleWorldMixin, World):
         """Set access rules."""
         set_rules(self)
 {create_items_section}        """Create randomized item pool."""
+        # First, place any locked items
+        self._place_locked_items()
+
+        # Then create the random item pool
         item_pool = []
 
         for item_name, count in ITEMPOOL_COUNTS.items():
@@ -474,6 +501,20 @@ class {world_class}(RuleWorldMixin, World):
                 item_pool.append(item)
 
         self.multiworld.itempool += item_pool
+
+    def _place_locked_items(self) -> None:
+        """Place items that must be in specific locations (locked placements)."""
+        for location_name, item_name in LOCKED_PLACEMENTS.items():
+            if item_name and item_name in item_table:
+                location = self.multiworld.get_location(location_name, self.player)
+                item_data = item_table[item_name]
+                item = {class_name}Item(
+                    item_name,
+                    item_data.classification,
+                    item_data.id,
+                    self.player
+                )
+                location.place_locked_item(item)
 {victory_section}
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

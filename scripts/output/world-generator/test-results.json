@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2025-12-05T19:34:00.823082",
+    "timestamp": "2025-12-05T20:29:24.132933",
     "seed": 1,
     "phase": "test",
     "total_templates": 1,
@@ -12,10 +12,10 @@
     "cross_validation_failed": 0
   },
   "results": {
-    "Inscryption": {
-      "template": "Inscryption.yaml",
-      "game_name": "Inscryption",
-      "timestamp": "2025-12-05T19:34:01.362541",
+    "Lufia II Ancient Cave": {
+      "template": "Lufia II Ancient Cave.yaml",
+      "game_name": "Lufia II Ancient Cave",
+      "timestamp": "2025-12-05T20:29:24.664454",
       "original": {
         "generation": {
           "success": true,
@@ -27,7 +27,7 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": null,
-          "processing_time_seconds": 8.72
+          "processing_time_seconds": 9.23
         }
       },
       "test_world": {
@@ -38,11 +38,11 @@
         "seed_generation": {
           "success": true,
           "seed_id": "AP_14089154938208861744",
-          "rules_path": "/home/user/Archipelago-CC/frontend/presets/inscryption_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/inscryption_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
-          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/inscryption_test/AP_14089154938208861744",
+          "rules_path": "/home/user/Archipelago-CC/frontend/presets/lufia2ac_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/lufia2ac_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/lufia2ac_test/AP_14089154938208861744",
           "error": null,
-          "processing_time_seconds": 5.7
+          "processing_time_seconds": 6.0
         },
         "spoiler_test": {
           "success": true,
@@ -50,7 +50,7 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": null,
-          "processing_time_seconds": 8.81
+          "processing_time_seconds": 8.92
         },
         "cross_validation": {
           "success": true,
@@ -58,10 +58,10 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": null,
-          "processing_time_seconds": 8.61
+          "processing_time_seconds": 8.97
         },
-        "test_template_name": "Inscryption Test.yaml",
-        "test_game_name": "Inscryption Test"
+        "test_template_name": "Lufia II Ancient Cave Test.yaml",
+        "test_game_name": "Lufia II Ancient Cave Test"
       },
       "errors": {
         "generation": [],
