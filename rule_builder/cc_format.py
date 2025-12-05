@@ -26,6 +26,18 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+def _extract_value(value: Any, default: Any = None) -> Any:
+    """
+    Extract a value from a potential constant wrapper.
+
+    CC format sometimes wraps simple values in {"type": "constant", "value": X}.
+    This helper unwraps them to get the actual value.
+    """
+    if isinstance(value, dict) and value.get('type') == 'constant':
+        return value.get('value', default)
+    return value if value is not None else default
+
+
 def is_cc_format(data: Mapping[str, Any]) -> bool:
     """
     Detect if a rule dict is in CC format vs Rule Builder format.
@@ -123,8 +135,8 @@ def _parse_item_check(data: Mapping[str, Any]) -> "Rule[Any]":
     """Parse an item_check rule: {"type": "item_check", "item": "Sword", "count": 1}"""
     from rule_builder.rules import Has
 
-    item = data.get('item', '')
-    count = data.get('count', 1)
+    item = _extract_value(data.get('item', ''), '')
+    count = _extract_value(data.get('count', 1), 1)
 
     if isinstance(item, dict):
         # Complex item reference - log warning and use string representation
@@ -138,8 +150,8 @@ def _parse_count_check(data: Mapping[str, Any]) -> "Rule[Any]":
     """Parse a count_check rule: {"type": "count_check", "item": "Arrow", "count": 10}"""
     from rule_builder.rules import Has
 
-    item = data.get('item', '')
-    count = data.get('count', 1)
+    item = _extract_value(data.get('item', ''), '')
+    count = _extract_value(data.get('count', 1), 1)
 
     if isinstance(item, dict):
         logger.warning(f"Complex item reference in count_check: {item}")
@@ -152,8 +164,8 @@ def _parse_group_check(data: Mapping[str, Any]) -> "Rule[Any]":
     """Parse a group_check rule: {"type": "group_check", "group": "Keys", "count": 3}"""
     from rule_builder.rules import HasGroup
 
-    group = data.get('group', '')
-    count = data.get('count', 1)
+    group = _extract_value(data.get('group', ''), '')
+    count = _extract_value(data.get('count', 1), 1)
 
     return HasGroup(item_name_group=group, count=count)
 

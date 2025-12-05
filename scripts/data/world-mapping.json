@@ -76,6 +76,13 @@
     "has_custom_game_logic": false,
     "world_directory": "bumpstik"
   },
+  "Bumper Stickers Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "bumpstik_test"
+  },
   "Castlevania - Circle of the Moon": {
     "exporter_path": "exporter/games/cvcotm.py",
     "game_logic_path": "frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js",

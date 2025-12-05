@@ -48,6 +48,16 @@ def test_basic_cc_parsing():
     assert item_rule2.count == 10, f"Expected count=10, got count={item_rule2.count}"
     print("  ✓ item_check with count")
 
+    # Test item_check with nested constant count (used by some games like Bumper Stickers)
+    item_rule3 = parse_cc_rule({
+        "type": "item_check",
+        "item": "Booster Bumper",
+        "count": {"type": "constant", "value": 5}
+    }, RuleWorldMixin)
+    assert isinstance(item_rule3, Has), f"Expected Has, got {type(item_rule3)}"
+    assert item_rule3.count == 5, f"Expected count=5, got count={item_rule3.count}"
+    print("  ✓ item_check with nested constant count")
+
     # Test group_check
     group_rule = parse_cc_rule({"type": "group_check", "group": "Keys", "count": 3}, RuleWorldMixin)
     assert isinstance(group_rule, HasGroup), f"Expected HasGroup, got {type(group_rule)}"
@@ -250,18 +260,23 @@ def main():
     test_state_methods()
     test_rule_from_dict_integration()
 
-    # Test with Adventure rules.json if available
-    adventure_rules = project_root / "frontend" / "presets" / "adventure" / "AP_14089154938208861744" / "AP_14089154938208861744_rules.json"
-    if adventure_rules.exists():
-        success = test_rules_json_file(adventure_rules)
-        if success:
-            print("\n✓ All Adventure rules parsed successfully!")
+    # Test with game rules.json files if available
+    games_to_test = [
+        ("adventure", "Adventure"),
+        ("bumpstik", "Bumper Stickers"),
+    ]
+
+    for game_dir, game_name in games_to_test:
+        rules_file = project_root / "frontend" / "presets" / game_dir / "AP_14089154938208861744" / "AP_14089154938208861744_rules.json"
+        if rules_file.exists():
+            success = test_rules_json_file(rules_file)
+            if success:
+                print(f"\n✓ All {game_name} rules parsed successfully!")
+            else:
+                print(f"\n✗ Some {game_name} rules failed to parse")
+                return 1
         else:
-            print("\n✗ Some Adventure rules failed to parse")
-            return 1
-    else:
-        print(f"\nNote: Adventure rules.json not found at {adventure_rules}")
-        print("Run the world generator test first to create it.")
+            print(f"\nNote: {game_name} rules.json not found at {rules_file}")
 
     print("\n" + "=" * 60)
     print("All tests passed!")
