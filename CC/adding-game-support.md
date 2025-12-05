@@ -427,6 +427,10 @@ Games with full world generator support:
 | Hylics 2 | 184 | ✓ Pass |
 | Shivers | 247 | ✓ Pass |
 | Wargroove | 64 | ✓ Pass |
+| Noita | 0 | ✓ Pass |
+| ChecksFinder | 0 | ✓ Pass |
+| Aquaria | 0 | ✓ Pass |
+| Landstalker | 0 | ✓ Pass |
 
 ---
 

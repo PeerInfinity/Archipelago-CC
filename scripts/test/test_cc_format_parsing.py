@@ -276,6 +276,10 @@ def main():
         ("hylics2", "Hylics 2"),
         ("shivers", "Shivers"),
         ("wargroove", "Wargroove"),
+        ("noita", "Noita"),
+        ("checksfinder", "ChecksFinder"),
+        ("aquaria", "Aquaria"),
+        ("landstalker", "Landstalker - The Treasures of King Nole"),
     ]
 
     for game_dir, game_name in games_to_test:
