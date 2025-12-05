@@ -620,6 +620,19 @@ export class RegionGraphUI {
             'opacity': 0.4,
             'font-style': 'italic'
           }
+        },
+        // Hidden nodes and edges (for discovery mode - preserves layout)
+        {
+          selector: 'node.discovery-hidden',
+          style: {
+            'display': 'none'
+          }
+        },
+        {
+          selector: 'edge.discovery-hidden',
+          style: {
+            'display': 'none'
+          }
         }
       ],
       
@@ -940,8 +953,9 @@ export class RegionGraphUI {
 
   onDiscoveryChanged() {
     // Discovery state changed (region/location/exit discovered)
-    // Update the graph to reflect new discovery state
-    if (this.cy && this.graphInitialized) {
+    // Update the graph to show/hide nodes and edges based on new discovery state
+    // This uses CSS classes to toggle visibility, preserving the layout
+    if (this.cy && this.graphInitialized && this.isDiscoveryModeActive) {
       const snapshot = stateManager.getLatestStateSnapshot();
       if (snapshot) {
         this.dataManager.onStateUpdate({ snapshot });
