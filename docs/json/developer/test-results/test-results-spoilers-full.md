@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-12-03 20:36:57
+**Generated:** 2025-12-05 06:51:16
 
-**Source Data Created:** 2025-12-03T01:05:46.856289
+**Source Data Created:** 2025-12-05T06:51:16.765370
 
-**Source Data Last Updated:** 2025-12-03T01:05:46.856298
+**Source Data Last Updated:** 2025-12-05T06:51:16.765379
 
 ## Summary
 
-- **Total Games:** 78
-- **Passed:** 78 (100.0%)
-- **Failed:** 0 (0.0%)
+- **Total Games:** 81
+- **Passed:** 80 (98.8%)
+- **Failed:** 1 (1.2%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
@@ -27,6 +27,7 @@
 | A Short Hike | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ⚫ |
 | APQuest | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ⚫ | ⚫ |
 | Adventure | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ⚫ |
+| Adventure Test | ❌ Failed seed 1 | 3 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Aquaria | ✅ Passed seeds 1-10 | 0 | 5.19 | 5.19 | 🟢 Complete | ✅ | ✅ |
 | Blasphemous | ✅ Passed seeds 1-10 | 0 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed seeds 1-10 | 0 | 10.18 | 10.18 | 🟢 Complete | ✅ | ⚫ |
@@ -85,6 +86,8 @@
 | Super Mario Land 2 | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Super Mario World | ✅ Passed seeds 1-10 | 0 | 8.12 | 8.12 | 🟢 Complete | ✅ | ⚫ |
 | Super Metroid | ✅ Passed seeds 1-10 | 0 | 7.3 | 7.3 | 🟢 Complete | ✅ | ✅ |
+| TOEM original | ✅ Passed seeds 1-10 | 0 | 3.66 | 3.66 | 🟢 Complete | ⚫ | ⚫ |
+| TOEM rule builder | ✅ Passed seeds 1-10 | 0 | 3.66 | 3.66 | 🟢 Complete | ⚫ | ⚫ |
 | TUNIC | ✅ Passed seeds 1-10 | 0 | 5.12 | 5.12 | 🟢 Complete | ✅ | ⚫ |
 | Terraria | ✅ Passed seeds 1-10 | 0 | 9.6 | 9.6 | 🟢 Complete | ✅ | ✅ |
 | The Legend of Zelda | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
