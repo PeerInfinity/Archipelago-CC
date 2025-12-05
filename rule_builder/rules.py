@@ -69,7 +69,18 @@ class RuleWorldMixin(World):
 
     @classmethod
     def rule_from_dict(cls, data: Mapping[str, Any]) -> "Rule[Self]":
-        """Create a rule instance from a serialized dict representation"""
+        """Create a rule instance from a serialized dict representation.
+
+        Supports both Rule Builder format and CC (Archipelago-CC) format:
+        - Rule Builder: {"rule": "Has", "options": [], "args": {"item_name": "Sword"}}
+        - CC format: {"type": "item_check", "item": "Sword"}
+        """
+        # Check if this is CC format (has 'type' key, no 'rule' key)
+        if 'type' in data and 'rule' not in data:
+            from rule_builder.cc_format import parse_cc_rule
+            return parse_cc_rule(data, cls)
+
+        # Standard Rule Builder format
         name = data.get("rule", "")
         rule_class = cls.get_rule_cls(name)
         return rule_class.from_dict(data, cls)
