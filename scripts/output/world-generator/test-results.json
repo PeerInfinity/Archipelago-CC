@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2025-12-05T21:34:16.922826",
+    "timestamp": "2025-12-05T21:55:44.810874",
     "seed": 1,
     "phase": "test",
     "total_templates": 1,
@@ -12,10 +12,10 @@
     "cross_validation_failed": 0
   },
   "results": {
-    "Timespinner": {
-      "template": "Timespinner.yaml",
-      "game_name": "Timespinner",
-      "timestamp": "2025-12-05T21:34:17.466686",
+    "Hylics 2": {
+      "template": "Hylics 2.yaml",
+      "game_name": "Hylics 2",
+      "timestamp": "2025-12-05T21:55:45.346192",
       "original": {
         "generation": {
           "success": true,
@@ -27,7 +27,7 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": null,
-          "processing_time_seconds": 8.57
+          "processing_time_seconds": 8.92
         }
       },
       "test_world": {
@@ -38,11 +38,11 @@
         "seed_generation": {
           "success": true,
           "seed_id": "AP_14089154938208861744",
-          "rules_path": "/home/user/Archipelago-CC/frontend/presets/timespinner_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/timespinner_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
-          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/timespinner_test/AP_14089154938208861744",
+          "rules_path": "/home/user/Archipelago-CC/frontend/presets/hylics2_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/hylics2_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/hylics2_test/AP_14089154938208861744",
           "error": null,
-          "processing_time_seconds": 5.87
+          "processing_time_seconds": 5.22
         },
         "spoiler_test": {
           "success": true,
@@ -50,7 +50,7 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": null,
-          "processing_time_seconds": 8.69
+          "processing_time_seconds": 8.52
         },
         "cross_validation": {
           "success": true,
@@ -58,10 +58,10 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": null,
-          "processing_time_seconds": 8.67
+          "processing_time_seconds": 8.5
         },
-        "test_template_name": "Timespinner Test.yaml",
-        "test_game_name": "Timespinner Test"
+        "test_template_name": "Hylics 2 Test.yaml",
+        "test_game_name": "Hylics 2 Test"
       },
       "errors": {
         "generation": [],

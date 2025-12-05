@@ -273,6 +273,7 @@ def main():
         ("tunic", "TUNIC"),
         ("lingo", "Lingo"),
         ("timespinner", "Timespinner"),
+        ("hylics2", "Hylics 2"),
     ]
 
     for game_dir, game_name in games_to_test:

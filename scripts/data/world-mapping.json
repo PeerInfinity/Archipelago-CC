@@ -244,6 +244,13 @@
     "has_custom_game_logic": true,
     "world_directory": "hylics2"
   },
+  "Hylics 2 Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "hylics2_test"
+  },
   "Inscryption": {
     "exporter_path": "exporter/games/inscryption.py",
     "game_logic_path": "frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js",

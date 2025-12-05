@@ -424,6 +424,7 @@ Games with full world generator support:
 | TUNIC | 816 | ✓ Pass |
 | Lingo | 610 | ✓ Pass |
 | Timespinner | 307 | ✓ Pass |
+| Hylics 2 | 184 | ✓ Pass |
 
 ---
 
