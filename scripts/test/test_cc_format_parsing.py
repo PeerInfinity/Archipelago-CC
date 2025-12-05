@@ -265,6 +265,7 @@ def main():
         ("adventure", "Adventure"),
         ("bumpstik", "Bumper Stickers"),
         ("shorthike", "A Short Hike"),
+        ("inscryption", "Inscryption"),
     ]
 
     for game_dir, game_name in games_to_test:

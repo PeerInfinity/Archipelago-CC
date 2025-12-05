@@ -244,6 +244,13 @@
     "has_custom_game_logic": true,
     "world_directory": "inscryption"
   },
+  "Inscryption Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "inscryption_test"
+  },
   "Jak and Daxter: The Precursor Legacy": {
     "exporter_path": "exporter/games/jakanddaxter.py",
     "game_logic_path": "frontend/modules/shared/gameLogic/jakanddaxter/jakanddaxterLogic.js",
@@ -299,6 +306,13 @@
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "lufia2ac"
+  },
+  "Lufia II Ancient Cave Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "lufia2ac_test"
   },
   "Mario & Luigi Superstar Saga": {
     "exporter_path": "exporter/games/mlss.py",
