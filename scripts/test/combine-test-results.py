@@ -162,6 +162,10 @@ def combine_ut_comparison_results(all_results: List[Dict[str, Any]]) -> Dict[str
 def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any]:
     """
     Combine results with standard structure (results -> template_name -> template_data).
+
+    Supports two modes:
+    1. Multi-seed mode: Same template tested with different seeds - aggregate all results
+    2. Overlay mode: Same template with same seed from different phases - use latest result
     """
     # Extract all templates and organize by template name and seed
     template_results = {}  # template_name -> list of (seed, result_data)
@@ -173,6 +177,26 @@ def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any
 
             seed = template_result.get('seed', '1')
             template_results[template_name].append((seed, template_result))
+
+    # Detect if we're in overlay mode (same seeds across templates)
+    # This happens when combining phase results from the same workflow run
+    is_overlay_mode = False
+    if template_results:
+        # Check if any template has duplicate seeds
+        for seed_list in template_results.values():
+            seeds = [s for s, _ in seed_list]
+            if len(seeds) != len(set(seeds)):
+                is_overlay_mode = True
+                print("Detected overlay mode (duplicate seeds) - using latest result for each template")
+                break
+
+    if is_overlay_mode:
+        # In overlay mode, keep only the last result for each (template, seed) combination
+        for template_name in template_results:
+            seed_to_result = {}
+            for seed, result in template_results[template_name]:
+                seed_to_result[seed] = result  # Later results overwrite earlier ones
+            template_results[template_name] = [(seed, result) for seed, result in seed_to_result.items()]
 
     # Sort each template's results by seed number
     for template_name in template_results:

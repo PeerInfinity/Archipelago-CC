@@ -32,8 +32,13 @@ from lib.test_utils import (
     normalize_game_name,
     count_errors_and_warnings,
     check_http_server,
+    build_and_load_world_mapping,
+    extract_game_name_from_template,
 )
 from lib.seed_utils import get_seed_id as compute_seed_id
+
+# Global world mapping cache - built once and reused
+_world_mapping: Dict[str, Dict] = {}
 
 
 def start_http_server(project_root: str) -> subprocess.Popen:
@@ -50,6 +55,50 @@ def start_http_server(project_root: str) -> subprocess.Popen:
             return process
         time.sleep(0.5)
     return process
+
+
+def get_world_directory_for_game(game_name: str, project_root: str) -> str:
+    """
+    Get the world directory name for a game using the world mapping.
+
+    This handles edge cases where the game name declaration uses a variable
+    (e.g., `game = CONSTANT`) that regex-based resolution can't handle.
+    """
+    global _world_mapping
+
+    # Build the world mapping if not already cached
+    if not _world_mapping:
+        _world_mapping = build_and_load_world_mapping(project_root)
+
+    # Try to find the world directory from the mapping
+    if game_name in _world_mapping:
+        world_dir = _world_mapping[game_name].get('world_directory')
+        if world_dir:
+            return world_dir
+
+    # Fallback to regex-based resolution
+    return normalize_game_name(f"{game_name}.yaml")
+
+
+def get_world_directory_for_template(template_name: str, project_root: str) -> str:
+    """
+    Get the world directory name for a template file.
+
+    First extracts the game name from the template, then resolves to directory.
+    """
+    # Extract game name from template file
+    templates_dir = os.path.join(project_root, 'Players', 'Templates')
+    template_path = os.path.join(templates_dir, template_name)
+
+    game_name = None
+    if os.path.exists(template_path):
+        game_name = extract_game_name_from_template(template_path)
+
+    if game_name:
+        return get_world_directory_for_game(game_name, project_root)
+
+    # Fallback to regex-based resolution from template name
+    return normalize_game_name(template_name)
 
 
 def get_project_root() -> str:
@@ -194,8 +243,8 @@ def run_generation(
         return result
 
     # Find the generated files
-    game_name = normalize_game_name(template_name)
-    preset_dir = os.path.join(project_root, 'frontend', 'presets', game_name, seed_id)
+    game_dir = get_world_directory_for_template(template_name, project_root)
+    preset_dir = os.path.join(project_root, 'frontend', 'presets', game_dir, seed_id)
 
     if os.path.exists(preset_dir):
         result['preset_dir'] = preset_dir
@@ -274,8 +323,8 @@ def run_spoiler_test(
     if seed_id is None:
         seed_id = compute_seed_id(seed)
 
-    game_name = normalize_game_name(template_name)
-    preset_dir = f"presets/{game_name}/{seed_id}"
+    game_dir = get_world_directory_for_template(template_name, project_root)
+    preset_dir = f"presets/{game_dir}/{seed_id}"
 
     # Run the spoiler test using npm test
     cmd = [
@@ -327,7 +376,7 @@ def process_template(
 
     Returns a result dict for this template.
     """
-    game_name = normalize_game_name(template_name)
+    game_dir = get_world_directory_for_template(template_name, project_root)
     game_name_display = template_name.replace('.yaml', '')
 
     print(f"\n{'='*60}")
@@ -391,7 +440,7 @@ def process_template(
         # Try to find it
         seed_id = compute_seed_id(seed)
         rules_path = os.path.join(
-            project_root, 'frontend', 'presets', game_name,
+            project_root, 'frontend', 'presets', game_dir,
             seed_id, f'{seed_id}_rules.json'
         )
 
@@ -400,7 +449,7 @@ def process_template(
         print(f"  FAILED: Rules file not found")
         return template_result
 
-    test_world_dir = os.path.join(project_root, 'worlds', f'{game_name}_test')
+    test_world_dir = os.path.join(project_root, 'worlds', f'{game_dir}_test')
     test_game_name = f"{game_name_display} Test"
 
     world_gen_result = run_world_generator(
@@ -482,8 +531,8 @@ def run_test_world_tests(
         if not skip_spoiler_test:
             # Get paths
             seed_id = compute_seed_id(seed)
-            original_game_dir = normalize_game_name(f"{original_game_name}.yaml")
-            test_game_dir = normalize_game_name(test_template_name)
+            original_game_dir = get_world_directory_for_game(original_game_name, project_root)
+            test_game_dir = get_world_directory_for_template(test_template_name, project_root)
 
             original_sphere_log = os.path.join(
                 project_root, 'frontend', 'presets', original_game_dir,
@@ -791,8 +840,8 @@ def main():
                     print(f"\n[4/4] Cross-validation with original sphere log...")
                     if not args.skip_spoiler_test:
                         seed_id = compute_seed_id(args.seed)
-                        original_game_dir = normalize_game_name(original_template)
-                        test_game_dir = normalize_game_name(test_template)
+                        original_game_dir = get_world_directory_for_template(original_template, project_root)
+                        test_game_dir = get_world_directory_for_template(test_template, project_root)
 
                         original_sphere_log = os.path.join(
                             project_root, 'frontend', 'presets', original_game_dir,
