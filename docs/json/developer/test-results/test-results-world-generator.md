@@ -1,6 +1,6 @@
 # World Generator Test Results
 
-**Generated:** 2025-12-05 04:53:45 UTC
+**Generated:** 2025-12-05 05:04:13 UTC
 **Seed:** N/A
 
 This report shows the results of round-trip testing the world generator.
@@ -28,11 +28,11 @@ world is validated to produce equivalent game logic.
 
 | Metric | Count |
 |--------|-------|
-| Total Templates | 87 |
-| Successful Original Generations | 72 |
-| Failed Original Generations | 15 |
-| Successful Test World Generations | 67 |
-| Failed Test World Generations | 20 |
+| Total Templates | 80 |
+| Successful Original Generations | 80 |
+| Failed Original Generations | 0 |
+| Successful Test World Generations | 75 |
+| Failed Test World Generations | 5 |
 | Cross-Validation Passed | 11 |
 | Cross-Validation Failed | 0 |
 
@@ -41,12 +41,11 @@ world is validated to produce equivalent game logic.
 | Game | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler | Cross-Validation |
 |------|--------------|---------------|-----------|----------|--------------|------------------|
 | A Hat in Time | ✅ | Skipped | ✅ | ❌ | - | - |
-| A Link to the Past | ❌ | ❌ | - | - | - | - |
+| A Link to the Past | ✅ | Skipped | ✅ | ❌ | - | - |
 | A Short Hike | ✅ | ✅ | ✅ | ❌ | - | - |
 | APQuest | ✅ | ✅ | ✅ | ❌ | - | - |
 | Adventure | ✅ | ✅ | ✅ | ❌ | - | - |
 | Aquaria | ✅ | ✅ | ✅ | ❌ | - | - |
-| Archipelago | ❌ | ❌ | - | - | - | - |
 | Blasphemous | ✅ | Skipped | ✅ | ❌ | - | - |
 | Bomb Rush Cyberfunk | ✅ | ✅ | ✅ | ❌ | - | - |
 | Bumper Stickers | ✅ | ✅ | ✅ | ❌ | - | - |
@@ -62,13 +61,11 @@ world is validated to produce equivalent game logic.
 | DOOM 1993 | ✅ | ✅ | ✅ | ❌ | - | - |
 | DOOM II | ✅ | ✅ | ✅ | ❌ | - | - |
 | Dark Souls III | ✅ | Skipped | ❌ | - | - | - |
-| Donkey Kong Country 3 | ❌ | ❌ | - | - | - | - |
+| Donkey Kong Country 3 | ✅ | ✅ | ✅ | ❌ | - | - |
 | Factorio | ✅ | Skipped | ❌ | - | - | - |
 | Faxanadu | ✅ | ✅ | ✅ | ❌ | - | - |
-| Final Fantasy | ❌ | ❌ | - | - | - | - |
 | Final Fantasy Mystic Quest | ✅ | ✅ | ✅ | ❌ | - | - |
 | Heretic | ✅ | ✅ | ✅ | ❌ | - | - |
-| Hollow Knight | ✅ | Skipped | ❌ | - | - | - |
 | Hylics 2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Inscryption | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Jak and Daxter The Precursor Legacy | ✅ | Skipped | ✅ | ❌ | - | - |
@@ -78,16 +75,15 @@ world is validated to produce equivalent game logic.
 | Landstalker - The Treasures of King Nole | ✅ | ✅ | ✅ | ❌ | - | - |
 | Lingo | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Links Awakening DX | ✅ | ✅ | ✅ | ❌ | - | - |
-| Lufia II Ancient Cave | ❌ | ❌ | - | - | - | - |
+| Lufia II Ancient Cave | ✅ | ✅ | ✅ | ❌ | - | - |
 | Mario & Luigi Superstar Saga | ✅ | Skipped | ✅ | ❌ | - | - |
 | MathProof2p2e4 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Mega Man 2 | ✅ | ✅ | ✅ | ❌ | - | - |
-| MegaMan Battle Network 3 | ❌ | ❌ | - | - | - | - |
+| MegaMan Battle Network 3 | ✅ | Skipped | ✅ | ❌ | - | - |
 | Meritous | ✅ | ✅ | ✅ | ❌ | - | - |
 | Metamath | ✅ | Skipped | ❌ | - | - | - |
 | Muse Dash | ✅ | ✅ | ✅ | ❌ | - | - |
 | Noita | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Ocarina of Time | ❌ | ❌ | - | - | - | - |
 | Old School Runescape | ✅ | Skipped | ✅ | ❌ | - | - |
 | Overcooked! 2 | ✅ | Skipped | ✅ | ❌ | - | - |
 | Paint | ✅ | ✅ | ✅ | ❌ | - | - |
@@ -97,44 +93,37 @@ world is validated to produce equivalent game logic.
 | Risk of Rain 2 | ✅ | Skipped | ✅ | ❌ | - | - |
 | SMZ3 | ✅ | Skipped | ✅ | ❌ | - | - |
 | Saving Princess | ✅ | ✅ | ✅ | ❌ | - | - |
-| Secret of Evermore | ❌ | ❌ | - | - | - | - |
+| Secret of Evermore | ✅ | Skipped | ✅ | ❌ | - | - |
 | Shivers | ✅ | Skipped | ✅ | ❌ | - | - |
 | Sonic Adventure 2 Battle | ✅ | Skipped | ✅ | ❌ | - | - |
 | Starcraft 2 | ✅ | Skipped | ✅ | ❌ | - | - |
 | Stardew Valley | ✅ | Skipped | ✅ | ❌ | - | - |
 | Subnautica | ✅ | Skipped | ✅ | ❌ | - | - |
-| Sudoku | ❌ | ❌ | - | - | - | - |
 | Super Mario 64 | ✅ | Skipped | ✅ | ❌ | - | - |
 | Super Mario Land 2 | ✅ | Skipped | ✅ | ❌ | - | - |
-| Super Mario World | ❌ | ❌ | - | - | - | - |
+| Super Mario World | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Super Metroid | ✅ | Skipped | ✅ | ❌ | - | - |
-| TOEM original | ❌ | ❌ | - | - | - | - |
-| TOEM rule builder | ❌ | ❌ | - | - | - | - |
+| TOEM original | ✅ | ✅ | ✅ | ❌ | - | - |
+| TOEM rule builder | ✅ | ✅ | ✅ | ❌ | - | - |
 | TUNIC | ✅ | Skipped | ✅ | ❌ | - | - |
 | Terraria | ✅ | Skipped | ✅ | ❌ | - | - |
-| The Legend of Zelda | ❌ | ❌ | - | - | - | - |
+| The Legend of Zelda | ✅ | Skipped | ❌ | - | - | - |
 | The Messenger | ✅ | Skipped | ❌ | - | - | - |
 | The Wind Waker | ✅ | Skipped | ✅ | ❌ | - | - |
 | The Witness | ✅ | Skipped | ✅ | ❌ | - | - |
 | Timespinner | ✅ | Skipped | ✅ | ❌ | - | - |
 | Undertale | ✅ | Skipped | ✅ | ❌ | - | - |
-| Universal Tracker | ❌ | ❌ | - | - | - | - |
 | VVVVVV | ✅ | Skipped | ✅ | ❌ | - | - |
 | Wargroove | ✅ | Skipped | ✅ | ❌ | - | - |
 | WebDevJourney | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Yacht Dice | ✅ | ✅ | ✅ | ❌ | - | - |
-| Yoshi's Island | ❌ | ❌ | - | - | - | - |
+| Yoshi's Island | ✅ | Skipped | ✅ | ❌ | - | - |
 | Yu-Gi-Oh! 2006 | ✅ | Skipped | ✅ | ❌ | - | - |
-| Zillion | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | shapez | ✅ | Skipped | ✅ | ❌ | - | - |
 
 ## Failures
 
-**41 games had errors:**
-
-### A Link to the Past
-
-- Original generation failed: raise FileNotFoundError(f"{attr} does not exist, but "
+**30 games had errors:**
 
 ### A Short Hike
 
@@ -151,10 +140,6 @@ world is validated to produce equivalent game logic.
 ### Aquaria
 
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
-
-### Archipelago
-
-- Original generation failed: Preset directory not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/generic/AP_14089154938208861744
 
 ### Bomb Rush Cyberfunk
 
@@ -183,13 +168,13 @@ world is validated to produce equivalent game logic.
 ### Dark Souls III
 
 - World generation failed: World generator failed: 
-ERROR:root:Could not load world WorldSource(cv64_test, is_zip=False, relative=True):
+ERROR:root:Could not load world WorldSource(ahit_test, is_zip=False, relative=True):
 Traceback (most recent call last):
   File "/home/runner/work/Arch...
 
 ### Donkey Kong Country 3
 
-- Original generation failed: SyntaxError: invalid syntax
+- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### Factorio
 
@@ -200,10 +185,6 @@ Traceback (most recent call last):
 
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
-### Final Fantasy
-
-- Original generation failed: raise AssertionError(f"FFR settings submitted with no key items ({multiworld.get_player_name(player)}). Please ensure you " \
-
 ### Final Fantasy Mystic Quest
 
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
@@ -211,11 +192,6 @@ Traceback (most recent call last):
 ### Heretic
 
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
-
-### Hollow Knight
-
-- World generation failed: World generator failed: 
-/home/runner/work/Archipelago-CC/Archipelago-CC/ModuleUpdate.py:76: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io...
 
 ### Landstalker - The Treasures of King Nole
 
@@ -227,15 +203,11 @@ Traceback (most recent call last):
 
 ### Lufia II Ancient Cave
 
-- Original generation failed: raise FileNotFoundError(f"{attr} does not exist, but "
+- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### Mega Man 2
 
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
-
-### MegaMan Battle Network 3
-
-- Original generation failed: SyntaxError: invalid syntax
 
 ### Meritous
 
@@ -244,15 +216,13 @@ Traceback (most recent call last):
 ### Metamath
 
 - World generation failed: World generator failed: 
-/home/runner/work/Archipelago-CC/Archipelago-CC/ModuleUpdate.py:76: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io...
+ERROR:root:Could not load world WorldSource(alttp_test, is_zip=False, relative=True):
+Traceback (most recent call last):
+  File "/home/runner/work/Arc...
 
 ### Muse Dash
 
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
-
-### Ocarina of Time
-
-- Original generation failed: SyntaxError: too many nested parentheses
 
 ### Paint
 
@@ -262,44 +232,26 @@ Traceback (most recent call last):
 
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
-### Secret of Evermore
-
-- Original generation failed: SyntaxError: too many nested parentheses
-
-### Sudoku
-
-- Original generation failed: SyntaxError: too many nested parentheses
-
-### Super Mario World
-
-- Original generation failed: raise FileNotFoundError(f"{attr} does not exist, but "
-
 ### TOEM original
 
-- Original generation failed: Preset directory not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_original/AP_14089154938208861744
+- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### TOEM rule builder
 
-- Original generation failed: Preset directory not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_rule_builder/AP_14089154938208861744
+- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
 
 ### The Legend of Zelda
 
-- Original generation failed: SyntaxError: invalid syntax
+- World generation failed: World generator failed: 
+/home/runner/work/Archipelago-CC/Archipelago-CC/ModuleUpdate.py:76: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io...
 
 ### The Messenger
 
 - World generation failed: World generator failed: 
-WARNING:root:excluding factorio_test from world sources because it has no __init__.py
-/home/runner/work/Archipelago-CC/Archipelago-CC/ModuleUpdate.py:...
-
-### Universal Tracker
-
-- Original generation failed: Preset directory not found: /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tracker/AP_14089154938208861744
+ERROR:root:Could not load world WorldSource(jakanddaxter_test, is_zip=False, relative=True):
+Traceback (most recent call last):
+  File "/home/runner/w...
 
 ### Yacht Dice
 
 - Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
-
-### Yoshi's Island
-
-- Original generation failed: SyntaxError: too many nested parentheses
