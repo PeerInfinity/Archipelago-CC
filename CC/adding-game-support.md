@@ -423,6 +423,7 @@ Games with full world generator support:
 | The Witness | 387 | ✓ Pass |
 | TUNIC | 816 | ✓ Pass |
 | Lingo | 610 | ✓ Pass |
+| Timespinner | 307 | ✓ Pass |
 
 ---
 

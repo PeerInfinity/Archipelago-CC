@@ -112,7 +112,8 @@ class RuleCodeGenerator:
         """Convert item_check to Has()."""
         self.required_imports.add('Has')
 
-        item = rule.get('item', '')
+        item_raw = rule.get('item', '')
+        item = self._extract_constant_value(item_raw, '')
         count_raw = rule.get('count', 1)
         count = self._extract_constant_value(count_raw, 1)
 
@@ -128,7 +129,8 @@ class RuleCodeGenerator:
         """Convert group_check to HasGroup()."""
         self.required_imports.add('HasGroup')
 
-        group = rule.get('group', '')
+        group_raw = rule.get('group', '')
+        group = self._extract_constant_value(group_raw, '')
         count_raw = rule.get('count', 1)
         count = self._extract_constant_value(count_raw, 1)
 
@@ -177,7 +179,8 @@ class RuleCodeGenerator:
         """Convert can_reach to CanReachRegion()."""
         self.required_imports.add('CanReachRegion')
 
-        region = rule.get('region', '')
+        region_raw = rule.get('region', '')
+        region = self._extract_constant_value(region_raw, '')
         region_escaped = region.replace('\\', '\\\\').replace('"', '\\"')
 
         return f'CanReachRegion("{region_escaped}")'
@@ -186,7 +189,8 @@ class RuleCodeGenerator:
         """Convert location_check to CanReachLocation()."""
         self.required_imports.add('CanReachLocation')
 
-        location = rule.get('location', '')
+        location_raw = rule.get('location', '')
+        location = self._extract_constant_value(location_raw, '')
         location_escaped = location.replace('\\', '\\\\').replace('"', '\\"')
 
         return f'CanReachLocation("{location_escaped}")'
@@ -195,7 +199,8 @@ class RuleCodeGenerator:
         """Convert can_reach_entrance to CanReachEntrance()."""
         self.required_imports.add('CanReachEntrance')
 
-        entrance = rule.get('entrance', '')
+        entrance_raw = rule.get('entrance', '')
+        entrance = self._extract_constant_value(entrance_raw, '')
         entrance_escaped = entrance.replace('\\', '\\\\').replace('"', '\\"')
 
         return f'CanReachEntrance("{entrance_escaped}")'
