@@ -34,6 +34,7 @@ from lib.test_utils import (
     check_http_server,
     build_and_load_world_mapping,
     extract_game_name_from_template,
+    load_template_exclude_list,
 )
 from lib.seed_utils import get_seed_id as compute_seed_id
 
@@ -584,6 +585,9 @@ def save_results(results: Dict, output_file: str) -> None:
 
 
 def main():
+    # Load default exclude list
+    default_exclude_list = load_template_exclude_list()
+
     parser = argparse.ArgumentParser(
         description='Test world generator with round-trip validation'
     )
@@ -597,8 +601,8 @@ def main():
         help='Output file for test results'
     )
     parser.add_argument(
-        '--skip-list', type=str, nargs='*', default=[],
-        help='Templates to skip'
+        '--skip-list', type=str, nargs='*', default=default_exclude_list,
+        help=f'Templates to skip (default: {" ".join(default_exclude_list)})'
     )
     parser.add_argument(
         '--include-list', type=str, nargs='*',
