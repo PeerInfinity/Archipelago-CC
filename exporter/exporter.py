@@ -840,6 +840,23 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
             serializable_starting_items = [
                 item.name for item in starting_items_list if hasattr(item, 'name')
             ]
+
+            # Filter out counter items that are targets of accumulator_rules
+            # These are precollected for generation purposes but shouldn't be in
+            # the exported starting_items - the frontend uses accumulator_rules instead
+            game_info = export_data.get('game_info', {}).get(player_str, {})
+            accumulator_targets = set()
+            for rule in game_info.get('accumulator_rules', []):
+                if rule.get('target'):
+                    accumulator_targets.add(rule['target'])
+
+            if accumulator_targets:
+                serializable_starting_items = [
+                    item for item in serializable_starting_items
+                    if item not in accumulator_targets
+                ]
+                logger.info(f"Filtered out accumulator target items from starting_items for player {player}: {accumulator_targets}")
+
             export_data['starting_items'][player_str] = serializable_starting_items
         except Exception as e:
             logger.error(f"Error processing starting items for player {player}: {str(e)}")
