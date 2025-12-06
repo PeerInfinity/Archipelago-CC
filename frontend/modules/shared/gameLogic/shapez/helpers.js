@@ -114,13 +114,15 @@ export function can_use_quad_painter(snapshot, staticData) {
 
 // Note: The following helpers are now exported as definitions in rules.json
 // and evaluated by the rule engine instead of JavaScript:
-// - can_make_stitched_shape
-// - can_build_mam
-// - can_make_east_windmill
-// - can_make_half_half_shape
-// - can_make_half_shape
+// - can_make_stitched_shape, can_build_mam, can_make_east_windmill
+// - can_make_half_half_shape, can_make_half_shape
 // - can_cut_half, can_rotate_90, can_rotate_180, can_stack, can_paint
 // - can_mix_colors, has_tunnel, has_balancer
+//
+// The following are inlined with imperative rule evaluation (block, for_range, etc.)
+// for newly generated presets, but kept here for backward compatibility:
+// - has_x_belt_multiplier (uses for_range loop)
+// - has_logic_list_building (uses conditional logic with list.index())
 
 /**
  * Check if player has required belt speed multiplier
