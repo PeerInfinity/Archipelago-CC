@@ -1149,14 +1149,9 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
         if not keep_templates and not is_second_pass:
             print(f"  Keeping {template_filename} in multiworld directory for future tests")
         elif is_second_pass and needs_regeneration:
-            # Second pass with restored template - remove it to restore previous state
-            print(f"  Removing restored template {template_filename} from multiworld directory (was temporarily added for second pass test)...")
-            try:
-                dest_path = os.path.join(multiworld_dir, template_filename)
-                os.remove(dest_path)
-                print(f"  Removed successfully")
-            except Exception as e:
-                print(f"  Error removing template: {e}")
+            # Second pass with restored template that passed - keep it!
+            # (The template we removed to make room was the oldest from first pass)
+            print(f"  Keeping restored template {template_filename} in multiworld directory (passed second pass)")
 
     print(f"\nCompleted {template_filename}: Multiworld Test={'[PASS]' if result['multiworld_test']['success'] else '[FAIL]'}, "
           f"Players Passed={result['multiworld_test']['players_passed']}/{result['multiworld_test']['total_players_tested']}")
