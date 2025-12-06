@@ -276,6 +276,13 @@ def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any
         key=lambda f: (f.get('template', ''), f.get('seed') if f.get('seed') is not None else float('inf'))
     )
 
+    # Collect seeds from all input files
+    seeds_used = []
+    for result_data in all_results:
+        metadata = result_data.get('metadata', {})
+        if 'seed' in metadata:
+            seeds_used.append(str(metadata['seed']))
+
     # Create combined output structure
     combined = {
         'metadata': {
@@ -287,6 +294,13 @@ def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any
         },
         'results': combined_results
     }
+
+    # Add seed info if available
+    if seeds_used:
+        if len(set(seeds_used)) == 1:
+            combined['metadata']['seed'] = seeds_used[0]
+        else:
+            combined['metadata']['seeds'] = sorted(set(seeds_used), key=lambda x: int(x) if x.isdigit() else x)
 
     # Add intermittent tracking if we have any failures
     if merged_intermittent_failures:
