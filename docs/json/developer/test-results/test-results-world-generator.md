@@ -1,7 +1,8 @@
 # World Generator Test Results
 
-**Generated:** 2025-12-06 04:41:39 UTC
+**Generated:** 2025-12-06 04:41:38 UTC
 **Seed:** N/A
+**Mode:** Random
 
 This report shows the results of round-trip testing the world generator.
 Each game's rules.json is converted to a `_test` world, and the generated
@@ -33,6 +34,8 @@ world is validated to produce equivalent game logic.
 | Failed Original Generations | 0 |
 | Successful Test World Generations | 80 |
 | Failed Test World Generations | 0 |
+| Successful Test Seed Generations | 65 |
+| Failed Test Seed Generations | 15 |
 | Cross-Validation Passed | 24 |
 | Cross-Validation Failed | 40 |
 
