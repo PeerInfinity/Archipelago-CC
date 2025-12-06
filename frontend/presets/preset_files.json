@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "test_data_updated": "2025-11-30T11:34:35.079483",
+    "test_data_updated": "2025-12-06T14:30:37.513435",
     "test_data_source": {
       "average_time_per_template_seconds": 18.6,
       "batch_processing_time_minutes": 24.6,
@@ -9,8 +9,8 @@
       "last_updated": "2025-10-09T23:50:14.807461",
       "script_version": "1.0.0"
     },
-    "games_with_test_data": 78,
-    "total_games": 81,
+    "games_with_test_data": 102,
+    "total_games": 105,
     "games_without_test_data": 3,
     "test_types_loaded": [
       "minimal_spoiler",
@@ -770,11 +770,11 @@
         "total_locations": 305
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
         "total_players": 7,
-        "first_failure_player": 7
+        "first_failure_player": null
       }
     }
   },
@@ -850,7 +850,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 7,
+        "total_players": 8,
         "first_failure_player": null
       }
     }
@@ -927,7 +927,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 8,
+        "total_players": 9,
         "first_failure_player": null
       }
     }
@@ -1005,7 +1005,7 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 9,
+        "total_players": 10,
         "first_failure_player": null
       }
     }
@@ -2497,11 +2497,11 @@
         "total_locations": 512
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
         "total_players": 10,
-        "first_failure_player": 10
+        "first_failure_player": null
       }
     }
   },
@@ -4402,11 +4402,11 @@
         "total_locations": 500
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
         "total_players": 10,
-        "first_failure_player": 10
+        "first_failure_player": null
       }
     }
   },
@@ -4742,11 +4742,11 @@
         "total_locations": 109
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
         "total_players": 10,
-        "first_failure_player": 10
+        "first_failure_player": null
       }
     }
   },
@@ -6265,48 +6265,11 @@
       }
     }
   },
-  "toem_rule_builder": {
-    "name": "TOEM rule builder",
-    "folders": {
-      "AP_13515657874892102023": {
-        "seed": 12345,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "TOEM rule builder"
-          }
-        ],
-        "files": [
-          "AP_13515657874892102023.archipelago",
-          "AP_13515657874892102023_Spoiler.txt",
-          "AP_13515657874892102023_rules.json",
-          "AP_13515657874892102023_sphere_log.jsonl"
-        ]
-      },
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "TOEM rule builder"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
   "toem_original": {
     "name": "TOEM original",
     "folders": {
-      "AP_13515657874892102023": {
-        "seed": 12345,
+      "AP_14089154938208861744": {
+        "seed": 1,
         "games": [
           {
             "player": 1,
@@ -6315,19 +6278,56 @@
           }
         ],
         "files": [
-          "AP_13515657874892102023.archipelago",
-          "AP_13515657874892102023_Spoiler.txt",
-          "AP_13515657874892102023_rules.json",
-          "AP_13515657874892102023_sphere_log.jsonl"
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "total_seeds": 10,
+        "first_failure_seed": null,
+        "seed_range": "1-10"
       },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "total_seeds": 10,
+        "first_failure_seed": null,
+        "seed_range": "1-10"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 157,
+        "total_locations": 157
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 10,
+        "first_failure_player": null
+      }
+    }
+  },
+  "toem_rule_builder": {
+    "name": "TOEM rule builder",
+    "folders": {
       "AP_14089154938208861744": {
         "seed": 1,
         "games": [
           {
             "player": 1,
             "name": "Player1",
-            "game": "TOEM original"
+            "game": "TOEM rule builder"
           }
         ],
         "files": [
@@ -6337,467 +6337,37 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    }
-  },
-  "adventure_test": {
-    "name": "Adventure Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Adventure Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "bumpstik_test": {
-    "name": "Bumper Stickers Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Bumper Stickers Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "shorthike_test": {
-    "name": "A Short Hike Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "A Short Hike Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "inscryption_test": {
-    "name": "Inscryption Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Inscryption Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "lufia2ac_test": {
-    "name": "Lufia II Ancient Cave Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Lufia II Ancient Cave Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "saving_princess_test": {
-    "name": "Saving Princess Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Saving Princess Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "faxanadu_test": {
-    "name": "Faxanadu Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Faxanadu Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "witness_test": {
-    "name": "The Witness Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "The Witness Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "tunic_test": {
-    "name": "TUNIC Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "TUNIC Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "lingo_test": {
-    "name": "Lingo Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Lingo Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "timespinner_test": {
-    "name": "Timespinner Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Timespinner Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "hylics2_test": {
-    "name": "Hylics 2 Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Hylics 2 Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "shivers_test": {
-    "name": "Shivers Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Shivers Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "wargroove_test": {
-    "name": "Wargroove Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Wargroove Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "noita_test": {
-    "name": "Noita Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Noita Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "checksfinder_test": {
-    "name": "ChecksFinder Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "ChecksFinder Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "aquaria_test": {
-    "name": "Aquaria Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Aquaria Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "landstalker_test": {
-    "name": "Landstalker - The Treasures of King Nole Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Landstalker - The Treasures of King Nole Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "bomb_rush_cyberfunk_test": {
-    "name": "Bomb Rush Cyberfunk Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Bomb Rush Cyberfunk Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "ffmq_test": {
-    "name": "Final Fantasy Mystic Quest Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Final Fantasy Mystic Quest Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "kdl3_test": {
-    "name": "Kirby's Dream Land 3 Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Kirby's Dream Land 3 Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "dlcquest_test": {
-    "name": "DLCQuest Test",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "DLCQuest Test"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "total_seeds": 10,
+        "first_failure_seed": null,
+        "seed_range": "1-10"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "total_seeds": 10,
+        "first_failure_seed": null,
+        "seed_range": "1-10"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 157,
+        "total_locations": 157
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 10,
+        "first_failure_player": null
       }
     }
   }

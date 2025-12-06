@@ -13,6 +13,16 @@ on:
         type: boolean
         default: true
 
+      generate_worldgen:
+        description: 'Generate worldgen worlds for standard templates'
+        type: boolean
+        default: false
+
+      worldgen_canonical_seed1:
+        description: 'Use canonical seed 1 placement for worldgen worlds'
+        type: boolean
+        default: true
+
 permissions:
   contents: write  # Allow pushing commits and creating branches
 
@@ -91,6 +101,8 @@ jobs:
           PYTHONUNBUFFERED: "1"
           GENERATE_MULTIWORLD: ${{ inputs.generate_multiworld }}
           GENERATE_EXTRA_SEEDS: ${{ inputs.generate_extra_seeds }}
+          GENERATE_WORLDGEN: ${{ inputs.generate_worldgen }}
+          WORLDGEN_CANONICAL_SEED1: ${{ inputs.worldgen_canonical_seed1 }}
         run: |
           source .venv/bin/activate
           chmod +x scripts/utils/generate_all_templates.sh
