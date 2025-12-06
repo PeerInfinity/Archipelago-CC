@@ -76,7 +76,7 @@ class ASTVisitorMixin:
                 logging.debug(f"Function body node {i}: {type(body_node).__name__}")
 
             # Skip docstrings - they are Expr nodes containing a Constant string as the first statement
-            body_to_analyze = node.body
+            body_to_analyze = list(node.body)
             if (body_to_analyze and
                 isinstance(body_to_analyze[0], ast.Expr) and
                 isinstance(body_to_analyze[0].value, ast.Constant) and
@@ -85,7 +85,34 @@ class ASTVisitorMixin:
                 logging.debug("Skipping docstring in function body")
                 body_to_analyze = body_to_analyze[1:]
 
-            # Skip variable assignments (Assign, AnnAssign) and look for control flow or return
+            if not body_to_analyze:
+                logging.warning(f"visit_FunctionDef: Empty function body for '{node.name}', returning None")
+                return None
+
+            # Check if this is a simple single-return function (the common case)
+            # Only use block mode if there are multiple statements or complex control flow
+            needs_block_mode = self._needs_block_mode(body_to_analyze)
+
+            if needs_block_mode:
+                logging.debug(f"visit_FunctionDef: Using block mode for '{node.name}'")
+                # Analyze all statements and produce a block
+                statements = []
+                for stmt in body_to_analyze:
+                    stmt_result = self.visit_statement(stmt)
+                    if stmt_result is not None:
+                        statements.append(stmt_result)
+
+                if len(statements) == 1:
+                    # Single statement - don't wrap in block
+                    return statements[0]
+                elif statements:
+                    return {
+                        'type': 'block',
+                        'statements': statements
+                    }
+                return None
+
+            # Original simple mode: Skip variable assignments and look for control flow or return
             while body_to_analyze and isinstance(body_to_analyze[0], (ast.Assign, ast.AnnAssign)):
                 logging.debug(f"Skipping variable assignment: {type(body_to_analyze[0]).__name__}")
                 body_to_analyze = body_to_analyze[1:]
@@ -118,6 +145,29 @@ class ASTVisitorMixin:
         except Exception as e:
             logging.error(f"Error analyzing function {node.name}: {e}")
             return None
+
+    def _needs_block_mode(self, body_nodes):
+        """
+        Determine if a function body needs block mode (multi-statement) analysis.
+        Returns True if the body contains:
+        - For loops
+        - Multiple assignments followed by a return
+        - AugAssign statements
+        """
+        has_for = any(isinstance(n, ast.For) for n in body_nodes)
+        has_augassign = any(isinstance(n, ast.AugAssign) for n in body_nodes)
+
+        # Count assignments followed by return
+        assign_count = sum(1 for n in body_nodes if isinstance(n, (ast.Assign, ast.AnnAssign)))
+        has_return = any(isinstance(n, ast.Return) for n in body_nodes)
+
+        # Use block mode if we have for loops, augmented assignments,
+        # or multiple assignments before a return
+        if has_for or has_augassign:
+            return True
+        if assign_count > 0 and has_return and len(body_nodes) > 2:
+            return True
+        return False
 
     def visit_Lambda(self, node):
         try:
@@ -1892,6 +1942,140 @@ class ASTVisitorMixin:
             }
         except Exception as e:
             logging.error("Error in visit_BinOp", e)
+            return None
+
+    def visit_For(self, node: ast.For):
+        """
+        Handle for loops, specifically for range() iterations.
+        Produces a for_range rule type for use in imperative helper evaluation.
+        """
+        try:
+            logging.debug(f"\n--- visit_For ---")
+            logging.debug(f"Target: {ast.dump(node.target)}")
+            logging.debug(f"Iter: {ast.dump(node.iter)}")
+
+            # Get the loop variable name
+            var_name = "_"
+            if isinstance(node.target, ast.Name):
+                var_name = node.target.id
+
+            # Check if this is a range() call
+            if not (isinstance(node.iter, ast.Call) and
+                    isinstance(node.iter.func, ast.Name) and
+                    node.iter.func.id == 'range'):
+                logging.warning(f"visit_For: Only range() loops are supported, got: {ast.dump(node.iter)}")
+                return None
+
+            # Get the count argument for range()
+            if not node.iter.args:
+                logging.error("visit_For: range() called without arguments")
+                return None
+
+            count_arg = node.iter.args[0]
+            count_result = self.visit(count_arg)
+            if count_result is None:
+                logging.error(f"visit_For: Failed to analyze range count: {ast.dump(count_arg)}")
+                return None
+
+            # Analyze the loop body
+            body_results = []
+            for stmt in node.body:
+                stmt_result = self.visit_statement(stmt)
+                if stmt_result is not None:
+                    body_results.append(stmt_result)
+
+            return {
+                'type': 'for_range',
+                'var': var_name,
+                'count': count_result,
+                'body': body_results
+            }
+        except Exception as e:
+            logging.error(f"Error in visit_For: {e}")
+            return None
+
+    def visit_AugAssign(self, node: ast.AugAssign):
+        """
+        Handle augmented assignment statements (+=, -=, *=, /=).
+        Produces an assign rule type with an op field.
+        """
+        try:
+            logging.debug(f"\n--- visit_AugAssign ---")
+            logging.debug(f"Target: {ast.dump(node.target)}")
+            logging.debug(f"Op: {type(node.op).__name__}")
+            logging.debug(f"Value: {ast.dump(node.value)}")
+
+            if not isinstance(node.target, ast.Name):
+                logging.warning(f"visit_AugAssign: Only simple name targets supported, got: {ast.dump(node.target)}")
+                return None
+
+            var_name = node.target.id
+
+            # Map AST operators to symbols
+            op_map = {
+                'Add': '+=', 'Sub': '-=',
+                'Mult': '*=', 'Div': '/=',
+                'FloorDiv': '//=', 'Mod': '%='
+            }
+            op_name = type(node.op).__name__
+            op_symbol = op_map.get(op_name, '+=')
+
+            value_result = self.visit(node.value)
+            if value_result is None:
+                logging.error(f"visit_AugAssign: Failed to analyze value: {ast.dump(node.value)}")
+                return None
+
+            return {
+                'type': 'assign',
+                'name': var_name,
+                'op': op_symbol,
+                'value': value_result
+            }
+        except Exception as e:
+            logging.error(f"Error in visit_AugAssign: {e}")
+            return None
+
+    def visit_statement(self, node):
+        """
+        Handle a statement node and return its rule representation.
+        This is used for multi-statement function bodies.
+        """
+        try:
+            logging.debug(f"\n--- visit_statement: {type(node).__name__} ---")
+
+            if isinstance(node, ast.Return):
+                # Return statement - wrap the value in a return type
+                value_result = self.visit(node.value) if node.value else {'type': 'constant', 'value': None}
+                return {
+                    'type': 'return',
+                    'value': value_result
+                }
+            elif isinstance(node, ast.Assign):
+                # Simple assignment
+                if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
+                    var_name = node.targets[0].id
+                    value_result = self.visit(node.value)
+                    if value_result is not None:
+                        return {
+                            'type': 'assign',
+                            'name': var_name,
+                            'value': value_result
+                        }
+                return None
+            elif isinstance(node, ast.AugAssign):
+                return self.visit_AugAssign(node)
+            elif isinstance(node, ast.For):
+                return self.visit_For(node)
+            elif isinstance(node, ast.If):
+                return self.visit_If(node)
+            elif isinstance(node, ast.Expr):
+                # Expression statement - just evaluate it
+                return self.visit(node.value)
+            else:
+                logging.warning(f"visit_statement: Unsupported statement type: {type(node).__name__}")
+                return None
+        except Exception as e:
+            logging.error(f"Error in visit_statement: {e}")
             return None
 
     def _substitute_variable_in_rule(self, rule: Dict[str, Any], var_name: str, value: Any) -> Optional[Dict[str, Any]]:

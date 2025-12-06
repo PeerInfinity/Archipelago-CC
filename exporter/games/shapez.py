@@ -19,7 +19,7 @@ class ShapezGameExportHandler(GenericGameExportHandler):
     # Helpers that should NOT be exported as definitions (too complex, need JS implementation)
     # These will remain as helper calls that the frontend JavaScript must handle
     HELPERS_TO_EXPORT_BLACKLIST = {
-        'has_x_belt_multiplier',      # Complex counting logic with loops
+        # 'has_x_belt_multiplier',    # Now supported with imperative rule evaluation
         'has_logic_list_building',    # Has closure variables (buildings, index) that can't be resolved
     }
 
@@ -79,7 +79,7 @@ class ShapezGameExportHandler(GenericGameExportHandler):
             'can_make_east_windmill',
             'can_make_half_half_shape',
             'can_make_half_shape',
-            'has_x_belt_multiplier',
+            # 'has_x_belt_multiplier' - now fully analyzed with imperative rules
         }
 
         return func_name in shapez_helpers

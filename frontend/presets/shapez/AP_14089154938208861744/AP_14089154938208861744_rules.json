@@ -2120,12 +2120,116 @@
             "name": "Delivering per second with 1.6x belt speed",
             "connected_region": "Achievements with x1.6 belt speed",
             "access_rule": {
-              "type": "helper",
-              "name": "has_x_belt_multiplier",
-              "args": [
+              "type": "block",
+              "statements": [
                 {
-                  "type": "constant",
-                  "value": 1.6
+                  "type": "assign",
+                  "name": "multiplier",
+                  "value": {
+                    "type": "constant",
+                    "value": 1.0
+                  }
+                },
+                {
+                  "type": "for_range",
+                  "var": "_",
+                  "count": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Rising Belt Upgrade"
+                      }
+                    ]
+                  },
+                  "body": [
+                    {
+                      "type": "assign",
+                      "name": "multiplier",
+                      "op": "*=",
+                      "value": {
+                        "type": "constant",
+                        "value": 2
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "assign",
+                  "name": "multiplier",
+                  "op": "+=",
+                  "value": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Gigantic Belt Upgrade"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 10
+                    }
+                  }
+                },
+                {
+                  "type": "assign",
+                  "name": "multiplier",
+                  "op": "+=",
+                  "value": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Big Belt Upgrade"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "assign",
+                  "name": "multiplier",
+                  "op": "+=",
+                  "value": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Small Belt Upgrade"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 0.1
+                    }
+                  }
+                },
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "compare",
+                    "left": {
+                      "type": "name",
+                      "name": "multiplier"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "type": "constant",
+                      "value": 1.6
+                    }
+                  }
                 }
               ]
             }
@@ -4397,44 +4501,6 @@
   },
   "helpers": {
     "1": {
-      "can_make_east_windmill": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "can_stack",
-            "args": []
-          },
-          {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Quad Cutter"
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "helper",
-                    "name": "can_cut_half",
-                    "args": []
-                  },
-                  {
-                    "type": "helper",
-                    "name": "can_rotate_180",
-                    "args": []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "can_mix_colors": {
-        "type": "item_check",
-        "item": "Color Mixer"
-      },
       "can_rotate_90": {
         "type": "or",
         "conditions": [
@@ -4502,9 +4568,28 @@
           }
         ]
       },
-      "can_stack": {
-        "type": "item_check",
-        "item": "Stacker"
+      "can_paint": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Double Painter"
+              },
+              {
+                "type": "item_check",
+                "item": "Painter"
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "can_use_quad_painter",
+            "args": []
+          }
+        ]
       },
       "can_make_half_shape": {
         "type": "or",
@@ -4529,9 +4614,97 @@
           }
         ]
       },
+      "can_make_east_windmill": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "can_stack",
+            "args": []
+          },
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Quad Cutter"
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "helper",
+                    "name": "can_cut_half",
+                    "args": []
+                  },
+                  {
+                    "type": "helper",
+                    "name": "can_rotate_180",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "can_make_stitched_shape": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "can_stack",
+            "args": []
+          },
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Quad Cutter"
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "name",
+                      "name": "floating"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "helper",
+                    "name": "can_cut_half",
+                    "args": []
+                  },
+                  {
+                    "type": "helper",
+                    "name": "can_rotate_90",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "can_stack": {
+        "type": "item_check",
+        "item": "Stacker"
+      },
       "can_cut_half": {
         "type": "item_check",
         "item": "Cutter"
+      },
+      "can_mix_colors": {
+        "type": "item_check",
+        "item": "Color Mixer"
       },
       "can_build_mam": {
         "type": "and",
@@ -4594,75 +4767,6 @@
                 "item": "Wires"
               }
             ]
-          }
-        ]
-      },
-      "can_make_stitched_shape": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "can_stack",
-            "args": []
-          },
-          {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Quad Cutter"
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "name",
-                      "name": "floating"
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "helper",
-                    "name": "can_cut_half",
-                    "args": []
-                  },
-                  {
-                    "type": "helper",
-                    "name": "can_rotate_90",
-                    "args": []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "can_paint": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Double Painter"
-              },
-              {
-                "type": "item_check",
-                "item": "Painter"
-              }
-            ]
-          },
-          {
-            "type": "helper",
-            "name": "can_use_quad_painter",
-            "args": []
           }
         ]
       }
