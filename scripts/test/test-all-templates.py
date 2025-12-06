@@ -1422,7 +1422,7 @@ def main():
                         current_player_count, export_only=args.export_only,
                         test_only=True,  # Use existing generation output
                         headed=args.headed,
-                        keep_templates=True,  # Don't modify templates
+                        keep_templates=False,  # Allow template management in second pass
                         test_all_players=False,  # Only test this player
                         require_prerequisites=False,  # Already passed first pass
                         include_error_details=args.include_error_details,
