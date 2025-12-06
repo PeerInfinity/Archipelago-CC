@@ -8,10 +8,75 @@ defaults for rule analysis, item data discovery, and common helper patterns.
 See exporter/games/generic.py for details on the enhanced functionality.
 """
 
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Set, Optional
 import collections
+import importlib
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class BaseGameExportHandler:
+    # Configuration for automatic helper extraction
+    # Games should override these class variables
+
+    # List of module paths containing helper functions (e.g., ['worlds.shapez.regions'])
+    HELPER_MODULES: List[str] = []
+
+    # List of module paths containing item name constants (e.g., ['worlds.shapez.data.strings'])
+    # The exporter will look for classes like ITEMS with attributes that map to item names
+    ITEM_NAME_MODULES: List[str] = []
+
+    # Whether to automatically export discovered helpers as definitions
+    # When False (default), only whitelisted helpers are exported
+    # When True, discovered helpers are exported (minus blacklist)
+    # Games must explicitly set this to True to enable automatic helper export
+    AUTO_EXPORT_DISCOVERED_HELPERS: bool = False
+
+    # Set of helper function names to export as definitions (manual whitelist)
+    # These helpers are always exported regardless of AUTO_EXPORT_DISCOVERED_HELPERS
+    HELPERS_TO_EXPORT_WHITELIST: Set[str] = set()
+
+    # Set of helper function names to NOT export as definitions (blacklist)
+    # These helpers are too complex and need JavaScript implementations
+    HELPERS_TO_EXPORT_BLACKLIST: Set[str] = set()
+
+    def __init__(self):
+        """Initialize the handler with an empty set of discovered helpers."""
+        # Set of helper names discovered during rule analysis
+        # Populated automatically by register_helper_usage()
+        self._discovered_helpers: Set[str] = set()
+
+    def register_helper_usage(self, helper_name: str) -> None:
+        """
+        Register that a helper function is used in the rules.
+
+        This is called by the analyzer when it encounters a helper function call.
+        The helper will be automatically analyzed and exported as a definition
+        (unless it's in the blacklist).
+
+        Args:
+            helper_name: The name of the helper function
+        """
+        if not hasattr(self, '_discovered_helpers'):
+            self._discovered_helpers = set()
+        self._discovered_helpers.add(helper_name)
+
+    def get_discovered_helpers(self) -> Set[str]:
+        """
+        Return the set of helper names discovered during rule analysis.
+
+        Returns:
+            Set of helper function names that were used in the analyzed rules
+        """
+        if not hasattr(self, '_discovered_helpers'):
+            self._discovered_helpers = set()
+        return self._discovered_helpers
+
+    def clear_discovered_helpers(self) -> None:
+        """Clear the set of discovered helpers. Called between player exports."""
+        self._discovered_helpers = set()
+
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Recursively expand helper functions in a rule structure."""
         if not rule or not isinstance(rule, dict):
@@ -333,3 +398,336 @@ class BaseGameExportHandler:
         """
         # Base implementation returns data unchanged
         return data
+
+    def get_helpers_to_export_whitelist(self) -> Set[str]:
+        """
+        Return a set of helper function names that SHOULD be exported as definitions.
+
+        When this returns a non-empty set, only these helpers will be exported as
+        definitions in the rules.json. All other helpers will remain as helper calls
+        that the frontend must implement.
+
+        Returns:
+            A set of helper function names to export as definitions.
+        """
+        return self.HELPERS_TO_EXPORT_WHITELIST
+
+    def get_helpers_to_export_blacklist(self) -> Set[str]:
+        """
+        Return a set of helper function names that should NOT be exported as definitions.
+
+        When this returns a non-empty set, these helpers will NOT be exported as
+        definitions even if they would otherwise be eligible. This is useful when
+        most helpers can be exported but a few are too complex.
+
+        The blacklist is checked after the whitelist.
+
+        Returns:
+            A set of helper function names to NOT export as definitions.
+        """
+        return self.HELPERS_TO_EXPORT_BLACKLIST
+
+    def get_helper_modules(self) -> List[str]:
+        """
+        Return a list of module paths containing helper functions.
+
+        Returns:
+            A list of module paths (e.g., ['worlds.shapez.regions'])
+        """
+        return self.HELPER_MODULES
+
+    def get_item_name_modules(self) -> List[str]:
+        """
+        Return a list of module paths containing item name constants.
+
+        Returns:
+            A list of module paths (e.g., ['worlds.shapez.data.strings'])
+        """
+        return self.ITEM_NAME_MODULES
+
+    def get_helper_definitions(self, world) -> Dict[str, Any]:
+        """
+        Extract helper function definitions and return them as rule structures.
+
+        This method automatically finds and analyzes helper functions from the
+        modules specified in HELPER_MODULES, converting them to rule structures
+        that the frontend can evaluate directly.
+
+        Helper discovery works in two ways:
+        1. Automatic: Helpers discovered during rule analysis (via register_helper_usage)
+        2. Manual: Helpers listed in HELPERS_TO_EXPORT_WHITELIST
+
+        The blacklist (HELPERS_TO_EXPORT_BLACKLIST) excludes helpers from export.
+
+        Args:
+            world: The world object for this player
+
+        Returns:
+            A dictionary mapping helper names to their rule definitions.
+            Example: {"can_cut_half": {"type": "item_check", "item": "Cutter"}}
+        """
+        # Import analyze_rule here to avoid circular imports
+        from exporter.analyzer import analyze_rule
+
+        helper_definitions = {}
+
+        # Get helper configuration
+        whitelist = self.get_helpers_to_export_whitelist()
+        blacklist = self.get_helpers_to_export_blacklist()
+        helper_modules = self.get_helper_modules()
+
+        # Determine which helpers to export based on AUTO_EXPORT_DISCOVERED_HELPERS
+        # When False (default), only whitelisted helpers are exported
+        # When True, discovered helpers are also exported (minus blacklist)
+        if self.AUTO_EXPORT_DISCOVERED_HELPERS:
+            discovered = self.get_discovered_helpers()
+            helpers_to_export = discovered | whitelist
+        else:
+            helpers_to_export = whitelist
+
+        if not helpers_to_export or not helper_modules:
+            return helper_definitions
+
+        # Load helper modules
+        loaded_modules = []
+        for module_path in helper_modules:
+            try:
+                module = importlib.import_module(module_path)
+                loaded_modules.append(module)
+            except ImportError as e:
+                logger.warning(f"Could not import helper module '{module_path}': {e}")
+
+        if not loaded_modules:
+            return helper_definitions
+
+        # Process helpers iteratively to discover nested helper dependencies
+        # When analyzing a helper, it may call other helpers which get registered
+        # Keep iterating until no new helpers are discovered
+        processed_helpers: Set[str] = set()
+        max_iterations = 10  # Safety limit to prevent infinite loops
+
+        for iteration in range(max_iterations):
+            # Get current set of helpers to export (may grow as we discover new ones)
+            if self.AUTO_EXPORT_DISCOVERED_HELPERS:
+                discovered = self.get_discovered_helpers()
+                current_helpers = discovered | whitelist
+            else:
+                current_helpers = whitelist
+
+            # Find helpers that haven't been processed yet
+            new_helpers = current_helpers - processed_helpers - blacklist
+
+            if not new_helpers:
+                logger.debug(f"Helper discovery complete after {iteration + 1} iteration(s)")
+                break
+
+            logger.debug(f"Iteration {iteration + 1}: Processing {len(new_helpers)} new helpers: {new_helpers}")
+
+            for helper_name in new_helpers:
+                processed_helpers.add(helper_name)
+
+                # Find the helper function in one of the loaded modules
+                helper_func = None
+                for module in loaded_modules:
+                    if hasattr(module, helper_name):
+                        helper_func = getattr(module, helper_name)
+                        break
+
+                if helper_func is None:
+                    # Not found in helper modules - this is normal for built-in helpers
+                    # like 'has', 'count', etc. that the frontend implements directly
+                    logger.debug(f"Helper function '{helper_name}' not found in helper modules (may be a built-in)")
+                    continue
+
+                # Analyze the function to get its rule structure
+                # This may discover new helpers via register_helper_usage
+                try:
+                    rule = analyze_rule(
+                        rule_func=helper_func,
+                        game_handler=self,
+                        player_context=world.player if hasattr(world, 'player') else None
+                    )
+
+                    # Clean up the rule - resolve item names, convert state methods to rule types
+                    rule = self._clean_helper_rule(rule, world)
+
+                    if rule and rule.get('type') != 'error':
+                        helper_definitions[helper_name] = rule
+                        logger.debug(f"Exported helper '{helper_name}': {rule}")
+                    else:
+                        logger.warning(f"Failed to analyze helper '{helper_name}': {rule}")
+                except Exception as e:
+                    logger.error(f"Error analyzing helper '{helper_name}': {e}")
+        else:
+            logger.warning(f"Helper discovery reached max iterations ({max_iterations}), may have circular dependencies")
+
+        return helper_definitions
+
+    def _clean_helper_rule(self, rule: Dict[str, Any], world) -> Dict[str, Any]:
+        """
+        Clean up a helper rule by resolving attribute nodes and simplifying structure.
+
+        This handles cases where the analyzer produces attribute nodes like
+        ITEMS.cutter that need to be resolved to actual item names, and converts
+        state method calls (has, has_any, has_all) to rule types the frontend
+        can evaluate directly.
+
+        Args:
+            rule: The rule dictionary to clean up
+            world: The world object for context
+
+        Returns:
+            The cleaned up rule dictionary
+        """
+        if not rule or not isinstance(rule, dict):
+            return rule
+
+        rule_type = rule.get('type')
+
+        # Resolve item_check with attribute-based item names
+        if rule_type == 'item_check':
+            item = rule.get('item')
+            if isinstance(item, dict) and item.get('type') == 'attribute':
+                resolved_item = self._resolve_item_attribute(item)
+                if resolved_item:
+                    rule['item'] = resolved_item
+            return rule
+
+        # Handle state.has(item, player) -> item_check
+        if rule_type == 'state_method' and rule.get('method') == 'has':
+            args = rule.get('args', [])
+            if len(args) >= 1:
+                item_arg = args[0]
+                if isinstance(item_arg, dict) and item_arg.get('type') == 'attribute':
+                    resolved_item = self._resolve_item_attribute(item_arg)
+                    if resolved_item:
+                        return {'type': 'item_check', 'item': resolved_item}
+                elif isinstance(item_arg, dict) and item_arg.get('type') == 'constant':
+                    return {'type': 'item_check', 'item': item_arg.get('value')}
+            return rule
+
+        # Handle state.has_any((items), player) -> or of item_checks
+        if rule_type == 'state_method' and rule.get('method') == 'has_any':
+            args = rule.get('args', [])
+            if len(args) >= 1:
+                items_arg = args[0]
+                items = self._resolve_items_collection(items_arg)
+                if items:
+                    return {
+                        'type': 'or',
+                        'conditions': [{'type': 'item_check', 'item': item} for item in items]
+                    }
+            return rule
+
+        # Handle state.has_all((items), player) -> and of item_checks
+        if rule_type == 'state_method' and rule.get('method') == 'has_all':
+            args = rule.get('args', [])
+            if len(args) >= 1:
+                items_arg = args[0]
+                items = self._resolve_items_collection(items_arg)
+                if items:
+                    return {
+                        'type': 'and',
+                        'conditions': [{'type': 'item_check', 'item': item} for item in items]
+                    }
+            return rule
+
+        # Recursively clean conditions
+        if rule_type in ['and', 'or']:
+            rule['conditions'] = [self._clean_helper_rule(c, world) for c in rule.get('conditions', [])]
+            return rule
+
+        if rule_type == 'not':
+            rule['condition'] = self._clean_helper_rule(rule.get('condition'), world)
+            return rule
+
+        return rule
+
+    def _resolve_item_attribute(self, attr_node: Dict[str, Any]) -> Optional[str]:
+        """
+        Resolve an attribute node (like ITEMS.cutter) to an item name string.
+
+        Searches through the modules specified in ITEM_NAME_MODULES for classes
+        that have the matching attribute.
+
+        Args:
+            attr_node: The attribute node dictionary from the analyzer
+
+        Returns:
+            The resolved item name string, or None if not found
+        """
+        if not attr_node or attr_node.get('type') != 'attribute':
+            return None
+
+        attr_name = attr_node.get('attr')
+        obj = attr_node.get('object', {})
+
+        # Get the class name (e.g., 'ITEMS')
+        class_name = None
+        if obj.get('type') == 'name':
+            class_name = obj.get('name')
+
+        if not class_name or not attr_name:
+            return None
+
+        # Search through item name modules for the class and attribute
+        for module_path in self.get_item_name_modules():
+            try:
+                module = importlib.import_module(module_path)
+                if hasattr(module, class_name):
+                    item_class = getattr(module, class_name)
+                    if hasattr(item_class, attr_name):
+                        return getattr(item_class, attr_name)
+            except ImportError:
+                pass
+
+        return None
+
+    def _resolve_items_collection(self, collection_node: Dict[str, Any]) -> Optional[List[str]]:
+        """
+        Resolve a tuple/list of item attributes to a list of item name strings.
+
+        Handles both:
+        - Tuple/list nodes with attribute elements (not yet resolved)
+        - Constant nodes with list/tuple values (already resolved by analyzer)
+
+        Args:
+            collection_node: The collection node dictionary from the analyzer
+
+        Returns:
+            A list of item name strings, or None if not resolvable
+        """
+        if not collection_node:
+            return None
+
+        items = []
+
+        # Handle constant type with list/tuple value (already resolved by analyzer)
+        if collection_node.get('type') == 'constant':
+            value = collection_node.get('value')
+            if isinstance(value, (list, tuple)):
+                return list(value)
+
+        # Handle tuple type
+        if collection_node.get('type') == 'tuple':
+            elements = collection_node.get('elements', [])
+            for elem in elements:
+                if elem.get('type') == 'attribute':
+                    item_name = self._resolve_item_attribute(elem)
+                    if item_name:
+                        items.append(item_name)
+                elif elem.get('type') == 'constant':
+                    items.append(elem.get('value'))
+
+        # Handle list type
+        elif collection_node.get('type') == 'list':
+            elements = collection_node.get('elements', [])
+            for elem in elements:
+                if elem.get('type') == 'attribute':
+                    item_name = self._resolve_item_attribute(elem)
+                    if item_name:
+                        items.append(item_name)
+                elif elem.get('type') == 'constant':
+                    items.append(elem.get('value'))
+
+        return items if items else None

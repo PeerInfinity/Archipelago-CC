@@ -604,6 +604,8 @@ export function createStateSnapshotInterface(
       regions: staticData.regions, // Use the main regions property for rule engine compatibility
       dungeons: staticData.dungeonData || staticData.dungeons,
       game_info: staticData.game_info, // Include game_info for variable resolution
+      helpers: staticData.helpers, // Include helper definitions for rule engine
+      settings: staticData.settings, // Include settings for helper evaluation
     }),
     getStateValue: (pathString) => {
       if (!snapshot) return undefined;

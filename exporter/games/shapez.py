@@ -2,13 +2,46 @@
 
 from typing import Dict, Any
 from .generic import GenericGameExportHandler
-import logging
 
-logger = logging.getLogger(__name__)
 
 class ShapezGameExportHandler(GenericGameExportHandler):
     """Export handler for shapez."""
     GAME_NAME = 'shapez'
+
+    # Module paths for automatic helper extraction
+    # Helpers are automatically discovered during rule analysis when they're used
+    HELPER_MODULES = ['worlds.shapez.regions']
+    ITEM_NAME_MODULES = ['worlds.shapez.data.strings']
+
+    # Enable automatic export of discovered helpers
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+
+    # Helpers that should NOT be exported as definitions (too complex, need JS implementation)
+    # These will remain as helper calls that the frontend JavaScript must handle
+    # Note: has_logic_list_building is now supported - list.index() is resolved at analysis time
+    HELPERS_TO_EXPORT_BLACKLIST: set[str] = set()
+
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """
+        Extract shapez-specific settings including the 'floating' parameter.
+
+        The 'floating' (has_floating) setting is used by helper functions like
+        can_make_stitched_shape and can_build_mam to determine if floating layers
+        are allowed.
+        """
+        # Get base settings
+        settings = super().get_settings_data(world, multiworld, player)
+
+        # Add shapez-specific settings
+        # 'floating' is computed from options in the world's __init__
+        # We need to compute it the same way
+        options = world.options
+        has_floating = (options.allow_floating_layers.value or
+                        not (options.randomize_level_requirements and
+                             options.randomize_upgrade_requirements))
+        settings['floating'] = has_floating
+
+        return settings
 
     def should_preserve_as_helper(self, func_name: str) -> bool:
         """
@@ -21,14 +54,10 @@ class ShapezGameExportHandler(GenericGameExportHandler):
         Returns:
             True if the function should be preserved as a helper call
         """
-        # Preserve has_logic_list_building as a helper
-        # This function takes closure variables (buildings list, index) that
-        # can't be properly resolved by the analyzer
-        if func_name == 'has_logic_list_building':
-            return True
-
-        # All other shapez helper functions should also be preserved
-        # This includes: can_cut_half, can_rotate_90, can_stack, can_paint, etc.
+        # Preserve helper functions as helper calls so they can be exported as
+        # reusable definitions or handled by JavaScript fallback.
+        # Note: has_x_belt_multiplier and has_logic_list_building are NOT preserved -
+        # they get inlined with imperative rule evaluation (block, for_range, assign, etc.)
         shapez_helpers = {
             'can_cut_half',
             'can_rotate_90',
@@ -44,7 +73,6 @@ class ShapezGameExportHandler(GenericGameExportHandler):
             'can_make_east_windmill',
             'can_make_half_half_shape',
             'can_make_half_shape',
-            'has_x_belt_multiplier',
         }
 
         return func_name in shapez_helpers

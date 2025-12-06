@@ -719,6 +719,7 @@ export function getStaticGameData(sm) {
     // Game-specific information
     game_info: sm.gameInfo,
     settings: sm.rules?.settings,  // Full settings object (keyed by player ID for multiworld)
+    helpers: sm.rules?.helpers,  // Helper function definitions (keyed by player ID for multiworld)
     // Starting items (precollected items)
     starting_items: sm.rules?.starting_items,
     // ID mappings
