@@ -1,6 +1,6 @@
 # World Generator Test Results
 
-**Generated:** 2025-12-05 16:23:37 UTC
+**Generated:** 2025-12-05 18:12:11 UTC
 **Seed:** N/A
 
 This report shows the results of round-trip testing the world generator.
@@ -179,9 +179,7 @@ world is validated to produce equivalent game logic.
 
 **Generation phase:**
 - World generation failed: World generator failed: 
-ERROR:root:Could not load world WorldSource(ahit_test, is_zip=False, relative=True):
-Traceback (most recent call last):
-  File "/home/runner/work/Arch...
+INFO: Loading JSON from /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dark_souls_3/AP_14089154938208861744/AP_14089154938208861744_...
 
 ### Donkey Kong Country 3
 
@@ -192,7 +190,7 @@ Traceback (most recent call last):
 
 **Generation phase:**
 - World generation failed: World generator failed: 
-/home/runner/work/Archipelago-CC/Archipelago-CC/ModuleUpdate.py:76: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io...
+INFO: Loading JSON from /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/factorio/AP_14089154938208861744/AP_14089154938208861744_rule...
 
 ### Faxanadu
 
@@ -238,9 +236,7 @@ Traceback (most recent call last):
 
 **Generation phase:**
 - World generation failed: World generator failed: 
-ERROR:root:Could not load world WorldSource(alttp_test, is_zip=False, relative=True):
-Traceback (most recent call last):
-  File "/home/runner/work/Arc...
+INFO: Loading JSON from /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/metamath/AP_14089154938208861744/AP_14089154938208861744_rule...
 
 ### Muse Dash
 
@@ -271,15 +267,13 @@ Traceback (most recent call last):
 
 **Generation phase:**
 - World generation failed: World generator failed: 
-/home/runner/work/Archipelago-CC/Archipelago-CC/ModuleUpdate.py:76: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io...
+INFO: Loading JSON from /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tloz/AP_14089154938208861744/AP_14089154938208861744_rules.js...
 
 ### The Messenger
 
 **Generation phase:**
 - World generation failed: World generator failed: 
-ERROR:root:Could not load world WorldSource(jakanddaxter_test, is_zip=False, relative=True):
-Traceback (most recent call last):
-  File "/home/runner/w...
+INFO: Loading JSON from /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/messenger/AP_14089154938208861744/AP_14089154938208861744_rul...
 
 ### Yacht Dice
 
