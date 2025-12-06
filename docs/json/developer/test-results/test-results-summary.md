@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-06 07:46:36
+**Generated:** 2025-12-06 11:17:16
 
 This summary combines results from 3 types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -137,6 +137,14 @@ Additional test results:
 | Yoshi's Island | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Yu-Gi-Oh! 2006 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | shapez | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+
+## Multi-Template Test Results
+
+These tests check multiple template configurations for the same game.
+
+| Game Name | Minimal (Advancement Items Only) | Full (All Locations) |
+|-----------|----------------------------------|-------------------------------|
+| A Link to the Past | [168/203 passed](./test-results-multitemplate-minimal.md#a-link-to-the-past) | ❓ N/A |
 
 ## Excluded Games
 
