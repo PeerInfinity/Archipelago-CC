@@ -112,70 +112,15 @@ export function can_use_quad_painter(snapshot, staticData) {
            has_any(snapshot, ["Switch", "Constant Signal"]);
 }
 
-/**
- * Check if player can make stitched shapes
- * @param {Object} snapshot - The game state snapshot
- * @param {Object} staticData - Static game data
- * @param {boolean} floating - Whether floating layers are allowed
- */
-export function can_make_stitched_shape(snapshot, staticData, floating = false) {
-    if (!can_stack(snapshot, staticData)) {
-        return false;
-    }
-
-    // If not floating, can use quad cutter
-    if (!floating && has(snapshot, "Quad Cutter")) {
-        return true;
-    }
-
-    // Otherwise need half cutter and rotation
-    return can_cut_half(snapshot, staticData) && can_rotate_90(snapshot, staticData);
-}
-
-/**
- * Check if player can build Make Anything Machine (MAM)
- * @param {Object} snapshot - The game state snapshot
- * @param {Object} staticData - Static game data
- * @param {boolean} floating - Whether floating layers are allowed
- */
-export function can_build_mam(snapshot, staticData, floating = false) {
-    return can_make_stitched_shape(snapshot, staticData, floating) &&
-           can_paint(snapshot, staticData) &&
-           can_mix_colors(snapshot, staticData) &&
-           has_balancer(snapshot, staticData) &&
-           has_tunnel(snapshot, staticData) &&
-           has_all(snapshot, ["Belt Reader", "Storage", "Item Filter",
-                          "Wires", "Logic Gates", "Virtual Processing"]);
-}
-
-/**
- * Check if player can make east windmill shapes
- * Only used for shapesanity (single layers)
- */
-export function can_make_east_windmill(snapshot, staticData) {
-    if (!can_stack(snapshot, staticData)) {
-        return false;
-    }
-
-    return has(snapshot, "Quad Cutter") ||
-           (can_cut_half(snapshot, staticData) && can_rotate_180(snapshot, staticData));
-}
-
-/**
- * Check if player can make half-half shapes
- * Only used for shapesanity (single layers)
- */
-export function can_make_half_half_shape(snapshot, staticData) {
-    return can_stack(snapshot, staticData) && has_any(snapshot, ["Cutter", "Quad Cutter"]);
-}
-
-/**
- * Check if player can make half shapes
- * Only used for shapesanity (single layers)
- */
-export function can_make_half_shape(snapshot, staticData) {
-    return can_cut_half(snapshot, staticData) || has_all(snapshot, ["Quad Cutter", "Stacker"]);
-}
+// Note: The following helpers are now exported as definitions in rules.json
+// and evaluated by the rule engine instead of JavaScript:
+// - can_make_stitched_shape
+// - can_build_mam
+// - can_make_east_windmill
+// - can_make_half_half_shape
+// - can_make_half_shape
+// - can_cut_half, can_rotate_90, can_rotate_180, can_stack, can_paint
+// - can_mix_colors, has_tunnel, has_balancer
 
 /**
  * Check if player has required belt speed multiplier
