@@ -9,6 +9,11 @@ on:
         type: number
         default: 1
 
+      canonical_seed1:
+        description: 'Use canonical seed 1 placement (items in original locations)'
+        type: boolean
+        default: true
+
       delete_existing_results:
         description: 'Delete existing test-results.json before testing'
         type: boolean
@@ -171,6 +176,7 @@ jobs:
             --phase generate-original \
             --skip-spoiler-test \
             --skip-cleanup \
+            ${{ inputs.canonical_seed1 && '--canonical-seed1' || '' }} \
             ${{ inputs.debug_mode && '--include-list Adventure.yaml' || '' }}
 
       - name: Upload test worlds as artifact
