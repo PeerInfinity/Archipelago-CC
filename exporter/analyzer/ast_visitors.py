@@ -16,10 +16,10 @@ from .utils import make_json_serializable, is_simple_value
 class ASTVisitorMixin:
     """
     Mixin containing all visit_* methods for AST nodes.
-    
+
     This class is designed to be mixed into RuleAnalyzer and provides
     all the visitor methods for handling different AST node types.
-    
+
     Required attributes from parent class:
         - closure_vars: Dict of closure variables
         - seen_funcs: Dict of seen functions (recursion tracking)
@@ -31,6 +31,22 @@ class ASTVisitorMixin:
         - expression_resolver: ExpressionResolver instance
         - binary_op_processor: BinaryOpProcessor instance
     """
+
+    def _register_helper_usage(self, helper_name: str) -> None:
+        """
+        Register that a helper function is used, for automatic discovery.
+
+        This calls the game handler's register_helper_usage method if available,
+        allowing the exporter to automatically discover and export helper definitions.
+
+        Args:
+            helper_name: The name of the helper function being used
+        """
+        if (hasattr(self, 'game_handler') and
+            self.game_handler is not None and
+            hasattr(self.game_handler, 'register_helper_usage')):
+            self.game_handler.register_helper_usage(helper_name)
+            logging.debug(f"Registered helper usage: {helper_name}")
 
     def visit_Module(self, node):
         try:
@@ -623,6 +639,8 @@ class ASTVisitorMixin:
                 'args': filtered_args
             }
             logging.debug(f"Created helper result: {result}")
+            # Register for automatic discovery
+            self._register_helper_usage(func_name)
             return result # Return helper result
 
         # 2. State method call (e.g., state.has)
@@ -895,6 +913,8 @@ class ASTVisitorMixin:
                     'args': filtered_args
                 }
                 logging.debug(f"Created helper result for self method: {result}")
+                # Register for automatic discovery
+                self._register_helper_usage(method_name)
                 return result
 
             # Handle logic.method calls (e.g., logic.oaks_aide, logic.can_surf)
@@ -965,6 +985,8 @@ class ASTVisitorMixin:
                     'args': filtered_args
                 }
                 logging.debug(f"Created helper result for logic method: {result}")
+                # Register for automatic discovery
+                self._register_helper_usage(method_name)
                 return result
 
             # Handle Location and Region object method calls (e.g., loc.can_reach(state) or region.can_reach(state))
@@ -1056,6 +1078,8 @@ class ASTVisitorMixin:
                         'args': filtered_args
                     }
                     logging.debug(f"Created helper result for module method: {result}")
+                    # Register for automatic discovery
+                    self._register_helper_usage(method_name)
                     return result
 
         # 3. Fallback for other types of calls (e.g., calling result of another function)

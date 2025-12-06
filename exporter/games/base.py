@@ -27,11 +27,50 @@ class BaseGameExportHandler:
     # The exporter will look for classes like ITEMS with attributes that map to item names
     ITEM_NAME_MODULES: List[str] = []
 
-    # Set of helper function names to export as definitions
+    # Set of helper function names to export as definitions (manual whitelist)
+    # If empty, automatic discovery is used instead
     HELPERS_TO_EXPORT_WHITELIST: Set[str] = set()
 
-    # Set of helper function names to NOT export as definitions
+    # Set of helper function names to NOT export as definitions (blacklist)
+    # These helpers are too complex and need JavaScript implementations
     HELPERS_TO_EXPORT_BLACKLIST: Set[str] = set()
+
+    def __init__(self):
+        """Initialize the handler with an empty set of discovered helpers."""
+        # Set of helper names discovered during rule analysis
+        # Populated automatically by register_helper_usage()
+        self._discovered_helpers: Set[str] = set()
+
+    def register_helper_usage(self, helper_name: str) -> None:
+        """
+        Register that a helper function is used in the rules.
+
+        This is called by the analyzer when it encounters a helper function call.
+        The helper will be automatically analyzed and exported as a definition
+        (unless it's in the blacklist).
+
+        Args:
+            helper_name: The name of the helper function
+        """
+        if not hasattr(self, '_discovered_helpers'):
+            self._discovered_helpers = set()
+        self._discovered_helpers.add(helper_name)
+
+    def get_discovered_helpers(self) -> Set[str]:
+        """
+        Return the set of helper names discovered during rule analysis.
+
+        Returns:
+            Set of helper function names that were used in the analyzed rules
+        """
+        if not hasattr(self, '_discovered_helpers'):
+            self._discovered_helpers = set()
+        return self._discovered_helpers
+
+    def clear_discovered_helpers(self) -> None:
+        """Clear the set of discovered helpers. Called between player exports."""
+        self._discovered_helpers = set()
+
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Recursively expand helper functions in a rule structure."""
         if not rule or not isinstance(rule, dict):
@@ -408,8 +447,11 @@ class BaseGameExportHandler:
         modules specified in HELPER_MODULES, converting them to rule structures
         that the frontend can evaluate directly.
 
-        The method respects the whitelist and blacklist to control which helpers
-        are exported as definitions.
+        Helper discovery works in two ways:
+        1. Automatic: Helpers discovered during rule analysis (via register_helper_usage)
+        2. Manual: Helpers listed in HELPERS_TO_EXPORT_WHITELIST
+
+        The blacklist (HELPERS_TO_EXPORT_BLACKLIST) excludes helpers from export.
 
         Args:
             world: The world object for this player
@@ -423,11 +465,16 @@ class BaseGameExportHandler:
 
         helper_definitions = {}
 
+        # Combine discovered helpers with manual whitelist
+        discovered = self.get_discovered_helpers()
         whitelist = self.get_helpers_to_export_whitelist()
         blacklist = self.get_helpers_to_export_blacklist()
         helper_modules = self.get_helper_modules()
 
-        if not whitelist or not helper_modules:
+        # Use discovered helpers if available, otherwise fall back to whitelist
+        helpers_to_export = discovered | whitelist
+
+        if not helpers_to_export or not helper_modules:
             return helper_definitions
 
         # Load helper modules
@@ -442,9 +489,10 @@ class BaseGameExportHandler:
         if not loaded_modules:
             return helper_definitions
 
-        # Process each whitelisted helper
-        for helper_name in whitelist:
+        # Process each helper (discovered or whitelisted)
+        for helper_name in helpers_to_export:
             if helper_name in blacklist:
+                logger.debug(f"Skipping blacklisted helper '{helper_name}'")
                 continue
 
             # Find the helper function in one of the loaded modules
@@ -455,7 +503,9 @@ class BaseGameExportHandler:
                     break
 
             if helper_func is None:
-                logger.warning(f"Helper function '{helper_name}' not found in any helper module")
+                # Not found in helper modules - this is normal for built-in helpers
+                # like 'has', 'count', etc. that the frontend implements directly
+                logger.debug(f"Helper function '{helper_name}' not found in helper modules (may be a built-in)")
                 continue
 
             # Analyze the function to get its rule structure

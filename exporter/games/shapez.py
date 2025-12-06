@@ -9,22 +9,17 @@ class ShapezGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'shapez'
 
     # Module paths for automatic helper extraction
+    # Helpers are automatically discovered during rule analysis when they're used
     HELPER_MODULES = ['worlds.shapez.regions']
     ITEM_NAME_MODULES = ['worlds.shapez.data.strings']
 
-    # Helpers that should be exported as rule definitions in rules.json
-    # The frontend can evaluate these directly without needing JavaScript implementations
-    HELPERS_TO_EXPORT_WHITELIST = {
-        'can_cut_half',      # state.has(ITEMS.cutter, player)
-        'can_stack',         # state.has(ITEMS.stacker, player)
-        'can_mix_colors',    # state.has(ITEMS.color_mixer, player)
-        'can_rotate_90',     # state.has_any((ITEMS.rotator, ITEMS.rotator_ccw), player)
-        'can_rotate_180',    # state.has_any((ITEMS.rotator, ITEMS.rotator_ccw, ITEMS.rotator_180), player)
-        'has_tunnel',        # state.has_any((ITEMS.tunnel, ITEMS.tunnel_tier_ii), player)
-    }
-
     # Helpers that should NOT be exported as definitions (too complex, need JS implementation)
-    HELPERS_TO_EXPORT_BLACKLIST = set()
+    # These will remain as helper calls that the frontend JavaScript must handle
+    HELPERS_TO_EXPORT_BLACKLIST = {
+        'has_x_belt_multiplier',      # Complex counting logic with loops
+        'can_build_mam',              # Complex multi-helper dependency logic
+        'has_logic_list_building',    # Has closure variables (buildings, index) that can't be resolved
+    }
 
     def should_preserve_as_helper(self, func_name: str) -> bool:
         """
