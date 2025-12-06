@@ -442,9 +442,9 @@ def extract_multiworld_chart_data(results: Dict[str, Any]) -> List[Dict[str, Any
     Extract multiworld test chart data from results.
     Returns list of dicts with keys:
         game_name, pass_fail, player_number, total_players_tested,
-        players_passed, players_failed, all_prereqs_passed,
-        has_custom_exporter, has_custom_game_logic,
-        templates_in_multiworld, bisection_results
+        total_players_in_multiworld, players_passed, players_failed,
+        all_prereqs_passed, has_custom_exporter, has_custom_game_logic,
+        templates_in_multiworld, bisection_results, second_pass
     """
     chart_data = []
 
@@ -463,11 +463,15 @@ def extract_multiworld_chart_data(results: Dict[str, Any]) -> List[Dict[str, Any
         success = multiworld_test.get('success', False)
         player_number = multiworld_test.get('player_number', 0)
         total_players_tested = multiworld_test.get('total_players_tested', 0)
+        total_players_in_multiworld = multiworld_test.get('total_players_in_multiworld', 0)
         players_passed = multiworld_test.get('players_passed', 0)
         players_failed = multiworld_test.get('players_failed', 0)
         all_prereqs_passed = prerequisite_check.get('all_prerequisites_passed', False)
         templates_in_multiworld = multiworld_test.get('templates_in_multiworld', {})
         bisection_results = template_data.get('bisection_results', None)
+
+        # Extract second pass data if available
+        second_pass = template_data.get('second_pass', None)
 
         if not all_prereqs_passed:
             pass_fail = 'Skipped (Prerequisites)'
@@ -482,13 +486,15 @@ def extract_multiworld_chart_data(results: Dict[str, Any]) -> List[Dict[str, Any
             'pass_fail': pass_fail,
             'player_number': player_number,
             'total_players_tested': total_players_tested,
+            'total_players_in_multiworld': total_players_in_multiworld,
             'players_passed': players_passed,
             'players_failed': players_failed,
             'all_prereqs_passed': all_prereqs_passed,
             'has_custom_exporter': has_custom_exporter,
             'has_custom_game_logic': has_custom_game_logic,
             'templates_in_multiworld': templates_in_multiworld,
-            'bisection_results': bisection_results
+            'bisection_results': bisection_results,
+            'second_pass': second_pass
         })
 
     chart_data.sort(key=lambda x: x['game_name'])
@@ -519,6 +525,9 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
         if 'last_updated' in metadata:
             md_content += f"**Source Data Last Updated:** {metadata.get('last_updated', 'Unknown')}\n\n"
 
+    # Check if any entries have second pass data
+    has_second_pass_data = any(entry.get('second_pass') for entry in chart_data)
+
     if chart_data:
         total_games = len(chart_data)
         passed = sum(1 for d in chart_data if d['pass_fail'].lower() == 'passed')
@@ -529,21 +538,40 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
         md_content += f"- **Total Games:** {total_games}\n"
         md_content += f"- **Passed:** {passed} ({passed/total_games*100:.1f}%)\n"
         md_content += f"- **Failed:** {failed} ({failed/total_games*100:.1f}%)\n"
-        md_content += f"- **Skipped (Prerequisites):** {skipped} ({skipped/total_games*100:.1f}%)\n\n"
+        md_content += f"- **Skipped (Prerequisites):** {skipped} ({skipped/total_games*100:.1f}%)\n"
+
+        # Add second pass summary if applicable
+        if has_second_pass_data:
+            second_pass_count = sum(1 for d in chart_data if d.get('second_pass'))
+            second_pass_passed = sum(1 for d in chart_data if d.get('second_pass', {}).get('success', False))
+            second_pass_failed = second_pass_count - second_pass_passed
+            md_content += f"- **Second Pass Tested:** {second_pass_count}\n"
+            md_content += f"- **Second Pass Passed:** {second_pass_passed}\n"
+            md_content += f"- **Second Pass Failed:** {second_pass_failed}\n"
+
+        md_content += "\n"
 
     md_content += "## Test Results\n\n"
-    md_content += "| Game Name | Test Result | Player # | Total Players | Players Passed | Players Failed | Custom Exporter | Custom GameLogic |\n"
-    md_content += "|-----------|-------------|----------|---------------|----------------|----------------|-----------------|------------------|\n"
+
+    # Add Second Pass column if there's second pass data
+    if has_second_pass_data:
+        md_content += "| Game Name | First Pass | Second Pass | Player # | MW Size | Custom Exporter | Custom GameLogic |\n"
+        md_content += "|-----------|------------|-------------|----------|---------|-----------------|------------------|\n"
+    else:
+        md_content += "| Game Name | Test Result | Player # | Total Players | Players Passed | Players Failed | Custom Exporter | Custom GameLogic |\n"
+        md_content += "|-----------|-------------|----------|---------------|----------------|----------------|-----------------|------------------|\n"
 
     for entry in chart_data:
         game_name = entry['game_name']
         pass_fail = entry['pass_fail']
         player_number = entry['player_number']
         total_players_tested = entry['total_players_tested']
+        total_players_in_multiworld = entry.get('total_players_in_multiworld', 0)
         players_passed = entry['players_passed']
         players_failed = entry['players_failed']
         has_custom_exporter = entry['has_custom_exporter']
         has_custom_game_logic = entry['has_custom_game_logic']
+        second_pass = entry.get('second_pass')
 
         if pass_fail.lower() == 'passed':
             result_display = "✅ Passed"
@@ -556,11 +584,29 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
         game_logic_indicator = "✅" if has_custom_game_logic else "⚫"
 
         player_display = str(player_number) if player_number > 0 else "N/A"
-        total_display = str(total_players_tested) if total_players_tested > 0 else "N/A"
-        passed_display = str(players_passed) if total_players_tested > 0 else "N/A"
-        failed_display = str(players_failed) if total_players_tested > 0 else "N/A"
 
-        md_content += f"| {game_name} | {result_display} | {player_display} | {total_display} | {passed_display} | {failed_display} | {exporter_indicator} | {game_logic_indicator} |\n"
+        if has_second_pass_data:
+            # Use total_players_in_multiworld for MW size display
+            mw_size = total_players_in_multiworld if total_players_in_multiworld > 0 else total_players_tested
+            mw_size_display = str(mw_size) if mw_size > 0 else "N/A"
+
+            # Second pass result
+            if second_pass:
+                if second_pass.get('success', False):
+                    second_pass_display = "✅ Passed"
+                else:
+                    second_pass_display = "❌ Failed"
+            else:
+                # No second pass needed (tested with full multiworld)
+                second_pass_display = "—"
+
+            md_content += f"| {game_name} | {result_display} | {second_pass_display} | {player_display} | {mw_size_display} | {exporter_indicator} | {game_logic_indicator} |\n"
+        else:
+            total_display = str(total_players_tested) if total_players_tested > 0 else "N/A"
+            passed_display = str(players_passed) if total_players_tested > 0 else "N/A"
+            failed_display = str(players_failed) if total_players_tested > 0 else "N/A"
+
+            md_content += f"| {game_name} | {result_display} | {player_display} | {total_display} | {passed_display} | {failed_display} | {exporter_indicator} | {game_logic_indicator} |\n"
 
     if not chart_data:
         md_content += "| No data available | - | - | - | - | - | - | - |\n"
@@ -631,15 +677,42 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
 
                 md_content += "\n"
 
+    # Add Second Pass Results section if any entries have second pass data
+    entries_with_second_pass = [e for e in chart_data if e.get('second_pass')]
+    if entries_with_second_pass:
+        md_content += "\n## Second Pass Results\n\n"
+        md_content += "Templates tested in the first pass with fewer than the maximum number of players were retested (second pass) with the full multiworld.\n\n"
+
+        md_content += "| Game Name | First Pass MW Size | Second Pass MW Size | Second Pass Player # | Second Pass Result |\n"
+        md_content += "|-----------|-------------------|---------------------|---------------------|--------------------|\n"
+
+        for entry in entries_with_second_pass:
+            game_name = entry['game_name']
+            first_pass_mw_size = entry.get('total_players_in_multiworld', entry['total_players_tested'])
+            second_pass = entry['second_pass']
+
+            second_pass_mw_size = second_pass.get('total_players_in_multiworld', 0)
+            second_pass_player_num = second_pass.get('player_number', 0)
+            second_pass_success = second_pass.get('success', False)
+
+            result_icon = "✅ Passed" if second_pass_success else "❌ Failed"
+
+            md_content += f"| {game_name} | {first_pass_mw_size} | {second_pass_mw_size} | {second_pass_player_num} | {result_icon} |\n"
+
+        md_content += "\n"
+
     md_content += "\n## Notes\n\n"
     md_content += "- **Player #:** The player number assigned to this template in the multiworld\n"
-    md_content += "- **Total Players:** Number of players tested in the multiworld configuration\n"
+    md_content += "- **Total Players / MW Size:** Number of players in the multiworld configuration when this template was tested\n"
     md_content += "- **Players Passed:** Number of players that passed the spoiler test\n"
     md_content += "- **Players Failed:** Number of players that failed the spoiler test\n"
     md_content += "- **Custom Exporter:** ✅ Has custom Python exporter script, ⚫ Uses generic exporter\n"
     md_content += "- **Custom GameLogic:** ✅ Has custom JavaScript game logic, ⚫ Uses generic logic\n\n"
     md_content += "**Pass Criteria:** All prerequisite tests (Spoiler Minimal, Spoiler Full, Multiclient) must pass, and all players in the multiworld must pass their spoiler tests\n\n"
-    md_content += "**Skipped:** Templates that did not meet prerequisite requirements\n"
+    md_content += "**Skipped:** Templates that did not meet prerequisite requirements\n\n"
+
+    if entries_with_second_pass:
+        md_content += "**Second Pass:** Templates tested in the first pass with fewer than the maximum number of players are retested with the full multiworld. This ensures all templates are validated with the final multiworld configuration.\n"
 
     return md_content
 

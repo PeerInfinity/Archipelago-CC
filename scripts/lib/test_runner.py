@@ -632,7 +632,7 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
                             keep_templates: bool = False, test_all_players: bool = False,
                             require_prerequisites: bool = True,
                             include_error_details: bool = False, max_templates: int = 10,
-                            dry_run: bool = False) -> Dict:
+                            dry_run: bool = False, is_second_pass: bool = False) -> Dict:
     """
     Test a single template in multiworld mode.
 
@@ -660,6 +660,8 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
         include_error_details: If True, include first error/warning lines in results
         max_templates: Maximum number of templates to keep in multiworld directory (default: 10)
         dry_run: If True, show what would be done without making changes (default: False)
+        is_second_pass: If True, this is a second pass retest (template already in multiworld,
+                        skip adding, just test the player at its alphabetical position)
 
     Returns:
         Dictionary with test results
@@ -677,7 +679,8 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     # Get world info
     world_info = get_world_info(template_file, templates_dir, world_mapping)
 
-    print(f"\n=== Testing {template_filename} (Multiworld Mode) ===")
+    pass_label = "Second Pass" if is_second_pass else "Multiworld Mode"
+    print(f"\n=== Testing {template_filename} ({pass_label}) ===")
 
     result = {
         'template_filename': template_filename,
@@ -695,6 +698,7 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
         },
         'multiworld_test': {
             'success': False,
+            'is_second_pass': is_second_pass,
             'player_number': current_player_count + 1,
             'total_players_tested': 0,
             'players_passed': 0,
@@ -706,6 +710,7 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     }
 
     # Check prerequisites - the template must have passed all three other test types
+    # (always run this check - it's cheap and provides useful verification info)
     print(f"Checking prerequisites for {template_filename}...")
 
     # Load the three test results files
@@ -800,7 +805,56 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
         print(f"Proceeding with multiworld test (prerequisite check disabled)")
 
     # Copy template to multiworld directory (unless keep_templates is True)
-    if not keep_templates:
+    # Track whether we need to regenerate (if template set changed in second pass)
+    needs_regeneration = False
+
+    if is_second_pass:
+        # In second pass mode, check if template is in multiworld directory
+        expected_path = os.path.join(multiworld_dir, template_filename)
+        if os.path.exists(expected_path):
+            print(f"Second pass mode - template already in multiworld directory")
+        else:
+            # Template was removed during first pass (total templates > max_templates)
+            # Need to copy it back and regenerate
+            print(f"Second pass mode - template not in multiworld directory, restoring...")
+
+            existing_templates = [f for f in os.listdir(multiworld_dir) if f.endswith('.yaml')]
+
+            # If at max capacity, remove the oldest template to make room
+            if len(existing_templates) >= max_templates:
+                # Get file modification times
+                template_times = []
+                for template in existing_templates:
+                    template_path = os.path.join(multiworld_dir, template)
+                    mtime = os.path.getmtime(template_path)
+                    template_times.append((template, mtime))
+
+                # Sort by modification time (oldest first)
+                template_times.sort(key=lambda x: x[1])
+
+                # Remove the oldest template
+                old_template = template_times[0][0]
+                old_template_path = os.path.join(multiworld_dir, old_template)
+                try:
+                    os.remove(old_template_path)
+                    print(f"  Removed {old_template} to make room")
+                except Exception as e:
+                    print(f"  Warning: Could not remove {old_template}: {e}")
+
+            # Copy the template from templates_dir
+            source_path = os.path.join(templates_dir, template_filename)
+            dest_path = os.path.join(multiworld_dir, template_filename)
+
+            try:
+                shutil.copy2(source_path, dest_path)
+                print(f"  Restored {template_filename} to multiworld directory")
+                needs_regeneration = True  # Template set changed, need to regenerate
+            except Exception as e:
+                print(f"  Error restoring template: {e}")
+                result['multiworld_test']['success'] = False
+                result['multiworld_test']['error'] = f"Failed to restore template: {e}"
+                return result
+    elif not keep_templates:
         # Check if we need to remove old templates to stay under the limit
         existing_templates = [f for f in os.listdir(multiworld_dir) if f.endswith('.yaml')]
 
@@ -889,9 +943,17 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     result['multiworld_test']['templates_in_multiworld'] = templates_in_multiworld
     print(f"Templates in multiworld: {templates_in_dir}")
 
-    # Step 1: Run Generate.py with all templates in multiworld directory (skip if test_only mode)
-    if not test_only:
-        print(f"Running Generate.py for multiworld with {current_player_count + 1} players...")
+    # Step 1: Run Generate.py with all templates in multiworld directory
+    # Skip if test_only mode, or if second pass without template set changes
+    # If needs_regeneration is True (template was restored in second pass), we must regenerate
+    if is_second_pass and not needs_regeneration:
+        print(f"Skipping generation for {template_filename} (second pass mode - using existing output)")
+        result['generation'] = {'note': 'Skipped in second pass mode'}
+    elif not test_only or needs_regeneration:
+        if needs_regeneration:
+            print(f"Running Generate.py for multiworld with {len(templates_in_dir)} players (template restored, regeneration required)...")
+        else:
+            print(f"Running Generate.py for multiworld with {len(templates_in_dir)} players...")
         generate_cmd = [
             "python", "Generate.py",
             "--player_files_path", "Players/presets/Multiworld",
@@ -926,12 +988,14 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
             print(f"Generation failed with return code {gen_return_code}")
             result['multiworld_test']['success'] = False
             result['multiworld_test']['error'] = 'Generation failed'
-            # Delete the template from multiworld directory since it failed
-            try:
-                os.remove(dest_path)
-                print(f"  Removed {template_filename} from multiworld directory due to generation failure")
-            except Exception as e:
-                print(f"  Error removing template: {e}")
+            # Delete the template from multiworld directory since it failed (only in first pass)
+            if not is_second_pass and not keep_templates:
+                try:
+                    dest_path = os.path.join(multiworld_dir, template_filename)
+                    os.remove(dest_path)
+                    print(f"  Removed {template_filename} from multiworld directory due to generation failure")
+                except Exception as e:
+                    print(f"  Error removing template: {e}")
             return result
     else:
         print(f"Skipping generation for {template_filename} (test-only mode)")
@@ -941,19 +1005,28 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     if test_all_players or keep_templates:
         # Test all players
         start_player = 1
-        end_player = current_player_count + (0 if keep_templates else 1)
+        end_player = len(templates_in_dir)
         print(f"Running multiworld spoiler tests for all {end_player} players...")
+        players_to_test = list(range(start_player, end_player + 1))
     else:
         # Only test the newly added player
-        start_player = current_player_count + 1
-        end_player = current_player_count + 1
-        print(f"Running multiworld spoiler test for player {start_player} only...")
+        # Find the player number by looking up the template's position in the sorted list
+        # (templates are sorted alphabetically, so the new template might not be last)
+        try:
+            new_player_number = templates_in_dir.index(template_filename) + 1
+        except ValueError:
+            # Template not found in list (shouldn't happen, but fallback to old behavior)
+            new_player_number = len(templates_in_dir)
+        print(f"Running multiworld spoiler test for player {new_player_number} ({template_filename})...")
+        players_to_test = [new_player_number]
+        # Update result with the correct player number
+        result['multiworld_test']['player_number'] = new_player_number
 
     test_start_time = time.time()
     all_players_passed = True
 
-    # Test the appropriate range of players
-    for player_num in range(start_player, end_player + 1):
+    # Test the appropriate players
+    for player_num in players_to_test:
         print(f"\n  Testing Player {player_num}...")
 
         # Use npm run test:headed if --headed flag is set
@@ -1042,28 +1115,43 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     test_end_time = time.time()
     test_processing_time = round(test_end_time - test_start_time, 2)
 
-    # Set total_players based on mode
-    if keep_templates:
-        result['multiworld_test']['total_players_tested'] = end_player
-    else:
-        result['multiworld_test']['total_players_tested'] = current_player_count + 1
+    # Set total_players based on templates in the multiworld directory
+    result['multiworld_test']['total_players_in_multiworld'] = len(templates_in_dir)
+    result['multiworld_test']['total_players_tested'] = len(players_to_test)
     result['multiworld_test']['processing_time_seconds'] = test_processing_time
     result['multiworld_test']['success'] = all_players_passed
 
-    # If any player failed, delete the template from multiworld directory (unless keep_templates)
+    # Handle template cleanup based on test result and mode
     if not all_players_passed:
         print(f"\n  Multiworld test FAILED for {template_filename}")
-        if not keep_templates:
+        if not keep_templates and not is_second_pass:
+            # First pass failure - remove the template
             print(f"  Removing {template_filename} from multiworld directory...")
             try:
+                dest_path = os.path.join(multiworld_dir, template_filename)
                 os.remove(dest_path)
                 print(f"  Removed successfully")
             except Exception as e:
                 print(f"  Error removing template: {e}")
+        elif is_second_pass and needs_regeneration:
+            # Second pass with restored template - remove it to restore previous state
+            print(f"  Removing restored template {template_filename} from multiworld directory...")
+            try:
+                dest_path = os.path.join(multiworld_dir, template_filename)
+                os.remove(dest_path)
+                print(f"  Removed successfully")
+            except Exception as e:
+                print(f"  Error removing template: {e}")
+        elif is_second_pass:
+            print(f"  Second pass mode - keeping template in multiworld directory")
     else:
         print(f"\n  Multiworld test PASSED for {template_filename}")
-        if not keep_templates:
+        if not keep_templates and not is_second_pass:
             print(f"  Keeping {template_filename} in multiworld directory for future tests")
+        elif is_second_pass and needs_regeneration:
+            # Second pass with restored template that passed - keep it!
+            # (The template we removed to make room was the oldest from first pass)
+            print(f"  Keeping restored template {template_filename} in multiworld directory (passed second pass)")
 
     print(f"\nCompleted {template_filename}: Multiworld Test={'[PASS]' if result['multiworld_test']['success'] else '[FAIL]'}, "
           f"Players Passed={result['multiworld_test']['players_passed']}/{result['multiworld_test']['total_players_tested']}")
