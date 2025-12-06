@@ -4396,14 +4396,6 @@
   },
   "helpers": {
     "1": {
-      "can_stack": {
-        "type": "item_check",
-        "item": "Stacker"
-      },
-      "can_cut_half": {
-        "type": "item_check",
-        "item": "Cutter"
-      },
       "can_rotate_90": {
         "type": "or",
         "conditions": [
@@ -4414,6 +4406,27 @@
           {
             "type": "item_check",
             "item": "Rotator (CCW)"
+          }
+        ]
+      },
+      "can_stack": {
+        "type": "item_check",
+        "item": "Stacker"
+      },
+      "can_cut_half": {
+        "type": "item_check",
+        "item": "Cutter"
+      },
+      "has_tunnel": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Tunnel"
+          },
+          {
+            "type": "item_check",
+            "item": "Tunnel Tier II"
           }
         ]
       },
@@ -4431,19 +4444,6 @@
           {
             "type": "item_check",
             "item": "Rotator (CCW)"
-          }
-        ]
-      },
-      "has_tunnel": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "item_check",
-            "item": "Tunnel"
-          },
-          {
-            "type": "item_check",
-            "item": "Tunnel Tier II"
           }
         ]
       },
