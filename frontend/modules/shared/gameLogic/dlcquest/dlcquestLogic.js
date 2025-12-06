@@ -252,14 +252,27 @@ export const helperFunctions = {
   },
 
   /**
-   * Count items in inventory
+   * Count items in inventory or prog_items
    * @param {Object} snapshot - Game state snapshot
    * @param {Object} staticData - Static game data
    * @param {string} itemName - Item name
    * @returns {number} Item count
    */
   count(snapshot, staticData, itemName) {
-    return getItemCount(snapshot, itemName);
+    // Check regular inventory first
+    const inventoryCount = snapshot?.inventory?.[itemName] || 0;
+    if (inventoryCount > 0) {
+      return inventoryCount;
+    }
+
+    // Also check prog_items for counter items (e.g., " coins")
+    // This is used by spoiler tests where precollected coins are in prog_items
+    const playerId = snapshot?.player?.id || snapshot?.player?.slot || 1;
+    const progItemsCount = snapshot?.prog_items?.[playerId]?.[itemName] ||
+                           snapshot?.prog_items?.[String(playerId)]?.[itemName] ||
+                           snapshot?.prog_items?.[parseInt(playerId)]?.[itemName] || 0;
+
+    return progItemsCount || 0;
   },
 
   /**

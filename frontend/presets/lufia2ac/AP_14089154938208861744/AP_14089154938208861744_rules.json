@@ -55,7 +55,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 2",
@@ -69,7 +70,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 3",
@@ -83,7 +85,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 4",
@@ -97,7 +100,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 5",
@@ -111,7 +115,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 6",
@@ -129,7 +134,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 7",
@@ -147,7 +153,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 8",
@@ -165,7 +172,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 9",
@@ -183,7 +191,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 10",
@@ -201,7 +210,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 11",
@@ -219,7 +229,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 12",
@@ -237,7 +248,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 13",
@@ -255,7 +267,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 14",
@@ -273,7 +286,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 15",
@@ -291,7 +305,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 16",
@@ -309,7 +324,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 17",
@@ -327,7 +343,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 18",
@@ -345,7 +362,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 19",
@@ -363,7 +381,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 20",
@@ -381,7 +400,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 21",
@@ -399,7 +419,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 22",
@@ -417,7 +438,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 23",
@@ -435,7 +457,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 24",
@@ -453,7 +476,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue chest 25",
@@ -471,7 +495,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chest access 6-10",
@@ -485,7 +510,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Chest access 11-15",
@@ -503,7 +529,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Chest access 16-20",
@@ -521,7 +548,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Chest access 21-25",
@@ -539,7 +567,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Iris treasure 4",
@@ -557,7 +586,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Iris treasure 3",
@@ -575,7 +605,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Iris treasure 6",
@@ -593,7 +624,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Iris treasure 8",
@@ -611,7 +643,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Iris treasure 5",
@@ -629,7 +662,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Iris treasure 2",
@@ -647,7 +681,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Iris treasure 7",
@@ -665,7 +700,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Iris treasure 1",
@@ -683,7 +719,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Iris treasure 9",
@@ -701,7 +738,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -721,7 +759,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Boss",
@@ -739,7 +778,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       }
@@ -5196,7 +5236,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Blaze sword": {
         "name": "Blaze sword",
@@ -5224,7 +5264,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Sky sword": {
         "name": "Sky sword",
@@ -5238,7 +5278,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Snow sword": {
         "name": "Snow sword",
@@ -5252,7 +5292,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Fry sword": {
         "name": "Fry sword",
@@ -5308,7 +5348,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Water spear": {
         "name": "Water spear",
@@ -5336,7 +5376,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3
       },
       "Mirak plate": {
         "name": "Mirak plate",
@@ -5378,7 +5418,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Water gaunt": {
         "name": "Water gaunt",
@@ -5420,7 +5460,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Dark mirror": {
         "name": "Dark mirror",
@@ -5434,7 +5474,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Apron shield": {
         "name": "Apron shield",
@@ -5462,7 +5502,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3
       },
       "Boom turban": {
         "name": "Boom turban",
@@ -5476,7 +5516,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Aqua helm": {
         "name": "Aqua helm",
@@ -5490,7 +5530,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Ice hairband": {
         "name": "Ice hairband",
@@ -5546,7 +5586,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Sea ring": {
         "name": "Sea ring",
@@ -5602,7 +5642,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Earth jewel": {
         "name": "Earth jewel",
@@ -5616,7 +5656,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Twist jewel": {
         "name": "Twist jewel",
@@ -5672,7 +5712,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Camu jewel": {
         "name": "Camu jewel",
@@ -5742,7 +5782,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Gold eye": {
         "name": "Gold eye",
@@ -6252,20 +6292,20 @@
   },
   "itempool_counts": {
     "1": {
-      "Agony helm": 6,
-      "Air whip": 2,
+      "Agony helm": 3,
+      "Air whip": 1,
       "Ancient key": 1,
-      "Aqua helm": 2,
-      "Boom turban": 4,
-      "Catfish jwl.": 2,
-      "Cryst shield": 2,
-      "Dark mirror": 4,
-      "Dia ring": 2,
-      "Dragon spear": 6,
-      "Earth jewel": 2,
+      "Aqua helm": 1,
+      "Boom turban": 2,
+      "Catfish jwl.": 1,
+      "Cryst shield": 1,
+      "Dark mirror": 2,
+      "Dia ring": 1,
+      "Dragon spear": 3,
+      "Earth jewel": 1,
       "Final Floor access": 1,
-      "Flame shield": 2,
-      "Gades blade": 2,
+      "Flame shield": 1,
+      "Gades blade": 1,
       "Iris armor": 1,
       "Iris helmet": 1,
       "Iris jewel": 1,
@@ -6276,11 +6316,11 @@
       "Iris sword": 1,
       "Iris tiara": 1,
       "Progressive chest access": 4,
-      "Silver eye": 2,
-      "Sizzle sword": 4,
-      "Sky sword": 2,
-      "Snow sword": 4,
-      "Thundo jewel": 2
+      "Silver eye": 1,
+      "Sizzle sword": 2,
+      "Sky sword": 1,
+      "Snow sword": 2,
+      "Thundo jewel": 1
     }
   },
   "progression_mapping": {

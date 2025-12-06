@@ -5,15 +5,24 @@ Each template function takes extracted data and returns the Python source code
 for that file.
 """
 
+import re
 from typing import Dict, List, Set
 from .extractors import ExtractedData, ItemData, LocationData, ExitData
 from .rule_codegen import RuleCodeGenerator, is_trivial_rule
 
 
+def sanitize_class_name(name: str) -> str:
+    """Sanitize a name to be a valid Python identifier.
+
+    Removes all characters that are not alphanumeric (keeps letters and digits).
+    """
+    return re.sub(r'[^a-zA-Z0-9]', '', name)
+
+
 def generate_items_py(data: ExtractedData) -> str:
     """Generate Items.py file content."""
     game_name = data.metadata.game_name
-    class_name = game_name.replace(' ', '').replace('-', '')
+    class_name = sanitize_class_name(game_name)
 
     # Build item table entries
     item_entries = []
@@ -62,7 +71,7 @@ item_table: Dict[str, ItemData] = {{
 def generate_locations_py(data: ExtractedData) -> str:
     """Generate Locations.py file content."""
     game_name = data.metadata.game_name
-    class_name = game_name.replace(' ', '').replace('-', '')
+    class_name = sanitize_class_name(game_name)
 
     # Build location table entries
     location_entries = []
@@ -112,14 +121,25 @@ location_table: Dict[str, LocationData] = {{
 def generate_regions_py(data: ExtractedData) -> str:
     """Generate Regions.py file content."""
     game_name = data.metadata.game_name
-    class_name = game_name.replace(' ', '').replace('-', '')
+    class_name = sanitize_class_name(game_name)
 
-    # Build region list
-    region_names = sorted(data.regions.keys())
-    region_list = ', '.join(f'"{r}"' for r in region_names)
+    # Build region list - always include Menu (required by Archipelago)
+    region_names_set = set(data.regions.keys())
+    region_names_set.add("Menu")
+    region_names = sorted(region_names_set)
+    # Escape quotes in region names
+    region_list = ', '.join(f'"{r.replace(chr(34), chr(92)+chr(34))}"' for r in region_names)
 
     # Build entrance connections
     entrance_lines = []
+
+    # Add entrance from Menu to start region if Menu wasn't in original data
+    if "Menu" not in data.regions:
+        start_region = data.start_region.replace('"', '\\"')
+        entrance_lines.append(
+            f'    _create_entrance(regions["Menu"], regions["{start_region}"], "MenuToStart")'
+        )
+
     for exit_name, exit_data in sorted(data.exits.items()):
         source = exit_data.source_region.replace('"', '\\"')
         target = exit_data.target_region.replace('"', '\\"')
@@ -259,7 +279,7 @@ def set_rules(world: "World") -> None:
 def generate_options_py(data: ExtractedData) -> str:
     """Generate Options.py file content."""
     game_name = data.metadata.game_name
-    class_name = game_name.replace(' ', '').replace('-', '')
+    class_name = sanitize_class_name(game_name)
 
     return f'''"""
 Game options for {game_name}.
@@ -295,7 +315,7 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
         canonical_seed1: If True, include seed=1 canonical placement behavior
     """
     game_name = data.metadata.game_name
-    class_name = game_name.replace(' ', '').replace('-', '')
+    class_name = sanitize_class_name(game_name)
     world_class = data.metadata.world_class_name
 
     # Build original placements dict (only needed if canonical_seed1 is enabled)
@@ -346,7 +366,8 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     if canonical_seed1:
         generate_early_section = '''
     def generate_early(self) -> None:
-        """Disable randomization for seed 1 (canonical placement)."""
+        """Push starting items and disable randomization for seed 1."""
+        self._push_starting_items()
         if self.multiworld.seed == 1:
             self.options.randomize_items.value = False
 '''
@@ -379,19 +400,104 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     def _create_item_pool(self) -> None:
 '''
     else:
-        generate_early_section = ''
+        generate_early_section = '''
+    def generate_early(self) -> None:
+        """Push starting items as precollected."""
+        self._push_starting_items()
+'''
         create_items_section = '''
     def create_items(self) -> None:
 '''
 
-    # Build itempool_counts dictionary
-    itempool_entries = []
-    for item_name, count in sorted(data.itempool_counts.items()):
+    # Build locked_placements dictionary
+    locked_entries = []
+    for loc_name, item_name in sorted(data.locked_placements.items()):
+        if item_name:
+            loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            locked_entries.append(f'    "{loc_escaped}": "{item_escaped}",')
+
+    locked_content = '\n'.join(locked_entries)
+
+    # Build starting_items dictionary (precollected items)
+    starting_entries = []
+    for item_name, count in sorted(data.starting_items.items()):
         if count > 0:
             item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
-            itempool_entries.append(f'    "{item_escaped}": {count},')
+            starting_entries.append(f'    "{item_escaped}": {count},')
+
+    starting_content = '\n'.join(starting_entries)
+
+    # Build accumulator_rules list (for state counter patterns like coins)
+    accumulator_rules_content = ''
+    if data.accumulator_rules:
+        rules_items = []
+        for rule in data.accumulator_rules:
+            pattern_escaped = rule['pattern'].replace('\\', '\\\\').replace('"', '\\"')
+            target_escaped = rule['target'].replace('\\', '\\\\').replace('"', '\\"')
+            rules_items.append(
+                f'        {{"pattern": r"{pattern_escaped}", "extract_value": {rule["extract_value"]}, '
+                f'"target": "{target_escaped}", "discriminator": None}},'
+            )
+        accumulator_rules_content = '\n'.join(rules_items)
+
+    # Build prog_items_init dictionary (initial values for state counters)
+    prog_items_init_content = ''
+    if data.prog_items_init:
+        init_entries = []
+        for item_name, value in sorted(data.prog_items_init.items()):
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            init_entries.append(f'        "{item_escaped}": {value},')
+        prog_items_init_content = '\n'.join(init_entries)
+
+    # Generate accumulator_rules section (for state counter patterns like coins)
+    if accumulator_rules_content:
+        accumulator_rules_section = f'''
+    # Accumulator rules for state counters (e.g., coins)
+    # These tell the exporter how to parse items like "60 coins" -> add 60 to " coins" counter
+    accumulator_rules: ClassVar[list] = [
+{accumulator_rules_content}
+    ]
+'''
+    else:
+        accumulator_rules_section = ''
+
+    # Generate prog_items_init section (initial counter values)
+    if prog_items_init_content:
+        prog_items_init_section = f'''
+    # Initial values for prog_items accumulators
+    prog_items_init: ClassVar[dict] = {{
+{prog_items_init_content}
+    }}
+'''
+    else:
+        prog_items_init_section = ''
+
+    # Count locked items to subtract from itempool_counts
+    locked_item_counts: Dict[str, int] = {}
+    for loc_name, item_name in data.locked_placements.items():
+        if item_name:
+            locked_item_counts[item_name] = locked_item_counts.get(item_name, 0) + 1
+
+    # Build itempool_counts dictionary (excluding locked items)
+    itempool_entries = []
+    for item_name, count in sorted(data.itempool_counts.items()):
+        # Subtract locked items from the count
+        adjusted_count = count - locked_item_counts.get(item_name, 0)
+        if adjusted_count > 0:
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            itempool_entries.append(f'    "{item_escaped}": {adjusted_count},')
 
     itempool_content = '\n'.join(itempool_entries)
+
+    # Build item_name_groups dictionary
+    item_name_groups_entries = []
+    for group_name, item_names in sorted(data.item_name_groups.items()):
+        group_escaped = group_name.replace('\\', '\\\\').replace('"', '\\"')
+        items_list = ', '.join(f'"{item.replace(chr(92), chr(92)+chr(92)).replace(chr(34), chr(92)+chr(34))}"' for item in sorted(item_names))
+        item_name_groups_entries.append(f'        "{group_escaped}": frozenset([{items_list}]),')
+
+    item_name_groups_content = '\n'.join(item_name_groups_entries)
 
     return f'''"""
 {game_name} world implementation for Archipelago.
@@ -411,9 +517,19 @@ from .Regions import create_regions
 from .Rules import set_rules
 
 
-# Item pool counts from original generation
+# Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {{
 {itempool_content}
+}}
+
+# Locked placements - items that must be placed via place_locked_item
+LOCKED_PLACEMENTS: Dict[str, str] = {{
+{locked_content}
+}}
+
+# Starting items - items the player begins with (precollected)
+STARTING_ITEMS: Dict[str, int] = {{
+{starting_content}
 }}
 
 
@@ -447,7 +563,11 @@ class {world_class}(RuleWorldMixin, World):
         name: data.location_id for name, data in location_table.items()
         if data.location_id is not None
     }}
-{generate_early_section}
+
+    item_name_groups: ClassVar[Dict[str, frozenset]] = {{
+{item_name_groups_content}
+    }}
+{accumulator_rules_section}{prog_items_init_section}{generate_early_section}
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
@@ -456,6 +576,10 @@ class {world_class}(RuleWorldMixin, World):
         """Set access rules."""
         set_rules(self)
 {create_items_section}        """Create randomized item pool."""
+        # First, place any locked items
+        self._place_locked_items()
+
+        # Then create the random item pool
         item_pool = []
 
         for item_name, count in ITEMPOOL_COUNTS.items():
@@ -474,6 +598,28 @@ class {world_class}(RuleWorldMixin, World):
                 item_pool.append(item)
 
         self.multiworld.itempool += item_pool
+
+    def _place_locked_items(self) -> None:
+        """Place items that must be in specific locations (locked placements)."""
+        for location_name, item_name in LOCKED_PLACEMENTS.items():
+            if item_name and item_name in item_table:
+                location = self.multiworld.get_location(location_name, self.player)
+                item_data = item_table[item_name]
+                item = {class_name}Item(
+                    item_name,
+                    item_data.classification,
+                    item_data.id,
+                    self.player
+                )
+                location.place_locked_item(item)
+
+    def _push_starting_items(self) -> None:
+        """Push starting items as precollected (for state counters like coins)."""
+        for item_name, count in STARTING_ITEMS.items():
+            if item_name in item_table:
+                for _ in range(count):
+                    item = self.create_item(item_name)
+                    self.multiworld.push_precollected(item)
 {victory_section}
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

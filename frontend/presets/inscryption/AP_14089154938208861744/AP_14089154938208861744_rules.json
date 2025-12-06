@@ -2481,7 +2481,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Stunted Wolf Card": {
         "name": "Stunted Wolf Card",
@@ -2494,7 +2494,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Wardrobe Key": {
         "name": "Wardrobe Key",
@@ -2507,7 +2507,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Skink Card": {
         "name": "Skink Card",
@@ -2520,7 +2520,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Ant Cards": {
         "name": "Ant Cards",
@@ -2533,7 +2533,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Caged Wolf Card": {
         "name": "Caged Wolf Card",
@@ -2546,7 +2546,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Squirrel Totem Head": {
         "name": "Squirrel Totem Head",
@@ -2559,7 +2559,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Dagger": {
         "name": "Dagger",
@@ -2572,7 +2572,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Film Roll": {
         "name": "Film Roll",
@@ -2585,7 +2585,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Ring": {
         "name": "Ring",
@@ -2598,7 +2598,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Magnificus Eye": {
         "name": "Magnificus Eye",
@@ -2611,7 +2611,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Oil Painting's Clover Plant": {
         "name": "Oil Painting's Clover Plant",
@@ -2624,7 +2624,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Extra Candle": {
         "name": "Extra Candle",
@@ -2637,7 +2637,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Bee Figurine": {
         "name": "Bee Figurine",
@@ -2650,7 +2650,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Greater Smoke": {
         "name": "Greater Smoke",
@@ -2663,7 +2663,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Angler Hook": {
         "name": "Angler Hook",
@@ -2676,7 +2676,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Camera Replica": {
         "name": "Camera Replica",
@@ -2689,7 +2689,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Pile Of Meat": {
         "name": "Pile Of Meat",
@@ -2702,7 +2702,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Epitaph Piece": {
         "name": "Epitaph Piece",
@@ -2715,7 +2715,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 18
+        "max_count": 9
       },
       "Epitaph Pieces": {
         "name": "Epitaph Pieces",
@@ -2741,7 +2741,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Bone Lord Femur": {
         "name": "Bone Lord Femur",
@@ -2754,7 +2754,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Bone Lord Horn": {
         "name": "Bone Lord Horn",
@@ -2767,7 +2767,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Bone Lord Holo Key": {
         "name": "Bone Lord Holo Key",
@@ -2780,7 +2780,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Mycologists Holo Key": {
         "name": "Mycologists Holo Key",
@@ -2793,7 +2793,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Ancient Obol": {
         "name": "Ancient Obol",
@@ -2806,7 +2806,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Great Kraken Card": {
         "name": "Great Kraken Card",
@@ -2819,7 +2819,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Drowned Soul Card": {
         "name": "Drowned Soul Card",
@@ -2832,7 +2832,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Salmon Card": {
         "name": "Salmon Card",
@@ -2845,7 +2845,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Dock's Clover Plant": {
         "name": "Dock's Clover Plant",
@@ -2858,7 +2858,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Extra Battery": {
         "name": "Extra Battery",
@@ -2871,7 +2871,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Nano Armor Generator": {
         "name": "Nano Armor Generator",
@@ -2884,7 +2884,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Mrs. Bomb's Remote": {
         "name": "Mrs. Bomb's Remote",
@@ -2897,7 +2897,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Inspectometer Battery": {
         "name": "Inspectometer Battery",
@@ -2910,7 +2910,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Gems Module": {
         "name": "Gems Module",
@@ -2923,7 +2923,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Lonely Wizbot Card": {
         "name": "Lonely Wizbot Card",
@@ -2936,7 +2936,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Fishbot Card": {
         "name": "Fishbot Card",
@@ -2949,7 +2949,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Ourobot Card": {
         "name": "Ourobot Card",
@@ -2962,7 +2962,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Holo Pelt": {
         "name": "Holo Pelt",
@@ -2975,7 +2975,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5
       },
       "Quill": {
         "name": "Quill",
@@ -2988,7 +2988,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Currency": {
         "name": "Currency",
@@ -3001,7 +3001,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 50
+        "max_count": 25
       },
       "Card Pack": {
         "name": "Card Pack",
@@ -3014,7 +3014,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 48
+        "max_count": 24
       }
     }
   },
@@ -3025,47 +3025,47 @@
   },
   "itempool_counts": {
     "1": {
-      "Ancient Obol": 2,
-      "Angler Hook": 2,
-      "Ant Cards": 2,
-      "Bee Figurine": 2,
-      "Bone Lord Femur": 2,
-      "Bone Lord Holo Key": 2,
-      "Bone Lord Horn": 2,
-      "Caged Wolf Card": 2,
-      "Camera Replica": 2,
-      "Card Pack": 48,
-      "Currency": 50,
-      "Dagger": 2,
-      "Dock's Clover Plant": 2,
-      "Drowned Soul Card": 2,
-      "Epitaph Piece": 18,
-      "Extra Battery": 2,
-      "Extra Candle": 2,
-      "Film Roll": 2,
-      "Fishbot Card": 2,
-      "Gems Module": 2,
-      "Great Kraken Card": 2,
-      "Greater Smoke": 2,
-      "Holo Pelt": 10,
-      "Inspectometer Battery": 2,
-      "Lonely Wizbot Card": 2,
-      "Magnificus Eye": 2,
-      "Monocle": 2,
-      "Mrs. Bomb's Remote": 2,
-      "Mycologists Holo Key": 2,
-      "Nano Armor Generator": 2,
-      "Oil Painting's Clover Plant": 2,
-      "Ourobot Card": 2,
-      "Pile Of Meat": 2,
-      "Quill": 2,
-      "Ring": 2,
-      "Salmon Card": 2,
-      "Skink Card": 2,
-      "Squirrel Totem Head": 2,
-      "Stinkbug Card": 2,
-      "Stunted Wolf Card": 2,
-      "Wardrobe Key": 2
+      "Ancient Obol": 1,
+      "Angler Hook": 1,
+      "Ant Cards": 1,
+      "Bee Figurine": 1,
+      "Bone Lord Femur": 1,
+      "Bone Lord Holo Key": 1,
+      "Bone Lord Horn": 1,
+      "Caged Wolf Card": 1,
+      "Camera Replica": 1,
+      "Card Pack": 24,
+      "Currency": 25,
+      "Dagger": 1,
+      "Dock's Clover Plant": 1,
+      "Drowned Soul Card": 1,
+      "Epitaph Piece": 9,
+      "Extra Battery": 1,
+      "Extra Candle": 1,
+      "Film Roll": 1,
+      "Fishbot Card": 1,
+      "Gems Module": 1,
+      "Great Kraken Card": 1,
+      "Greater Smoke": 1,
+      "Holo Pelt": 5,
+      "Inspectometer Battery": 1,
+      "Lonely Wizbot Card": 1,
+      "Magnificus Eye": 1,
+      "Monocle": 1,
+      "Mrs. Bomb's Remote": 1,
+      "Mycologists Holo Key": 1,
+      "Nano Armor Generator": 1,
+      "Oil Painting's Clover Plant": 1,
+      "Ourobot Card": 1,
+      "Pile Of Meat": 1,
+      "Quill": 1,
+      "Ring": 1,
+      "Salmon Card": 1,
+      "Skink Card": 1,
+      "Squirrel Totem Head": 1,
+      "Stinkbug Card": 1,
+      "Stunted Wolf Card": 1,
+      "Wardrobe Key": 1
     }
   },
   "progression_mapping": {

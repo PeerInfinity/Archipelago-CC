@@ -16,6 +16,25 @@ from .Regions import create_regions
 from .Rules import set_rules
 
 
+# Item pool counts from original generation
+ITEMPOOL_COUNTS: Dict[str, int] = {
+    "Black Key": 1,
+    "Bridge": 1,
+    "Chalice": 1,
+    "Freeincarnate": 12,
+    "Left Difficulty Switch": 1,
+    "Magnet": 1,
+    "Right Difficulty Switch": 1,
+    "Slow Grundle": 1,
+    "Slow Rhindle": 1,
+    "Slow Yorgle": 1,
+    "Sword": 1,
+    "Victory": 1,
+    "White Key": 1,
+    "Yellow Key": 1,
+}
+
+
 class AdventureTestWeb(WebWorld):
     """Web interface for Adventure Test."""
     theme = "ocean"
@@ -59,18 +78,20 @@ class AdventureTestWorld(RuleWorldMixin, World):
         """Create randomized item pool."""
         item_pool = []
 
-        for item_name, item_data in item_table.items():
+        for item_name, count in ITEMPOOL_COUNTS.items():
             # Skip event items
-            if item_data.id is None:
+            if item_name not in item_table or item_table[item_name].id is None:
                 continue
 
-            item = AdventureTestItem(
-                item_name,
-                item_data.classification,
-                item_data.id,
-                self.player
-            )
-            item_pool.append(item)
+            item_data = item_table[item_name]
+            for _ in range(count):
+                item = AdventureTestItem(
+                    item_name,
+                    item_data.classification,
+                    item_data.id,
+                    self.player
+                )
+                item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 

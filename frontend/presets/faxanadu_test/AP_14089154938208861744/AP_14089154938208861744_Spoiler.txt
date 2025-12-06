@@ -1,0 +1,222 @@
+﻿Archipelago Version 0.6.5  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Faxanadu Test
+Location Count:                  110
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 Yes
+
+
+Locations:
+
+Apolune Deluge: Hourglass
+Apolune Hand Dagger: Hourglass
+Apolune Key Jack: Wingboots
+Apolune Red Potion: Elixir
+Apolune Small Shield: Poison
+Branches Hidden Hourglass: Red Potion
+Branches Hidden Mattock: Red Potion
+Branches Hidden Ointment: Tilte
+Branches Poison: Red Potion
+Conflate Giant Blade: Ointment
+Conflate Guru: Red Potion
+Conflate Magic Shield: Red Potion
+Conflate Red Potion: Progressive Shield
+Conflate Wingboots: Poison
+Dartmoor Castle Hidden Hourglass: Poison
+Dartmoor Castle Hidden Red Potion: Red Potion
+Dartmoor Giant Blade: Poison
+Dartmoor Key King: Red Potion
+Dartmoor Red Potion: Red Potion
+Daybreak Giant Blade: Fire
+Daybreak Key King: Red Potion
+Daybreak Key Queen: Black Onyx
+Daybreak Red Potion: Red Potion
+Daybreak Tilte: Red Potion
+Eolis Deluge: Wingboots
+Eolis Elixir: Red Potion
+Eolis Guru: Progressive Sword
+Eolis Hand Dagger: Progressive Sword
+Eolis Key Jack: Poison
+Eolis Red Potion: Key Jack
+Evil Fortress Glove: Hourglass
+Evil Fortress Hidden Glove: Hourglass
+Evil Fortress Ointment: Red Potion
+Evil Fortress Poison 1: Progressive Armor
+Evil Fortress Poison 2: Hourglass
+Evil Fortress Poison 3: Progressive Armor
+Evil One: Killed Evil One
+Forepaw Key Jack: Poison
+Forepaw Key Queen: Ring of Elf
+Forepaw Long Sword: Ring of Ruby
+Forepaw Red Potion: Red Potion
+Forepaw Small Shield: Red Potion
+Forepaw Studded Mail: Red Potion
+Forepaw Wingboots: Ointment
+Fraternal Castle Dragon Slayer: Magical Rod
+Fraternal Castle Guru: Red Potion
+Fraternal Castle Hidden Hourglass: Red Potion
+Fraternal Castle Hidden Ointment: Poison
+Fraternal Castle Poison 1: Red Potion
+Fraternal Castle Poison 2: Red Potion
+Fraternal Castle Poison 3: Red Potion
+Fraternal Castle Shop Hidden Ointment: Glove
+Helm Branch Battle Helmet: Ointment
+Helm Branch Hidden Glove: Red Potion
+Joker Spring: Joker Spring Flow
+Joker Spring Ruby Ring: Key King
+Mascon Key Jack: Progressive Sword
+Mascon Key Queen: Thunder
+Mascon Large Shield: Poison
+Mascon Mattock: Poison
+Mascon Red Potion: Poison
+Mascon Thunder: Hourglass
+Mist Hidden Poison 1: Progressive Shield
+Mist Hidden Poison 2: Progressive Shield
+Mist Hidden Wingboots: Ointment
+Misty Doctor Office: Key Ace
+Misty House: Poison
+Misty Magic Hall: Hourglass
+Misty Shop Death: Wingboots
+Misty Shop Elixir: Red Potion
+Misty Shop Hourglass: Demons Ring
+Misty Shop Red Potion: Red Potion
+Path to Apolune Death: Elixir
+Path to Apolune Magic Shield: Key Queen
+Path to Conflate Hidden Ointment: Ointment
+Path to Conflate Poison: Ointment
+Path to Daybreak Battle Suit: Poison
+Path to Daybreak Glove: Progressive Armor
+Path to Daybreak Hidden Wingboots 1: Red Potion
+Path to Daybreak Hidden Wingboots 2: Red Potion
+Path to Daybreak Magical Rod: Hourglass
+Path to Daybreak Poison: Death
+Path to Forepaw Glove: Glove
+Path to Forepaw Hidden Red Potion: Poison
+Path to Mascon Hidden Wingboots: Red Potion
+Sky Spring: Sky Spring Flow
+Tower of Fortress Boss Wingboots: Poison
+Tower of Fortress Elixir: Ring of Dworf
+Tower of Fortress Guru: Red Potion
+Tower of Fortress Hidden Wingboots: Hourglass
+Tower of Fortress Ointment: Poison
+Tower of Fortress Poison 1: Unlock Wingboots
+Tower of Fortress Poison 2: Key Joker
+Tower of Fortress Spring: Tower of Fortress Spring Flow
+Tower of Mist Black Onyx: Progressive Sword
+Tower of Mist Elixir: Deluge
+Tower of Mist Hidden Ointment: Red Potion
+Tower of Red Potion: Red Potion
+Tower of Suffer Hidden Hourglass: Elixir
+Tower of Suffer Hidden Wingboots: Red Potion
+Tower of Suffer Pendant: Red Potion
+Tower of Trunk Boss Mattock: Mattock
+Tower of Trunk Hidden Hourglass: Poison
+Tower of Trunk Hidden Mattock: Spring Elixir
+Trunk Hidden Ointment: Ointment
+Trunk Hidden Red Potion: Poison
+Trunk Red Potion: Progressive Shield
+Useless Tower: Ointment
+Victim Full Plate: Red Potion
+Victim Key King: Hourglass
+Victim Key Queen: Red Potion
+Victim Mattock: Wingboots
+Victim Red Potion: Elixir
+Victim Tavern: Red Potion
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Eolis Guru: Progressive Sword
+}
+2: {
+  Eolis Elixir: Red Potion
+  Eolis Hand Dagger: Progressive Sword
+  Eolis Red Potion: Key Jack
+}
+3: {
+  Tower of Trunk Boss Mattock: Mattock
+  Tower of Trunk Hidden Mattock: Spring Elixir
+}
+4: {
+  Forepaw Long Sword: Ring of Ruby
+  Forepaw Red Potion: Red Potion
+  Forepaw Small Shield: Red Potion
+  Forepaw Studded Mail: Red Potion
+  Tower of Fortress Elixir: Ring of Dworf
+  Tower of Fortress Poison 1: Unlock Wingboots
+  Tower of Fortress Poison 2: Key Joker
+  Tower of Fortress Spring: Tower of Fortress Spring Flow
+}
+5: {
+  Joker Spring: Joker Spring Flow
+  Joker Spring Ruby Ring: Key King
+  Sky Spring: Sky Spring Flow
+}
+6: {
+  Path to Apolune Magic Shield: Key Queen
+  Tower of Fortress Guru: Red Potion
+}
+7: {
+  Mascon Key Jack: Progressive Sword
+  Misty Shop Elixir: Red Potion
+  Misty Shop Hourglass: Demons Ring
+  Misty Shop Red Potion: Red Potion
+  Path to Mascon Hidden Wingboots: Red Potion
+  Tower of Mist Black Onyx: Progressive Sword
+  Tower of Mist Elixir: Deluge
+  Tower of Mist Hidden Ointment: Red Potion
+  Tower of Red Potion: Red Potion
+  Tower of Suffer Hidden Wingboots: Red Potion
+  Tower of Suffer Pendant: Red Potion
+  Victim Full Plate: Red Potion
+  Victim Key Queen: Red Potion
+  Victim Tavern: Red Potion
+}
+8: {
+  Misty Doctor Office: Key Ace
+}
+9: {
+  Branches Hidden Hourglass: Red Potion
+  Branches Hidden Mattock: Red Potion
+  Branches Poison: Red Potion
+  Conflate Magic Shield: Red Potion
+  Dartmoor Castle Hidden Red Potion: Red Potion
+  Dartmoor Key King: Red Potion
+  Dartmoor Red Potion: Red Potion
+  Daybreak Key King: Red Potion
+  Daybreak Key Queen: Black Onyx
+  Daybreak Red Potion: Red Potion
+  Daybreak Tilte: Red Potion
+  Evil Fortress Ointment: Red Potion
+  Evil Fortress Poison 1: Progressive Armor
+  Evil Fortress Poison 3: Progressive Armor
+  Evil One: Killed Evil One
+  Fraternal Castle Guru: Red Potion
+  Fraternal Castle Hidden Hourglass: Red Potion
+  Fraternal Castle Poison 1: Red Potion
+  Fraternal Castle Poison 2: Red Potion
+  Fraternal Castle Poison 3: Red Potion
+  Helm Branch Hidden Glove: Red Potion
+  Path to Daybreak Glove: Progressive Armor
+  Path to Daybreak Hidden Wingboots 1: Red Potion
+  Path to Daybreak Hidden Wingboots 2: Red Potion
+}
+10: {
+  Conflate Guru: Red Potion
+}

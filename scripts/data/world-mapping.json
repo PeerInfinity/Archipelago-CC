@@ -20,6 +20,13 @@
     "has_custom_game_logic": false,
     "world_directory": "shorthike"
   },
+  "A Short Hike Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "shorthike_test"
+  },
   "APQuest": {
     "exporter_path": null,
     "game_logic_path": null,
@@ -48,6 +55,13 @@
     "has_custom_game_logic": true,
     "world_directory": "aquaria"
   },
+  "Aquaria Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "aquaria_test"
+  },
   "Archipelago": {
     "exporter_path": "exporter/games/generic.py",
     "game_logic_path": "frontend/modules/shared/gameLogic/generic/genericLogic.js",
@@ -69,12 +83,26 @@
     "has_custom_game_logic": false,
     "world_directory": "bomb_rush_cyberfunk"
   },
+  "Bomb Rush Cyberfunk Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "bomb_rush_cyberfunk_test"
+  },
   "Bumper Stickers": {
     "exporter_path": "exporter/games/bumpstik.py",
     "game_logic_path": null,
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "bumpstik"
+  },
+  "Bumper Stickers Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "bumpstik_test"
   },
   "Castlevania - Circle of the Moon": {
     "exporter_path": "exporter/games/cvcotm.py",
@@ -111,6 +139,13 @@
     "has_custom_game_logic": false,
     "world_directory": "checksfinder"
   },
+  "ChecksFinder Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "checksfinder_test"
+  },
   "ChocolateChipCookies": {
     "exporter_path": "exporter/games/bakingadventure.py",
     "game_logic_path": null,
@@ -138,6 +173,13 @@
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "dlcquest"
+  },
+  "DLCQuest Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "dlcquest_test"
   },
   "DOOM 1993": {
     "exporter_path": "exporter/games/doom_1993.py",
@@ -181,6 +223,13 @@
     "has_custom_game_logic": false,
     "world_directory": "faxanadu"
   },
+  "Faxanadu Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "faxanadu_test"
+  },
   "Final Fantasy": {
     "exporter_path": null,
     "game_logic_path": null,
@@ -194,6 +243,13 @@
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "ffmq"
+  },
+  "Final Fantasy Mystic Quest Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "ffmq_test"
   },
   "Heretic": {
     "exporter_path": null,
@@ -216,12 +272,26 @@
     "has_custom_game_logic": true,
     "world_directory": "hylics2"
   },
+  "Hylics 2 Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "hylics2_test"
+  },
   "Inscryption": {
     "exporter_path": "exporter/games/inscryption.py",
     "game_logic_path": "frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js",
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "inscryption"
+  },
+  "Inscryption Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "inscryption_test"
   },
   "Jak and Daxter: The Precursor Legacy": {
     "exporter_path": "exporter/games/jakanddaxter.py",
@@ -251,6 +321,13 @@
     "has_custom_game_logic": true,
     "world_directory": "kdl3"
   },
+  "Kirby's Dream Land 3 Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "kdl3_test"
+  },
   "Landstalker - The Treasures of King Nole": {
     "exporter_path": "exporter/games/landstalker.py",
     "game_logic_path": "frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js",
@@ -258,12 +335,26 @@
     "has_custom_game_logic": true,
     "world_directory": "landstalker"
   },
+  "Landstalker - The Treasures of King Nole Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "landstalker_test"
+  },
   "Lingo": {
     "exporter_path": "exporter/games/lingo.py",
     "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "lingo"
+  },
+  "Lingo Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "lingo_test"
   },
   "Links Awakening DX": {
     "exporter_path": "exporter/games/ladx.py",
@@ -278,6 +369,13 @@
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "lufia2ac"
+  },
+  "Lufia II Ancient Cave Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "lufia2ac_test"
   },
   "Mario & Luigi Superstar Saga": {
     "exporter_path": "exporter/games/mlss.py",
@@ -334,6 +432,13 @@
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "noita"
+  },
+  "Noita Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "noita_test"
   },
   "Ocarina of Time": {
     "exporter_path": "exporter/games/oot.py",
@@ -405,6 +510,13 @@
     "has_custom_game_logic": false,
     "world_directory": "saving_princess"
   },
+  "Saving Princess Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "saving_princess_test"
+  },
   "Secret of Evermore": {
     "exporter_path": "exporter/games/soe.py",
     "game_logic_path": "frontend/modules/shared/gameLogic/soe/soeLogic.js",
@@ -418,6 +530,13 @@
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "shivers"
+  },
+  "Shivers Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "shivers_test"
   },
   "Sonic Adventure 2 Battle": {
     "exporter_path": "exporter/games/sa2b.py",
@@ -503,6 +622,13 @@
     "has_custom_game_logic": false,
     "world_directory": "tunic"
   },
+  "TUNIC Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "tunic_test"
+  },
   "Terraria": {
     "exporter_path": "exporter/games/terraria.py",
     "game_logic_path": "frontend/modules/shared/gameLogic/terraria/terrariaLogic.js",
@@ -538,12 +664,26 @@
     "has_custom_game_logic": true,
     "world_directory": "witness"
   },
+  "The Witness Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "witness_test"
+  },
   "Timespinner": {
     "exporter_path": "exporter/games/timespinner.py",
     "game_logic_path": "frontend/modules/shared/gameLogic/timespinner/timespinnerLogic.js",
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "timespinner"
+  },
+  "Timespinner Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "timespinner_test"
   },
   "Undertale": {
     "exporter_path": "exporter/games/undertale.py",
@@ -572,6 +712,13 @@
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "wargroove"
+  },
+  "Wargroove Test": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "wargroove_test"
   },
   "WebDevJourney": {
     "exporter_path": null,

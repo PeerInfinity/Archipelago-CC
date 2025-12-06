@@ -653,7 +653,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "White Key": {
         "name": "White Key",
@@ -666,7 +666,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Black Key": {
         "name": "Black Key",
@@ -679,7 +679,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Bridge": {
         "name": "Bridge",
@@ -692,7 +692,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Magnet": {
         "name": "Magnet",
@@ -705,7 +705,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Sword": {
         "name": "Sword",
@@ -718,7 +718,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Chalice": {
         "name": "Chalice",
@@ -731,7 +731,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Left Difficulty Switch": {
         "name": "Left Difficulty Switch",
@@ -744,7 +744,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Right Difficulty Switch": {
         "name": "Right Difficulty Switch",
@@ -757,7 +757,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Freeincarnate": {
         "name": "Freeincarnate",
@@ -770,7 +770,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 24
+        "max_count": 12
       },
       "Slow Yorgle": {
         "name": "Slow Yorgle",
@@ -783,7 +783,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Slow Grundle": {
         "name": "Slow Grundle",
@@ -796,7 +796,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Slow Rhindle": {
         "name": "Slow Rhindle",
@@ -809,7 +809,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Revive Dragons": {
         "name": "Revive Dragons",
@@ -859,20 +859,20 @@
   },
   "itempool_counts": {
     "1": {
-      "Black Key": 2,
-      "Bridge": 2,
-      "Chalice": 2,
-      "Freeincarnate": 24,
-      "Left Difficulty Switch": 2,
-      "Magnet": 2,
-      "Right Difficulty Switch": 2,
-      "Slow Grundle": 2,
-      "Slow Rhindle": 2,
-      "Slow Yorgle": 2,
-      "Sword": 2,
+      "Black Key": 1,
+      "Bridge": 1,
+      "Chalice": 1,
+      "Freeincarnate": 12,
+      "Left Difficulty Switch": 1,
+      "Magnet": 1,
+      "Right Difficulty Switch": 1,
+      "Slow Grundle": 1,
+      "Slow Rhindle": 1,
+      "Slow Yorgle": 1,
+      "Sword": 1,
       "Victory": 1,
-      "White Key": 2,
-      "Yellow Key": 2
+      "White Key": 1,
+      "Yellow Key": 1
     }
   },
   "progression_mapping": {

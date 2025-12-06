@@ -275,7 +275,8 @@ export function _createSelfSnapshotInterface(sm) {
             inventory: sm.inventory,
             flags: sm.gameStateModule?.flags || [],
             events: sm.gameStateModule?.events || [],
-            player: { id: sm.playerId, slot: sm.playerId }
+            player: { id: sm.playerId, slot: sm.playerId },
+            prog_items: sm.prog_items  // Include prog_items for state counter games
           };
           // Include all game-specific data needed by helpers (e.g., Pokemon local_poke_data)
           const staticData = {
@@ -303,7 +304,8 @@ export function _createSelfSnapshotInterface(sm) {
             inventory: sm.inventory,
             flags: sm.gameStateModule?.flags || [],
             events: sm.gameStateModule?.events || [],
-            player: { id: sm.playerId, slot: sm.playerId }
+            player: { id: sm.playerId, slot: sm.playerId },
+            prog_items: sm.prog_items  // Include prog_items for state counter games
           };
           // Include all game-specific data needed by helpers (e.g., Pokemon local_poke_data)
           const staticData = {
@@ -978,6 +980,19 @@ export function clearState(sm, options = { recomputeAndSendUpdate: true }) {
           }
         }
       }
+    }
+
+    // Re-initialize prog_items from prog_items_init (e.g., for precollected coins)
+    const gameInfo = sm.gameInfo?.[sm.playerId];
+    if (gameInfo?.prog_items_init && sm.prog_items) {
+      const playerId = sm.playerId;
+      if (!sm.prog_items[playerId]) {
+        sm.prog_items[playerId] = {};
+      }
+      for (const [accumulatorName, initialValue] of Object.entries(gameInfo.prog_items_init)) {
+        sm.prog_items[playerId][accumulatorName] = initialValue;
+      }
+      sm._logDebug(`[clearState] Re-initialized prog_items from prog_items_init`);
     }
   } else if (!sm.inventory) {
     // If inventory doesn't exist, create it
