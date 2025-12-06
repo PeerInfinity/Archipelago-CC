@@ -3,6 +3,7 @@ import { evaluateRule } from '../shared/ruleEngine.js';
 import { createStateSnapshotInterface } from '../shared/stateInterface.js';
 import { getPlayerStateSingleton } from '../playerState/singleton.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
+import discoveryStateSingleton from '../discovery/singleton.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -136,6 +137,33 @@ export class GraphDataManager {
     };
   }
 
+  /**
+   * Check if a region has an entrance from any discovered region.
+   * A region has an entrance if any discovered region has an exit leading to it.
+   * @param {string} regionName - The region to check
+   * @param {Map} regions - Map of all regions
+   * @returns {boolean} True if the region has an entrance from a discovered region
+   */
+  hasEntranceFromDiscoveredRegion(regionName, regions) {
+    // Check if any discovered region has an exit leading to this region
+    for (const [sourceRegionName, sourceRegionData] of regions.entries()) {
+      // Only consider discovered regions as sources
+      if (!discoveryStateSingleton.isRegionDiscovered(sourceRegionName)) {
+        continue;
+      }
+
+      // Check if this discovered region has an exit to the target region
+      if (sourceRegionData.exits && sourceRegionData.exits.length > 0) {
+        for (const exit of sourceRegionData.exits) {
+          if (exit.connected_region === regionName) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
   buildGraphFromRegions(regions, exits) {
     // Use Map methods
     logger.debug('buildGraphFromRegions called', { regionCount: regions?.size || 0 });
@@ -156,27 +184,81 @@ export class GraphDataManager {
     const assumeBidirectional = playerSettings?.assume_bidirectional_exits === true;
     logger.debug('Exit configuration', { assumeBidirectional });
 
+    // Get discovery mode state and settings
+    const isDiscoveryModeActive = this.ui.isDiscoveryModeActive || false;
+    const discoverySettings = this.ui.discoverySettings || {
+      undiscoveredDisplay: 'hidden',
+      clickDiscoversLocation: true,
+      showUndiscoveredDetails: false
+    };
+
+    // Check if "Show Undiscovered" checkbox is checked (default to true if not found)
+    const showUndiscoveredCheckbox = this.ui.controlPanel?.querySelector('#graph-show-undiscovered');
+    const showUndiscovered = showUndiscoveredCheckbox?.checked ?? true;
+
     // Create nodes for each region with location counts
+    // In discovery mode, we include ALL regions but mark hidden ones with discovery-hidden class
+    // This preserves the layout when discovery state changes
     for (const [regionName, regionData] of regions.entries()) {
+      // Check discovery state
+      const isRegionDiscovered = discoveryStateSingleton.isRegionDiscovered(regionName);
+
       // Calculate location counts
       const locationCounts = this.calculateLocationCounts(regionName, regionData);
 
-      // Get display text based on settings
-      const displayText = this.ui.getRegionDisplayText(regionData);
+      // Determine display text and classes based on discovery state
+      let displayText;
+      let nodeClasses = 'region';
+      let shouldHide = false;
 
-      // Add location counts if there are locations
-      const countLabel = `${locationCounts.checked}, ${locationCounts.accessible}, ${locationCounts.inaccessible} / ${locationCounts.total}`;
-      const fullLabel = locationCounts.total > 0 ? `${displayText}\n${countLabel}` : displayText;
+      if (isDiscoveryModeActive && !isRegionDiscovered) {
+        // Check if this region has an entrance from a discovered region
+        const hasEntrance = this.hasEntranceFromDiscoveredRegion(regionName, regions);
+
+        if (!hasEntrance) {
+          // No entrance from discovered region - hide this node
+          shouldHide = true;
+          displayText = '???';
+          nodeClasses += ' undiscovered-placeholder';
+        } else if (discoverySettings.undiscoveredDisplay === 'hidden' && !showUndiscovered) {
+          // Has entrance but user chose to hide undiscovered regions
+          shouldHide = true;
+          displayText = '???';
+          nodeClasses += ' undiscovered-placeholder';
+        } else {
+          // Has entrance and should be shown as undiscovered
+          displayText = '???';
+          nodeClasses += ' undiscovered-placeholder';
+        }
+      } else {
+        // Discovered region or discovery mode not active - show normal display
+        displayText = this.ui.getRegionDisplayText(regionData);
+      }
+
+      // Add discovery-hidden class if node should be hidden
+      if (shouldHide) {
+        nodeClasses += ' discovery-hidden';
+      }
+
+      // Add location counts if there are locations (only for discovered regions)
+      let fullLabel;
+      if (isDiscoveryModeActive && !isRegionDiscovered) {
+        fullLabel = displayText; // Just "???" for undiscovered regions
+      } else {
+        const countLabel = `${locationCounts.checked}, ${locationCounts.accessible}, ${locationCounts.inaccessible} / ${locationCounts.total}`;
+        fullLabel = locationCounts.total > 0 ? `${displayText}\n${countLabel}` : displayText;
+      }
 
       elements.nodes.push({
         data: {
           id: regionName,
           label: fullLabel,
           regionName: regionName,
-          locationCounts: locationCounts
+          locationCounts: locationCounts,
+          isDiscovered: isRegionDiscovered
         },
         position: this.ui.nodePositions.get(regionName) || { x: Math.random() * 500, y: Math.random() * 500 },
-        classes: 'region'
+        classes: nodeClasses
       });
     }
 
@@ -184,14 +266,15 @@ export class GraphDataManager {
     const exitMap = new Map(); // key: "fromRegion->toRegion", value: exitData
     const processedEdges = new Set();
 
-    // Collect all exits from region definitions
+    // Collect all exits from region definitions (include ALL exits to preserve layout)
     for (const [regionName, regionData] of regions.entries()) {
       if (regionData.exits && regionData.exits.length > 0) {
         for (const exitDef of regionData.exits) {
           const fromRegion = regionName;
           const toRegion = exitDef.connected_region;
 
-          if (fromRegion && toRegion && regions.has(fromRegion) && regions.has(toRegion)) {
+          // Include all valid exits (both regions must exist)
+          if (fromRegion && toRegion && regions.has(toRegion)) {
             const exitKey = `${fromRegion}->${toRegion}`;
             exitMap.set(exitKey, {
               fromRegion,
@@ -210,6 +293,7 @@ export class GraphDataManager {
         const fromRegion = exitData.parentRegion;
         const toRegion = exitData.connectedRegion;
 
+        // Include all valid exits
         if (fromRegion && toRegion && regions.has(fromRegion) && regions.has(toRegion)) {
           const exitKey = `${fromRegion}->${toRegion}`;
           if (!exitMap.has(exitKey)) {
@@ -261,6 +345,49 @@ export class GraphDataManager {
         edgeLabel = reverseExit.exitName;
       }
 
+      // Check discovery state for exits and determine if edge should be hidden
+      let edgeClasses = '';
+      let shouldHideEdge = false;
+
+      if (isDiscoveryModeActive) {
+        // Check if either exit in this edge is discovered
+        const forwardExitDiscovered = primaryExit ?
+          discoveryStateSingleton.isExitDiscovered(primaryExit.fromRegion, primaryExit.exitName) : false;
+        const reverseExitDiscovered = reverseExit ?
+          discoveryStateSingleton.isExitDiscovered(reverseExit.fromRegion, reverseExit.exitName) : false;
+
+        // Check if endpoint regions are discovered and have entrances from discovered regions
+        const sourceDiscovered = discoveryStateSingleton.isRegionDiscovered(edgeSource);
+        const targetDiscovered = discoveryStateSingleton.isRegionDiscovered(edgeTarget);
+        const sourceHasEntrance = sourceDiscovered || this.hasEntranceFromDiscoveredRegion(edgeSource, regions);
+        const targetHasEntrance = targetDiscovered || this.hasEntranceFromDiscoveredRegion(edgeTarget, regions);
+
+        // Edge should be hidden if either endpoint doesn't have an entrance from a discovered region
+        if (!sourceHasEntrance || !targetHasEntrance) {
+          shouldHideEdge = true;
+        }
+
+        // Also hide if user chose to hide undiscovered and the exit is not discovered
+        const exitDiscovered = forwardExitDiscovered || reverseExitDiscovered;
+        if (!exitDiscovered) {
+          edgeClasses = 'undiscovered';
+          // Replace label with "???" if not showing undiscovered details
+          if (!discoverySettings.showUndiscoveredDetails) {
+            edgeLabel = '???';
+          }
+
+          // Hide undiscovered edges if user chose to hide undiscovered items
+          if (discoverySettings.undiscoveredDisplay === 'hidden' && !showUndiscovered) {
+            shouldHideEdge = true;
+          }
+        }
+      }
+
+      // Add discovery-hidden class if edge should be hidden
+      if (shouldHideEdge) {
+        edgeClasses += (edgeClasses ? ' ' : '') + 'discovery-hidden';
+      }
+
       // Create edge data
       const edgeData = {
         id: edgeId,
@@ -278,7 +405,7 @@ export class GraphDataManager {
         reverseExitName: isForwardDirection ? (reverseExit ? reverseExit.exitName : '') : exitData.exitName
       };
 
-      elements.edges.push({ data: edgeData });
+      elements.edges.push({ data: edgeData, classes: edgeClasses });
       processedEdges.add(edgeId);
       processedEdges.add(reverseEdgeId); // Mark both directions as processed
     }
@@ -383,6 +510,17 @@ export class GraphDataManager {
     const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
     if (!snapshotInterface) return;
 
+    // Get discovery mode state
+    const isDiscoveryModeActive = this.ui.isDiscoveryModeActive || false;
+    const discoverySettings = this.ui.discoverySettings || {
+      undiscoveredDisplay: 'hidden',
+      showUndiscoveredDetails: false
+    };
+
+    // Check if "Show Undiscovered" checkbox is checked (default to true if not found)
+    const showUndiscoveredCheckbox = this.ui.controlPanel?.querySelector('#graph-show-undiscovered');
+    const showUndiscovered = showUndiscoveredCheckbox?.checked ?? true;
+
     // Update node colors based on region accessibility and location status
     this.ui.cy.nodes().forEach(node => {
       const regionName = node.id();
@@ -406,9 +544,39 @@ export class GraphDataManager {
             const regionIsAccessible = parentNode.hasClass('accessible');
             const regionAccessClass = regionIsAccessible ? 'region-accessible' : 'region-inaccessible';
 
+            // Check discovery state for location and its parent region
+            const isLocationDiscovered = discoveryStateSingleton.isLocationDiscovered(locationName);
+            const isRegionDiscovered = discoveryStateSingleton.isRegionDiscovered(parentRegion);
+
+            // Determine if location should be shown as placeholder
+            let shouldShowAsPlaceholder = false;
+            if (isDiscoveryModeActive) {
+              if (!isRegionDiscovered || !isLocationDiscovered) {
+                shouldShowAsPlaceholder = true;
+              }
+            }
+
+            // Update location node label - show ??? if undiscovered
+            if (shouldShowAsPlaceholder) {
+              node.data('label', '???');
+            } else {
+              node.data('label', this.ui.getLocationDisplayText(location));
+            }
+            node.data('isDiscovered', isLocationDiscovered);
+
             // Update location node classes
-            node.removeClass('location-checked location-accessible location-inaccessible region-accessible region-inaccessible');
+            node.removeClass('location-checked location-accessible location-inaccessible region-accessible region-inaccessible undiscovered discovery-hidden');
             node.addClass(`${regionAccessClass} location-${locationStatus}`);
+
+            // Add undiscovered class if in discovery mode and not discovered
+            if (shouldShowAsPlaceholder) {
+              node.addClass('undiscovered');
+            }
+
+            // Hide location node if parent region is hidden
+            if (isDiscoveryModeActive && parentNode.hasClass('discovery-hidden')) {
+              node.addClass('discovery-hidden');
+            }
           }
         }
         return;
@@ -423,20 +591,58 @@ export class GraphDataManager {
       const isVisited = snapshot.visitedRegions &&
                        snapshot.visitedRegions.includes(regionName);
 
+      // Check discovery state for region
+      const isRegionDiscovered = discoveryStateSingleton.isRegionDiscovered(regionName);
+
       // Recalculate location counts for updated state
       const locationCounts = this.calculateLocationCounts(regionName, regionData);
 
-      // Get display text based on settings
-      const displayText = this.ui.getRegionDisplayText(regionData);
+      // Determine display text based on discovery state
+      let displayText;
+      if (isDiscoveryModeActive && !isRegionDiscovered) {
+        // Undiscovered region - always show ???
+        displayText = '???';
+      } else {
+        displayText = this.ui.getRegionDisplayText(regionData);
+      }
 
-      // Add location counts if there are locations
-      const countLabel = `${locationCounts.checked}, ${locationCounts.accessible}, ${locationCounts.inaccessible} / ${locationCounts.total}`;
-      const fullLabel = locationCounts.total > 0 ? `${displayText}\n${countLabel}` : displayText;
+      // Add location counts if there are locations (only for discovered regions)
+      let fullLabel;
+      if (isDiscoveryModeActive && !isRegionDiscovered) {
+        fullLabel = displayText; // Just "???" for undiscovered regions
+      } else {
+        const countLabel = `${locationCounts.checked}, ${locationCounts.accessible}, ${locationCounts.inaccessible} / ${locationCounts.total}`;
+        fullLabel = locationCounts.total > 0 ? `${displayText}\n${countLabel}` : displayText;
+      }
       node.data('label', fullLabel);
       node.data('locationCounts', locationCounts);
+      node.data('isDiscovered', isRegionDiscovered);
 
-      // Clear all classes
-      node.removeClass('accessible inaccessible completed all-accessible mixed-locations all-inaccessible');
+      // Clear all classes (preserve undiscovered classes if in discovery mode)
+      node.removeClass('accessible inaccessible completed all-accessible mixed-locations all-inaccessible undiscovered undiscovered-placeholder discovery-hidden');
+
+      // Determine if node should be hidden in discovery mode
+      let shouldHide = false;
+      if (isDiscoveryModeActive && !isRegionDiscovered) {
+        // Check if this region has an entrance from a discovered region
+        const hasEntrance = this.hasEntranceFromDiscoveredRegion(regionName, staticData.regions);
+
+        if (!hasEntrance) {
+          // No entrance from discovered region - hide this node
+          shouldHide = true;
+        } else if (discoverySettings.undiscoveredDisplay === 'hidden' && !showUndiscovered) {
+          // Has entrance but user chose to hide undiscovered regions
+          shouldHide = true;
+        }
+
+        // Always add placeholder class for undiscovered regions
+        node.addClass('undiscovered-placeholder');
+      }
+
+      // Apply discovery-hidden class if node should be hidden
+      if (shouldHide) {
+        node.addClass('discovery-hidden');
+      }
 
       // Apply base accessibility class
       if (isReachable) {
@@ -455,12 +661,27 @@ export class GraphDataManager {
 
     // Update edge colors based on exit accessibility and directionality
     this.ui.cy.edges().forEach(edge => {
+      // Skip location edges
+      // Handle region-location edges - hide them if parent region is hidden
+      if (edge.hasClass('region-location-edge')) {
+        edge.removeClass('discovery-hidden');
+        if (isDiscoveryModeActive) {
+          const sourceNode = edge.source();
+          if (sourceNode.hasClass('discovery-hidden')) {
+            edge.addClass('discovery-hidden');
+          }
+        }
+        return;
+      }
+
       const sourceRegion = edge.source().id();
       const targetRegion = edge.target().id();
       const edgeData = edge.data();
       const isBidirectional = edgeData.isBidirectional;
       const forwardExitRule = edgeData.forwardExitRule;
       const reverseExitRule = edgeData.reverseExitRule;
+      const forwardExitName = edgeData.forwardExitName;
+      const reverseExitName = edgeData.reverseExitName;
 
       // Check if regions are reachable
       const sourceReachable = snapshot.regionReachability?.[sourceRegion] === true ||
@@ -494,7 +715,43 @@ export class GraphDataManager {
       }
 
       // Clear all classes
-      edge.removeClass('accessible inaccessible bidirectional');
+      edge.removeClass('accessible inaccessible bidirectional undiscovered discovery-hidden');
+
+      // Check discovery state for exits and determine if edge should be hidden
+      let shouldHideEdge = false;
+      if (isDiscoveryModeActive) {
+        const forwardExitDiscovered = forwardExitName ?
+          discoveryStateSingleton.isExitDiscovered(sourceRegion, forwardExitName) : false;
+        const reverseExitDiscovered = reverseExitName ?
+          discoveryStateSingleton.isExitDiscovered(targetRegion, reverseExitName) : false;
+
+        // Check if endpoint regions are discovered and have entrances from discovered regions
+        const sourceDiscovered = discoveryStateSingleton.isRegionDiscovered(sourceRegion);
+        const targetDiscovered = discoveryStateSingleton.isRegionDiscovered(targetRegion);
+        const sourceHasEntrance = sourceDiscovered || this.hasEntranceFromDiscoveredRegion(sourceRegion, staticData.regions);
+        const targetHasEntrance = targetDiscovered || this.hasEntranceFromDiscoveredRegion(targetRegion, staticData.regions);
+
+        // Edge should be hidden if either endpoint doesn't have an entrance from a discovered region
+        if (!sourceHasEntrance || !targetHasEntrance) {
+          shouldHideEdge = true;
+        }
+
+        // Edge is undiscovered if neither direction's exit is discovered
+        const exitDiscovered = forwardExitDiscovered || reverseExitDiscovered;
+        if (!exitDiscovered) {
+          edge.addClass('undiscovered');
+
+          // Hide undiscovered edges if user chose to hide undiscovered items
+          if (discoverySettings.undiscoveredDisplay === 'hidden' && !showUndiscovered) {
+            shouldHideEdge = true;
+          }
+        }
+      }
+
+      // Apply discovery-hidden class if edge should be hidden
+      if (shouldHideEdge) {
+        edge.addClass('discovery-hidden');
+      }
 
       // Add bidirectional class if applicable
       if (isBidirectional) {
@@ -567,12 +824,68 @@ export class GraphDataManager {
     const regionIsAccessible = region.hasClass('accessible');
     const regionAccessClass = regionIsAccessible ? 'region-accessible' : 'region-inaccessible';
 
+    // Get discovery mode state
+    const isDiscoveryModeActive = this.ui.isDiscoveryModeActive || false;
+    const discoverySettings = this.ui.discoverySettings || {
+      undiscoveredDisplay: 'hidden',
+      showUndiscoveredDetails: false
+    };
+
+    // Check if "Show Undiscovered" checkbox is checked (default to true if not found)
+    const showUndiscoveredCheckbox = this.ui.controlPanel?.querySelector('#graph-show-undiscovered');
+    const showUndiscovered = showUndiscoveredCheckbox?.checked ?? true;
+
+    // Check if the region itself is discovered
+    const isRegionDiscovered = discoveryStateSingleton.isRegionDiscovered(regionId);
+
     locations.forEach((location, i) => {
       const angle = (2 * Math.PI * i) / locations.length - Math.PI/2;
       const locationStatus = this.getLocationStatus(regionId, location);
 
-      // Get display text for location
-      const displayText = this.ui.getLocationDisplayText(location);
+      // Check discovery state for location
+      const isLocationDiscovered = discoveryStateSingleton.isLocationDiscovered(location.name);
+
+      // Determine if location should be shown as placeholder or hidden
+      let shouldShowAsPlaceholder = false;
+      if (isDiscoveryModeActive) {
+        if (!isRegionDiscovered) {
+          // Region is undiscovered - location should be placeholder
+          shouldShowAsPlaceholder = true;
+        } else if (!isLocationDiscovered) {
+          // Region is discovered but location is not
+          shouldShowAsPlaceholder = true;
+        }
+
+        // Apply "Show Undiscovered" filter - skip this location if it's undiscovered and filter is off
+        if (shouldShowAsPlaceholder && !showUndiscovered) {
+          return; // Skip this location entirely
+        }
+      }
+
+      // Get display text for location - show ??? if undiscovered
+      let displayText;
+      if (shouldShowAsPlaceholder) {
+        displayText = '???';
+      } else {
+        displayText = this.ui.getLocationDisplayText(location);
+      }
+
+      // Build classes for the node
+      let nodeClasses = `location-node ${regionAccessClass} location-${locationStatus}`;
+      if (shouldShowAsPlaceholder) {
+        nodeClasses += ' undiscovered';
+      }
+
+      // Hide location node if parent region is hidden
+      if (isDiscoveryModeActive && region.hasClass('discovery-hidden')) {
+        nodeClasses += ' discovery-hidden';
+      }
+
+      // Also build edge classes - hide edge if location is hidden
+      let edgeClasses = 'region-location-edge';
+      if (isDiscoveryModeActive && region.hasClass('discovery-hidden')) {
+        edgeClasses += ' discovery-hidden';
+      }
 
       elements.push({
         group: 'nodes',
@@ -582,13 +895,14 @@ export class GraphDataManager {
           locationName: location.name,
           parentRegion: regionId,
           isLocation: true,
+          isDiscovered: isLocationDiscovered,
           locked: true
         },
         position: {
           x: pos.x + radius * Math.cos(angle),
           y: pos.y + radius * Math.sin(angle)
         },
-        classes: `location-node ${regionAccessClass} location-${locationStatus}`
+        classes: nodeClasses
       });
 
       elements.push({
@@ -598,7 +912,7 @@ export class GraphDataManager {
           source: regionId,
           target: `loc_${regionId}_${location.name}`
         },
-        classes: 'region-location-edge'
+        classes: edgeClasses
       });
     });
 

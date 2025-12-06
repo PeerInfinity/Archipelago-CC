@@ -240,7 +240,19 @@ export function createStateSnapshotInterface(
   stateManager = null
 ) {
   // Legacy snapshotHelpersInstance removed - using agnostic helpers directly
-  const gameName = staticData?.game_name || snapshot?.game; // Get game name from static data or snapshot
+  let gameName = staticData?.game_name || snapshot?.game; // Get game name from static data or snapshot
+
+  // In multiworld mode, get the player-specific game name
+  // The overall game_name will be "Multiworld", but each player has their own game
+  if (gameName === 'Multiworld') {
+    const rawPlayerId = snapshot?.player?.id || snapshot?.player?.slot ||
+                     staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
+    // Normalize to string since settings keys are strings ('1', '2', etc.)
+    const playerId = String(rawPlayerId);
+    if (staticData?.settings?.[playerId]?.game) {
+      gameName = staticData.settings[playerId].game;
+    }
+  }
 
   function findLocationDataInStatic(locationName) {
     if (!staticData) return null;
@@ -451,8 +463,24 @@ export function createStateSnapshotInterface(
         return selectedHelpers.count(snapshot, staticData, itemName);
       }
 
-      // Legacy implementation fallback
-      return snapshot?.inventory?.[itemName] || 0;
+      // Check regular inventory first
+      const inventoryCount = snapshot?.inventory?.[itemName] || 0;
+      if (inventoryCount > 0) {
+        return inventoryCount;
+      }
+
+      // Also check prog_items for counter items (e.g., " coins")
+      // This allows item_check rules to work with accumulator_rules targets
+      const playerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
+      const progItemsCount = snapshot?.prog_items?.[playerId]?.[itemName] ||
+                             snapshot?.prog_items?.[String(playerId)]?.[itemName] ||
+                             snapshot?.prog_items?.[parseInt(playerId)]?.[itemName] || 0;
+
+      if (progItemsCount > 0) {
+        return progItemsCount;
+      }
+
+      return 0;
     },
     getTotalItemCount: () => {
       // Count total items across all item types in inventory
@@ -576,6 +604,8 @@ export function createStateSnapshotInterface(
       regions: staticData.regions, // Use the main regions property for rule engine compatibility
       dungeons: staticData.dungeonData || staticData.dungeons,
       game_info: staticData.game_info, // Include game_info for variable resolution
+      helpers: staticData.helpers, // Include helper definitions for rule engine
+      settings: staticData.settings, // Include settings for helper evaluation
     }),
     getStateValue: (pathString) => {
       if (!snapshot) return undefined;

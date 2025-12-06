@@ -42,7 +42,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cave: Balcony",
@@ -56,7 +57,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cave: Spike pit",
@@ -70,7 +72,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cave: Powered Blaster chest",
@@ -84,7 +87,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cave: Wallboss (Boss)",
@@ -98,7 +102,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cave: Guard (Boss)",
@@ -112,7 +117,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -164,7 +170,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Volcanic: Under bridge",
@@ -178,7 +185,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Volcanic: Behind wall",
@@ -192,7 +200,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Volcanic: Flamethrower chest",
@@ -223,7 +232,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Volcanic: Cliff (Boss)",
@@ -254,7 +264,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -274,7 +285,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arctic: After Guard",
@@ -288,7 +300,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arctic: Under snow",
@@ -302,7 +315,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arctic: Ice Spreadshot chest",
@@ -333,7 +347,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arctic: Jacket chest",
@@ -347,7 +362,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arctic: Ace (Boss)",
@@ -378,7 +394,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -502,7 +519,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hub: Hidden near Cave",
@@ -516,7 +534,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hub: Hidden near Swamp",
@@ -530,7 +549,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hub: Console login",
@@ -544,7 +564,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hub: Ninja scare (Boss?)",
@@ -558,7 +579,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -601,7 +623,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Swamp: Down the chimney",
@@ -615,7 +638,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Swamp: Wall maze",
@@ -629,7 +653,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Swamp: Special Extension chest",
@@ -660,7 +685,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Swamp: Snake (Boss)",
@@ -691,7 +717,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -720,7 +747,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Electrical: Volt Laser chest",
@@ -734,7 +762,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Electrical: Generator (Boss)",
@@ -748,7 +777,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Electrical: Tesla orb",
@@ -762,7 +792,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -782,7 +813,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Electrical: Behind wall",
@@ -796,7 +828,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Electrical: Before Malakhov",
@@ -810,7 +843,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Electrical: Malakhov (Boss)",
@@ -824,7 +858,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Electrical: BRAINOS (Boss)",
@@ -848,7 +883,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mission objective",
@@ -872,7 +908,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       }
@@ -900,7 +937,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Flamethrower": {
         "name": "Flamethrower",
@@ -914,7 +951,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Ice Spreadshot": {
         "name": "Ice Spreadshot",
@@ -928,7 +965,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Volt Laser": {
         "name": "Volt Laser",
@@ -942,7 +979,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Life Extension": {
         "name": "Life Extension",
@@ -956,7 +993,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6
       },
       "Clip Extension": {
         "name": "Clip Extension",
@@ -970,7 +1007,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6
       },
       "Faster Reload": {
         "name": "Faster Reload",
@@ -984,7 +1021,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6
       },
       "Special Extension": {
         "name": "Special Extension",
@@ -998,7 +1035,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Jacket": {
         "name": "Jacket",
@@ -1011,7 +1048,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Cave Key": {
         "name": "Cave Key",
@@ -1025,7 +1062,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Volcanic Key": {
         "name": "Volcanic Key",
@@ -1039,7 +1076,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Arctic Key": {
         "name": "Arctic Key",
@@ -1053,7 +1090,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Swamp Key": {
         "name": "Swamp Key",
@@ -1067,7 +1104,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "System Power": {
         "name": "System Power",
@@ -1080,7 +1117,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Full Heal": {
         "name": "Full Heal",
@@ -1094,7 +1131,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3
       },
       "Quick-fire Mode": {
         "name": "Quick-fire Mode",
@@ -1136,7 +1173,7 @@
         "trap": true,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Shake Trap": {
         "name": "Shake Trap",
@@ -1164,7 +1201,7 @@
         "trap": true,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "PRINCESS": {
         "name": "PRINCESS",
@@ -1193,24 +1230,24 @@
   },
   "itempool_counts": {
     "1": {
-      "Arctic Key": 2,
-      "Cave Key": 2,
-      "Clip Extension": 12,
-      "Faster Reload": 12,
-      "Flamethrower": 2,
-      "Full Heal": 6,
-      "Ice Spreadshot": 2,
-      "Ice Trap": 4,
-      "Jacket": 2,
-      "Life Extension": 12,
-      "Ninja Trap": 4,
+      "Arctic Key": 1,
+      "Cave Key": 1,
+      "Clip Extension": 6,
+      "Faster Reload": 6,
+      "Flamethrower": 1,
+      "Full Heal": 3,
+      "Ice Spreadshot": 1,
+      "Ice Trap": 2,
+      "Jacket": 1,
+      "Life Extension": 6,
+      "Ninja Trap": 2,
       "PRINCESS": 1,
-      "Powered Blaster": 2,
-      "Special Extension": 2,
-      "Swamp Key": 2,
-      "System Power": 2,
-      "Volcanic Key": 2,
-      "Volt Laser": 2
+      "Powered Blaster": 1,
+      "Special Extension": 1,
+      "Swamp Key": 1,
+      "System Power": 1,
+      "Volcanic Key": 1,
+      "Volt Laser": 1
     }
   },
   "progression_mapping": {

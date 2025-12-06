@@ -19,8 +19,12 @@ from lib.test_utils import read_host_yaml_config, load_template_exclude_list
 from lib.test_results import is_test_passing, load_existing_results
 
 
-def get_test_results_path(project_root, use_full_spoilers=False, use_minimal_spoilers=False, use_multiclient=False):
+def get_test_results_path(project_root, use_full_spoilers=False, use_minimal_spoilers=False, use_multiclient=False, use_multiworld=False):
     """Determine the correct test results path based on host.yaml configuration or command-line flags."""
+    # If --multiworld is set, use the multiworld results path
+    if use_multiworld:
+        return Path(project_root) / 'scripts/output/multiworld/test-results.json'
+
     # If --multiclient is set, use the multiclient results path
     if use_multiclient:
         return Path(project_root) / 'scripts/output/multiclient/test-results.json'
@@ -44,9 +48,9 @@ def get_test_results_path(project_root, use_full_spoilers=False, use_minimal_spo
         return Path(project_root) / 'scripts/output/spoiler-minimal/test-results.json'
 
 
-def load_test_results(project_root, use_full_spoilers=False, use_minimal_spoilers=False, use_multiclient=False):
+def load_test_results(project_root, use_full_spoilers=False, use_minimal_spoilers=False, use_multiclient=False, use_multiworld=False):
     """Load the template test results JSON file."""
-    results_file = get_test_results_path(project_root, use_full_spoilers, use_minimal_spoilers, use_multiclient)
+    results_file = get_test_results_path(project_root, use_full_spoilers, use_minimal_spoilers, use_multiclient, use_multiworld)
     if not results_file.exists():
         return {}
 
@@ -173,6 +177,237 @@ def get_prompt_for_game(game_name, seed=1, use_cloud_docs=False, use_full_spoile
         return None
 
 
+def is_multiworld_test_passing(template_file, test_results):
+    """Check if a multiworld test is passing for a template.
+
+    Returns True if:
+    - The test passed (multiworld_test.success is True)
+    - The test was skipped due to prerequisites not being met
+
+    Returns False if:
+    - The test failed (multiworld_test.success is False AND prerequisites passed)
+    - The template is not in the results
+    """
+    if template_file not in test_results:
+        return False
+
+    result = test_results[template_file]
+    if not isinstance(result, dict):
+        return False
+
+    # Check if prerequisites were met - if not, treat as "passing" (skip it)
+    prereq = result.get('prerequisite_check', {})
+    if not prereq.get('all_prerequisites_passed', True):
+        return True  # Skipped due to prerequisites - don't generate prompt
+
+    multiworld_test = result.get('multiworld_test', {})
+    return multiworld_test.get('success', False)
+
+
+def get_multiworld_bisection_info(template_file, test_results):
+    """Get bisection results for a failing multiworld test.
+
+    Returns a dict with:
+        - has_bisection: bool (True if bisection results exist)
+        - failing_pairs: list of template filenames that fail when paired
+        - tested_pairs: list of dicts with pair test details
+        - templates_in_multiworld: dict mapping player numbers to template names
+    """
+    if template_file not in test_results:
+        return {'has_bisection': False, 'failing_pairs': [], 'tested_pairs': [], 'templates_in_multiworld': {}}
+
+    result = test_results[template_file]
+    if not isinstance(result, dict):
+        return {'has_bisection': False, 'failing_pairs': [], 'tested_pairs': [], 'templates_in_multiworld': {}}
+
+    bisection_results = result.get('bisection_results', {})
+    multiworld_test = result.get('multiworld_test', {})
+
+    return {
+        'has_bisection': bisection_results.get('triggered', False),
+        'failing_pairs': bisection_results.get('failing_pairs', []),
+        'tested_pairs': bisection_results.get('tested_pairs', []),
+        'templates_in_multiworld': multiworld_test.get('templates_in_multiworld', {})
+    }
+
+
+def get_multiworld_failure_details(template_file, test_results):
+    """Get details about why a multiworld test failed.
+
+    Returns a dict with:
+        - player_number: which player number this template was tested as
+        - player_results: results for each player tested
+        - first_failure_player: which player failed first (if any)
+        - generation_success: whether generation succeeded
+    """
+    if template_file not in test_results:
+        return None
+
+    result = test_results[template_file]
+    if not isinstance(result, dict):
+        return None
+
+    multiworld_test = result.get('multiworld_test', {})
+    generation = result.get('generation', {})
+
+    return {
+        'player_number': multiworld_test.get('player_number'),
+        'player_results': multiworld_test.get('player_results', {}),
+        'first_failure_player': multiworld_test.get('first_failure_player'),
+        'generation_success': generation.get('success', False),
+        'templates_in_multiworld': multiworld_test.get('templates_in_multiworld', {})
+    }
+
+
+def generate_multiworld_prompt(template_file, game_name, bisection_info, failure_details, seed=1):
+    """Generate a debugging prompt for a failing multiworld test.
+
+    Focuses on specific failing pairs from bisection results when available.
+    """
+    prompt_parts = []
+
+    prompt_parts.append("""First, please read CC/cloud-setup.md and complete the environment setup if you haven't already.
+
+Then, please read
+CC/game-debugging-multiworld-CC.md
+""")
+
+    prompt_parts.append(f"The game we are debugging is **{game_name}** (template: `{template_file}`).\n")
+
+    # Check if we have bisection results with failing pairs
+    if bisection_info['has_bisection'] and bisection_info['failing_pairs']:
+        failing_pairs = bisection_info['failing_pairs']
+        prompt_parts.append(f"\n## Bisection Results\n")
+        prompt_parts.append(f"Bisection testing found {len(failing_pairs)} specific template pair(s) that cause failures:\n")
+
+        for partner in failing_pairs:
+            prompt_parts.append(f"- `{template_file}` + `{partner}`\n")
+
+        # Focus on the first failing pair for debugging
+        first_failing_partner = failing_pairs[0]
+        prompt_parts.append(f"\n## Recommended Debugging Focus\n")
+        prompt_parts.append(f"Start by debugging the pair: **{template_file}** + **{first_failing_partner}**\n")
+
+        # Find details for this specific pair
+        failing_player_num = None
+        failing_template = None
+        sphere_reached = 0
+        total_spheres = 0
+        for pair in bisection_info['tested_pairs']:
+            if pair.get('partner_template') == first_failing_partner:
+                player_results = pair.get('player_results', {})
+                for player_key, player_result in player_results.items():
+                    if not player_result.get('passed', True):
+                        failing_player_num = player_result.get('player_number')
+                        failing_template = player_result.get('template')
+                        sphere_reached = player_result.get('sphere_reached', 0)
+                        total_spheres = player_result.get('total_spheres', 0)
+                        prompt_parts.append(f"\n**Player {failing_player_num}** (`{failing_template}`) failed at sphere {sphere_reached}/{total_spheres}\n")
+                break
+
+        # Determine player order (alphabetical)
+        sorted_templates = sorted([template_file, first_failing_partner])
+        player1_template = sorted_templates[0]
+        player2_template = sorted_templates[1]
+
+        prompt_parts.append(f"""
+Since {len(failing_pairs)} different partner games cause failures with {game_name}, the issue is likely in the **{game_name}** game logic itself, not in the partner games.
+
+## Setup Commands
+
+To set up this specific failing pair for debugging:
+
+```bash
+# Clear multiworld directory
+rm -f Players/presets/Multiworld/*.yaml
+
+# Copy the failing pair
+cp "Players/Templates/{template_file}" Players/presets/Multiworld/
+cp "Players/Templates/{first_failing_partner}" Players/presets/Multiworld/
+
+# Generate multiworld data
+python Generate.py --player_files_path Players/presets/Multiworld --seed {seed}
+```
+
+After generation, the files will be in `frontend/presets/multiworld/AP_14089154938208861744/` (for seed 1).
+
+In multiworld mode, templates are assigned to players alphabetically:
+- Player 1: `{player1_template}`
+- Player 2: `{player2_template}`
+
+## Debugging Steps
+
+1. **Run the spoiler test for the failing player** to see where it stops:
+```bash
+npm test --mode=test-spoilers --game=multiworld --seed={seed} --player={failing_player_num if failing_player_num else 2}
+npm run test:analyze
+cat playwright-analysis.txt
+```
+
+2. **Examine the sphere log** to understand progression:
+```bash
+# View the sphere log for the failing player
+cat frontend/presets/multiworld/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl | grep '"player": {failing_player_num if failing_player_num else 2}' | head -20
+```
+
+3. **Check the rules file** for the failing player's game:
+```bash
+# View player-specific rules
+cat frontend/presets/multiworld/AP_14089154938208861744/AP_14089154938208861744_rules.json | python -c "import json,sys; d=json.load(sys.stdin); print(json.dumps(d['players']['{failing_player_num if failing_player_num else 2}'], indent=2))" | head -100
+```
+
+4. **Compare with single-player behavior**: The issue may be related to how items from other players are handled, or how the game logic processes "foreign" items.
+""")
+
+    elif bisection_info['has_bisection'] and not bisection_info['failing_pairs']:
+        # Bisection ran but found no failing pairs - might be an intermittent issue
+        prompt_parts.append(f"\n## Bisection Results\n")
+        prompt_parts.append("Bisection testing was triggered but found NO specific failing pairs.\n")
+        prompt_parts.append("This might indicate an intermittent failure or an issue that only occurs with more than 2 templates.\n")
+
+        prompt_parts.append(f"""
+## Test Command
+
+To re-run the multiworld test:
+
+```bash
+python scripts/test/test-all-templates.py --multiworld --multiworld-bisect-failures --include-list "{template_file}"
+```
+""")
+
+    else:
+        # No bisection results - just provide general debugging info
+        if failure_details:
+            prompt_parts.append(f"\n## Failure Details\n")
+
+            if not failure_details['generation_success']:
+                prompt_parts.append("Generation failed for this multiworld.\n")
+            else:
+                player_results = failure_details.get('player_results', {})
+                for player_key, player_result in player_results.items():
+                    if not player_result.get('passed', True):
+                        prompt_parts.append(f"Player {player_result.get('player_number')} failed:")
+                        prompt_parts.append(f"  - Sphere reached: {player_result.get('sphere_reached', 0)}/{player_result.get('total_spheres', 0)}\n")
+
+            templates_in_multiworld = failure_details.get('templates_in_multiworld', {})
+            if templates_in_multiworld:
+                prompt_parts.append("\nTemplates in multiworld:\n")
+                for player_key, tmpl in sorted(templates_in_multiworld.items()):
+                    prompt_parts.append(f"  - {player_key}: {tmpl}\n")
+
+        prompt_parts.append(f"""
+## Test Command
+
+To run the multiworld test with bisection (to find specific failing pairs):
+
+```bash
+python scripts/test/test-all-templates.py --multiworld --multiworld-bisect-failures --include-list "{template_file}"
+```
+""")
+
+    return ''.join(prompt_parts)
+
+
 def main():
     # Load default exclude list
     default_exclude_list = load_template_exclude_list()
@@ -208,6 +443,8 @@ def main():
                        help='Read test results from scripts/output/spoiler-minimal/test-results.json')
     parser.add_argument('--multiclient', action='store_true',
                        help='Check multiclient test results and generate prompts for failing multiclient tests')
+    parser.add_argument('--multiworld', action='store_true',
+                       help='Check multiworld test results and generate prompts for failing multiworld tests (uses bisection results)')
 
     args = parser.parse_args()
 
@@ -218,6 +455,14 @@ def main():
 
     if args.multiclient and (args.full_spoilers or args.minimal_spoilers):
         print("Error: --multiclient cannot be combined with --full-spoilers or --minimal-spoilers")
+        sys.exit(1)
+
+    if args.multiworld and (args.full_spoilers or args.minimal_spoilers):
+        print("Error: --multiworld cannot be combined with --full-spoilers or --minimal-spoilers")
+        sys.exit(1)
+
+    if args.multiworld and args.multiclient:
+        print("Error: --multiworld and --multiclient are mutually exclusive")
         sys.exit(1)
 
     # Determine project root
@@ -268,17 +513,22 @@ def main():
             print(f"{'='*60}")
 
         # Load current test results
-        test_results = load_test_results(project_root, args.full_spoilers, args.minimal_spoilers, args.multiclient)
+        test_results = load_test_results(project_root, args.full_spoilers, args.minimal_spoilers, args.multiclient, args.multiworld)
 
-        # Check if we need to run the test (skip for multiclient mode - tests must already exist)
-        if template_file not in test_results and not args.multiclient:
+        # Check if we need to run the test (skip for multiclient/multiworld mode - tests must already exist)
+        if template_file not in test_results and not args.multiclient and not args.multiworld:
             if not quiet_mode:
                 print("No test results found, running initial test...")
             run_template_test(template_file, args.seed)
-            test_results = load_test_results(project_root, args.full_spoilers, args.minimal_spoilers, args.multiclient)
+            test_results = load_test_results(project_root, args.full_spoilers, args.minimal_spoilers, args.multiclient, args.multiworld)
 
-        # Check if test is passing
-        if is_test_passing(template_file, test_results, multiclient=args.multiclient):
+        # Check if test is passing (use appropriate check for multiworld mode)
+        if args.multiworld:
+            test_passing = is_multiworld_test_passing(template_file, test_results)
+        else:
+            test_passing = is_test_passing(template_file, test_results, multiclient=args.multiclient)
+
+        if test_passing:
             if not quiet_mode:
                 print(f"✅ {template_file} is already passing, skipping...")
         else:
@@ -303,11 +553,19 @@ def main():
 
                 # Handle --promptfile mode
                 if args.promptfile:
-                    if args.multiclient:
+                    if args.multiworld:
+                        # Generate multiworld-specific prompt using bisection results
+                        bisection_info = get_multiworld_bisection_info(template_file, test_results)
+                        failure_details = get_multiworld_failure_details(template_file, test_results)
+                        multiworld_prompt = generate_multiworld_prompt(
+                            template_file, game_name_from_yaml, bisection_info, failure_details, seed_to_use
+                        )
+                        collected_prompts.append(multiworld_prompt)
+                    elif args.multiclient:
                         # Generate multiclient-specific prompt
                         multiclient_prompt = f"""First, please read CC/cloud-setup.md and complete the environment setup if you haven't already.
 
-Then, please read 
+Then, please read
 CC/game-debugging-multiclient-CC.md
 
 The next game we want to work on is {game_name_from_yaml}.
@@ -334,16 +592,30 @@ python scripts/test/test-all-templates.py --include-list "{template_file}" --mul
                             if not quiet_mode:
                                 print(f"Error getting prompt for {game_name_from_yaml}: {e}", file=sys.stderr)
                 else:
-                    # Run prompt script
-                    run_prompt_for_game(game_name_from_yaml, args.text, args.prompt, seed_to_use, quiet_mode, args.CC, args.full_spoilers)
+                    # Handle non-promptfile modes
+                    if args.multiworld:
+                        # For multiworld mode with -p or -t, generate and output the prompt directly
+                        bisection_info = get_multiworld_bisection_info(template_file, test_results)
+                        failure_details = get_multiworld_failure_details(template_file, test_results)
+                        multiworld_prompt = generate_multiworld_prompt(
+                            template_file, game_name_from_yaml, bisection_info, failure_details, seed_to_use
+                        )
+                        print(multiworld_prompt)
 
-                    # Exit immediately if -t or -p was specified (regardless of --loud)
-                    if args.text or args.prompt:
-                        return 0
+                        # Exit immediately if -t or -p was specified
+                        if args.text or args.prompt:
+                            return 0
+                    else:
+                        # Run prompt script for normal spoiler/multiclient modes
+                        run_prompt_for_game(game_name_from_yaml, args.text, args.prompt, seed_to_use, quiet_mode, args.CC, args.full_spoilers)
 
-                    # Run test again to check if it's now passing
-                    print("Re-running test to check if issues were resolved...")
-                    run_template_test(template_file, args.seed)
+                        # Exit immediately if -t or -p was specified (regardless of --loud)
+                        if args.text or args.prompt:
+                            return 0
+
+                        # Run test again to check if it's now passing
+                        print("Re-running test to check if issues were resolved...")
+                        run_template_test(template_file, args.seed)
 
                 # Increment files processed counter
                 files_processed += 1

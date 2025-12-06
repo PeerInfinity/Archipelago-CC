@@ -81,6 +81,11 @@
       "path": "./modules/discovery/index.js",
       "enabled": true
     },
+    "discoveryPanel": {
+      "path": "./modules/discoveryPanel/index.js",
+      "enabled": true,
+      "requires": ["discovery"]
+    },
     "playerState": {
       "path": "./modules/playerState/index.js",
       "enabled": true
@@ -97,8 +102,8 @@
       "path": "./modules/presets/index.js",
       "enabled": true
     },
-    "testSpoilers": {
-      "path": "./modules/testSpoilers/index.js",
+    "spoilerTest": {
+      "path": "./modules/spoilerTest/index.js",
       "enabled": true
     },
     "sphereState": {
@@ -188,11 +193,12 @@
     "dungeons",
     "regionGraph",
     "discovery",
+    "discoveryPanel",
     "playerState",
     "playerStatePanel",
     "loops",
     "presets",
-    "testSpoilers",
+    "spoilerTest",
     "sphereState",
     "spoilerChecklist",
     "textAdventure",

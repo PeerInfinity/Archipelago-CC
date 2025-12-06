@@ -302,14 +302,30 @@ function findRulesFileFromGameSeed(presetFiles, gameParam, seedParam, playerPara
   let gameEntry = null;
   let gameKey = null;
 
+  // Handle path-style game parameters like "presets/dlcquest_test/AP_14089154938208861744"
+  // Extract the game directory from the path
+  let normalizedGameParam = gameParam;
+  if (gameParam.startsWith('presets/')) {
+    const pathParts = gameParam.split('/');
+    if (pathParts.length >= 2) {
+      normalizedGameParam = pathParts[1]; // Extract game directory (e.g., "dlcquest_test")
+      logger.info('init', `Extracted game directory "${normalizedGameParam}" from path "${gameParam}"`);
+    }
+  }
+
   // First check if gameParam matches a root key directly
-  if (presetFiles[gameParam]) {
+  if (presetFiles[normalizedGameParam]) {
+    gameEntry = presetFiles[normalizedGameParam];
+    gameKey = normalizedGameParam;
+  } else if (presetFiles[gameParam]) {
+    // Fallback to original gameParam in case it matches
     gameEntry = presetFiles[gameParam];
     gameKey = gameParam;
   } else {
     // Search through all entries to find matching name
     for (const [key, entry] of Object.entries(presetFiles)) {
-      if (entry.name && entry.name.toLowerCase() === gameParam.toLowerCase()) {
+      if (entry.name && (entry.name.toLowerCase() === normalizedGameParam.toLowerCase() ||
+                         entry.name.toLowerCase() === gameParam.toLowerCase())) {
         gameEntry = entry;
         gameKey = key;
         break;

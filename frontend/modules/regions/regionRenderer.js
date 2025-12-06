@@ -108,9 +108,10 @@ export class RegionRenderer {
    * @param {string} sortMethod - Current sort method
    * @param {boolean} useColorblind - Whether to use colorblind mode
    * @param {string} sectionOrder - Section order preference
+   * @param {Object} discoverySettings - Discovery settings for filtering
    * @returns {Object} Object with fragments: { available, unavailable, general }
    */
-  buildRegionFragments(regionsToRender, staticData, snapshot, snapshotInterface, sortMethod, useColorblind, sectionOrder) {
+  buildRegionFragments(regionsToRender, staticData, snapshot, snapshotInterface, sortMethod, useColorblind, sectionOrder, discoverySettings = null) {
     const availableFragment = document.createDocumentFragment();
     const unavailableFragment = document.createDocumentFragment();
     const generalFragment = document.createDocumentFragment();
@@ -133,7 +134,8 @@ export class RegionRenderer {
           false, // Skip indicators are never expanded
           staticData,
           true, // isSkipIndicator
-          sectionOrder
+          sectionOrder,
+          discoverySettings
         );
       } else {
         // Get static region data
@@ -155,11 +157,13 @@ export class RegionRenderer {
           regionInfo.expanded,
           staticData,
           false, // Not a skip indicator
-          sectionOrder
+          sectionOrder,
+          discoverySettings
         );
 
         if (!regionBlock) {
-          logger.warn(`Failed to build region block for: ${regionInfo.name}`);
+          // May return null for undiscovered regions in discovery mode
+          logger.debug(`Region block not built for: ${regionInfo.name} (may be undiscovered)`);
           return;
         }
       }
@@ -234,7 +238,8 @@ export class RegionRenderer {
       sortMethod = 'original',
       originalRegionOrder = [],
       useColorblind = false,
-      sectionOrder = 'entrances-exits-locations'
+      sectionOrder = 'entrances-exits-locations',
+      discoverySettings = null
     } = options;
 
     logger.info(`Rendering ${regionsToRender.length} regions (sort: ${sortMethod})`);
@@ -257,7 +262,8 @@ export class RegionRenderer {
       snapshotInterface,
       sortMethod,
       useColorblind,
-      sectionOrder
+      sectionOrder,
+      discoverySettings
     );
 
     // Update DOM

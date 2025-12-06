@@ -1,0 +1,198 @@
+﻿Archipelago Version 0.6.5  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Lingo Test
+Location Count:                  155
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 Yes
+
+
+Locations:
+
+Amen Name Area - AMEN, NAME: :)
+Art Gallery - First Floor Puzzles: Black
+Art Gallery - Fourth Floor Puzzles: Atbash Trap
+Art Gallery - ORDER: Wanderlust
+Art Gallery - Second Floor Puzzles: The Feeling of Being Lost
+Art Gallery - Third Floor Puzzles: :)
+Challenge Room - Achievement: Wanderlust
+Challenge Room - WELCOME: Iceland Trap
+Champion's Rest - YOU: Empty White Hallways
+Color Barriers - BLUE and YELLOW: Puzzle Skip
+Color Barriers - GREEN, ORANGE and PURPLE: :)
+Color Barriers - RED and BLUE: The Feeling of Being Lost
+Color Barriers - RED and YELLOW: Wanderlust
+Color Hunt - BLUE: The Feeling of Being Lost
+Color Hunt - EXIT: The Feeling of Being Lost
+Color Hunt - GREEN: Slowness Trap
+Color Hunt - ORANGE: Wanderlust
+Color Hunt - PURPLE: Atbash Trap
+Color Hunt - RED: Puzzle Skip
+Color Hunt - YELLOW: Puzzle Skip
+Courtyard - FIRST, SECOND, THIRD, FOURTH: The Feeling of Being Lost
+Crossroads - BEND HI: :)
+Crossroads - DECAY: Atbash Trap
+Crossroads - LOST Pair: Iceland Trap
+Crossroads - NOPE: Atbash Trap
+Crossroads - THE EYES: Atbash Trap
+Crossroads - TURN/RUNT: The Feeling of Being Lost
+Crossroads - WE ROT: Atbash Trap
+Crossroads - WORDS, SWORD: Empty White Hallways
+Directional Gallery - 834283054: Iceland Trap
+Directional Gallery - PARANOID: :)
+Directional Gallery - TURN, LEARN: :)
+Directional Gallery - WADED + WEE: Empty White Hallways
+Dread Hallway - DREAD: Empty White Hallways
+Eights: Atbash Trap
+Elements Area - UNDISTRACTED: Slowness Trap
+Fives: The Feeling of Being Lost
+Fours: Wanderlust
+Giant Sevens: The Feeling of Being Lost
+Hallway Room (1) - OUT: Iceland Trap
+Hallway Room - First Room: Orange
+Hallway Room - Fourth Room: Puzzle Skip
+Hallway Room - Second Room: Wanderlust
+Hallway Room - Third Room: Puzzle Skip
+Hedge Maze - DOWN: Empty White Hallways
+Hedge Maze - Hide and Seek: Puzzle Skip
+Hidden Room - DEAD END: :)
+Hidden Room - OPEN: :)
+Hub Room - LOST: Puzzle Skip
+Hub Room - OPEN: :)
+Hub Room - ORDER: Empty White Hallways
+Hub Room - RAT: Empty White Hallways
+Hub Room - SLAUGHTER: Puzzle Skip
+Hub Room - TRACE: Atbash Trap
+Knight Night Room - TRUSTED: Wanderlust
+Nines: Wanderlust
+Orange Tower Fifth Floor - DRAWL + RUNS: Empty White Hallways
+Orange Tower Fifth Floor - SIZE (Small), SIZE (Big): Puzzle Skip
+Orange Tower First Floor - DADS + ALE: Slowness Trap
+Orange Tower First Floor - SECRET: Empty White Hallways
+Orange Tower First Floor - Salt Pepper Door: Wanderlust
+Orange Tower Fourth Floor - HOT CRUSTS: Wanderlust
+Orange Tower Fourth Floor - IRK HORN: Wanderlust
+Orange Tower Fourth Floor - LEARNS + UNSEW: Slowness Trap
+Orange Tower Third Floor - DEER + WREN: :)
+Outside The Agreeable - BLACK: Wanderlust
+Outside The Agreeable - CLOSE: The Feeling of Being Lost
+Outside The Agreeable - Lookout Panels: The Feeling of Being Lost
+Outside The Agreeable - MASSACRED: :)
+Outside The Agreeable - RIGHT: Puzzle Skip
+Outside The Bold - BEGIN: :)
+Outside The Bold - UNOPEN: The Feeling of Being Lost
+Outside The Initiated - OXEN: Pilgrim Room - Sun Painting
+Outside The Initiated - UNCOVER: Purple
+Outside The Undeterred - ART + ART: Empty White Hallways
+Outside The Undeterred - ONE: Wanderlust
+Outside The Undeterred - PEN: Green
+Outside The Undeterred - RAINY: Puzzle Skip
+Outside The Undeterred - ZERO: Wanderlust
+Outside The Wanderer - WANDERLUST: Yellow
+Outside The Wise - KITTEN, CAT: Atbash Trap
+Outside The Wondrous - SHRINK: Wanderlust
+Owl Hallway - READS + RUST: :)
+Owl Hallway - STRAYS: Iceland Trap
+Pilgrim Antechamber - PILGRIM: Brown
+Pilgrim Room - HOT CRUST: :)
+Pilgrim Room - THIS: :)
+Rhyme Room (Cross) - Exit Puzzles: Puzzle Skip
+Rhyme Room (Smiley) - Puzzles Toward Target: The Feeling of Being Lost
+Rhyme Room (Target) - Puzzles Toward Cross: Slowness Trap
+Rhyme Room - Circle/Looped Square Wall: Puzzle Skip
+Rhyme Room - Circle/Smiley Wall: :)
+Rhyme Room - Cross/Looped Square Wall: :)
+Rhyme Room - Target/Looped Square Wall: The Feeling of Being Lost
+Room Room - BASE: Wanderlust
+Second Room - Good Luck: Wanderlust
+Second Room - LEVEL 2: Wanderlust
+Sevens: Empty White Hallways
+Sixes: The Feeling of Being Lost
+Starting Room - HI: Slowness Trap
+Starting Room - HIDDEN: The Feeling of Being Lost
+Symmetry Room - LEAF, FEEL: The Feeling of Being Lost
+Symmetry Room - NEAR, FAR: :)
+Symmetry Room - WARTS, STRAW: Puzzle Skip
+The Agreeable - Achievement: Red
+The Agreeable - BYE: Slowness Trap
+The Artistic - Achievement: Puzzle Skip
+The Artistic - Apple and Smiley: Wanderlust
+The Artistic - Lattice and Apple: Empty White Hallways
+The Artistic - Panda and Lattice: Puzzle Skip
+The Artistic - Smiley and Panda: The Feeling of Being Lost
+The Bearer - Achievement: Puzzle Skip
+The Bearer - FARTHER: Wanderlust
+The Bearer - MIDDLE: Puzzle Skip
+The Bearer - SHORTCUT: The Feeling of Being Lost
+The Bold - Achievement: Wanderlust
+The Colorful - Achievement: Wanderlust
+The Colorful - Black: Puzzle Skip
+The Colorful - Blue: Blue
+The Colorful - Brown: :)
+The Colorful - Gray: Wanderlust
+The Colorful - Green: Slowness Trap
+The Colorful - Orange: Empty White Hallways
+The Colorful - Purple: :)
+The Colorful - Red: :)
+The Colorful - White: Slowness Trap
+The Colorful - Yellow: :)
+The Discerning - Achievement: Iceland Trap
+The End (Solved): Victory
+The Eyes They See - NEAR: Puzzle Skip
+The Fearless - Achievement: The Feeling of Being Lost
+The Fearless - First Floor Puzzles: Wanderlust
+The Fearless - Second Floor Puzzles: Wanderlust
+The Incomparable - Achievement: The Feeling of Being Lost
+The Initiated - Achievement: Gray
+The Observant - Achievement: Iceland Trap
+The Observant - FOUR (1), FOUR (2): Wanderlust
+The Observant - SIX: Empty White Hallways
+The Optimistic - Achievement: Puzzle Skip
+The Perceptive - Achievement: Wanderlust
+The Perceptive - GAZE: Iceland Trap
+The Seeker - Achievement: The Feeling of Being Lost
+The Steady - Achievement: Wanderlust
+The Tenacious - Achievement: :)
+The Tenacious - Palindromes: The Feeling of Being Lost
+The Tenacious - White Palindromes: Slowness Trap
+The Traveled - Achievement: :)
+The Traveled - HELLO: Iceland Trap
+The Undeterred - Achievement: Wanderlust
+The Wanderer - Achievement: :)
+The Wise - Achievement: Iceland Trap
+The Wondrous - Achievement: Puzzle Skip
+Threes: Empty White Hallways
+Twos: :)
+Welcome Back Area - CLOCKWISE: Empty White Hallways
+Welcome Back Area - WELCOME BACK: Puzzle Skip
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Art Gallery - First Floor Puzzles: Black
+  Hallway Room - First Room: Orange
+  Outside The Initiated - OXEN: Pilgrim Room - Sun Painting
+  Outside The Initiated - UNCOVER: Purple
+  Outside The Undeterred - PEN: Green
+  Outside The Wanderer - WANDERLUST: Yellow
+  Pilgrim Antechamber - PILGRIM: Brown
+  The Agreeable - Achievement: Red
+  The Colorful - Blue: Blue
+  The End (Solved): Victory
+  The Initiated - Achievement: Gray
+}

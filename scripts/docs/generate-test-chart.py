@@ -272,8 +272,8 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
         md_content += f"- **Total Intermittent Failures:** {intermittent_total_count}\n\n"
 
     md_content += "## Test Results\n\n"
-    md_content += "| Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Custom Exporter | Custom GameLogic |\n"
-    md_content += "|-----------|-------------|------------|----------------|-------------|----------|-----------------|------------------|\n"
+    md_content += "| Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Base Exporter | Base GameLogic |\n"
+    md_content += "|-----------|-------------|------------|----------------|-------------|----------|---------------|----------------|\n"
 
     for game_name, pass_fail, gen_error_count, sphere_reached, max_spheres, has_custom_exporter, has_custom_game_logic, rules_consistent, spoilers_consistent in chart_data:
         if 'passed' in pass_fail.lower():
@@ -296,8 +296,8 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
         else:
             result_display = "❌ Failed"
 
-        exporter_indicator = "✅" if has_custom_exporter else "⚫"
-        game_logic_indicator = "✅" if has_custom_game_logic else "⚫"
+        exporter_indicator = "⚫" if has_custom_exporter else "✅"
+        game_logic_indicator = "⚫" if has_custom_game_logic else "✅"
 
         md_content += f"| {game_name} | {result_display} | {gen_error_count} | {sphere_reached:g} | {max_spheres:g} | {progress} | {exporter_indicator} | {game_logic_indicator} |\n"
 
@@ -344,8 +344,8 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
     md_content += "- **Sphere Reached:** The logical sphere the test reached before completion/failure\n"
     md_content += "- **Max Spheres:** Total logical spheres available in the game\n"
     md_content += "- **Progress:** Percentage of logical spheres completed\n"
-    md_content += "- **Custom Exporter:** ✅ Has custom Python exporter script, ⚫ Uses generic exporter\n"
-    md_content += "- **Custom GameLogic:** ✅ Has custom JavaScript game logic, ⚫ Uses generic logic\n\n"
+    md_content += "- **Base Exporter:** ✅ Uses generic exporter, ⚫ Has custom Python exporter script\n"
+    md_content += "- **Base GameLogic:** ✅ Uses generic logic, ⚫ Has custom JavaScript game logic\n\n"
     md_content += "**Pass Criteria:** Generation errors = 0, Max spheres > 0, Spoiler test completed successfully\n"
 
     return md_content
@@ -390,8 +390,8 @@ def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int
         md_content += f"- **Failed:** {total_games - passed} ({(total_games-passed)/total_games*100:.1f}%)\n\n"
 
     md_content += "## Test Results\n\n"
-    md_content += "| Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Custom Exporter | Custom GameLogic |\n"
-    md_content += "|-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|-----------------|------------------|\n"
+    md_content += "| Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Base Exporter | Base GameLogic |\n"
+    md_content += "|-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|---------------|----------------|\n"
 
     for (game_name, pass_fail, gen_error_count,
          client1_checked, client1_total, client1_manually_checkable, client1_manually_checkable_checked,
@@ -402,8 +402,8 @@ def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int
         result_display = "✅ Passed" if pass_fail.lower() == 'passed' else "❌ Failed"
         client1_status = "✅" if client1_passed else "❌"
         client2_status = "✅" if client2_passed else "❌"
-        exporter_indicator = "✅" if has_custom_exporter else "⚫"
-        game_logic_indicator = "✅" if has_custom_game_logic else "⚫"
+        exporter_indicator = "⚫" if has_custom_exporter else "✅"
+        game_logic_indicator = "⚫" if has_custom_game_logic else "✅"
 
         # Format location counts as "checked/total"
         c1_total_str = f"{client1_checked}/{client1_total}"
@@ -426,8 +426,8 @@ def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int
     md_content += "- **Client 2 (Receive Test):** Tests receiving location checks at Client 2\n"
     md_content += "  - **C2 Locations:** Locations received / total expected (received/total)\n"
     md_content += "  - Client 2 passes if all expected locations are received\n"
-    md_content += "- **Custom Exporter:** ✅ Has custom Python exporter script, ⚫ Uses generic exporter\n"
-    md_content += "- **Custom GameLogic:** ✅ Has custom JavaScript game logic, ⚫ Uses generic logic\n\n"
+    md_content += "- **Base Exporter:** ✅ Uses generic exporter, ⚫ Has custom Python exporter script\n"
+    md_content += "- **Base GameLogic:** ✅ Uses generic logic, ⚫ Has custom JavaScript game logic\n\n"
     md_content += "**Pass Criteria:** A test is marked as ✅ Passed only if:\n"
     md_content += "- Generation errors = 0 (no errors during world generation)\n"
     md_content += "- Client 1 passed (all manually-checkable locations sent)\n"
@@ -437,12 +437,14 @@ def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int
     return md_content
 
 
-def extract_multiworld_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, int, int, int, int, int, bool, bool]]:
+def extract_multiworld_chart_data(results: Dict[str, Any]) -> List[Dict[str, Any]]:
     """
     Extract multiworld test chart data from results.
-    Returns list of tuples: (game_name, pass_fail, player_number, total_players_tested,
-                            players_passed, players_failed, prerequisite_check,
-                            has_custom_exporter, has_custom_game_logic)
+    Returns list of dicts with keys:
+        game_name, pass_fail, player_number, total_players_tested,
+        total_players_in_multiworld, players_passed, players_failed,
+        all_prereqs_passed, has_custom_exporter, has_custom_game_logic,
+        templates_in_multiworld, bisection_results, second_pass
     """
     chart_data = []
 
@@ -461,9 +463,15 @@ def extract_multiworld_chart_data(results: Dict[str, Any]) -> List[Tuple[str, st
         success = multiworld_test.get('success', False)
         player_number = multiworld_test.get('player_number', 0)
         total_players_tested = multiworld_test.get('total_players_tested', 0)
+        total_players_in_multiworld = multiworld_test.get('total_players_in_multiworld', 0)
         players_passed = multiworld_test.get('players_passed', 0)
         players_failed = multiworld_test.get('players_failed', 0)
         all_prereqs_passed = prerequisite_check.get('all_prerequisites_passed', False)
+        templates_in_multiworld = multiworld_test.get('templates_in_multiworld', {})
+        bisection_results = template_data.get('bisection_results', None)
+
+        # Extract second pass data if available
+        second_pass = template_data.get('second_pass', None)
 
         if not all_prereqs_passed:
             pass_fail = 'Skipped (Prerequisites)'
@@ -472,15 +480,28 @@ def extract_multiworld_chart_data(results: Dict[str, Any]) -> List[Tuple[str, st
         else:
             pass_fail = 'Failed'
 
-        chart_data.append((game_name, pass_fail, player_number, total_players_tested,
-                          players_passed, players_failed, all_prereqs_passed,
-                          has_custom_exporter, has_custom_game_logic))
+        chart_data.append({
+            'game_name': game_name,
+            'template_filename': template_filename,
+            'pass_fail': pass_fail,
+            'player_number': player_number,
+            'total_players_tested': total_players_tested,
+            'total_players_in_multiworld': total_players_in_multiworld,
+            'players_passed': players_passed,
+            'players_failed': players_failed,
+            'all_prereqs_passed': all_prereqs_passed,
+            'has_custom_exporter': has_custom_exporter,
+            'has_custom_game_logic': has_custom_game_logic,
+            'templates_in_multiworld': templates_in_multiworld,
+            'bisection_results': bisection_results,
+            'second_pass': second_pass
+        })
 
-    chart_data.sort(key=lambda x: x[0])
+    chart_data.sort(key=lambda x: x['game_name'])
     return chart_data
 
 
-def generate_multiworld_markdown(chart_data: List[Tuple[str, str, int, int, int, int, bool, bool, bool]],
+def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
                                  metadata: Dict[str, Any], top_level_metadata: Optional[Dict[str, Any]] = None) -> str:
     """Generate a markdown table for multiworld test data."""
     md_content = "# Archipelago Template Test Results Chart\n\n"
@@ -504,25 +525,53 @@ def generate_multiworld_markdown(chart_data: List[Tuple[str, str, int, int, int,
         if 'last_updated' in metadata:
             md_content += f"**Source Data Last Updated:** {metadata.get('last_updated', 'Unknown')}\n\n"
 
+    # Check if any entries have second pass data
+    has_second_pass_data = any(entry.get('second_pass') for entry in chart_data)
+
     if chart_data:
         total_games = len(chart_data)
-        passed = sum(1 for _, pf, *_ in chart_data if pf.lower() == 'passed')
-        skipped = sum(1 for _, pf, *_ in chart_data if 'skipped' in pf.lower() or 'prerequisites' in pf.lower())
+        passed = sum(1 for d in chart_data if d['pass_fail'].lower() == 'passed')
+        skipped = sum(1 for d in chart_data if 'skipped' in d['pass_fail'].lower() or 'prerequisites' in d['pass_fail'].lower())
         failed = total_games - passed - skipped
 
         md_content += "## Summary\n\n"
         md_content += f"- **Total Games:** {total_games}\n"
         md_content += f"- **Passed:** {passed} ({passed/total_games*100:.1f}%)\n"
         md_content += f"- **Failed:** {failed} ({failed/total_games*100:.1f}%)\n"
-        md_content += f"- **Skipped (Prerequisites):** {skipped} ({skipped/total_games*100:.1f}%)\n\n"
+        md_content += f"- **Skipped (Prerequisites):** {skipped} ({skipped/total_games*100:.1f}%)\n"
+
+        # Add second pass summary if applicable
+        if has_second_pass_data:
+            second_pass_count = sum(1 for d in chart_data if d.get('second_pass'))
+            second_pass_passed = sum(1 for d in chart_data if (d.get('second_pass') or {}).get('success', False))
+            second_pass_failed = second_pass_count - second_pass_passed
+            md_content += f"- **Second Pass Tested:** {second_pass_count}\n"
+            md_content += f"- **Second Pass Passed:** {second_pass_passed}\n"
+            md_content += f"- **Second Pass Failed:** {second_pass_failed}\n"
+
+        md_content += "\n"
 
     md_content += "## Test Results\n\n"
-    md_content += "| Game Name | Test Result | Player # | Total Players | Players Passed | Players Failed | Custom Exporter | Custom GameLogic |\n"
-    md_content += "|-----------|-------------|----------|---------------|----------------|----------------|-----------------|------------------|\n"
 
-    for (game_name, pass_fail, player_number, total_players_tested,
-         players_passed, players_failed, all_prereqs_passed,
-         has_custom_exporter, has_custom_game_logic) in chart_data:
+    # Add Second Pass column if there's second pass data
+    if has_second_pass_data:
+        md_content += "| Game Name | First Pass | Second Pass | Player # | MW Size | Base Exporter | Base GameLogic |\n"
+        md_content += "|-----------|------------|-------------|----------|---------|---------------|----------------|\n"
+    else:
+        md_content += "| Game Name | Test Result | Player # | Total Players | Players Passed | Players Failed | Base Exporter | Base GameLogic |\n"
+        md_content += "|-----------|-------------|----------|---------------|----------------|----------------|---------------|----------------|\n"
+
+    for entry in chart_data:
+        game_name = entry['game_name']
+        pass_fail = entry['pass_fail']
+        player_number = entry['player_number']
+        total_players_tested = entry['total_players_tested']
+        total_players_in_multiworld = entry.get('total_players_in_multiworld', 0)
+        players_passed = entry['players_passed']
+        players_failed = entry['players_failed']
+        has_custom_exporter = entry['has_custom_exporter']
+        has_custom_game_logic = entry['has_custom_game_logic']
+        second_pass = entry.get('second_pass')
 
         if pass_fail.lower() == 'passed':
             result_display = "✅ Passed"
@@ -531,28 +580,139 @@ def generate_multiworld_markdown(chart_data: List[Tuple[str, str, int, int, int,
         else:
             result_display = "❌ Failed"
 
-        exporter_indicator = "✅" if has_custom_exporter else "⚫"
-        game_logic_indicator = "✅" if has_custom_game_logic else "⚫"
+        exporter_indicator = "⚫" if has_custom_exporter else "✅"
+        game_logic_indicator = "⚫" if has_custom_game_logic else "✅"
 
         player_display = str(player_number) if player_number > 0 else "N/A"
-        total_display = str(total_players_tested) if total_players_tested > 0 else "N/A"
-        passed_display = str(players_passed) if total_players_tested > 0 else "N/A"
-        failed_display = str(players_failed) if total_players_tested > 0 else "N/A"
 
-        md_content += f"| {game_name} | {result_display} | {player_display} | {total_display} | {passed_display} | {failed_display} | {exporter_indicator} | {game_logic_indicator} |\n"
+        if has_second_pass_data:
+            # Use total_players_in_multiworld for MW size display
+            mw_size = total_players_in_multiworld if total_players_in_multiworld > 0 else total_players_tested
+            mw_size_display = str(mw_size) if mw_size > 0 else "N/A"
+
+            # Second pass result
+            if second_pass:
+                if second_pass.get('success', False):
+                    second_pass_display = "✅ Passed"
+                else:
+                    second_pass_display = "❌ Failed"
+            else:
+                # No second pass needed (tested with full multiworld)
+                second_pass_display = "—"
+
+            md_content += f"| {game_name} | {result_display} | {second_pass_display} | {player_display} | {mw_size_display} | {exporter_indicator} | {game_logic_indicator} |\n"
+        else:
+            total_display = str(total_players_tested) if total_players_tested > 0 else "N/A"
+            passed_display = str(players_passed) if total_players_tested > 0 else "N/A"
+            failed_display = str(players_failed) if total_players_tested > 0 else "N/A"
+
+            md_content += f"| {game_name} | {result_display} | {player_display} | {total_display} | {passed_display} | {failed_display} | {exporter_indicator} | {game_logic_indicator} |\n"
 
     if not chart_data:
         md_content += "| No data available | - | - | - | - | - | - | - |\n"
 
+    # Add Templates in Multiworld section for games that have this data
+    entries_with_templates = [e for e in chart_data if e.get('templates_in_multiworld')]
+    if entries_with_templates:
+        md_content += "\n## Templates in Multiworld\n\n"
+        md_content += "Shows which templates were in the multiworld when each game was tested:\n\n"
+
+        for entry in entries_with_templates:
+            game_name = entry['game_name']
+            templates_in_multiworld = entry['templates_in_multiworld']
+
+            md_content += f"### {game_name}\n\n"
+            md_content += "| Player # | Template |\n"
+            md_content += "|----------|----------|\n"
+
+            # Sort by player number
+            for player_key in sorted(templates_in_multiworld.keys(), key=lambda x: int(x.split('_')[1])):
+                player_num = player_key.split('_')[1]
+                template_name = templates_in_multiworld[player_key]
+                md_content += f"| {player_num} | {template_name} |\n"
+
+            md_content += "\n"
+
+    # Add Bisection Results section if any exist
+    entries_with_bisection = [e for e in chart_data if e.get('bisection_results')]
+    if entries_with_bisection:
+        md_content += "\n## Bisection Results\n\n"
+        md_content += "When a multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.\n\n"
+
+        for entry in entries_with_bisection:
+            game_name = entry['game_name']
+            template_filename = entry.get('template_filename', game_name)
+            bisection = entry['bisection_results']
+
+            md_content += f"### {game_name} ({template_filename})\n\n"
+
+            tested_pairs = bisection.get('tested_pairs', [])
+            failing_pairs = bisection.get('failing_pairs', [])
+
+            if failing_pairs:
+                md_content += f"**Failing pairs found:** {len(failing_pairs)}\n\n"
+            else:
+                md_content += "**No failing pairs found** (failure may be due to combination of 3+ templates)\n\n"
+
+            if tested_pairs:
+                md_content += "| Partner Template | Result | Generation | Player 1 | Player 2 |\n"
+                md_content += "|------------------|--------|------------|----------|----------|\n"
+
+                for pair in tested_pairs:
+                    partner = pair.get('partner_template', 'Unknown')
+                    success = pair.get('success', False)
+                    gen_success = pair.get('generation_success', False)
+
+                    result_icon = "✅" if success else "❌"
+                    gen_icon = "✅" if gen_success else "❌"
+
+                    player_results = pair.get('player_results', {})
+                    p1_result = player_results.get('player_1', {})
+                    p2_result = player_results.get('player_2', {})
+
+                    p1_icon = "✅" if p1_result.get('passed', False) else ("❌" if p1_result else "—")
+                    p2_icon = "✅" if p2_result.get('passed', False) else ("❌" if p2_result else "—")
+
+                    md_content += f"| {partner} | {result_icon} | {gen_icon} | {p1_icon} | {p2_icon} |\n"
+
+                md_content += "\n"
+
+    # Add Second Pass Results section if any entries have second pass data
+    entries_with_second_pass = [e for e in chart_data if e.get('second_pass')]
+    if entries_with_second_pass:
+        md_content += "\n## Second Pass Results\n\n"
+        md_content += "Templates tested in the first pass with fewer than the maximum number of players were retested (second pass) with the full multiworld.\n\n"
+
+        md_content += "| Game Name | First Pass MW Size | Second Pass MW Size | Second Pass Player # | Second Pass Result |\n"
+        md_content += "|-----------|-------------------|---------------------|---------------------|--------------------|\n"
+
+        for entry in entries_with_second_pass:
+            game_name = entry['game_name']
+            first_pass_mw_size = entry.get('total_players_in_multiworld', entry['total_players_tested'])
+            second_pass = entry['second_pass']
+
+            second_pass_mw_size = second_pass.get('total_players_in_multiworld', 0)
+            second_pass_player_num = second_pass.get('player_number', 0)
+            second_pass_success = second_pass.get('success', False)
+
+            result_icon = "✅ Passed" if second_pass_success else "❌ Failed"
+
+            md_content += f"| {game_name} | {first_pass_mw_size} | {second_pass_mw_size} | {second_pass_player_num} | {result_icon} |\n"
+
+        md_content += "\n"
+
     md_content += "\n## Notes\n\n"
     md_content += "- **Player #:** The player number assigned to this template in the multiworld\n"
-    md_content += "- **Total Players:** Number of players tested in the multiworld configuration\n"
+    md_content += "- **Total Players / MW Size:** Number of players in the multiworld configuration when this template was tested\n"
     md_content += "- **Players Passed:** Number of players that passed the spoiler test\n"
     md_content += "- **Players Failed:** Number of players that failed the spoiler test\n"
-    md_content += "- **Custom Exporter:** ✅ Has custom Python exporter script, ⚫ Uses generic exporter\n"
-    md_content += "- **Custom GameLogic:** ✅ Has custom JavaScript game logic, ⚫ Uses generic logic\n\n"
+    md_content += "- **Base Exporter:** ✅ Uses generic exporter, ⚫ Has custom Python exporter script\n"
+    md_content += "- **Base GameLogic:** ✅ Uses generic logic, ⚫ Has custom JavaScript game logic\n\n"
     md_content += "**Pass Criteria:** All prerequisite tests (Spoiler Minimal, Spoiler Full, Multiclient) must pass, and all players in the multiworld must pass their spoiler tests\n\n"
-    md_content += "**Skipped:** Templates that did not meet prerequisite requirements\n"
+    md_content += "**Skipped:** Templates that did not meet prerequisite requirements\n\n"
+
+    if entries_with_second_pass:
+        md_content += "**Second Pass:** Templates tested in the first pass with fewer than the maximum number of players are retested with the full multiworld. This ensures all templates are validated with the final multiworld configuration.\n"
 
     return md_content
 
@@ -655,12 +815,12 @@ def generate_multitemplate_markdown(chart_data: Dict[str, List[Tuple[str, str, i
 
         # Get exporter/logic info from first template (all templates for a game share these)
         _, _, _, _, _, has_custom_exporter, has_custom_game_logic = templates[0]
-        exporter_indicator = "✅ Yes" if has_custom_exporter else "⚫ No"
-        game_logic_indicator = "✅ Yes" if has_custom_game_logic else "⚫ No"
+        exporter_indicator = "⚫ No" if has_custom_exporter else "✅ Yes"
+        game_logic_indicator = "⚫ No" if has_custom_game_logic else "✅ Yes"
 
         md_content += f"## {game_name}\n\n"
         md_content += f"**Results:** {passed}/{total} passed ({passed/total*100:.1f}%)  \n"
-        md_content += f"**Custom Exporter:** {exporter_indicator} | **Custom GameLogic:** {game_logic_indicator}\n\n"
+        md_content += f"**Base Exporter:** {exporter_indicator} | **Base GameLogic:** {game_logic_indicator}\n\n"
 
         md_content += "| Template | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress |\n"
         md_content += "|----------|-------------|------------|----------------|-------------|----------|\n"
@@ -699,15 +859,15 @@ def generate_multitemplate_markdown(chart_data: Dict[str, List[Tuple[str, str, i
     md_content += "- **Max Spheres:** Total logical spheres available in the game\n"
     md_content += "- **Progress:** Percentage of logical spheres completed\n\n"
     md_content += "### Game Information\n\n"
-    md_content += "- **Custom Exporter:** Whether the game has a custom Python exporter script (✅ Yes) or uses generic exporter (⚫ No)\n"
-    md_content += "- **Custom GameLogic:** Whether the game has custom JavaScript game logic (✅ Yes) or uses generic logic (⚫ No)\n\n"
+    md_content += "- **Base Exporter:** Whether the game uses generic exporter (✅ Yes) or has a custom Python exporter script (⚫ No)\n"
+    md_content += "- **Base GameLogic:** Whether the game uses generic logic (✅ Yes) or has custom JavaScript game logic (⚫ No)\n\n"
     md_content += "**Pass Criteria:** Generation errors = 0, Max spheres > 0, Spoiler test completed successfully\n\n"
     md_content += "**Invalid Configurations:** Templates marked as Invalid have settings that cannot be satisfied by the game's logic (FillError). These represent impossible configurations, not bugs.\n"
 
     return md_content
 
 
-def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None, ut_comparison_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None) -> str:
+def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None, ut_comparison_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None, has_ut_random=False, has_ut_fixed=False) -> str:
     """Generate a combined summary chart with all test results."""
     md_content = "# Archipelago Template Test Results Summary\n\n"
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
@@ -725,10 +885,9 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
     for name, desc, link in test_types:
         md_content += f"- **{name}:** {desc} - [View Details]({link})\n"
 
-    # Add link to UT comparison (separate from main test types - not included in statistics)
-    if ut_comparison_data is not None:
-        md_content += "\nAdditional test results:\n"
-        md_content += "- **UT Comparison Test:** Validates Universal Tracker matches Python sphere log - [View Details](./test-results-ut-comparison.md)\n"
+    # Add additional test results links
+    md_content += "\nAdditional test results:\n"
+    md_content += "- **World Generator Test:** Tests world generation for all templates - [View Details](./test-results-world-generator.md)\n"
 
     md_content += "\n"
 
@@ -737,7 +896,8 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
     games_minimal = {name: result for name, result, *_ in minimal_data}
     games_full = {name: result for name, result, *_ in full_data}
     games_multiclient = {name: result for name, result, *_ in multiclient_data}
-    games_multiworld = {name: result for name, result, *_ in multiworld_data} if multiworld_data else {}
+    # multiworld_data is now a list of dicts
+    games_multiworld = {d['game_name']: d['pass_fail'] for d in multiworld_data} if multiworld_data else {}
 
     # Extract custom exporter/logic info and consistency data (from minimal_data as it has all games)
     games_exporter_logic = {}
@@ -836,11 +996,11 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
     # Add Test Results table
     md_content += "\n## Test Results\n\n"
     if multiworld_data is not None:
-        md_content += "| Game Name | Minimal Test | Full Test | Multiclient Test | Multiworld Test | Consistent Rules | Consistent Spoilers | Custom Exporter | Custom GameLogic |\n"
-        md_content += "|-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|-----------------|------------------|\n"
+        md_content += "| Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Base Exporter | Base GameLogic |\n"
+        md_content += "|-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|---------------|----------------|\n"
     else:
-        md_content += "| Game Name | Minimal Test | Full Test | Multiclient Test | Consistent Rules | Consistent Spoilers | Custom Exporter | Custom GameLogic |\n"
-        md_content += "|-----------|--------------|-----------|------------------|------------------|---------------------|-----------------|------------------|\n"
+        md_content += "| Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | Consistent Rules | Consistent Spoilers | Base Exporter | Base GameLogic |\n"
+        md_content += "|-----------|--------------|-----------|------------------|------------------|---------------------|---------------|----------------|\n"
 
     for game in all_games:
         minimal_result = games_minimal.get(game, "N/A")
@@ -850,8 +1010,8 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
 
         # Get exporter/logic info
         has_exporter, has_logic = games_exporter_logic.get(game, (False, False))
-        exporter_indicator = "✅" if has_exporter else "⚫"
-        logic_indicator = "✅" if has_logic else "⚫"
+        exporter_indicator = "⚫" if has_exporter else "✅"
+        logic_indicator = "⚫" if has_logic else "✅"
 
         # Get consistency info
         rules_consistent, spoilers_consistent = games_consistency.get(game, (None, None))
@@ -940,6 +1100,18 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
                 game_name = game.replace('.yaml', '')
                 md_content += f"- {game_name}\n"
         md_content += "\n"
+
+    # Add Notes section
+    md_content += "## Notes\n\n"
+    md_content += "### Column Descriptions\n\n"
+    md_content += "- **[Minimal Test](./test-results-spoilers-minimal.md):** Spoiler test using advancement items only\n"
+    md_content += "- **[Full Test](./test-results-spoilers-full.md):** Spoiler test using all locations\n"
+    md_content += "- **[Multiclient Test](./test-results-multiclient.md):** Tests sending and receiving location checks between two clients\n"
+    md_content += "- **[Multiworld Test](./test-results-multiworld.md):** Tests the game in a multiworld with multiple other games\n"
+    md_content += "- **Consistent Rules:** ✅ if rules.json files are identical across all tested seeds, ⚫ if they differ, ❓ if not tested\n"
+    md_content += "- **Consistent Spoilers:** ✅ if spoiler files are identical across all tested seeds, ⚫ if they differ, ❓ if not tested\n"
+    md_content += "- **Base Exporter:** ✅ Uses generic exporter, ⚫ Has custom Python exporter script\n"
+    md_content += "- **Base GameLogic:** ✅ Uses generic logic, ⚫ Has custom JavaScript game logic\n"
 
     return md_content
 
@@ -1120,21 +1292,56 @@ def main():
     else:
         print(f"Info: Multitemplate full test results not found: {mtfull_input}")
 
-    # Load UT comparison test results
-    ut_input = os.path.join(project_root, 'scripts/output/ut-comparison/test-results.json')
-    ut_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-ut-comparison.md')
+    # Load UT comparison test results (both random and fixed seed)
+    ut_random_input = os.path.join(project_root, 'scripts/output/ut-comparison/test-results-random-seed.json')
+    ut_fixed_input = os.path.join(project_root, 'scripts/output/ut-comparison/test-results-fixed-seed.json')
+    ut_output_dir = os.path.join(project_root, 'docs/json/developer/test-results')
 
-    ut_data = None
-    if os.path.exists(ut_input):
-        ut_results = load_test_results(ut_input)
-        ut_data = extract_ut_comparison_chart_data(ut_results)
-        world_mapping = load_world_mapping(project_root)
-        ut_md = generate_ut_comparison_markdown(ut_data, ut_results.get('metadata', {}), world_mapping)
-        os.makedirs(os.path.dirname(ut_output), exist_ok=True)
-        with open(ut_output, 'w') as f:
-            f.write(ut_md)
+    ut_random_data = None
+    ut_fixed_data = None
+    world_mapping = load_world_mapping(project_root)
+
+    has_random = os.path.exists(ut_random_input)
+    has_fixed = os.path.exists(ut_fixed_input)
+
+    if has_random:
+        ut_random_results = load_test_results(ut_random_input)
+        ut_random_data = extract_ut_comparison_chart_data(ut_random_results)
+        other_link = './test-results-ut-comparison-fixed-seed.md' if has_fixed else None
+        ut_random_md = generate_ut_comparison_markdown(
+            ut_random_data,
+            ut_random_results.get('metadata', {}),
+            world_mapping,
+            seed_type="random",
+            other_results_link=other_link
+        )
+        ut_random_output = os.path.join(ut_output_dir, 'test-results-ut-comparison-random-seed.md')
+        os.makedirs(ut_output_dir, exist_ok=True)
+        with open(ut_random_output, 'w') as f:
+            f.write(ut_random_md)
     else:
-        print(f"Info: UT comparison test results not found: {ut_input}")
+        print(f"Info: UT comparison random seed results not found: {ut_random_input}")
+
+    if has_fixed:
+        ut_fixed_results = load_test_results(ut_fixed_input)
+        ut_fixed_data = extract_ut_comparison_chart_data(ut_fixed_results)
+        other_link = './test-results-ut-comparison-random-seed.md' if has_random else None
+        ut_fixed_md = generate_ut_comparison_markdown(
+            ut_fixed_data,
+            ut_fixed_results.get('metadata', {}),
+            world_mapping,
+            seed_type="fixed",
+            other_results_link=other_link
+        )
+        ut_fixed_output = os.path.join(ut_output_dir, 'test-results-ut-comparison-fixed-seed.md')
+        os.makedirs(ut_output_dir, exist_ok=True)
+        with open(ut_fixed_output, 'w') as f:
+            f.write(ut_fixed_md)
+    else:
+        print(f"Info: UT comparison fixed seed results not found: {ut_fixed_input}")
+
+    # For the summary, use fixed seed data if available, otherwise random
+    ut_data = ut_fixed_data if ut_fixed_data else ut_random_data
 
     # Generate summary chart
     if minimal_data or full_data or mp_data or mw_data or mtmin_data or mtfull_data or ut_data:
@@ -1146,7 +1353,7 @@ def main():
         full_meta = full_results.get('metadata', {}) if 'full_results' in locals() else None
 
         summary_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary.md')
-        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data, ut_data, excluded_games, minimal_meta, full_meta)
+        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data, ut_data, excluded_games, minimal_meta, full_meta, has_ut_random=has_random, has_ut_fixed=has_fixed)
         with open(summary_output, 'w') as f:
             f.write(summary_md)
 

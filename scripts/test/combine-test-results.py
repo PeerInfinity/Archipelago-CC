@@ -31,6 +31,52 @@ def load_results_file(file_path: str) -> Dict[str, Any]:
         return None
 
 
+def merge_errors(existing_errors: Any, new_errors: Any) -> Dict[str, List[str]]:
+    """
+    Merge errors from two results, handling both old (list) and new (dict) formats.
+
+    The new format is: {'generation': [...], 'testing': [...]}
+    The old format is: [...]
+
+    Returns the new dict format with merged errors.
+    """
+    # Normalize existing_errors to dict format
+    if existing_errors is None:
+        existing_dict = {'generation': [], 'testing': []}
+    elif isinstance(existing_errors, list):
+        # Old format - treat as generation errors
+        existing_dict = {'generation': list(existing_errors), 'testing': []}
+    elif isinstance(existing_errors, dict):
+        existing_dict = {
+            'generation': list(existing_errors.get('generation', [])),
+            'testing': list(existing_errors.get('testing', []))
+        }
+    else:
+        existing_dict = {'generation': [], 'testing': []}
+
+    # Normalize new_errors to dict format
+    if new_errors is None:
+        new_dict = {'generation': [], 'testing': []}
+    elif isinstance(new_errors, list):
+        # Old format - treat as generation errors
+        new_dict = {'generation': list(new_errors), 'testing': []}
+    elif isinstance(new_errors, dict):
+        new_dict = {
+            'generation': list(new_errors.get('generation', [])),
+            'testing': list(new_errors.get('testing', []))
+        }
+    else:
+        new_dict = {'generation': [], 'testing': []}
+
+    # Merge, avoiding duplicates
+    merged = {
+        'generation': existing_dict['generation'] + [e for e in new_dict['generation'] if e not in existing_dict['generation']],
+        'testing': existing_dict['testing'] + [e for e in new_dict['testing'] if e not in existing_dict['testing']]
+    }
+
+    return merged
+
+
 def is_ut_comparison_structure(results: Dict[str, Any]) -> bool:
     """
     Detect if results have UT comparison structure.
@@ -67,7 +113,10 @@ def is_multitemplate_structure(results: Dict[str, Any]) -> bool:
     if isinstance(first_value, dict):
         # Check if it looks like a template result (has 'generation' or 'spoiler_test' or 'ut_comparison')
         # or a game container (has template names as keys)
-        if 'generation' in first_value or 'spoiler_test' in first_value or 'multiclient_test' in first_value or 'multiworld_test' in first_value or 'ut_comparison' in first_value:
+        # Also check for world generator format ('original', 'test_world')
+        template_result_keys = {'generation', 'spoiler_test', 'multiclient_test', 'multiworld_test',
+                                'ut_comparison', 'original', 'test_world'}
+        if any(key in first_value for key in template_result_keys):
             return False
         # If values are dicts with these fields, it's multitemplate
         for value in first_value.values():
@@ -124,8 +173,10 @@ def combine_ut_comparison_results(all_results: List[Dict[str, Any]]) -> Dict[str
     """
     combined_results = {}
 
-    # Get seed from first file's metadata (should be same across all)
-    seed = all_results[0].get('metadata', {}).get('seed', '1')
+    # Get metadata from first file (should be same across all)
+    first_metadata = all_results[0].get('metadata', {})
+    seed = first_metadata.get('seed', '1')
+    runs_per_template = first_metadata.get('runs_per_template', 1)
 
     # Merge all template results
     for result_data in all_results:
@@ -144,6 +195,7 @@ def combine_ut_comparison_results(all_results: List[Dict[str, Any]]) -> Dict[str
             'last_updated': datetime.now().isoformat(),
             'script_version': '1.0.0',
             'seed': seed,
+            'runs_per_template': runs_per_template,
             'combined_from': len(all_results),
             'total_templates': len(combined_results)
         },
@@ -156,6 +208,10 @@ def combine_ut_comparison_results(all_results: List[Dict[str, Any]]) -> Dict[str
 def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any]:
     """
     Combine results with standard structure (results -> template_name -> template_data).
+
+    Supports two modes:
+    1. Multi-seed mode: Same template tested with different seeds - aggregate all results
+    2. Overlay mode: Same template with same seed from different phases - use latest result
     """
     # Extract all templates and organize by template name and seed
     template_results = {}  # template_name -> list of (seed, result_data)
@@ -167,6 +223,32 @@ def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any
 
             seed = template_result.get('seed', '1')
             template_results[template_name].append((seed, template_result))
+
+    # Detect if we're in overlay mode (same seeds across templates)
+    # This happens when combining phase results from the same workflow run
+    is_overlay_mode = False
+    if template_results:
+        # Check if any template has duplicate seeds
+        for seed_list in template_results.values():
+            seeds = [s for s, _ in seed_list]
+            if len(seeds) != len(set(seeds)):
+                is_overlay_mode = True
+                print("Detected overlay mode (duplicate seeds) - using latest result for each template")
+                break
+
+    if is_overlay_mode:
+        # In overlay mode, merge results for each (template, seed) combination
+        # Later results take precedence but errors are merged from all phases
+        for template_name in template_results:
+            seed_to_result = {}
+            for seed, result in template_results[template_name]:
+                if seed in seed_to_result:
+                    # Merge errors from previous result into new result
+                    existing_errors = seed_to_result[seed].get('errors')
+                    new_errors = result.get('errors')
+                    result['errors'] = merge_errors(existing_errors, new_errors)
+                seed_to_result[seed] = result
+            template_results[template_name] = [(seed, result) for seed, result in seed_to_result.items()]
 
     # Sort each template's results by seed number
     for template_name in template_results:
@@ -194,6 +276,13 @@ def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any
         key=lambda f: (f.get('template', ''), f.get('seed') if f.get('seed') is not None else float('inf'))
     )
 
+    # Collect seeds from all input files
+    seeds_used = []
+    for result_data in all_results:
+        metadata = result_data.get('metadata', {})
+        if 'seed' in metadata:
+            seeds_used.append(str(metadata['seed']))
+
     # Create combined output structure
     combined = {
         'metadata': {
@@ -205,6 +294,13 @@ def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any
         },
         'results': combined_results
     }
+
+    # Add seed info if available
+    if seeds_used:
+        if len(set(seeds_used)) == 1:
+            combined['metadata']['seed'] = seeds_used[0]
+        else:
+            combined['metadata']['seeds'] = sorted(set(seeds_used), key=lambda x: int(x) if x.isdigit() else x)
 
     # Add intermittent tracking if we have any failures
     if merged_intermittent_failures:
@@ -332,15 +428,15 @@ def _process_template_results(template_results: Dict[str, List], combined_result
 
                 # Check if this seed passed
                 seed_passed = False
-                if 'spoiler_test' in result:
+                if 'spoiler_test' in result and result['spoiler_test']:
                     seed_passed = result['spoiler_test'].get('pass_fail') == 'passed'
-                elif 'multiclient_test' in result:
+                elif 'multiclient_test' in result and result['multiclient_test']:
                     seed_passed = result['multiclient_test'].get('success', False)
-                elif 'multiworld_test' in result:
+                elif 'multiworld_test' in result and result['multiworld_test']:
                     seed_passed = result['multiworld_test'].get('success', False)
                 else:
                     # Check generation success
-                    seed_passed = result.get('generation', {}).get('success', False)
+                    seed_passed = (result.get('generation') or {}).get('success', False)
 
                 if seed_passed:
                     seeds_passed += 1
@@ -422,8 +518,8 @@ def main():
     parser.add_argument(
         '--output-file',
         type=str,
-        required=True,
-        help='Output file path for combined results'
+        default=None,
+        help='Output file path for combined results (auto-computed if not specified)'
     )
     parser.add_argument(
         '--dry-run',
@@ -449,6 +545,20 @@ def main():
     if not input_files:
         print("Error: No input files specified")
         sys.exit(1)
+
+    # Auto-compute output filename if not specified
+    if args.output_file is None:
+        # Detect seed type from input filenames
+        input_files_str = " ".join(input_files)
+        if "random" in input_files_str:
+            seed_type = "random"
+        elif "fixed" in input_files_str:
+            seed_type = "fixed"
+        else:
+            # Default to the first file's directory for output
+            seed_type = "combined"
+        args.output_file = f"scripts/output/ut-comparison/test-results-{seed_type}-seed.json"
+        print(f"Auto-computed output file: {args.output_file}")
 
     print(f"Combining {len(input_files)} test result files:")
     for f in input_files:
@@ -515,14 +625,17 @@ def _print_template_summary(template_name: str, result: Dict[str, Any], indent: 
     else:
         # Single seed result
         seed = result.get('seed', '1')
-        if 'spoiler_test' in result:
+        if 'spoiler_test' in result and result['spoiler_test']:
             passed = result['spoiler_test'].get('pass_fail') == 'passed'
-        elif 'multiclient_test' in result:
+        elif 'multiclient_test' in result and result['multiclient_test']:
             passed = result['multiclient_test'].get('success', False)
-        elif 'multiworld_test' in result:
+        elif 'multiworld_test' in result and result['multiworld_test']:
             passed = result['multiworld_test'].get('success', False)
+        elif 'original' in result and result['original']:
+            # World generator format - check original generation success
+            passed = (result['original'].get('generation') or {}).get('success', False)
         else:
-            passed = result.get('generation', {}).get('success', False)
+            passed = (result.get('generation') or {}).get('success', False)
 
         status = "✅" if passed else "❌"
         print(f"{indent}{status} {template_name}: Single seed {seed}")

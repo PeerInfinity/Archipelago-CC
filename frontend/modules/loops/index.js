@@ -1,7 +1,7 @@
 // Core state and UI for this module
 import loopStateSingleton from './loopStateSingleton.js';
 import { LoopUI } from './loopUI.js';
-import { handleUserLocationCheckForLoops, handleUserItemCheckForLoops, initializeLoopEvents } from './loopEvents.js'; // Import handlers
+import { handleUserLocationCheckForLoops, handleUserItemCheckForLoops, handleUserExitClickedForLoops, initializeLoopEvents } from './loopEvents.js'; // Import handlers
 
 // --- Module Info ---
 export const moduleInfo = {
@@ -131,6 +131,16 @@ export function register(registrationApi) {
     moduleInfo.name,
     'user:itemCheck',
     handleUserItemCheckForLoops,
+    { direction: 'up', condition: 'conditional', timing: 'immediate' }
+  );
+
+  // Register dispatcher receiver for user:exitClicked
+  // When loop mode is active, this handler intercepts the event
+  // When loop mode is not active, it propagates to the next handler (regions module)
+  registrationApi.registerDispatcherReceiver(
+    moduleInfo.name,
+    'user:exitClicked',
+    handleUserExitClickedForLoops,
     { direction: 'up', condition: 'conditional', timing: 'immediate' }
   );
 

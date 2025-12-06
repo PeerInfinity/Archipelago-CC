@@ -14,8 +14,41 @@ from collections import defaultdict
 import Utils
 from .analyzer import analyze_rule
 from .games import get_game_export_handler
+from BaseClasses import ItemClassification
 
 logger = logging.getLogger(__name__)
+
+
+def classification_to_string(classification: ItemClassification) -> str:
+    """Convert an ItemClassification enum to its string name.
+
+    Handles combined flags by returning the most specific named combination,
+    or the base classification name.
+    """
+    # Check for exact named combinations first (most specific)
+    if classification == ItemClassification.progression_deprioritized_skip_balancing:
+        return "progression_deprioritized_skip_balancing"
+    if classification == ItemClassification.progression_skip_balancing:
+        return "progression_skip_balancing"
+    if classification == ItemClassification.progression_deprioritized:
+        return "progression_deprioritized"
+
+    # Check individual flags
+    if classification == ItemClassification.progression:
+        return "progression"
+    if classification == ItemClassification.useful:
+        return "useful"
+    if classification == ItemClassification.trap:
+        return "trap"
+    if classification == ItemClassification.filler:
+        return "filler"
+
+    # For other combinations, use the enum's name if available
+    try:
+        return classification.name
+    except (AttributeError, ValueError):
+        # Fallback: return string representation
+        return str(classification)
 
 # Module-level cache for rule analysis results
 _rule_analysis_cache: Dict[Tuple[int, int, Optional[int]], Any] = {}
@@ -23,6 +56,24 @@ _rule_analysis_cache: Dict[Tuple[int, int, Optional[int]], Any] = {}
 def clear_rule_cache():
     """Clear the rule analysis cache. Call between generations."""
     _rule_analysis_cache.clear()
+
+
+def _insert_hint_text(item_data: dict, hint_text: str) -> None:
+    """Insert hint_text immediately after 'name' key in item_data dict.
+
+    This ensures consistent key ordering in the exported JSON.
+    """
+    if 'hint_text' in item_data:
+        return  # Already has hint_text
+
+    # Rebuild dict with hint_text after name
+    new_data = {}
+    for key, value in item_data.items():
+        new_data[key] = value
+        if key == 'name':
+            new_data['hint_text'] = hint_text
+    item_data.clear()
+    item_data.update(new_data)
 
 def resolve_attribute_nodes_in_rule(rule: Dict[str, Any], world) -> Dict[str, Any]:
     """
@@ -668,6 +719,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         'itempool_counts': {},  # Complete itempool counts by player
         'game_info': {},  # Game-specific information for frontend
         'starting_items': {}, # Starting items by player
+        'helpers': {},  # Helper function definitions by player
     }
     
     # Dungeons will only be added if there's data to include
@@ -752,6 +804,17 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
                 'error': error_msg,
                 'details': "Failed to read game settings. Check logs for more information."
             }
+
+        # Get helper definitions using handler
+        try:
+            helper_definitions = game_handler.get_helper_definitions(world)
+            if helper_definitions:
+                export_data['helpers'][player_str] = helper_definitions
+                logger.debug(f"Exported {len(helper_definitions)} helper definitions for player {player}")
+        except Exception as e:
+            error_msg = f"Error exporting helper definitions for player {player}: {str(e)}"
+            logger.error(error_msg)
+            # Don't add error to export_data - just skip helpers silently
 
         # Start regions
         try:
@@ -840,6 +903,23 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
             serializable_starting_items = [
                 item.name for item in starting_items_list if hasattr(item, 'name')
             ]
+
+            # Filter out counter items that are targets of accumulator_rules
+            # These are precollected for generation purposes but shouldn't be in
+            # the exported starting_items - the frontend uses accumulator_rules instead
+            game_info = export_data.get('game_info', {}).get(player_str, {})
+            accumulator_targets = set()
+            for rule in game_info.get('accumulator_rules', []):
+                if rule.get('target'):
+                    accumulator_targets.add(rule['target'])
+
+            if accumulator_targets:
+                serializable_starting_items = [
+                    item for item in serializable_starting_items
+                    if item not in accumulator_targets
+                ]
+                logger.info(f"Filtered out accumulator target items from starting_items for player {player}: {accumulator_targets}")
+
             export_data['starting_items'][player_str] = serializable_starting_items
         except Exception as e:
             logger.error(f"Error processing starting items for player {player}: {str(e)}")
@@ -905,6 +985,23 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
             # Check cache first (before override to avoid recursive loops)
             if cache_key in _rule_analysis_cache:
                 return _rule_analysis_cache[cache_key]
+
+            # Check if this is a Rule Builder Resolved rule with native serialization
+            # Rule Builder rules have a to_dict() method that provides native JSON serialization
+            if hasattr(rule_func, 'to_dict') and callable(rule_func.to_dict):
+                try:
+                    rb_dict = rule_func.to_dict()
+                    # Convert Rule Builder format to Archipelago-CC format for frontend compatibility
+                    from exporter.converter import convert_rule_builder_to_cc
+                    cc_dict, warnings = convert_rule_builder_to_cc(rb_dict)
+                    for warning in warnings:
+                        logger.debug(f"Rule Builder conversion warning for {target_type} '{rule_target_name}': {warning}")
+                    # Cache and return the converted CC format
+                    _rule_analysis_cache[cache_key] = cc_dict
+                    return cc_dict
+                except Exception as e:
+                    logger.warning(f"Rule Builder to_dict() failed for {target_type} '{rule_target_name}': {e}")
+                    # Fall through to AST analysis as fallback
 
             # Check if game handler has an override for rule analysis (e.g., Blasphemous, Terraria)
             if game_handler and hasattr(game_handler, 'override_rule_analysis'):
@@ -1076,13 +1173,17 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
         # Second pass - process all regions
         for region in player_regions:
             try:
-                region_data = {
-                    'name': getattr(region, 'name', 'Unknown'),
-                    'entrances': [],
-                    'exits': [],
-                    'locations': []
-                }
-                
+                region_name = getattr(region, 'name', 'Unknown')
+                region_hint = getattr(region, 'hint_text', region_name)
+
+                # Build region_data with hint_text immediately after name if present
+                region_data = {'name': region_name}
+                if region_hint and region_hint != region_name:
+                    region_data['hint_text'] = region_hint
+                region_data['entrances'] = []
+                region_data['exits'] = []
+                region_data['locations'] = []
+
                 # Add game-specific region attributes from the handler
                 region_attributes = game_handler.get_region_attributes(region)
                 region_data.update(region_attributes)
@@ -1297,13 +1398,35 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                 )
                             
                             
+                            # Get progress_type - only include if not DEFAULT
+                            progress_type = getattr(location, 'progress_type', None)
+                            progress_type_str = None
+                            if progress_type is not None:
+                                # Convert enum to string name
+                                progress_type_str = progress_type.name if hasattr(progress_type, 'name') else str(progress_type)
+                                # Only include if not DEFAULT
+                                if progress_type_str == 'DEFAULT':
+                                    progress_type_str = None
+
+                            # Get show_in_spoiler - only include if False (default is True)
+                            show_in_spoiler = getattr(location, 'show_in_spoiler', True)
+
                             location_data = {
                                 'name': location_name,
                                 'id': location_name_to_id.get(location_name, None),  # Add location ID from mapping
                                 'access_rule': access_rule_result,
                                 'item_rule': item_rule_result,
-                                'item': None
+                                'item': None,
+                                'locked': getattr(location, 'locked', False)  # True if item was placed via place_locked_item
                             }
+
+                            # Only include progress_type if not DEFAULT
+                            if progress_type_str:
+                                location_data['progress_type'] = progress_type_str
+
+                            # Only include show_in_spoiler if False (to reduce JSON size)
+                            if not show_in_spoiler:
+                                location_data['show_in_spoiler'] = False
 
                             # Add game-specific location attributes from the handler
                             location_attributes = game_handler.get_location_attributes(location, world)
@@ -1363,6 +1486,23 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
         logger.error(f"Error getting game-specific item data for {game_name}: {e}")
         items_data = {} # Start empty if handler fails
 
+    # 1b. Migrate old-style handler data (advancement/useful/trap) to new classification field
+    for item_name, item_data in items_data.items():
+        if 'classification' not in item_data:
+            # Convert old boolean flags to classification string
+            if item_data.get('advancement'):
+                item_data['classification'] = 'progression'
+            elif item_data.get('useful'):
+                item_data['classification'] = 'useful'
+            elif item_data.get('trap'):
+                item_data['classification'] = 'trap'
+            else:
+                item_data['classification'] = 'filler'
+        # Remove old boolean flags from items table
+        item_data.pop('advancement', None)
+        item_data.pop('useful', None)
+        item_data.pop('trap', None)
+
     # 2. Layer in base item IDs and groups from world.item_id_to_name
     for item_id, item_name in getattr(world, 'item_id_to_name', {}).items():
         if item_name not in items_data:
@@ -1372,7 +1512,8 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
                 'name': item_name,
                 'id': item_id,
                 'groups': [],
-                'advancement': False, 'useful': False, 'trap': False, 'event': False,
+                'classification': 'filler',
+                'event': False,
                 'type': None, 'max_count': 1
             }
         else:
@@ -1400,10 +1541,12 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
             if new_groups_added:
                  items_data[item_name]['groups'].sort()
 
-    # 3. Update classification flags from placed items (use values from placed items if not set by handler)
+    # 3. Update classification from placed items (use values from placed items if not set by handler)
     for location in multiworld.get_locations(player):
         if location.item:
             item_name = location.item.name
+            item_classification = getattr(location.item, 'classification', ItemClassification.filler)
+
             # Add event items that aren't in items_data yet (items with code=None)
             if item_name not in items_data:
                 # Extract type value
@@ -1416,34 +1559,38 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
                 else:
                     item_type = None
 
-                # This is likely an event item - create an entry for it
-                items_data[item_name] = {
-                    'name': item_name,
-                    'id': getattr(location.item, 'code', None),
-                    'groups': [],
-                    'advancement': getattr(location.item, 'advancement', False),
-                    'useful': getattr(location.item, 'useful', False),
-                    'trap': getattr(location.item, 'trap', False),
-                    'event': True if getattr(location.item, 'code', None) is None else False,
-                    'type': item_type,
-                    'max_count': 1
-                }
-            else:
-                # Item already exists, update flags if they are still default (False)
-                item_data = items_data[item_name]
-                if not item_data.get('advancement'):
-                    item_data['advancement'] = getattr(location.item, 'advancement', False)
-                if not item_data.get('useful'):
-                     item_data['useful'] = getattr(location.item, 'useful', False)
-                if not item_data.get('trap'):
-                     item_data['trap'] = getattr(location.item, 'trap', False)
-                # Event flag likely comes from type, less critical to update here unless specific logic requires it
+                # Get hint_text if different from name
+                item_hint = getattr(location.item, 'hint_text', item_name)
 
-    # 3b. Also check precollected items for advancement status
+                # This is likely an event item - create an entry for it
+                # Build dict with hint_text immediately after name if present
+                item_entry = {'name': item_name}
+                if item_hint and item_hint != item_name:
+                    item_entry['hint_text'] = item_hint
+                item_entry['id'] = getattr(location.item, 'code', None)
+                item_entry['groups'] = []
+                item_entry['classification'] = classification_to_string(item_classification)
+                item_entry['event'] = True if getattr(location.item, 'code', None) is None else False
+                item_entry['type'] = item_type
+                item_entry['max_count'] = 1
+                items_data[item_name] = item_entry
+            else:
+                # Item already exists, update classification if not already set
+                item_data = items_data[item_name]
+                if item_data.get('classification') == 'filler':
+                    item_data['classification'] = classification_to_string(item_classification)
+                # Add hint_text if not already set and differs from name
+                item_hint = getattr(location.item, 'hint_text', item_name)
+                if item_hint and item_hint != item_name:
+                    _insert_hint_text(item_data, item_hint)
+
+    # 3b. Also check precollected items for classification
     if player in multiworld.precollected_items:
         for item in multiworld.precollected_items[player]:
             item_name = item.name
-            # Add event items that aren't in items_data yet (items with code=None)
+            item_classification = getattr(item, 'classification', ItemClassification.filler)
+
+            # Add items that aren't in items_data yet
             if item_name not in items_data:
                 # Extract type value
                 type_obj = getattr(item, 'type', None)
@@ -1455,27 +1602,30 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
                 else:
                     item_type = None
 
-                # This is likely an event item - create an entry for it
-                items_data[item_name] = {
-                    'name': item_name,
-                    'id': getattr(item, 'code', None),
-                    'groups': [],
-                    'advancement': getattr(item, 'advancement', False),
-                    'useful': getattr(item, 'useful', False),
-                    'trap': getattr(item, 'trap', False),
-                    'event': True if getattr(item, 'code', None) is None else False,
-                    'type': item_type,
-                    'max_count': 1
-                }
+                # Get hint_text if different from name
+                item_hint = getattr(item, 'hint_text', item_name)
+
+                # Create an entry for this item
+                # Build dict with hint_text immediately after name if present
+                item_entry = {'name': item_name}
+                if item_hint and item_hint != item_name:
+                    item_entry['hint_text'] = item_hint
+                item_entry['id'] = getattr(item, 'code', None)
+                item_entry['groups'] = []
+                item_entry['classification'] = classification_to_string(item_classification)
+                item_entry['event'] = True if getattr(item, 'code', None) is None else False
+                item_entry['type'] = item_type
+                item_entry['max_count'] = 1
+                items_data[item_name] = item_entry
             else:
-                # Item already exists, update flags if they are still default (False)
+                # Item already exists, update classification if not already set
                 item_data = items_data[item_name]
-                if not item_data.get('advancement'):
-                    item_data['advancement'] = getattr(item, 'advancement', False)
-                if not item_data.get('useful'):
-                    item_data['useful'] = getattr(item, 'useful', False)
-                if not item_data.get('trap'):
-                    item_data['trap'] = getattr(item, 'trap', False)
+                if item_data.get('classification') == 'filler':
+                    item_data['classification'] = classification_to_string(item_classification)
+                # Add hint_text if not already set and differs from name
+                item_hint = getattr(item, 'hint_text', item_name)
+                if item_hint and item_hint != item_name:
+                    _insert_hint_text(item_data, item_hint)
 
     # 4. Get and apply game-specific max counts
     try:
@@ -1669,6 +1819,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         'schema_version',
         'game_name',
         'game_directory',
+        'playerId',  # Player ID for player-specific exports
         'archipelago_version',
         'generation_seed',
         'player_names',
@@ -1728,6 +1879,12 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                     # Use the get_world_directory_name function to get the directory name
                     game_directory = get_world_directory_name(game_name)
                     ordered_data[key] = game_directory
+                continue
+
+            # Special handling for playerId - only include in player-specific exports
+            if key == 'playerId':
+                if player_id is not None:
+                    ordered_data[key] = player_id
                 continue
 
             # Special handling for dungeons (only include if it exists)

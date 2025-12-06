@@ -22,6 +22,14 @@ export const moduleInfo = {
   description: 'Exits display panel.',
 };
 
+// Store module-level references
+let moduleDispatcher = null;
+
+// Export function to get dispatcher for use by exitUI
+export function getExitsModuleDispatcher() {
+  return moduleDispatcher;
+}
+
 /**
  * Registration function for the Exits module.
  * Registers the exits panel component.
@@ -32,9 +40,29 @@ export function register(registrationApi) {
   // Register the panel component class constructor
   registrationApi.registerPanelComponent('exitsPanel', ExitUI);
 
-  // Register events that this module publishes
-  registrationApi.registerEventBusPublisher('user:exitClicked');
+  // Register dispatcher sender for exit click events
+  // Uses 'bottom' so that modules loaded later (like loops) get first chance to handle
+  registrationApi.registerDispatcherSender('user:exitClicked', 'bottom', 'first');
 
   // Register settings schema if needed
   // No specific settings schema for Exits registration.
+}
+
+/**
+ * Initialization function for the Exits module.
+ * Gets core APIs and sets up module-level subscriptions if any.
+ */
+export async function initialize(moduleId, priorityIndex, initializationApi) {
+  log('info', `[Exits Module] Initializing with priority ${priorityIndex}...`);
+
+  // Store the dispatcher for use by exitUI
+  moduleDispatcher = initializationApi.getDispatcher();
+
+  log('info', '[Exits Module] Initialization complete.');
+
+  // Return cleanup function
+  return () => {
+    log('info', '[Exits Module] Cleaning up...');
+    moduleDispatcher = null;
+  };
 }

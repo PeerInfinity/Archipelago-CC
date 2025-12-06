@@ -97,3 +97,4 @@ See the [Project Roadmap](/docs/json/project-roadmap.md) for the latest status, 
 - Uses [CodeMirror](https://github.com/codemirror/codemirror5)
 - Uses [Cytoscape.js](https://github.com/cytoscape/cytoscape.js) for graph visualization
 - Uses [metamath-py](https://pypi.org/project/metamath-py/) for the MetaMath apworld
+- Uses [Rule Builder](https://github.com/drtchops/Archipelago/tree/rules-engine) ([PR #5048](https://github.com/ArchipelagoMW/Archipelago/pull/5048))

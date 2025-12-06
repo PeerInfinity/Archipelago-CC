@@ -1413,7 +1413,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Animation Pack": {
         "name": "Animation Pack",
@@ -1426,7 +1426,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Audio Pack": {
         "name": "Audio Pack",
@@ -1439,7 +1439,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Pause Menu Pack": {
         "name": "Pause Menu Pack",
@@ -1452,7 +1452,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Time is Money Pack": {
         "name": "Time is Money Pack",
@@ -1465,7 +1465,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Double Jump Pack": {
         "name": "Double Jump Pack",
@@ -1478,7 +1478,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Pet Pack": {
         "name": "Pet Pack",
@@ -1491,7 +1491,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Sexy Outfits Pack": {
         "name": "Sexy Outfits Pack",
@@ -1504,7 +1504,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Top Hat Pack": {
         "name": "Top Hat Pack",
@@ -1517,7 +1517,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Map Pack": {
         "name": "Map Pack",
@@ -1530,7 +1530,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Gun Pack": {
         "name": "Gun Pack",
@@ -1543,7 +1543,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "The Zombie Pack": {
         "name": "The Zombie Pack",
@@ -1556,7 +1556,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Night Map Pack": {
         "name": "Night Map Pack",
@@ -1569,7 +1569,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Psychological Warfare Pack": {
         "name": "Psychological Warfare Pack",
@@ -1582,7 +1582,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Armor for your Horse Pack": {
         "name": "Armor for your Horse Pack",
@@ -1595,7 +1595,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Finish the Fight Pack": {
         "name": "Finish the Fight Pack",
@@ -1608,7 +1608,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Particles Pack": {
         "name": "Particles Pack",
@@ -1777,7 +1777,7 @@
         "trap": true,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4
       },
       "Pickaxe": {
         "name": "Pickaxe",
@@ -1985,7 +1985,7 @@
         "trap": true,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Temporary Spike": {
         "name": "Temporary Spike",
@@ -1998,7 +1998,7 @@
         "trap": true,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Loading Screen": {
         "name": "Loading Screen",
@@ -2011,7 +2011,7 @@
         "trap": true,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7
       },
       "DLC Quest: Progressive Weapon": {
         "name": "DLC Quest: Progressive Weapon",
@@ -2112,27 +2112,27 @@
       "76 coins": 1,
       "89 coins": 1,
       "9 coins": 1,
-      "Animation Pack": 2,
-      "Armor for your Horse Pack": 2,
-      "Audio Pack": 2,
-      "Double Jump Pack": 2,
-      "Finish the Fight Pack": 2,
-      "Gun Pack": 2,
-      "Loading Screen": 14,
-      "Map Pack": 2,
-      "Movement Pack": 2,
-      "Name Change Pack": 8,
-      "Night Map Pack": 2,
-      "Pause Menu Pack": 2,
-      "Pet Pack": 2,
-      "Psychological Warfare Pack": 2,
-      "Sexy Outfits Pack": 2,
-      "Temporary Spike": 2,
-      "The Zombie Pack": 2,
-      "Time is Money Pack": 2,
-      "Top Hat Pack": 2,
+      "Animation Pack": 1,
+      "Armor for your Horse Pack": 1,
+      "Audio Pack": 1,
+      "Double Jump Pack": 1,
+      "Finish the Fight Pack": 1,
+      "Gun Pack": 1,
+      "Loading Screen": 7,
+      "Map Pack": 1,
+      "Movement Pack": 1,
+      "Name Change Pack": 4,
+      "Night Map Pack": 1,
+      "Pause Menu Pack": 1,
+      "Pet Pack": 1,
+      "Psychological Warfare Pack": 1,
+      "Sexy Outfits Pack": 1,
+      "Temporary Spike": 1,
+      "The Zombie Pack": 1,
+      "Time is Money Pack": 1,
+      "Top Hat Pack": 1,
       "Victory Basic": 1,
-      "Zombie Sheep": 2
+      "Zombie Sheep": 1
     }
   },
   "progression_mapping": {

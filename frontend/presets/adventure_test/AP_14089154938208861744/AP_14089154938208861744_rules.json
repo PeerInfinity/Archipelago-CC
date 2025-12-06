@@ -1,0 +1,901 @@
+{
+  "schema_version": 3,
+  "game_name": "Adventure Test",
+  "game_directory": "adventure_test",
+  "archipelago_version": "0.6.5",
+  "generation_seed": 1,
+  "player_names": {
+    "1": "Player1"
+  },
+  "world_classes": {
+    "1": "AdventureTestWorld"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "GameStart",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Overworld": {
+        "name": "Overworld",
+        "exits": [
+          {
+            "name": "YellowCastlePort",
+            "connected_region": "YellowCastle",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Yellow Key"
+            }
+          },
+          {
+            "name": "WhiteCastlePort",
+            "connected_region": "WhiteCastle",
+            "access_rule": {
+              "type": "item_check",
+              "item": "White Key"
+            }
+          },
+          {
+            "name": "BlackCastlePort",
+            "connected_region": "BlackCastle",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Black Key"
+            }
+          },
+          {
+            "name": "CreditsWall",
+            "connected_region": "CreditsRoom",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Black Key",
+                    "Bridge"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Blue Labyrinth 0",
+            "id": 118000004,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Left Difficulty Switch",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue Labyrinth 1",
+            "id": 118000006,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Slow Yorgle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Catacombs",
+            "id": 118000009,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Sword",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Adjacent to Catacombs",
+            "id": 118000012,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Slow Grundle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Southwest of Catacombs",
+            "id": 118000014,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "White Castle Gate",
+            "id": 118000015,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Black Castle Gate",
+            "id": 118000016,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Black Key",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Yellow Castle Gate",
+            "id": 118000017,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Northeast of Catacombs",
+            "id": 118000028,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Southeast of Catacombs",
+            "id": 118000029,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Slay Yorgle",
+            "id": 118000209,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Right Difficulty Switch",
+                    "Sword"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "YellowCastle": {
+        "name": "YellowCastle",
+        "exits": [
+          {
+            "name": "YellowCastleExit",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Inside Yellow Castle",
+            "id": 118000018,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Magnet",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Chalice Home",
+            "id": null,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Chalice",
+                    "Yellow Key"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ],
+        "hint_text": "Yellow Castle"
+      },
+      "WhiteCastle": {
+        "name": "WhiteCastle",
+        "exits": [
+          {
+            "name": "WhiteCastleExit",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "WhiteCastleSecretPassage",
+            "connected_region": "WhiteCastleVault",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Bridge"
+            }
+          },
+          {
+            "name": "WhiteCastlePeekPassage",
+            "connected_region": "WhiteCastlePreVaultPeek",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Bridge",
+                    "Magnet"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "RedMaze0",
+            "id": 118000023,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "RedMaze1",
+            "id": 118000026,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ],
+        "hint_text": "White Castle"
+      },
+      "WhiteCastlePreVaultPeek": {
+        "name": "WhiteCastlePreVaultPeek",
+        "exits": [
+          {
+            "name": "WhiteCastleFromPeek",
+            "connected_region": "WhiteCastle",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Red Maze Vault Entrance",
+            "id": 118000183,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ],
+        "hint_text": "White Castle Secret Peek"
+      },
+      "WhiteCastleVault": {
+        "name": "WhiteCastleVault",
+        "exits": [
+          {
+            "name": "WhiteCastleReturnPassage",
+            "connected_region": "WhiteCastle",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Red Maze Vault",
+            "id": 118000025,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Slay Grundle",
+            "id": 118000210,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Right Difficulty Switch",
+                    "Sword"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Yellow Key",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ],
+        "hint_text": "White Castle Vault"
+      },
+      "BlackCastle": {
+        "name": "BlackCastle",
+        "exits": [
+          {
+            "name": "BlackCastleExit",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "BlackCastleVaultEntrance",
+            "connected_region": "BlackCastleVault",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Bridge",
+                    "Magnet"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Dungeon0",
+            "id": 118000019,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Dungeon1",
+            "id": 118000021,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Right Difficulty Switch",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Black Castle Foyer",
+            "id": 118000027,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Bridge",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Slay Rhindle",
+            "id": 118000208,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Right Difficulty Switch",
+                    "Sword"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Slow Rhindle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ],
+        "hint_text": "Black Castle"
+      },
+      "BlackCastleVault": {
+        "name": "BlackCastleVault",
+        "exits": [
+          {
+            "name": "BlackCastleReturnPassage",
+            "connected_region": "BlackCastle",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Dungeon Vault",
+            "id": 118000181,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "White Key",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ],
+        "hint_text": "Black Castle Vault"
+      },
+      "CreditsRoom": {
+        "name": "CreditsRoom",
+        "exits": [
+          {
+            "name": "CreditsExit",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "CreditsToFarSide",
+            "connected_region": "CreditsRoomFarSide",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Magnet"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Credits Left Side",
+            "id": 118000030,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ],
+        "hint_text": "Credits Room"
+      },
+      "CreditsRoomFarSide": {
+        "name": "CreditsRoomFarSide",
+        "exits": [
+          {
+            "name": "CreditsFromFarSide",
+            "connected_region": "CreditsRoom",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Credits Right Side",
+            "id": 118000190,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Chalice",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ],
+        "hint_text": "Credits Far Side"
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "Yellow Key": {
+        "name": "Yellow Key",
+        "id": 118000011,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "White Key": {
+        "name": "White Key",
+        "id": 118000012,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Black Key": {
+        "name": "Black Key",
+        "id": 118000013,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Bridge": {
+        "name": "Bridge",
+        "id": 118000010,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Magnet": {
+        "name": "Magnet",
+        "id": 118000017,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Sword": {
+        "name": "Sword",
+        "id": 118000009,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Chalice": {
+        "name": "Chalice",
+        "id": 118000016,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Left Difficulty Switch": {
+        "name": "Left Difficulty Switch",
+        "id": 118000256,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Right Difficulty Switch": {
+        "name": "Right Difficulty Switch",
+        "id": 118000257,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Freeincarnate": {
+        "name": "Freeincarnate",
+        "id": 118000258,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 12,
+        "classification": "filler"
+      },
+      "Slow Yorgle": {
+        "name": "Slow Yorgle",
+        "id": 118000259,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Slow Grundle": {
+        "name": "Slow Grundle",
+        "id": 118000260,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Slow Rhindle": {
+        "name": "Slow Rhindle",
+        "id": 118000261,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Revive Dragons": {
+        "name": "Revive Dragons",
+        "id": 118000262,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "trap"
+      },
+      "nothing": {
+        "name": "nothing",
+        "id": 118000000,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Event",
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "Black Key": 1,
+      "Bridge": 1,
+      "Chalice": 1,
+      "Freeincarnate": 12,
+      "Left Difficulty Switch": 1,
+      "Magnet": 1,
+      "Right Difficulty Switch": 1,
+      "Slow Grundle": 1,
+      "Slow Rhindle": 1,
+      "Slow Yorgle": 1,
+      "Sword": 1,
+      "Victory": 1,
+      "White Key": 1,
+      "Yellow Key": 1
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "settings": {
+    "1": {
+      "game": "Adventure Test",
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {
+      "name": "Adventure Test",
+      "rule_format": {
+        "version": "1.0"
+      }
+    }
+  }
+}

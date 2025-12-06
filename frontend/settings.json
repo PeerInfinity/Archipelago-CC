@@ -177,8 +177,18 @@
       "autoRestart": false,
       "loopModeEnabled": false
     },
-    "testSpoilers": {
+    "spoilerTest": {
       "verboseSpoilerTests": false
+    },
+    "discovery": {
+      "enableDiscoveryMode": false,
+      "regionDiscoveryTrigger": "onEnter",
+      "autoDiscoverLocations": false,
+      "autoDiscoverExits": false,
+      "undiscoveredDisplay": "hidden",
+      "showDebugOptions": true,
+      "clickDiscoversLocation": true,
+      "showUndiscoveredDetails": false
     }
   }
 }

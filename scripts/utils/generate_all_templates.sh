@@ -39,37 +39,12 @@ fi
 if [ "$GENERATE_MULTIWORLD" = "true" ]; then
   rm -rf Players/presets/Multiworld/
   mkdir -p Players/presets/Multiworld/
-  cp Players/Templates/*.yaml Players/presets/Multiworld/
-
-  #Exclude list:
-  rm -f Players/presets/Multiworld/"Archipelago.yaml" \
-        Players/presets/Multiworld/"Final Fantasy.yaml" \
-        Players/presets/Multiworld/"Hollow Knight.yaml" \
-        Players/presets/Multiworld/"Ocarina of Time.yaml" \
-        Players/presets/Multiworld/"Sudoku.yaml" \
-        Players/presets/Multiworld/"Universal Tracker.yaml" \
-        Players/presets/Multiworld/"Zillion.yaml"
-
-  #Currently failing games:
-  rm -f Players/presets/Multiworld/"Blasphemous.yaml" \
-        Players/presets/Multiworld/"Kingdom Hearts.yaml" \
-        Players/presets/Multiworld/"SMZ3.yaml" \
-        Players/presets/Multiworld/"Stardew Valley.yaml" \
-        Players/presets/Multiworld/"Super Metroid.yaml"
+  cp "Players/Templates/A Hat in Time.yaml" "Players/Templates/A Link to the Past.yaml" "Players/Templates/Adventure.yaml" "Players/Templates/A Short Hike.yaml" Players/presets/Multiworld/
 
   python Generate.py --player_files_path "Players/presets/Multiworld" --seed 1
 
   if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
-    rm -rf Players/presets/Multiworld/
-    mkdir -p Players/presets/Multiworld/
-    cp "Players/Templates/A Hat in Time.yaml" "Players/Templates/A Link to the Past.yaml" "Players/Templates/Adventure.yaml" "Players/Templates/A Short Hike.yaml" Players/presets/Multiworld/
-
     python Generate.py --player_files_path "Players/presets/Multiworld" --seed 2
-
-    rm -rf Players/presets/Multiworld/
-    mkdir -p Players/presets/Multiworld/
-    cp "Players/Templates/Adventure.yaml" "Players/Templates/A Short Hike.yaml" Players/presets/Multiworld/
-
     python Generate.py --player_files_path "Players/presets/Multiworld" --seed 3
   fi
 
@@ -175,6 +150,33 @@ fi
 #python scripts/build/pack_apworld.py mathadventure
 #python scripts/build/pack_apworld.py bakingadventure
 #python scripts/build/pack_apworld.py codingadventure
+
+# Test templates
+python Generate.py --weights_file_path "Templates/TOEM original.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/TOEM rule builder.yaml" --multi 1 --seed 1
+
+python Generate.py --weights_file_path "Templates/A Short Hike Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Adventure Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Aquaria Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Bomb Rush Cyberfunk Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Bumper Stickers Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/ChecksFinder Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/DLCQuest Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Faxanadu Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Final Fantasy Mystic Quest Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Hylics 2 Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Inscryption Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Kirby's Dream Land 3 Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Landstalker - The Treasures of King Nole Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Lingo Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Lufia II Ancient Cave Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Noita Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Saving Princess Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Shivers Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/The Witness Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Timespinner Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/TUNIC Test.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Wargroove Test.yaml" --multi 1 --seed 1
 
 #remove empty preset directories
 find frontend/presets -type d -empty -delete

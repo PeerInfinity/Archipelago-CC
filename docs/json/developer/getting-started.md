@@ -132,7 +132,7 @@ npm test                          # Run tests (auto-starts HTTP server)
 
 **Detailed Instructions:**
 
-This project includes an end-to-end test suite using Playwright that validates the entire frontend system, including the crucial `testSpoilers` logic validation. To run it:
+This project includes an end-to-end test suite using Playwright that validates the entire frontend system, including the crucial `spoilerTest` logic validation. To run it:
 
 1.  Make sure you have Node.js and npm installed.
 2.  In the project's root directory, run `npm install` to get the testing dependencies.

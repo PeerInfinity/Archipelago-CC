@@ -163,7 +163,7 @@ Each subdirectory in `frontend/modules/` represents a distinct, self-contained f
 -   **`settings/`**: Provides a UI for editing application settings.
 -   **`testModule/`**: A simple module used for testing dynamic module loading.
 -   **`testPlaythroughs/`**: A developer tool for replaying a game's progression event-by-event to validate the `StateManager`.
--   **`testSpoilers/`**: A powerful validation tool that replays a game's logical progression against its spoiler log to confirm the accuracy of the exported rules.
+-   **`spoilerTest/`**: A powerful validation tool that replays a game's logical progression against its spoiler log to confirm the accuracy of the exported rules.
 -   **`tests/`**: A comprehensive in-app framework for discovering, running, and debugging automated feature tests. It is the core of the project's Playwright-based end-to-end testing strategy.
 -   **`textAdventure/`**: Provides a classic text-based adventure interface for interacting with the game world.
 -   **`timer/` & `timerPanel/`**: Manages the logic and UI for the automated location checking timer ("Begin" / "Quick Check").

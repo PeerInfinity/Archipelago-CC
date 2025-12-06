@@ -1,0 +1,220 @@
+name: Test World Generator (Single Job)
+
+on:
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: 'Seed number to use for testing'
+        required: true
+        type: number
+        default: 1
+
+      canonical_seed1:
+        description: 'Use canonical seed 1 placement (items in original locations)'
+        type: boolean
+        default: true
+
+      include_list:
+        description: 'Comma-separated list of templates to test (e.g., "Adventure.yaml,Clique.yaml"). Leave empty for all.'
+        type: string
+        default: ''
+
+      delete_existing_results:
+        description: 'Delete existing test-results.json before testing'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  test-world-generator:
+    name: Test World Generator
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create or switch to test-results-update branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin
+
+          if git ls-remote --exit-code --heads origin test-results-update; then
+            git checkout test-results-update
+            git pull origin test-results-update
+            git rm -rf .
+            git checkout origin/main -- .
+            if ! git diff --staged --quiet; then
+              git commit -m "Sync test-results-update with main"
+              git push origin test-results-update
+            fi
+          else
+            git checkout -b test-results-update origin/main
+          fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Cache Python virtual environment
+        uses: actions/cache@v4
+        id: cache-venv
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements.txt') }}
+
+      - name: Create virtual environment and install dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run ModuleUpdate
+        run: |
+          source .venv/bin/activate
+          python ModuleUpdate.py --yes
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py minimal-spoilers
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v4
+        id: cache-node
+        with:
+          path: node_modules
+          key: node-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Node.js dependencies
+        if: steps.cache-node.outputs.cache-hit != 'true'
+        run: npm install
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: cache-playwright
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
+        run: |
+          source .venv/bin/activate
+          npx playwright install chromium
+
+      - name: Setup - Clean test artifacts
+        run: |
+          source .venv/bin/activate
+
+          # Clean _test worlds
+          find worlds -maxdepth 1 -type d -name '*_test' -exec rm -rf {} + 2>/dev/null || true
+
+          # Clean _test templates
+          find Players/Templates -name '* Test.yaml' -delete 2>/dev/null || true
+
+          # Clean _test presets
+          find frontend/presets -maxdepth 1 -type d -name '*_test' -exec rm -rf {} + 2>/dev/null || true
+
+          # Clear and regenerate templates
+          rm -f Players/Templates/*.yaml
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Delete existing test results
+        if: inputs.delete_existing_results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Delete world generator test results
+          git rm -f scripts/output/world-generator/test-results.json || true
+          git rm -f docs/json/developer/test-results/test-results-world-generator.md || true
+
+          # Commit if there are changes
+          if ! git diff --staged --quiet; then
+            git commit -m "Delete existing world generator test results before new test run"
+            git push origin test-results-update
+          fi
+
+      - name: Start HTTP server
+        run: |
+          python -m http.server 8000 &
+          sleep 2
+
+      - name: Run world generator tests
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          source .venv/bin/activate
+
+          # Build command with optional flags
+          CMD="python scripts/test/test-world-generator.py"
+          CMD="$CMD --seed ${{ inputs.seed }}"
+          CMD="$CMD --phase all"
+
+          if [ "${{ inputs.canonical_seed1 }}" = "true" ]; then
+            CMD="$CMD --canonical-seed1"
+          fi
+
+          if [ -n "${{ inputs.include_list }}" ]; then
+            CMD="$CMD --include-list '${{ inputs.include_list }}'"
+          fi
+
+          echo "Running: $CMD"
+          eval $CMD
+
+      - name: Generate markdown report
+        if: always()
+        run: |
+          source .venv/bin/activate
+          python scripts/docs/generate-world-generator-report.py || true
+
+      - name: Cleanup test artifacts
+        if: always()
+        run: |
+          source .venv/bin/activate
+
+          # Clean _test worlds
+          find worlds -maxdepth 1 -type d -name '*_test' -exec rm -rf {} + 2>/dev/null || true
+
+          # Clean _test templates
+          find Players/Templates -name '* Test.yaml' -delete 2>/dev/null || true
+
+          # Clean _test presets
+          find frontend/presets -maxdepth 1 -type d -name '*_test' -exec rm -rf {} + 2>/dev/null || true
+
+          # Regenerate clean templates
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Commit and push results
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f scripts/output/world-generator/test-results.json || true
+          git add -f docs/json/developer/test-results/test-results-world-generator.md || true
+
+          if ! git diff --staged --quiet; then
+            git commit -m "Update world generator test results (single job)
+
+          Generated by workflow run: ${{ github.run_id }}
+          Seed: ${{ inputs.seed }}
+          Canonical seed 1: ${{ inputs.canonical_seed1 }}
+          Include list: ${{ inputs.include_list || 'all' }}
+          "
+            git push origin test-results-update
+          fi

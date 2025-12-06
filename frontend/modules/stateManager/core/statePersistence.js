@@ -275,7 +275,8 @@ export function _createSelfSnapshotInterface(sm) {
             inventory: sm.inventory,
             flags: sm.gameStateModule?.flags || [],
             events: sm.gameStateModule?.events || [],
-            player: { id: sm.playerId, slot: sm.playerId }
+            player: { id: sm.playerId, slot: sm.playerId },
+            prog_items: sm.prog_items  // Include prog_items for state counter games
           };
           // Include all game-specific data needed by helpers (e.g., Pokemon local_poke_data)
           const staticData = {
@@ -303,7 +304,8 @@ export function _createSelfSnapshotInterface(sm) {
             inventory: sm.inventory,
             flags: sm.gameStateModule?.flags || [],
             events: sm.gameStateModule?.events || [],
-            player: { id: sm.playerId, slot: sm.playerId }
+            player: { id: sm.playerId, slot: sm.playerId },
+            prog_items: sm.prog_items  // Include prog_items for state counter games
           };
           // Include all game-specific data needed by helpers (e.g., Pokemon local_poke_data)
           const staticData = {
@@ -409,7 +411,11 @@ export function _createSelfSnapshotInterface(sm) {
       // Logic object (game-specific helper functions)
       if (name === 'logic') {
         // Get game-specific helpers from the game logic module
-        const gameName = sm.rules?.game_name;
+        // For multiworld, use the player-specific game from settings instead of the top-level game_name
+        let gameName = sm.rules?.game_name;
+        if (gameName === 'Multiworld' && sm.settings?.game) {
+          gameName = sm.settings.game;
+        }
         if (gameName) {
           const gameLogic = getGameLogic(gameName);
           if (gameLogic && gameLogic.helperFunctions) {
@@ -712,7 +718,8 @@ export function getStaticGameData(sm) {
     mode: sm.mode,
     // Game-specific information
     game_info: sm.gameInfo,
-    settings: sm.rules?.settings,
+    settings: sm.rules?.settings,  // Full settings object (keyed by player ID for multiworld)
+    helpers: sm.rules?.helpers,  // Helper function definitions (keyed by player ID for multiworld)
     // Starting items (precollected items)
     starting_items: sm.rules?.starting_items,
     // ID mappings
@@ -974,6 +981,19 @@ export function clearState(sm, options = { recomputeAndSendUpdate: true }) {
           }
         }
       }
+    }
+
+    // Re-initialize prog_items from prog_items_init (e.g., for precollected coins)
+    const gameInfo = sm.gameInfo?.[sm.playerId];
+    if (gameInfo?.prog_items_init && sm.prog_items) {
+      const playerId = sm.playerId;
+      if (!sm.prog_items[playerId]) {
+        sm.prog_items[playerId] = {};
+      }
+      for (const [accumulatorName, initialValue] of Object.entries(gameInfo.prog_items_init)) {
+        sm.prog_items[playerId][accumulatorName] = initialValue;
+      }
+      sm._logDebug(`[clearState] Re-initialized prog_items from prog_items_init`);
     }
   } else if (!sm.inventory) {
     // If inventory doesn't exist, create it

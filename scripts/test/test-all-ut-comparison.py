@@ -95,9 +95,15 @@ def parse_sphere_index(sphere_index: str) -> tuple:
         return (-1, -1)
 
 
-def run_ut_comparison_test(yaml_file: Path, seed: str, port: int, output_dir: Path) -> Dict:
+def run_ut_comparison_test(yaml_file: Path, seed: Optional[str], port: int, output_dir: Path) -> Dict:
     """
     Run UT comparison test for a single template.
+
+    Args:
+        yaml_file: Path to the YAML template file
+        seed: Seed for generation (None = let UT generate random seed)
+        port: Server port
+        output_dir: Output directory for results
 
     Returns a dict with:
         - passed: bool
@@ -126,11 +132,19 @@ def run_ut_comparison_test(yaml_file: Path, seed: str, port: int, output_dir: Pa
     cmd = [
         sys.executable, str(PROJECT_ROOT / "scripts/test/test-ut-comparison.py"),
         "--yaml-file", str(yaml_file),
-        "--seed", seed,
         "--port", str(port),
         "--output-dir", str(output_dir),
         "--auto-ignore-events"
     ]
+
+    # Pass seed for generation (always uses seed 1 for consistent game generation)
+    # For UT seed: pass the same seed in fixed mode, or empty string in random mode
+    if seed is not None:
+        # Fixed seed mode: use same seed for both generation and UT
+        cmd.extend(["--seed", seed])
+    else:
+        # Random seed mode: use seed 1 for generation, let UT generate its own random seed
+        cmd.extend(["--seed", "1", "--ut-seed", ""])
 
     print(f"  Running: {' '.join(cmd[:6])}...")  # Show truncated command
 
@@ -139,7 +153,7 @@ def run_ut_comparison_test(yaml_file: Path, seed: str, port: int, output_dir: Pa
             cmd,
             capture_output=True,
             text=True,
-            timeout=600,  # 10 minute timeout per test
+            timeout=1500,  # 25 minute timeout per test (generation: 10min + driver: 10min + overhead)
             cwd=str(PROJECT_ROOT)
         )
 
@@ -219,8 +233,8 @@ def main():
     parser.add_argument(
         '--output-file',
         type=str,
-        default='scripts/output/ut-comparison/test-results.json',
-        help='Output JSON file path'
+        default=None,
+        help='Output JSON file path (auto-computed if not specified)'
     )
     parser.add_argument(
         '--skip-list',
@@ -237,8 +251,8 @@ def main():
     parser.add_argument(
         '--seed',
         type=str,
-        default='1',
-        help='Seed to use for generation (default: 1)'
+        default=None,
+        help='Seed to use for generation (if not specified, a random seed is used for each test)'
     )
     parser.add_argument(
         '--port',
@@ -277,6 +291,23 @@ def main():
     )
 
     args = parser.parse_args()
+
+    # Determine seed mode: if --seed is provided, use fixed mode; otherwise use random mode
+    is_random_seed_mode = args.seed is None
+    seed_type = "random" if is_random_seed_mode else "fixed"
+
+    # Compute output filename if not specified
+    if args.output_file is None:
+        # Determine if this is a split job
+        is_split_job = args.every_nth > 1
+        if is_split_job:
+            # Split number is skip_first + 1 (e.g., skip_first=0 -> split 1)
+            split_num = args.skip_first + 1
+            output_filename = f"test-results-{seed_type}-split-{split_num}.json"
+        else:
+            output_filename = f"test-results-{seed_type}-seed.json"
+        args.output_file = f"scripts/output/ut-comparison/{output_filename}"
+        print(f"Auto-computed output file: {args.output_file}")
 
     # Get templates directory
     templates_dir = PROJECT_ROOT / args.templates_dir
@@ -322,7 +353,8 @@ def main():
             "created": datetime.now().isoformat(),
             "last_updated": datetime.now().isoformat(),
             "script_version": "1.0.0",
-            "seed": args.seed,
+            "seed_mode": seed_type,
+            "seed": args.seed if not is_random_seed_mode else "random",
             "runs_per_template": args.runs_per_template,
             "total_templates": len(template_files)
         },
@@ -350,10 +382,15 @@ def main():
         # Run multiple tests and collect results
         run_results = []
         for run_num in range(1, runs_per_template + 1):
-            if runs_per_template > 1:
-                print(f"    Run {run_num}/{runs_per_template}...", end=" ", flush=True)
+            # Use provided seed or None (let UT generate its own random seed)
+            test_seed = args.seed  # None in random mode, specific value in fixed mode
 
-            test_result = run_ut_comparison_test(yaml_file, args.seed, args.port, test_temp_dir)
+            if runs_per_template > 1:
+                seed_display = test_seed if test_seed else "random"
+                print(f"    Run {run_num}/{runs_per_template} (seed={seed_display})...", end=" ", flush=True)
+
+            test_result = run_ut_comparison_test(yaml_file, test_seed, args.port, test_temp_dir)
+            test_result["seed_used"] = test_seed  # None means UT generated its own
             run_results.append(test_result)
 
             if runs_per_template > 1:
@@ -413,6 +450,7 @@ def main():
                 "num_runs": runs_per_template,
                 "run_details": [
                     {
+                        "seed": r.get("seed_used"),
                         "passed": r["passed"],
                         "spheres_matched": r["spheres_matched"],
                         "spheres_mismatched": r.get("spheres_mismatched", 0),
