@@ -500,43 +500,66 @@ class BaseGameExportHandler:
         if not loaded_modules:
             return helper_definitions
 
-        # Process each helper (discovered or whitelisted)
-        for helper_name in helpers_to_export:
-            if helper_name in blacklist:
-                logger.debug(f"Skipping blacklisted helper '{helper_name}'")
-                continue
+        # Process helpers iteratively to discover nested helper dependencies
+        # When analyzing a helper, it may call other helpers which get registered
+        # Keep iterating until no new helpers are discovered
+        processed_helpers: Set[str] = set()
+        max_iterations = 10  # Safety limit to prevent infinite loops
 
-            # Find the helper function in one of the loaded modules
-            helper_func = None
-            for module in loaded_modules:
-                if hasattr(module, helper_name):
-                    helper_func = getattr(module, helper_name)
-                    break
+        for iteration in range(max_iterations):
+            # Get current set of helpers to export (may grow as we discover new ones)
+            if self.AUTO_EXPORT_DISCOVERED_HELPERS:
+                discovered = self.get_discovered_helpers()
+                current_helpers = discovered | whitelist
+            else:
+                current_helpers = whitelist
 
-            if helper_func is None:
-                # Not found in helper modules - this is normal for built-in helpers
-                # like 'has', 'count', etc. that the frontend implements directly
-                logger.debug(f"Helper function '{helper_name}' not found in helper modules (may be a built-in)")
-                continue
+            # Find helpers that haven't been processed yet
+            new_helpers = current_helpers - processed_helpers - blacklist
 
-            # Analyze the function to get its rule structure
-            try:
-                rule = analyze_rule(
-                    rule_func=helper_func,
-                    game_handler=self,
-                    player_context=world.player if hasattr(world, 'player') else None
-                )
+            if not new_helpers:
+                logger.debug(f"Helper discovery complete after {iteration + 1} iteration(s)")
+                break
 
-                # Clean up the rule - resolve item names, convert state methods to rule types
-                rule = self._clean_helper_rule(rule, world)
+            logger.debug(f"Iteration {iteration + 1}: Processing {len(new_helpers)} new helpers: {new_helpers}")
 
-                if rule and rule.get('type') != 'error':
-                    helper_definitions[helper_name] = rule
-                    logger.debug(f"Exported helper '{helper_name}': {rule}")
-                else:
-                    logger.warning(f"Failed to analyze helper '{helper_name}': {rule}")
-            except Exception as e:
-                logger.error(f"Error analyzing helper '{helper_name}': {e}")
+            for helper_name in new_helpers:
+                processed_helpers.add(helper_name)
+
+                # Find the helper function in one of the loaded modules
+                helper_func = None
+                for module in loaded_modules:
+                    if hasattr(module, helper_name):
+                        helper_func = getattr(module, helper_name)
+                        break
+
+                if helper_func is None:
+                    # Not found in helper modules - this is normal for built-in helpers
+                    # like 'has', 'count', etc. that the frontend implements directly
+                    logger.debug(f"Helper function '{helper_name}' not found in helper modules (may be a built-in)")
+                    continue
+
+                # Analyze the function to get its rule structure
+                # This may discover new helpers via register_helper_usage
+                try:
+                    rule = analyze_rule(
+                        rule_func=helper_func,
+                        game_handler=self,
+                        player_context=world.player if hasattr(world, 'player') else None
+                    )
+
+                    # Clean up the rule - resolve item names, convert state methods to rule types
+                    rule = self._clean_helper_rule(rule, world)
+
+                    if rule and rule.get('type') != 'error':
+                        helper_definitions[helper_name] = rule
+                        logger.debug(f"Exported helper '{helper_name}': {rule}")
+                    else:
+                        logger.warning(f"Failed to analyze helper '{helper_name}': {rule}")
+                except Exception as e:
+                    logger.error(f"Error analyzing helper '{helper_name}': {e}")
+        else:
+            logger.warning(f"Helper discovery reached max iterations ({max_iterations}), may have circular dependencies")
 
         return helper_definitions
 
