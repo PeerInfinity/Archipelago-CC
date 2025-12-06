@@ -1642,12 +1642,25 @@ export const evaluateRule = (rule, context, depth = 0) => {
         // Resolve name using the context's resolveName method if available
         if (context && typeof context.resolveName === 'function') {
           result = context.resolveName(rule.name);
-        } else {
+        }
+
+        // If not resolved, try to get from settings
+        // This is needed for helper definitions that reference settings like 'floating'
+        if (result === undefined && typeof context?.getStaticData === 'function') {
+          const staticData = context.getStaticData();
+          const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
+          const settingValue = staticData?.settings?.[playerId]?.[rule.name];
+          if (settingValue !== undefined) {
+            result = settingValue;
+            log('debug', `[evaluateRule] Resolved name '${rule.name}' from settings: ${result}`);
+          }
+        }
+
+        if (result === undefined) {
           log(
             'warn',
-            `[evaluateRule] Context cannot resolve name: ${rule.name}`
+            `[evaluateRule] Could not resolve name: ${rule.name}`
           );
-          result = undefined;
         }
         break;
       }

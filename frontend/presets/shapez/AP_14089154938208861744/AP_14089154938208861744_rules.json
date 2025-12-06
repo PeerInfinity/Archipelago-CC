@@ -4383,7 +4383,8 @@
     "1": {
       "game": "shapez",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "floating": false
     }
   },
   "game_info": {
@@ -4396,29 +4397,6 @@
   },
   "helpers": {
     "1": {
-      "can_make_half_shape": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "can_cut_half",
-            "args": []
-          },
-          {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Quad Cutter"
-              },
-              {
-                "type": "item_check",
-                "item": "Stacker"
-              }
-            ]
-          }
-        ]
-      },
       "can_make_east_windmill": {
         "type": "and",
         "conditions": [
@@ -4453,6 +4431,23 @@
           }
         ]
       },
+      "can_mix_colors": {
+        "type": "item_check",
+        "item": "Color Mixer"
+      },
+      "can_rotate_90": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Rotator"
+          },
+          {
+            "type": "item_check",
+            "item": "Rotator (CCW)"
+          }
+        ]
+      },
       "can_make_half_half_shape": {
         "type": "and",
         "conditions": [
@@ -4473,27 +4468,6 @@
                 "item": "Quad Cutter"
               }
             ]
-          }
-        ]
-      },
-      "can_stack": {
-        "type": "item_check",
-        "item": "Stacker"
-      },
-      "can_cut_half": {
-        "type": "item_check",
-        "item": "Cutter"
-      },
-      "can_rotate_90": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "item_check",
-            "item": "Rotator"
-          },
-          {
-            "type": "item_check",
-            "item": "Rotator (CCW)"
           }
         ]
       },
@@ -4528,30 +4502,98 @@
           }
         ]
       },
-      "can_mix_colors": {
+      "can_stack": {
         "type": "item_check",
-        "item": "Color Mixer"
+        "item": "Stacker"
       },
-      "can_paint": {
+      "can_make_half_shape": {
         "type": "or",
         "conditions": [
           {
-            "type": "or",
+            "type": "helper",
+            "name": "can_cut_half",
+            "args": []
+          },
+          {
+            "type": "and",
             "conditions": [
               {
                 "type": "item_check",
-                "item": "Double Painter"
+                "item": "Quad Cutter"
               },
               {
                 "type": "item_check",
-                "item": "Painter"
+                "item": "Stacker"
+              }
+            ]
+          }
+        ]
+      },
+      "can_cut_half": {
+        "type": "item_check",
+        "item": "Cutter"
+      },
+      "can_build_mam": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "can_make_stitched_shape",
+            "args": [
+              {
+                "type": "name",
+                "name": "floating"
               }
             ]
           },
           {
             "type": "helper",
-            "name": "can_use_quad_painter",
+            "name": "can_paint",
             "args": []
+          },
+          {
+            "type": "helper",
+            "name": "can_mix_colors",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has_balancer",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has_tunnel",
+            "args": []
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Belt Reader"
+              },
+              {
+                "type": "item_check",
+                "item": "Item Filter"
+              },
+              {
+                "type": "item_check",
+                "item": "Logic Gates"
+              },
+              {
+                "type": "item_check",
+                "item": "Storage"
+              },
+              {
+                "type": "item_check",
+                "item": "Virtual Processing"
+              },
+              {
+                "type": "item_check",
+                "item": "Wires"
+              }
+            ]
           }
         ]
       },
@@ -4598,6 +4640,29 @@
                 ]
               }
             ]
+          }
+        ]
+      },
+      "can_paint": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Double Painter"
+              },
+              {
+                "type": "item_check",
+                "item": "Painter"
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "can_use_quad_painter",
+            "args": []
           }
         ]
       }

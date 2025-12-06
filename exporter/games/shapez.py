@@ -17,9 +17,30 @@ class ShapezGameExportHandler(GenericGameExportHandler):
     # These will remain as helper calls that the frontend JavaScript must handle
     HELPERS_TO_EXPORT_BLACKLIST = {
         'has_x_belt_multiplier',      # Complex counting logic with loops
-        'can_build_mam',              # Complex multi-helper dependency logic
         'has_logic_list_building',    # Has closure variables (buildings, index) that can't be resolved
     }
+
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """
+        Extract shapez-specific settings including the 'floating' parameter.
+
+        The 'floating' (has_floating) setting is used by helper functions like
+        can_make_stitched_shape and can_build_mam to determine if floating layers
+        are allowed.
+        """
+        # Get base settings
+        settings = super().get_settings_data(world, multiworld, player)
+
+        # Add shapez-specific settings
+        # 'floating' is computed from options in the world's __init__
+        # We need to compute it the same way
+        options = world.options
+        has_floating = (options.allow_floating_layers.value or
+                        not (options.randomize_level_requirements and
+                             options.randomize_upgrade_requirements))
+        settings['floating'] = has_floating
+
+        return settings
 
     def should_preserve_as_helper(self, func_name: str) -> bool:
         """
