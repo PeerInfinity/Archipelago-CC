@@ -2343,9 +2343,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 4
@@ -2356,9 +2354,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 3
@@ -2369,9 +2365,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 4
@@ -2382,9 +2376,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2395,9 +2387,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2408,9 +2398,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2421,9 +2409,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2434,9 +2420,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2447,9 +2431,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2460,9 +2442,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2473,9 +2453,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2486,9 +2464,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2499,9 +2475,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2512,9 +2486,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2525,9 +2497,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2538,9 +2508,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2551,9 +2519,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2564,9 +2530,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2577,9 +2541,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2590,9 +2552,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2603,9 +2563,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2616,9 +2574,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2629,9 +2585,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2642,9 +2596,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 10
@@ -2655,9 +2607,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 35
@@ -2668,9 +2618,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 4
@@ -2681,9 +2629,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 2
@@ -2694,9 +2640,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 8
@@ -2707,9 +2651,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
+        "classification": "trap",
         "event": false,
         "type": null,
         "max_count": 17
@@ -2720,9 +2662,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 4
@@ -2731,9 +2671,7 @@
         "name": "Sky Spring Flow",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 1
@@ -2742,9 +2680,7 @@
         "name": "Joker Spring Flow",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 1
@@ -2753,9 +2689,7 @@
         "name": "Tower of Fortress Spring Flow",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 1
@@ -2764,9 +2698,7 @@
         "name": "Killed Evil One",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 1
@@ -2835,5 +2767,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

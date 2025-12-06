@@ -54,7 +54,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -702,7 +703,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -773,7 +775,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -827,7 +830,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -856,7 +860,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -885,7 +890,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1065,7 +1071,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1102,7 +1109,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1375,7 +1383,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1447,7 +1456,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1975,7 +1985,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2333,7 +2344,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2400,7 +2412,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2429,7 +2442,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2475,7 +2489,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2529,7 +2544,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2653,7 +2669,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2682,7 +2699,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2733,7 +2751,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2839,7 +2859,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3026,7 +3047,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3132,7 +3154,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3182,7 +3205,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3343,7 +3367,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Outside Boo Buddies Room Chest (Bottle Grotto)",
@@ -3357,7 +3382,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3487,7 +3513,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3584,7 +3611,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3750,7 +3778,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Conch Horn (Bottle Grotto)",
@@ -3764,7 +3793,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3864,7 +3894,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3929,7 +3960,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4002,7 +4034,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4160,7 +4193,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4237,7 +4271,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4635,7 +4670,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4693,7 +4729,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4760,7 +4797,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4858,7 +4896,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4900,7 +4939,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4959,7 +4999,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5094,7 +5135,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5195,7 +5237,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "NW of Boots Pit Ledge Chest (Angler's Tunnel)",
@@ -5209,7 +5252,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5301,7 +5345,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5339,7 +5384,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5494,7 +5540,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5790,7 +5837,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5819,7 +5867,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5883,7 +5932,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Spark Chest (Angler's Tunnel)",
@@ -5897,7 +5947,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5944,7 +5995,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6010,7 +6062,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6200,7 +6253,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Surf Harp (Angler's Tunnel)",
@@ -6214,7 +6268,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6291,7 +6346,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6329,7 +6385,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6421,7 +6478,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "East (Rapids Ride)",
@@ -6435,7 +6493,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6653,7 +6712,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -6691,7 +6752,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -6720,7 +6783,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6862,7 +6926,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6913,7 +6978,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6942,7 +7008,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7037,7 +7104,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7220,7 +7288,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7353,7 +7422,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7448,7 +7518,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -7499,7 +7571,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -7670,7 +7744,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -7721,7 +7796,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7846,7 +7922,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8096,7 +8173,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8275,7 +8353,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8676,7 +8755,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8745,7 +8825,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8942,7 +9023,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -9056,7 +9138,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -9106,7 +9189,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9144,7 +9228,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -9173,7 +9258,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -9202,7 +9288,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -9231,7 +9318,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9260,7 +9348,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9289,7 +9378,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -9497,7 +9587,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -9535,7 +9626,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -9747,7 +9839,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9892,7 +9985,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9970,7 +10064,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Thunder Drum (Turtle Rock)",
@@ -9984,7 +10079,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -10056,7 +10152,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -10149,7 +10246,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -10178,7 +10276,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10229,7 +10328,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10249,7 +10349,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10308,7 +10409,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10368,7 +10470,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10418,7 +10521,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -10517,7 +10622,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10867,7 +10973,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -11027,7 +11134,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -11056,7 +11164,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11167,7 +11276,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -11401,7 +11511,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -11455,7 +11566,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -11505,7 +11617,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11559,7 +11672,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11613,7 +11727,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11659,7 +11774,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -11740,7 +11856,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -11843,7 +11960,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Organ of Evening Calm (Eagle's Tower)",
@@ -11857,7 +11975,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -11886,7 +12005,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12027,7 +12147,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -12154,7 +12275,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12382,7 +12504,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12442,7 +12565,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12710,7 +12834,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -12773,7 +12898,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12836,7 +12962,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Upper Small Key (Color Dungeon)",
@@ -12850,7 +12977,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -12896,7 +13024,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -13073,7 +13202,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -13136,7 +13266,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -13437,7 +13568,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunic Fairy Item 2 (Color Dungeon)",
@@ -13451,7 +13583,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -13480,7 +13613,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -13509,7 +13644,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -13568,7 +13705,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -13627,7 +13765,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -13739,7 +13878,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -13797,7 +13937,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -14030,7 +14171,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -14202,7 +14344,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -14222,7 +14365,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -14242,7 +14386,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14356,7 +14501,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -14470,7 +14616,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -14797,7 +14944,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -14839,7 +14987,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -14906,7 +15055,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14994,7 +15144,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15023,7 +15174,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -15073,7 +15225,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -15123,7 +15276,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -15425,7 +15579,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15472,7 +15627,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sea Lily's Bell (Key Cavern)",
@@ -15486,7 +15642,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -15549,7 +15706,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15603,7 +15761,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15632,7 +15791,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15661,7 +15821,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15690,7 +15851,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15719,7 +15881,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15787,7 +15950,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15825,7 +15989,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -16008,7 +16173,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -16067,7 +16233,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -16206,7 +16373,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -16317,7 +16485,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -16436,7 +16605,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -16478,7 +16648,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -16516,7 +16688,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -16634,7 +16808,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -16709,7 +16884,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -16747,7 +16923,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -16927,7 +17104,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -16956,7 +17134,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -17065,7 +17244,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -17300,7 +17480,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Wind Marimba (Catfish's Maw)",
@@ -17314,7 +17495,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -17472,7 +17654,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -17501,7 +17684,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -17530,7 +17714,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -17616,7 +17801,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -17675,7 +17861,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -17713,7 +17900,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -17742,7 +17930,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -18124,7 +18313,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -18157,7 +18347,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -18195,7 +18386,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -18242,7 +18434,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -18327,7 +18520,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Switch, Star Above Statues Chest (Face Shrine)",
@@ -18341,7 +18535,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -18388,7 +18583,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -18429,7 +18625,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -18458,7 +18655,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -18517,7 +18715,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -18546,7 +18745,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -18739,7 +18939,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -18777,7 +18978,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Coral Triangle (Face Shrine)",
@@ -18791,7 +18993,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -18926,7 +19129,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -18972,7 +19176,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -19172,7 +19377,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -19223,7 +19429,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -19274,7 +19481,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -19350,7 +19558,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -19401,7 +19611,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -19504,7 +19716,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -19533,7 +19746,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -19602,7 +19816,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -19787,7 +20002,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -19858,7 +20074,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -19917,7 +20134,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -19946,7 +20164,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -20050,7 +20270,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -20121,7 +20342,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -20381,7 +20604,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Four Zol Chest (Tail Cave)",
@@ -20395,7 +20619,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Spark, Mini-Moldorm Chest (Tail Cave)",
@@ -20409,7 +20634,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -20464,7 +20690,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -20531,7 +20758,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -20628,7 +20856,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -20657,7 +20886,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -20721,7 +20951,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -20767,7 +20998,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -20933,7 +21165,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -21040,7 +21273,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Full Moon Cello (Tail Cave)",
@@ -21054,7 +21288,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -21083,7 +21318,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -21152,7 +21388,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -21203,7 +21440,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -21254,7 +21492,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -21313,7 +21552,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -21352,12 +21592,10 @@
           "Everything",
           "Power Bracelet"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Progressive Shield": {
         "name": "Progressive Shield",
@@ -21366,12 +21604,10 @@
           "Everything",
           "Shield"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Bow": {
         "name": "Bow",
@@ -21379,12 +21615,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Hookshot": {
         "name": "Hookshot",
@@ -21392,12 +21626,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Magic Rod": {
         "name": "Magic Rod",
@@ -21406,12 +21638,10 @@
           "Bush Breakers",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Pegasus Boots": {
         "name": "Pegasus Boots",
@@ -21419,12 +21649,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ocarina": {
         "name": "Ocarina",
@@ -21432,12 +21660,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Feather": {
         "name": "Feather",
@@ -21445,12 +21671,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Shovel": {
         "name": "Shovel",
@@ -21458,12 +21682,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Magic Powder": {
         "name": "Magic Powder",
@@ -21472,12 +21694,10 @@
           "Bush Breakers",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 2,
+        "classification": "progression"
       },
       "Bomb": {
         "name": "Bomb",
@@ -21486,12 +21706,10 @@
           "Bush Breakers",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "progression"
       },
       "Progressive Sword": {
         "name": "Progressive Sword",
@@ -21501,12 +21719,10 @@
           "Everything",
           "Sword"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Flippers": {
         "name": "Flippers",
@@ -21514,12 +21730,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Boomerang": {
         "name": "Boomerang",
@@ -21528,12 +21742,10 @@
           "Bush Breakers",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Slime Key": {
         "name": "Slime Key",
@@ -21542,12 +21754,10 @@
           "Entrance Keys",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Medicine": {
         "name": "Medicine",
@@ -21555,12 +21765,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "useful"
       },
       "Tail Key": {
         "name": "Tail Key",
@@ -21569,12 +21777,10 @@
           "Entrance Keys",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Angler Key": {
         "name": "Angler Key",
@@ -21583,12 +21789,10 @@
           "Entrance Keys",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Face Key": {
         "name": "Face Key",
@@ -21597,12 +21801,10 @@
           "Entrance Keys",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Bird Key": {
         "name": "Bird Key",
@@ -21611,12 +21813,10 @@
           "Entrance Keys",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Gold Leaf": {
         "name": "Gold Leaf",
@@ -21624,12 +21824,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5,
+        "classification": "progression"
       },
       "Map": {
         "name": "Map",
@@ -21637,12 +21835,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Compass": {
         "name": "Compass",
@@ -21650,12 +21846,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Stone Beak": {
         "name": "Stone Beak",
@@ -21663,12 +21857,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Nightmare Key": {
         "name": "Nightmare Key",
@@ -21676,12 +21868,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Key": {
         "name": "Key",
@@ -21689,12 +21879,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "50 Rupees": {
         "name": "50 Rupees",
@@ -21703,12 +21891,10 @@
           "Everything",
           "Rupees"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 26
+        "max_count": 13,
+        "classification": "progression_skip_balancing"
       },
       "20 Rupees": {
         "name": "20 Rupees",
@@ -21717,12 +21903,10 @@
           "Everything",
           "Rupees"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "progression_skip_balancing"
       },
       "100 Rupees": {
         "name": "100 Rupees",
@@ -21731,12 +21915,10 @@
           "Everything",
           "Rupees"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression_skip_balancing"
       },
       "200 Rupees": {
         "name": "200 Rupees",
@@ -21745,12 +21927,10 @@
           "Everything",
           "Rupees"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression"
       },
       "500 Rupees": {
         "name": "500 Rupees",
@@ -21759,12 +21939,10 @@
           "Everything",
           "Rupees"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Seashell": {
         "name": "Seashell",
@@ -21772,12 +21950,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 48
+        "max_count": 24,
+        "classification": "progression_skip_balancing"
       },
       "Nothing": {
         "name": "Nothing",
@@ -21785,12 +21961,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Zol Attack": {
         "name": "Zol Attack",
@@ -21798,12 +21972,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "trap"
       },
       "Small Key (Tail Cave)": {
         "name": "Small Key (Tail Cave)",
@@ -21812,12 +21984,10 @@
           "Everything",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "progression"
       },
       "Small Key (Bottle Grotto)": {
         "name": "Small Key (Bottle Grotto)",
@@ -21826,12 +21996,10 @@
           "Everything",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 5
+        "max_count": 5,
+        "classification": "progression"
       },
       "Small Key (Key Cavern)": {
         "name": "Small Key (Key Cavern)",
@@ -21840,12 +22008,10 @@
           "Everything",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 9
+        "max_count": 9,
+        "classification": "progression"
       },
       "Small Key (Angler's Tunnel)": {
         "name": "Small Key (Angler's Tunnel)",
@@ -21854,12 +22020,10 @@
           "Everything",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 5
+        "max_count": 5,
+        "classification": "progression"
       },
       "Small Key (Catfish's Maw)": {
         "name": "Small Key (Catfish's Maw)",
@@ -21868,12 +22032,10 @@
           "Everything",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "progression"
       },
       "Small Key (Face Shrine)": {
         "name": "Small Key (Face Shrine)",
@@ -21882,12 +22044,10 @@
           "Everything",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "progression"
       },
       "Small Key (Eagle's Tower)": {
         "name": "Small Key (Eagle's Tower)",
@@ -21896,12 +22056,10 @@
           "Everything",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "progression"
       },
       "Small Key (Turtle Rock)": {
         "name": "Small Key (Turtle Rock)",
@@ -21910,12 +22068,10 @@
           "Everything",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 7
+        "max_count": 7,
+        "classification": "progression"
       },
       "Small Key (Color Dungeon)": {
         "name": "Small Key (Color Dungeon)",
@@ -21924,12 +22080,10 @@
           "Everything",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "progression"
       },
       "Dungeon Map (Tail Cave)": {
         "name": "Dungeon Map (Tail Cave)",
@@ -21938,12 +22092,10 @@
           "Everything",
           "Maps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Dungeon Map (Bottle Grotto)": {
         "name": "Dungeon Map (Bottle Grotto)",
@@ -21952,12 +22104,10 @@
           "Everything",
           "Maps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Dungeon Map (Key Cavern)": {
         "name": "Dungeon Map (Key Cavern)",
@@ -21966,12 +22116,10 @@
           "Everything",
           "Maps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Dungeon Map (Angler's Tunnel)": {
         "name": "Dungeon Map (Angler's Tunnel)",
@@ -21980,12 +22128,10 @@
           "Everything",
           "Maps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Dungeon Map (Catfish's Maw)": {
         "name": "Dungeon Map (Catfish's Maw)",
@@ -21994,12 +22140,10 @@
           "Everything",
           "Maps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Dungeon Map (Face Shrine)": {
         "name": "Dungeon Map (Face Shrine)",
@@ -22008,12 +22152,10 @@
           "Everything",
           "Maps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Dungeon Map (Eagle's Tower)": {
         "name": "Dungeon Map (Eagle's Tower)",
@@ -22022,12 +22164,10 @@
           "Everything",
           "Maps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Dungeon Map (Turtle Rock)": {
         "name": "Dungeon Map (Turtle Rock)",
@@ -22036,12 +22176,10 @@
           "Everything",
           "Maps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Dungeon Map (Color Dungeon)": {
         "name": "Dungeon Map (Color Dungeon)",
@@ -22050,12 +22188,10 @@
           "Everything",
           "Maps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Compass (Tail Cave)": {
         "name": "Compass (Tail Cave)",
@@ -22064,12 +22200,10 @@
           "Compasses",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Compass (Bottle Grotto)": {
         "name": "Compass (Bottle Grotto)",
@@ -22078,12 +22212,10 @@
           "Compasses",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Compass (Key Cavern)": {
         "name": "Compass (Key Cavern)",
@@ -22092,12 +22224,10 @@
           "Compasses",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Compass (Angler's Tunnel)": {
         "name": "Compass (Angler's Tunnel)",
@@ -22106,12 +22236,10 @@
           "Compasses",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Compass (Catfish's Maw)": {
         "name": "Compass (Catfish's Maw)",
@@ -22120,12 +22248,10 @@
           "Compasses",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Compass (Face Shrine)": {
         "name": "Compass (Face Shrine)",
@@ -22134,12 +22260,10 @@
           "Compasses",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Compass (Eagle's Tower)": {
         "name": "Compass (Eagle's Tower)",
@@ -22148,12 +22272,10 @@
           "Compasses",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Compass (Turtle Rock)": {
         "name": "Compass (Turtle Rock)",
@@ -22162,12 +22284,10 @@
           "Compasses",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Compass (Color Dungeon)": {
         "name": "Compass (Color Dungeon)",
@@ -22176,12 +22296,10 @@
           "Compasses",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Stone Beak (Tail Cave)": {
         "name": "Stone Beak (Tail Cave)",
@@ -22190,12 +22308,10 @@
           "Everything",
           "Stone Beaks"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Stone Beak (Bottle Grotto)": {
         "name": "Stone Beak (Bottle Grotto)",
@@ -22204,12 +22320,10 @@
           "Everything",
           "Stone Beaks"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Stone Beak (Key Cavern)": {
         "name": "Stone Beak (Key Cavern)",
@@ -22218,12 +22332,10 @@
           "Everything",
           "Stone Beaks"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Stone Beak (Angler's Tunnel)": {
         "name": "Stone Beak (Angler's Tunnel)",
@@ -22232,12 +22344,10 @@
           "Everything",
           "Stone Beaks"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Stone Beak (Catfish's Maw)": {
         "name": "Stone Beak (Catfish's Maw)",
@@ -22246,12 +22356,10 @@
           "Everything",
           "Stone Beaks"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Stone Beak (Face Shrine)": {
         "name": "Stone Beak (Face Shrine)",
@@ -22260,12 +22368,10 @@
           "Everything",
           "Stone Beaks"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Stone Beak (Eagle's Tower)": {
         "name": "Stone Beak (Eagle's Tower)",
@@ -22274,12 +22380,10 @@
           "Everything",
           "Stone Beaks"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Stone Beak (Turtle Rock)": {
         "name": "Stone Beak (Turtle Rock)",
@@ -22288,12 +22392,10 @@
           "Everything",
           "Stone Beaks"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Stone Beak (Color Dungeon)": {
         "name": "Stone Beak (Color Dungeon)",
@@ -22302,12 +22404,10 @@
           "Everything",
           "Stone Beaks"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Nightmare Key (Tail Cave)": {
         "name": "Nightmare Key (Tail Cave)",
@@ -22316,12 +22416,10 @@
           "Everything",
           "Nightmare Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Nightmare Key (Bottle Grotto)": {
         "name": "Nightmare Key (Bottle Grotto)",
@@ -22330,12 +22428,10 @@
           "Everything",
           "Nightmare Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Nightmare Key (Key Cavern)": {
         "name": "Nightmare Key (Key Cavern)",
@@ -22344,12 +22440,10 @@
           "Everything",
           "Nightmare Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Nightmare Key (Angler's Tunnel)": {
         "name": "Nightmare Key (Angler's Tunnel)",
@@ -22358,12 +22452,10 @@
           "Everything",
           "Nightmare Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Nightmare Key (Catfish's Maw)": {
         "name": "Nightmare Key (Catfish's Maw)",
@@ -22372,12 +22464,10 @@
           "Everything",
           "Nightmare Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Nightmare Key (Face Shrine)": {
         "name": "Nightmare Key (Face Shrine)",
@@ -22386,12 +22476,10 @@
           "Everything",
           "Nightmare Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Nightmare Key (Eagle's Tower)": {
         "name": "Nightmare Key (Eagle's Tower)",
@@ -22400,12 +22488,10 @@
           "Everything",
           "Nightmare Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Nightmare Key (Turtle Rock)": {
         "name": "Nightmare Key (Turtle Rock)",
@@ -22414,12 +22500,10 @@
           "Everything",
           "Nightmare Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Nightmare Key (Color Dungeon)": {
         "name": "Nightmare Key (Color Dungeon)",
@@ -22428,12 +22512,10 @@
           "Everything",
           "Nightmare Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Toadstool": {
         "name": "Toadstool",
@@ -22441,12 +22523,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Guardian Acorn": {
         "name": "Guardian Acorn",
@@ -22454,12 +22534,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Heart Piece": {
         "name": "Heart Piece",
@@ -22467,12 +22545,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 24
+        "max_count": 12,
+        "classification": "filler"
       },
       "BowWow": {
         "name": "BowWow",
@@ -22480,12 +22556,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "10 Arrows": {
         "name": "10 Arrows",
@@ -22493,12 +22567,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Single Arrow": {
         "name": "Single Arrow",
@@ -22506,12 +22578,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Max Powder Upgrade": {
         "name": "Max Powder Upgrade",
@@ -22520,12 +22590,10 @@
           "Everything",
           "Upgrades"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Max Bombs Upgrade": {
         "name": "Max Bombs Upgrade",
@@ -22534,12 +22602,10 @@
           "Everything",
           "Upgrades"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Max Arrows Upgrade": {
         "name": "Max Arrows Upgrade",
@@ -22548,12 +22614,10 @@
           "Everything",
           "Upgrades"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Red Tunic": {
         "name": "Red Tunic",
@@ -22562,12 +22626,10 @@
           "Everything",
           "Tunics"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Blue Tunic": {
         "name": "Blue Tunic",
@@ -22576,12 +22638,10 @@
           "Everything",
           "Tunics"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Heart Container": {
         "name": "Heart Container",
@@ -22589,12 +22649,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 16
+        "max_count": 8,
+        "classification": "useful"
       },
       "Ballad of the Wind Fish": {
         "name": "Ballad of the Wind Fish",
@@ -22603,12 +22661,10 @@
           "Everything",
           "Songs"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Manbo's Mambo": {
         "name": "Manbo's Mambo",
@@ -22617,12 +22673,10 @@
           "Everything",
           "Songs"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Frog's Song of Soul": {
         "name": "Frog's Song of Soul",
@@ -22631,12 +22685,10 @@
           "Everything",
           "Songs"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Full Moon Cello": {
         "name": "Full Moon Cello",
@@ -22645,12 +22697,10 @@
           "Everything",
           "Instruments"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Conch Horn": {
         "name": "Conch Horn",
@@ -22659,12 +22709,10 @@
           "Everything",
           "Instruments"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Sea Lily's Bell": {
         "name": "Sea Lily's Bell",
@@ -22673,12 +22721,10 @@
           "Everything",
           "Instruments"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Surf Harp": {
         "name": "Surf Harp",
@@ -22687,12 +22733,10 @@
           "Everything",
           "Instruments"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Wind Marimba": {
         "name": "Wind Marimba",
@@ -22701,12 +22745,10 @@
           "Everything",
           "Instruments"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Coral Triangle": {
         "name": "Coral Triangle",
@@ -22715,12 +22757,10 @@
           "Everything",
           "Instruments"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Organ of Evening Calm": {
         "name": "Organ of Evening Calm",
@@ -22729,12 +22769,10 @@
           "Everything",
           "Instruments"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Thunder Drum": {
         "name": "Thunder Drum",
@@ -22743,12 +22781,10 @@
           "Everything",
           "Instruments"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Rooster": {
         "name": "Rooster",
@@ -22756,12 +22792,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Yoshi Doll": {
         "name": "Yoshi Doll",
@@ -22770,12 +22804,10 @@
           "Everything",
           "Trading Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ribbon": {
         "name": "Ribbon",
@@ -22784,12 +22816,10 @@
           "Everything",
           "Trading Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Dog Food": {
         "name": "Dog Food",
@@ -22798,12 +22828,10 @@
           "Everything",
           "Trading Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Bananas": {
         "name": "Bananas",
@@ -22812,12 +22840,10 @@
           "Everything",
           "Trading Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Stick": {
         "name": "Stick",
@@ -22826,12 +22852,10 @@
           "Everything",
           "Trading Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Honeycomb": {
         "name": "Honeycomb",
@@ -22840,12 +22864,10 @@
           "Everything",
           "Trading Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Pineapple": {
         "name": "Pineapple",
@@ -22854,12 +22876,10 @@
           "Everything",
           "Trading Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Hibiscus": {
         "name": "Hibiscus",
@@ -22868,12 +22888,10 @@
           "Everything",
           "Trading Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Letter": {
         "name": "Letter",
@@ -22882,12 +22900,10 @@
           "Everything",
           "Trading Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Broom": {
         "name": "Broom",
@@ -22896,12 +22912,10 @@
           "Everything",
           "Trading Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Fishing Hook": {
         "name": "Fishing Hook",
@@ -22910,12 +22924,10 @@
           "Everything",
           "Trading Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Necklace": {
         "name": "Necklace",
@@ -22924,12 +22936,10 @@
           "Everything",
           "Trading Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Scale": {
         "name": "Scale",
@@ -22938,12 +22948,10 @@
           "Everything",
           "Trading Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Magnifying Glass": {
         "name": "Magnifying Glass",
@@ -22952,12 +22960,10 @@
           "Everything",
           "Trading Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Piece Of Power": {
         "name": "Piece Of Power",
@@ -22965,38 +22971,34 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "ANGLER_KEYHOLE": {
         "name": "ANGLER_KEYHOLE",
+        "hint_text": "ANGLER KEYHOLE",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CASTLE_BUTTON": {
         "name": "CASTLE_BUTTON",
+        "hint_text": "CASTLE BUTTON",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "RAFT": {
         "name": "RAFT",
@@ -23004,12 +23006,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "MEDICINE2": {
         "name": "MEDICINE2",
@@ -23017,12 +23017,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "An Alarm Clock": {
         "name": "An Alarm Clock",
@@ -23030,12 +23028,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Can Play Trendy Game": {
         "name": "Can Play Trendy Game",
@@ -23043,12 +23039,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -23076,22 +23070,22 @@
   },
   "itempool_counts": {
     "1": {
-      "10 Arrows": 2,
-      "100 Rupees": 6,
-      "20 Rupees": 12,
-      "200 Rupees": 6,
-      "50 Rupees": 26,
+      "10 Arrows": 1,
+      "100 Rupees": 3,
+      "20 Rupees": 6,
+      "200 Rupees": 3,
+      "50 Rupees": 13,
       "ANGLER_KEYHOLE": 1,
       "An Alarm Clock": 1,
-      "Angler Key": 2,
-      "Ballad of the Wind Fish": 2,
+      "Angler Key": 1,
+      "Ballad of the Wind Fish": 1,
       "Bananas": 1,
-      "Bird Key": 2,
-      "Blue Tunic": 2,
-      "Bomb": 8,
-      "Boomerang": 2,
-      "Bow": 2,
-      "BowWow": 2,
+      "Bird Key": 1,
+      "Blue Tunic": 1,
+      "Bomb": 4,
+      "Boomerang": 1,
+      "Bow": 1,
+      "BowWow": 1,
       "Broom": 1,
       "CASTLE_BUTTON": 1,
       "Can Play Trendy Game": 1,
@@ -23116,28 +23110,28 @@
       "Dungeon Map (Key Cavern)": 1,
       "Dungeon Map (Tail Cave)": 1,
       "Dungeon Map (Turtle Rock)": 1,
-      "Face Key": 2,
-      "Feather": 2,
+      "Face Key": 1,
+      "Feather": 1,
       "Fishing Hook": 1,
-      "Flippers": 2,
-      "Frog's Song of Soul": 2,
+      "Flippers": 1,
+      "Frog's Song of Soul": 1,
       "Full Moon Cello": 1,
-      "Gold Leaf": 10,
-      "Heart Container": 16,
-      "Heart Piece": 24,
+      "Gold Leaf": 5,
+      "Heart Container": 8,
+      "Heart Piece": 12,
       "Hibiscus": 1,
       "Honeycomb": 1,
-      "Hookshot": 2,
+      "Hookshot": 1,
       "Letter": 1,
       "MEDICINE2": 1,
-      "Magic Powder": 3,
-      "Magic Rod": 2,
+      "Magic Powder": 2,
+      "Magic Rod": 1,
       "Magnifying Glass": 1,
-      "Manbo's Mambo": 2,
-      "Max Arrows Upgrade": 2,
-      "Max Bombs Upgrade": 2,
-      "Max Powder Upgrade": 2,
-      "Medicine": 6,
+      "Manbo's Mambo": 1,
+      "Max Arrows Upgrade": 1,
+      "Max Bombs Upgrade": 1,
+      "Max Powder Upgrade": 1,
+      "Medicine": 3,
       "Necklace": 1,
       "Nightmare Key (Angler's Tunnel)": 1,
       "Nightmare Key (Bottle Grotto)": 1,
@@ -23148,24 +23142,24 @@
       "Nightmare Key (Key Cavern)": 1,
       "Nightmare Key (Tail Cave)": 1,
       "Nightmare Key (Turtle Rock)": 1,
-      "Nothing": 2,
-      "Ocarina": 2,
+      "Nothing": 1,
+      "Ocarina": 1,
       "Organ of Evening Calm": 1,
-      "Pegasus Boots": 2,
+      "Pegasus Boots": 1,
       "Pineapple": 1,
-      "Progressive Power Bracelet": 4,
-      "Progressive Shield": 4,
-      "Progressive Sword": 4,
+      "Progressive Power Bracelet": 2,
+      "Progressive Shield": 2,
+      "Progressive Sword": 2,
       "RAFT": 1,
-      "Red Tunic": 2,
+      "Red Tunic": 1,
       "Ribbon": 1,
-      "Rooster": 2,
+      "Rooster": 1,
       "Scale": 1,
       "Sea Lily's Bell": 1,
-      "Seashell": 48,
-      "Shovel": 2,
-      "Single Arrow": 2,
-      "Slime Key": 2,
+      "Seashell": 24,
+      "Shovel": 1,
+      "Single Arrow": 1,
+      "Slime Key": 1,
       "Small Key (Angler's Tunnel)": 5,
       "Small Key (Bottle Grotto)": 5,
       "Small Key (Catfish's Maw)": 3,
@@ -23186,12 +23180,12 @@
       "Stone Beak (Tail Cave)": 1,
       "Stone Beak (Turtle Rock)": 1,
       "Surf Harp": 1,
-      "Tail Key": 2,
+      "Tail Key": 1,
       "Thunder Drum": 1,
-      "Toadstool": 2,
+      "Toadstool": 1,
       "Wind Marimba": 1,
       "Yoshi Doll": 1,
-      "Zol Attack": 8
+      "Zol Attack": 4
     }
   },
   "progression_mapping": {
@@ -23214,5 +23208,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

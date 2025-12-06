@@ -14,44 +14,82 @@
     "1": {
       "Menu": {
         "name": "Menu",
+        "hint_text": "Dimension VVVVVV",
         "exits": [
           {
             "name": "Menu -> Laboratory",
             "connected_region": "Laboratory",
             "access_rule": {
-              "type": "helper",
-              "name": "_has_trinket_range",
-              "args": [
+              "type": "block",
+              "statements": [
                 {
-                  "type": "binary_op",
-                  "left": {
-                    "type": "constant",
-                    "value": 3
+                  "type": "for_range",
+                  "var": "i",
+                  "count": {
+                    "type": "name",
+                    "name": "start"
                   },
-                  "op": "*",
-                  "right": {
-                    "type": "binary_op",
-                    "left": {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    "op": "-",
-                    "right": {
-                      "type": "constant",
-                      "value": 1
+                  "body": [
+                    {
+                      "type": "conditional",
+                      "test": {
+                        "type": "not",
+                        "condition": {
+                          "type": "item_check",
+                          "item": {
+                            "type": "binary_op",
+                            "left": {
+                              "type": "constant",
+                              "value": "Trinket "
+                            },
+                            "op": "+",
+                            "right": {
+                              "type": "function_call",
+                              "function": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "helper",
+                                  "name": "str",
+                                  "args": [
+                                    {
+                                      "type": "binary_op",
+                                      "left": {
+                                        "type": "constant",
+                                        "value": 1
+                                      },
+                                      "op": "+",
+                                      "right": {
+                                        "type": "constant",
+                                        "value": 1
+                                      }
+                                    }
+                                  ]
+                                },
+                                "attr": "zfill"
+                              },
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": 2
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "if_true": {
+                        "type": "constant",
+                        "value": false
+                      },
+                      "if_false": null
                     }
-                  }
+                  ]
                 },
                 {
-                  "type": "binary_op",
-                  "left": {
+                  "type": "return",
+                  "value": {
                     "type": "constant",
-                    "value": 3
-                  },
-                  "op": "*",
-                  "right": {
-                    "type": "constant",
-                    "value": 1
+                    "value": true
                   }
                 }
               ]
@@ -61,39 +99,76 @@
             "name": "Menu -> The Tower",
             "connected_region": "The Tower",
             "access_rule": {
-              "type": "helper",
-              "name": "_has_trinket_range",
-              "args": [
+              "type": "block",
+              "statements": [
                 {
-                  "type": "binary_op",
-                  "left": {
-                    "type": "constant",
-                    "value": 3
+                  "type": "for_range",
+                  "var": "i",
+                  "count": {
+                    "type": "name",
+                    "name": "start"
                   },
-                  "op": "*",
-                  "right": {
-                    "type": "binary_op",
-                    "left": {
-                      "type": "constant",
-                      "value": 2
-                    },
-                    "op": "-",
-                    "right": {
-                      "type": "constant",
-                      "value": 1
+                  "body": [
+                    {
+                      "type": "conditional",
+                      "test": {
+                        "type": "not",
+                        "condition": {
+                          "type": "item_check",
+                          "item": {
+                            "type": "binary_op",
+                            "left": {
+                              "type": "constant",
+                              "value": "Trinket "
+                            },
+                            "op": "+",
+                            "right": {
+                              "type": "function_call",
+                              "function": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "helper",
+                                  "name": "str",
+                                  "args": [
+                                    {
+                                      "type": "binary_op",
+                                      "left": {
+                                        "type": "constant",
+                                        "value": 2
+                                      },
+                                      "op": "+",
+                                      "right": {
+                                        "type": "constant",
+                                        "value": 1
+                                      }
+                                    }
+                                  ]
+                                },
+                                "attr": "zfill"
+                              },
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": 2
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "if_true": {
+                        "type": "constant",
+                        "value": false
+                      },
+                      "if_false": null
                     }
-                  }
+                  ]
                 },
                 {
-                  "type": "binary_op",
-                  "left": {
+                  "type": "return",
+                  "value": {
                     "type": "constant",
-                    "value": 3
-                  },
-                  "op": "*",
-                  "right": {
-                    "type": "constant",
-                    "value": 2
+                    "value": true
                   }
                 }
               ]
@@ -103,39 +178,76 @@
             "name": "Menu -> Space Station 2",
             "connected_region": "Space Station 2",
             "access_rule": {
-              "type": "helper",
-              "name": "_has_trinket_range",
-              "args": [
+              "type": "block",
+              "statements": [
                 {
-                  "type": "binary_op",
-                  "left": {
-                    "type": "constant",
-                    "value": 3
+                  "type": "for_range",
+                  "var": "i",
+                  "count": {
+                    "type": "name",
+                    "name": "start"
                   },
-                  "op": "*",
-                  "right": {
-                    "type": "binary_op",
-                    "left": {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    "op": "-",
-                    "right": {
-                      "type": "constant",
-                      "value": 1
+                  "body": [
+                    {
+                      "type": "conditional",
+                      "test": {
+                        "type": "not",
+                        "condition": {
+                          "type": "item_check",
+                          "item": {
+                            "type": "binary_op",
+                            "left": {
+                              "type": "constant",
+                              "value": "Trinket "
+                            },
+                            "op": "+",
+                            "right": {
+                              "type": "function_call",
+                              "function": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "helper",
+                                  "name": "str",
+                                  "args": [
+                                    {
+                                      "type": "binary_op",
+                                      "left": {
+                                        "type": "constant",
+                                        "value": 3
+                                      },
+                                      "op": "+",
+                                      "right": {
+                                        "type": "constant",
+                                        "value": 1
+                                      }
+                                    }
+                                  ]
+                                },
+                                "attr": "zfill"
+                              },
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": 2
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "if_true": {
+                        "type": "constant",
+                        "value": false
+                      },
+                      "if_false": null
                     }
-                  }
+                  ]
                 },
                 {
-                  "type": "binary_op",
-                  "left": {
+                  "type": "return",
+                  "value": {
                     "type": "constant",
-                    "value": 3
-                  },
-                  "op": "*",
-                  "right": {
-                    "type": "constant",
-                    "value": 3
+                    "value": true
                   }
                 }
               ]
@@ -145,39 +257,76 @@
             "name": "Menu -> Warp Zone",
             "connected_region": "Warp Zone",
             "access_rule": {
-              "type": "helper",
-              "name": "_has_trinket_range",
-              "args": [
+              "type": "block",
+              "statements": [
                 {
-                  "type": "binary_op",
-                  "left": {
-                    "type": "constant",
-                    "value": 3
+                  "type": "for_range",
+                  "var": "i",
+                  "count": {
+                    "type": "name",
+                    "name": "start"
                   },
-                  "op": "*",
-                  "right": {
-                    "type": "binary_op",
-                    "left": {
-                      "type": "constant",
-                      "value": 4
-                    },
-                    "op": "-",
-                    "right": {
-                      "type": "constant",
-                      "value": 1
+                  "body": [
+                    {
+                      "type": "conditional",
+                      "test": {
+                        "type": "not",
+                        "condition": {
+                          "type": "item_check",
+                          "item": {
+                            "type": "binary_op",
+                            "left": {
+                              "type": "constant",
+                              "value": "Trinket "
+                            },
+                            "op": "+",
+                            "right": {
+                              "type": "function_call",
+                              "function": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "helper",
+                                  "name": "str",
+                                  "args": [
+                                    {
+                                      "type": "binary_op",
+                                      "left": {
+                                        "type": "constant",
+                                        "value": 4
+                                      },
+                                      "op": "+",
+                                      "right": {
+                                        "type": "constant",
+                                        "value": 1
+                                      }
+                                    }
+                                  ]
+                                },
+                                "attr": "zfill"
+                              },
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": 2
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "if_true": {
+                        "type": "constant",
+                        "value": false
+                      },
+                      "if_false": null
                     }
-                  }
+                  ]
                 },
                 {
-                  "type": "binary_op",
-                  "left": {
+                  "type": "return",
+                  "value": {
                     "type": "constant",
-                    "value": 3
-                  },
-                  "op": "*",
-                  "right": {
-                    "type": "constant",
-                    "value": 4
+                    "value": true
                   }
                 }
               ]
@@ -197,7 +346,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Overworld (Left of Ship)",
@@ -211,7 +361,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Overworld (Square Room)",
@@ -225,7 +376,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Overworld (Sad Elephant)",
@@ -239,7 +391,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "It's a Secret to Nobody",
@@ -253,7 +406,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Trench Warfare",
@@ -267,7 +421,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "NPC Trinket",
@@ -343,7 +498,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "V",
@@ -414,7 +570,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -434,7 +591,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Overworld (Outside Entanglement Generator)",
@@ -448,7 +606,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Tantalizing Trinket",
@@ -462,7 +621,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Purest Unobtainium",
@@ -476,7 +636,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -496,7 +657,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Tower 2",
@@ -510,7 +672,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -530,7 +693,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "You Just Keep Coming Back",
@@ -544,7 +708,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Clarion Call",
@@ -558,7 +723,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Prize for the Reckless",
@@ -572,7 +738,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Doing things the hard way",
@@ -586,7 +753,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -606,7 +774,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       }
@@ -628,12 +797,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Trinket 02": {
         "name": "Trinket 02",
@@ -641,12 +808,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Trinket 03": {
         "name": "Trinket 03",
@@ -654,12 +819,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Trinket 04": {
         "name": "Trinket 04",
@@ -667,12 +830,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Trinket 05": {
         "name": "Trinket 05",
@@ -680,12 +841,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Trinket 06": {
         "name": "Trinket 06",
@@ -693,12 +852,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Trinket 07": {
         "name": "Trinket 07",
@@ -706,12 +863,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Trinket 08": {
         "name": "Trinket 08",
@@ -719,12 +874,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Trinket 09": {
         "name": "Trinket 09",
@@ -732,12 +885,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Trinket 10": {
         "name": "Trinket 10",
@@ -745,12 +896,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Trinket 11": {
         "name": "Trinket 11",
@@ -758,12 +907,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Trinket 12": {
         "name": "Trinket 12",
@@ -771,12 +918,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Trinket 13": {
         "name": "Trinket 13",
@@ -784,12 +929,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Trinket 14": {
         "name": "Trinket 14",
@@ -797,12 +940,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Trinket 15": {
         "name": "Trinket 15",
@@ -810,12 +951,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Trinket 16": {
         "name": "Trinket 16",
@@ -823,12 +962,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Trinket 17": {
         "name": "Trinket 17",
@@ -836,12 +973,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Trinket 18": {
         "name": "Trinket 18",
@@ -849,12 +984,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Trinket 19": {
         "name": "Trinket 19",
@@ -862,12 +995,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Trinket 20": {
         "name": "Trinket 20",
@@ -875,12 +1006,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       }
     }
   },
@@ -891,26 +1020,26 @@
   },
   "itempool_counts": {
     "1": {
-      "Trinket 01": 2,
-      "Trinket 02": 2,
-      "Trinket 03": 2,
-      "Trinket 04": 2,
-      "Trinket 05": 2,
-      "Trinket 06": 2,
-      "Trinket 07": 2,
-      "Trinket 08": 2,
-      "Trinket 09": 2,
-      "Trinket 10": 2,
-      "Trinket 11": 2,
-      "Trinket 12": 2,
-      "Trinket 13": 2,
-      "Trinket 14": 2,
-      "Trinket 15": 2,
-      "Trinket 16": 2,
-      "Trinket 17": 2,
-      "Trinket 18": 2,
-      "Trinket 19": 2,
-      "Trinket 20": 2
+      "Trinket 01": 1,
+      "Trinket 02": 1,
+      "Trinket 03": 1,
+      "Trinket 04": 1,
+      "Trinket 05": 1,
+      "Trinket 06": 1,
+      "Trinket 07": 1,
+      "Trinket 08": 1,
+      "Trinket 09": 1,
+      "Trinket 10": 1,
+      "Trinket 11": 1,
+      "Trinket 12": 1,
+      "Trinket 13": 1,
+      "Trinket 14": 1,
+      "Trinket 15": 1,
+      "Trinket 16": 1,
+      "Trinket 17": 1,
+      "Trinket 18": 1,
+      "Trinket 19": 1,
+      "Trinket 20": 1
     }
   },
   "progression_mapping": {
@@ -941,5 +1070,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

@@ -119,7 +119,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Flippers",
@@ -158,7 +159,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Birds nest",
@@ -191,7 +193,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Battery",
@@ -224,7 +227,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Circuit board",
@@ -257,7 +261,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bolt",
@@ -273,7 +278,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hinge",
@@ -289,7 +295,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Shear",
@@ -322,7 +329,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Net launcher",
@@ -361,7 +369,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Drinking glass",
@@ -377,7 +386,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Clay bowl",
@@ -393,7 +403,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Net canister",
@@ -426,7 +437,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Binoculars",
@@ -465,7 +477,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Metal fishing rod",
@@ -498,7 +511,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Oxygen bottle",
@@ -537,7 +551,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sprinkler",
@@ -576,7 +591,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Empty bottle",
@@ -603,7 +619,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cookingpot",
@@ -648,7 +665,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Juicer",
@@ -693,7 +711,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Stationary anchor",
@@ -732,7 +751,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Advanced grill",
@@ -771,7 +791,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Metal Spear",
@@ -810,7 +831,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Storage",
@@ -849,7 +871,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Smelter",
@@ -888,7 +911,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Paint mill",
@@ -927,7 +951,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hammock",
@@ -966,7 +991,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Metal axe",
@@ -1005,7 +1031,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Scrap hook",
@@ -1044,7 +1071,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Large crop plot",
@@ -1083,7 +1111,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sweep net",
@@ -1122,7 +1151,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Basic bow",
@@ -1161,7 +1191,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Scarecrow",
@@ -1200,7 +1231,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Metal arrow",
@@ -1233,7 +1265,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Shovel",
@@ -1266,7 +1299,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Advanced collection net",
@@ -1299,7 +1333,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bucket",
@@ -1332,7 +1367,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Collection net",
@@ -1365,7 +1401,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Paint brush",
@@ -1398,7 +1435,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Advanced purifier",
@@ -1431,7 +1469,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grass plot",
@@ -1464,7 +1503,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Stone arrow",
@@ -1497,7 +1537,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Medium crop plot",
@@ -1524,7 +1565,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lantern",
@@ -1551,7 +1593,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Small trophy board",
@@ -1578,7 +1621,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Medium trophy board",
@@ -1605,7 +1649,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Large trophy board",
@@ -1632,7 +1677,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Backpack",
@@ -1665,7 +1711,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Leather helmet",
@@ -1692,7 +1739,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Leather body armor",
@@ -1719,7 +1767,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Leather greaves",
@@ -1746,7 +1795,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beehive",
@@ -1791,7 +1841,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Good healing salve",
@@ -1824,7 +1875,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Healing salve",
@@ -1851,7 +1903,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1872,7 +1925,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Head light blueprint",
@@ -1887,7 +1941,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Recycler blueprint",
@@ -1902,7 +1957,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Radio Tower Briefcase",
@@ -1917,7 +1973,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Radio Tower Frequency to Vasagatan",
@@ -1932,7 +1989,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Radio Tower Notepad 1",
@@ -1947,7 +2005,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Radio Tower Notepad 2",
@@ -1962,7 +2021,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Radio Tower Signalboard Trace",
@@ -1977,7 +2037,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1998,7 +2059,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hannes Letter 2",
@@ -2013,7 +2075,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hannes Letter 3",
@@ -2028,7 +2091,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Olof Log 1",
@@ -2043,7 +2107,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Olof Log 2",
@@ -2058,7 +2123,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Olof Log 3",
@@ -2073,7 +2139,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Vasagatan Recording 1",
@@ -2088,7 +2155,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Vasagatan Recording 2",
@@ -2103,7 +2171,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Vasagatan Recording 3",
@@ -2118,7 +2187,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Vasagatan Magazine Clipping",
@@ -2133,7 +2203,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Vasagatan Frequency to Balboa",
@@ -2148,7 +2219,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Engine blueprint",
@@ -2163,7 +2235,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Steering Wheel blueprint",
@@ -2178,7 +2251,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2199,7 +2273,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Balboa Island Correa twins picture",
@@ -2214,7 +2289,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Balboa Island Schedule of engineers",
@@ -2229,7 +2305,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Biofuel refiner blueprint",
@@ -2244,7 +2321,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Balboa Island Note from Henry",
@@ -2270,7 +2348,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Balboa Island Correas diary 3",
@@ -2296,7 +2375,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Fuel tank blueprint",
@@ -2322,7 +2402,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Balboa Island Correas diary 1",
@@ -2337,7 +2418,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Balboa Island Correas diary 2",
@@ -2352,7 +2434,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Fuel pipe blueprint",
@@ -2367,7 +2450,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Balboa Island Bear map",
@@ -2382,7 +2466,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Johnny (Balboa Island)",
@@ -2408,7 +2493,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Balboa Island Doll murderer 4",
@@ -2423,7 +2509,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Balboa Island Doll murderer 1",
@@ -2438,7 +2525,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Balboa Island Doll murderer 3",
@@ -2453,7 +2541,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Balboa Island Doll murderer 5",
@@ -2468,7 +2557,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Balboa Island Doll murderer 2",
@@ -2483,7 +2573,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Relay Station quest",
@@ -2498,7 +2589,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2519,7 +2611,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Caravan Island Detto journal 2",
@@ -2534,7 +2627,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Caravan Island Detto journal 3",
@@ -2549,7 +2643,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Caravan Island Detto journal 4",
@@ -2564,7 +2659,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Caravan Island Detto journal 5",
@@ -2579,7 +2675,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Caravan Island Detto journal 6",
@@ -2594,7 +2691,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Caravan Island Olaf speech",
@@ -2609,7 +2707,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Caravan Island Raft town article",
@@ -2624,7 +2723,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Caravan Island Doctor's note",
@@ -2639,7 +2739,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Firework blueprint",
@@ -2654,7 +2755,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Battery Charger quest",
@@ -2669,7 +2771,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Zipline quest",
@@ -2695,7 +2798,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Caravan Island Frequency to Tangaroa",
@@ -2721,7 +2825,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Engine controls blueprint",
@@ -2747,7 +2852,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Metal detector blueprint",
@@ -2762,7 +2868,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2783,7 +2890,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tangaroa Ruben 2",
@@ -2798,7 +2906,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tangaroa Ruben 3",
@@ -2813,7 +2922,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tangaroa Ruben 4",
@@ -2828,7 +2938,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tangaroa Ruben 5",
@@ -2843,7 +2954,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tangaroa Gardener Diary",
@@ -2858,7 +2970,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tangaroa Riot Log",
@@ -2873,7 +2986,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tangaroa Tulley Note",
@@ -2888,7 +3002,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tangaroa Cipher",
@@ -2903,7 +3018,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tangaroa Frequency to Varuna Point",
@@ -2918,7 +3034,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Water pipe blueprint",
@@ -2933,7 +3050,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Electric purifier blueprint",
@@ -2948,7 +3066,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Water tank blueprint",
@@ -2963,7 +3082,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Large Storage blueprint",
@@ -2978,7 +3098,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Elaine (Tangaroa)",
@@ -2993,7 +3114,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3014,7 +3136,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Varuna Point Grabber diary 2",
@@ -3029,7 +3152,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Varuna Point Grabber diary 3",
@@ -3044,7 +3168,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Varuna Point Grabber diary 4",
@@ -3059,7 +3184,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Varuna Point Grabber diary 5",
@@ -3074,7 +3200,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Varuna Point Grabber diary 6",
@@ -3089,7 +3216,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Varuna Point Frequency to Temperance",
@@ -3104,7 +3232,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Wind Turbine blueprint",
@@ -3119,7 +3248,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Advanced Battery blueprint",
@@ -3134,7 +3264,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Advanced Headlight blueprint",
@@ -3149,7 +3280,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Electric Grill blueprint",
@@ -3164,7 +3296,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3185,7 +3318,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Temperance Bruno diary 2",
@@ -3200,7 +3334,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Temperance Bruno diary 3",
@@ -3215,7 +3350,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Temperance Bruno diary 4",
@@ -3230,7 +3366,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Temperance Bruno diary 5",
@@ -3245,7 +3382,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Temperance Sparrow note 1",
@@ -3260,7 +3398,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Temperance Sparrow note 2",
@@ -3275,7 +3414,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Temperance Frequency to Utopia",
@@ -3290,7 +3430,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Temperance Star sign 1",
@@ -3305,7 +3446,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Temperance Star sign 2",
@@ -3320,7 +3462,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Temperance Star sign 3",
@@ -3335,7 +3478,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Temperance Star sign 4",
@@ -3350,7 +3494,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Electric Smelter blueprint",
@@ -3365,7 +3510,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Advanced Biofuel Extractor blueprint",
@@ -3380,7 +3526,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Advanced Stationary Anchor blueprint",
@@ -3395,7 +3542,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Shogo (Temperance)",
@@ -3410,7 +3558,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3441,7 +3590,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Advanced Backpack blueprint",
@@ -3466,7 +3616,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Titanium Tools blueprint",
@@ -3491,7 +3642,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Utopia Captives note",
@@ -3516,7 +3668,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Utopia Detto map",
@@ -3541,7 +3694,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Utopia Complete",
@@ -3566,7 +3720,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3602,12 +3757,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Big backpack": {
         "name": "Big backpack",
@@ -3615,12 +3768,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Leather helmet": {
         "name": "Leather helmet",
@@ -3628,12 +3779,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Leather body armor": {
         "name": "Leather body armor",
@@ -3641,12 +3790,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Leather greaves": {
         "name": "Leather greaves",
@@ -3654,12 +3801,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Flippers": {
         "name": "Flippers",
@@ -3667,12 +3812,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Head light": {
         "name": "Head light",
@@ -3680,12 +3823,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Advanced head light": {
         "name": "Advanced head light",
@@ -3693,12 +3834,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Oxygen bottle": {
         "name": "Oxygen bottle",
@@ -3706,12 +3845,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Zipline tool": {
         "name": "Zipline tool",
@@ -3719,12 +3856,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Electric zipline tool": {
         "name": "Electric zipline tool",
@@ -3732,12 +3867,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Empty bottle": {
         "name": "Empty bottle",
@@ -3745,12 +3878,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Empty canteen": {
         "name": "Empty canteen",
@@ -3758,12 +3889,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bucket": {
         "name": "Bucket",
@@ -3771,12 +3900,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Clay bowl": {
         "name": "Clay bowl",
@@ -3784,12 +3911,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Drinking glass": {
         "name": "Drinking glass",
@@ -3797,12 +3922,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Healing salve": {
         "name": "Healing salve",
@@ -3810,12 +3933,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Good healing salve": {
         "name": "Good healing salve",
@@ -3823,12 +3944,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Cookingpot": {
         "name": "Cookingpot",
@@ -3836,12 +3955,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Juicer": {
         "name": "Juicer",
@@ -3849,12 +3966,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Advanced grill": {
         "name": "Advanced grill",
@@ -3862,12 +3977,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Electric grill": {
         "name": "Electric grill",
@@ -3875,12 +3988,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Advanced purifier": {
         "name": "Advanced purifier",
@@ -3888,12 +3999,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Electric purifier": {
         "name": "Electric purifier",
@@ -3901,12 +4010,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Advanced small crop plot": {
         "name": "Advanced small crop plot",
@@ -3914,12 +4021,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Advanced medium crop plot": {
         "name": "Advanced medium crop plot",
@@ -3927,12 +4032,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Advanced large crop plot": {
         "name": "Advanced large crop plot",
@@ -3940,12 +4043,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Grass plot": {
         "name": "Grass plot",
@@ -3953,12 +4054,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Medium crop plot": {
         "name": "Medium crop plot",
@@ -3966,12 +4065,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Large crop plot": {
         "name": "Large crop plot",
@@ -3979,12 +4076,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Scarecrow": {
         "name": "Scarecrow",
@@ -3992,12 +4087,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Advanced Scarecrow": {
         "name": "Advanced Scarecrow",
@@ -4005,12 +4098,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Sprinkler": {
         "name": "Sprinkler",
@@ -4018,12 +4109,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Honey": {
         "name": "Honey",
@@ -4031,12 +4120,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Battery": {
         "name": "Battery",
@@ -4044,12 +4131,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Advanced Battery": {
         "name": "Advanced Battery",
@@ -4057,12 +4142,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bolt": {
         "name": "Bolt",
@@ -4070,12 +4153,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Circuit board": {
         "name": "Circuit board",
@@ -4083,12 +4164,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Hinge": {
         "name": "Hinge",
@@ -4096,12 +4175,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Stationary anchor": {
         "name": "Stationary anchor",
@@ -4109,12 +4186,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Advanced stationary anchor": {
         "name": "Advanced stationary anchor",
@@ -4122,12 +4197,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Engine controls": {
         "name": "Engine controls",
@@ -4135,12 +4208,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Engine": {
         "name": "Engine",
@@ -4148,12 +4219,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Receiver": {
         "name": "Receiver",
@@ -4161,12 +4230,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Antenna": {
         "name": "Antenna",
@@ -4174,12 +4241,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Steering Wheel": {
         "name": "Steering Wheel",
@@ -4187,12 +4252,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Battery charger": {
         "name": "Battery charger",
@@ -4200,12 +4263,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Wind turbine": {
         "name": "Wind turbine",
@@ -4213,12 +4274,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Hammock": {
         "name": "Hammock",
@@ -4226,12 +4285,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Beehive": {
         "name": "Beehive",
@@ -4239,12 +4296,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Biofuel refiner": {
         "name": "Biofuel refiner",
@@ -4252,12 +4307,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Advanced biofuel refiner": {
         "name": "Advanced biofuel refiner",
@@ -4265,12 +4318,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Birds nest": {
         "name": "Birds nest",
@@ -4278,12 +4329,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Simple collection net": {
         "name": "Simple collection net",
@@ -4291,12 +4340,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Advanced collection net": {
         "name": "Advanced collection net",
@@ -4304,12 +4351,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Smelter": {
         "name": "Smelter",
@@ -4317,12 +4362,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Electric Smelter": {
         "name": "Electric Smelter",
@@ -4330,12 +4373,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Fuel tank": {
         "name": "Fuel tank",
@@ -4343,12 +4384,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Water tank": {
         "name": "Water tank",
@@ -4356,12 +4395,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Fuel pipe": {
         "name": "Fuel pipe",
@@ -4369,12 +4406,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Water pipe": {
         "name": "Water pipe",
@@ -4382,12 +4417,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Recycler": {
         "name": "Recycler",
@@ -4395,12 +4428,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Storage": {
         "name": "Storage",
@@ -4408,12 +4439,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Large Storage": {
         "name": "Large Storage",
@@ -4421,12 +4450,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Trashcan": {
         "name": "Trashcan",
@@ -4434,12 +4461,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Zipline": {
         "name": "Zipline",
@@ -4447,12 +4472,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Firework": {
         "name": "Firework",
@@ -4460,12 +4483,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Metal axe": {
         "name": "Metal axe",
@@ -4473,12 +4494,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Titanium axe": {
         "name": "Titanium axe",
@@ -4486,12 +4505,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Binoculars": {
         "name": "Binoculars",
@@ -4499,12 +4516,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Metal fishing rod": {
         "name": "Metal fishing rod",
@@ -4512,12 +4527,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Scrap hook": {
         "name": "Scrap hook",
@@ -4525,12 +4538,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Titanium hook": {
         "name": "Titanium hook",
@@ -4538,12 +4549,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Metal detector": {
         "name": "Metal detector",
@@ -4551,12 +4560,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Shear": {
         "name": "Shear",
@@ -4564,12 +4571,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Shovel": {
         "name": "Shovel",
@@ -4577,12 +4582,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Sweep net": {
         "name": "Sweep net",
@@ -4590,12 +4593,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Basic bow": {
         "name": "Basic bow",
@@ -4603,12 +4604,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Stone arrow": {
         "name": "Stone arrow",
@@ -4616,12 +4615,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Metal arrow": {
         "name": "Metal arrow",
@@ -4629,12 +4626,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Titanium arrow": {
         "name": "Titanium arrow",
@@ -4642,12 +4637,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Metal spear": {
         "name": "Metal spear",
@@ -4655,12 +4648,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Machete": {
         "name": "Machete",
@@ -4668,12 +4659,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Titanium sword": {
         "name": "Titanium sword",
@@ -4681,12 +4670,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Net launcher": {
         "name": "Net launcher",
@@ -4694,12 +4681,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Net canister": {
         "name": "Net canister",
@@ -4707,12 +4692,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Vasagatan Frequency": {
         "name": "Vasagatan Frequency",
@@ -4720,12 +4703,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Balboa Island Frequency": {
         "name": "Balboa Island Frequency",
@@ -4733,12 +4714,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Tangaroa Frequency": {
         "name": "Tangaroa Frequency",
@@ -4746,12 +4725,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Varuna Point Frequency": {
         "name": "Varuna Point Frequency",
@@ -4759,12 +4736,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Temperance Frequency": {
         "name": "Temperance Frequency",
@@ -4772,12 +4747,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Utopia Frequency": {
         "name": "Utopia Frequency",
@@ -4785,12 +4758,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Caravan Island Frequency": {
         "name": "Caravan Island Frequency",
@@ -4798,285 +4769,262 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "progressive-salve": {
         "name": "progressive-salve",
+        "hint_text": "progressive salve",
         "id": 47094,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "progressive-backpack": {
         "name": "progressive-backpack",
+        "hint_text": "progressive backpack",
         "id": 47095,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "progressive-containers": {
         "name": "progressive-containers",
+        "hint_text": "progressive containers",
         "id": 47096,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "progressive-headlight": {
         "name": "progressive-headlight",
+        "hint_text": "progressive headlight",
         "id": 47097,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "progressive-biofuel": {
         "name": "progressive-biofuel",
+        "hint_text": "progressive biofuel",
         "id": 47098,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "progressive-bottle": {
         "name": "progressive-bottle",
+        "hint_text": "progressive bottle",
         "id": 47099,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "progressive-grill": {
         "name": "progressive-grill",
+        "hint_text": "progressive grill",
         "id": 47100,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "progressive-purifier": {
         "name": "progressive-purifier",
+        "hint_text": "progressive purifier",
         "id": 47101,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "progressive-crop-plot": {
         "name": "progressive-crop-plot",
+        "hint_text": "progressive crop plot",
         "id": 47102,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5,
+        "classification": "filler"
       },
       "progressive-battery": {
         "name": "progressive-battery",
+        "hint_text": "progressive battery",
         "id": 47103,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "progression"
       },
       "progressive-anchor": {
         "name": "progressive-anchor",
+        "hint_text": "progressive anchor",
         "id": 47104,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "progressive-engine": {
         "name": "progressive-engine",
+        "hint_text": "progressive engine",
         "id": 47105,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression"
       },
       "progressive-scarecrow": {
         "name": "progressive-scarecrow",
+        "hint_text": "progressive scarecrow",
         "id": 47106,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "progressive-net": {
         "name": "progressive-net",
+        "hint_text": "progressive net",
         "id": 47107,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "progressive-storage": {
         "name": "progressive-storage",
+        "hint_text": "progressive storage",
         "id": 47108,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "progressive-zipline": {
         "name": "progressive-zipline",
+        "hint_text": "progressive zipline",
         "id": 47109,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression"
       },
       "progressive-metals": {
         "name": "progressive-metals",
+        "hint_text": "progressive metals",
         "id": 47110,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression"
       },
       "progressive-bow": {
         "name": "progressive-bow",
+        "hint_text": "progressive bow",
         "id": 47111,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "filler"
       },
       "progressive-axe": {
         "name": "progressive-axe",
+        "hint_text": "progressive axe",
         "id": 47112,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "progressive-hook": {
         "name": "progressive-hook",
+        "hint_text": "progressive hook",
         "id": 47113,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "progressive-spear": {
         "name": "progressive-spear",
+        "hint_text": "progressive spear",
         "id": 47114,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression"
       },
       "progressive-frequency": {
         "name": "progressive-frequency",
@@ -5084,12 +5032,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 1 Plank": {
         "name": "Resource Pack: 1 Plank",
@@ -5097,12 +5043,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "Resource Pack: 2 Plank": {
         "name": "Resource Pack: 2 Plank",
@@ -5110,12 +5054,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Resource Pack: 3 Plank": {
         "name": "Resource Pack: 3 Plank",
@@ -5123,12 +5065,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 4 Plank": {
         "name": "Resource Pack: 4 Plank",
@@ -5136,12 +5076,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 5 Plank": {
         "name": "Resource Pack: 5 Plank",
@@ -5149,12 +5087,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 6 Plank": {
         "name": "Resource Pack: 6 Plank",
@@ -5162,12 +5098,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 7 Plank": {
         "name": "Resource Pack: 7 Plank",
@@ -5175,12 +5109,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 8 Plank": {
         "name": "Resource Pack: 8 Plank",
@@ -5188,12 +5120,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 9 Plank": {
         "name": "Resource Pack: 9 Plank",
@@ -5201,12 +5131,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 10 Plank": {
         "name": "Resource Pack: 10 Plank",
@@ -5214,12 +5142,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 11 Plank": {
         "name": "Resource Pack: 11 Plank",
@@ -5227,12 +5153,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 12 Plank": {
         "name": "Resource Pack: 12 Plank",
@@ -5240,12 +5164,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 13 Plank": {
         "name": "Resource Pack: 13 Plank",
@@ -5253,12 +5175,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 14 Plank": {
         "name": "Resource Pack: 14 Plank",
@@ -5266,12 +5186,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 15 Plank": {
         "name": "Resource Pack: 15 Plank",
@@ -5279,12 +5197,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 1 Plastic": {
         "name": "Resource Pack: 1 Plastic",
@@ -5292,12 +5208,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 2 Plastic": {
         "name": "Resource Pack: 2 Plastic",
@@ -5305,12 +5219,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Resource Pack: 3 Plastic": {
         "name": "Resource Pack: 3 Plastic",
@@ -5318,12 +5230,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 4 Plastic": {
         "name": "Resource Pack: 4 Plastic",
@@ -5331,12 +5241,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 5 Plastic": {
         "name": "Resource Pack: 5 Plastic",
@@ -5344,12 +5252,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 6 Plastic": {
         "name": "Resource Pack: 6 Plastic",
@@ -5357,12 +5263,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 7 Plastic": {
         "name": "Resource Pack: 7 Plastic",
@@ -5370,12 +5274,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 8 Plastic": {
         "name": "Resource Pack: 8 Plastic",
@@ -5383,12 +5285,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 9 Plastic": {
         "name": "Resource Pack: 9 Plastic",
@@ -5396,12 +5296,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 10 Plastic": {
         "name": "Resource Pack: 10 Plastic",
@@ -5409,12 +5307,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 11 Plastic": {
         "name": "Resource Pack: 11 Plastic",
@@ -5422,12 +5318,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 12 Plastic": {
         "name": "Resource Pack: 12 Plastic",
@@ -5435,12 +5329,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 13 Plastic": {
         "name": "Resource Pack: 13 Plastic",
@@ -5448,12 +5340,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 14 Plastic": {
         "name": "Resource Pack: 14 Plastic",
@@ -5461,12 +5351,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 15 Plastic": {
         "name": "Resource Pack: 15 Plastic",
@@ -5474,12 +5362,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 1 Clay": {
         "name": "Resource Pack: 1 Clay",
@@ -5487,12 +5373,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 2 Clay": {
         "name": "Resource Pack: 2 Clay",
@@ -5500,12 +5384,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 3 Clay": {
         "name": "Resource Pack: 3 Clay",
@@ -5513,12 +5395,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 4 Clay": {
         "name": "Resource Pack: 4 Clay",
@@ -5526,12 +5406,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Resource Pack: 5 Clay": {
         "name": "Resource Pack: 5 Clay",
@@ -5539,12 +5417,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 6 Clay": {
         "name": "Resource Pack: 6 Clay",
@@ -5552,12 +5428,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 7 Clay": {
         "name": "Resource Pack: 7 Clay",
@@ -5565,12 +5439,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 8 Clay": {
         "name": "Resource Pack: 8 Clay",
@@ -5578,12 +5450,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 9 Clay": {
         "name": "Resource Pack: 9 Clay",
@@ -5591,12 +5461,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 10 Clay": {
         "name": "Resource Pack: 10 Clay",
@@ -5604,12 +5472,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 11 Clay": {
         "name": "Resource Pack: 11 Clay",
@@ -5617,12 +5483,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 12 Clay": {
         "name": "Resource Pack: 12 Clay",
@@ -5630,12 +5494,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 13 Clay": {
         "name": "Resource Pack: 13 Clay",
@@ -5643,12 +5505,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 14 Clay": {
         "name": "Resource Pack: 14 Clay",
@@ -5656,12 +5516,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 15 Clay": {
         "name": "Resource Pack: 15 Clay",
@@ -5669,12 +5527,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 1 Stone": {
         "name": "Resource Pack: 1 Stone",
@@ -5682,12 +5538,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 2 Stone": {
         "name": "Resource Pack: 2 Stone",
@@ -5695,12 +5549,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 3 Stone": {
         "name": "Resource Pack: 3 Stone",
@@ -5708,12 +5560,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 4 Stone": {
         "name": "Resource Pack: 4 Stone",
@@ -5721,12 +5571,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 5 Stone": {
         "name": "Resource Pack: 5 Stone",
@@ -5734,12 +5582,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Resource Pack: 6 Stone": {
         "name": "Resource Pack: 6 Stone",
@@ -5747,12 +5593,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 7 Stone": {
         "name": "Resource Pack: 7 Stone",
@@ -5760,12 +5604,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 8 Stone": {
         "name": "Resource Pack: 8 Stone",
@@ -5773,12 +5615,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 9 Stone": {
         "name": "Resource Pack: 9 Stone",
@@ -5786,12 +5626,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 10 Stone": {
         "name": "Resource Pack: 10 Stone",
@@ -5799,12 +5637,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 11 Stone": {
         "name": "Resource Pack: 11 Stone",
@@ -5812,12 +5648,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 12 Stone": {
         "name": "Resource Pack: 12 Stone",
@@ -5825,12 +5659,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 13 Stone": {
         "name": "Resource Pack: 13 Stone",
@@ -5838,12 +5670,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 14 Stone": {
         "name": "Resource Pack: 14 Stone",
@@ -5851,12 +5681,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 15 Stone": {
         "name": "Resource Pack: 15 Stone",
@@ -5864,12 +5692,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 1 Scrap": {
         "name": "Resource Pack: 1 Scrap",
@@ -5877,12 +5703,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 2 Scrap": {
         "name": "Resource Pack: 2 Scrap",
@@ -5890,12 +5714,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Resource Pack: 3 Scrap": {
         "name": "Resource Pack: 3 Scrap",
@@ -5903,12 +5725,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "Resource Pack: 4 Scrap": {
         "name": "Resource Pack: 4 Scrap",
@@ -5916,12 +5736,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 5 Scrap": {
         "name": "Resource Pack: 5 Scrap",
@@ -5929,12 +5747,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 6 Scrap": {
         "name": "Resource Pack: 6 Scrap",
@@ -5942,12 +5758,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 7 Scrap": {
         "name": "Resource Pack: 7 Scrap",
@@ -5955,12 +5769,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 8 Scrap": {
         "name": "Resource Pack: 8 Scrap",
@@ -5968,12 +5780,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 9 Scrap": {
         "name": "Resource Pack: 9 Scrap",
@@ -5981,12 +5791,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 10 Scrap": {
         "name": "Resource Pack: 10 Scrap",
@@ -5994,12 +5802,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 11 Scrap": {
         "name": "Resource Pack: 11 Scrap",
@@ -6007,12 +5813,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 12 Scrap": {
         "name": "Resource Pack: 12 Scrap",
@@ -6020,12 +5824,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 13 Scrap": {
         "name": "Resource Pack: 13 Scrap",
@@ -6033,12 +5835,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 14 Scrap": {
         "name": "Resource Pack: 14 Scrap",
@@ -6046,12 +5846,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 15 Scrap": {
         "name": "Resource Pack: 15 Scrap",
@@ -6059,12 +5857,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 1 SeaVine": {
         "name": "Resource Pack: 1 SeaVine",
@@ -6072,12 +5868,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Resource Pack: 2 SeaVine": {
         "name": "Resource Pack: 2 SeaVine",
@@ -6085,12 +5879,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 3 SeaVine": {
         "name": "Resource Pack: 3 SeaVine",
@@ -6098,12 +5890,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 4 SeaVine": {
         "name": "Resource Pack: 4 SeaVine",
@@ -6111,12 +5901,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 5 SeaVine": {
         "name": "Resource Pack: 5 SeaVine",
@@ -6124,12 +5912,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 6 SeaVine": {
         "name": "Resource Pack: 6 SeaVine",
@@ -6137,12 +5923,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 7 SeaVine": {
         "name": "Resource Pack: 7 SeaVine",
@@ -6150,12 +5934,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 8 SeaVine": {
         "name": "Resource Pack: 8 SeaVine",
@@ -6163,12 +5945,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 9 SeaVine": {
         "name": "Resource Pack: 9 SeaVine",
@@ -6176,12 +5956,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 10 SeaVine": {
         "name": "Resource Pack: 10 SeaVine",
@@ -6189,12 +5967,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 11 SeaVine": {
         "name": "Resource Pack: 11 SeaVine",
@@ -6202,12 +5978,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 12 SeaVine": {
         "name": "Resource Pack: 12 SeaVine",
@@ -6215,12 +5989,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 13 SeaVine": {
         "name": "Resource Pack: 13 SeaVine",
@@ -6228,12 +6000,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 14 SeaVine": {
         "name": "Resource Pack: 14 SeaVine",
@@ -6241,12 +6011,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 15 SeaVine": {
         "name": "Resource Pack: 15 SeaVine",
@@ -6254,12 +6022,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 1 Thatch": {
         "name": "Resource Pack: 1 Thatch",
@@ -6267,12 +6033,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 2 Thatch": {
         "name": "Resource Pack: 2 Thatch",
@@ -6280,12 +6044,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Resource Pack: 3 Thatch": {
         "name": "Resource Pack: 3 Thatch",
@@ -6293,12 +6055,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 4 Thatch": {
         "name": "Resource Pack: 4 Thatch",
@@ -6306,12 +6066,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Resource Pack: 5 Thatch": {
         "name": "Resource Pack: 5 Thatch",
@@ -6319,12 +6077,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 6 Thatch": {
         "name": "Resource Pack: 6 Thatch",
@@ -6332,12 +6088,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 7 Thatch": {
         "name": "Resource Pack: 7 Thatch",
@@ -6345,12 +6099,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 8 Thatch": {
         "name": "Resource Pack: 8 Thatch",
@@ -6358,12 +6110,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 9 Thatch": {
         "name": "Resource Pack: 9 Thatch",
@@ -6371,12 +6121,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 10 Thatch": {
         "name": "Resource Pack: 10 Thatch",
@@ -6384,12 +6132,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 11 Thatch": {
         "name": "Resource Pack: 11 Thatch",
@@ -6397,12 +6143,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 12 Thatch": {
         "name": "Resource Pack: 12 Thatch",
@@ -6410,12 +6154,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 13 Thatch": {
         "name": "Resource Pack: 13 Thatch",
@@ -6423,12 +6165,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 14 Thatch": {
         "name": "Resource Pack: 14 Thatch",
@@ -6436,12 +6176,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 15 Thatch": {
         "name": "Resource Pack: 15 Thatch",
@@ -6449,12 +6187,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 1 Sand": {
         "name": "Resource Pack: 1 Sand",
@@ -6462,12 +6198,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 2 Sand": {
         "name": "Resource Pack: 2 Sand",
@@ -6475,12 +6209,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 3 Sand": {
         "name": "Resource Pack: 3 Sand",
@@ -6488,12 +6220,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 4 Sand": {
         "name": "Resource Pack: 4 Sand",
@@ -6501,12 +6231,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 5 Sand": {
         "name": "Resource Pack: 5 Sand",
@@ -6514,12 +6242,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 6 Sand": {
         "name": "Resource Pack: 6 Sand",
@@ -6527,12 +6253,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 7 Sand": {
         "name": "Resource Pack: 7 Sand",
@@ -6540,12 +6264,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 8 Sand": {
         "name": "Resource Pack: 8 Sand",
@@ -6553,12 +6275,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 9 Sand": {
         "name": "Resource Pack: 9 Sand",
@@ -6566,12 +6286,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 10 Sand": {
         "name": "Resource Pack: 10 Sand",
@@ -6579,12 +6297,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 11 Sand": {
         "name": "Resource Pack: 11 Sand",
@@ -6592,12 +6308,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 12 Sand": {
         "name": "Resource Pack: 12 Sand",
@@ -6605,12 +6319,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 13 Sand": {
         "name": "Resource Pack: 13 Sand",
@@ -6618,12 +6330,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 14 Sand": {
         "name": "Resource Pack: 14 Sand",
@@ -6631,12 +6341,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 15 Sand": {
         "name": "Resource Pack: 15 Sand",
@@ -6644,12 +6352,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 1 Raw_Beet": {
         "name": "Resource Pack: 1 Raw_Beet",
@@ -6657,51 +6363,46 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 2 Raw_Beet": {
         "name": "Resource Pack: 2 Raw_Beet",
+        "hint_text": "Resource Pack: 2 Raw Beet",
         "id": 47237,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 3 Raw_Beet": {
         "name": "Resource Pack: 3 Raw_Beet",
+        "hint_text": "Resource Pack: 3 Raw Beet",
         "id": 47238,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 4 Raw_Beet": {
         "name": "Resource Pack: 4 Raw_Beet",
+        "hint_text": "Resource Pack: 4 Raw Beet",
         "id": 47239,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 5 Raw_Beet": {
         "name": "Resource Pack: 5 Raw_Beet",
@@ -6709,12 +6410,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 6 Raw_Beet": {
         "name": "Resource Pack: 6 Raw_Beet",
@@ -6722,12 +6421,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 7 Raw_Beet": {
         "name": "Resource Pack: 7 Raw_Beet",
@@ -6735,12 +6432,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 8 Raw_Beet": {
         "name": "Resource Pack: 8 Raw_Beet",
@@ -6748,12 +6443,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 9 Raw_Beet": {
         "name": "Resource Pack: 9 Raw_Beet",
@@ -6761,12 +6454,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 10 Raw_Beet": {
         "name": "Resource Pack: 10 Raw_Beet",
@@ -6774,12 +6465,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 11 Raw_Beet": {
         "name": "Resource Pack: 11 Raw_Beet",
@@ -6787,12 +6476,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 12 Raw_Beet": {
         "name": "Resource Pack: 12 Raw_Beet",
@@ -6800,12 +6487,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 13 Raw_Beet": {
         "name": "Resource Pack: 13 Raw_Beet",
@@ -6813,12 +6498,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 14 Raw_Beet": {
         "name": "Resource Pack: 14 Raw_Beet",
@@ -6826,12 +6509,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 15 Raw_Beet": {
         "name": "Resource Pack: 15 Raw_Beet",
@@ -6839,12 +6520,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 1 Raw_Potato": {
         "name": "Resource Pack: 1 Raw_Potato",
@@ -6852,12 +6531,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 2 Raw_Potato": {
         "name": "Resource Pack: 2 Raw_Potato",
@@ -6865,12 +6542,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 3 Raw_Potato": {
         "name": "Resource Pack: 3 Raw_Potato",
@@ -6878,25 +6553,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 4 Raw_Potato": {
         "name": "Resource Pack: 4 Raw_Potato",
+        "hint_text": "Resource Pack: 4 Raw Potato",
         "id": 47254,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 5 Raw_Potato": {
         "name": "Resource Pack: 5 Raw_Potato",
@@ -6904,12 +6576,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 6 Raw_Potato": {
         "name": "Resource Pack: 6 Raw_Potato",
@@ -6917,12 +6587,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 7 Raw_Potato": {
         "name": "Resource Pack: 7 Raw_Potato",
@@ -6930,12 +6598,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 8 Raw_Potato": {
         "name": "Resource Pack: 8 Raw_Potato",
@@ -6943,12 +6609,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 9 Raw_Potato": {
         "name": "Resource Pack: 9 Raw_Potato",
@@ -6956,12 +6620,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 10 Raw_Potato": {
         "name": "Resource Pack: 10 Raw_Potato",
@@ -6969,12 +6631,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 11 Raw_Potato": {
         "name": "Resource Pack: 11 Raw_Potato",
@@ -6982,12 +6642,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 12 Raw_Potato": {
         "name": "Resource Pack: 12 Raw_Potato",
@@ -6995,12 +6653,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 13 Raw_Potato": {
         "name": "Resource Pack: 13 Raw_Potato",
@@ -7008,12 +6664,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 14 Raw_Potato": {
         "name": "Resource Pack: 14 Raw_Potato",
@@ -7021,12 +6675,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 15 Raw_Potato": {
         "name": "Resource Pack: 15 Raw_Potato",
@@ -7034,12 +6686,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 1 MetalOre": {
         "name": "Resource Pack: 1 MetalOre",
@@ -7047,12 +6697,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 2 MetalOre": {
         "name": "Resource Pack: 2 MetalOre",
@@ -7060,12 +6708,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Resource Pack: 3 MetalOre": {
         "name": "Resource Pack: 3 MetalOre",
@@ -7073,12 +6719,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 4 MetalOre": {
         "name": "Resource Pack: 4 MetalOre",
@@ -7086,12 +6730,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 5 MetalOre": {
         "name": "Resource Pack: 5 MetalOre",
@@ -7099,12 +6741,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 6 MetalOre": {
         "name": "Resource Pack: 6 MetalOre",
@@ -7112,12 +6752,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 7 MetalOre": {
         "name": "Resource Pack: 7 MetalOre",
@@ -7125,12 +6763,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 8 MetalOre": {
         "name": "Resource Pack: 8 MetalOre",
@@ -7138,12 +6774,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 9 MetalOre": {
         "name": "Resource Pack: 9 MetalOre",
@@ -7151,12 +6785,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 10 MetalOre": {
         "name": "Resource Pack: 10 MetalOre",
@@ -7164,12 +6796,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 11 MetalOre": {
         "name": "Resource Pack: 11 MetalOre",
@@ -7177,12 +6807,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 12 MetalOre": {
         "name": "Resource Pack: 12 MetalOre",
@@ -7190,12 +6818,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 13 MetalOre": {
         "name": "Resource Pack: 13 MetalOre",
@@ -7203,12 +6829,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 14 MetalOre": {
         "name": "Resource Pack: 14 MetalOre",
@@ -7216,12 +6840,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 15 MetalOre": {
         "name": "Resource Pack: 15 MetalOre",
@@ -7229,12 +6851,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 1 TitaniumOre": {
         "name": "Resource Pack: 1 TitaniumOre",
@@ -7242,12 +6862,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "Resource Pack: 2 TitaniumOre": {
         "name": "Resource Pack: 2 TitaniumOre",
@@ -7255,12 +6873,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Resource Pack: 3 TitaniumOre": {
         "name": "Resource Pack: 3 TitaniumOre",
@@ -7268,12 +6884,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 4 TitaniumOre": {
         "name": "Resource Pack: 4 TitaniumOre",
@@ -7281,12 +6895,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 5 TitaniumOre": {
         "name": "Resource Pack: 5 TitaniumOre",
@@ -7294,12 +6906,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 6 TitaniumOre": {
         "name": "Resource Pack: 6 TitaniumOre",
@@ -7307,12 +6917,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 7 TitaniumOre": {
         "name": "Resource Pack: 7 TitaniumOre",
@@ -7320,12 +6928,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 8 TitaniumOre": {
         "name": "Resource Pack: 8 TitaniumOre",
@@ -7333,12 +6939,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 9 TitaniumOre": {
         "name": "Resource Pack: 9 TitaniumOre",
@@ -7346,12 +6950,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 10 TitaniumOre": {
         "name": "Resource Pack: 10 TitaniumOre",
@@ -7359,12 +6961,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 11 TitaniumOre": {
         "name": "Resource Pack: 11 TitaniumOre",
@@ -7372,12 +6972,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 12 TitaniumOre": {
         "name": "Resource Pack: 12 TitaniumOre",
@@ -7385,12 +6983,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 13 TitaniumOre": {
         "name": "Resource Pack: 13 TitaniumOre",
@@ -7398,12 +6994,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 14 TitaniumOre": {
         "name": "Resource Pack: 14 TitaniumOre",
@@ -7411,12 +7005,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 15 TitaniumOre": {
         "name": "Resource Pack: 15 TitaniumOre",
@@ -7424,12 +7016,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 1 CopperOre": {
         "name": "Resource Pack: 1 CopperOre",
@@ -7437,12 +7027,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 2 CopperOre": {
         "name": "Resource Pack: 2 CopperOre",
@@ -7450,12 +7038,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "Resource Pack: 3 CopperOre": {
         "name": "Resource Pack: 3 CopperOre",
@@ -7463,12 +7049,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 4 CopperOre": {
         "name": "Resource Pack: 4 CopperOre",
@@ -7476,12 +7060,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 5 CopperOre": {
         "name": "Resource Pack: 5 CopperOre",
@@ -7489,12 +7071,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 6 CopperOre": {
         "name": "Resource Pack: 6 CopperOre",
@@ -7502,12 +7082,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 7 CopperOre": {
         "name": "Resource Pack: 7 CopperOre",
@@ -7515,12 +7093,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 8 CopperOre": {
         "name": "Resource Pack: 8 CopperOre",
@@ -7528,12 +7104,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 9 CopperOre": {
         "name": "Resource Pack: 9 CopperOre",
@@ -7541,12 +7115,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 10 CopperOre": {
         "name": "Resource Pack: 10 CopperOre",
@@ -7554,12 +7126,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 11 CopperOre": {
         "name": "Resource Pack: 11 CopperOre",
@@ -7567,12 +7137,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 12 CopperOre": {
         "name": "Resource Pack: 12 CopperOre",
@@ -7580,12 +7148,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 13 CopperOre": {
         "name": "Resource Pack: 13 CopperOre",
@@ -7593,12 +7159,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 14 CopperOre": {
         "name": "Resource Pack: 14 CopperOre",
@@ -7606,12 +7170,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 15 CopperOre": {
         "name": "Resource Pack: 15 CopperOre",
@@ -7619,12 +7181,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 1 ExplosiveGoo": {
         "name": "Resource Pack: 1 ExplosiveGoo",
@@ -7632,12 +7192,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 2 ExplosiveGoo": {
         "name": "Resource Pack: 2 ExplosiveGoo",
@@ -7645,12 +7203,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 3 ExplosiveGoo": {
         "name": "Resource Pack: 3 ExplosiveGoo",
@@ -7658,12 +7214,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 4 ExplosiveGoo": {
         "name": "Resource Pack: 4 ExplosiveGoo",
@@ -7671,12 +7225,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 5 ExplosiveGoo": {
         "name": "Resource Pack: 5 ExplosiveGoo",
@@ -7684,12 +7236,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 6 ExplosiveGoo": {
         "name": "Resource Pack: 6 ExplosiveGoo",
@@ -7697,12 +7247,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 7 ExplosiveGoo": {
         "name": "Resource Pack: 7 ExplosiveGoo",
@@ -7710,12 +7258,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 8 ExplosiveGoo": {
         "name": "Resource Pack: 8 ExplosiveGoo",
@@ -7723,12 +7269,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 9 ExplosiveGoo": {
         "name": "Resource Pack: 9 ExplosiveGoo",
@@ -7736,12 +7280,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 10 ExplosiveGoo": {
         "name": "Resource Pack: 10 ExplosiveGoo",
@@ -7749,12 +7291,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 11 ExplosiveGoo": {
         "name": "Resource Pack: 11 ExplosiveGoo",
@@ -7762,12 +7302,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 12 ExplosiveGoo": {
         "name": "Resource Pack: 12 ExplosiveGoo",
@@ -7775,12 +7313,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 13 ExplosiveGoo": {
         "name": "Resource Pack: 13 ExplosiveGoo",
@@ -7788,12 +7324,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 14 ExplosiveGoo": {
         "name": "Resource Pack: 14 ExplosiveGoo",
@@ -7801,12 +7335,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Resource Pack: 15 ExplosiveGoo": {
         "name": "Resource Pack: 15 ExplosiveGoo",
@@ -7814,12 +7346,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Victory": {
         "name": "Victory",
@@ -7827,12 +7357,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -7843,111 +7371,111 @@
   },
   "itempool_counts": {
     "1": {
-      "Antenna": 2,
+      "Antenna": 1,
       "Balboa Island Frequency": 1,
-      "Beehive": 2,
-      "Binoculars": 2,
-      "Birds nest": 2,
-      "Bolt": 2,
-      "Bucket": 2,
+      "Beehive": 1,
+      "Binoculars": 1,
+      "Birds nest": 1,
+      "Bolt": 1,
+      "Bucket": 1,
       "Caravan Island Frequency": 1,
-      "Circuit board": 2,
-      "Cookingpot": 2,
-      "Firework": 2,
-      "Flippers": 2,
-      "Fuel pipe": 2,
-      "Fuel tank": 2,
-      "Grass plot": 2,
-      "Hammock": 2,
-      "Hinge": 2,
-      "Honey": 2,
-      "Juicer": 2,
-      "Leather body armor": 2,
-      "Leather greaves": 2,
-      "Leather helmet": 2,
-      "Metal fishing rod": 2,
-      "Net canister": 2,
-      "Net launcher": 2,
-      "Oxygen bottle": 2,
-      "Receiver": 2,
-      "Recycler": 2,
-      "Resource Pack: 1 Clay": 2,
-      "Resource Pack: 1 CopperOre": 2,
-      "Resource Pack: 1 MetalOre": 2,
-      "Resource Pack: 1 Plank": 6,
-      "Resource Pack: 1 Plastic": 2,
-      "Resource Pack: 1 Scrap": 2,
-      "Resource Pack: 1 SeaVine": 4,
-      "Resource Pack: 1 Stone": 2,
-      "Resource Pack: 1 TitaniumOre": 6,
-      "Resource Pack: 2 Clay": 2,
-      "Resource Pack: 2 CopperOre": 6,
-      "Resource Pack: 2 MetalOre": 4,
-      "Resource Pack: 2 Plank": 4,
-      "Resource Pack: 2 Plastic": 4,
-      "Resource Pack: 2 Raw_Beet": 2,
-      "Resource Pack: 2 Sand": 2,
-      "Resource Pack: 2 Scrap": 4,
-      "Resource Pack: 2 SeaVine": 2,
-      "Resource Pack: 2 Stone": 2,
-      "Resource Pack: 2 Thatch": 4,
-      "Resource Pack: 2 TitaniumOre": 4,
-      "Resource Pack: 3 Clay": 2,
-      "Resource Pack: 3 CopperOre": 2,
-      "Resource Pack: 3 MetalOre": 2,
-      "Resource Pack: 3 Plank": 2,
-      "Resource Pack: 3 Plastic": 2,
-      "Resource Pack: 3 Raw_Beet": 2,
-      "Resource Pack: 3 Scrap": 6,
-      "Resource Pack: 3 TitaniumOre": 2,
-      "Resource Pack: 4 Clay": 4,
-      "Resource Pack: 4 CopperOre": 2,
-      "Resource Pack: 4 Raw_Beet": 2,
-      "Resource Pack: 4 Raw_Potato": 2,
-      "Resource Pack: 4 Stone": 2,
-      "Resource Pack: 4 Thatch": 4,
-      "Resource Pack: 5 CopperOre": 2,
-      "Resource Pack: 5 ExplosiveGoo": 2,
-      "Resource Pack: 5 MetalOre": 2,
-      "Resource Pack: 5 Sand": 2,
-      "Resource Pack: 5 Scrap": 2,
-      "Resource Pack: 5 SeaVine": 2,
-      "Resource Pack: 5 Stone": 4,
-      "Resource Pack: 5 TitaniumOre": 2,
-      "Shear": 2,
-      "Shovel": 2,
-      "Sprinkler": 2,
-      "Sweep net": 2,
+      "Circuit board": 1,
+      "Cookingpot": 1,
+      "Firework": 1,
+      "Flippers": 1,
+      "Fuel pipe": 1,
+      "Fuel tank": 1,
+      "Grass plot": 1,
+      "Hammock": 1,
+      "Hinge": 1,
+      "Honey": 1,
+      "Juicer": 1,
+      "Leather body armor": 1,
+      "Leather greaves": 1,
+      "Leather helmet": 1,
+      "Metal fishing rod": 1,
+      "Net canister": 1,
+      "Net launcher": 1,
+      "Oxygen bottle": 1,
+      "Receiver": 1,
+      "Recycler": 1,
+      "Resource Pack: 1 Clay": 1,
+      "Resource Pack: 1 CopperOre": 1,
+      "Resource Pack: 1 MetalOre": 1,
+      "Resource Pack: 1 Plank": 3,
+      "Resource Pack: 1 Plastic": 1,
+      "Resource Pack: 1 Scrap": 1,
+      "Resource Pack: 1 SeaVine": 2,
+      "Resource Pack: 1 Stone": 1,
+      "Resource Pack: 1 TitaniumOre": 3,
+      "Resource Pack: 2 Clay": 1,
+      "Resource Pack: 2 CopperOre": 3,
+      "Resource Pack: 2 MetalOre": 2,
+      "Resource Pack: 2 Plank": 2,
+      "Resource Pack: 2 Plastic": 2,
+      "Resource Pack: 2 Raw_Beet": 1,
+      "Resource Pack: 2 Sand": 1,
+      "Resource Pack: 2 Scrap": 2,
+      "Resource Pack: 2 SeaVine": 1,
+      "Resource Pack: 2 Stone": 1,
+      "Resource Pack: 2 Thatch": 2,
+      "Resource Pack: 2 TitaniumOre": 2,
+      "Resource Pack: 3 Clay": 1,
+      "Resource Pack: 3 CopperOre": 1,
+      "Resource Pack: 3 MetalOre": 1,
+      "Resource Pack: 3 Plank": 1,
+      "Resource Pack: 3 Plastic": 1,
+      "Resource Pack: 3 Raw_Beet": 1,
+      "Resource Pack: 3 Scrap": 3,
+      "Resource Pack: 3 TitaniumOre": 1,
+      "Resource Pack: 4 Clay": 2,
+      "Resource Pack: 4 CopperOre": 1,
+      "Resource Pack: 4 Raw_Beet": 1,
+      "Resource Pack: 4 Raw_Potato": 1,
+      "Resource Pack: 4 Stone": 1,
+      "Resource Pack: 4 Thatch": 2,
+      "Resource Pack: 5 CopperOre": 1,
+      "Resource Pack: 5 ExplosiveGoo": 1,
+      "Resource Pack: 5 MetalOre": 1,
+      "Resource Pack: 5 Sand": 1,
+      "Resource Pack: 5 Scrap": 1,
+      "Resource Pack: 5 SeaVine": 1,
+      "Resource Pack: 5 Stone": 2,
+      "Resource Pack: 5 TitaniumOre": 1,
+      "Shear": 1,
+      "Shovel": 1,
+      "Sprinkler": 1,
+      "Sweep net": 1,
       "Tangaroa Frequency": 1,
       "Temperance Frequency": 1,
-      "Trashcan": 2,
+      "Trashcan": 1,
       "Utopia Frequency": 1,
       "Varuna Point Frequency": 1,
       "Vasagatan Frequency": 1,
       "Victory": 1,
-      "Water pipe": 2,
-      "Water tank": 2,
-      "progressive-anchor": 4,
-      "progressive-axe": 4,
-      "progressive-backpack": 4,
-      "progressive-battery": 8,
-      "progressive-biofuel": 4,
-      "progressive-bottle": 4,
-      "progressive-bow": 8,
-      "progressive-containers": 4,
-      "progressive-crop-plot": 10,
-      "progressive-engine": 6,
-      "progressive-grill": 4,
-      "progressive-headlight": 4,
-      "progressive-hook": 4,
-      "progressive-metals": 6,
-      "progressive-net": 4,
-      "progressive-purifier": 4,
-      "progressive-salve": 4,
-      "progressive-scarecrow": 4,
-      "progressive-spear": 6,
-      "progressive-storage": 4,
-      "progressive-zipline": 6
+      "Water pipe": 1,
+      "Water tank": 1,
+      "progressive-anchor": 2,
+      "progressive-axe": 2,
+      "progressive-backpack": 2,
+      "progressive-battery": 4,
+      "progressive-biofuel": 2,
+      "progressive-bottle": 2,
+      "progressive-bow": 4,
+      "progressive-containers": 2,
+      "progressive-crop-plot": 5,
+      "progressive-engine": 3,
+      "progressive-grill": 2,
+      "progressive-headlight": 2,
+      "progressive-hook": 2,
+      "progressive-metals": 3,
+      "progressive-net": 2,
+      "progressive-purifier": 2,
+      "progressive-salve": 2,
+      "progressive-scarecrow": 2,
+      "progressive-spear": 3,
+      "progressive-storage": 2,
+      "progressive-zipline": 3
     }
   },
   "progression_mapping": {
@@ -8321,5 +7849,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

@@ -705,12 +705,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 5
+        "max_count": 5,
+        "classification": "progression"
       },
       "Map Height": {
         "name": "Map Height",
@@ -718,12 +716,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 5
+        "max_count": 5,
+        "classification": "progression"
       },
       "Map Bombs": {
         "name": "Map Bombs",
@@ -731,12 +727,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 15
+        "max_count": 15,
+        "classification": "progression"
       }
     }
   },
@@ -772,5 +766,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

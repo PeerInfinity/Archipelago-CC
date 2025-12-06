@@ -141,7 +141,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Boss Shop Item",
@@ -172,7 +173,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -198,7 +200,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -218,7 +221,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -353,7 +357,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Act Completion (Welcome to Mafia Town)",
@@ -367,7 +372,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -522,7 +528,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -683,7 +690,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -762,7 +770,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia HQ - Freezer Chest",
@@ -776,7 +785,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia HQ - Secret Room",
@@ -796,7 +806,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia HQ - Bathroom Stall Chest",
@@ -810,7 +821,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Act Completion (Down with the Mafia!)",
@@ -824,7 +836,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -892,7 +905,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "HUMT Access",
@@ -906,7 +920,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -985,7 +1001,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1090,7 +1107,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1308,7 +1326,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1360,7 +1379,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Murder on the Owl Express - Luggage Room Top",
@@ -1374,7 +1394,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Murder on the Owl Express - Luggage Room Bottom",
@@ -1388,7 +1409,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Murder on the Owl Express - Raven Suite Room",
@@ -1408,7 +1430,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Murder on the Owl Express - Raven Suite Top",
@@ -1422,7 +1445,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Murder on the Owl Express - Lounge Chest",
@@ -1436,7 +1460,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Act Completion (Murder on the Owl Express)",
@@ -1450,7 +1475,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1598,7 +1624,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Picture Perfect - Hats Buy Building",
@@ -1612,7 +1639,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Act Completion (Picture Perfect)",
@@ -1626,7 +1654,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1665,7 +1694,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1726,7 +1756,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1755,7 +1786,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1817,7 +1849,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio Basement - Cardboard Conductor",
@@ -1832,7 +1865,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio Basement - Above Conductor Sign",
@@ -1847,7 +1881,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio Basement - Logo Wall",
@@ -1861,7 +1896,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio Basement - Disco Room",
@@ -1876,7 +1912,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio Basement - Small Room",
@@ -1890,7 +1927,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio Basement - Vent Pipe",
@@ -1904,7 +1942,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio Basement - Tightrope",
@@ -1919,7 +1958,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio Basement - Cameras",
@@ -1934,7 +1974,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio Basement - Locked Room",
@@ -1949,7 +1990,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Act Completion (Dead Bird Studio Basement)",
@@ -1964,7 +2006,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1984,7 +2027,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio (Rift) - Page: Behind Cardboard Planet",
@@ -1998,7 +2042,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio (Rift) - Page: Near Time Rift Gate",
@@ -2012,7 +2057,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio (Rift) - Page: Top of Metal Bar",
@@ -2026,7 +2072,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio (Rift) - Page: Lava Lamp",
@@ -2040,7 +2087,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio (Rift) - Page: Above Horse Picture",
@@ -2054,7 +2102,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio (Rift) - Page: Green Screen",
@@ -2068,7 +2117,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio (Rift) - Page: In The Corner",
@@ -2082,7 +2132,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio (Rift) - Page: Above TV Room",
@@ -2096,7 +2147,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2116,7 +2168,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2136,7 +2189,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2156,7 +2210,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio - Red Building Top",
@@ -2170,7 +2225,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio - Behind Water Tower",
@@ -2184,7 +2240,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio - Side of House",
@@ -2198,7 +2255,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2233,7 +2291,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio - Tightrope Chest",
@@ -2247,7 +2306,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio - Tepee Chest",
@@ -2276,7 +2336,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dead Bird Studio - Conductor Chest",
@@ -2305,7 +2366,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2520,7 +2582,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Act Completion (Contractual Obligations)",
@@ -2534,7 +2597,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Snatcher's Contract - The Subcon Well",
@@ -2548,7 +2612,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2630,7 +2695,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Well - Above Chest",
@@ -2644,7 +2710,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Well - On Pipe",
@@ -2659,7 +2726,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Well - Mushroom",
@@ -2673,7 +2741,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Act Completion (The Subcon Well)",
@@ -2688,7 +2757,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2875,7 +2945,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TOD Access",
@@ -2889,7 +2960,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2978,7 +3051,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Queen Vanessa's Manor - Bedroom Chest",
@@ -2992,7 +3066,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Queen Vanessa's Manor - Hall Chest",
@@ -3006,7 +3081,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Queen Vanessa's Manor - Chandelier",
@@ -3020,7 +3096,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Act Completion (Queen Vanessa's Manor)",
@@ -3034,7 +3111,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3145,7 +3223,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3374,7 +3453,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3469,7 +3550,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - The Purrloined Village: Chest Reward",
@@ -3483,7 +3565,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - Mystifying Time Mesa: Zipline",
@@ -3518,7 +3601,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - Mystifying Time Mesa: Gate Puzzle",
@@ -3532,7 +3616,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - The Twilight Path",
@@ -3552,7 +3637,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3581,7 +3667,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - Goat Village: Hidden Branch",
@@ -3595,7 +3682,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - Goat Refinery",
@@ -3639,7 +3727,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - Bird Pass Fork",
@@ -3654,7 +3743,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - Yellow Band Hills",
@@ -3684,7 +3774,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - Ember Summit",
@@ -3699,7 +3790,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - Goat Outpost Horn",
@@ -3714,7 +3806,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - Windy Passage",
@@ -3729,7 +3822,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3749,7 +3843,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - The Birdhouse: Dweller Platforms Relic",
@@ -3769,7 +3864,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - The Birdhouse: Brewing Crate House",
@@ -3783,7 +3879,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - The Birdhouse: Hay Bale",
@@ -3797,7 +3894,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - The Birdhouse: Alpine Crow Mini-Gauntlet",
@@ -3811,7 +3909,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - The Birdhouse: Outer Edge",
@@ -3825,7 +3924,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Act Completion (The Birdhouse)",
@@ -3839,7 +3939,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Birdhouse Cleared",
@@ -3853,7 +3954,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3873,7 +3976,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - The Lava Cake: Outer Island Chest",
@@ -3887,7 +3991,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - The Lava Cake: Dweller Pillars",
@@ -3901,7 +4006,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - The Lava Cake: Top Cake",
@@ -3915,7 +4021,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Act Completion (The Lava Cake)",
@@ -3929,7 +4036,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lava Cake Cleared",
@@ -3943,7 +4051,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3963,7 +4073,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - The Windmill: Entrance",
@@ -3977,7 +4088,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - The Windmill: Dropdown",
@@ -3991,7 +4103,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - The Windmill: House Window",
@@ -4005,7 +4118,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Act Completion (The Windmill)",
@@ -4019,7 +4133,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Windmill Cleared",
@@ -4033,7 +4148,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4053,7 +4170,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline - The Twilight Bell: Ice Platform",
@@ -4067,7 +4185,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Act Completion (The Twilight Bell)",
@@ -4081,7 +4200,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Twilight Bell Cleared",
@@ -4095,7 +4215,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4157,7 +4279,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TIHS Access",
@@ -4171,7 +4294,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4191,7 +4316,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline (Rift) - Page: Entrance Area Hidden Ledge",
@@ -4205,7 +4331,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline (Rift) - Page: Windmill Island Ledge",
@@ -4219,7 +4346,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline (Rift) - Page: Waterfall Wooden Pillar",
@@ -4233,7 +4361,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline (Rift) - Page: Lonely Birdhouse Top",
@@ -4247,7 +4376,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpine Skyline (Rift) - Page: Below Aqueduct",
@@ -4261,7 +4391,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4287,7 +4418,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4313,7 +4445,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4421,7 +4554,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Old Man (Steel Beams)",
@@ -4506,7 +4640,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Blue Vault",
@@ -4520,7 +4655,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Green Vault",
@@ -4534,7 +4670,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Red Vault",
@@ -4548,7 +4685,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Blue Vault Brewing Crate",
@@ -4568,7 +4706,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Plaza Under Boxes",
@@ -4582,7 +4721,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Small Boat",
@@ -4596,7 +4736,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Staircase Pon Cluster",
@@ -4610,7 +4751,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Palm Tree",
@@ -4624,7 +4766,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Port",
@@ -4638,7 +4781,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Docks Chest",
@@ -4652,7 +4796,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Ice Hat Cage",
@@ -4672,7 +4817,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Hidden Buttons Chest",
@@ -4686,7 +4832,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4715,7 +4862,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Ledge Chest",
@@ -4729,7 +4877,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Yellow Sphere Building Chest",
@@ -4743,7 +4892,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Beneath Scaffolding",
@@ -4757,7 +4907,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - On Scaffolding",
@@ -4856,7 +5007,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Cargo Ship",
@@ -4870,7 +5022,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Beach Alcove",
@@ -4884,7 +5037,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Wood Cage",
@@ -4898,7 +5052,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Beach Patio",
@@ -4912,7 +5067,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Steel Beam Nest",
@@ -4926,7 +5082,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Top of Ruined Tower",
@@ -4946,7 +5103,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Hot Air Balloon",
@@ -4966,7 +5124,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Camera Badge 1",
@@ -4980,7 +5139,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Camera Badge 2",
@@ -4994,7 +5154,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Chest Beneath Aqueduct",
@@ -5008,7 +5169,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Secret Cave",
@@ -5037,7 +5199,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Crow Chest",
@@ -5051,7 +5214,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Above Boats",
@@ -5075,7 +5239,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Slip Slide Chest",
@@ -5089,7 +5254,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Behind Faucet",
@@ -5103,7 +5269,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Clock Tower Chest",
@@ -5118,7 +5285,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Top of Lighthouse",
@@ -5133,7 +5301,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Mafia Geek Platform",
@@ -5232,7 +5401,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia Town - Behind HQ Chest",
@@ -5303,7 +5473,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5323,7 +5494,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia of Cooks - Page: Fish Pile",
@@ -5337,7 +5509,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia of Cooks - Page: Trash Mound",
@@ -5351,7 +5524,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia of Cooks - Page: Beside Red Building",
@@ -5365,7 +5539,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia of Cooks - Page: Behind Shipping Containers",
@@ -5379,7 +5554,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia of Cooks - Page: Top of Boat",
@@ -5393,7 +5569,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mafia of Cooks - Page: Below Dock",
@@ -5407,7 +5584,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5427,7 +5605,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5447,7 +5626,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5495,7 +5675,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Village - Graveyard Ice Cube",
@@ -5509,7 +5690,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Village - House Top",
@@ -5523,7 +5705,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Village - Ice Cube House",
@@ -5537,7 +5720,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Village - Stump Platform Chest",
@@ -5551,7 +5735,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Giant Tree Climb",
@@ -5565,7 +5750,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Ice Cube Shack",
@@ -5579,7 +5765,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Swamp Gravestone",
@@ -5599,7 +5786,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Swamp Near Well",
@@ -5613,7 +5801,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Swamp Tree A",
@@ -5627,7 +5816,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Swamp Tree B",
@@ -5641,7 +5831,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Swamp Ice Wall",
@@ -5655,7 +5846,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Swamp Treehouse",
@@ -5669,7 +5861,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Swamp Tree Chest",
@@ -5683,7 +5876,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Burning House",
@@ -5697,7 +5891,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Burning Tree Climb",
@@ -5711,7 +5906,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Burning Stump Chest",
@@ -5725,7 +5921,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Burning Forest Treehouse",
@@ -5739,7 +5936,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Spider Bone Cage A",
@@ -5753,7 +5951,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Spider Bone Cage B",
@@ -5767,7 +5966,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Triple Spider Bounce",
@@ -5781,7 +5981,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Noose Treehouse",
@@ -5796,7 +5997,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Long Tree Climb Chest",
@@ -5816,7 +6018,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Manor Rooftop",
@@ -5830,7 +6033,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Infinite Yarn Bush",
@@ -5850,7 +6054,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Magnet Badge Bush",
@@ -5870,7 +6075,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Dweller Stump",
@@ -5890,7 +6096,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Dweller Floating Rocks",
@@ -5910,7 +6117,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Dweller Platforming Tree A",
@@ -5924,7 +6132,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Dweller Platforming Tree B",
@@ -5944,7 +6153,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Giant Time Piece",
@@ -5958,7 +6168,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Gallows",
@@ -5972,7 +6183,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Green and Purple Dweller Rocks",
@@ -5986,7 +6198,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Dweller Shack",
@@ -6006,7 +6219,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Subcon Forest - Tall Tree Hookshot Swing",
@@ -6021,7 +6235,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Snatcher's Contract - Toilet of Doom",
@@ -6035,7 +6250,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Snatcher's Contract - Queen Vanessa's Manor",
@@ -6049,7 +6265,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Snatcher's Contract - Mail Delivery Service",
@@ -6063,7 +6280,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6102,7 +6320,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6122,7 +6341,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6142,7 +6362,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6162,7 +6383,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sleepy Subcon - Page: Behind Entrance Area",
@@ -6176,7 +6398,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sleepy Subcon - Page: Near Wrecking Ball",
@@ -6190,7 +6413,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sleepy Subcon - Page: Behind Crane",
@@ -6204,7 +6428,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sleepy Subcon - Page: Wrecked Treehouse",
@@ -6218,7 +6443,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sleepy Subcon - Page: Behind 2nd Rift Gate",
@@ -6232,7 +6458,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sleepy Subcon - Page: Rotating Platform",
@@ -6246,7 +6473,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sleepy Subcon - Page: Behind 3rd Rift Gate",
@@ -6260,7 +6488,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sleepy Subcon - Page: Frozen Tree",
@@ -6274,7 +6503,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sleepy Subcon - Page: Secret Library",
@@ -6288,7 +6518,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6309,7 +6540,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6354,7 +6586,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6374,7 +6607,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Badge Seller - Item 2",
@@ -6388,7 +6622,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Badge Seller - Item 3",
@@ -6402,7 +6637,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Badge Seller - Item 4",
@@ -6416,7 +6652,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Badge Seller - Item 5",
@@ -6430,7 +6667,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Badge Seller - Item 6",
@@ -6444,7 +6682,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6478,7 +6717,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Act Completion (The Finale)",
@@ -6508,7 +6748,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Time Piece Cluster",
@@ -6538,7 +6779,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       }
@@ -6560,12 +6803,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 100
+        "max_count": 50,
+        "classification": "progression_skip_balancing"
       },
       "Time Piece": {
         "name": "Time Piece",
@@ -6573,12 +6814,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 80
+        "max_count": 40,
+        "classification": "progression_skip_balancing"
       },
       "Sprint Hat": {
         "name": "Sprint Hat",
@@ -6586,12 +6825,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Brewing Hat": {
         "name": "Brewing Hat",
@@ -6599,12 +6836,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ice Hat": {
         "name": "Ice Hat",
@@ -6612,12 +6847,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Dweller Mask": {
         "name": "Dweller Mask",
@@ -6625,12 +6858,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Time Stop Hat": {
         "name": "Time Stop Hat",
@@ -6638,12 +6869,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Projectile Badge": {
         "name": "Projectile Badge",
@@ -6651,12 +6880,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Fast Hatter Badge": {
         "name": "Fast Hatter Badge",
@@ -6664,12 +6891,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Hover Badge": {
         "name": "Hover Badge",
@@ -6677,12 +6902,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Hookshot Badge": {
         "name": "Hookshot Badge",
@@ -6690,12 +6913,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Item Magnet Badge": {
         "name": "Item Magnet Badge",
@@ -6703,12 +6924,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "No Bonk Badge": {
         "name": "No Bonk Badge",
@@ -6716,12 +6935,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Compass Badge": {
         "name": "Compass Badge",
@@ -6729,12 +6946,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Scooter Badge": {
         "name": "Scooter Badge",
@@ -6742,12 +6957,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "One-Hit Hero Badge": {
         "name": "One-Hit Hero Badge",
@@ -6755,12 +6968,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Camera Badge": {
         "name": "Camera Badge",
@@ -6768,12 +6979,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Burger Patty)": {
         "name": "Relic (Burger Patty)",
@@ -6782,12 +6991,10 @@
           "Burger",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Burger Cushion)": {
         "name": "Relic (Burger Cushion)",
@@ -6796,12 +7003,10 @@
           "Burger",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Mountain Set)": {
         "name": "Relic (Mountain Set)",
@@ -6810,12 +7015,10 @@
           "Everything",
           "Train"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Train)": {
         "name": "Relic (Train)",
@@ -6824,12 +7027,10 @@
           "Everything",
           "Train"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (UFO)": {
         "name": "Relic (UFO)",
@@ -6838,12 +7039,10 @@
           "Everything",
           "UFO"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Cow)": {
         "name": "Relic (Cow)",
@@ -6852,12 +7051,10 @@
           "Everything",
           "UFO"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Cool Cow)": {
         "name": "Relic (Cool Cow)",
@@ -6866,26 +7063,23 @@
           "Everything",
           "UFO"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Tin-foil Hat Cow)": {
         "name": "Relic (Tin-foil Hat Cow)",
+        "hint_text": "Relic (Tin foil Hat Cow)",
         "id": 2000300013,
         "groups": [
           "Everything",
           "UFO"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Crayon Box)": {
         "name": "Relic (Crayon Box)",
@@ -6894,12 +7088,10 @@
           "Crayon",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Red Crayon)": {
         "name": "Relic (Red Crayon)",
@@ -6908,12 +7100,10 @@
           "Crayon",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Blue Crayon)": {
         "name": "Relic (Blue Crayon)",
@@ -6922,12 +7112,10 @@
           "Crayon",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Green Crayon)": {
         "name": "Relic (Green Crayon)",
@@ -6936,12 +7124,10 @@
           "Crayon",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Cake Stand)": {
         "name": "Relic (Cake Stand)",
@@ -6950,12 +7136,10 @@
           "Cake",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Shortcake)": {
         "name": "Relic (Shortcake)",
@@ -6964,12 +7148,10 @@
           "Cake",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Chocolate Cake Slice)": {
         "name": "Relic (Chocolate Cake Slice)",
@@ -6978,12 +7160,10 @@
           "Cake",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Chocolate Cake)": {
         "name": "Relic (Chocolate Cake)",
@@ -6992,12 +7172,10 @@
           "Cake",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Necklace Bust)": {
         "name": "Relic (Necklace Bust)",
@@ -7006,12 +7184,10 @@
           "Everything",
           "Necklace"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Necklace)": {
         "name": "Relic (Necklace)",
@@ -7020,12 +7196,10 @@
           "Everything",
           "Necklace"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "25 Pons": {
         "name": "25 Pons",
@@ -7033,12 +7207,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 92
+        "max_count": 46,
+        "classification": "filler"
       },
       "50 Pons": {
         "name": "50 Pons",
@@ -7046,12 +7218,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 24
+        "max_count": 12,
+        "classification": "filler"
       },
       "100 Pons": {
         "name": "100 Pons",
@@ -7059,12 +7229,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "filler"
       },
       "Health Pon": {
         "name": "Health Pon",
@@ -7072,12 +7240,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 32
+        "max_count": 16,
+        "classification": "filler"
       },
       "Random Cosmetic": {
         "name": "Random Cosmetic",
@@ -7085,12 +7251,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 58
+        "max_count": 29,
+        "classification": "filler"
       },
       "Baby Trap": {
         "name": "Baby Trap",
@@ -7098,12 +7262,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "trap"
       },
       "Laser Trap": {
         "name": "Laser Trap",
@@ -7111,12 +7273,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "trap"
       },
       "Parade Trap": {
         "name": "Parade Trap",
@@ -7124,12 +7284,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "trap"
       },
       "Badge Pin": {
         "name": "Badge Pin",
@@ -7137,12 +7295,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "useful"
       },
       "Umbrella": {
         "name": "Umbrella",
@@ -7150,12 +7306,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Progressive Painting Unlock": {
         "name": "Progressive Painting Unlock",
@@ -7163,12 +7317,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Metro Ticket - Yellow": {
         "name": "Metro Ticket - Yellow",
@@ -7176,12 +7328,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Metro Ticket - Green": {
         "name": "Metro Ticket - Green",
@@ -7189,12 +7339,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Metro Ticket - Blue": {
         "name": "Metro Ticket - Blue",
@@ -7202,12 +7350,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Metro Ticket - Pink": {
         "name": "Metro Ticket - Pink",
@@ -7215,64 +7361,58 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Snatcher's Contract - The Subcon Well": {
         "name": "Snatcher's Contract - The Subcon Well",
+        "hint_text": "Snatcher's Contract   The Subcon Well",
         "id": 2000300200,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Snatcher's Contract - Toilet of Doom": {
         "name": "Snatcher's Contract - Toilet of Doom",
+        "hint_text": "Snatcher's Contract   Toilet of Doom",
         "id": 2000300201,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Snatcher's Contract - Queen Vanessa's Manor": {
         "name": "Snatcher's Contract - Queen Vanessa's Manor",
+        "hint_text": "Snatcher's Contract   Queen Vanessa's Manor",
         "id": 2000300202,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Snatcher's Contract - Mail Delivery Service": {
         "name": "Snatcher's Contract - Mail Delivery Service",
+        "hint_text": "Snatcher's Contract   Mail Delivery Service",
         "id": 2000300203,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Zipline Unlock - The Birdhouse Path": {
         "name": "Zipline Unlock - The Birdhouse Path",
@@ -7280,12 +7420,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Zipline Unlock - The Lava Cake Path": {
         "name": "Zipline Unlock - The Lava Cake Path",
@@ -7293,12 +7431,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Zipline Unlock - The Windmill Path": {
         "name": "Zipline Unlock - The Windmill Path",
@@ -7306,12 +7442,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Zipline Unlock - The Twilight Bell Path": {
         "name": "Zipline Unlock - The Twilight Bell Path",
@@ -7319,12 +7453,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "HUMT Access": {
         "name": "HUMT Access",
@@ -7332,12 +7464,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "TOD Access": {
         "name": "TOD Access",
@@ -7345,12 +7475,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "AFR Access": {
         "name": "AFR Access",
@@ -7358,12 +7486,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "TIHS Access": {
         "name": "TIHS Access",
@@ -7371,12 +7497,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Birdhouse Cleared": {
         "name": "Birdhouse Cleared",
@@ -7384,12 +7508,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Lava Cake Cleared": {
         "name": "Lava Cake Cleared",
@@ -7397,12 +7519,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Windmill Cleared": {
         "name": "Windmill Cleared",
@@ -7410,12 +7530,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Twilight Bell Cleared": {
         "name": "Twilight Bell Cleared",
@@ -7423,12 +7541,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Time Piece Cluster": {
         "name": "Time Piece Cluster",
@@ -7436,12 +7552,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -7458,48 +7572,48 @@
   },
   "itempool_counts": {
     "1": {
-      "100 Pons": 12,
-      "25 Pons": 92,
-      "50 Pons": 24,
+      "100 Pons": 6,
+      "25 Pons": 46,
+      "50 Pons": 12,
       "AFR Access": 1,
-      "Badge Pin": 4,
+      "Badge Pin": 2,
       "Birdhouse Cleared": 1,
       "Compass Badge": 1,
-      "Fast Hatter Badge": 2,
+      "Fast Hatter Badge": 1,
       "HUMT Access": 1,
-      "Health Pon": 32,
-      "Hookshot Badge": 2,
-      "Hover Badge": 2,
-      "Item Magnet Badge": 2,
+      "Health Pon": 16,
+      "Hookshot Badge": 1,
+      "Hover Badge": 1,
+      "Item Magnet Badge": 1,
       "Lava Cake Cleared": 1,
-      "No Bonk Badge": 2,
-      "Projectile Badge": 2,
-      "Random Cosmetic": 58,
-      "Relic (Blue Crayon)": 2,
-      "Relic (Burger Cushion)": 2,
-      "Relic (Burger Patty)": 2,
-      "Relic (Cool Cow)": 2,
-      "Relic (Cow)": 2,
-      "Relic (Crayon Box)": 2,
-      "Relic (Green Crayon)": 2,
-      "Relic (Mountain Set)": 2,
-      "Relic (Red Crayon)": 2,
-      "Relic (Tin-foil Hat Cow)": 2,
-      "Relic (Train)": 2,
-      "Relic (UFO)": 2,
-      "Scooter Badge": 2,
-      "Snatcher's Contract - Mail Delivery Service": 2,
-      "Snatcher's Contract - Queen Vanessa's Manor": 2,
-      "Snatcher's Contract - The Subcon Well": 2,
-      "Snatcher's Contract - Toilet of Doom": 2,
+      "No Bonk Badge": 1,
+      "Projectile Badge": 1,
+      "Random Cosmetic": 29,
+      "Relic (Blue Crayon)": 1,
+      "Relic (Burger Cushion)": 1,
+      "Relic (Burger Patty)": 1,
+      "Relic (Cool Cow)": 1,
+      "Relic (Cow)": 1,
+      "Relic (Crayon Box)": 1,
+      "Relic (Green Crayon)": 1,
+      "Relic (Mountain Set)": 1,
+      "Relic (Red Crayon)": 1,
+      "Relic (Tin-foil Hat Cow)": 1,
+      "Relic (Train)": 1,
+      "Relic (UFO)": 1,
+      "Scooter Badge": 1,
+      "Snatcher's Contract - Mail Delivery Service": 1,
+      "Snatcher's Contract - Queen Vanessa's Manor": 1,
+      "Snatcher's Contract - The Subcon Well": 1,
+      "Snatcher's Contract - Toilet of Doom": 1,
       "TIHS Access": 1,
       "TOD Access": 1,
-      "Time Piece": 80,
+      "Time Piece": 40,
       "Time Piece Cluster": 1,
       "Twilight Bell Cleared": 1,
-      "Umbrella": 2,
+      "Umbrella": 1,
       "Windmill Cleared": 1,
-      "Yarn": 100
+      "Yarn": 50
     }
   },
   "progression_mapping": {
@@ -7647,5 +7761,6 @@
         ]
       }
     }
-  }
+  },
+  "helpers": {}
 }

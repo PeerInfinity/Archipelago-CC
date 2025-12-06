@@ -54,7 +54,8 @@
               "player": 1,
               "advancement": false,
               "type": "Artifact"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpha Cache 2",
@@ -68,7 +69,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpha Cache 3",
@@ -82,7 +84,8 @@
               "player": 1,
               "advancement": true,
               "type": "PSI Key"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpha Cache 4",
@@ -96,7 +99,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpha Cache 5",
@@ -110,7 +114,8 @@
               "player": 1,
               "advancement": false,
               "type": "Crystals"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpha Cache 6",
@@ -124,7 +129,8 @@
               "player": 1,
               "advancement": false,
               "type": "Crystals"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beta Cache 1",
@@ -138,7 +144,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beta Cache 2",
@@ -152,7 +159,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beta Cache 3",
@@ -166,7 +174,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beta Cache 4",
@@ -180,7 +189,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beta Cache 5",
@@ -194,7 +204,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beta Cache 6",
@@ -208,7 +219,8 @@
               "player": 1,
               "advancement": false,
               "type": "Crystals"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Gamma Cache 1",
@@ -222,7 +234,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Gamma Cache 2",
@@ -236,7 +249,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Gamma Cache 3",
@@ -250,7 +264,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Gamma Cache 4",
@@ -264,7 +279,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Gamma Cache 5",
@@ -278,7 +294,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Gamma Cache 6",
@@ -292,7 +309,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reward Chest 1",
@@ -306,7 +324,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reward Chest 2",
@@ -320,7 +339,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reward Chest 3",
@@ -334,7 +354,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reward Chest 4",
@@ -348,7 +369,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reward Chest 5",
@@ -362,7 +384,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reward Chest 6",
@@ -376,7 +399,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "PSI Key Storage 1",
@@ -390,7 +414,8 @@
               "player": 1,
               "advancement": true,
               "type": "Important Artifact"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -436,7 +461,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpha Cache 8",
@@ -450,7 +476,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpha Cache 9",
@@ -464,7 +491,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpha Cache 10",
@@ -478,7 +506,8 @@
               "player": 1,
               "advancement": false,
               "type": "Crystals"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpha Cache 11",
@@ -492,7 +521,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpha Cache 12",
@@ -506,7 +536,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beta Cache 7",
@@ -520,7 +551,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beta Cache 8",
@@ -534,7 +566,8 @@
               "player": 1,
               "advancement": true,
               "type": "PSI Key"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beta Cache 9",
@@ -548,7 +581,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beta Cache 10",
@@ -562,7 +596,8 @@
               "player": 1,
               "advancement": false,
               "type": "Crystals"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beta Cache 11",
@@ -576,7 +611,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beta Cache 12",
@@ -590,7 +626,8 @@
               "player": 1,
               "advancement": false,
               "type": "Crystals"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Gamma Cache 7",
@@ -604,7 +641,8 @@
               "player": 1,
               "advancement": false,
               "type": "Crystals"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Gamma Cache 8",
@@ -618,7 +656,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Gamma Cache 9",
@@ -632,7 +671,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Gamma Cache 10",
@@ -646,7 +686,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Gamma Cache 11",
@@ -660,7 +701,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Gamma Cache 12",
@@ -674,7 +716,8 @@
               "player": 1,
               "advancement": true,
               "type": "Important Artifact"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reward Chest 7",
@@ -688,7 +731,8 @@
               "player": 1,
               "advancement": false,
               "type": "Artifact"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reward Chest 8",
@@ -702,7 +746,8 @@
               "player": 1,
               "advancement": true,
               "type": "Important Artifact"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reward Chest 9",
@@ -716,7 +761,8 @@
               "player": 1,
               "advancement": false,
               "type": "Crystals"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reward Chest 10",
@@ -730,7 +776,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reward Chest 11",
@@ -744,7 +791,8 @@
               "player": 1,
               "advancement": false,
               "type": "Artifact"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reward Chest 12",
@@ -758,7 +806,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "PSI Key Storage 2",
@@ -772,7 +821,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -818,7 +868,8 @@
               "player": 1,
               "advancement": true,
               "type": "Important Artifact"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpha Cache 14",
@@ -832,7 +883,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpha Cache 15",
@@ -846,7 +898,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpha Cache 16",
@@ -860,7 +913,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpha Cache 17",
@@ -874,7 +928,8 @@
               "player": 1,
               "advancement": false,
               "type": "Artifact"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpha Cache 18",
@@ -888,7 +943,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beta Cache 13",
@@ -902,7 +958,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beta Cache 14",
@@ -916,7 +973,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beta Cache 15",
@@ -930,7 +988,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beta Cache 16",
@@ -944,7 +1003,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beta Cache 17",
@@ -958,7 +1018,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beta Cache 18",
@@ -972,7 +1033,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Gamma Cache 13",
@@ -986,7 +1048,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Gamma Cache 14",
@@ -1000,7 +1063,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Gamma Cache 15",
@@ -1014,7 +1078,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Gamma Cache 16",
@@ -1028,7 +1093,8 @@
               "player": 1,
               "advancement": false,
               "type": "Crystals"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Gamma Cache 17",
@@ -1042,7 +1108,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Gamma Cache 18",
@@ -1056,7 +1123,8 @@
               "player": 1,
               "advancement": true,
               "type": "PSI Key"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reward Chest 13",
@@ -1070,7 +1138,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reward Chest 14",
@@ -1084,7 +1153,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reward Chest 15",
@@ -1098,7 +1168,8 @@
               "player": 1,
               "advancement": false,
               "type": "Artifact"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reward Chest 16",
@@ -1112,7 +1183,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reward Chest 17",
@@ -1126,7 +1198,8 @@
               "player": 1,
               "advancement": false,
               "type": "Crystals"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reward Chest 18",
@@ -1140,7 +1213,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           },
           {
             "name": "PSI Key Storage 3",
@@ -1154,7 +1228,8 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1200,7 +1275,9 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Alpha Cache 20",
@@ -1214,7 +1291,9 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Alpha Cache 21",
@@ -1228,7 +1307,9 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Alpha Cache 22",
@@ -1242,7 +1323,9 @@
               "player": 1,
               "advancement": false,
               "type": "Crystals"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Alpha Cache 23",
@@ -1256,7 +1339,9 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Alpha Cache 24",
@@ -1270,7 +1355,9 @@
               "player": 1,
               "advancement": false,
               "type": "Crystals"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Beta Cache 19",
@@ -1284,7 +1371,9 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Beta Cache 20",
@@ -1298,7 +1387,9 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Beta Cache 21",
@@ -1312,7 +1403,9 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Beta Cache 22",
@@ -1326,7 +1419,9 @@
               "player": 1,
               "advancement": false,
               "type": "Crystals"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Beta Cache 23",
@@ -1340,7 +1435,9 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Beta Cache 24",
@@ -1354,7 +1451,9 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Gamma Cache 19",
@@ -1368,7 +1467,9 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Gamma Cache 20",
@@ -1382,7 +1483,9 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Gamma Cache 21",
@@ -1396,7 +1499,9 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Gamma Cache 22",
@@ -1410,7 +1515,9 @@
               "player": 1,
               "advancement": false,
               "type": "Crystals"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Gamma Cache 23",
@@ -1424,7 +1531,9 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Gamma Cache 24",
@@ -1438,7 +1547,9 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Reward Chest 19",
@@ -1452,7 +1563,9 @@
               "player": 1,
               "advancement": false,
               "type": "Crystals"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Reward Chest 20",
@@ -1466,7 +1579,9 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Reward Chest 21",
@@ -1480,7 +1595,9 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Reward Chest 22",
@@ -1494,7 +1611,9 @@
               "player": 1,
               "advancement": false,
               "type": "Crystals"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Reward Chest 23",
@@ -1508,7 +1627,9 @@
               "player": 1,
               "advancement": false,
               "type": "Enhancement"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Reward Chest 24",
@@ -1522,7 +1643,9 @@
               "player": 1,
               "advancement": false,
               "type": "Crystals"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Place of Power",
@@ -1536,7 +1659,8 @@
               "player": 1,
               "advancement": true,
               "type": "Cursed Seal"
-            }
+            },
+            "locked": true
           },
           {
             "name": "The Last Place You'll Look",
@@ -1550,7 +1674,8 @@
               "player": 1,
               "advancement": true,
               "type": "Agate Knife"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1579,7 +1704,8 @@
               "player": 1,
               "advancement": false,
               "type": "Trap"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Meridian Defeat",
@@ -1593,7 +1719,8 @@
               "player": 1,
               "advancement": true,
               "type": "Victory"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1622,7 +1749,8 @@
               "player": 1,
               "advancement": false,
               "type": "Trap"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ataraxia Defeat",
@@ -1636,7 +1764,8 @@
               "player": 1,
               "advancement": true,
               "type": "Victory"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1665,7 +1794,8 @@
               "player": 1,
               "advancement": false,
               "type": "Trap"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Merodach Defeat",
@@ -1679,7 +1809,8 @@
               "player": 1,
               "advancement": true,
               "type": "Victory"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1699,7 +1830,8 @@
               "player": 1,
               "advancement": true,
               "type": "Victory"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1719,7 +1851,8 @@
               "player": 1,
               "advancement": true,
               "type": "Victory"
-            }
+            },
+            "locked": true
           }
         ]
       }
@@ -1741,12 +1874,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Reflect Shield upgrade": {
         "name": "Reflect Shield upgrade",
@@ -1755,12 +1886,10 @@
           "Everything",
           "Upgrades"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 50
+        "max_count": 25,
+        "classification": "filler"
       },
       "Circuit Charge upgrade": {
         "name": "Circuit Charge upgrade",
@@ -1769,12 +1898,10 @@
           "Everything",
           "Upgrades"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 46
+        "max_count": 23,
+        "classification": "filler"
       },
       "Circuit Refill upgrade": {
         "name": "Circuit Refill upgrade",
@@ -1783,12 +1910,10 @@
           "Everything",
           "Upgrades"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 44
+        "max_count": 22,
+        "classification": "filler"
       },
       "Map": {
         "name": "Map",
@@ -1797,12 +1922,10 @@
           "Artifacts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Shield Boost": {
         "name": "Shield Boost",
@@ -1812,12 +1935,10 @@
           "Everything",
           "Important Artifacts"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Crystal Efficiency": {
         "name": "Crystal Efficiency",
@@ -1826,12 +1947,10 @@
           "Artifacts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Circuit Booster": {
         "name": "Circuit Booster",
@@ -1841,12 +1960,10 @@
           "Everything",
           "Important Artifacts"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Metabolism": {
         "name": "Metabolism",
@@ -1856,12 +1973,10 @@
           "Everything",
           "Important Artifacts"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Dodge Enhancer": {
         "name": "Dodge Enhancer",
@@ -1871,12 +1986,10 @@
           "Everything",
           "Important Artifacts"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ethereal Monocle": {
         "name": "Ethereal Monocle",
@@ -1885,12 +1998,10 @@
           "Artifacts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Crystal Gatherer": {
         "name": "Crystal Gatherer",
@@ -1899,12 +2010,10 @@
           "Artifacts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Portable Compass": {
         "name": "Portable Compass",
@@ -1913,12 +2022,10 @@
           "Artifacts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "PSI Key 1": {
         "name": "PSI Key 1",
@@ -1927,12 +2034,10 @@
           "Everything",
           "PSI Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "PSI Key 2": {
         "name": "PSI Key 2",
@@ -1941,12 +2046,10 @@
           "Everything",
           "PSI Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "PSI Key 3": {
         "name": "PSI Key 3",
@@ -1955,12 +2058,10 @@
           "Everything",
           "PSI Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Cursed Seal": {
         "name": "Cursed Seal",
@@ -1968,12 +2069,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Agate Knife": {
         "name": "Agate Knife",
@@ -1981,12 +2080,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Evolution Trap": {
         "name": "Evolution Trap",
@@ -1994,12 +2091,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "trap"
       },
       "Crystals x500": {
         "name": "Crystals x500",
@@ -2008,12 +2103,10 @@
           "Crystals",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "filler"
       },
       "Crystals x1000": {
         "name": "Crystals x1000",
@@ -2022,12 +2115,10 @@
           "Crystals",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5,
+        "classification": "filler"
       },
       "Crystals x2000": {
         "name": "Crystals x2000",
@@ -2036,12 +2127,10 @@
           "Crystals",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5,
+        "classification": "filler"
       },
       "Extra Life": {
         "name": "Extra Life",
@@ -2049,12 +2138,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Meridian Defeated": {
         "name": "Meridian Defeated",
@@ -2062,12 +2149,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ataraxia Defeated": {
         "name": "Ataraxia Defeated",
@@ -2075,12 +2160,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Merodach Defeated": {
         "name": "Merodach Defeated",
@@ -2088,12 +2171,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Victory": {
         "name": "Victory",
@@ -2101,12 +2182,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Full Victory": {
         "name": "Full Victory",
@@ -2114,12 +2193,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -2137,29 +2214,29 @@
     "1": {
       "Agate Knife": 1,
       "Ataraxia Defeated": 1,
-      "Circuit Booster": 2,
-      "Circuit Charge upgrade": 46,
-      "Circuit Refill upgrade": 44,
-      "Crystal Efficiency": 2,
-      "Crystal Gatherer": 2,
-      "Crystals x1000": 10,
-      "Crystals x2000": 10,
-      "Crystals x500": 14,
+      "Circuit Booster": 1,
+      "Circuit Charge upgrade": 23,
+      "Circuit Refill upgrade": 22,
+      "Crystal Efficiency": 1,
+      "Crystal Gatherer": 1,
+      "Crystals x1000": 5,
+      "Crystals x2000": 5,
+      "Crystals x500": 7,
       "Cursed Seal": 1,
-      "Dodge Enhancer": 2,
-      "Ethereal Monocle": 2,
+      "Dodge Enhancer": 1,
+      "Ethereal Monocle": 1,
       "Evolution Trap": 3,
       "Full Victory": 1,
-      "Map": 2,
+      "Map": 1,
       "Meridian Defeated": 1,
       "Merodach Defeated": 1,
-      "Metabolism": 2,
-      "PSI Key 1": 2,
-      "PSI Key 2": 2,
-      "PSI Key 3": 2,
-      "Portable Compass": 2,
-      "Reflect Shield upgrade": 50,
-      "Shield Boost": 2,
+      "Metabolism": 1,
+      "PSI Key 1": 1,
+      "PSI Key 2": 1,
+      "PSI Key 3": 1,
+      "Portable Compass": 1,
+      "Reflect Shield upgrade": 25,
+      "Shield Boost": 1,
       "Victory": 1
     }
   },
@@ -2183,5 +2260,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

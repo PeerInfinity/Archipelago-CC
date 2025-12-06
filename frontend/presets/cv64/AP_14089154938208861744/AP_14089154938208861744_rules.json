@@ -135,7 +135,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: Grab practice pillars - Top",
@@ -149,7 +150,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: King Skeleton's bridge",
@@ -163,7 +165,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: Moon gazebo inside",
@@ -177,7 +180,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: Moon gazebo roof",
@@ -191,7 +195,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: Sun gazebo inside",
@@ -205,7 +210,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: Sun gazebo roof",
@@ -219,7 +225,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: Were-tiger switch",
@@ -233,7 +240,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: Dirge maiden gate",
@@ -247,7 +255,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: Dirge maiden crypt - Upper",
@@ -261,7 +270,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: Dirge maiden pedestal plaque",
@@ -275,7 +285,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: Tri-corpse save junction",
@@ -289,7 +300,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: Descending bridge wall side",
@@ -303,7 +315,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: Descending bridge switch side",
@@ -317,7 +330,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -346,7 +360,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: Three-crypt plaza main path crypt - Upper-front",
@@ -360,7 +375,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: Three-crypt plaza back-facing crypt - Lower-front",
@@ -374,7 +390,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: Three-crypt plaza back-facing crypt - Upper",
@@ -388,7 +405,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: Invisible bridge platform",
@@ -402,7 +420,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: Werewolf crypt - Right",
@@ -416,7 +435,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: Werewolf statue plaque",
@@ -430,7 +450,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: Werewolf path near tree",
@@ -444,7 +465,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forest of Silence: Three-crypt plaza switch",
@@ -458,7 +480,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -509,7 +532,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Wall: White Dragons switch door",
@@ -523,7 +547,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Wall: Central rampart near right tower",
@@ -537,7 +562,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Wall: Central rampart near left tower",
@@ -551,7 +577,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Wall: Sandbag shelf - Visible",
@@ -565,7 +592,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Wall: Sandbag shelf - Invisible",
@@ -579,7 +607,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -599,7 +628,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -628,7 +658,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Wall: Left tower child ledge",
@@ -642,7 +673,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Wall: Dracula cutscene switch door",
@@ -656,7 +688,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -685,7 +718,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Outer front gate - Right",
@@ -699,7 +733,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Outer front gate platform",
@@ -713,7 +748,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Inner front gate dog food",
@@ -727,7 +763,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -743,12 +780,88 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "helper",
-                    "name": "location_item_name",
-                    "args": [
+                    "type": "block",
+                    "statements": [
                       {
-                        "type": "constant",
-                        "value": "Villa: Storeroom statue"
+                        "type": "assign",
+                        "name": "location",
+                        "value": {
+                          "type": "function_call",
+                          "function": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "attribute",
+                              "object": {
+                                "type": "name",
+                                "name": "state"
+                              },
+                              "attr": "multiworld"
+                            },
+                            "attr": "get_location"
+                          },
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": "Villa: Storeroom statue"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "test": {
+                          "type": "compare",
+                          "left": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "constant",
+                              "value": "Villa: Storeroom statue"
+                            },
+                            "attr": "item"
+                          },
+                          "op": "is",
+                          "right": {
+                            "type": "constant",
+                            "value": null
+                          }
+                        },
+                        "if_true": {
+                          "type": "constant",
+                          "value": null
+                        },
+                        "if_false": null
+                      },
+                      {
+                        "type": "return",
+                        "value": {
+                          "type": "list",
+                          "value": [
+                            {
+                              "type": "attribute",
+                              "object": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "constant",
+                                  "value": "Villa: Storeroom statue"
+                                },
+                                "attr": "item"
+                              },
+                              "attr": "name"
+                            },
+                            {
+                              "type": "attribute",
+                              "object": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "constant",
+                                  "value": "Villa: Storeroom statue"
+                                },
+                                "attr": "item"
+                              },
+                              "attr": "player"
+                            }
+                          ]
+                        }
                       }
                     ]
                   },
@@ -773,12 +886,88 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "helper",
-                        "name": "location_item_name",
-                        "args": [
+                        "type": "block",
+                        "statements": [
                           {
-                            "type": "constant",
-                            "value": "Villa: Storeroom - Right"
+                            "type": "assign",
+                            "name": "location",
+                            "value": {
+                              "type": "function_call",
+                              "function": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "name",
+                                    "name": "state"
+                                  },
+                                  "attr": "multiworld"
+                                },
+                                "attr": "get_location"
+                              },
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": "Villa: Storeroom - Right"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "conditional",
+                            "test": {
+                              "type": "compare",
+                              "left": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "constant",
+                                  "value": "Villa: Storeroom - Right"
+                                },
+                                "attr": "item"
+                              },
+                              "op": "is",
+                              "right": {
+                                "type": "constant",
+                                "value": null
+                              }
+                            },
+                            "if_true": {
+                              "type": "constant",
+                              "value": null
+                            },
+                            "if_false": null
+                          },
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "list",
+                              "value": [
+                                {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "constant",
+                                      "value": "Villa: Storeroom - Right"
+                                    },
+                                    "attr": "item"
+                                  },
+                                  "attr": "name"
+                                },
+                                {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "constant",
+                                      "value": "Villa: Storeroom - Right"
+                                    },
+                                    "attr": "item"
+                                  },
+                                  "attr": "player"
+                                }
+                              ]
+                            }
                           }
                         ]
                       },
@@ -803,12 +992,88 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "helper",
-                            "name": "location_item_name",
-                            "args": [
+                            "type": "block",
+                            "statements": [
                               {
-                                "type": "constant",
-                                "value": "Villa: Storeroom - Left"
+                                "type": "assign",
+                                "name": "location",
+                                "value": {
+                                  "type": "function_call",
+                                  "function": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "attribute",
+                                      "object": {
+                                        "type": "name",
+                                        "name": "state"
+                                      },
+                                      "attr": "multiworld"
+                                    },
+                                    "attr": "get_location"
+                                  },
+                                  "args": [
+                                    {
+                                      "type": "constant",
+                                      "value": "Villa: Storeroom - Left"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "conditional",
+                                "test": {
+                                  "type": "compare",
+                                  "left": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "constant",
+                                      "value": "Villa: Storeroom - Left"
+                                    },
+                                    "attr": "item"
+                                  },
+                                  "op": "is",
+                                  "right": {
+                                    "type": "constant",
+                                    "value": null
+                                  }
+                                },
+                                "if_true": {
+                                  "type": "constant",
+                                  "value": null
+                                },
+                                "if_false": null
+                              },
+                              {
+                                "type": "return",
+                                "value": {
+                                  "type": "list",
+                                  "value": [
+                                    {
+                                      "type": "attribute",
+                                      "object": {
+                                        "type": "attribute",
+                                        "object": {
+                                          "type": "constant",
+                                          "value": "Villa: Storeroom - Left"
+                                        },
+                                        "attr": "item"
+                                      },
+                                      "attr": "name"
+                                    },
+                                    {
+                                      "type": "attribute",
+                                      "object": {
+                                        "type": "attribute",
+                                        "object": {
+                                          "type": "constant",
+                                          "value": "Villa: Storeroom - Left"
+                                        },
+                                        "attr": "item"
+                                      },
+                                      "attr": "player"
+                                    }
+                                  ]
+                                }
                               }
                             ]
                           },
@@ -847,12 +1112,88 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "helper",
-                    "name": "location_item_name",
-                    "args": [
+                    "type": "block",
+                    "statements": [
                       {
-                        "type": "constant",
-                        "value": "Villa: Archives rear corner"
+                        "type": "assign",
+                        "name": "location",
+                        "value": {
+                          "type": "function_call",
+                          "function": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "attribute",
+                              "object": {
+                                "type": "name",
+                                "name": "state"
+                              },
+                              "attr": "multiworld"
+                            },
+                            "attr": "get_location"
+                          },
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": "Villa: Archives rear corner"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "test": {
+                          "type": "compare",
+                          "left": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "constant",
+                              "value": "Villa: Archives rear corner"
+                            },
+                            "attr": "item"
+                          },
+                          "op": "is",
+                          "right": {
+                            "type": "constant",
+                            "value": null
+                          }
+                        },
+                        "if_true": {
+                          "type": "constant",
+                          "value": null
+                        },
+                        "if_false": null
+                      },
+                      {
+                        "type": "return",
+                        "value": {
+                          "type": "list",
+                          "value": [
+                            {
+                              "type": "attribute",
+                              "object": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "constant",
+                                  "value": "Villa: Archives rear corner"
+                                },
+                                "attr": "item"
+                              },
+                              "attr": "name"
+                            },
+                            {
+                              "type": "attribute",
+                              "object": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "constant",
+                                  "value": "Villa: Archives rear corner"
+                                },
+                                "attr": "item"
+                              },
+                              "attr": "player"
+                            }
+                          ]
+                        }
                       }
                     ]
                   },
@@ -877,12 +1218,88 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "helper",
-                        "name": "location_item_name",
-                        "args": [
+                        "type": "block",
+                        "statements": [
                           {
-                            "type": "constant",
-                            "value": "Villa: Archives table"
+                            "type": "assign",
+                            "name": "location",
+                            "value": {
+                              "type": "function_call",
+                              "function": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "name",
+                                    "name": "state"
+                                  },
+                                  "attr": "multiworld"
+                                },
+                                "attr": "get_location"
+                              },
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": "Villa: Archives table"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "conditional",
+                            "test": {
+                              "type": "compare",
+                              "left": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "constant",
+                                  "value": "Villa: Archives table"
+                                },
+                                "attr": "item"
+                              },
+                              "op": "is",
+                              "right": {
+                                "type": "constant",
+                                "value": null
+                              }
+                            },
+                            "if_true": {
+                              "type": "constant",
+                              "value": null
+                            },
+                            "if_false": null
+                          },
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "list",
+                              "value": [
+                                {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "constant",
+                                      "value": "Villa: Archives table"
+                                    },
+                                    "attr": "item"
+                                  },
+                                  "attr": "name"
+                                },
+                                {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "constant",
+                                      "value": "Villa: Archives table"
+                                    },
+                                    "attr": "item"
+                                  },
+                                  "attr": "player"
+                                }
+                              ]
+                            }
                           }
                         ]
                       },
@@ -932,7 +1349,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Front yard cross grave near porch",
@@ -946,7 +1364,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Front yard visitor's tombstone",
@@ -960,7 +1379,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Midnight fountain - Front-left",
@@ -974,7 +1394,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Midnight fountain - Front-right",
@@ -988,7 +1409,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Midnight fountain - Middle-left",
@@ -1002,7 +1424,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Midnight fountain - Middle-right",
@@ -1016,7 +1439,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Midnight fountain - Rear-left",
@@ -1030,7 +1454,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Midnight fountain - Rear-right",
@@ -1044,7 +1469,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Foyer lower level - Front-right",
@@ -1058,7 +1484,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Foyer lower level - Front-left",
@@ -1072,7 +1499,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Foyer lower level - Middle-left",
@@ -1086,7 +1514,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Foyer lower level - Rear-right",
@@ -1100,7 +1529,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Foyer lower level - Rear-left",
@@ -1114,7 +1544,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Foyer upper-right pot",
@@ -1128,7 +1559,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Foyer upper-left pot",
@@ -1142,7 +1574,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Foyer sofa",
@@ -1156,7 +1589,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Rose garden staircase bottom",
@@ -1170,7 +1604,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Bedroom near chairs",
@@ -1184,7 +1619,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Bedroom near bed",
@@ -1198,7 +1634,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Vincent",
@@ -1212,7 +1649,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Mary's room table",
@@ -1226,7 +1664,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Dining room rose vase",
@@ -1240,7 +1679,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Living room - Right pot",
@@ -1254,7 +1694,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Living room - Left pot",
@@ -1268,7 +1709,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Living room clawed painting",
@@ -1282,7 +1724,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Living room ceiling light",
@@ -1296,7 +1739,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Living room lion head",
@@ -1310,7 +1754,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Maze garden exit knight",
@@ -1324,7 +1769,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1353,7 +1799,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Storeroom - Right",
@@ -1367,7 +1814,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Storeroom statue",
@@ -1381,7 +1829,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1401,7 +1850,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Archives rear corner",
@@ -1415,7 +1865,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1452,7 +1903,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Front maze garden - Malus's hiding bush",
@@ -1466,7 +1918,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Front maze garden - Frankie's left dead-end",
@@ -1480,7 +1933,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Front maze garden - Frankie's right dead-end urn",
@@ -1494,7 +1948,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Rear maze garden - Iron Thorn Fenced area - Front",
@@ -1508,7 +1963,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Rear maze garden - Iron Thorn Fenced area - Mid-front",
@@ -1522,7 +1978,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Rear maze garden - Iron Thorn Fenced area - Mid-rear",
@@ -1536,7 +1993,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Rear maze garden - Iron Thorn Fenced area - Rear",
@@ -1550,7 +2008,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Rear maze garden - Viewing platform dead-end",
@@ -1564,7 +2023,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Rear maze garden - Past-exit dead-end",
@@ -1578,7 +2038,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Servants' path small alcove",
@@ -1592,7 +2053,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1621,7 +2083,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1666,7 +2129,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Crypt bridge upstream",
@@ -1680,7 +2144,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Crypt - Left from entrance",
@@ -1694,7 +2159,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Crypt - Right from entrance",
@@ -1708,7 +2174,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Crypt - Left wall",
@@ -1722,7 +2189,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Crypt - Right wall",
@@ -1736,7 +2204,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villa: Crypt - Right of coffin",
@@ -1750,7 +2219,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1779,7 +2249,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Landing point rock crusher",
@@ -1793,7 +2264,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Stepping stone alcove - Left",
@@ -1807,7 +2279,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Twin arrow signs",
@@ -1821,7 +2294,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Near lonesome bucket",
@@ -1835,7 +2309,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Lonesome bucket poison pit",
@@ -1849,7 +2324,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Lonesome bucket-Albert junction",
@@ -1863,7 +2339,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Albert's campsite",
@@ -1877,7 +2354,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Albert's poison pit",
@@ -1891,7 +2369,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Gondola rock crusher sun door - Middle",
@@ -1905,7 +2384,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Gondola rock crusher sun door - Right",
@@ -1919,7 +2399,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Gondola rock crusher",
@@ -1933,7 +2414,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Red gondola station",
@@ -1947,7 +2429,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Gondola transfer point",
@@ -1961,7 +2444,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1990,7 +2474,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Corpse bucket moon door - Right",
@@ -2004,7 +2489,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Shovel poison pit start",
@@ -2018,7 +2504,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Exit door poison pit start",
@@ -2032,7 +2519,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Shovel poison pit end",
@@ -2046,7 +2534,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Exit door poison pit end",
@@ -2060,7 +2549,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Shovel",
@@ -2074,7 +2564,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Shovel zone save junction",
@@ -2088,7 +2579,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Shovel zone moon door - Left",
@@ -2102,7 +2594,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Shovel zone sun door - Left",
@@ -2116,7 +2609,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tunnel: Shovel zone sun door - Middle",
@@ -2130,7 +2624,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2159,7 +2654,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Waterway: Across from entrance",
@@ -2173,7 +2669,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Waterway: Across poison parkour ledges",
@@ -2187,7 +2684,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Waterway: Waterfall alcove ledge",
@@ -2201,7 +2699,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Waterway: Brick platforms save corridor",
@@ -2215,7 +2714,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Waterway: Above skeleton crusher ledge",
@@ -2229,7 +2729,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2259,12 +2760,88 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "helper",
-                    "name": "location_item_name",
-                    "args": [
+                    "type": "block",
+                    "statements": [
                       {
-                        "type": "constant",
-                        "value": "Castle Center: Torture chamber rafters"
+                        "type": "assign",
+                        "name": "location",
+                        "value": {
+                          "type": "function_call",
+                          "function": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "attribute",
+                              "object": {
+                                "type": "name",
+                                "name": "state"
+                              },
+                              "attr": "multiworld"
+                            },
+                            "attr": "get_location"
+                          },
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": "Castle Center: Torture chamber rafters"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "test": {
+                          "type": "compare",
+                          "left": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "constant",
+                              "value": "Castle Center: Torture chamber rafters"
+                            },
+                            "attr": "item"
+                          },
+                          "op": "is",
+                          "right": {
+                            "type": "constant",
+                            "value": null
+                          }
+                        },
+                        "if_true": {
+                          "type": "constant",
+                          "value": null
+                        },
+                        "if_false": null
+                      },
+                      {
+                        "type": "return",
+                        "value": {
+                          "type": "list",
+                          "value": [
+                            {
+                              "type": "attribute",
+                              "object": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "constant",
+                                  "value": "Castle Center: Torture chamber rafters"
+                                },
+                                "attr": "item"
+                              },
+                              "attr": "name"
+                            },
+                            {
+                              "type": "attribute",
+                              "object": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "constant",
+                                  "value": "Castle Center: Torture chamber rafters"
+                                },
+                                "attr": "item"
+                              },
+                              "attr": "player"
+                            }
+                          ]
+                        }
                       }
                     ]
                   },
@@ -2289,12 +2866,88 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "helper",
-                        "name": "location_item_name",
-                        "args": [
+                        "type": "block",
+                        "statements": [
                           {
-                            "type": "constant",
-                            "value": "Castle Center: Torture chamber instrument rack"
+                            "type": "assign",
+                            "name": "location",
+                            "value": {
+                              "type": "function_call",
+                              "function": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "name",
+                                    "name": "state"
+                                  },
+                                  "attr": "multiworld"
+                                },
+                                "attr": "get_location"
+                              },
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": "Castle Center: Torture chamber instrument rack"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "conditional",
+                            "test": {
+                              "type": "compare",
+                              "left": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "constant",
+                                  "value": "Castle Center: Torture chamber instrument rack"
+                                },
+                                "attr": "item"
+                              },
+                              "op": "is",
+                              "right": {
+                                "type": "constant",
+                                "value": null
+                              }
+                            },
+                            "if_true": {
+                              "type": "constant",
+                              "value": null
+                            },
+                            "if_false": null
+                          },
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "list",
+                              "value": [
+                                {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "constant",
+                                      "value": "Castle Center: Torture chamber instrument rack"
+                                    },
+                                    "attr": "item"
+                                  },
+                                  "attr": "name"
+                                },
+                                {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "constant",
+                                      "value": "Castle Center: Torture chamber instrument rack"
+                                    },
+                                    "attr": "item"
+                                  },
+                                  "attr": "player"
+                                }
+                              ]
+                            }
                           }
                         ]
                       },
@@ -2319,12 +2972,88 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "helper",
-                            "name": "location_item_name",
-                            "args": [
+                            "type": "block",
+                            "statements": [
                               {
-                                "type": "constant",
-                                "value": "Castle Center: Mandragora shelf - Right"
+                                "type": "assign",
+                                "name": "location",
+                                "value": {
+                                  "type": "function_call",
+                                  "function": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "attribute",
+                                      "object": {
+                                        "type": "name",
+                                        "name": "state"
+                                      },
+                                      "attr": "multiworld"
+                                    },
+                                    "attr": "get_location"
+                                  },
+                                  "args": [
+                                    {
+                                      "type": "constant",
+                                      "value": "Castle Center: Mandragora shelf - Right"
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "conditional",
+                                "test": {
+                                  "type": "compare",
+                                  "left": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "constant",
+                                      "value": "Castle Center: Mandragora shelf - Right"
+                                    },
+                                    "attr": "item"
+                                  },
+                                  "op": "is",
+                                  "right": {
+                                    "type": "constant",
+                                    "value": null
+                                  }
+                                },
+                                "if_true": {
+                                  "type": "constant",
+                                  "value": null
+                                },
+                                "if_false": null
+                              },
+                              {
+                                "type": "return",
+                                "value": {
+                                  "type": "list",
+                                  "value": [
+                                    {
+                                      "type": "attribute",
+                                      "object": {
+                                        "type": "attribute",
+                                        "object": {
+                                          "type": "constant",
+                                          "value": "Castle Center: Mandragora shelf - Right"
+                                        },
+                                        "attr": "item"
+                                      },
+                                      "attr": "name"
+                                    },
+                                    {
+                                      "type": "attribute",
+                                      "object": {
+                                        "type": "attribute",
+                                        "object": {
+                                          "type": "constant",
+                                          "value": "Castle Center: Mandragora shelf - Right"
+                                        },
+                                        "attr": "item"
+                                      },
+                                      "attr": "player"
+                                    }
+                                  ]
+                                }
                               }
                             ]
                           },
@@ -2349,12 +3078,88 @@
                             {
                               "type": "compare",
                               "left": {
-                                "type": "helper",
-                                "name": "location_item_name",
-                                "args": [
+                                "type": "block",
+                                "statements": [
                                   {
-                                    "type": "constant",
-                                    "value": "Castle Center: Mandragora shelf - Left"
+                                    "type": "assign",
+                                    "name": "location",
+                                    "value": {
+                                      "type": "function_call",
+                                      "function": {
+                                        "type": "attribute",
+                                        "object": {
+                                          "type": "attribute",
+                                          "object": {
+                                            "type": "name",
+                                            "name": "state"
+                                          },
+                                          "attr": "multiworld"
+                                        },
+                                        "attr": "get_location"
+                                      },
+                                      "args": [
+                                        {
+                                          "type": "constant",
+                                          "value": "Castle Center: Mandragora shelf - Left"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "type": "conditional",
+                                    "test": {
+                                      "type": "compare",
+                                      "left": {
+                                        "type": "attribute",
+                                        "object": {
+                                          "type": "constant",
+                                          "value": "Castle Center: Mandragora shelf - Left"
+                                        },
+                                        "attr": "item"
+                                      },
+                                      "op": "is",
+                                      "right": {
+                                        "type": "constant",
+                                        "value": null
+                                      }
+                                    },
+                                    "if_true": {
+                                      "type": "constant",
+                                      "value": null
+                                    },
+                                    "if_false": null
+                                  },
+                                  {
+                                    "type": "return",
+                                    "value": {
+                                      "type": "list",
+                                      "value": [
+                                        {
+                                          "type": "attribute",
+                                          "object": {
+                                            "type": "attribute",
+                                            "object": {
+                                              "type": "constant",
+                                              "value": "Castle Center: Mandragora shelf - Left"
+                                            },
+                                            "attr": "item"
+                                          },
+                                          "attr": "name"
+                                        },
+                                        {
+                                          "type": "attribute",
+                                          "object": {
+                                            "type": "attribute",
+                                            "object": {
+                                              "type": "constant",
+                                              "value": "Castle Center: Mandragora shelf - Left"
+                                            },
+                                            "attr": "item"
+                                          },
+                                          "attr": "player"
+                                        }
+                                      ]
+                                    }
                                   }
                                 ]
                               },
@@ -2442,7 +3247,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Basement hallway junction",
@@ -2456,7 +3262,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Torture chamber hallway",
@@ -2470,7 +3277,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Behemoth arena - Left far-front torch",
@@ -2484,7 +3292,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Behemoth arena - Left mid-front torch",
@@ -2498,7 +3307,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Behemoth arena - Left mid-rear torch",
@@ -2512,7 +3322,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Behemoth arena - Left far-rear torch",
@@ -2526,7 +3337,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Behemoth arena - Right far-front torch",
@@ -2540,7 +3352,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Behemoth arena - Right mid-front torch",
@@ -2554,7 +3367,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Behemoth arena - Right mid-rear torch",
@@ -2568,7 +3382,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Behemoth arena - Right far-rear torch",
@@ -2582,7 +3397,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Near elevator room machine",
@@ -2596,7 +3412,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Atop elevator room machine",
@@ -2610,7 +3427,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Elevator pipe device",
@@ -2624,7 +3442,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Elevator room staircase",
@@ -2638,7 +3457,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Red carpet hall knight",
@@ -2652,7 +3472,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Gear room side",
@@ -2666,7 +3487,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Gear room center",
@@ -2680,7 +3502,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Gear room corner",
@@ -2694,7 +3517,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Lizard locker knight",
@@ -2708,7 +3532,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Lizard locker room near pit",
@@ -2722,7 +3547,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Lizard locker room corner",
@@ -2736,7 +3562,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Broken staircase floor",
@@ -2750,7 +3577,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Broken staircase knight",
@@ -2764,7 +3592,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Above broken staircase savepoint",
@@ -2778,7 +3607,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Stained Glass Knight room - Left",
@@ -2792,7 +3622,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Stained Glass Knight room - Right",
@@ -2806,7 +3637,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Butler bros. room near door",
@@ -2820,7 +3652,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Butler bros. room inner",
@@ -2834,7 +3667,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Past butler room flamethrowers",
@@ -2848,7 +3682,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Inside cracked wall hallway flamethrower",
@@ -2862,7 +3697,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Past upper cracked wall flamethrowers",
@@ -2876,7 +3712,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Heinrich Meyer",
@@ -2890,7 +3727,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Nitro room crates",
@@ -2904,7 +3742,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Magical Nitro shelf - Heinrich side",
@@ -2918,7 +3757,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Hell Knight landing corner knight",
@@ -2932,7 +3772,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Maid sisters room vase",
@@ -2946,7 +3787,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Maid sisters room outer table",
@@ -2960,7 +3802,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Maid sisters room inner table",
@@ -2974,7 +3817,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Invention room maid sisters door",
@@ -2988,7 +3832,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Invention room spike crusher door",
@@ -3002,7 +3847,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Invention room giant Famicart",
@@ -3016,7 +3862,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Invention room zeppelin",
@@ -3030,7 +3877,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Invention room round machine",
@@ -3044,7 +3892,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Inside nitro hallway flamethrower",
@@ -3058,7 +3907,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Past nitro room flamethrowers",
@@ -3072,7 +3922,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Magical Nitro shelf - Invention side",
@@ -3086,7 +3937,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3106,7 +3958,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Mandragora shelf - Right",
@@ -3120,7 +3973,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Torture chamber instrument rack",
@@ -3134,7 +3988,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Torture chamber rafters",
@@ -3148,7 +4003,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3168,7 +4024,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Center: Library bookshelf",
@@ -3182,7 +4039,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3211,7 +4069,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3270,7 +4129,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Duel Tower: Invisible bridge balcony - Right",
@@ -3284,7 +4144,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Duel Tower: Stepping stone path start",
@@ -3298,7 +4159,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Duel Tower: Above Were-bull arena",
@@ -3312,7 +4174,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3357,7 +4220,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of Execution: Past mid-savepoint spikes - Left",
@@ -3371,7 +4235,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of Execution: Electric grate ledge",
@@ -3385,7 +4250,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of Execution: Invisible bridge ledge",
@@ -3399,7 +4265,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of Execution: Guillotine tower top level",
@@ -3413,7 +4280,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3433,7 +4301,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3457,12 +4326,88 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "helper",
-                    "name": "location_item_name",
-                    "args": [
+                    "type": "block",
+                    "statements": [
                       {
-                        "type": "constant",
-                        "value": "Tower of Science: Pick-a-door hallway locked middle room"
+                        "type": "assign",
+                        "name": "location",
+                        "value": {
+                          "type": "function_call",
+                          "function": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "attribute",
+                              "object": {
+                                "type": "name",
+                                "name": "state"
+                              },
+                              "attr": "multiworld"
+                            },
+                            "attr": "get_location"
+                          },
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": "Tower of Science: Pick-a-door hallway locked middle room"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "test": {
+                          "type": "compare",
+                          "left": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "constant",
+                              "value": "Tower of Science: Pick-a-door hallway locked middle room"
+                            },
+                            "attr": "item"
+                          },
+                          "op": "is",
+                          "right": {
+                            "type": "constant",
+                            "value": null
+                          }
+                        },
+                        "if_true": {
+                          "type": "constant",
+                          "value": null
+                        },
+                        "if_false": null
+                      },
+                      {
+                        "type": "return",
+                        "value": {
+                          "type": "list",
+                          "value": [
+                            {
+                              "type": "attribute",
+                              "object": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "constant",
+                                  "value": "Tower of Science: Pick-a-door hallway locked middle room"
+                                },
+                                "attr": "item"
+                              },
+                              "attr": "name"
+                            },
+                            {
+                              "type": "attribute",
+                              "object": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "constant",
+                                  "value": "Tower of Science: Pick-a-door hallway locked middle room"
+                                },
+                                "attr": "item"
+                              },
+                              "attr": "player"
+                            }
+                          ]
+                        }
                       }
                     ]
                   },
@@ -3510,7 +4455,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of Science: Plain sight side room",
@@ -3524,7 +4470,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of Science: Staircase side room",
@@ -3538,7 +4485,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3558,7 +4506,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3582,12 +4531,88 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "helper",
-                    "name": "location_item_name",
-                    "args": [
+                    "type": "block",
+                    "statements": [
                       {
-                        "type": "constant",
-                        "value": "Tower of Science: Locked Key3 room - Left"
+                        "type": "assign",
+                        "name": "location",
+                        "value": {
+                          "type": "function_call",
+                          "function": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "attribute",
+                              "object": {
+                                "type": "name",
+                                "name": "state"
+                              },
+                              "attr": "multiworld"
+                            },
+                            "attr": "get_location"
+                          },
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": "Tower of Science: Locked Key3 room - Left"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "type": "conditional",
+                        "test": {
+                          "type": "compare",
+                          "left": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "constant",
+                              "value": "Tower of Science: Locked Key3 room - Left"
+                            },
+                            "attr": "item"
+                          },
+                          "op": "is",
+                          "right": {
+                            "type": "constant",
+                            "value": null
+                          }
+                        },
+                        "if_true": {
+                          "type": "constant",
+                          "value": null
+                        },
+                        "if_false": null
+                      },
+                      {
+                        "type": "return",
+                        "value": {
+                          "type": "list",
+                          "value": [
+                            {
+                              "type": "attribute",
+                              "object": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "constant",
+                                  "value": "Tower of Science: Locked Key3 room - Left"
+                                },
+                                "attr": "item"
+                              },
+                              "attr": "name"
+                            },
+                            {
+                              "type": "attribute",
+                              "object": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "constant",
+                                  "value": "Tower of Science: Locked Key3 room - Left"
+                                },
+                                "attr": "item"
+                              },
+                              "attr": "player"
+                            }
+                          ]
+                        }
                       }
                     ]
                   },
@@ -3612,12 +4637,88 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "helper",
-                        "name": "location_item_name",
-                        "args": [
+                        "type": "block",
+                        "statements": [
                           {
-                            "type": "constant",
-                            "value": "Tower of Science: Locked Key3 room - Right"
+                            "type": "assign",
+                            "name": "location",
+                            "value": {
+                              "type": "function_call",
+                              "function": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "name",
+                                    "name": "state"
+                                  },
+                                  "attr": "multiworld"
+                                },
+                                "attr": "get_location"
+                              },
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": "Tower of Science: Locked Key3 room - Right"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "conditional",
+                            "test": {
+                              "type": "compare",
+                              "left": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "constant",
+                                  "value": "Tower of Science: Locked Key3 room - Right"
+                                },
+                                "attr": "item"
+                              },
+                              "op": "is",
+                              "right": {
+                                "type": "constant",
+                                "value": null
+                              }
+                            },
+                            "if_true": {
+                              "type": "constant",
+                              "value": null
+                            },
+                            "if_false": null
+                          },
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "list",
+                              "value": [
+                                {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "constant",
+                                      "value": "Tower of Science: Locked Key3 room - Right"
+                                    },
+                                    "attr": "item"
+                                  },
+                                  "attr": "name"
+                                },
+                                {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "constant",
+                                      "value": "Tower of Science: Locked Key3 room - Right"
+                                    },
+                                    "attr": "item"
+                                  },
+                                  "attr": "player"
+                                }
+                              ]
+                            }
                           }
                         ]
                       },
@@ -3667,7 +4768,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of Science: Spiky conveyor side room",
@@ -3681,7 +4783,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of Science: Exit hallway",
@@ -3695,7 +4798,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3715,7 +4819,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of Science: Locked Key3 room - Left",
@@ -3729,7 +4834,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3766,7 +4872,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of Sorcery: Mid-savepoint platform",
@@ -3780,7 +4887,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of Sorcery: Trick shot from mid-savepoint platform",
@@ -3794,7 +4902,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of Sorcery: Above yellow bubble",
@@ -3808,7 +4917,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of Sorcery: Above tiny blue platforms start",
@@ -3822,7 +4932,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of Sorcery: Lone red platform side island",
@@ -3836,7 +4947,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of Sorcery: Invisible bridge platform",
@@ -3850,7 +4962,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3879,7 +4992,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Room of Clocks: Right from entrance hallway",
@@ -3893,7 +5007,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Room of Clocks: Right of Contract",
@@ -3907,7 +5022,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3936,7 +5052,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Clock Tower: Gear climb room corner",
@@ -3950,7 +5067,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3987,7 +5105,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Clock Tower: Bone Pillar chasm room - Front-right",
@@ -4001,7 +5120,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Clock Tower: Bone Pillar chasm room key alcove",
@@ -4015,7 +5135,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4052,7 +5173,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4063,8 +5185,109 @@
             "name": "Dracula's door",
             "connected_region": "Castle Keep: Dracula's chamber",
             "access_rule": {
-              "type": "item_check",
-              "item": "Crystal"
+              "type": "block",
+              "statements": [
+                {
+                  "type": "assign",
+                  "name": "drac_object_name",
+                  "value": {
+                    "type": "constant",
+                    "value": null
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "constant",
+                      "value": 1
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": 1
+                    }
+                  },
+                  "if_true": {
+                    "type": "constant",
+                    "value": "Crystal"
+                  },
+                  "if_false": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "compare",
+                      "left": {
+                        "type": "constant",
+                        "value": 1
+                      },
+                      "op": "==",
+                      "right": {
+                        "type": "constant",
+                        "value": 2
+                      }
+                    },
+                    "if_true": {
+                      "type": "constant",
+                      "value": "Trophy"
+                    },
+                    "if_false": {
+                      "type": "conditional",
+                      "test": {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": 1
+                        },
+                        "op": "==",
+                        "right": {
+                          "type": "constant",
+                          "value": 3
+                        }
+                      },
+                      "if_true": {
+                        "type": "constant",
+                        "value": "Special2"
+                      },
+                      "if_false": null
+                    }
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "name",
+                      "name": "drac_object_name"
+                    },
+                    "op": "is not",
+                    "right": {
+                      "type": "constant",
+                      "value": null
+                    }
+                  },
+                  "if_true": {
+                    "type": "item_check",
+                    "item": {
+                      "type": "name",
+                      "name": "drac_object_name"
+                    },
+                    "count": {
+                      "type": "constant",
+                      "value": 1
+                    }
+                  },
+                  "if_false": null
+                },
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": true
+                  }
+                }
+              ]
             }
           }
         ],
@@ -4081,7 +5304,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Keep: Right Dracula door flame",
@@ -4095,7 +5319,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Keep: Behind Dracula's chamber",
@@ -4109,7 +5334,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Castle Keep: Dracula's floating cube",
@@ -4123,7 +5349,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4143,7 +5370,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       }
@@ -4165,12 +5393,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 58
+        "max_count": 29,
+        "classification": "filler"
       },
       "Red jewel(L)": {
         "name": "Red jewel(L)",
@@ -4178,12 +5404,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 66
+        "max_count": 33,
+        "classification": "filler"
       },
       "Special1": {
         "name": "Special1",
@@ -4191,12 +5415,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "progression"
       },
       "Special2": {
         "name": "Special2",
@@ -4204,12 +5426,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Roast chicken": {
         "name": "Roast chicken",
@@ -4217,12 +5437,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 42
+        "max_count": 21,
+        "classification": "filler"
       },
       "Roast beef": {
         "name": "Roast beef",
@@ -4230,12 +5448,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 48
+        "max_count": 24,
+        "classification": "filler"
       },
       "Healing kit": {
         "name": "Healing kit",
@@ -4243,12 +5459,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "useful"
       },
       "Purifying": {
         "name": "Purifying",
@@ -4256,12 +5470,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 28
+        "max_count": 14,
+        "classification": "filler"
       },
       "Cure ampoule": {
         "name": "Cure ampoule",
@@ -4269,12 +5481,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5,
+        "classification": "filler"
       },
       "PowerUp": {
         "name": "PowerUp",
@@ -4282,12 +5492,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 20
+        "max_count": 10,
+        "classification": "filler"
       },
       "Knife": {
         "name": "Knife",
@@ -4295,12 +5503,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Holy water": {
         "name": "Holy water",
@@ -4308,12 +5514,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Cross": {
         "name": "Cross",
@@ -4321,12 +5525,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Axe": {
         "name": "Axe",
@@ -4334,12 +5536,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ice Trap": {
         "name": "Ice Trap",
@@ -4347,12 +5547,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Magical Nitro": {
         "name": "Magical Nitro",
@@ -4362,12 +5560,10 @@
           "Everything",
           "Ingredient"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Mandragora": {
         "name": "Mandragora",
@@ -4377,12 +5573,10 @@
           "Everything",
           "Ingredient"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Sun card": {
         "name": "Sun card",
@@ -4390,12 +5584,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 18
+        "max_count": 9,
+        "classification": "filler"
       },
       "Moon card": {
         "name": "Moon card",
@@ -4403,12 +5595,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 16
+        "max_count": 8,
+        "classification": "filler"
       },
       "Archives Key": {
         "name": "Archives Key",
@@ -4416,12 +5606,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Left Tower Key": {
         "name": "Left Tower Key",
@@ -4429,12 +5617,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Storeroom Key": {
         "name": "Storeroom Key",
@@ -4442,12 +5628,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Garden Key": {
         "name": "Garden Key",
@@ -4455,12 +5639,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Copper Key": {
         "name": "Copper Key",
@@ -4468,12 +5650,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Chamber Key": {
         "name": "Chamber Key",
@@ -4481,12 +5661,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Execution Key": {
         "name": "Execution Key",
@@ -4494,12 +5672,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Science Key1": {
         "name": "Science Key1",
@@ -4507,12 +5683,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Science Key2": {
         "name": "Science Key2",
@@ -4520,12 +5694,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Science Key3": {
         "name": "Science Key3",
@@ -4533,12 +5705,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Clocktower Key1": {
         "name": "Clocktower Key1",
@@ -4546,12 +5716,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Clocktower Key2": {
         "name": "Clocktower Key2",
@@ -4559,12 +5727,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Clocktower Key3": {
         "name": "Clocktower Key3",
@@ -4572,12 +5738,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "500 GOLD": {
         "name": "500 GOLD",
@@ -4585,12 +5749,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 36
+        "max_count": 18,
+        "classification": "filler"
       },
       "300 GOLD": {
         "name": "300 GOLD",
@@ -4598,12 +5760,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 18
+        "max_count": 9,
+        "classification": "filler"
       },
       "100 GOLD": {
         "name": "100 GOLD",
@@ -4611,12 +5771,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5,
+        "classification": "filler"
       },
       "PermaUp": {
         "name": "PermaUp",
@@ -4624,12 +5782,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal": {
         "name": "Crystal",
@@ -4637,12 +5793,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "The Count Downed": {
         "name": "The Count Downed",
@@ -4650,12 +5804,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -4668,36 +5820,36 @@
   },
   "itempool_counts": {
     "1": {
-      "100 GOLD": 10,
-      "300 GOLD": 18,
-      "500 GOLD": 36,
-      "Archives Key": 2,
-      "Chamber Key": 2,
-      "Clocktower Key1": 2,
-      "Clocktower Key2": 2,
-      "Clocktower Key3": 2,
-      "Copper Key": 2,
+      "100 GOLD": 5,
+      "300 GOLD": 9,
+      "500 GOLD": 18,
+      "Archives Key": 1,
+      "Chamber Key": 1,
+      "Clocktower Key1": 1,
+      "Clocktower Key2": 1,
+      "Clocktower Key3": 1,
+      "Copper Key": 1,
       "Crystal": 1,
-      "Cure ampoule": 10,
-      "Execution Key": 2,
-      "Garden Key": 2,
-      "Healing kit": 8,
-      "Left Tower Key": 2,
-      "Magical Nitro": 4,
-      "Mandragora": 4,
-      "Moon card": 16,
-      "PowerUp": 20,
-      "Purifying": 28,
-      "Red jewel(L)": 66,
-      "Red jewel(S)": 58,
-      "Roast beef": 48,
-      "Roast chicken": 42,
-      "Science Key1": 2,
-      "Science Key2": 2,
-      "Science Key3": 2,
-      "Special1": 14,
-      "Storeroom Key": 2,
-      "Sun card": 18,
+      "Cure ampoule": 5,
+      "Execution Key": 1,
+      "Garden Key": 1,
+      "Healing kit": 4,
+      "Left Tower Key": 1,
+      "Magical Nitro": 2,
+      "Mandragora": 2,
+      "Moon card": 8,
+      "PowerUp": 10,
+      "Purifying": 14,
+      "Red jewel(L)": 33,
+      "Red jewel(S)": 29,
+      "Roast beef": 24,
+      "Roast chicken": 21,
+      "Science Key1": 1,
+      "Science Key2": 1,
+      "Science Key3": 1,
+      "Special1": 7,
+      "Storeroom Key": 1,
+      "Sun card": 9,
       "The Count Downed": 1
     }
   },
@@ -4721,5 +5873,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

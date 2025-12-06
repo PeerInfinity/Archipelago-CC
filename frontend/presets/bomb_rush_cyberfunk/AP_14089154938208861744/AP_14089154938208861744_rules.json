@@ -69,7 +69,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 10 Graffiti Spots",
@@ -101,7 +102,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 15 Graffiti Spots",
@@ -133,7 +135,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 20 Graffiti Spots",
@@ -165,7 +168,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 25 Graffiti Spots",
@@ -197,7 +201,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 30 Graffiti Spots",
@@ -229,7 +234,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 35 Graffiti Spots",
@@ -261,7 +267,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 40 Graffiti Spots",
@@ -293,7 +300,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 45 Graffiti Spots",
@@ -325,7 +333,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 50 Graffiti Spots",
@@ -357,7 +366,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 55 Graffiti Spots",
@@ -389,7 +399,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 60 Graffiti Spots",
@@ -421,7 +432,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 65 Graffiti Spots",
@@ -453,7 +465,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 70 Graffiti Spots",
@@ -485,7 +498,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 75 Graffiti Spots",
@@ -517,7 +531,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 80 Graffiti Spots",
@@ -549,7 +564,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 85 Graffiti Spots",
@@ -581,7 +597,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 90 Graffiti Spots",
@@ -613,7 +630,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 95 Graffiti Spots",
@@ -645,7 +663,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 100 Graffiti Spots",
@@ -677,7 +696,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 105 Graffiti Spots",
@@ -709,7 +729,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 110 Graffiti Spots",
@@ -741,7 +762,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 115 Graffiti Spots",
@@ -773,7 +795,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 120 Graffiti Spots",
@@ -805,7 +828,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 125 Graffiti Spots",
@@ -837,7 +861,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 130 Graffiti Spots",
@@ -869,7 +894,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 135 Graffiti Spots",
@@ -901,7 +927,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 140 Graffiti Spots",
@@ -933,7 +960,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 145 Graffiti Spots",
@@ -965,7 +993,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 150 Graffiti Spots",
@@ -997,7 +1026,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 155 Graffiti Spots",
@@ -1029,7 +1059,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 160 Graffiti Spots",
@@ -1061,7 +1092,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 165 Graffiti Spots",
@@ -1093,7 +1125,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 170 Graffiti Spots",
@@ -1125,7 +1158,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 175 Graffiti Spots",
@@ -1157,7 +1191,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 180 Graffiti Spots",
@@ -1189,7 +1224,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 185 Graffiti Spots",
@@ -1221,7 +1257,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 190 Graffiti Spots",
@@ -1253,7 +1290,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 195 Graffiti Spots",
@@ -1285,7 +1323,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 200 Graffiti Spots",
@@ -1317,7 +1356,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 205 Graffiti Spots",
@@ -1349,7 +1389,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 210 Graffiti Spots",
@@ -1381,7 +1422,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 215 Graffiti Spots",
@@ -1413,7 +1455,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 220 Graffiti Spots",
@@ -1445,7 +1488,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 225 Graffiti Spots",
@@ -1477,7 +1521,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 230 Graffiti Spots",
@@ -1509,7 +1554,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 235 Graffiti Spots",
@@ -1541,7 +1587,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 240 Graffiti Spots",
@@ -1573,7 +1620,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 245 Graffiti Spots",
@@ -1605,7 +1653,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 250 Graffiti Spots",
@@ -1637,7 +1686,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 255 Graffiti Spots",
@@ -1669,7 +1719,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 260 Graffiti Spots",
@@ -1701,7 +1752,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 265 Graffiti Spots",
@@ -1733,7 +1785,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 270 Graffiti Spots",
@@ -1765,7 +1818,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 275 Graffiti Spots",
@@ -1797,7 +1851,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 280 Graffiti Spots",
@@ -1829,7 +1884,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 285 Graffiti Spots",
@@ -1861,7 +1917,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 290 Graffiti Spots",
@@ -1893,7 +1950,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 295 Graffiti Spots",
@@ -1925,7 +1983,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 300 Graffiti Spots",
@@ -1957,7 +2016,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 305 Graffiti Spots",
@@ -1989,7 +2049,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 310 Graffiti Spots",
@@ -2021,7 +2082,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 315 Graffiti Spots",
@@ -2053,7 +2115,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 320 Graffiti Spots",
@@ -2085,7 +2148,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 325 Graffiti Spots",
@@ -2117,7 +2181,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 330 Graffiti Spots",
@@ -2149,7 +2214,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 335 Graffiti Spots",
@@ -2181,7 +2247,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 340 Graffiti Spots",
@@ -2213,7 +2280,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 345 Graffiti Spots",
@@ -2245,7 +2313,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 350 Graffiti Spots",
@@ -2277,7 +2346,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 355 Graffiti Spots",
@@ -2309,7 +2379,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 360 Graffiti Spots",
@@ -2341,7 +2412,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 365 Graffiti Spots",
@@ -2373,7 +2445,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 370 Graffiti Spots",
@@ -2405,7 +2478,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 375 Graffiti Spots",
@@ -2437,7 +2511,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 380 Graffiti Spots",
@@ -2469,7 +2544,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 385 Graffiti Spots",
@@ -2501,7 +2577,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tagged 389 Graffiti Spots",
@@ -2533,7 +2610,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2589,7 +2667,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hideout: Garage tower CD",
@@ -2603,7 +2682,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hideout: Rooftop CD",
@@ -2617,7 +2697,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hideout: Under staircase graffiti",
@@ -2631,7 +2712,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hideout: Secret area graffiti",
@@ -2645,7 +2727,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hideout: Rear studio graffiti",
@@ -2659,7 +2742,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hideout: Corner ledge graffiti",
@@ -2673,7 +2757,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hideout: Upper platform skateboard",
@@ -2687,7 +2772,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hideout: BMX garage skateboard",
@@ -2720,7 +2806,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hideout: Unlock phone app",
@@ -2738,7 +2825,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hideout: Vinyl joins the crew",
@@ -2756,7 +2844,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hideout: Solace joins the crew",
@@ -2774,7 +2863,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2817,7 +2907,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Behind glass graffiti",
@@ -2831,7 +2922,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Office room graffiti",
@@ -2845,7 +2937,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: BMX gate outfit",
@@ -2878,7 +2971,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Big Polo",
@@ -2892,7 +2986,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Trash Polo",
@@ -2906,7 +3001,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2980,7 +3076,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Train rail ledge skateboard",
@@ -2994,7 +3091,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Train station CD",
@@ -3008,7 +3106,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Billboard platform outfit",
@@ -3022,7 +3121,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Hilltop Robo Post CD",
@@ -3036,7 +3136,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Hill secret skateboard",
@@ -3050,7 +3151,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Rooftop CD",
@@ -3064,7 +3166,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Wallrunning challenge reward",
@@ -3079,7 +3182,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Manual challenge reward",
@@ -3094,7 +3198,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Corner challenge reward",
@@ -3109,7 +3214,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Glass floor skates",
@@ -3142,7 +3248,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Frank joins the crew",
@@ -3160,7 +3267,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3195,7 +3303,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Underground mall vending machine skateboard",
@@ -3209,7 +3318,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Rave joins the crew",
@@ -3233,7 +3343,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Fruit stand Polo",
@@ -3247,7 +3358,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3282,7 +3394,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Side street secret skateboard",
@@ -3296,7 +3409,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3340,7 +3454,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Basketball court Robo Post CD",
@@ -3354,7 +3469,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Basketball court shortcut CD",
@@ -3372,7 +3488,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Rietveld joins the crew",
@@ -3396,7 +3513,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Versum Hill: Complete Chapter 1",
@@ -3420,7 +3538,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3491,7 +3611,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Square: Rooftop staircase graffiti",
@@ -3505,7 +3626,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Square: Toilet graffiti",
@@ -3519,7 +3641,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Square: Trash graffiti",
@@ -3533,7 +3656,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Square: Center tower graffiti",
@@ -3547,7 +3671,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Square: Rooftop billboard graffiti",
@@ -3561,7 +3686,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Square: Center Robo Post CD",
@@ -3575,7 +3701,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Square: Parking garage Robo Post CD",
@@ -3589,7 +3716,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Square: Mall ledge outfit",
@@ -3603,7 +3731,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Square: Alley rooftop outfit",
@@ -3617,7 +3746,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Square: Alley staircase skateboard",
@@ -3631,7 +3761,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Square: Secret painting skates",
@@ -3645,7 +3776,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Square: Vending machine skates",
@@ -3659,7 +3791,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Square: Walkway roof skates",
@@ -3673,7 +3806,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Square: Alley ledge skates",
@@ -3687,7 +3821,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Square: DJ Cyber joins the crew",
@@ -3701,7 +3836,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Square: Half pipe Polo",
@@ -3715,7 +3851,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3773,7 +3910,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: Manual challenge reward",
@@ -3788,7 +3926,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: Score challenge reward",
@@ -3803,7 +3942,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: Under square ledge graffiti",
@@ -3817,7 +3957,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: Bus graffiti",
@@ -3831,7 +3972,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: Under square Robo Post graffiti",
@@ -3845,7 +3987,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: BMX gate graffiti",
@@ -3878,7 +4021,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: Square tower CD",
@@ -3892,7 +4036,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: Trash CD",
@@ -3906,7 +4051,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: Shop roof outfit",
@@ -3920,7 +4066,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: Glass roof skates",
@@ -3934,7 +4081,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: Eclipse joins the crew",
@@ -3952,7 +4100,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: Behind glass Polo",
@@ -3966,7 +4115,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3996,7 +4146,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: Underground ramp skates",
@@ -4010,7 +4161,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4050,7 +4202,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: Ocean platform CD",
@@ -4064,7 +4217,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: End of dock CD",
@@ -4078,7 +4232,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: Dock Robo Post outfit",
@@ -4092,7 +4247,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: Control room skates",
@@ -4106,7 +4262,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: Mesh joins the crew",
@@ -4130,7 +4287,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4169,7 +4327,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4208,7 +4367,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: Rooftop glass CD",
@@ -4241,7 +4401,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: Tower core outfit",
@@ -4255,7 +4416,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: High rooftop outfit",
@@ -4269,7 +4431,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brink Terminal: Complete Chapter 2",
@@ -4293,7 +4456,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4355,7 +4520,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Mall: Wall alcove graffiti",
@@ -4369,7 +4535,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Mall: Maintenance shaft CD",
@@ -4383,7 +4550,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Mall: Glass cylinder CD",
@@ -4416,7 +4584,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Mall: Lower Robo Post outfit",
@@ -4430,7 +4599,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4460,7 +4630,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4513,7 +4684,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Mall: Trick challenge reward",
@@ -4528,7 +4700,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Mall: Slide challenge reward",
@@ -4543,7 +4716,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Mall: Fish challenge reward",
@@ -4558,7 +4732,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Mall: Score challenge reward",
@@ -4573,7 +4748,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Mall: Atrium top floor Robo Post CD",
@@ -4587,7 +4763,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Mall: Atrium top floor floating CD",
@@ -4601,7 +4778,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Mall: Atrium top floor BMX",
@@ -4615,7 +4793,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Mall: Theater entrance BMX",
@@ -4629,7 +4808,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Mall: Atrium BMX gate BMX",
@@ -4662,7 +4842,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Mall: Upside down rail outfit",
@@ -4676,7 +4857,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Mall: DOT.EXE joins the crew",
@@ -4694,7 +4876,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4733,7 +4916,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4781,7 +4965,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Mall: Theater hanging billboards graffiti",
@@ -4795,7 +4980,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Mall: Theater garage graffiti",
@@ -4809,7 +4995,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Mall: Theater maintenance CD",
@@ -4823,7 +5010,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Mall: Shine joins the crew",
@@ -4841,7 +5029,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Millennium Mall: Complete Chapter 3",
@@ -4865,7 +5054,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4904,7 +5095,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Polo graffiti",
@@ -4918,7 +5110,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Above entrance graffiti",
@@ -4932,7 +5125,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: BMX gate BMX",
@@ -4965,7 +5159,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Polo pile 1",
@@ -4979,7 +5174,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Polo pile 2",
@@ -4993,7 +5189,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Polo pile 3",
@@ -5007,7 +5204,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Polo pile 4",
@@ -5021,7 +5219,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5078,7 +5277,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Supply port Robo Post CD",
@@ -5092,7 +5292,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Above gate ledge CD",
@@ -5106,7 +5307,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Smoke hole BMX",
@@ -5120,7 +5322,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Above gate rail outfit",
@@ -5134,7 +5337,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Rail loop outfit",
@@ -5148,7 +5352,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Score challenge reward",
@@ -5163,7 +5368,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Score challenge 2 reward",
@@ -5178,7 +5384,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Quarter pipe challenge reward",
@@ -5193,7 +5400,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5242,7 +5450,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Maze glass Polo",
@@ -5256,7 +5465,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Maze classroom Polo",
@@ -5270,7 +5480,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Maze vent Polo",
@@ -5284,7 +5495,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Big maze Polo",
@@ -5298,7 +5510,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Maze desk Polo",
@@ -5312,7 +5525,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Maze forklift Polo",
@@ -5326,7 +5540,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5374,7 +5589,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Shortcut glass CD",
@@ -5407,7 +5623,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Turret jump CD",
@@ -5421,7 +5638,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Helipad BMX",
@@ -5435,7 +5653,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Pipe outfit",
@@ -5449,7 +5668,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Trash outfit",
@@ -5463,7 +5683,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Devil Theory joins the crew",
@@ -5481,7 +5702,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Complete Chapter 4",
@@ -5505,7 +5727,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -5562,7 +5786,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Pyramid top Robo Post CD",
@@ -5576,7 +5801,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Island: Rise joins the crew",
@@ -5590,7 +5816,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5637,7 +5864,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Secret ledge BMX",
@@ -5651,7 +5879,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Highway rooftop BMX",
@@ -5665,7 +5894,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5713,7 +5943,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Half pipe CD",
@@ -5727,7 +5958,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Across bull horns graffiti",
@@ -5741,7 +5973,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Small rooftop graffiti",
@@ -5755,7 +5988,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Trash graffiti",
@@ -5769,7 +6003,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Trash Polo",
@@ -5783,7 +6018,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5840,7 +6076,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Deep city tower CD",
@@ -5854,7 +6091,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Race challenge reward",
@@ -5878,7 +6116,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Wallrunning challenge reward",
@@ -5902,7 +6141,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Score challenge reward",
@@ -5917,7 +6157,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Deep city vent jump BMX",
@@ -5931,7 +6172,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Deep city side wires outfit",
@@ -5945,7 +6187,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Deep city center island outfit",
@@ -5959,7 +6202,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5998,7 +6242,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Red light side alley outfit",
@@ -6012,7 +6257,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6069,7 +6315,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6099,7 +6346,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Elephant tower glass outfit",
@@ -6113,7 +6361,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Helipad outfit",
@@ -6127,7 +6376,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Vending machine CD",
@@ -6141,7 +6391,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Coil joins the crew",
@@ -6165,7 +6416,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Flesh Prince joins the crew",
@@ -6179,7 +6431,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Futurism joins the crew",
@@ -6193,7 +6446,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mataan: Shopping Polo",
@@ -6207,7 +6461,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Defeat Faux",
@@ -6231,7 +6486,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       }
@@ -6254,10 +6511,7 @@
         "id": 2308000,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Chuckin Up)": {
         "classification": "filler",
@@ -6266,10 +6520,7 @@
         "id": 2308001,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Spectres)": {
         "classification": "filler",
@@ -6278,10 +6529,7 @@
         "id": 2308002,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (You Can Say Hi)": {
         "classification": "filler",
@@ -6290,10 +6538,7 @@
         "id": 2308003,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (JACK DA FUNK)": {
         "classification": "filler",
@@ -6302,10 +6547,7 @@
         "id": 2308004,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Feel The Funk (Computer Love))": {
         "classification": "filler",
@@ -6314,10 +6556,7 @@
         "id": 2308005,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Big City Life)": {
         "classification": "filler",
@@ -6326,10 +6565,7 @@
         "id": 2308006,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (I Wanna Kno)": {
         "classification": "filler",
@@ -6338,10 +6574,7 @@
         "id": 2308007,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Plume)": {
         "classification": "filler",
@@ -6350,10 +6583,7 @@
         "id": 2308008,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Two Days Off)": {
         "classification": "filler",
@@ -6362,10 +6592,7 @@
         "id": 2308009,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Scraped On The Way Out)": {
         "classification": "filler",
@@ -6374,10 +6601,7 @@
         "id": 2308010,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Last Hoorah)": {
         "classification": "filler",
@@ -6386,10 +6610,7 @@
         "id": 2308011,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (State of Mind)": {
         "classification": "filler",
@@ -6398,10 +6619,7 @@
         "id": 2308012,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (AGUA)": {
         "classification": "filler",
@@ -6410,10 +6628,7 @@
         "id": 2308013,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Condensed milk)": {
         "classification": "filler",
@@ -6422,10 +6637,7 @@
         "id": 2308014,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Light Switch)": {
         "classification": "filler",
@@ -6434,10 +6646,7 @@
         "id": 2308015,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Hair Dun Nails Dun)": {
         "classification": "filler",
@@ -6446,10 +6655,7 @@
         "id": 2308016,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Precious Thing)": {
         "classification": "filler",
@@ -6458,10 +6664,7 @@
         "id": 2308017,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Next To Me)": {
         "classification": "filler",
@@ -6470,10 +6673,7 @@
         "id": 2308018,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Refuse)": {
         "classification": "filler",
@@ -6482,10 +6682,7 @@
         "id": 2308019,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Iridium)": {
         "classification": "filler",
@@ -6494,10 +6691,7 @@
         "id": 2308020,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Funk Express)": {
         "classification": "filler",
@@ -6506,10 +6700,7 @@
         "id": 2308021,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (In The Pocket)": {
         "classification": "filler",
@@ -6518,10 +6709,7 @@
         "id": 2308022,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Bounce Upon A Time)": {
         "classification": "filler",
@@ -6530,10 +6718,7 @@
         "id": 2308023,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (hwbouths)": {
         "classification": "filler",
@@ -6542,10 +6727,7 @@
         "id": 2308024,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Morning Glow)": {
         "classification": "filler",
@@ -6554,10 +6736,7 @@
         "id": 2308025,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Chromebies)": {
         "classification": "filler",
@@ -6566,10 +6745,7 @@
         "id": 2308026,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (watchyaback!)": {
         "classification": "filler",
@@ -6578,10 +6754,7 @@
         "id": 2308027,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Anime Break)": {
         "classification": "filler",
@@ -6590,10 +6763,7 @@
         "id": 2308028,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (DA PEOPLE)": {
         "classification": "filler",
@@ -6602,10 +6772,7 @@
         "id": 2308029,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Trinitron)": {
         "classification": "filler",
@@ -6614,10 +6781,7 @@
         "id": 2308030,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Operator)": {
         "classification": "filler",
@@ -6626,10 +6790,7 @@
         "id": 2308031,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Sunshine Popping Mixtape)": {
         "classification": "filler",
@@ -6638,10 +6799,7 @@
         "id": 2308032,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (House Cats Mixtape)": {
         "classification": "filler",
@@ -6650,10 +6808,7 @@
         "id": 2308033,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Breaking Machine Mixtape)": {
         "classification": "filler",
@@ -6662,10 +6817,7 @@
         "id": 2308034,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Music (Beastmode Hip Hop Mixtape)": {
         "classification": "filler",
@@ -6674,10 +6826,7 @@
         "id": 2308035,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (M - OVERWHELMME)": {
         "classification": "progression",
@@ -6687,10 +6836,7 @@
         "groups": [
           "Everything",
           "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (M - QUICK BING)": {
         "classification": "progression",
@@ -6700,10 +6846,7 @@
         "groups": [
           "Everything",
           "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (M - BLOCKY)": {
         "classification": "progression",
@@ -6713,10 +6856,7 @@
         "groups": [
           "Everything",
           "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (M - Pora)": {
         "classification": "progression",
@@ -6726,10 +6866,7 @@
         "groups": [
           "Everything",
           "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (M - Teddy 4)": {
         "classification": "progression",
@@ -6739,10 +6876,7 @@
         "groups": [
           "Everything",
           "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (M - BOMB BEATS)": {
         "classification": "progression",
@@ -6752,10 +6886,7 @@
         "groups": [
           "Everything",
           "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (M - SPRAYTANICPANIC!)": {
         "classification": "progression",
@@ -6765,10 +6896,7 @@
         "groups": [
           "Everything",
           "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (M - SHOGUN)": {
         "classification": "progression",
@@ -6778,10 +6906,7 @@
         "groups": [
           "Everything",
           "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (M - TeleBinge)": {
         "classification": "progression",
@@ -6791,10 +6916,7 @@
         "groups": [
           "Everything",
           "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (M - 0m33)": {
         "classification": "progression",
@@ -6804,10 +6926,7 @@
         "groups": [
           "Everything",
           "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (M - Vom'B)": {
         "classification": "progression",
@@ -6817,10 +6936,7 @@
         "groups": [
           "Everything",
           "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (M - Street classic)": {
         "classification": "progression",
@@ -6830,10 +6946,7 @@
         "groups": [
           "Everything",
           "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (M - Thick Candy)": {
         "classification": "progression",
@@ -6843,10 +6956,7 @@
         "groups": [
           "Everything",
           "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (M - colorBOMB)": {
         "classification": "progression",
@@ -6856,10 +6966,7 @@
         "groups": [
           "Everything",
           "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (M - Zona Leste)": {
         "classification": "progression",
@@ -6869,10 +6976,7 @@
         "groups": [
           "Everything",
           "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (M - Stacked Symbols)": {
         "classification": "progression",
@@ -6882,10 +6986,7 @@
         "groups": [
           "Everything",
           "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (M - B-boy Love)": {
         "classification": "progression",
@@ -6895,10 +6996,7 @@
         "groups": [
           "Everything",
           "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (M - Devil 68)": {
         "classification": "progression",
@@ -6908,10 +7006,7 @@
         "groups": [
           "Everything",
           "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (M - pico pow)": {
         "classification": "progression",
@@ -6921,10 +7016,7 @@
         "groups": [
           "Everything",
           "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (L - WHOLE SIXER)": {
         "classification": "progression",
@@ -6934,10 +7026,7 @@
         "groups": [
           "Everything",
           "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (L - INFINITY)": {
         "classification": "progression",
@@ -6947,10 +7036,7 @@
         "groups": [
           "Everything",
           "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (L - VoodooBoy)": {
         "classification": "progression",
@@ -6960,10 +7046,7 @@
         "groups": [
           "Everything",
           "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (L - Fang It Up!)": {
         "classification": "progression",
@@ -6973,10 +7056,7 @@
         "groups": [
           "Everything",
           "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (L - FREAKS)": {
         "classification": "progression",
@@ -6986,10 +7066,7 @@
         "groups": [
           "Everything",
           "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (L - Graffo Le Fou)": {
         "classification": "progression",
@@ -6999,10 +7076,7 @@
         "groups": [
           "Everything",
           "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (L - Lauder)": {
         "classification": "progression",
@@ -7012,10 +7086,7 @@
         "groups": [
           "Everything",
           "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (L - SpawningSeason)": {
         "classification": "progression",
@@ -7025,10 +7096,7 @@
         "groups": [
           "Everything",
           "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (L - Moai Marathon)": {
         "classification": "progression",
@@ -7038,10 +7106,7 @@
         "groups": [
           "Everything",
           "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (L - Tius)": {
         "classification": "progression",
@@ -7051,10 +7116,7 @@
         "groups": [
           "Everything",
           "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (L - NOISY NINJA)": {
         "classification": "progression",
@@ -7064,10 +7126,7 @@
         "groups": [
           "Everything",
           "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (L - Campaign Trail)": {
         "classification": "progression",
@@ -7077,10 +7136,7 @@
         "groups": [
           "Everything",
           "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (L - skate or di3)": {
         "classification": "progression",
@@ -7090,10 +7146,7 @@
         "groups": [
           "Everything",
           "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (L - Jd Vila Formosa)": {
         "classification": "progression",
@@ -7103,10 +7156,7 @@
         "groups": [
           "Everything",
           "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (L - Messenger Mural)": {
         "classification": "progression",
@@ -7116,10 +7166,7 @@
         "groups": [
           "Everything",
           "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (L - RECORD.HEAD)": {
         "classification": "progression",
@@ -7129,10 +7176,7 @@
         "groups": [
           "Everything",
           "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (L - Boom)": {
         "classification": "progression",
@@ -7142,10 +7186,7 @@
         "groups": [
           "Everything",
           "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (L - wild rush)": {
         "classification": "progression",
@@ -7155,10 +7196,7 @@
         "groups": [
           "Everything",
           "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (L - buttercup)": {
         "classification": "progression",
@@ -7168,10 +7206,7 @@
         "groups": [
           "Everything",
           "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (XL - Gold Rush)": {
         "classification": "progression",
@@ -7181,10 +7216,7 @@
         "groups": [
           "Everything",
           "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (XL - WILD STRUXXA)": {
         "classification": "progression",
@@ -7194,10 +7226,7 @@
         "groups": [
           "Everything",
           "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (XL - VIBRATIONS)": {
         "classification": "progression",
@@ -7207,10 +7236,7 @@
         "groups": [
           "Everything",
           "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (XL - SECOND SIGHT)": {
         "classification": "progression",
@@ -7220,10 +7246,7 @@
         "groups": [
           "Everything",
           "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (XL - Bomb Croc)": {
         "classification": "progression",
@@ -7233,10 +7256,7 @@
         "groups": [
           "Everything",
           "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (XL - FATE)": {
         "classification": "progression",
@@ -7246,10 +7266,7 @@
         "groups": [
           "Everything",
           "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (XL - Web Spitter)": {
         "classification": "progression",
@@ -7259,10 +7276,7 @@
         "groups": [
           "Everything",
           "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (XL - MOTORCYCLE GANG)": {
         "classification": "progression",
@@ -7272,10 +7286,7 @@
         "groups": [
           "Everything",
           "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (XL - Deep Dive)": {
         "classification": "progression",
@@ -7285,10 +7296,7 @@
         "groups": [
           "Everything",
           "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (XL - MegaHood)": {
         "classification": "progression",
@@ -7298,10 +7306,7 @@
         "groups": [
           "Everything",
           "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (XL - Gamex UPA ABL)": {
         "classification": "progression",
@@ -7311,10 +7316,7 @@
         "groups": [
           "Everything",
           "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (XL - BiGSHiNYBoMB)": {
         "classification": "progression",
@@ -7324,10 +7326,7 @@
         "groups": [
           "Everything",
           "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (XL - Bomb Burner)": {
         "classification": "progression",
@@ -7337,10 +7336,7 @@
         "groups": [
           "Everything",
           "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (XL - Pirate's Life 4 Me)": {
         "classification": "progression",
@@ -7350,10 +7346,7 @@
         "groups": [
           "Everything",
           "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (XL - Bombing by FireMan)": {
         "classification": "progression",
@@ -7363,10 +7356,7 @@
         "groups": [
           "Everything",
           "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (XL - end 2 end)": {
         "classification": "progression",
@@ -7376,10 +7366,7 @@
         "groups": [
           "Everything",
           "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (XL - Raver Funk)": {
         "classification": "progression",
@@ -7389,10 +7376,7 @@
         "groups": [
           "Everything",
           "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Graffiti (XL - headphones on Helmet on)": {
         "classification": "progression",
@@ -7402,10 +7386,7 @@
         "groups": [
           "Everything",
           "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Skateboard (Devon)": {
         "classification": "filler",
@@ -7415,10 +7396,7 @@
         "groups": [
           "Everything",
           "skateboard"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Skateboard (Terrence)": {
         "classification": "filler",
@@ -7428,10 +7406,7 @@
         "groups": [
           "Everything",
           "skateboard"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Skateboard (Maceo)": {
         "classification": "filler",
@@ -7441,10 +7416,7 @@
         "groups": [
           "Everything",
           "skateboard"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Skateboard (Lazer Accuracy)": {
         "classification": "filler",
@@ -7454,10 +7426,7 @@
         "groups": [
           "Everything",
           "skateboard"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Skateboard (Death Boogie)": {
         "classification": "filler",
@@ -7467,10 +7436,7 @@
         "groups": [
           "Everything",
           "skateboard"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Skateboard (Sylk)": {
         "classification": "filler",
@@ -7480,10 +7446,7 @@
         "groups": [
           "Everything",
           "skateboard"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Skateboard (Taiga)": {
         "classification": "filler",
@@ -7493,10 +7456,7 @@
         "groups": [
           "Everything",
           "skateboard"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Skateboard (Just Swell)": {
         "classification": "filler",
@@ -7506,10 +7466,7 @@
         "groups": [
           "Everything",
           "skateboard"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Skateboard (Mantra)": {
         "classification": "filler",
@@ -7519,10 +7476,7 @@
         "groups": [
           "Everything",
           "skateboard"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Inline Skates (Glaciers)": {
         "classification": "progression",
@@ -7534,10 +7488,7 @@
           "inline",
           "inline skates",
           "skates"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Inline Skates (Sweet Royale)": {
         "classification": "progression",
@@ -7549,10 +7500,7 @@
           "inline",
           "inline skates",
           "skates"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Inline Skates (Strawberry Missiles)": {
         "classification": "progression",
@@ -7564,10 +7512,7 @@
           "inline",
           "inline skates",
           "skates"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Inline Skates (Ice Cold Killers)": {
         "classification": "progression",
@@ -7579,10 +7524,7 @@
           "inline",
           "inline skates",
           "skates"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Inline Skates (Red Industry)": {
         "classification": "progression",
@@ -7594,10 +7536,7 @@
           "inline",
           "inline skates",
           "skates"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Inline Skates (Mech Adversary)": {
         "classification": "progression",
@@ -7609,10 +7548,7 @@
           "inline",
           "inline skates",
           "skates"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Inline Skates (Orange Blasters)": {
         "classification": "progression",
@@ -7624,10 +7560,7 @@
           "inline",
           "inline skates",
           "skates"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Inline Skates (ck)": {
         "classification": "progression",
@@ -7639,10 +7572,7 @@
           "inline",
           "inline skates",
           "skates"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Inline Skates (Sharpshooters)": {
         "classification": "progression",
@@ -7654,10 +7584,7 @@
           "inline",
           "inline skates",
           "skates"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "BMX (Mr. Taupe)": {
         "classification": "progression",
@@ -7669,10 +7596,7 @@
           "bicycle",
           "bike",
           "bmx"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "BMX (Gum)": {
         "classification": "progression",
@@ -7684,10 +7608,7 @@
           "bicycle",
           "bike",
           "bmx"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "BMX (Steel Wheeler)": {
         "classification": "progression",
@@ -7699,10 +7620,7 @@
           "bicycle",
           "bike",
           "bmx"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "BMX (oyo)": {
         "classification": "progression",
@@ -7714,10 +7632,7 @@
           "bicycle",
           "bike",
           "bmx"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "BMX (Rigid No.6)": {
         "classification": "progression",
@@ -7729,10 +7644,7 @@
           "bicycle",
           "bike",
           "bmx"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "BMX (Ceremony)": {
         "classification": "progression",
@@ -7744,10 +7656,7 @@
           "bicycle",
           "bike",
           "bmx"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "BMX (XXX)": {
         "classification": "progression",
@@ -7759,10 +7668,7 @@
           "bicycle",
           "bike",
           "bmx"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "BMX (Terrazza)": {
         "classification": "progression",
@@ -7774,10 +7680,7 @@
           "bicycle",
           "bike",
           "bmx"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "BMX (Dedication)": {
         "classification": "progression",
@@ -7789,10 +7692,7 @@
           "bicycle",
           "bike",
           "bmx"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Red - Autumn)": {
         "classification": "filler",
@@ -7801,10 +7701,7 @@
         "id": 2308119,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Red - Winter)": {
         "classification": "filler",
@@ -7813,10 +7710,7 @@
         "id": 2308120,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Tryce - Autumn)": {
         "classification": "filler",
@@ -7825,10 +7719,7 @@
         "id": 2308121,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Tryce - Winter)": {
         "classification": "filler",
@@ -7837,10 +7728,7 @@
         "id": 2308122,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Bel - Autumn)": {
         "classification": "filler",
@@ -7849,10 +7737,7 @@
         "id": 2308123,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Bel - Winter)": {
         "classification": "filler",
@@ -7861,10 +7746,7 @@
         "id": 2308124,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Vinyl - Autumn)": {
         "classification": "filler",
@@ -7873,10 +7755,7 @@
         "id": 2308125,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Vinyl - Winter)": {
         "classification": "filler",
@@ -7885,10 +7764,7 @@
         "id": 2308126,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Solace - Autumn)": {
         "classification": "filler",
@@ -7897,10 +7773,7 @@
         "id": 2308127,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Solace - Winter)": {
         "classification": "filler",
@@ -7909,10 +7782,7 @@
         "id": 2308128,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Felix - Autumn)": {
         "classification": "filler",
@@ -7921,10 +7791,7 @@
         "id": 2308129,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Felix - Winter)": {
         "classification": "filler",
@@ -7933,10 +7800,7 @@
         "id": 2308130,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Rave - Autumn)": {
         "classification": "filler",
@@ -7945,10 +7809,7 @@
         "id": 2308131,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Rave - Winter)": {
         "classification": "filler",
@@ -7957,10 +7818,7 @@
         "id": 2308132,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Mesh - Autumn)": {
         "classification": "filler",
@@ -7969,10 +7827,7 @@
         "id": 2308133,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Mesh - Winter)": {
         "classification": "filler",
@@ -7981,10 +7836,7 @@
         "id": 2308134,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Shine - Autumn)": {
         "classification": "filler",
@@ -7993,10 +7845,7 @@
         "id": 2308135,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Shine - Winter)": {
         "classification": "filler",
@@ -8005,10 +7854,7 @@
         "id": 2308136,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Rise - Autumn)": {
         "classification": "filler",
@@ -8017,10 +7863,7 @@
         "id": 2308137,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Rise - Winter)": {
         "classification": "filler",
@@ -8029,10 +7872,7 @@
         "id": 2308138,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Coil - Autumn)": {
         "classification": "filler",
@@ -8041,10 +7881,7 @@
         "id": 2308139,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Outfit (Coil - Winter)": {
         "classification": "filler",
@@ -8053,10 +7890,7 @@
         "id": 2308140,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Tryce": {
         "classification": "progression",
@@ -8066,10 +7900,7 @@
         "groups": [
           "Everything",
           "characters"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Bel": {
         "classification": "progression",
@@ -8080,10 +7911,7 @@
           "Everything",
           "characters",
           "girl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Vinyl": {
         "classification": "progression",
@@ -8094,10 +7922,7 @@
           "Everything",
           "characters",
           "girl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Solace": {
         "classification": "progression",
@@ -8107,10 +7932,7 @@
         "groups": [
           "Everything",
           "characters"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Rave": {
         "classification": "progression",
@@ -8121,10 +7943,7 @@
           "Everything",
           "characters",
           "girl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Mesh": {
         "classification": "progression",
@@ -8134,10 +7953,7 @@
         "groups": [
           "Everything",
           "characters"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Shine": {
         "classification": "progression",
@@ -8148,10 +7964,7 @@
           "Everything",
           "characters",
           "girl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Rise": {
         "classification": "progression",
@@ -8162,10 +7975,7 @@
           "Everything",
           "characters",
           "girl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Coil": {
         "classification": "progression",
@@ -8175,10 +7985,7 @@
         "groups": [
           "Everything",
           "characters"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Frank": {
         "classification": "progression",
@@ -8188,10 +7995,7 @@
         "groups": [
           "Everything",
           "characters"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Rietveld": {
         "classification": "progression",
@@ -8201,10 +8005,7 @@
         "groups": [
           "Everything",
           "characters"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "DJ Cyber": {
         "classification": "progression",
@@ -8214,10 +8015,7 @@
         "groups": [
           "Everything",
           "characters"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Eclipse": {
         "classification": "progression",
@@ -8227,10 +8025,7 @@
         "groups": [
           "Everything",
           "characters"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "DOT.EXE": {
         "classification": "progression",
@@ -8240,10 +8035,7 @@
         "groups": [
           "Everything",
           "characters"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Devil Theory": {
         "classification": "progression",
@@ -8253,10 +8045,7 @@
         "groups": [
           "Everything",
           "characters"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Flesh Prince": {
         "classification": "progression",
@@ -8266,10 +8055,7 @@
         "groups": [
           "Everything",
           "characters"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Futurism": {
         "classification": "progression",
@@ -8280,10 +8066,7 @@
           "Everything",
           "characters",
           "girl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Oldhead": {
         "classification": "progression",
@@ -8293,10 +8076,7 @@
         "groups": [
           "Everything",
           "characters"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "8 REP": {
         "classification": "progression_skip_balancing",
@@ -8305,10 +8085,7 @@
         "id": 2308159,
         "groups": [
           "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "16 REP": {
         "classification": "progression_skip_balancing",
@@ -8317,10 +8094,7 @@
         "id": 2308160,
         "groups": [
           "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "24 REP": {
         "classification": "progression_skip_balancing",
@@ -8329,10 +8103,7 @@
         "id": 2308161,
         "groups": [
           "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "32 REP": {
         "classification": "progression_skip_balancing",
@@ -8341,10 +8112,7 @@
         "id": 2308162,
         "groups": [
           "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "48 REP": {
         "classification": "progression_skip_balancing",
@@ -8353,10 +8121,7 @@
         "id": 2308163,
         "groups": [
           "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Camera App": {
         "classification": "progression",
@@ -8365,10 +8130,7 @@
         "id": 2308164,
         "groups": [
           "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Chapter Completed": {
         "name": "Chapter Completed",
@@ -8376,12 +8138,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 4
+        "max_count": 4,
+        "classification": "progression"
       },
       "Victory": {
         "name": "Victory",
@@ -8389,12 +8149,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -8417,173 +8175,173 @@
   },
   "itempool_counts": {
     "1": {
-      "16 REP": 64,
-      "24 REP": 26,
-      "32 REP": 10,
-      "48 REP": 6,
-      "8 REP": 68,
-      "BMX (Ceremony)": 2,
-      "BMX (Dedication)": 2,
-      "BMX (Gum)": 2,
-      "BMX (Mr. Taupe)": 2,
-      "BMX (Rigid No.6)": 2,
-      "BMX (Steel Wheeler)": 2,
-      "BMX (Terrazza)": 2,
-      "BMX (XXX)": 2,
-      "BMX (oyo)": 2,
-      "Bel": 2,
-      "Camera App": 2,
+      "16 REP": 32,
+      "24 REP": 13,
+      "32 REP": 5,
+      "48 REP": 3,
+      "8 REP": 34,
+      "BMX (Ceremony)": 1,
+      "BMX (Dedication)": 1,
+      "BMX (Gum)": 1,
+      "BMX (Mr. Taupe)": 1,
+      "BMX (Rigid No.6)": 1,
+      "BMX (Steel Wheeler)": 1,
+      "BMX (Terrazza)": 1,
+      "BMX (XXX)": 1,
+      "BMX (oyo)": 1,
+      "Bel": 1,
+      "Camera App": 1,
       "Chapter Completed": 4,
-      "Coil": 2,
-      "DJ Cyber": 2,
-      "DOT.EXE": 2,
-      "Devil Theory": 2,
-      "Eclipse": 2,
-      "Flesh Prince": 2,
-      "Frank": 2,
-      "Futurism": 2,
-      "Graffiti (L - Boom)": 2,
-      "Graffiti (L - Campaign Trail)": 2,
-      "Graffiti (L - FREAKS)": 2,
-      "Graffiti (L - Fang It Up!)": 2,
-      "Graffiti (L - Graffo Le Fou)": 2,
-      "Graffiti (L - INFINITY)": 2,
-      "Graffiti (L - Jd Vila Formosa)": 2,
-      "Graffiti (L - Lauder)": 2,
-      "Graffiti (L - Messenger Mural)": 2,
-      "Graffiti (L - Moai Marathon)": 2,
-      "Graffiti (L - NOISY NINJA)": 2,
-      "Graffiti (L - RECORD.HEAD)": 2,
-      "Graffiti (L - SpawningSeason)": 2,
-      "Graffiti (L - Tius)": 2,
-      "Graffiti (L - VoodooBoy)": 2,
-      "Graffiti (L - WHOLE SIXER)": 2,
-      "Graffiti (L - buttercup)": 2,
-      "Graffiti (L - skate or di3)": 2,
-      "Graffiti (L - wild rush)": 2,
-      "Graffiti (M - 0m33)": 2,
-      "Graffiti (M - B-boy Love)": 2,
-      "Graffiti (M - BLOCKY)": 2,
-      "Graffiti (M - BOMB BEATS)": 2,
-      "Graffiti (M - Devil 68)": 2,
-      "Graffiti (M - OVERWHELMME)": 2,
-      "Graffiti (M - Pora)": 2,
-      "Graffiti (M - QUICK BING)": 2,
-      "Graffiti (M - SHOGUN)": 2,
-      "Graffiti (M - SPRAYTANICPANIC!)": 2,
-      "Graffiti (M - Stacked Symbols)": 2,
-      "Graffiti (M - Street classic)": 2,
-      "Graffiti (M - Teddy 4)": 2,
-      "Graffiti (M - TeleBinge)": 2,
-      "Graffiti (M - Thick Candy)": 2,
-      "Graffiti (M - Vom'B)": 2,
-      "Graffiti (M - Zona Leste)": 2,
-      "Graffiti (M - colorBOMB)": 2,
-      "Graffiti (M - pico pow)": 2,
-      "Graffiti (XL - BiGSHiNYBoMB)": 2,
-      "Graffiti (XL - Bomb Burner)": 2,
-      "Graffiti (XL - Bomb Croc)": 2,
-      "Graffiti (XL - Bombing by FireMan)": 2,
-      "Graffiti (XL - Deep Dive)": 2,
-      "Graffiti (XL - FATE)": 2,
-      "Graffiti (XL - Gamex UPA ABL)": 2,
-      "Graffiti (XL - Gold Rush)": 2,
-      "Graffiti (XL - MOTORCYCLE GANG)": 2,
-      "Graffiti (XL - MegaHood)": 2,
-      "Graffiti (XL - Pirate's Life 4 Me)": 2,
-      "Graffiti (XL - Raver Funk)": 2,
-      "Graffiti (XL - SECOND SIGHT)": 2,
-      "Graffiti (XL - VIBRATIONS)": 2,
-      "Graffiti (XL - WILD STRUXXA)": 2,
-      "Graffiti (XL - Web Spitter)": 2,
-      "Graffiti (XL - end 2 end)": 2,
-      "Graffiti (XL - headphones on Helmet on)": 2,
-      "Inline Skates (Glaciers)": 2,
-      "Inline Skates (Ice Cold Killers)": 2,
-      "Inline Skates (Mech Adversary)": 2,
-      "Inline Skates (Orange Blasters)": 2,
-      "Inline Skates (Red Industry)": 2,
-      "Inline Skates (Sharpshooters)": 2,
-      "Inline Skates (Strawberry Missiles)": 2,
-      "Inline Skates (Sweet Royale)": 2,
-      "Inline Skates (ck)": 2,
-      "Mesh": 2,
-      "Music (AGUA)": 2,
-      "Music (Anime Break)": 2,
-      "Music (Beastmode Hip Hop Mixtape)": 2,
-      "Music (Big City Life)": 2,
-      "Music (Bounce Upon A Time)": 2,
-      "Music (Breaking Machine Mixtape)": 2,
-      "Music (Chromebies)": 2,
-      "Music (Chuckin Up)": 2,
-      "Music (Condensed milk)": 2,
-      "Music (DA PEOPLE)": 2,
-      "Music (Feel The Funk (Computer Love))": 2,
-      "Music (Funk Express)": 2,
-      "Music (GET ENUF)": 2,
-      "Music (Hair Dun Nails Dun)": 2,
-      "Music (House Cats Mixtape)": 2,
-      "Music (I Wanna Kno)": 2,
-      "Music (In The Pocket)": 2,
-      "Music (Iridium)": 2,
-      "Music (JACK DA FUNK)": 2,
-      "Music (Last Hoorah)": 2,
-      "Music (Light Switch)": 2,
-      "Music (Morning Glow)": 2,
-      "Music (Next To Me)": 2,
-      "Music (Operator)": 2,
-      "Music (Plume)": 2,
-      "Music (Precious Thing)": 2,
-      "Music (Refuse)": 2,
-      "Music (Scraped On The Way Out)": 2,
-      "Music (Spectres)": 2,
-      "Music (State of Mind)": 2,
-      "Music (Sunshine Popping Mixtape)": 2,
-      "Music (Trinitron)": 2,
-      "Music (Two Days Off)": 2,
-      "Music (You Can Say Hi)": 2,
-      "Music (hwbouths)": 2,
-      "Music (watchyaback!)": 2,
-      "Oldhead": 2,
-      "Outfit (Bel - Autumn)": 2,
-      "Outfit (Bel - Winter)": 2,
-      "Outfit (Coil - Autumn)": 2,
-      "Outfit (Coil - Winter)": 2,
-      "Outfit (Felix - Autumn)": 2,
-      "Outfit (Felix - Winter)": 2,
-      "Outfit (Mesh - Autumn)": 2,
-      "Outfit (Mesh - Winter)": 2,
-      "Outfit (Rave - Autumn)": 2,
-      "Outfit (Rave - Winter)": 2,
-      "Outfit (Red - Autumn)": 2,
-      "Outfit (Red - Winter)": 2,
-      "Outfit (Rise - Autumn)": 2,
-      "Outfit (Rise - Winter)": 2,
-      "Outfit (Shine - Autumn)": 2,
-      "Outfit (Shine - Winter)": 2,
-      "Outfit (Solace - Autumn)": 2,
-      "Outfit (Solace - Winter)": 2,
-      "Outfit (Tryce - Autumn)": 2,
-      "Outfit (Tryce - Winter)": 2,
-      "Outfit (Vinyl - Autumn)": 2,
-      "Outfit (Vinyl - Winter)": 2,
-      "Rave": 2,
-      "Rietveld": 2,
-      "Rise": 2,
-      "Shine": 2,
-      "Skateboard (Death Boogie)": 2,
-      "Skateboard (Devon)": 2,
-      "Skateboard (Just Swell)": 2,
-      "Skateboard (Lazer Accuracy)": 2,
-      "Skateboard (Maceo)": 2,
-      "Skateboard (Mantra)": 2,
-      "Skateboard (Sylk)": 2,
-      "Skateboard (Taiga)": 2,
-      "Skateboard (Terrence)": 2,
-      "Solace": 2,
-      "Tryce": 2,
+      "Coil": 1,
+      "DJ Cyber": 1,
+      "DOT.EXE": 1,
+      "Devil Theory": 1,
+      "Eclipse": 1,
+      "Flesh Prince": 1,
+      "Frank": 1,
+      "Futurism": 1,
+      "Graffiti (L - Boom)": 1,
+      "Graffiti (L - Campaign Trail)": 1,
+      "Graffiti (L - FREAKS)": 1,
+      "Graffiti (L - Fang It Up!)": 1,
+      "Graffiti (L - Graffo Le Fou)": 1,
+      "Graffiti (L - INFINITY)": 1,
+      "Graffiti (L - Jd Vila Formosa)": 1,
+      "Graffiti (L - Lauder)": 1,
+      "Graffiti (L - Messenger Mural)": 1,
+      "Graffiti (L - Moai Marathon)": 1,
+      "Graffiti (L - NOISY NINJA)": 1,
+      "Graffiti (L - RECORD.HEAD)": 1,
+      "Graffiti (L - SpawningSeason)": 1,
+      "Graffiti (L - Tius)": 1,
+      "Graffiti (L - VoodooBoy)": 1,
+      "Graffiti (L - WHOLE SIXER)": 1,
+      "Graffiti (L - buttercup)": 1,
+      "Graffiti (L - skate or di3)": 1,
+      "Graffiti (L - wild rush)": 1,
+      "Graffiti (M - 0m33)": 1,
+      "Graffiti (M - B-boy Love)": 1,
+      "Graffiti (M - BLOCKY)": 1,
+      "Graffiti (M - BOMB BEATS)": 1,
+      "Graffiti (M - Devil 68)": 1,
+      "Graffiti (M - OVERWHELMME)": 1,
+      "Graffiti (M - Pora)": 1,
+      "Graffiti (M - QUICK BING)": 1,
+      "Graffiti (M - SHOGUN)": 1,
+      "Graffiti (M - SPRAYTANICPANIC!)": 1,
+      "Graffiti (M - Stacked Symbols)": 1,
+      "Graffiti (M - Street classic)": 1,
+      "Graffiti (M - Teddy 4)": 1,
+      "Graffiti (M - TeleBinge)": 1,
+      "Graffiti (M - Thick Candy)": 1,
+      "Graffiti (M - Vom'B)": 1,
+      "Graffiti (M - Zona Leste)": 1,
+      "Graffiti (M - colorBOMB)": 1,
+      "Graffiti (M - pico pow)": 1,
+      "Graffiti (XL - BiGSHiNYBoMB)": 1,
+      "Graffiti (XL - Bomb Burner)": 1,
+      "Graffiti (XL - Bomb Croc)": 1,
+      "Graffiti (XL - Bombing by FireMan)": 1,
+      "Graffiti (XL - Deep Dive)": 1,
+      "Graffiti (XL - FATE)": 1,
+      "Graffiti (XL - Gamex UPA ABL)": 1,
+      "Graffiti (XL - Gold Rush)": 1,
+      "Graffiti (XL - MOTORCYCLE GANG)": 1,
+      "Graffiti (XL - MegaHood)": 1,
+      "Graffiti (XL - Pirate's Life 4 Me)": 1,
+      "Graffiti (XL - Raver Funk)": 1,
+      "Graffiti (XL - SECOND SIGHT)": 1,
+      "Graffiti (XL - VIBRATIONS)": 1,
+      "Graffiti (XL - WILD STRUXXA)": 1,
+      "Graffiti (XL - Web Spitter)": 1,
+      "Graffiti (XL - end 2 end)": 1,
+      "Graffiti (XL - headphones on Helmet on)": 1,
+      "Inline Skates (Glaciers)": 1,
+      "Inline Skates (Ice Cold Killers)": 1,
+      "Inline Skates (Mech Adversary)": 1,
+      "Inline Skates (Orange Blasters)": 1,
+      "Inline Skates (Red Industry)": 1,
+      "Inline Skates (Sharpshooters)": 1,
+      "Inline Skates (Strawberry Missiles)": 1,
+      "Inline Skates (Sweet Royale)": 1,
+      "Inline Skates (ck)": 1,
+      "Mesh": 1,
+      "Music (AGUA)": 1,
+      "Music (Anime Break)": 1,
+      "Music (Beastmode Hip Hop Mixtape)": 1,
+      "Music (Big City Life)": 1,
+      "Music (Bounce Upon A Time)": 1,
+      "Music (Breaking Machine Mixtape)": 1,
+      "Music (Chromebies)": 1,
+      "Music (Chuckin Up)": 1,
+      "Music (Condensed milk)": 1,
+      "Music (DA PEOPLE)": 1,
+      "Music (Feel The Funk (Computer Love))": 1,
+      "Music (Funk Express)": 1,
+      "Music (GET ENUF)": 1,
+      "Music (Hair Dun Nails Dun)": 1,
+      "Music (House Cats Mixtape)": 1,
+      "Music (I Wanna Kno)": 1,
+      "Music (In The Pocket)": 1,
+      "Music (Iridium)": 1,
+      "Music (JACK DA FUNK)": 1,
+      "Music (Last Hoorah)": 1,
+      "Music (Light Switch)": 1,
+      "Music (Morning Glow)": 1,
+      "Music (Next To Me)": 1,
+      "Music (Operator)": 1,
+      "Music (Plume)": 1,
+      "Music (Precious Thing)": 1,
+      "Music (Refuse)": 1,
+      "Music (Scraped On The Way Out)": 1,
+      "Music (Spectres)": 1,
+      "Music (State of Mind)": 1,
+      "Music (Sunshine Popping Mixtape)": 1,
+      "Music (Trinitron)": 1,
+      "Music (Two Days Off)": 1,
+      "Music (You Can Say Hi)": 1,
+      "Music (hwbouths)": 1,
+      "Music (watchyaback!)": 1,
+      "Oldhead": 1,
+      "Outfit (Bel - Autumn)": 1,
+      "Outfit (Bel - Winter)": 1,
+      "Outfit (Coil - Autumn)": 1,
+      "Outfit (Coil - Winter)": 1,
+      "Outfit (Felix - Autumn)": 1,
+      "Outfit (Felix - Winter)": 1,
+      "Outfit (Mesh - Autumn)": 1,
+      "Outfit (Mesh - Winter)": 1,
+      "Outfit (Rave - Autumn)": 1,
+      "Outfit (Rave - Winter)": 1,
+      "Outfit (Red - Autumn)": 1,
+      "Outfit (Red - Winter)": 1,
+      "Outfit (Rise - Autumn)": 1,
+      "Outfit (Rise - Winter)": 1,
+      "Outfit (Shine - Autumn)": 1,
+      "Outfit (Shine - Winter)": 1,
+      "Outfit (Solace - Autumn)": 1,
+      "Outfit (Solace - Winter)": 1,
+      "Outfit (Tryce - Autumn)": 1,
+      "Outfit (Tryce - Winter)": 1,
+      "Outfit (Vinyl - Autumn)": 1,
+      "Outfit (Vinyl - Winter)": 1,
+      "Rave": 1,
+      "Rietveld": 1,
+      "Rise": 1,
+      "Shine": 1,
+      "Skateboard (Death Boogie)": 1,
+      "Skateboard (Devon)": 1,
+      "Skateboard (Just Swell)": 1,
+      "Skateboard (Lazer Accuracy)": 1,
+      "Skateboard (Maceo)": 1,
+      "Skateboard (Mantra)": 1,
+      "Skateboard (Sylk)": 1,
+      "Skateboard (Taiga)": 1,
+      "Skateboard (Terrence)": 1,
+      "Solace": 1,
+      "Tryce": 1,
       "Victory": 1,
-      "Vinyl": 2
+      "Vinyl": 1
     }
   },
   "progression_mapping": {
@@ -8617,5 +8375,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

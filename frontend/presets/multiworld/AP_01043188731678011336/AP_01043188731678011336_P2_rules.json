@@ -2,6 +2,7 @@
   "schema_version": 3,
   "game_name": "A Link to the Past",
   "game_directory": "alttp",
+  "playerId": "2",
   "archipelago_version": "0.6.5",
   "generation_seed": 2,
   "player_names": {
@@ -20,6 +21,7 @@
     "2": {
       "Menu": {
         "name": "Menu",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Links House S&Q",
@@ -701,6 +703,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -716,6 +719,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -731,6 +735,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -746,6 +751,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -761,6 +767,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -776,6 +783,7 @@
               "advancement": true,
               "type": "Event"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -784,6 +792,7 @@
       },
       "Death Mountain Entrance": {
         "name": "Death Mountain Entrance",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Old Man Cave (West)",
@@ -808,6 +817,7 @@
       },
       "Lake Hylia Central Island": {
         "name": "Lake Hylia Central Island",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Capacity Upgrade",
@@ -833,6 +843,7 @@
       },
       "Blinds Hideout": {
         "name": "Blinds Hideout",
+        "hint_text": "a bounty of five items",
         "exits": [],
         "locations": [
           {
@@ -849,6 +860,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -864,6 +876,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -879,6 +892,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -894,6 +908,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -909,6 +924,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -917,6 +933,7 @@
       },
       "Hyrule Castle Secret Entrance": {
         "name": "Hyrule Castle Secret Entrance",
+        "hint_text": "a drop's exit",
         "exits": [
           {
             "name": "Hyrule Castle Secret Entrance Exit",
@@ -941,6 +958,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -956,6 +974,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -964,6 +983,7 @@
       },
       "Zoras River": {
         "name": "Zoras River",
+        "hint_text": "Light World",
         "exits": [],
         "locations": [
           {
@@ -979,6 +999,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -994,6 +1015,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -1002,6 +1024,7 @@
       },
       "Waterfall of Wishing": {
         "name": "Waterfall of Wishing",
+        "hint_text": "a cave with two chests",
         "exits": [],
         "locations": [
           {
@@ -1017,6 +1040,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -1032,6 +1056,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -1040,6 +1065,7 @@
       },
       "Kings Grave Area": {
         "name": "Kings Grave Area",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Kings Grave",
@@ -1065,6 +1091,7 @@
       },
       "Kings Grave": {
         "name": "Kings Grave",
+        "hint_text": "a cave with a chest",
         "exits": [],
         "locations": [
           {
@@ -1080,6 +1107,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -1088,6 +1116,7 @@
       },
       "North Fairy Cave": {
         "name": "North Fairy Cave",
+        "hint_text": "a drop's exit",
         "exits": [
           {
             "name": "North Fairy Cave Exit",
@@ -1104,6 +1133,7 @@
       },
       "Dam": {
         "name": "Dam",
+        "hint_text": "the dam",
         "exits": [],
         "locations": [
           {
@@ -1119,6 +1149,7 @@
               "advancement": true,
               "type": "Event"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -1134,6 +1165,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -1142,6 +1174,7 @@
       },
       "Links House": {
         "name": "Links House",
+        "hint_text": "your house",
         "exits": [
           {
             "name": "Links House Exit",
@@ -1166,6 +1199,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -1174,6 +1208,7 @@
       },
       "Chris Houlihan Room": {
         "name": "Chris Houlihan Room",
+        "hint_text": "I AM ERROR",
         "exits": [
           {
             "name": "Chris Houlihan Room Exit",
@@ -1190,6 +1225,7 @@
       },
       "Tavern": {
         "name": "Tavern",
+        "hint_text": "the tavern",
         "exits": [],
         "locations": [
           {
@@ -1205,6 +1241,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -1213,6 +1250,7 @@
       },
       "Elder House": {
         "name": "Elder House",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Elder House Exit (East)",
@@ -1237,6 +1275,7 @@
       },
       "Snitch Lady (East)": {
         "name": "Snitch Lady (East)",
+        "hint_text": "a boring house",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -1244,6 +1283,7 @@
       },
       "Snitch Lady (West)": {
         "name": "Snitch Lady (West)",
+        "hint_text": "a boring house",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -1251,6 +1291,7 @@
       },
       "Bush Covered House": {
         "name": "Bush Covered House",
+        "hint_text": "the grass man",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -1258,6 +1299,7 @@
       },
       "Tavern (Front)": {
         "name": "Tavern (Front)",
+        "hint_text": "the tavern",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -1265,6 +1307,7 @@
       },
       "Light World Bomb Hut": {
         "name": "Light World Bomb Hut",
+        "hint_text": "a restock room",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -1272,6 +1315,7 @@
       },
       "Kakariko Shop": {
         "name": "Kakariko Shop",
+        "hint_text": "a common shop",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -1308,6 +1352,7 @@
       },
       "Fortune Teller (Light)": {
         "name": "Fortune Teller (Light)",
+        "hint_text": "a fortune teller",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -1315,6 +1360,7 @@
       },
       "Lake Hylia Fortune Teller": {
         "name": "Lake Hylia Fortune Teller",
+        "hint_text": "a fortune teller",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -1322,6 +1368,7 @@
       },
       "Lumberjack House": {
         "name": "Lumberjack House",
+        "hint_text": "a boring house",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -1329,6 +1376,7 @@
       },
       "Bonk Fairy (Light)": {
         "name": "Bonk Fairy (Light)",
+        "hint_text": "a fairy fountain",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -1336,6 +1384,7 @@
       },
       "Bonk Fairy (Dark)": {
         "name": "Bonk Fairy (Dark)",
+        "hint_text": "a fairy fountain",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -1343,6 +1392,7 @@
       },
       "Lake Hylia Healer Fairy": {
         "name": "Lake Hylia Healer Fairy",
+        "hint_text": "a fairy fountain",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -1350,6 +1400,7 @@
       },
       "Swamp Healer Fairy": {
         "name": "Swamp Healer Fairy",
+        "hint_text": "a fairy fountain",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -1357,6 +1408,7 @@
       },
       "Desert Healer Fairy": {
         "name": "Desert Healer Fairy",
+        "hint_text": "a fairy fountain",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -1364,6 +1416,7 @@
       },
       "Dark Lake Hylia Healer Fairy": {
         "name": "Dark Lake Hylia Healer Fairy",
+        "hint_text": "a fairy fountain",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -1371,6 +1424,7 @@
       },
       "Dark Lake Hylia Ledge Healer Fairy": {
         "name": "Dark Lake Hylia Ledge Healer Fairy",
+        "hint_text": "a fairy fountain",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -1378,6 +1432,7 @@
       },
       "Dark Desert Healer Fairy": {
         "name": "Dark Desert Healer Fairy",
+        "hint_text": "a fairy fountain",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -1385,6 +1440,7 @@
       },
       "Dark Death Mountain Healer Fairy": {
         "name": "Dark Death Mountain Healer Fairy",
+        "hint_text": "a fairy fountain",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -1392,6 +1448,7 @@
       },
       "Chicken House": {
         "name": "Chicken House",
+        "hint_text": "a house with a chest",
         "exits": [],
         "locations": [
           {
@@ -1408,6 +1465,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -1416,6 +1474,7 @@
       },
       "Aginahs Cave": {
         "name": "Aginahs Cave",
+        "hint_text": "a cave with a chest",
         "exits": [],
         "locations": [
           {
@@ -1432,6 +1491,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -1440,6 +1500,7 @@
       },
       "Sahasrahlas Hut": {
         "name": "Sahasrahlas Hut",
+        "hint_text": "Sahasrahla",
         "exits": [],
         "locations": [
           {
@@ -1456,6 +1517,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -1472,6 +1534,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -1488,6 +1551,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -1503,6 +1567,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -1511,6 +1576,7 @@
       },
       "Kakariko Well (top)": {
         "name": "Kakariko Well (top)",
+        "hint_text": "a drop's exit",
         "exits": [
           {
             "name": "Kakariko Well (top to bottom)",
@@ -1536,6 +1602,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -1551,6 +1618,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -1566,6 +1634,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -1581,6 +1650,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -1596,6 +1666,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -1604,6 +1675,7 @@
       },
       "Kakariko Well (bottom)": {
         "name": "Kakariko Well (bottom)",
+        "hint_text": "a drop's exit",
         "exits": [
           {
             "name": "Kakariko Well Exit",
@@ -1620,6 +1692,7 @@
       },
       "Blacksmiths Hut": {
         "name": "Blacksmiths Hut",
+        "hint_text": "the smith",
         "exits": [],
         "locations": [
           {
@@ -1635,6 +1708,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -1669,6 +1743,7 @@
               "advancement": true,
               "type": "Event"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -1677,6 +1752,7 @@
       },
       "Bat Cave Drop Ledge": {
         "name": "Bat Cave Drop Ledge",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Bat Cave Drop",
@@ -1693,6 +1769,7 @@
       },
       "Bat Cave (right)": {
         "name": "Bat Cave (right)",
+        "hint_text": "a drop's exit",
         "exits": [
           {
             "name": "Bat Cave Door",
@@ -1717,6 +1794,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -1725,6 +1803,7 @@
       },
       "Bat Cave (left)": {
         "name": "Bat Cave (left)",
+        "hint_text": "a drop's exit",
         "exits": [
           {
             "name": "Bat Cave Exit",
@@ -1741,6 +1820,7 @@
       },
       "Sick Kids House": {
         "name": "Sick Kids House",
+        "hint_text": "the sick kid",
         "exits": [],
         "locations": [
           {
@@ -1756,6 +1836,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -1764,6 +1845,7 @@
       },
       "Hobo Bridge": {
         "name": "Hobo Bridge",
+        "hint_text": "Light World",
         "exits": [],
         "locations": [
           {
@@ -1779,6 +1861,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -1787,6 +1870,7 @@
       },
       "Lost Woods Hideout (top)": {
         "name": "Lost Woods Hideout (top)",
+        "hint_text": "a drop's exit",
         "exits": [
           {
             "name": "Lost Woods Hideout (top to bottom)",
@@ -1811,6 +1895,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -1819,6 +1904,7 @@
       },
       "Lost Woods Hideout (bottom)": {
         "name": "Lost Woods Hideout (bottom)",
+        "hint_text": "a drop's exit",
         "exits": [
           {
             "name": "Lost Woods Hideout Exit",
@@ -1835,6 +1921,7 @@
       },
       "Lumberjack Tree (top)": {
         "name": "Lumberjack Tree (top)",
+        "hint_text": "a drop's exit",
         "exits": [
           {
             "name": "Lumberjack Tree (top to bottom)",
@@ -1859,6 +1946,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -1867,6 +1955,7 @@
       },
       "Lumberjack Tree (bottom)": {
         "name": "Lumberjack Tree (bottom)",
+        "hint_text": "a drop's exit",
         "exits": [
           {
             "name": "Lumberjack Tree Exit",
@@ -1883,6 +1972,7 @@
       },
       "Cave 45 Ledge": {
         "name": "Cave 45 Ledge",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Cave 45",
@@ -1899,6 +1989,7 @@
       },
       "Cave 45": {
         "name": "Cave 45",
+        "hint_text": "a cave with an item",
         "exits": [],
         "locations": [
           {
@@ -1914,6 +2005,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -1922,6 +2014,7 @@
       },
       "Graveyard Ledge": {
         "name": "Graveyard Ledge",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Graveyard Cave",
@@ -1938,6 +2031,7 @@
       },
       "Graveyard Cave": {
         "name": "Graveyard Cave",
+        "hint_text": "a cave with an item",
         "exits": [],
         "locations": [
           {
@@ -1954,6 +2048,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -1962,6 +2057,7 @@
       },
       "Checkerboard Cave": {
         "name": "Checkerboard Cave",
+        "hint_text": "a cave with an item",
         "exits": [],
         "locations": [
           {
@@ -1977,6 +2073,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -1985,6 +2082,7 @@
       },
       "Long Fairy Cave": {
         "name": "Long Fairy Cave",
+        "hint_text": "a fairy fountain",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -1992,6 +2090,7 @@
       },
       "Mini Moldorm Cave": {
         "name": "Mini Moldorm Cave",
+        "hint_text": "a bounty of five items",
         "exits": [],
         "locations": [
           {
@@ -2013,6 +2112,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -2034,6 +2134,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -2055,6 +2156,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -2076,6 +2178,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -2097,6 +2200,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -2105,6 +2209,7 @@
       },
       "Ice Rod Cave": {
         "name": "Ice Rod Cave",
+        "hint_text": "a cave with a chest",
         "exits": [],
         "locations": [
           {
@@ -2120,6 +2225,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -2128,6 +2234,7 @@
       },
       "Good Bee Cave": {
         "name": "Good Bee Cave",
+        "hint_text": "a cold bee",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -2135,6 +2242,7 @@
       },
       "20 Rupee Cave": {
         "name": "20 Rupee Cave",
+        "hint_text": "a cave with some cash",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -2142,6 +2250,7 @@
       },
       "Cave Shop (Lake Hylia)": {
         "name": "Cave Shop (Lake Hylia)",
+        "hint_text": "a common shop",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -2178,6 +2287,7 @@
       },
       "Cave Shop (Dark Death Mountain)": {
         "name": "Cave Shop (Dark Death Mountain)",
+        "hint_text": "a common shop",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -2214,6 +2324,7 @@
       },
       "Bonk Rock Cave": {
         "name": "Bonk Rock Cave",
+        "hint_text": "a cave with a chest",
         "exits": [],
         "locations": [
           {
@@ -2229,6 +2340,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -2237,6 +2349,7 @@
       },
       "Library": {
         "name": "Library",
+        "hint_text": "the library",
         "exits": [],
         "locations": [
           {
@@ -2252,6 +2365,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -2260,6 +2374,7 @@
       },
       "Kakariko Gamble Game": {
         "name": "Kakariko Gamble Game",
+        "hint_text": "a game of chance",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -2267,6 +2382,7 @@
       },
       "Potion Shop": {
         "name": "Potion Shop",
+        "hint_text": "the potion shop",
         "exits": [],
         "locations": [
           {
@@ -2282,6 +2398,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -2319,6 +2436,7 @@
       },
       "Lake Hylia Island": {
         "name": "Lake Hylia Island",
+        "hint_text": "Light World",
         "exits": [],
         "locations": [
           {
@@ -2334,6 +2452,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -2342,6 +2461,7 @@
       },
       "Capacity Upgrade": {
         "name": "Capacity Upgrade",
+        "hint_text": "the queen of fairies",
         "exits": [],
         "locations": [
           {
@@ -2357,6 +2477,7 @@
               "advancement": true,
               "type": "Event"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -2394,6 +2515,7 @@
       },
       "Two Brothers House": {
         "name": "Two Brothers House",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Two Brothers House Exit (East)",
@@ -2420,6 +2542,7 @@
       },
       "Maze Race Ledge": {
         "name": "Maze Race Ledge",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Two Brothers House (West)",
@@ -2444,6 +2567,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -2452,6 +2576,7 @@
       },
       "50 Rupee Cave": {
         "name": "50 Rupee Cave",
+        "hint_text": "a cave with some cash",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -2459,6 +2584,7 @@
       },
       "Desert Ledge": {
         "name": "Desert Ledge",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Desert Palace Entrance (North) Rocks",
@@ -2492,6 +2618,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -2500,6 +2627,7 @@
       },
       "Desert Ledge (Northeast)": {
         "name": "Desert Ledge (Northeast)",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Checkerboard Cave",
@@ -2517,6 +2645,7 @@
       },
       "Desert Palace Stairs": {
         "name": "Desert Palace Stairs",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Desert Palace Entrance (South)",
@@ -2533,6 +2662,7 @@
       },
       "Desert Palace Lone Stairs": {
         "name": "Desert Palace Lone Stairs",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Desert Palace Stairs Drop",
@@ -2557,6 +2687,7 @@
       },
       "Desert Palace Entrance (North) Spot": {
         "name": "Desert Palace Entrance (North) Spot",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Desert Palace Entrance (North)",
@@ -2582,6 +2713,7 @@
       },
       "Desert Palace Main (Outer)": {
         "name": "Desert Palace Main (Outer)",
+        "hint_text": "Desert Palace",
         "exits": [
           {
             "name": "Desert Palace Pots (Outer)",
@@ -2634,6 +2766,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -2649,6 +2782,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -2664,6 +2798,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -2673,6 +2808,7 @@
       },
       "Desert Palace Main (Inner)": {
         "name": "Desert Palace Main (Inner)",
+        "hint_text": "Desert Palace",
         "exits": [
           {
             "name": "Desert Palace Exit (South)",
@@ -2698,6 +2834,7 @@
       },
       "Desert Palace East": {
         "name": "Desert Palace East",
+        "hint_text": "Desert Palace",
         "exits": [],
         "locations": [
           {
@@ -2713,6 +2850,7 @@
               "advancement": false,
               "type": "Compass"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -2734,6 +2872,7 @@
               "advancement": true,
               "type": "BigKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -2743,6 +2882,7 @@
       },
       "Desert Palace North": {
         "name": "Desert Palace North",
+        "hint_text": "Desert Palace",
         "exits": [
           {
             "name": "Desert Palace Exit (North)",
@@ -2767,6 +2907,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -2801,6 +2942,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -2835,6 +2977,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -2909,6 +3052,7 @@
               "advancement": false,
               "type": "Map"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -2998,6 +3142,7 @@
               "advancement": true,
               "type": "Event"
             },
+            "locked": true,
             "crystal": true
           }
         ],
@@ -3031,6 +3176,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -3046,6 +3192,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -3061,6 +3208,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -3076,6 +3224,7 @@
               "advancement": false,
               "type": "Map"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -3115,6 +3264,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -3199,6 +3349,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -3214,6 +3365,7 @@
               "advancement": true,
               "type": "BigKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -3285,6 +3437,7 @@
               "advancement": false,
               "type": "Compass"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -3356,6 +3509,7 @@
               "advancement": true,
               "type": "Event"
             },
+            "locked": true,
             "crystal": true
           }
         ],
@@ -3365,6 +3519,7 @@
       },
       "Master Sword Meadow": {
         "name": "Master Sword Meadow",
+        "hint_text": "Light World",
         "exits": [],
         "locations": [
           {
@@ -3393,6 +3548,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -3401,6 +3557,7 @@
       },
       "Lost Woods Gamble": {
         "name": "Lost Woods Gamble",
+        "hint_text": "a game of chance",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -3408,6 +3565,7 @@
       },
       "Hyrule Castle Courtyard": {
         "name": "Hyrule Castle Courtyard",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Hyrule Castle Secret Entrance Stairs",
@@ -3432,6 +3590,7 @@
       },
       "Hyrule Castle Ledge": {
         "name": "Hyrule Castle Ledge",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Hyrule Castle Entrance (East)",
@@ -3591,6 +3750,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -3606,6 +3766,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -3689,6 +3850,7 @@
               "advancement": false,
               "type": "Map"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -3710,6 +3872,7 @@
               "advancement": true,
               "type": "BigKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -3782,6 +3945,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -3816,6 +3980,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -3825,6 +3990,7 @@
       },
       "Sewer Drop": {
         "name": "Sewer Drop",
+        "hint_text": "a drop's exit",
         "exits": [
           {
             "name": "Sewer Drop",
@@ -3842,6 +4008,7 @@
       },
       "Sewers (Dark)": {
         "name": "Sewers (Dark)",
+        "hint_text": "a drop's exit",
         "exits": [
           {
             "name": "Sewers Door",
@@ -3904,6 +4071,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -3938,6 +4106,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -3947,6 +4116,7 @@
       },
       "Sewers": {
         "name": "Sewers",
+        "hint_text": "a drop's exit",
         "exits": [
           {
             "name": "Sanctuary Push Door",
@@ -3994,6 +4164,7 @@
       },
       "Sewers Secret Room": {
         "name": "Sewers Secret Room",
+        "hint_text": "a drop's exit",
         "exits": [],
         "locations": [
           {
@@ -4009,6 +4180,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -4024,6 +4196,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -4039,6 +4212,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -4047,6 +4221,7 @@
       },
       "Sanctuary": {
         "name": "Sanctuary",
+        "hint_text": "a drop's exit",
         "exits": [
           {
             "name": "Sanctuary Exit",
@@ -4071,6 +4246,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -4080,6 +4256,7 @@
       },
       "Agahnims Tower": {
         "name": "Agahnims Tower",
+        "hint_text": "Castle Tower",
         "exits": [
           {
             "name": "Agahnim 1",
@@ -4141,6 +4318,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -4184,6 +4362,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -4227,6 +4406,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -4270,6 +4450,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -4279,6 +4460,7 @@
       },
       "Agahnim 1": {
         "name": "Agahnim 1",
+        "hint_text": "Castle Tower",
         "exits": [],
         "locations": [
           {
@@ -4314,6 +4496,7 @@
               "advancement": true,
               "type": "Event"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -4323,6 +4506,7 @@
       },
       "Old Man Cave": {
         "name": "Old Man Cave",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Old Man Cave Exit (East)",
@@ -4355,6 +4539,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -4363,6 +4548,7 @@
       },
       "Old Man House": {
         "name": "Old Man House",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Old Man House Exit (Bottom)",
@@ -4387,6 +4573,7 @@
       },
       "Old Man House Back": {
         "name": "Old Man House Back",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Old Man House Exit (Top)",
@@ -4411,6 +4598,7 @@
       },
       "Death Mountain": {
         "name": "Death Mountain",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Old Man Cave (East)",
@@ -4491,6 +4679,7 @@
       },
       "Death Mountain Return Cave": {
         "name": "Death Mountain Return Cave",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Death Mountain Return Cave Exit (West)",
@@ -4515,6 +4704,7 @@
       },
       "Death Mountain Return Ledge": {
         "name": "Death Mountain Return Ledge",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Death Mountain Return Ledge Drop",
@@ -4539,6 +4729,7 @@
       },
       "Spectacle Rock Cave (Top)": {
         "name": "Spectacle Rock Cave (Top)",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Spectacle Rock Cave Drop",
@@ -4571,6 +4762,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -4579,6 +4771,7 @@
       },
       "Spectacle Rock Cave (Bottom)": {
         "name": "Spectacle Rock Cave (Bottom)",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Spectacle Rock Cave Exit",
@@ -4595,6 +4788,7 @@
       },
       "Spectacle Rock Cave (Peak)": {
         "name": "Spectacle Rock Cave (Peak)",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Spectacle Rock Cave Peak Drop",
@@ -4619,6 +4813,7 @@
       },
       "East Death Mountain (Bottom)": {
         "name": "East Death Mountain (Bottom)",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Broken Bridge (East)",
@@ -4685,6 +4880,7 @@
       },
       "Hookshot Fairy": {
         "name": "Hookshot Fairy",
+        "hint_text": "fairies deep in a cave",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -4692,6 +4888,7 @@
       },
       "Paradox Cave Front": {
         "name": "Paradox Cave Front",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Paradox Cave Push Block Reverse",
@@ -4725,6 +4922,7 @@
       },
       "Paradox Cave Chest Area": {
         "name": "Paradox Cave Chest Area",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Paradox Cave Push Block",
@@ -4786,6 +4984,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -4830,6 +5029,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -4874,6 +5074,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -4918,6 +5119,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -4962,6 +5164,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -4978,6 +5181,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -4994,6 +5198,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -5002,6 +5207,7 @@
       },
       "Paradox Cave": {
         "name": "Paradox Cave",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Paradox Cave Exit (Middle)",
@@ -5034,6 +5240,7 @@
       },
       "Light World Death Mountain Shop": {
         "name": "Light World Death Mountain Shop",
+        "hint_text": "a common shop",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -5070,6 +5277,7 @@
       },
       "East Death Mountain (Top)": {
         "name": "East Death Mountain (Top)",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Paradox Cave (Top)",
@@ -5136,6 +5344,7 @@
       },
       "Spiral Cave Ledge": {
         "name": "Spiral Cave Ledge",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Spiral Cave",
@@ -5160,6 +5369,7 @@
       },
       "Spiral Cave (Top)": {
         "name": "Spiral Cave (Top)",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Spiral Cave (top to bottom)",
@@ -5192,6 +5402,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -5200,6 +5411,7 @@
       },
       "Spiral Cave (Bottom)": {
         "name": "Spiral Cave (Bottom)",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Spiral Cave Exit",
@@ -5216,6 +5428,7 @@
       },
       "Fairy Ascension Plateau": {
         "name": "Fairy Ascension Plateau",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Fairy Ascension Drop",
@@ -5240,6 +5453,7 @@
       },
       "Fairy Ascension Cave (Bottom)": {
         "name": "Fairy Ascension Cave (Bottom)",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Fairy Ascension Cave Climb",
@@ -5264,6 +5478,7 @@
       },
       "Fairy Ascension Cave (Drop)": {
         "name": "Fairy Ascension Cave (Drop)",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Fairy Ascension Cave Pots",
@@ -5280,6 +5495,7 @@
       },
       "Fairy Ascension Cave (Top)": {
         "name": "Fairy Ascension Cave (Top)",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Fairy Ascension Cave Exit (Top)",
@@ -5304,6 +5520,7 @@
       },
       "Fairy Ascension Ledge": {
         "name": "Fairy Ascension Ledge",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Fairy Ascension Ledge Drop",
@@ -5328,6 +5545,7 @@
       },
       "Death Mountain (Top)": {
         "name": "Death Mountain (Top)",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "East Death Mountain (Top)",
@@ -5369,6 +5587,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -5377,6 +5596,7 @@
       },
       "Spectacle Rock": {
         "name": "Spectacle Rock",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Spectacle Rock Drop",
@@ -5401,6 +5621,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -5409,6 +5630,7 @@
       },
       "Tower of Hera (Bottom)": {
         "name": "Tower of Hera (Bottom)",
+        "hint_text": "Tower of Hera",
         "exits": [
           {
             "name": "Tower of Hera Small Key Door",
@@ -5543,6 +5765,7 @@
               "advancement": true,
               "type": "BigKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -5559,6 +5782,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -5568,6 +5792,7 @@
       },
       "Tower of Hera (Basement)": {
         "name": "Tower of Hera (Basement)",
+        "hint_text": "Tower of Hera",
         "exits": [],
         "locations": [
           {
@@ -5584,6 +5809,7 @@
               "advancement": false,
               "type": "Compass"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -5593,6 +5819,7 @@
       },
       "Tower of Hera (Top)": {
         "name": "Tower of Hera (Top)",
+        "hint_text": "Tower of Hera",
         "exits": [],
         "locations": [
           {
@@ -5608,6 +5835,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -5623,6 +5851,7 @@
               "advancement": false,
               "type": "Map"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -5658,6 +5887,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -5693,6 +5923,7 @@
               "advancement": true,
               "type": "Event"
             },
+            "locked": true,
             "crystal": true
           }
         ],
@@ -5702,6 +5933,7 @@
       },
       "East Dark World": {
         "name": "East Dark World",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Pyramid Fairy",
@@ -5948,6 +6180,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -5956,6 +6189,7 @@
       },
       "Catfish": {
         "name": "Catfish",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Catfish Exit Rock",
@@ -5981,6 +6215,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -5989,6 +6224,7 @@
       },
       "Northeast Dark World": {
         "name": "Northeast Dark World",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "West Dark World Gap",
@@ -6075,6 +6311,7 @@
       },
       "Palace of Darkness Hint": {
         "name": "Palace of Darkness Hint",
+        "hint_text": "a storyteller",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -6082,6 +6319,7 @@
       },
       "East Dark World Hint": {
         "name": "East Dark World Hint",
+        "hint_text": "a storyteller",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -6089,6 +6327,7 @@
       },
       "South Dark World": {
         "name": "South Dark World",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Dark Lake Hylia Drop (South)",
@@ -6275,6 +6514,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -6317,6 +6557,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -6325,6 +6566,7 @@
       },
       "Bombos Tablet Ledge": {
         "name": "Bombos Tablet Ledge",
+        "hint_text": "Light World",
         "exits": [],
         "locations": [
           {
@@ -6341,6 +6583,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -6349,6 +6592,7 @@
       },
       "Big Bomb Shop": {
         "name": "Big Bomb Shop",
+        "hint_text": "the bomb shop",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -6356,6 +6600,7 @@
       },
       "Archery Game": {
         "name": "Archery Game",
+        "hint_text": "a game of skill",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -6363,6 +6608,7 @@
       },
       "Dark Lake Hylia": {
         "name": "Dark Lake Hylia",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Lake Hylia Island Mirror Spot",
@@ -6408,6 +6654,7 @@
       },
       "Dark Lake Hylia Central Island": {
         "name": "Dark Lake Hylia Central Island",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Ice Palace",
@@ -6432,6 +6679,7 @@
       },
       "Dark Lake Hylia Ledge": {
         "name": "Dark Lake Hylia Ledge",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Dark Lake Hylia Ledge Drop",
@@ -6501,6 +6749,7 @@
       },
       "Dark Lake Hylia Ledge Hint": {
         "name": "Dark Lake Hylia Ledge Hint",
+        "hint_text": "a storyteller",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -6508,6 +6757,7 @@
       },
       "Dark Lake Hylia Ledge Spike Cave": {
         "name": "Dark Lake Hylia Ledge Spike Cave",
+        "hint_text": "a spiky hint",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -6515,6 +6765,7 @@
       },
       "Hype Cave": {
         "name": "Hype Cave",
+        "hint_text": "a bounty of five items",
         "exits": [],
         "locations": [
           {
@@ -6540,6 +6791,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -6565,6 +6817,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -6590,6 +6843,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -6615,6 +6869,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -6630,6 +6885,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -6638,6 +6894,7 @@
       },
       "West Dark World": {
         "name": "West Dark World",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Village of Outcasts Drop",
@@ -6930,6 +7187,7 @@
               "advancement": true,
               "type": "Event"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -6938,6 +7196,7 @@
       },
       "Dark Grassy Lawn": {
         "name": "Dark Grassy Lawn",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Grassy Lawn Pegs",
@@ -6971,6 +7230,7 @@
       },
       "Hammer Peg Area": {
         "name": "Hammer Peg Area",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Bat Cave Drop Ledge Mirror Spot",
@@ -7030,6 +7290,7 @@
               "advancement": true,
               "type": "Event"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -7038,6 +7299,7 @@
       },
       "Bumper Cave Entrance": {
         "name": "Bumper Cave Entrance",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Bumper Cave (Bottom)",
@@ -7070,6 +7332,7 @@
       },
       "Fortune Teller (Dark)": {
         "name": "Fortune Teller (Dark)",
+        "hint_text": "a fortune teller",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -7077,6 +7340,7 @@
       },
       "Village of Outcasts Shop": {
         "name": "Village of Outcasts Shop",
+        "hint_text": "a common shop",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -7113,6 +7377,7 @@
       },
       "Dark Lake Hylia Shop": {
         "name": "Dark Lake Hylia Shop",
+        "hint_text": "a common shop",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -7149,6 +7414,7 @@
       },
       "Dark World Lumberjack Shop": {
         "name": "Dark World Lumberjack Shop",
+        "hint_text": "a common shop",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -7185,6 +7451,7 @@
       },
       "Dark World Potion Shop": {
         "name": "Dark World Potion Shop",
+        "hint_text": "a common shop",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -7221,6 +7488,7 @@
       },
       "Dark World Hammer Peg Cave": {
         "name": "Dark World Hammer Peg Cave",
+        "hint_text": "a cave with an item",
         "exits": [],
         "locations": [
           {
@@ -7236,6 +7504,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -7244,6 +7513,7 @@
       },
       "Pyramid Fairy": {
         "name": "Pyramid Fairy",
+        "hint_text": "a cave with two chests",
         "exits": [],
         "locations": [
           {
@@ -7259,6 +7529,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -7274,6 +7545,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -7282,6 +7554,7 @@
       },
       "Brewery": {
         "name": "Brewery",
+        "hint_text": "a house with a chest",
         "exits": [],
         "locations": [
           {
@@ -7297,6 +7570,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -7305,6 +7579,7 @@
       },
       "C-Shaped House": {
         "name": "C-Shaped House",
+        "hint_text": "a house with a chest",
         "exits": [],
         "locations": [
           {
@@ -7320,6 +7595,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -7328,6 +7604,7 @@
       },
       "Chest Game": {
         "name": "Chest Game",
+        "hint_text": "a game of 16 chests",
         "exits": [],
         "locations": [
           {
@@ -7343,6 +7620,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -7351,6 +7629,7 @@
       },
       "Red Shield Shop": {
         "name": "Red Shield Shop",
+        "hint_text": "the rare shop",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -7387,6 +7666,7 @@
       },
       "Dark Sanctuary Hint": {
         "name": "Dark Sanctuary Hint",
+        "hint_text": "a storyteller",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -7394,6 +7674,7 @@
       },
       "Bumper Cave": {
         "name": "Bumper Cave",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Bumper Cave Exit (Bottom)",
@@ -7445,6 +7726,7 @@
       },
       "Bumper Cave Ledge": {
         "name": "Bumper Cave Ledge",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Bumper Cave Ledge Drop",
@@ -7485,6 +7767,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -7493,6 +7776,7 @@
       },
       "Skull Woods Forest": {
         "name": "Skull Woods Forest",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Skull Woods First Section Hole (East)",
@@ -7541,6 +7825,7 @@
       },
       "Skull Woods Forest (West)": {
         "name": "Skull Woods Forest (West)",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Skull Woods Second Section Hole",
@@ -7582,6 +7867,7 @@
       },
       "Dark Desert": {
         "name": "Dark Desert",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Misery Mire",
@@ -7669,6 +7955,7 @@
       },
       "Mire Shed": {
         "name": "Mire Shed",
+        "hint_text": "a cave with two chests",
         "exits": [],
         "locations": [
           {
@@ -7684,6 +7971,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -7699,6 +7987,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -7707,6 +7996,7 @@
       },
       "Dark Desert Hint": {
         "name": "Dark Desert Hint",
+        "hint_text": "a storyteller",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -7714,6 +8004,7 @@
       },
       "Dark Death Mountain (West Bottom)": {
         "name": "Dark Death Mountain (West Bottom)",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Spike Cave",
@@ -7746,6 +8037,7 @@
       },
       "Dark Death Mountain (Top)": {
         "name": "Dark Death Mountain (Top)",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Dark Death Mountain Drop (East)",
@@ -7878,6 +8170,7 @@
       },
       "Dark Death Mountain Ledge": {
         "name": "Dark Death Mountain Ledge",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Dark Death Mountain Ledge (East)",
@@ -7918,6 +8211,7 @@
       },
       "Dark Death Mountain Isolated Ledge": {
         "name": "Dark Death Mountain Isolated Ledge",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Isolated Ledge Mirror Spot",
@@ -7942,6 +8236,7 @@
       },
       "Dark Death Mountain (East Bottom)": {
         "name": "Dark Death Mountain (East Bottom)",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Superbunny Cave (Bottom)",
@@ -7983,6 +8278,7 @@
       },
       "Superbunny Cave (Top)": {
         "name": "Superbunny Cave (Top)",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Superbunny Cave Exit (Top)",
@@ -8016,6 +8312,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -8040,6 +8337,7 @@
               "advancement": true,
               "type": "Sword"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -8048,6 +8346,7 @@
       },
       "Superbunny Cave (Bottom)": {
         "name": "Superbunny Cave (Bottom)",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Superbunny Cave Climb",
@@ -8190,6 +8489,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -8198,6 +8498,7 @@
       },
       "Hookshot Cave": {
         "name": "Hookshot Cave",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Hookshot Cave Exit (South)",
@@ -8258,6 +8559,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -8291,6 +8593,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -8333,6 +8636,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -8366,6 +8670,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -8374,6 +8679,7 @@
       },
       "Hookshot Cave (Upper)": {
         "name": "Hookshot Cave (Upper)",
+        "hint_text": "a connector",
         "exits": [
           {
             "name": "Hookshot Cave Exit (North)",
@@ -8399,6 +8705,7 @@
       },
       "Death Mountain Floating Island (Dark World)": {
         "name": "Death Mountain Floating Island (Dark World)",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Floating Island Drop",
@@ -8431,6 +8738,7 @@
       },
       "Death Mountain Floating Island (Light World)": {
         "name": "Death Mountain Floating Island (Light World)",
+        "hint_text": "Light World",
         "exits": [],
         "locations": [
           {
@@ -8446,6 +8754,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -8454,6 +8763,7 @@
       },
       "Turtle Rock (Top)": {
         "name": "Turtle Rock (Top)",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Turtle Rock Drop",
@@ -8470,6 +8780,7 @@
       },
       "Mimic Cave Ledge": {
         "name": "Mimic Cave Ledge",
+        "hint_text": "Light World",
         "exits": [
           {
             "name": "Mimic Cave",
@@ -8584,6 +8895,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -8592,6 +8904,7 @@
       },
       "Swamp Palace (Entrance)": {
         "name": "Swamp Palace (Entrance)",
+        "hint_text": "Swamp Palace",
         "exits": [
           {
             "name": "Swamp Palace Moat",
@@ -8635,6 +8948,7 @@
       },
       "Swamp Palace (First Room)": {
         "name": "Swamp Palace (First Room)",
+        "hint_text": "Swamp Palace",
         "exits": [
           {
             "name": "Swamp Palace Small Key Door",
@@ -8663,6 +8977,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -8672,6 +8987,7 @@
       },
       "Swamp Palace (Starting Area)": {
         "name": "Swamp Palace (Starting Area)",
+        "hint_text": "Swamp Palace",
         "exits": [
           {
             "name": "Swamp Palace (Center)",
@@ -8719,6 +9035,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -8734,6 +9051,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -8762,6 +9080,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -8771,6 +9090,7 @@
       },
       "Swamp Palace (Center)": {
         "name": "Swamp Palace (Center)",
+        "hint_text": "Swamp Palace",
         "exits": [
           {
             "name": "Swamp Palace (North)",
@@ -8861,6 +9181,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -8876,6 +9197,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -8900,6 +9222,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -8915,6 +9238,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -8924,6 +9248,7 @@
       },
       "Swamp Palace (West)": {
         "name": "Swamp Palace (West)",
+        "hint_text": "Swamp Palace",
         "exits": [],
         "locations": [
           {
@@ -8939,6 +9264,7 @@
               "advancement": true,
               "type": "BigKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -8954,6 +9280,7 @@
               "advancement": false,
               "type": "Compass"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -8963,6 +9290,7 @@
       },
       "Swamp Palace (North)": {
         "name": "Swamp Palace (North)",
+        "hint_text": "Swamp Palace",
         "exits": [],
         "locations": [
           {
@@ -8978,6 +9306,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -8993,6 +9322,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -9008,6 +9338,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -9023,6 +9354,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -9080,6 +9412,7 @@
               "advancement": false,
               "type": "Map"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -9137,6 +9470,7 @@
               "advancement": true,
               "type": "Event"
             },
+            "locked": true,
             "crystal": true
           }
         ],
@@ -9146,6 +9480,7 @@
       },
       "Thieves Town (Entrance)": {
         "name": "Thieves Town (Entrance)",
+        "hint_text": "Thieves' Town",
         "exits": [
           {
             "name": "Thieves Town Big Key Door",
@@ -9178,6 +9513,7 @@
               "advancement": true,
               "type": "BigKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -9193,6 +9529,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -9208,6 +9545,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -9223,6 +9561,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -9232,6 +9571,7 @@
       },
       "Thieves Town (Deep)": {
         "name": "Thieves Town (Deep)",
+        "hint_text": "Thieves' Town",
         "exits": [
           {
             "name": "Blind Fight",
@@ -9283,6 +9623,7 @@
               "advancement": false,
               "type": "Map"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -9365,6 +9706,7 @@
               "advancement": false,
               "type": "Compass"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -9380,6 +9722,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -9408,6 +9751,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -9436,6 +9780,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -9445,6 +9790,7 @@
       },
       "Blind Fight": {
         "name": "Blind Fight",
+        "hint_text": "Thieves' Town",
         "exits": [],
         "locations": [
           {
@@ -9489,6 +9835,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -9533,6 +9880,7 @@
               "advancement": true,
               "type": "Event"
             },
+            "locked": true,
             "crystal": true
           }
         ],
@@ -9542,6 +9890,7 @@
       },
       "Skull Woods First Section": {
         "name": "Skull Woods First Section",
+        "hint_text": "Skull Woods",
         "exits": [
           {
             "name": "Skull Woods First Section Exit",
@@ -9625,6 +9974,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -9634,6 +9984,7 @@
       },
       "Skull Woods First Section (Right)": {
         "name": "Skull Woods First Section (Right)",
+        "hint_text": "Skull Woods",
         "exits": [
           {
             "name": "Skull Woods First Section (Right) North Door",
@@ -9689,6 +10040,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -9698,6 +10050,7 @@
       },
       "Skull Woods First Section (Left)": {
         "name": "Skull Woods First Section (Left)",
+        "hint_text": "Skull Woods",
         "exits": [
           {
             "name": "Skull Woods First Section (Left) Door to Exit",
@@ -9752,6 +10105,7 @@
               "advancement": true,
               "type": "BigKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -9776,6 +10130,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -9785,6 +10140,7 @@
       },
       "Skull Woods First Section (Top)": {
         "name": "Skull Woods First Section (Top)",
+        "hint_text": "Skull Woods",
         "exits": [
           {
             "name": "Skull Woods First Section (Top) One-Way Path",
@@ -9869,6 +10225,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -9878,6 +10235,7 @@
       },
       "Skull Woods Second Section (Drop)": {
         "name": "Skull Woods Second Section (Drop)",
+        "hint_text": "Skull Woods",
         "exits": [
           {
             "name": "Skull Woods Second Section (Drop)",
@@ -9895,6 +10253,7 @@
       },
       "Skull Woods Second Section": {
         "name": "Skull Woods Second Section",
+        "hint_text": "Skull Woods",
         "exits": [
           {
             "name": "Skull Woods Second Section Exit (East)",
@@ -9945,6 +10304,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -9978,6 +10338,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -9987,6 +10348,7 @@
       },
       "Skull Woods Final Section (Entrance)": {
         "name": "Skull Woods Final Section (Entrance)",
+        "hint_text": "Skull Woods",
         "exits": [
           {
             "name": "Skull Woods Torch Room",
@@ -10037,6 +10399,7 @@
               "advancement": false,
               "type": "Map"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -10046,6 +10409,7 @@
       },
       "Skull Woods Final Section (Mothula)": {
         "name": "Skull Woods Final Section (Mothula)",
+        "hint_text": "Skull Woods",
         "exits": [],
         "locations": [
           {
@@ -10061,6 +10425,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -10118,6 +10483,7 @@
               "advancement": false,
               "type": "Compass"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -10175,6 +10541,7 @@
               "advancement": true,
               "type": "Event"
             },
+            "locked": true,
             "crystal": true
           }
         ],
@@ -10184,6 +10551,7 @@
       },
       "Ice Palace (Entrance)": {
         "name": "Ice Palace (Entrance)",
+        "hint_text": "Ice Palace",
         "exits": [
           {
             "name": "Ice Palace (Second Section)",
@@ -10245,6 +10613,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -10283,6 +10652,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -10292,6 +10662,7 @@
       },
       "Ice Palace (Second Section)": {
         "name": "Ice Palace (Second Section)",
+        "hint_text": "Ice Palace",
         "exits": [
           {
             "name": "Ice Palace (Main)",
@@ -10320,6 +10691,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -10329,6 +10701,7 @@
       },
       "Ice Palace (Main)": {
         "name": "Ice Palace (Main)",
+        "hint_text": "Ice Palace",
         "exits": [
           {
             "name": "Ice Palace (East)",
@@ -10522,6 +10895,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -10537,6 +10911,7 @@
               "advancement": false,
               "type": "Compass"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -10561,6 +10936,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -10576,6 +10952,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -10585,6 +10962,7 @@
       },
       "Ice Palace (East)": {
         "name": "Ice Palace (East)",
+        "hint_text": "Ice Palace",
         "exits": [
           {
             "name": "Ice Palace (East Top)",
@@ -10619,6 +10997,7 @@
               "advancement": false,
               "type": "Map"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -10628,6 +11007,7 @@
       },
       "Ice Palace (East Top)": {
         "name": "Ice Palace (East Top)",
+        "hint_text": "Ice Palace",
         "exits": [],
         "locations": [
           {
@@ -10643,6 +11023,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -10658,6 +11039,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -10673,6 +11055,7 @@
               "advancement": true,
               "type": "BigKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -10682,6 +11065,7 @@
       },
       "Ice Palace (Kholdstare)": {
         "name": "Ice Palace (Kholdstare)",
+        "hint_text": "Ice Palace",
         "exits": [],
         "locations": [
           {
@@ -10726,6 +11110,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -10770,6 +11155,7 @@
               "advancement": true,
               "type": "Event"
             },
+            "locked": true,
             "crystal": true
           }
         ],
@@ -10779,6 +11165,7 @@
       },
       "Misery Mire (Entrance)": {
         "name": "Misery Mire (Entrance)",
+        "hint_text": "Misery Mire",
         "exits": [
           {
             "name": "Misery Mire Entrance Gap",
@@ -10849,6 +11236,7 @@
       },
       "Misery Mire (Main)": {
         "name": "Misery Mire (Main)",
+        "hint_text": "Misery Mire",
         "exits": [
           {
             "name": "Misery Mire (West)",
@@ -10974,6 +11362,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -11025,6 +11414,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -11076,6 +11466,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -11091,6 +11482,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -11143,6 +11535,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -11158,6 +11551,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -11195,6 +11589,7 @@
               "advancement": true,
               "type": "BigKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -11320,6 +11715,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -11329,6 +11725,7 @@
       },
       "Misery Mire (West)": {
         "name": "Misery Mire (West)",
+        "hint_text": "Misery Mire",
         "exits": [],
         "locations": [
           {
@@ -11354,6 +11751,7 @@
               "advancement": false,
               "type": "Compass"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -11379,6 +11777,7 @@
               "advancement": false,
               "type": "Map"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -11388,6 +11787,7 @@
       },
       "Misery Mire (Final Area)": {
         "name": "Misery Mire (Final Area)",
+        "hint_text": "Misery Mire",
         "exits": [
           {
             "name": "Misery Mire (Vitreous)",
@@ -11424,6 +11824,7 @@
       },
       "Misery Mire (Vitreous)": {
         "name": "Misery Mire (Vitreous)",
+        "hint_text": "Misery Mire",
         "exits": [],
         "locations": [
           {
@@ -11468,6 +11869,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -11512,6 +11914,7 @@
               "advancement": true,
               "type": "Event"
             },
+            "locked": true,
             "crystal": true
           }
         ],
@@ -11521,6 +11924,7 @@
       },
       "Turtle Rock (Entrance)": {
         "name": "Turtle Rock (Entrance)",
+        "hint_text": "Turtle Rock",
         "exits": [
           {
             "name": "Turtle Rock Entrance Gap",
@@ -11555,6 +11959,7 @@
       },
       "Turtle Rock (First Section)": {
         "name": "Turtle Rock (First Section)",
+        "hint_text": "Turtle Rock",
         "exits": [
           {
             "name": "Turtle Rock Entrance to Pokey Room",
@@ -11609,6 +12014,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -11651,6 +12057,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -11693,6 +12100,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -11702,6 +12110,7 @@
       },
       "Turtle Rock (Pokey Room)": {
         "name": "Turtle Rock (Pokey Room)",
+        "hint_text": "Turtle Rock",
         "exits": [
           {
             "name": "Turtle Rock (Pokey Room) (North)",
@@ -11804,6 +12213,7 @@
               "advancement": true,
               "type": "BigKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -11813,6 +12223,7 @@
       },
       "Turtle Rock (Chain Chomp Room)": {
         "name": "Turtle Rock (Chain Chomp Room)",
+        "hint_text": "Turtle Rock",
         "exits": [
           {
             "name": "Turtle Rock (Chain Chomp Room) (North)",
@@ -11956,6 +12367,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -11965,6 +12377,7 @@
       },
       "Turtle Rock (Second Section)": {
         "name": "Turtle Rock (Second Section)",
+        "hint_text": "Turtle Rock",
         "exits": [
           {
             "name": "Turtle Rock Chain Chomp Staircase",
@@ -12109,6 +12522,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -12175,6 +12589,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -12184,6 +12599,7 @@
       },
       "Turtle Rock (Second Section Bomb Wall)": {
         "name": "Turtle Rock (Second Section Bomb Wall)",
+        "hint_text": "Turtle Rock",
         "exits": [
           {
             "name": "Turtle Rock Ledge Exit (West)",
@@ -12209,6 +12625,7 @@
       },
       "Turtle Rock (Big Chest)": {
         "name": "Turtle Rock (Big Chest)",
+        "hint_text": "Turtle Rock",
         "exits": [
           {
             "name": "Turtle Rock (Big Chest) (North)",
@@ -12286,6 +12703,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -12295,6 +12713,7 @@
       },
       "Turtle Rock (Crystaroller Room)": {
         "name": "Turtle Rock (Crystaroller Room)",
+        "hint_text": "Turtle Rock",
         "exits": [
           {
             "name": "Turtle Rock Dark Room Staircase",
@@ -12340,6 +12759,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -12349,6 +12769,7 @@
       },
       "Turtle Rock (Dark Room)": {
         "name": "Turtle Rock (Dark Room)",
+        "hint_text": "Turtle Rock",
         "exits": [
           {
             "name": "Turtle Rock (Dark Room) (North)",
@@ -12392,6 +12813,7 @@
       },
       "Turtle Rock (Eye Bridge Bomb Wall)": {
         "name": "Turtle Rock (Eye Bridge Bomb Wall)",
+        "hint_text": "Turtle Rock",
         "exits": [
           {
             "name": "Turtle Rock Isolated Ledge Exit",
@@ -12417,6 +12839,7 @@
       },
       "Turtle Rock (Eye Bridge)": {
         "name": "Turtle Rock (Eye Bridge)",
+        "hint_text": "Turtle Rock",
         "exits": [
           {
             "name": "Turtle Rock Dark Room (South)",
@@ -12533,6 +12956,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -12588,6 +13012,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -12643,6 +13068,7 @@
               "advancement": false,
               "type": "Compass"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -12698,6 +13124,7 @@
               "advancement": false,
               "type": "Map"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -12707,6 +13134,7 @@
       },
       "Turtle Rock (Trinexx)": {
         "name": "Turtle Rock (Trinexx)",
+        "hint_text": "Turtle Rock",
         "exits": [],
         "locations": [
           {
@@ -12751,6 +13179,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -12795,6 +13224,7 @@
               "advancement": true,
               "type": "Event"
             },
+            "locked": true,
             "crystal": true
           }
         ],
@@ -12804,6 +13234,7 @@
       },
       "Palace of Darkness (Entrance)": {
         "name": "Palace of Darkness (Entrance)",
+        "hint_text": "Palace of Darkness",
         "exits": [
           {
             "name": "Palace of Darkness Bridge Room",
@@ -12859,6 +13290,7 @@
               "advancement": true,
               "type": "BigKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -12868,6 +13300,7 @@
       },
       "Palace of Darkness (Center)": {
         "name": "Palace of Darkness (Center)",
+        "hint_text": "Palace of Darkness",
         "exits": [
           {
             "name": "Palace of Darkness Big Key Chest Staircase",
@@ -13016,6 +13449,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -13040,6 +13474,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -13049,6 +13484,7 @@
       },
       "Palace of Darkness (Big Key Chest)": {
         "name": "Palace of Darkness (Big Key Chest)",
+        "hint_text": "Palace of Darkness",
         "exits": [],
         "locations": [
           {
@@ -13064,6 +13500,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -13073,6 +13510,7 @@
       },
       "Palace of Darkness (Bonk Section)": {
         "name": "Palace of Darkness (Bonk Section)",
+        "hint_text": "Palace of Darkness",
         "exits": [
           {
             "name": "Palace of Darkness Hammer Peg Drop",
@@ -13107,6 +13545,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -13122,6 +13561,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -13131,6 +13571,7 @@
       },
       "Palace of Darkness (North)": {
         "name": "Palace of Darkness (North)",
+        "hint_text": "Palace of Darkness",
         "exits": [
           {
             "name": "Palace of Darkness Spike Statue Room Door",
@@ -13230,6 +13671,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -13254,6 +13696,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -13278,6 +13721,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -13287,6 +13731,7 @@
       },
       "Palace of Darkness (Maze)": {
         "name": "Palace of Darkness (Maze)",
+        "hint_text": "Palace of Darkness",
         "exits": [],
         "locations": [
           {
@@ -13302,6 +13747,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -13317,6 +13763,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -13351,6 +13798,7 @@
               "advancement": false,
               "type": "Map"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -13360,6 +13808,7 @@
       },
       "Palace of Darkness (Harmless Hellway)": {
         "name": "Palace of Darkness (Harmless Hellway)",
+        "hint_text": "Palace of Darkness",
         "exits": [],
         "locations": [
           {
@@ -13375,6 +13824,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -13384,6 +13834,7 @@
       },
       "Palace of Darkness (Final Section)": {
         "name": "Palace of Darkness (Final Section)",
+        "hint_text": "Palace of Darkness",
         "exits": [],
         "locations": [
           {
@@ -13428,6 +13879,7 @@
               "advancement": false,
               "type": "Compass"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -13472,6 +13924,7 @@
               "advancement": true,
               "type": "Event"
             },
+            "locked": true,
             "crystal": true
           }
         ],
@@ -13481,6 +13934,7 @@
       },
       "Ganons Tower (Entrance)": {
         "name": "Ganons Tower (Entrance)",
+        "hint_text": "Ganon's Tower",
         "exits": [
           {
             "name": "Ganons Tower (Tile Room)",
@@ -13566,6 +14020,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -13581,6 +14036,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -13596,6 +14052,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -13611,6 +14068,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -13620,6 +14078,7 @@
       },
       "Ganons Tower (Tile Room)": {
         "name": "Ganons Tower (Tile Room)",
+        "hint_text": "Ganon's Tower",
         "exits": [
           {
             "name": "Ganons Tower (Tile Room) Key Door",
@@ -13710,6 +14169,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -13719,6 +14179,7 @@
       },
       "Ganons Tower (Compass Room)": {
         "name": "Ganons Tower (Compass Room)",
+        "hint_text": "Ganon's Tower",
         "exits": [
           {
             "name": "Ganons Tower (Bottom) (East)",
@@ -13889,6 +14350,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -13993,6 +14455,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -14097,6 +14560,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -14201,6 +14665,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -14305,6 +14770,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -14314,6 +14780,7 @@
       },
       "Ganons Tower (Hookshot Room)": {
         "name": "Ganons Tower (Hookshot Room)",
+        "hint_text": "Ganon's Tower",
         "exits": [
           {
             "name": "Ganons Tower (Map Room)",
@@ -14422,6 +14889,7 @@
               "advancement": true,
               "type": "Sword"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -14446,6 +14914,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -14470,6 +14939,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -14494,6 +14964,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -14528,6 +14999,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -14537,6 +15009,7 @@
       },
       "Ganons Tower (Map Room)": {
         "name": "Ganons Tower (Map Room)",
+        "hint_text": "Ganon's Tower",
         "exits": [],
         "locations": [
           {
@@ -14552,6 +15025,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -14561,6 +15035,7 @@
       },
       "Ganons Tower (Firesnake Room)": {
         "name": "Ganons Tower (Firesnake Room)",
+        "hint_text": "Ganon's Tower",
         "exits": [
           {
             "name": "Ganons Tower (Firesnake Room)",
@@ -14753,6 +15228,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -14762,6 +15238,7 @@
       },
       "Ganons Tower (Teleport Room)": {
         "name": "Ganons Tower (Teleport Room)",
+        "hint_text": "Ganon's Tower",
         "exits": [
           {
             "name": "Ganons Tower (Bottom) (West)",
@@ -14858,6 +15335,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -14945,6 +15423,7 @@
               "advancement": false,
               "type": "Map"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -15032,6 +15511,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -15119,6 +15599,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -15128,6 +15609,7 @@
       },
       "Ganons Tower (Bottom)": {
         "name": "Ganons Tower (Bottom)",
+        "hint_text": "Ganon's Tower",
         "exits": [],
         "locations": [
           {
@@ -15152,6 +15634,7 @@
               "advancement": true,
               "type": "BigKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -15185,6 +15668,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -15238,6 +15722,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -15291,6 +15776,7 @@
               "advancement": true,
               "type": "SmallKey"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -15344,6 +15830,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -15353,6 +15840,7 @@
       },
       "Ganons Tower (Top)": {
         "name": "Ganons Tower (Top)",
+        "hint_text": "Ganon's Tower",
         "exits": [
           {
             "name": "Ganons Tower Torch Rooms",
@@ -15434,6 +15922,7 @@
       },
       "Ganons Tower (Before Moldorm)": {
         "name": "Ganons Tower (Before Moldorm)",
+        "hint_text": "Ganon's Tower",
         "exits": [
           {
             "name": "Ganons Tower Moldorm Door",
@@ -15472,6 +15961,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -15487,6 +15977,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -15525,6 +16016,7 @@
               "advancement": false,
               "type": "Compass"
             },
+            "locked": true,
             "crystal": false
           },
           {
@@ -15555,6 +16047,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           }
         ],
@@ -15564,6 +16057,7 @@
       },
       "Ganons Tower (Moldorm)": {
         "name": "Ganons Tower (Moldorm)",
+        "hint_text": "Ganon's Tower",
         "exits": [
           {
             "name": "Ganons Tower Moldorm Gap",
@@ -15634,6 +16128,7 @@
       },
       "Agahnim 2": {
         "name": "Agahnim 2",
+        "hint_text": "Ganon's Tower",
         "exits": [],
         "locations": [
           {
@@ -15649,6 +16144,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "crystal": false
           },
           {
@@ -15693,6 +16189,7 @@
               "advancement": true,
               "type": "Event"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -15702,6 +16199,7 @@
       },
       "Pyramid": {
         "name": "Pyramid",
+        "hint_text": "a drop's exit",
         "exits": [
           {
             "name": "Ganon Drop",
@@ -15765,6 +16263,7 @@
               "advancement": true,
               "type": "Event"
             },
+            "locked": true,
             "crystal": false
           }
         ],
@@ -15773,6 +16272,7 @@
       },
       "Bottom of Pyramid": {
         "name": "Bottom of Pyramid",
+        "hint_text": "a drop's exit",
         "exits": [
           {
             "name": "Pyramid Exit",
@@ -15789,6 +16289,7 @@
       },
       "Pyramid Ledge": {
         "name": "Pyramid Ledge",
+        "hint_text": "Dark World",
         "exits": [
           {
             "name": "Pyramid Entrance",
@@ -15813,6 +16314,7 @@
       },
       "Desert Northern Cliffs": {
         "name": "Desert Northern Cliffs",
+        "hint_text": "Light World",
         "exits": [],
         "locations": [],
         "is_light_world": true,
@@ -15820,6 +16322,7 @@
       },
       "Dark Death Mountain Bunny Descent Area": {
         "name": "Dark Death Mountain Bunny Descent Area",
+        "hint_text": "Dark World",
         "exits": [],
         "locations": [],
         "is_light_world": false,
@@ -16856,27 +17359,24 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Progressive Bow": {
         "name": "Progressive Bow",
+        "hint_text": "a Bow",
         "id": 100,
         "groups": [
           "Bows",
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "progression"
       },
       "Progressive Bow (Alt)": {
         "name": "Progressive Bow (Alt)",
@@ -16886,12 +17386,10 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Silver Arrows": {
         "name": "Silver Arrows",
@@ -16901,12 +17399,10 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Silver Bow": {
         "name": "Silver Bow",
@@ -16916,12 +17412,10 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Book of Mudora": {
         "name": "Book of Mudora",
@@ -16930,12 +17424,10 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Hammer": {
         "name": "Hammer",
@@ -16944,12 +17436,10 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Hookshot": {
         "name": "Hookshot",
@@ -16958,12 +17448,10 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Magic Mirror": {
         "name": "Magic Mirror",
@@ -16972,40 +17460,36 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Flute": {
         "name": "Flute",
+        "hint_text": "the Flute",
         "id": 20,
         "groups": [
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "progression"
       },
       "Pegasus Boots": {
         "name": "Pegasus Boots",
+        "hint_text": "the Boots",
         "id": 75,
         "groups": [
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "progression"
       },
       "Power Glove": {
         "name": "Power Glove",
@@ -17015,12 +17499,10 @@
           "Gloves",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Cape": {
         "name": "Cape",
@@ -17029,12 +17511,10 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mushroom": {
         "name": "Mushroom",
@@ -17043,12 +17523,10 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Shovel": {
         "name": "Shovel",
@@ -17057,40 +17535,36 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Lamp": {
         "name": "Lamp",
+        "hint_text": "the Lamp",
         "id": 18,
         "groups": [
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "progression"
       },
       "Magic Powder": {
         "name": "Magic Powder",
+        "hint_text": "the Powder",
         "id": 13,
         "groups": [
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "progression"
       },
       "Moon Pearl": {
         "name": "Moon Pearl",
@@ -17099,12 +17573,10 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Cane of Somaria": {
         "name": "Cane of Somaria",
@@ -17114,12 +17586,10 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Fire Rod": {
         "name": "Fire Rod",
@@ -17129,12 +17599,10 @@
           "Progression Items",
           "Rods"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Flippers": {
         "name": "Flippers",
@@ -17143,12 +17611,10 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ice Rod": {
         "name": "Ice Rod",
@@ -17158,12 +17624,10 @@
           "Progression Items",
           "Rods"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Titans Mitts": {
         "name": "Titans Mitts",
@@ -17173,12 +17637,10 @@
           "Gloves",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Bombos": {
         "name": "Bombos",
@@ -17188,12 +17650,10 @@
           "Medallions",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "progression"
       },
       "Ether": {
         "name": "Ether",
@@ -17203,12 +17663,10 @@
           "Medallions",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Quake": {
         "name": "Quake",
@@ -17218,12 +17676,10 @@
           "Medallions",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Bottle": {
         "name": "Bottle",
@@ -17233,15 +17689,14 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "progression"
       },
       "Bottle (Red Potion)": {
         "name": "Bottle (Red Potion)",
+        "hint_text": "a bottle",
         "id": 43,
         "groups": [
           "Bottles",
@@ -17249,12 +17704,10 @@
           "Potions",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "progression"
       },
       "Bottle (Green Potion)": {
         "name": "Bottle (Green Potion)",
@@ -17265,12 +17718,10 @@
           "Potions",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "progression"
       },
       "Bottle (Blue Potion)": {
         "name": "Bottle (Blue Potion)",
@@ -17281,12 +17732,10 @@
           "Potions",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "progression"
       },
       "Bottle (Fairy)": {
         "name": "Bottle (Fairy)",
@@ -17296,12 +17745,10 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "progression"
       },
       "Bottle (Bee)": {
         "name": "Bottle (Bee)",
@@ -17311,12 +17758,10 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "progression"
       },
       "Bottle (Good Bee)": {
         "name": "Bottle (Good Bee)",
@@ -17326,12 +17771,10 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "progression"
       },
       "Master Sword": {
         "name": "Master Sword",
@@ -17341,12 +17784,10 @@
           "Progression Items",
           "Swords"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Sword",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Tempered Sword": {
         "name": "Tempered Sword",
@@ -17356,12 +17797,10 @@
           "Progression Items",
           "Swords"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Sword",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Fighter Sword": {
         "name": "Fighter Sword",
@@ -17371,12 +17810,10 @@
           "Progression Items",
           "Swords"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Sword",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Golden Sword": {
         "name": "Golden Sword",
@@ -17386,99 +17823,91 @@
           "Progression Items",
           "Swords"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Sword",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Progressive Sword": {
         "name": "Progressive Sword",
+        "hint_text": "a Sword",
         "id": 94,
         "groups": [
           "Everything",
           "Progression Items",
           "Swords"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Sword",
-        "max_count": 4
+        "max_count": 4,
+        "classification": "progression"
       },
       "Progressive Glove": {
         "name": "Progressive Glove",
+        "hint_text": "a Glove",
         "id": 97,
         "groups": [
           "Everything",
           "Gloves",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "progression"
       },
       "Green Pendant": {
         "name": "Green Pendant",
+        "hint_text": "the green pendant",
         "id": null,
         "groups": [
           "Event",
           "Pendants"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Blue Pendant": {
         "name": "Blue Pendant",
+        "hint_text": "the blue pendant",
         "id": null,
         "groups": [
           "Event",
           "Pendants"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Red Pendant": {
         "name": "Red Pendant",
+        "hint_text": "the red pendant",
         "id": null,
         "groups": [
           "Event",
           "Pendants"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Triforce": {
         "name": "Triforce",
+        "hint_text": "the Triforce",
         "id": 106,
         "groups": [
           "Event",
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Power Star": {
         "name": "Power Star",
@@ -17487,12 +17916,10 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Triforce Piece": {
         "name": "Triforce Piece",
@@ -17501,138 +17928,127 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal 1": {
         "name": "Crystal 1",
+        "hint_text": "a blue crystal",
         "id": null,
         "groups": [
           "Crystals",
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Crystal 2": {
         "name": "Crystal 2",
+        "hint_text": "a blue crystal",
         "id": null,
         "groups": [
           "Crystals",
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Crystal 3": {
         "name": "Crystal 3",
+        "hint_text": "a blue crystal",
         "id": null,
         "groups": [
           "Crystals",
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Crystal 4": {
         "name": "Crystal 4",
+        "hint_text": "a blue crystal",
         "id": null,
         "groups": [
           "Crystals",
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Crystal 5": {
         "name": "Crystal 5",
+        "hint_text": "a red crystal",
         "id": null,
         "groups": [
           "Crystals",
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Crystal 6": {
         "name": "Crystal 6",
+        "hint_text": "a red crystal",
         "id": null,
         "groups": [
           "Crystals",
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Crystal 7": {
         "name": "Crystal 7",
+        "hint_text": "a blue crystal",
         "id": null,
         "groups": [
           "Crystals",
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Single Arrow": {
         "name": "Single Arrow",
+        "hint_text": "an arrow",
         "id": 67,
         "groups": [
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "filler"
       },
       "Arrows (10)": {
         "name": "Arrows (10)",
+        "hint_text": "ten arrows",
         "id": 68,
         "groups": [
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 13
+        "max_count": 13,
+        "classification": "filler"
       },
       "Arrow Upgrade (+10)": {
         "name": "Arrow Upgrade (+10)",
@@ -17642,12 +18058,10 @@
           "Progression Items",
           "Upgrades"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Arrow Upgrade (+5)": {
         "name": "Arrow Upgrade (+5)",
@@ -17657,12 +18071,10 @@
           "Progression Items",
           "Upgrades"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Arrow Upgrade (70)": {
         "name": "Arrow Upgrade (70)",
@@ -17672,12 +18084,10 @@
           "Progression Items",
           "Upgrades"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Single Bomb": {
         "name": "Single Bomb",
@@ -17686,40 +18096,36 @@
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bombs (3)": {
         "name": "Bombs (3)",
+        "hint_text": "three bombs",
         "id": 40,
         "groups": [
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 20
+        "max_count": 20,
+        "classification": "filler"
       },
       "Bombs (10)": {
         "name": "Bombs (10)",
+        "hint_text": "ten bombs",
         "id": 49,
         "groups": [
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "filler"
       },
       "Bomb Upgrade (+10)": {
         "name": "Bomb Upgrade (+10)",
@@ -17729,12 +18135,10 @@
           "Progression Items",
           "Upgrades"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Bomb Upgrade (+5)": {
         "name": "Bomb Upgrade (+5)",
@@ -17744,12 +18148,10 @@
           "Progression Items",
           "Upgrades"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Bomb Upgrade (50)": {
         "name": "Bomb Upgrade (50)",
@@ -17759,12 +18161,10 @@
           "Progression Items",
           "Upgrades"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Blue Mail": {
         "name": "Blue Mail",
@@ -17774,12 +18174,10 @@
           "Mails",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Red Mail": {
         "name": "Red Mail",
@@ -17789,27 +18187,24 @@
           "Mails",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Progressive Mail": {
         "name": "Progressive Mail",
+        "hint_text": "some armor",
         "id": 96,
         "groups": [
           "Everything",
           "Mails",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "useful"
       },
       "Blue Boomerang": {
         "name": "Blue Boomerang",
@@ -17819,12 +18214,10 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Red Boomerang": {
         "name": "Red Boomerang",
@@ -17834,12 +18227,10 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Blue Shield": {
         "name": "Blue Shield",
@@ -17849,12 +18240,10 @@
           "Non Progression Items",
           "Shields"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Red Shield": {
         "name": "Red Shield",
@@ -17864,12 +18253,10 @@
           "Non Progression Items",
           "Shields"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mirror Shield": {
         "name": "Mirror Shield",
@@ -17879,27 +18266,24 @@
           "Progression Items",
           "Shields"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Progressive Shield": {
         "name": "Progressive Shield",
+        "hint_text": "a shield",
         "id": 95,
         "groups": [
           "Everything",
           "Progression Items",
           "Shields"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "progression"
       },
       "Bug Catching Net": {
         "name": "Bug Catching Net",
@@ -17908,12 +18292,10 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Cane of Byrna": {
         "name": "Cane of Byrna",
@@ -17923,114 +18305,105 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Boss Heart Container": {
         "name": "Boss Heart Container",
+        "hint_text": "a heart",
         "id": 62,
         "groups": [
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 10,
+        "classification": "useful"
       },
       "Sanctuary Heart Container": {
         "name": "Sanctuary Heart Container",
+        "hint_text": "a heart",
         "id": 63,
         "groups": [
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "useful"
       },
       "Piece of Heart": {
         "name": "Piece of Heart",
+        "hint_text": "a heart piece",
         "id": 23,
         "groups": [
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 24
+        "max_count": 24,
+        "classification": "useful"
       },
       "Rupee (1)": {
         "name": "Rupee (1)",
+        "hint_text": "a green rupee",
         "id": 52,
         "groups": [
           "Everything",
           "Non Progression Items",
           "Rupees"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "filler"
       },
       "Rupees (5)": {
         "name": "Rupees (5)",
+        "hint_text": "a blue rupee",
         "id": 53,
         "groups": [
           "Everything",
           "Non Progression Items",
           "Rupees"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 7
+        "max_count": 7,
+        "classification": "filler"
       },
       "Rupees (20)": {
         "name": "Rupees (20)",
+        "hint_text": "a red rupee",
         "id": 54,
         "groups": [
           "Everything",
           "Non Progression Items",
           "Rupees"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 33
+        "max_count": 33,
+        "classification": "filler"
       },
       "Rupees (50)": {
         "name": "Rupees (50)",
+        "hint_text": "fifty rupees",
         "id": 65,
         "groups": [
           "Everything",
           "Non Progression Items",
           "Rupees"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 9
+        "max_count": 9,
+        "classification": "filler"
       },
       "Rupees (100)": {
         "name": "Rupees (100)",
@@ -18040,27 +18413,24 @@
           "Non Progression Items",
           "Rupees"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Rupees (300)": {
         "name": "Rupees (300)",
+        "hint_text": "three hundred rupees",
         "id": 70,
         "groups": [
           "Everything",
           "Non Progression Items",
           "Rupees"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 7
+        "max_count": 7,
+        "classification": "filler"
       },
       "Rupoor": {
         "name": "Rupoor",
@@ -18069,12 +18439,10 @@
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "trap"
       },
       "Red Clock": {
         "name": "Red Clock",
@@ -18084,12 +18452,10 @@
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "trap"
       },
       "Blue Clock": {
         "name": "Blue Clock",
@@ -18099,12 +18465,10 @@
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Green Clock": {
         "name": "Green Clock",
@@ -18114,12 +18478,10 @@
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Single RNG": {
         "name": "Single RNG",
@@ -18128,12 +18490,10 @@
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Multi RNG": {
         "name": "Multi RNG",
@@ -18142,12 +18502,10 @@
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Magic Upgrade (1/2)": {
         "name": "Magic Upgrade (1/2)",
@@ -18157,12 +18515,10 @@
           "Progression Items",
           "Upgrades"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Magic Upgrade (1/4)": {
         "name": "Magic Upgrade (1/4)",
@@ -18172,222 +18528,206 @@
           "Progression Items",
           "Upgrades"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Small Key (Eastern Palace)": {
         "name": "Small Key (Eastern Palace)",
+        "hint_text": "a small key to Eastern Palace",
         "id": 162,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "SmallKey",
-        "max_count": 2
+        "max_count": 2,
+        "classification": "progression"
       },
       "Big Key (Eastern Palace)": {
         "name": "Big Key (Eastern Palace)",
+        "hint_text": "a big key to Eastern Palace",
         "id": 157,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "BigKey",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Compass (Eastern Palace)": {
         "name": "Compass (Eastern Palace)",
+        "hint_text": "a compass to Eastern Palace",
         "id": 141,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Compass",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Map (Eastern Palace)": {
         "name": "Map (Eastern Palace)",
+        "hint_text": "a map to Eastern Palace",
         "id": 125,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Map",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Small Key (Desert Palace)": {
         "name": "Small Key (Desert Palace)",
+        "hint_text": "a small key to Desert Palace",
         "id": 163,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "SmallKey",
-        "max_count": 4
+        "max_count": 4,
+        "classification": "progression"
       },
       "Big Key (Desert Palace)": {
         "name": "Big Key (Desert Palace)",
+        "hint_text": "a big key to Desert Palace",
         "id": 156,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "BigKey",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Compass (Desert Palace)": {
         "name": "Compass (Desert Palace)",
+        "hint_text": "a compass to Desert Palace",
         "id": 140,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Compass",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Map (Desert Palace)": {
         "name": "Map (Desert Palace)",
+        "hint_text": "a map to Desert Palace",
         "id": 124,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Map",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Small Key (Tower of Hera)": {
         "name": "Small Key (Tower of Hera)",
+        "hint_text": "a small key to Tower of Hera",
         "id": 170,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "SmallKey",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Big Key (Tower of Hera)": {
         "name": "Big Key (Tower of Hera)",
+        "hint_text": "a big key to Tower of Hera",
         "id": 149,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "BigKey",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Compass (Tower of Hera)": {
         "name": "Compass (Tower of Hera)",
+        "hint_text": "a compass to Tower of Hera",
         "id": 133,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Compass",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Map (Tower of Hera)": {
         "name": "Map (Tower of Hera)",
+        "hint_text": "a map to Tower of Hera",
         "id": 117,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Map",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Small Key (Hyrule Castle)": {
         "name": "Small Key (Hyrule Castle)",
+        "hint_text": "a small key to Hyrule Castle",
         "id": 160,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "SmallKey",
-        "max_count": 4
+        "max_count": 4,
+        "classification": "progression"
       },
       "Big Key (Hyrule Castle)": {
         "name": "Big Key (Hyrule Castle)",
+        "hint_text": "a big key to Hyrule Castle",
         "id": 159,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "BigKey",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Compass (Hyrule Castle)": {
         "name": "Compass (Hyrule Castle)",
@@ -18397,42 +18737,38 @@
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Compass",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Map (Hyrule Castle)": {
         "name": "Map (Hyrule Castle)",
+        "hint_text": "a map to Hyrule Castle",
         "id": 127,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Map",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Small Key (Agahnims Tower)": {
         "name": "Small Key (Agahnims Tower)",
+        "hint_text": "a small key to Castle Tower",
         "id": 164,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "SmallKey",
-        "max_count": 4
+        "max_count": 4,
+        "classification": "progression"
       },
       "Big Key (Agahnims Tower)": {
         "name": "Big Key (Agahnims Tower)",
@@ -18442,12 +18778,10 @@
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "BigKey",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Compass (Agahnims Tower)": {
         "name": "Compass (Agahnims Tower)",
@@ -18457,12 +18791,10 @@
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Compass",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Map (Agahnims Tower)": {
         "name": "Map (Agahnims Tower)",
@@ -18472,492 +18804,458 @@
           "Maps",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Map",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Small Key (Palace of Darkness)": {
         "name": "Small Key (Palace of Darkness)",
+        "hint_text": "a small key to Palace of Darkness",
         "id": 166,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "SmallKey",
-        "max_count": 6
+        "max_count": 6,
+        "classification": "progression"
       },
       "Big Key (Palace of Darkness)": {
         "name": "Big Key (Palace of Darkness)",
+        "hint_text": "a big key to Palace of Darkness",
         "id": 153,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "BigKey",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Compass (Palace of Darkness)": {
         "name": "Compass (Palace of Darkness)",
+        "hint_text": "a compass to Palace of Darkness",
         "id": 137,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Compass",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Map (Palace of Darkness)": {
         "name": "Map (Palace of Darkness)",
+        "hint_text": "a map to Palace of Darkness",
         "id": 121,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Map",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Small Key (Thieves Town)": {
         "name": "Small Key (Thieves Town)",
+        "hint_text": "a small key to Thieves' Town",
         "id": 171,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "SmallKey",
-        "max_count": 3
+        "max_count": 3,
+        "classification": "progression"
       },
       "Big Key (Thieves Town)": {
         "name": "Big Key (Thieves Town)",
+        "hint_text": "a big key to Thieves' Town",
         "id": 148,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "BigKey",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Compass (Thieves Town)": {
         "name": "Compass (Thieves Town)",
+        "hint_text": "a compass to Thieves' Town",
         "id": 132,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Compass",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Map (Thieves Town)": {
         "name": "Map (Thieves Town)",
+        "hint_text": "a map to Thieves' Town",
         "id": 116,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Map",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Small Key (Skull Woods)": {
         "name": "Small Key (Skull Woods)",
+        "hint_text": "a small key to Skull Woods",
         "id": 168,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "SmallKey",
-        "max_count": 5
+        "max_count": 5,
+        "classification": "progression"
       },
       "Big Key (Skull Woods)": {
         "name": "Big Key (Skull Woods)",
+        "hint_text": "a big key to Skull Woods",
         "id": 151,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "BigKey",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Compass (Skull Woods)": {
         "name": "Compass (Skull Woods)",
+        "hint_text": "a compass to Skull Woods",
         "id": 135,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Compass",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Map (Skull Woods)": {
         "name": "Map (Skull Woods)",
+        "hint_text": "a map to Skull Woods",
         "id": 119,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Map",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Small Key (Swamp Palace)": {
         "name": "Small Key (Swamp Palace)",
+        "hint_text": "a small key to Swamp Palace",
         "id": 165,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "SmallKey",
-        "max_count": 6
+        "max_count": 6,
+        "classification": "progression"
       },
       "Big Key (Swamp Palace)": {
         "name": "Big Key (Swamp Palace)",
+        "hint_text": "a big key to Swamp Palace",
         "id": 154,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "BigKey",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Compass (Swamp Palace)": {
         "name": "Compass (Swamp Palace)",
+        "hint_text": "a compass to Swamp Palace",
         "id": 138,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Compass",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Map (Swamp Palace)": {
         "name": "Map (Swamp Palace)",
+        "hint_text": "a map to Swamp Palace",
         "id": 122,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Map",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Small Key (Ice Palace)": {
         "name": "Small Key (Ice Palace)",
+        "hint_text": "a small key to Ice Palace",
         "id": 169,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "SmallKey",
-        "max_count": 6
+        "max_count": 6,
+        "classification": "progression"
       },
       "Big Key (Ice Palace)": {
         "name": "Big Key (Ice Palace)",
+        "hint_text": "a big key to Ice Palace",
         "id": 150,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "BigKey",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Compass (Ice Palace)": {
         "name": "Compass (Ice Palace)",
+        "hint_text": "a compass to Ice Palace",
         "id": 134,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Compass",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Map (Ice Palace)": {
         "name": "Map (Ice Palace)",
+        "hint_text": "a map to Ice Palace",
         "id": 118,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Map",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Small Key (Misery Mire)": {
         "name": "Small Key (Misery Mire)",
+        "hint_text": "a small key to Misery Mire",
         "id": 167,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "SmallKey",
-        "max_count": 6
+        "max_count": 6,
+        "classification": "progression"
       },
       "Big Key (Misery Mire)": {
         "name": "Big Key (Misery Mire)",
+        "hint_text": "a big key to Misery Mire",
         "id": 152,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "BigKey",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Compass (Misery Mire)": {
         "name": "Compass (Misery Mire)",
+        "hint_text": "a compass to Misery Mire",
         "id": 136,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Compass",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Map (Misery Mire)": {
         "name": "Map (Misery Mire)",
+        "hint_text": "a map to Misery Mire",
         "id": 120,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Map",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Small Key (Turtle Rock)": {
         "name": "Small Key (Turtle Rock)",
+        "hint_text": "a small key to Turtle Rock",
         "id": 172,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "SmallKey",
-        "max_count": 6
+        "max_count": 6,
+        "classification": "progression"
       },
       "Big Key (Turtle Rock)": {
         "name": "Big Key (Turtle Rock)",
+        "hint_text": "a big key to Turtle Rock",
         "id": 147,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "BigKey",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Compass (Turtle Rock)": {
         "name": "Compass (Turtle Rock)",
+        "hint_text": "a compass to Turtle Rock",
         "id": 131,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Compass",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Map (Turtle Rock)": {
         "name": "Map (Turtle Rock)",
+        "hint_text": "a map to Turtle Rock",
         "id": 115,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Map",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Small Key (Ganons Tower)": {
         "name": "Small Key (Ganons Tower)",
+        "hint_text": "a small key to Ganon's Tower",
         "id": 173,
         "groups": [
           "Everything",
           "Progression Items",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "SmallKey",
-        "max_count": 8
+        "max_count": 8,
+        "classification": "progression"
       },
       "Big Key (Ganons Tower)": {
         "name": "Big Key (Ganons Tower)",
+        "hint_text": "a big key to Ganon's Tower",
         "id": 146,
         "groups": [
           "Big Keys",
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "BigKey",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Compass (Ganons Tower)": {
         "name": "Compass (Ganons Tower)",
+        "hint_text": "a compass to Ganon's Tower",
         "id": 130,
         "groups": [
           "Compasses",
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Compass",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Map (Ganons Tower)": {
         "name": "Map (Ganons Tower)",
+        "hint_text": "a map to Ganon's Tower",
         "id": 114,
         "groups": [
           "Everything",
           "Maps",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Map",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Small Key (Universal)": {
         "name": "Small Key (Universal)",
@@ -18967,12 +19265,10 @@
           "Non Progression Items",
           "Small Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Nothing": {
         "name": "Nothing",
@@ -18981,12 +19277,10 @@
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "trap"
       },
       "Bee Trap": {
         "name": "Bee Trap",
@@ -18995,12 +19289,10 @@
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "trap"
       },
       "Faerie": {
         "name": "Faerie",
@@ -19009,12 +19301,10 @@
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Good Bee": {
         "name": "Good Bee",
@@ -19023,12 +19313,10 @@
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Magic Jar": {
         "name": "Magic Jar",
@@ -19037,12 +19325,10 @@
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Apple": {
         "name": "Apple",
@@ -19051,12 +19337,10 @@
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Red Potion": {
         "name": "Red Potion",
@@ -19066,12 +19350,10 @@
           "Non Progression Items",
           "Potions"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Green Potion": {
         "name": "Green Potion",
@@ -19081,12 +19363,10 @@
           "Non Progression Items",
           "Potions"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Blue Potion": {
         "name": "Blue Potion",
@@ -19096,12 +19376,10 @@
           "Non Progression Items",
           "Potions"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bee": {
         "name": "Bee",
@@ -19110,12 +19388,10 @@
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "trap"
       },
       "Small Heart": {
         "name": "Small Heart",
@@ -19124,27 +19400,24 @@
           "Everything",
           "Non Progression Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Activated Flute": {
         "name": "Activated Flute",
+        "hint_text": "the Flute",
         "id": 74,
         "groups": [
           "Event",
           "Everything",
           "Progression Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Beat Agahnim 1": {
         "name": "Beat Agahnim 1",
@@ -19152,12 +19425,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Beat Agahnim 2": {
         "name": "Beat Agahnim 2",
@@ -19165,12 +19436,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Get Frog": {
         "name": "Get Frog",
@@ -19178,12 +19447,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Return Smith": {
         "name": "Return Smith",
@@ -19191,12 +19458,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Pick Up Purple Chest": {
         "name": "Pick Up Purple Chest",
@@ -19204,12 +19469,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Open Floodgate": {
         "name": "Open Floodgate",
@@ -19217,12 +19480,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Capacity Upgrade Shop": {
         "name": "Capacity Upgrade Shop",
@@ -19230,20 +19491,16 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "13 Coins": {
         "name": "13 Coins",
         "id": 82037,
         "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19252,9 +19509,7 @@
         "name": "Seashell",
         "id": 82002,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19263,9 +19518,7 @@
         "name": "Health Pon",
         "id": 2000300037,
         "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19274,9 +19527,7 @@
         "name": "25 Pons",
         "id": 2000300034,
         "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19285,9 +19536,7 @@
         "name": "Time Piece",
         "id": 2000300002,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19296,9 +19545,7 @@
         "name": "Random Cosmetic",
         "id": 2000300044,
         "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19307,9 +19554,7 @@
         "name": "Wristwatch",
         "id": 82013,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19318,9 +19563,7 @@
         "name": "Stick",
         "id": 82001,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19329,9 +19572,7 @@
         "name": "Yarn",
         "id": 2000300001,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19340,9 +19581,7 @@
         "name": "Progressive Fishing Rod",
         "id": 82007,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19351,9 +19590,7 @@
         "name": "Golden Feather",
         "id": 82003,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19362,9 +19599,7 @@
         "name": "Freeincarnate",
         "id": 118000258,
         "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19373,9 +19608,7 @@
         "name": "Baseball Cap",
         "id": 82022,
         "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19384,9 +19617,7 @@
         "name": "50 Pons",
         "id": 2000300035,
         "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19395,9 +19626,7 @@
         "name": "Camping Permit",
         "id": 82026,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19406,9 +19635,7 @@
         "name": "Slow Yorgle",
         "id": 118000259,
         "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19417,9 +19644,7 @@
         "name": "7 Coins",
         "id": 82028,
         "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19428,9 +19653,7 @@
         "name": "33 Coins",
         "id": 82035,
         "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19439,20 +19662,17 @@
         "name": "No Bonk Badge",
         "id": 2000300029,
         "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
       },
       "Relic (Tin-foil Hat Cow)": {
         "name": "Relic (Tin-foil Hat Cow)",
+        "hint_text": "Relic (Tin foil Hat Cow)",
         "id": 2000300013,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19461,9 +19681,7 @@
         "name": "Left Difficulty Switch",
         "id": 118000256,
         "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19472,9 +19690,7 @@
         "name": "Item Magnet Badge",
         "id": 2000300028,
         "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19483,9 +19699,7 @@
         "name": "Relic (Burger Cushion)",
         "id": 2000300007,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19494,9 +19708,7 @@
         "name": "Hookshot Badge",
         "id": 2000300027,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19505,9 +19717,7 @@
         "name": "Toy Shovel",
         "id": 82009,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19516,9 +19726,7 @@
         "name": "18 Coins",
         "id": 82030,
         "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19527,9 +19735,7 @@
         "name": "Medal",
         "id": 82011,
         "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19538,20 +19744,17 @@
         "name": "Projectile Badge",
         "id": 2000300024,
         "groups": [],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
       },
       "Snatcher's Contract - Queen Vanessa's Manor": {
         "name": "Snatcher's Contract - Queen Vanessa's Manor",
+        "hint_text": "Snatcher's Contract   Queen Vanessa's Manor",
         "id": 2000300202,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19560,9 +19763,7 @@
         "name": "Slow Grundle",
         "id": 118000260,
         "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19571,9 +19772,7 @@
         "name": "The King Map",
         "id": 82018,
         "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19582,9 +19781,7 @@
         "name": "Provincial Park Hat",
         "id": 82023,
         "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19593,9 +19790,7 @@
         "name": "25 Coins",
         "id": 82032,
         "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19604,9 +19799,7 @@
         "name": "The Treasure of Sid Beach Map",
         "id": 82019,
         "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19885,5 +20078,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

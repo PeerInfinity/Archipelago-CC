@@ -85,7 +85,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "2 score",
@@ -142,7 +143,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "3 score",
@@ -199,7 +201,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "4 score",
@@ -256,7 +259,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "5 score",
@@ -313,7 +317,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "6 score",
@@ -370,7 +375,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "7 score",
@@ -427,7 +433,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "8 score",
@@ -484,7 +491,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "9 score",
@@ -541,7 +549,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "10 score",
@@ -598,7 +607,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "11 score",
@@ -655,7 +665,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "12 score",
@@ -712,7 +723,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "13 score",
@@ -769,7 +781,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "14 score",
@@ -826,7 +839,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "15 score",
@@ -883,7 +897,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "17 score",
@@ -940,7 +955,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "19 score",
@@ -997,7 +1013,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "22 score",
@@ -1054,7 +1071,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "25 score",
@@ -1111,7 +1129,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "28 score",
@@ -1168,7 +1187,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "32 score",
@@ -1225,7 +1245,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "36 score",
@@ -1282,7 +1303,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "40 score",
@@ -1339,7 +1361,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "44 score",
@@ -1396,7 +1419,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "48 score",
@@ -1453,7 +1477,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "53 score",
@@ -1510,7 +1535,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "58 score",
@@ -1567,7 +1593,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "63 score",
@@ -1624,7 +1651,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "69 score",
@@ -1681,7 +1709,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "74 score",
@@ -1738,7 +1767,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "80 score",
@@ -1795,7 +1825,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "87 score",
@@ -1852,7 +1883,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "93 score",
@@ -1909,7 +1941,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "100 score",
@@ -1966,7 +1999,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "107 score",
@@ -2023,7 +2057,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "114 score",
@@ -2080,7 +2115,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "122 score",
@@ -2137,7 +2173,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "130 score",
@@ -2194,7 +2231,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "138 score",
@@ -2251,7 +2289,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "146 score",
@@ -2308,7 +2347,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "155 score",
@@ -2365,7 +2405,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "164 score",
@@ -2422,7 +2463,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "173 score",
@@ -2479,7 +2521,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "183 score",
@@ -2536,7 +2579,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "193 score",
@@ -2593,7 +2637,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "203 score",
@@ -2650,7 +2695,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "214 score",
@@ -2707,7 +2753,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "224 score",
@@ -2764,7 +2811,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "236 score",
@@ -2821,7 +2869,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "247 score",
@@ -2878,7 +2927,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "259 score",
@@ -2935,7 +2985,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "271 score",
@@ -2992,7 +3043,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "283 score",
@@ -3049,7 +3101,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "296 score",
@@ -3106,7 +3159,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "309 score",
@@ -3163,7 +3217,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "322 score",
@@ -3220,7 +3275,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "336 score",
@@ -3277,7 +3333,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "350 score",
@@ -3334,7 +3391,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "364 score",
@@ -3391,7 +3449,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "378 score",
@@ -3448,7 +3507,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "393 score",
@@ -3505,7 +3565,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "408 score",
@@ -3562,7 +3623,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "424 score",
@@ -3619,7 +3681,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "440 score",
@@ -3676,7 +3739,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "456 score",
@@ -3733,7 +3797,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "473 score",
@@ -3790,7 +3855,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "490 score",
@@ -3847,7 +3913,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "507 score",
@@ -3904,7 +3971,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "524 score",
@@ -3961,7 +4029,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "542 score",
@@ -4018,7 +4087,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "560 score",
@@ -4075,7 +4145,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "579 score",
@@ -4132,7 +4203,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "598 score",
@@ -4189,7 +4261,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "617 score",
@@ -4246,7 +4319,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "637 score",
@@ -4303,7 +4377,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "657 score",
@@ -4360,7 +4435,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "677 score",
@@ -4417,7 +4493,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "698 score",
@@ -4474,7 +4551,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "719 score",
@@ -4531,7 +4609,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "740 score",
@@ -4588,7 +4667,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "762 score",
@@ -4645,7 +4725,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "777 score",
@@ -4702,7 +4783,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "806 score",
@@ -4759,7 +4841,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "829 score",
@@ -4816,7 +4899,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "852 score",
@@ -4873,7 +4957,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "876 score",
@@ -4930,7 +5015,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "899 score",
@@ -4987,7 +5073,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "924 score",
@@ -5044,7 +5131,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "948 score",
@@ -5101,7 +5189,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "1000 score",
@@ -5158,7 +5247,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       }
@@ -5180,12 +5270,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 2,
+        "classification": "progression|useful"
       },
       "Dice Fragment": {
         "name": "Dice Fragment",
@@ -5193,12 +5281,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 32
+        "max_count": 16,
+        "classification": "progression"
       },
       "Roll": {
         "name": "Roll",
@@ -5206,12 +5292,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 2,
+        "classification": "progression"
       },
       "Roll Fragment": {
         "name": "Roll Fragment",
@@ -5219,12 +5303,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 18
+        "max_count": 9,
+        "classification": "progression"
       },
       "Fixed Score Multiplier": {
         "name": "Fixed Score Multiplier",
@@ -5233,12 +5315,10 @@
           "Everything",
           "Score Multiplier"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 22
+        "max_count": 11,
+        "classification": "progression"
       },
       "Step Score Multiplier": {
         "name": "Step Score Multiplier",
@@ -5247,12 +5327,10 @@
           "Everything",
           "Score Multiplier"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Category Ones": {
         "name": "Category Ones",
@@ -5261,12 +5339,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Category Twos": {
         "name": "Category Twos",
@@ -5275,12 +5351,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Category Threes": {
         "name": "Category Threes",
@@ -5289,12 +5363,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression"
       },
       "Category Fours": {
         "name": "Category Fours",
@@ -5303,12 +5375,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Category Fives": {
         "name": "Category Fives",
@@ -5317,12 +5387,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Category Sixes": {
         "name": "Category Sixes",
@@ -5331,12 +5399,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Category Choice": {
         "name": "Category Choice",
@@ -5345,12 +5411,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 2,
+        "classification": "progression"
       },
       "Category Inverse Choice": {
         "name": "Category Inverse Choice",
@@ -5359,12 +5423,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Category Pair": {
         "name": "Category Pair",
@@ -5373,12 +5435,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Category Three of a Kind": {
         "name": "Category Three of a Kind",
@@ -5387,12 +5447,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Category Four of a Kind": {
         "name": "Category Four of a Kind",
@@ -5401,12 +5459,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Category Tiny Straight": {
         "name": "Category Tiny Straight",
@@ -5415,12 +5471,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression"
       },
       "Category Small Straight": {
         "name": "Category Small Straight",
@@ -5429,12 +5483,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Category Large Straight": {
         "name": "Category Large Straight",
@@ -5443,12 +5495,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Category Full House": {
         "name": "Category Full House",
@@ -5457,12 +5507,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Category Yacht": {
         "name": "Category Yacht",
@@ -5471,12 +5519,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Category Distincts": {
         "name": "Category Distincts",
@@ -5485,12 +5531,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Category Two times Ones": {
         "name": "Category Two times Ones",
@@ -5499,12 +5543,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Category Half of Sixes": {
         "name": "Category Half of Sixes",
@@ -5513,12 +5555,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Category Twos and Threes": {
         "name": "Category Twos and Threes",
@@ -5527,12 +5567,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Category Sum of Odds": {
         "name": "Category Sum of Odds",
@@ -5541,12 +5579,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Category Sum of Evens": {
         "name": "Category Sum of Evens",
@@ -5555,12 +5591,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Category Double Threes and Fours": {
         "name": "Category Double Threes and Fours",
@@ -5569,12 +5603,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Category Quadruple Ones and Twos": {
         "name": "Category Quadruple Ones and Twos",
@@ -5583,12 +5615,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Category Micro Straight": {
         "name": "Category Micro Straight",
@@ -5597,12 +5627,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Category Three Odds": {
         "name": "Category Three Odds",
@@ -5611,12 +5639,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Category 1-2-1 Consecutive": {
         "name": "Category 1-2-1 Consecutive",
@@ -5625,12 +5651,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Category Three Distinct Dice": {
         "name": "Category Three Distinct Dice",
@@ -5639,12 +5663,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Category Two Pair": {
         "name": "Category Two Pair",
@@ -5653,12 +5675,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Category 2-1-2 Consecutive": {
         "name": "Category 2-1-2 Consecutive",
@@ -5667,12 +5687,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Category Five Distinct Dice": {
         "name": "Category Five Distinct Dice",
@@ -5681,12 +5699,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Category 4&5 Full House": {
         "name": "Category 4&5 Full House",
@@ -5695,12 +5711,10 @@
           "Categories",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Encouragement": {
         "name": "Encouragement",
@@ -5708,12 +5722,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5,
+        "classification": "filler"
       },
       "Fun Fact": {
         "name": "Fun Fact",
@@ -5721,12 +5733,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Story Chapter": {
         "name": "Story Chapter",
@@ -5734,12 +5744,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Good RNG": {
         "name": "Good RNG",
@@ -5747,12 +5755,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bad RNG": {
         "name": "Bad RNG",
@@ -5760,12 +5766,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bonus Point": {
         "name": "Bonus Point",
@@ -5774,12 +5778,10 @@
           "Everything",
           "Points"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 40
+        "max_count": 20,
+        "classification": "useful"
       },
       "1 Point": {
         "name": "1 Point",
@@ -5788,12 +5790,10 @@
           "Everything",
           "Points"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "10 Points": {
         "name": "10 Points",
@@ -5802,12 +5802,10 @@
           "Everything",
           "Points"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5,
+        "classification": "progression"
       },
       "100 Points": {
         "name": "100 Points",
@@ -5816,12 +5814,10 @@
           "Everything",
           "Points"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Victory": {
         "name": "Victory",
@@ -5829,12 +5825,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -5848,30 +5842,30 @@
   },
   "itempool_counts": {
     "1": {
-      "10 Points": 10,
-      "Bonus Point": 40,
-      "Category Choice": 3,
-      "Category Fives": 2,
-      "Category Four of a Kind": 2,
-      "Category Fours": 2,
-      "Category Full House": 2,
+      "10 Points": 5,
+      "Bonus Point": 20,
+      "Category Choice": 2,
+      "Category Fives": 1,
+      "Category Four of a Kind": 1,
+      "Category Fours": 1,
+      "Category Full House": 1,
       "Category Inverse Choice": 1,
-      "Category Large Straight": 2,
-      "Category Ones": 2,
-      "Category Pair": 2,
-      "Category Sixes": 2,
-      "Category Small Straight": 2,
-      "Category Three of a Kind": 4,
-      "Category Threes": 6,
-      "Category Tiny Straight": 6,
-      "Category Twos": 4,
-      "Category Yacht": 2,
-      "Dice": 3,
-      "Dice Fragment": 32,
-      "Encouragement": 10,
-      "Fixed Score Multiplier": 22,
-      "Roll": 3,
-      "Roll Fragment": 18,
+      "Category Large Straight": 1,
+      "Category Ones": 1,
+      "Category Pair": 1,
+      "Category Sixes": 1,
+      "Category Small Straight": 1,
+      "Category Three of a Kind": 2,
+      "Category Threes": 3,
+      "Category Tiny Straight": 3,
+      "Category Twos": 2,
+      "Category Yacht": 1,
+      "Dice": 2,
+      "Dice Fragment": 16,
+      "Encouragement": 5,
+      "Fixed Score Multiplier": 11,
+      "Roll": 2,
+      "Roll Fragment": 9,
       "Victory": 1
     }
   },
@@ -5890,7 +5884,8 @@
     "1": {
       "game": "Yacht Dice",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "add_sphere_items_upfront": true
     }
   },
   "game_info": {
@@ -5900,5 +5895,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

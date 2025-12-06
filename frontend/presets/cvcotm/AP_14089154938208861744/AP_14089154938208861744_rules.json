@@ -48,7 +48,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catacomb: Push crate treasure room",
@@ -62,7 +63,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catacomb: Fleamen brain room - Lower",
@@ -85,7 +87,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catacomb: Fleamen brain room - Upper",
@@ -120,7 +123,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catacomb: Earth Demon dash room",
@@ -134,7 +138,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catacomb: Tackle block treasure room",
@@ -148,7 +153,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catacomb: Earth Demon bone pit - Lower",
@@ -162,7 +168,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catacomb: Earth Demon bone pit - Upper",
@@ -187,7 +194,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catacomb: Below right column save room",
@@ -201,7 +209,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catacomb: Right column fake wall",
@@ -215,7 +224,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catacomb: Right column Spirit room",
@@ -229,7 +239,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catacomb: Muddy Mudman platforms room - Lower",
@@ -243,7 +254,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catacomb: Muddy Mudman platforms room - Upper",
@@ -268,7 +280,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catacomb: Slide space zone",
@@ -282,7 +295,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Catacomb: Pre-Cerberus lone Skeleton room",
@@ -296,7 +310,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catacomb: Pre-Cerberus Hopper treasure room",
@@ -310,7 +325,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catacomb: Behind Cerberus",
@@ -324,7 +340,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catacomb: Mummies' fake wall",
@@ -347,7 +364,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -385,7 +403,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Abyss Staircase: Loopback drop",
@@ -399,7 +418,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -553,7 +573,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Abyss Staircase: Upper fake wall",
@@ -567,7 +588,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Audience Room: Skeleton foyer fake wall",
@@ -581,7 +603,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Audience Room: Main gallery fake wall",
@@ -595,7 +618,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Audience Room: Below coyote jump",
@@ -609,7 +633,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Audience Room: Push crate gallery",
@@ -623,7 +648,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Audience Room: Past coyote jump",
@@ -637,7 +663,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Audience Room: Tackle block gallery",
@@ -651,7 +678,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Audience Room: Wicked roc chamber - Lower",
@@ -665,7 +693,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Audience Room: Wicked roc chamber - Upper",
@@ -679,7 +708,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Audience Room: Upper Devil Tower hallway",
@@ -693,7 +723,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Audience Room: Right exterior - Lower",
@@ -707,7 +738,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Audience Room: Right exterior - Upper",
@@ -732,7 +764,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Audience Room: Right exterior fake wall",
@@ -746,7 +779,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Audience Room: 100 meter skelly dash hallway",
@@ -771,7 +805,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Audience Room: Lower Devil Tower hallway fake wall",
@@ -785,7 +820,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Audience Room: Behind Necromancer",
@@ -799,7 +835,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Audience Room: Below Machine Tower roc ledge",
@@ -824,7 +861,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Audience Room: Below Machine Tower push crate room",
@@ -849,7 +887,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Audience Room: Roc horse jaguar armory - Left",
@@ -884,7 +923,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Audience Room: Roc horse jaguar armory - Right",
@@ -919,7 +959,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Outer Wall: Left roc ledge",
@@ -933,7 +974,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Outer Wall: Right-brained ledge",
@@ -958,7 +1000,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Outer Wall: Fake Nightmare floor",
@@ -972,7 +1015,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Triumph Hallway: Skeleton slopes fake wall",
@@ -986,7 +1030,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Triumph Hallway: Entrance Flame Armor climb",
@@ -1021,7 +1066,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1050,7 +1096,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Machine Tower: Knight fox meeting room",
@@ -1064,7 +1111,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Machine Tower: Boneheaded argument wall kicks room",
@@ -1089,7 +1137,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Machine Tower: Foxy fake wall",
@@ -1103,7 +1152,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Machine Tower: Skelly-rang wall kicks room",
@@ -1128,7 +1178,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Machine Tower: Fake Lilim wall",
@@ -1142,7 +1193,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Machine Tower: Thunderous zone fake wall",
@@ -1156,7 +1208,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Machine Tower: Thunderous zone lone Stone Armor room",
@@ -1170,7 +1223,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1190,7 +1244,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Machine Tower: Stone fox hallway",
@@ -1204,7 +1259,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Machine Tower: Pre-Iron Golem fake wall",
@@ -1218,7 +1274,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Machine Tower: Behind Iron Golem",
@@ -1232,7 +1289,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1297,7 +1355,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1353,7 +1412,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Eternal Corridor: Skelly-rang fake wall",
@@ -1367,7 +1427,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chapel Tower: Flame Armor climb room",
@@ -1392,7 +1453,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chapel Tower: Lower chapel push crate room",
@@ -1406,7 +1468,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chapel Tower: Lower chapel fake wall",
@@ -1420,7 +1483,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chapel Tower: Beastly wall kicks room - Brain side",
@@ -1434,7 +1498,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chapel Tower: Beastly wall kicks room - Brawn side",
@@ -1448,7 +1513,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chapel Tower: Middle chapel fake wall",
@@ -1462,7 +1528,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chapel Tower: Middle chapel push crate room",
@@ -1476,7 +1543,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chapel Tower: Sharp mind climb room",
@@ -1501,7 +1569,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chapel Tower: Upper chapel fake wall",
@@ -1515,7 +1584,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1555,7 +1625,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chapel Tower: Upper belfry fake wall",
@@ -1569,7 +1640,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chapel Tower: Iron maiden switch",
@@ -1583,7 +1655,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Chapel Tower: Behind Adramelech iron maiden",
@@ -1614,7 +1687,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1655,7 +1729,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chapel Tower: Outside Battle Arena - Lower",
@@ -1690,7 +1765,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1727,7 +1803,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Gallery: Conveyor upper push crate room",
@@ -1741,7 +1818,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Gallery: Conveyor lower push crate room",
@@ -1755,7 +1833,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Gallery: Harpy climb room - Lower",
@@ -1780,7 +1859,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Gallery: Harpy climb room - Upper",
@@ -1805,7 +1885,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1834,7 +1915,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Gallery: Handy bee hallway",
@@ -1848,7 +1930,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Gallery: Myconid fake wall",
@@ -1862,7 +1945,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Gallery: Crumble bridge fake wall",
@@ -1876,7 +1960,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Gallery: Behind Dragon Zombies",
@@ -1890,7 +1975,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1919,7 +2005,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1939,7 +2026,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Crate-nudge fox room",
@@ -1953,7 +2041,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Crate-nudge fake wall",
@@ -1967,7 +2056,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Succubus shaft roc ledge",
@@ -2002,7 +2092,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Fake Lilith wall",
@@ -2016,7 +2107,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Optional puzzle ceiling fake wall",
@@ -2041,7 +2133,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Holy fox hideout - Left",
@@ -2055,7 +2148,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Holy fox hideout - Right roc ledge",
@@ -2090,7 +2184,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Forest Armor's domain fake wall",
@@ -2104,7 +2199,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Behind Death",
@@ -2118,7 +2214,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Behind Death fake wall",
@@ -2132,7 +2229,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Dryad expulsion chamber",
@@ -2146,7 +2244,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2184,7 +2283,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2213,7 +2313,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Waterway: Beyond illusory wall",
@@ -2227,7 +2328,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Waterway: Ice Armor's domain fake wall",
@@ -2241,7 +2343,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Waterway: Brain freeze room",
@@ -2266,7 +2369,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Waterway: Middle lone Ice Armor room",
@@ -2280,7 +2384,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Waterway: Roc fake ceiling",
@@ -2294,7 +2399,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Waterway: Wicked Fishhead moat - Bottom",
@@ -2308,7 +2414,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Waterway: Wicked Fishhead moat - Top",
@@ -2322,7 +2429,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Waterway: Lizard-man turf - Bottom",
@@ -2336,7 +2444,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2365,7 +2474,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Waterway: Roc exit shaft",
@@ -2379,7 +2489,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Waterway: Behind Camilla",
@@ -2402,7 +2513,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underground Waterway: Roc exit shaft fake wall",
@@ -2416,7 +2528,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2436,7 +2549,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Observation Tower: Legion plaza fake wall",
@@ -2450,7 +2564,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Observation Tower: Legion plaza Minotaur hallway",
@@ -2464,7 +2579,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Observation Tower: Siren balcony fake wall",
@@ -2478,7 +2594,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Observation Tower: Evil Pillar pit fake wall",
@@ -2492,7 +2609,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Observation Tower: Alraune garden",
@@ -2506,7 +2624,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Observation Tower: Dark Armor's domain fake wall",
@@ -2520,7 +2639,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Observation Tower: Catoblepeas hallway",
@@ -2534,7 +2654,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Observation Tower: Near warp room fake wall",
@@ -2548,7 +2669,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Observation Tower: Behind Hugh",
@@ -2562,7 +2684,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2593,7 +2716,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dracula",
@@ -2607,7 +2731,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2643,12 +2768,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 74
+        "max_count": 37
       },
       "HP Max Up": {
         "name": "HP Max Up",
@@ -2656,12 +2779,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 68
+        "max_count": 34
       },
       "MP Max Up": {
         "name": "MP Max Up",
@@ -2669,12 +2790,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 48
+        "max_count": 24
       },
       "Salamander Card": {
         "name": "Salamander Card",
@@ -2686,12 +2805,10 @@
           "DSS",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Serpent Card": {
         "name": "Serpent Card",
@@ -2705,12 +2822,10 @@
           "Freeze",
           "Freeze Attribute"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
+        "classification": "progression|useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Mandragora Card": {
         "name": "Mandragora Card",
@@ -2722,12 +2837,10 @@
           "DSS",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Golem Card": {
         "name": "Golem Card",
@@ -2739,12 +2852,10 @@
           "DSS",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Cockatrice Card": {
         "name": "Cockatrice Card",
@@ -2758,12 +2869,10 @@
           "Freeze",
           "Freeze Attribute"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
+        "classification": "progression|useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Manticore Card": {
         "name": "Manticore Card",
@@ -2775,12 +2884,10 @@
           "DSS",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Griffin Card": {
         "name": "Griffin Card",
@@ -2792,12 +2899,10 @@
           "DSS",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Thunderbird Card": {
         "name": "Thunderbird Card",
@@ -2809,12 +2914,10 @@
           "DSS",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Unicorn Card": {
         "name": "Unicorn Card",
@@ -2826,12 +2929,10 @@
           "DSS",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Black Dog Card": {
         "name": "Black Dog Card",
@@ -2843,12 +2944,10 @@
           "DSS",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Mercury Card": {
         "name": "Mercury Card",
@@ -2862,12 +2961,10 @@
           "Freeze",
           "Freeze Action"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
+        "classification": "progression|useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Venus Card": {
         "name": "Venus Card",
@@ -2879,12 +2976,10 @@
           "DSS",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Jupiter Card": {
         "name": "Jupiter Card",
@@ -2896,12 +2991,10 @@
           "DSS",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Mars Card": {
         "name": "Mars Card",
@@ -2915,12 +3008,10 @@
           "Freeze",
           "Freeze Action"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
+        "classification": "progression|useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Diana Card": {
         "name": "Diana Card",
@@ -2932,12 +3023,10 @@
           "DSS",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Apollo Card": {
         "name": "Apollo Card",
@@ -2949,12 +3038,10 @@
           "DSS",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Neptune Card": {
         "name": "Neptune Card",
@@ -2966,12 +3053,10 @@
           "DSS",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Saturn Card": {
         "name": "Saturn Card",
@@ -2983,12 +3068,10 @@
           "DSS",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Uranus Card": {
         "name": "Uranus Card",
@@ -3000,12 +3083,10 @@
           "DSS",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Pluto Card": {
         "name": "Pluto Card",
@@ -3017,12 +3098,10 @@
           "DSS",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Double": {
         "name": "Double",
@@ -3030,12 +3109,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
+        "classification": "progression|useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Tackle": {
         "name": "Tackle",
@@ -3043,12 +3120,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Kick Boots": {
         "name": "Kick Boots",
@@ -3056,12 +3131,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Heavy Ring": {
         "name": "Heavy Ring",
@@ -3069,12 +3142,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Cleansing": {
         "name": "Cleansing",
@@ -3082,12 +3153,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Roc Wing": {
         "name": "Roc Wing",
@@ -3095,12 +3164,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
+        "classification": "progression|useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Last Key": {
         "name": "Last Key",
@@ -3108,12 +3175,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Maiden Detonator": {
         "name": "Maiden Detonator",
@@ -3121,20 +3186,16 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 2
       },
       "The Count Downed": {
         "name": "The Count Downed",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 1
@@ -3157,38 +3218,38 @@
   },
   "itempool_counts": {
     "1": {
-      "Apollo Card": 2,
-      "Black Dog Card": 2,
-      "Cleansing": 2,
-      "Cockatrice Card": 2,
-      "Diana Card": 2,
-      "Double": 2,
-      "Golem Card": 2,
-      "Griffin Card": 2,
-      "HP Max Up": 68,
-      "Heart Max Up": 74,
-      "Heavy Ring": 2,
-      "Jupiter Card": 2,
-      "Kick Boots": 2,
-      "Last Key": 2,
-      "MP Max Up": 48,
-      "Maiden Detonator": 3,
-      "Mandragora Card": 2,
-      "Manticore Card": 2,
-      "Mars Card": 2,
-      "Mercury Card": 2,
-      "Neptune Card": 2,
-      "Pluto Card": 2,
-      "Roc Wing": 2,
-      "Salamander Card": 2,
-      "Saturn Card": 2,
-      "Serpent Card": 2,
-      "Tackle": 2,
+      "Apollo Card": 1,
+      "Black Dog Card": 1,
+      "Cleansing": 1,
+      "Cockatrice Card": 1,
+      "Diana Card": 1,
+      "Double": 1,
+      "Golem Card": 1,
+      "Griffin Card": 1,
+      "HP Max Up": 34,
+      "Heart Max Up": 37,
+      "Heavy Ring": 1,
+      "Jupiter Card": 1,
+      "Kick Boots": 1,
+      "Last Key": 1,
+      "MP Max Up": 24,
+      "Maiden Detonator": 2,
+      "Mandragora Card": 1,
+      "Manticore Card": 1,
+      "Mars Card": 1,
+      "Mercury Card": 1,
+      "Neptune Card": 1,
+      "Pluto Card": 1,
+      "Roc Wing": 1,
+      "Salamander Card": 1,
+      "Saturn Card": 1,
+      "Serpent Card": 1,
+      "Tackle": 1,
       "The Count Downed": 1,
-      "Thunderbird Card": 2,
-      "Unicorn Card": 2,
-      "Uranus Card": 2,
-      "Venus Card": 2
+      "Thunderbird Card": 1,
+      "Unicorn Card": 1,
+      "Uranus Card": 1,
+      "Venus Card": 1
     }
   },
   "progression_mapping": {
@@ -3216,5 +3277,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

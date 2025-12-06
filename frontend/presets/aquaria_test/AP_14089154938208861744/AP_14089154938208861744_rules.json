@@ -7930,15 +7930,244 @@
   },
   "items": {
     "1": {
+      "Blaster Peg Prime beated": {
+        "name": "Blaster Peg Prime beated",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Crabbius Maximus beated": {
+        "name": "Crabbius Maximus beated",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Drunian God beated": {
+        "name": "Drunian God beated",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Fallen God beated": {
+        "name": "Fallen God beated",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "King Jellyfish God Prime beated": {
+        "name": "King Jellyfish God Prime beated",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Lumerean God beated": {
+        "name": "Lumerean God beated",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Mantis Shrimp Prime beated": {
+        "name": "Mantis Shrimp Prime beated",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Mergog beated": {
+        "name": "Mergog beated",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Mithalan God beated": {
+        "name": "Mithalan God beated",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Mithalan priests beated": {
+        "name": "Mithalan priests beated",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Nautilus Prime beated": {
+        "name": "Nautilus Prime beated",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Octopus Prime beated": {
+        "name": "Octopus Prime beated",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "The Golem beated": {
+        "name": "The Golem beated",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "First Secret obtained": {
+        "name": "First Secret obtained",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Second Secret obtained": {
+        "name": "Second Secret obtained",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Has Sun Crystal": {
+        "name": "Has Sun Crystal",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Body Tongue cleared": {
+        "name": "Body Tongue cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Third Secret obtained": {
+        "name": "Third Secret obtained",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
       "Anemone": {
         "name": "Anemone",
         "id": 698000,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Arcane Poultice": {
+        "name": "Arcane Poultice",
+        "id": 698038,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 7
+      },
+      "Arnassi Armor": {
+        "name": "Arnassi Armor",
+        "id": 698023,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7949,48 +8178,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Big Seed": {
-        "name": "Big Seed",
-        "id": 698002,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Glowing Seed": {
-        "name": "Glowing Seed",
-        "id": 698003,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Black Pearl": {
-        "name": "Black Pearl",
-        "id": 698004,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -8002,22 +8190,7 @@
           "Damage",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Crab Armor": {
-        "name": "Crab Armor",
-        "id": 698006,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -8029,178 +8202,7 @@
           "Everything",
           "Light"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Tooth": {
-        "name": "Tooth",
-        "id": 698008,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Energy Statue": {
-        "name": "Energy Statue",
-        "id": 698009,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Krotite Armor": {
-        "name": "Krotite Armor",
-        "id": 698010,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Golden Starfish": {
-        "name": "Golden Starfish",
-        "id": 698011,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Golden Gear": {
-        "name": "Golden Gear",
-        "id": 698012,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Jelly Beacon": {
-        "name": "Jelly Beacon",
-        "id": 698013,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Jelly Costume": {
-        "name": "Jelly Costume",
-        "id": 698014,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Jelly Plant": {
-        "name": "Jelly Plant",
-        "id": 698015,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Mithalas Doll": {
-        "name": "Mithalas Doll",
-        "id": 698016,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Mithalan Dress": {
-        "name": "Mithalan Dress",
-        "id": 698017,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Mithalas Banner": {
-        "name": "Mithalas Banner",
-        "id": 698018,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Mithalas Pot": {
-        "name": "Mithalas Pot",
-        "id": 698019,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Mutant Costume": {
-        "name": "Mutant Costume",
-        "id": 698020,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -8212,9 +8214,7 @@
           "Damage",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -8226,165 +8226,7 @@
           "Damage",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Arnassi Armor": {
-        "name": "Arnassi Armor",
-        "id": 698023,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Seed Bag": {
-        "name": "Seed Bag",
-        "id": 698024,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "King's Skull": {
-        "name": "King's Skull",
-        "id": 698025,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Song Plant Spore": {
-        "name": "Song Plant Spore",
-        "id": 698026,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Stone Head": {
-        "name": "Stone Head",
-        "id": 698027,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Sun Key": {
-        "name": "Sun Key",
-        "id": 698028,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Girl Costume": {
-        "name": "Girl Costume",
-        "id": 698029,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Odd Container": {
-        "name": "Odd Container",
-        "id": 698030,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Trident": {
-        "name": "Trident",
-        "id": 698031,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Turtle Egg": {
-        "name": "Turtle Egg",
-        "id": 698032,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Jelly Egg": {
-        "name": "Jelly Egg",
-        "id": 698033,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Urchin Costume": {
-        "name": "Urchin Costume",
-        "id": 698034,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -8395,1063 +8237,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Vedha's Cure-All": {
-        "name": "Vedha's Cure-All",
-        "id": 698036,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Zuuna's Perogi": {
-        "name": "Zuuna's Perogi",
-        "id": 698037,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Arcane Poultice": {
-        "name": "Arcane Poultice",
-        "id": 698038,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 7
-      },
-      "Berry Ice Cream": {
-        "name": "Berry Ice Cream",
-        "id": 698039,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Buttery Sea Loaf": {
-        "name": "Buttery Sea Loaf",
-        "id": 698040,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Cold Borscht": {
-        "name": "Cold Borscht",
-        "id": 698041,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Cold Soup": {
-        "name": "Cold Soup",
-        "id": 698042,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Crab Cake": {
-        "name": "Crab Cake",
-        "id": 698043,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Divine Soup": {
-        "name": "Divine Soup",
-        "id": 698044,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Dumbo Ice Cream": {
-        "name": "Dumbo Ice Cream",
-        "id": 698045,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 3
-      },
-      "Fish Oil": {
-        "name": "Fish Oil",
-        "id": 698046,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Glowing Egg": {
-        "name": "Glowing Egg",
-        "id": 698047,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Hand Roll": {
-        "name": "Hand Roll",
-        "id": 698048,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 5
-      },
-      "Healing Poultice": {
-        "name": "Healing Poultice",
-        "id": 698049,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 4
-      },
-      "Hearty Soup": {
-        "name": "Hearty Soup",
-        "id": 698050,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 5
-      },
-      "Hot Borscht": {
-        "name": "Hot Borscht",
-        "id": 698051,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Hot Soup": {
-        "name": "Hot Soup",
-        "id": 698052,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 3
-      },
-      "Ice Cream": {
-        "name": "Ice Cream",
-        "id": 698053,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Leadership Roll": {
-        "name": "Leadership Roll",
-        "id": 698054,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Leaf Poultice": {
-        "name": "Leaf Poultice",
-        "id": 698055,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 5
-      },
-      "Leeching Poultice": {
-        "name": "Leeching Poultice",
-        "id": 698056,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 4
-      },
-      "Legendary Cake": {
-        "name": "Legendary Cake",
-        "id": 698057,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Loaf of Life": {
-        "name": "Loaf of Life",
-        "id": 698058,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Long Life Soup": {
-        "name": "Long Life Soup",
-        "id": 698059,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Magic Soup": {
-        "name": "Magic Soup",
-        "id": 698060,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Mushroom x 2": {
-        "name": "Mushroom x 2",
-        "id": 698061,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Perogi": {
-        "name": "Perogi",
-        "id": 698062,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Plant Leaf": {
-        "name": "Plant Leaf",
-        "id": 698063,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 3
-      },
-      "Plump Perogi": {
-        "name": "Plump Perogi",
-        "id": 698064,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Poison Loaf": {
-        "name": "Poison Loaf",
-        "id": 698065,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Poison Soup": {
-        "name": "Poison Soup",
-        "id": 698066,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Rainbow Mushroom": {
-        "name": "Rainbow Mushroom",
-        "id": 698067,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 4
-      },
-      "Rainbow Soup": {
-        "name": "Rainbow Soup",
-        "id": 698068,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Red Berry": {
-        "name": "Red Berry",
-        "id": 698069,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Red Bulb x 2": {
-        "name": "Red Bulb x 2",
-        "id": 698070,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 3
-      },
-      "Rotten Cake": {
-        "name": "Rotten Cake",
-        "id": 698071,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Rotten Loaf x 8": {
-        "name": "Rotten Loaf x 8",
-        "id": 698072,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Rotten Meat": {
-        "name": "Rotten Meat",
-        "id": 698073,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 5
-      },
-      "Royal Soup": {
-        "name": "Royal Soup",
-        "id": 698074,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Sea Cake": {
-        "name": "Sea Cake",
-        "id": 698075,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 4
-      },
-      "Sea Loaf": {
-        "name": "Sea Loaf",
-        "id": 698076,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Shark Fin Soup": {
-        "name": "Shark Fin Soup",
-        "id": 698077,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Sight Poultice": {
-        "name": "Sight Poultice",
-        "id": 698078,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Small Bone x 2": {
-        "name": "Small Bone x 2",
-        "id": 698079,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Small Egg": {
-        "name": "Small Egg",
-        "id": 698080,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Small Tentacle x 2": {
-        "name": "Small Tentacle x 2",
-        "id": 698081,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Special Bulb": {
-        "name": "Special Bulb",
-        "id": 698082,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 5
-      },
-      "Special Cake": {
-        "name": "Special Cake",
-        "id": 698083,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Spicy Meat x 2": {
-        "name": "Spicy Meat x 2",
-        "id": 698084,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 3
-      },
-      "Spicy Roll": {
-        "name": "Spicy Roll",
-        "id": 698085,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 11
-      },
-      "Spicy Soup": {
-        "name": "Spicy Soup",
-        "id": 698086,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Spider Roll": {
-        "name": "Spider Roll",
-        "id": 698087,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Swamp Cake": {
-        "name": "Swamp Cake",
-        "id": 698088,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 3
-      },
-      "Tasty Cake": {
-        "name": "Tasty Cake",
-        "id": 698089,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Tasty Roll": {
-        "name": "Tasty Roll",
-        "id": 698090,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Tough Cake": {
-        "name": "Tough Cake",
-        "id": 698091,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Turtle Soup": {
-        "name": "Turtle Soup",
-        "id": 698092,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Vedha Sea Crisp": {
-        "name": "Vedha Sea Crisp",
-        "id": 698093,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Veggie Cake": {
-        "name": "Veggie Cake",
-        "id": 698094,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Veggie Ice Cream": {
-        "name": "Veggie Ice Cream",
-        "id": 698095,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Veggie Soup": {
-        "name": "Veggie Soup",
-        "id": 698096,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Volcano Roll": {
-        "name": "Volcano Roll",
-        "id": 698097,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Health Upgrade": {
-        "name": "Health Upgrade",
-        "id": 698098,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 5
-      },
-      "Wok": {
-        "name": "Wok",
-        "id": 698099,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Eel Oil x 2": {
-        "name": "Eel Oil x 2",
-        "id": 698100,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Fish Meat x 2": {
-        "name": "Fish Meat x 2",
-        "id": 698101,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Fish Oil x 3": {
-        "name": "Fish Oil x 3",
-        "id": 698102,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Glowing Egg x 2": {
-        "name": "Glowing Egg x 2",
-        "id": 698103,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Healing Poultice x 2": {
-        "name": "Healing Poultice x 2",
-        "id": 698104,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Hot Soup x 2": {
-        "name": "Hot Soup x 2",
-        "id": 698105,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Leadership Roll x 2": {
-        "name": "Leadership Roll x 2",
-        "id": 698106,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Leaf Poultice x 3": {
-        "name": "Leaf Poultice x 3",
-        "id": 698107,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Plant Leaf x 2": {
-        "name": "Plant Leaf x 2",
-        "id": 698108,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Plant Leaf x 3": {
-        "name": "Plant Leaf x 3",
-        "id": 698109,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 4
-      },
-      "Rotten Meat x 2": {
-        "name": "Rotten Meat x 2",
-        "id": 698110,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Rotten Meat x 8": {
-        "name": "Rotten Meat x 8",
-        "id": 698111,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Sea Loaf x 2": {
-        "name": "Sea Loaf x 2",
-        "id": 698112,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Small Bone x 3": {
-        "name": "Small Bone x 3",
-        "id": 698113,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 3
-      },
-      "Small Egg x 2": {
-        "name": "Small Egg x 2",
-        "id": 698114,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Li and Li Song": {
-        "name": "Li and Li Song",
-        "id": 698115,
-        "groups": [
-          "Damage",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Shield Song": {
-        "name": "Shield Song",
-        "id": 698116,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -9463,37 +8249,150 @@
           "Damage",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Sun Form": {
-        "name": "Sun Form",
-        "id": 698118,
+      "Berry Ice Cream": {
+        "name": "Berry Ice Cream",
+        "id": 698039,
         "groups": [
-          "Everything",
-          "Light"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Nature Form": {
-        "name": "Nature Form",
-        "id": 698119,
-        "groups": [
-          "Damage",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Big Seed": {
+        "name": "Big Seed",
+        "id": 698002,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Bind Song": {
+        "name": "Bind Song",
+        "id": 698121,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Black Pearl": {
+        "name": "Black Pearl",
+        "id": 698004,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Buttery Sea Loaf": {
+        "name": "Buttery Sea Loaf",
+        "id": 698040,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cold Borscht": {
+        "name": "Cold Borscht",
+        "id": 698041,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Cold Soup": {
+        "name": "Cold Soup",
+        "id": 698042,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Crab Armor": {
+        "name": "Crab Armor",
+        "id": 698006,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Crab Cake": {
+        "name": "Crab Cake",
+        "id": 698043,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Divine Soup": {
+        "name": "Divine Soup",
+        "id": 698044,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Dual Form": {
+        "name": "Dual Form",
+        "id": 698124,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Dumbo Ice Cream": {
+        "name": "Dumbo Ice Cream",
+        "id": 698045,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "Eel Oil x 2": {
+        "name": "Eel Oil x 2",
+        "id": 698100,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -9505,22 +8404,18 @@
           "Damage",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Bind Song": {
-        "name": "Bind Song",
-        "id": 698121,
+      "Energy Statue": {
+        "name": "Energy Statue",
+        "id": 698009,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -9531,12 +8426,870 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
+      },
+      "Fish Meat x 2": {
+        "name": "Fish Meat x 2",
+        "id": 698101,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Fish Oil": {
+        "name": "Fish Oil",
+        "id": 698046,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Fish Oil x 3": {
+        "name": "Fish Oil x 3",
+        "id": 698102,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Girl Costume": {
+        "name": "Girl Costume",
+        "id": 698029,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Glowing Egg": {
+        "name": "Glowing Egg",
+        "id": 698047,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Glowing Egg x 2": {
+        "name": "Glowing Egg x 2",
+        "id": 698103,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Glowing Seed": {
+        "name": "Glowing Seed",
+        "id": 698003,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Golden Gear": {
+        "name": "Golden Gear",
+        "id": 698012,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Golden Starfish": {
+        "name": "Golden Starfish",
+        "id": 698011,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hand Roll": {
+        "name": "Hand Roll",
+        "id": 698048,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 5
+      },
+      "Healing Poultice": {
+        "name": "Healing Poultice",
+        "id": 698049,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "Healing Poultice x 2": {
+        "name": "Healing Poultice x 2",
+        "id": 698104,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Health Upgrade": {
+        "name": "Health Upgrade",
+        "id": 698098,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 5
+      },
+      "Hearty Soup": {
+        "name": "Hearty Soup",
+        "id": 698050,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 5
+      },
+      "Hot Borscht": {
+        "name": "Hot Borscht",
+        "id": 698051,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hot Soup": {
+        "name": "Hot Soup",
+        "id": 698052,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "Hot Soup x 2": {
+        "name": "Hot Soup x 2",
+        "id": 698105,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ice Cream": {
+        "name": "Ice Cream",
+        "id": 698053,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Jelly Beacon": {
+        "name": "Jelly Beacon",
+        "id": 698013,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Jelly Costume": {
+        "name": "Jelly Costume",
+        "id": 698014,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Jelly Egg": {
+        "name": "Jelly Egg",
+        "id": 698033,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Jelly Plant": {
+        "name": "Jelly Plant",
+        "id": 698015,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "King's Skull": {
+        "name": "King's Skull",
+        "id": 698025,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Krotite Armor": {
+        "name": "Krotite Armor",
+        "id": 698010,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Leadership Roll": {
+        "name": "Leadership Roll",
+        "id": 698054,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Leadership Roll x 2": {
+        "name": "Leadership Roll x 2",
+        "id": 698106,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Leaf Poultice": {
+        "name": "Leaf Poultice",
+        "id": 698055,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 5
+      },
+      "Leaf Poultice x 3": {
+        "name": "Leaf Poultice x 3",
+        "id": 698107,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Leeching Poultice": {
+        "name": "Leeching Poultice",
+        "id": 698056,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "Legendary Cake": {
+        "name": "Legendary Cake",
+        "id": 698057,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Li and Li Song": {
+        "name": "Li and Li Song",
+        "id": 698115,
+        "groups": [
+          "Damage",
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Loaf of Life": {
+        "name": "Loaf of Life",
+        "id": 698058,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Long Life Soup": {
+        "name": "Long Life Soup",
+        "id": 698059,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Magic Soup": {
+        "name": "Magic Soup",
+        "id": 698060,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mithalan Dress": {
+        "name": "Mithalan Dress",
+        "id": 698017,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mithalas Banner": {
+        "name": "Mithalas Banner",
+        "id": 698018,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mithalas Doll": {
+        "name": "Mithalas Doll",
+        "id": 698016,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mithalas Pot": {
+        "name": "Mithalas Pot",
+        "id": 698019,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mushroom x 2": {
+        "name": "Mushroom x 2",
+        "id": 698061,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mutant Costume": {
+        "name": "Mutant Costume",
+        "id": 698020,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Nature Form": {
+        "name": "Nature Form",
+        "id": 698119,
+        "groups": [
+          "Damage",
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Odd Container": {
+        "name": "Odd Container",
+        "id": 698030,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Perogi": {
+        "name": "Perogi",
+        "id": 698062,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Plant Leaf": {
+        "name": "Plant Leaf",
+        "id": 698063,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "Plant Leaf x 2": {
+        "name": "Plant Leaf x 2",
+        "id": 698108,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Plant Leaf x 3": {
+        "name": "Plant Leaf x 3",
+        "id": 698109,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "Plump Perogi": {
+        "name": "Plump Perogi",
+        "id": 698064,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Poison Loaf": {
+        "name": "Poison Loaf",
+        "id": 698065,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Poison Soup": {
+        "name": "Poison Soup",
+        "id": 698066,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rainbow Mushroom": {
+        "name": "Rainbow Mushroom",
+        "id": 698067,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "Rainbow Soup": {
+        "name": "Rainbow Soup",
+        "id": 698068,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Red Berry": {
+        "name": "Red Berry",
+        "id": 698069,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Red Bulb x 2": {
+        "name": "Red Bulb x 2",
+        "id": 698070,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "Rotten Cake": {
+        "name": "Rotten Cake",
+        "id": 698071,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rotten Loaf x 8": {
+        "name": "Rotten Loaf x 8",
+        "id": 698072,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rotten Meat": {
+        "name": "Rotten Meat",
+        "id": 698073,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 5
+      },
+      "Rotten Meat x 2": {
+        "name": "Rotten Meat x 2",
+        "id": 698110,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rotten Meat x 8": {
+        "name": "Rotten Meat x 8",
+        "id": 698111,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Royal Soup": {
+        "name": "Royal Soup",
+        "id": 698074,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sea Cake": {
+        "name": "Sea Cake",
+        "id": 698075,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "Sea Loaf": {
+        "name": "Sea Loaf",
+        "id": 698076,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sea Loaf x 2": {
+        "name": "Sea Loaf x 2",
+        "id": 698112,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Seed Bag": {
+        "name": "Seed Bag",
+        "id": 698024,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Shark Fin Soup": {
+        "name": "Shark Fin Soup",
+        "id": 698077,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Shield Song": {
+        "name": "Shield Song",
+        "id": 698116,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sight Poultice": {
+        "name": "Sight Poultice",
+        "id": 698078,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Small Bone x 2": {
+        "name": "Small Bone x 2",
+        "id": 698079,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Small Bone x 3": {
+        "name": "Small Bone x 3",
+        "id": 698113,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "Small Egg": {
+        "name": "Small Egg",
+        "id": 698080,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Small Egg x 2": {
+        "name": "Small Egg x 2",
+        "id": 698114,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Small Tentacle x 2": {
+        "name": "Small Tentacle x 2",
+        "id": 698081,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Song Plant Spore": {
+        "name": "Song Plant Spore",
+        "id": 698026,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Special Bulb": {
+        "name": "Special Bulb",
+        "id": 698082,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 5
+      },
+      "Special Cake": {
+        "name": "Special Cake",
+        "id": 698083,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Spicy Meat x 2": {
+        "name": "Spicy Meat x 2",
+        "id": 698084,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "Spicy Roll": {
+        "name": "Spicy Roll",
+        "id": 698085,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 11
+      },
+      "Spicy Soup": {
+        "name": "Spicy Soup",
+        "id": 698086,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Spider Roll": {
+        "name": "Spider Roll",
+        "id": 698087,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 2
       },
       "Spirit Form": {
         "name": "Spirit Form",
@@ -9544,87 +9297,96 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Dual Form": {
-        "name": "Dual Form",
-        "id": 698124,
+      "Stone Head": {
+        "name": "Stone Head",
+        "id": 698027,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Transturtle Veil top left": {
-        "name": "Transturtle Veil top left",
-        "id": 698125,
+      "Sun Form": {
+        "name": "Sun Form",
+        "id": 698118,
         "groups": [
-          "Everything"
+          "Everything",
+          "Light"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Transturtle Veil top right": {
-        "name": "Transturtle Veil top right",
-        "id": 698126,
+      "Sun Key": {
+        "name": "Sun Key",
+        "id": 698028,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Transturtle Open Waters top right": {
-        "name": "Transturtle Open Waters top right",
-        "id": 698127,
+      "Swamp Cake": {
+        "name": "Swamp Cake",
+        "id": 698088,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "Tasty Cake": {
+        "name": "Tasty Cake",
+        "id": 698089,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Transturtle Kelp Forest bottom left": {
-        "name": "Transturtle Kelp Forest bottom left",
-        "id": 698128,
+      "Tasty Roll": {
+        "name": "Tasty Roll",
+        "id": 698090,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Tooth": {
+        "name": "Tooth",
+        "id": 698008,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Transturtle Home Waters": {
-        "name": "Transturtle Home Waters",
-        "id": 698129,
+      "Tough Cake": {
+        "name": "Tough Cake",
+        "id": 698091,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -9635,35 +9397,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Transturtle Final Boss": {
-        "name": "Transturtle Final Boss",
-        "id": 698131,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Transturtle Simon Says": {
-        "name": "Transturtle Simon Says",
-        "id": 698132,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -9674,258 +9408,219 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Blaster Peg Prime beated": {
-        "name": "Blaster Peg Prime beated",
-        "id": null,
+      "Transturtle Final Boss": {
+        "name": "Transturtle Final Boss",
+        "id": 698131,
         "groups": [
-          "Event"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "useful",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "Crabbius Maximus beated": {
-        "name": "Crabbius Maximus beated",
-        "id": null,
+      "Transturtle Home Waters": {
+        "name": "Transturtle Home Waters",
+        "id": 698129,
         "groups": [
-          "Event"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "useful",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "Drunian God beated": {
-        "name": "Drunian God beated",
-        "id": null,
+      "Transturtle Kelp Forest bottom left": {
+        "name": "Transturtle Kelp Forest bottom left",
+        "id": 698128,
         "groups": [
-          "Event"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "progression",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "Fallen God beated": {
-        "name": "Fallen God beated",
-        "id": null,
+      "Transturtle Open Waters top right": {
+        "name": "Transturtle Open Waters top right",
+        "id": 698127,
         "groups": [
-          "Event"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "progression",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "King Jellyfish God Prime beated": {
-        "name": "King Jellyfish God Prime beated",
-        "id": null,
+      "Transturtle Simon Says": {
+        "name": "Transturtle Simon Says",
+        "id": 698132,
         "groups": [
-          "Event"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "progression",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "Lumerean God beated": {
-        "name": "Lumerean God beated",
-        "id": null,
+      "Transturtle Veil top left": {
+        "name": "Transturtle Veil top left",
+        "id": 698125,
         "groups": [
-          "Event"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "progression",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "Mantis Shrimp Prime beated": {
-        "name": "Mantis Shrimp Prime beated",
-        "id": null,
+      "Transturtle Veil top right": {
+        "name": "Transturtle Veil top right",
+        "id": 698126,
         "groups": [
-          "Event"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "progression",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "Mergog beated": {
-        "name": "Mergog beated",
-        "id": null,
+      "Trident": {
+        "name": "Trident",
+        "id": 698031,
         "groups": [
-          "Event"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "filler",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "Mithalan God beated": {
-        "name": "Mithalan God beated",
-        "id": null,
+      "Turtle Egg": {
+        "name": "Turtle Egg",
+        "id": 698032,
         "groups": [
-          "Event"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "filler",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "Mithalan priests beated": {
-        "name": "Mithalan priests beated",
-        "id": null,
+      "Turtle Soup": {
+        "name": "Turtle Soup",
+        "id": 698092,
         "groups": [
-          "Event"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Urchin Costume": {
+        "name": "Urchin Costume",
+        "id": 698034,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "Nautilus Prime beated": {
-        "name": "Nautilus Prime beated",
-        "id": null,
+      "Vedha Sea Crisp": {
+        "name": "Vedha Sea Crisp",
+        "id": 698093,
         "groups": [
-          "Event"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Vedha's Cure-All": {
+        "name": "Vedha's Cure-All",
+        "hint_text": "Vedha's Cure All",
+        "id": 698036,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "Octopus Prime beated": {
-        "name": "Octopus Prime beated",
-        "id": null,
+      "Veggie Cake": {
+        "name": "Veggie Cake",
+        "id": 698094,
         "groups": [
-          "Event"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "useful",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "The Golem beated": {
-        "name": "The Golem beated",
-        "id": null,
+      "Veggie Ice Cream": {
+        "name": "Veggie Ice Cream",
+        "id": 698095,
         "groups": [
-          "Event"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "useful",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "First Secret obtained": {
-        "name": "First Secret obtained",
-        "id": null,
+      "Veggie Soup": {
+        "name": "Veggie Soup",
+        "id": 698096,
         "groups": [
-          "Event"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Volcano Roll": {
+        "name": "Volcano Roll",
+        "id": 698097,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "Victory": {
-        "name": "Victory",
-        "id": null,
+      "Wok": {
+        "name": "Wok",
+        "id": 698099,
         "groups": [
-          "Event"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "useful",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "Second Secret obtained": {
-        "name": "Second Secret obtained",
-        "id": null,
+      "Zuuna's Perogi": {
+        "name": "Zuuna's Perogi",
+        "id": 698037,
         "groups": [
-          "Event"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Has Sun Crystal": {
-        "name": "Has Sun Crystal",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Body Tongue cleared": {
-        "name": "Body Tongue cleared",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Third Secret obtained": {
-        "name": "Third Secret obtained",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "useful",
+        "event": false,
+        "type": null,
         "max_count": 1
       }
     }
@@ -10115,5 +9810,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

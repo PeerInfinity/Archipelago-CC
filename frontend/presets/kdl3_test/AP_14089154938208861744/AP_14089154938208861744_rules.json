@@ -15583,6 +15583,29 @@
   },
   "items": {
     "1": {
+      "1-Up": {
+        "name": "1-Up",
+        "hint_text": "1 Up",
+        "id": 7798817,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 10
+      },
+      "Big Star": {
+        "name": "Big Star",
+        "id": 7798822,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Burning": {
         "name": "Burning",
         "id": 7798785,
@@ -15590,163 +15613,7 @@
           "Copy Ability",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Stone": {
-        "name": "Stone",
-        "id": 7798786,
-        "groups": [
-          "Copy Ability",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Ice": {
-        "name": "Ice",
-        "id": 7798787,
-        "groups": [
-          "Copy Ability",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Needle": {
-        "name": "Needle",
-        "id": 7798788,
-        "groups": [
-          "Copy Ability",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Clean": {
-        "name": "Clean",
-        "id": 7798789,
-        "groups": [
-          "Copy Ability",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Parasol": {
-        "name": "Parasol",
-        "id": 7798790,
-        "groups": [
-          "Copy Ability",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Spark": {
-        "name": "Spark",
-        "id": 7798791,
-        "groups": [
-          "Copy Ability",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Cutter": {
-        "name": "Cutter",
-        "id": 7798792,
-        "groups": [
-          "Copy Ability",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Rick": {
-        "name": "Rick",
-        "id": 7798800,
-        "groups": [
-          "Animal Friend",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Kine": {
-        "name": "Kine",
-        "id": 7798801,
-        "groups": [
-          "Animal Friend",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Coo": {
-        "name": "Coo",
-        "id": 7798802,
-        "groups": [
-          "Animal Friend",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Nago": {
-        "name": "Nago",
-        "id": 7798803,
-        "groups": [
-          "Animal Friend",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -15758,9 +15625,180 @@
           "Animal Friend",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Clean": {
+        "name": "Clean",
+        "id": 7798789,
+        "groups": [
+          "Copy Ability",
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Coo": {
+        "name": "Coo",
+        "id": 7798802,
+        "groups": [
+          "Animal Friend",
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cutter": {
+        "name": "Cutter",
+        "id": 7798792,
+        "groups": [
+          "Copy Ability",
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Eject Ability": {
+        "name": "Eject Ability",
+        "id": 7798850,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "trap",
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "Gooey Bag": {
+        "name": "Gooey Bag",
+        "id": 7798848,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "trap",
+        "event": false,
+        "type": null,
+        "max_count": 9
+      },
+      "Heart Star": {
+        "name": "Heart Star",
+        "id": 7798816,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 23
+      },
+      "Ice": {
+        "name": "Ice",
+        "id": 7798787,
+        "groups": [
+          "Copy Ability",
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Invincible Candy": {
+        "name": "Invincible Candy",
+        "id": 7798819,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "Kine": {
+        "name": "Kine",
+        "id": 7798801,
+        "groups": [
+          "Animal Friend",
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Little Star": {
+        "name": "Little Star",
+        "id": 7798820,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Maxim Tomato": {
+        "name": "Maxim Tomato",
+        "id": 7798818,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Medium Star": {
+        "name": "Medium Star",
+        "id": 7798821,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Nago": {
+        "name": "Nago",
+        "id": 7798803,
+        "groups": [
+          "Animal Friend",
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Needle": {
+        "name": "Needle",
+        "id": 7798788,
+        "groups": [
+          "Copy Ability",
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Parasol": {
+        "name": "Parasol",
+        "id": 7798790,
+        "groups": [
+          "Copy Ability",
+          "Everything"
+        ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -15772,116 +15810,22 @@
           "Animal Friend",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Heart Star": {
-        "name": "Heart Star",
-        "id": 7798816,
+      "Rick": {
+        "name": "Rick",
+        "id": 7798800,
         "groups": [
+          "Animal Friend",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 23
-      },
-      "1-Up": {
-        "name": "1-Up",
-        "id": 7798817,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 10
-      },
-      "Maxim Tomato": {
-        "name": "Maxim Tomato",
-        "id": 7798818,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
-      },
-      "Invincible Candy": {
-        "name": "Invincible Candy",
-        "id": 7798819,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 3
-      },
-      "Little Star": {
-        "name": "Little Star",
-        "id": 7798820,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Medium Star": {
-        "name": "Medium Star",
-        "id": 7798821,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Big Star": {
-        "name": "Big Star",
-        "id": 7798822,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Gooey Bag": {
-        "name": "Gooey Bag",
-        "id": 7798848,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
-        "event": false,
-        "type": null,
-        "max_count": 9
       },
       "Slowness": {
         "name": "Slowness",
@@ -15889,427 +15833,318 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
+        "classification": "trap",
         "event": false,
         "type": null,
         "max_count": 2
       },
-      "Eject Ability": {
-        "name": "Eject Ability",
-        "id": 7798850,
+      "Spark": {
+        "name": "Spark",
+        "id": 7798791,
         "groups": [
+          "Copy Ability",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 1
+      },
+      "Stone": {
+        "name": "Stone",
+        "id": 7798786,
+        "groups": [
+          "Copy Ability",
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
       },
       "Rick Spawn": {
         "name": "Rick Spawn",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 20
       },
       "Nago Spawn": {
         "name": "Nago Spawn",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 16
       },
       "Coo Spawn": {
         "name": "Coo Spawn",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 17
       },
       "Kine Spawn": {
         "name": "Kine Spawn",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 13
       },
       "ChuChu Spawn": {
         "name": "ChuChu Spawn",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 17
       },
       "Pitch Spawn": {
         "name": "Pitch Spawn",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 15
       },
       "No Ability": {
         "name": "No Ability",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 190
       },
       "Cutter Ability": {
         "name": "Cutter Ability",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 22
       },
       "Clean Ability": {
         "name": "Clean Ability",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 23
       },
       "Needle Ability": {
         "name": "Needle Ability",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 22
       },
       "Burning Ability": {
         "name": "Burning Ability",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 26
       },
       "Spark Ability": {
         "name": "Spark Ability",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 22
       },
       "Cloudy Park - Stage Completion": {
         "name": "Cloudy Park - Stage Completion",
+        "hint_text": "Cloudy Park   Stage Completion",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 6
       },
       "Ice Ability": {
         "name": "Ice Ability",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 18
       },
       "Stone Ability": {
         "name": "Stone Ability",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 19
       },
       "Parasol Ability": {
         "name": "Parasol Ability",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 21
       },
       "Grass Land - Stage Completion": {
         "name": "Grass Land - Stage Completion",
+        "hint_text": "Grass Land   Stage Completion",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 6
       },
       "Love-Love Rod": {
         "name": "Love-Love Rod",
+        "hint_text": "Love Love Rod",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       },
       "Iceberg - Stage Completion": {
         "name": "Iceberg - Stage Completion",
+        "hint_text": "Iceberg   Stage Completion",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 6
       },
       "Level 1 Boss Defeated": {
         "name": "Level 1 Boss Defeated",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       },
       "Level 1 Boss Purified": {
         "name": "Level 1 Boss Purified",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       },
       "Level 2 Boss Defeated": {
         "name": "Level 2 Boss Defeated",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       },
       "Level 2 Boss Purified": {
         "name": "Level 2 Boss Purified",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       },
       "Level 3 Boss Defeated": {
         "name": "Level 3 Boss Defeated",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       },
       "Level 3 Boss Purified": {
         "name": "Level 3 Boss Purified",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       },
       "Level 4 Boss Defeated": {
         "name": "Level 4 Boss Defeated",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       },
       "Level 4 Boss Purified": {
         "name": "Level 4 Boss Purified",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       },
       "Level 5 Boss Defeated": {
         "name": "Level 5 Boss Defeated",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       },
       "Level 5 Boss Purified": {
         "name": "Level 5 Boss Purified",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       },
       "Ripple Field - Stage Completion": {
         "name": "Ripple Field - Stage Completion",
+        "hint_text": "Ripple Field   Stage Completion",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 6
       },
       "Sand Canyon - Stage Completion": {
         "name": "Sand Canyon - Stage Completion",
+        "hint_text": "Sand Canyon   Stage Completion",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 6
       }
     }
@@ -16397,5 +16232,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

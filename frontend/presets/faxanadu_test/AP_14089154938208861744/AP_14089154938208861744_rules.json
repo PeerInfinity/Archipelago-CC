@@ -2315,236 +2315,13 @@
   },
   "items": {
     "1": {
-      "Progressive Sword": {
-        "name": "Progressive Sword",
-        "id": 400000,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 4
-      },
-      "Progressive Armor": {
-        "name": "Progressive Armor",
-        "id": 400001,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 3
-      },
-      "Progressive Shield": {
-        "name": "Progressive Shield",
-        "id": 400002,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 4
-      },
-      "Spring Elixir": {
-        "name": "Spring Elixir",
-        "id": 400003,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Mattock": {
-        "name": "Mattock",
-        "id": 400004,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Unlock Wingboots": {
-        "name": "Unlock Wingboots",
-        "id": 400005,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Key Jack": {
-        "name": "Key Jack",
-        "id": 400006,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Key Queen": {
-        "name": "Key Queen",
-        "id": 400007,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Key King": {
-        "name": "Key King",
-        "id": 400008,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Key Joker": {
-        "name": "Key Joker",
-        "id": 400009,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Key Ace": {
-        "name": "Key Ace",
-        "id": 400010,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Ring of Ruby": {
-        "name": "Ring of Ruby",
-        "id": 400011,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Ring of Dworf": {
-        "name": "Ring of Dworf",
-        "id": 400012,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Demons Ring": {
-        "name": "Demons Ring",
-        "id": 400013,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
       "Black Onyx": {
         "name": "Black Onyx",
         "id": 400014,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Deluge": {
-        "name": "Deluge",
-        "id": 400015,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Thunder": {
-        "name": "Thunder",
-        "id": 400016,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Fire": {
-        "name": "Fire",
-        "id": 400017,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2555,35 +2332,128 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Tilte": {
-        "name": "Tilte",
-        "id": 400019,
+      "Deluge": {
+        "name": "Deluge",
+        "id": 400015,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Ring of Elf": {
-        "name": "Ring of Elf",
-        "id": 400020,
+      "Demons Ring": {
+        "name": "Demons Ring",
+        "id": 400013,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Elixir": {
+        "name": "Elixir",
+        "id": 400025,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "Fire": {
+        "name": "Fire",
+        "id": 400017,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Glove": {
+        "name": "Glove",
+        "id": 400026,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Hourglass": {
+        "name": "Hourglass",
+        "id": 400023,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 10
+      },
+      "Key Ace": {
+        "name": "Key Ace",
+        "id": 400010,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Key Jack": {
+        "name": "Key Jack",
+        "id": 400006,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Key Joker": {
+        "name": "Key Joker",
+        "id": 400009,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Key King": {
+        "name": "Key King",
+        "id": 400008,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Key Queen": {
+        "name": "Key Queen",
+        "id": 400007,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -2594,77 +2464,21 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Pendant": {
-        "name": "Pendant",
-        "id": 400022,
+      "Mattock": {
+        "name": "Mattock",
+        "id": 400004,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
-      },
-      "Hourglass": {
-        "name": "Hourglass",
-        "id": 400023,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 10
-      },
-      "Red Potion": {
-        "name": "Red Potion",
-        "id": 400024,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 35
-      },
-      "Elixir": {
-        "name": "Elixir",
-        "id": 400025,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 4
-      },
-      "Glove": {
-        "name": "Glove",
-        "id": 400026,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
       },
       "Ointment": {
         "name": "Ointment",
@@ -2672,12 +2486,21 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 8
+      },
+      "Pendant": {
+        "name": "Pendant",
+        "id": 400022,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
       },
       "Poison": {
         "name": "Poison",
@@ -2685,12 +2508,131 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
+        "classification": "trap",
         "event": false,
         "type": null,
         "max_count": 17
+      },
+      "Progressive Armor": {
+        "name": "Progressive Armor",
+        "id": 400001,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "Progressive Shield": {
+        "name": "Progressive Shield",
+        "id": 400002,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "Progressive Sword": {
+        "name": "Progressive Sword",
+        "id": 400000,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "Red Potion": {
+        "name": "Red Potion",
+        "id": 400024,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 35
+      },
+      "Ring of Dworf": {
+        "name": "Ring of Dworf",
+        "id": 400012,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ring of Elf": {
+        "name": "Ring of Elf",
+        "id": 400020,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ring of Ruby": {
+        "name": "Ring of Ruby",
+        "id": 400011,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Spring Elixir": {
+        "name": "Spring Elixir",
+        "id": 400003,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Thunder": {
+        "name": "Thunder",
+        "id": 400016,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Tilte": {
+        "name": "Tilte",
+        "id": 400019,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Unlock Wingboots": {
+        "name": "Unlock Wingboots",
+        "id": 400005,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
       },
       "Wingboots": {
         "name": "Wingboots",
@@ -2698,9 +2640,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 4
@@ -2708,53 +2648,37 @@
       "Killed Evil One": {
         "name": "Killed Evil One",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       },
       "Joker Spring Flow": {
         "name": "Joker Spring Flow",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       },
       "Sky Spring Flow": {
         "name": "Sky Spring Flow",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       },
       "Tower of Fortress Spring Flow": {
         "name": "Tower of Fortress Spring Flow",
         "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       }
     }
@@ -2821,5 +2745,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }
