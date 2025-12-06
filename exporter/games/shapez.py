@@ -13,6 +13,9 @@ class ShapezGameExportHandler(GenericGameExportHandler):
     HELPER_MODULES = ['worlds.shapez.regions']
     ITEM_NAME_MODULES = ['worlds.shapez.data.strings']
 
+    # Enable automatic export of discovered helpers
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+
     # Helpers that should NOT be exported as definitions (too complex, need JS implementation)
     # These will remain as helper calls that the frontend JavaScript must handle
     HELPERS_TO_EXPORT_BLACKLIST = {

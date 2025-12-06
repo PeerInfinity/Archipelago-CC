@@ -27,8 +27,14 @@ class BaseGameExportHandler:
     # The exporter will look for classes like ITEMS with attributes that map to item names
     ITEM_NAME_MODULES: List[str] = []
 
+    # Whether to automatically export discovered helpers as definitions
+    # When False (default), only whitelisted helpers are exported
+    # When True, discovered helpers are exported (minus blacklist)
+    # Games must explicitly set this to True to enable automatic helper export
+    AUTO_EXPORT_DISCOVERED_HELPERS: bool = False
+
     # Set of helper function names to export as definitions (manual whitelist)
-    # If empty, automatic discovery is used instead
+    # These helpers are always exported regardless of AUTO_EXPORT_DISCOVERED_HELPERS
     HELPERS_TO_EXPORT_WHITELIST: Set[str] = set()
 
     # Set of helper function names to NOT export as definitions (blacklist)
@@ -465,14 +471,19 @@ class BaseGameExportHandler:
 
         helper_definitions = {}
 
-        # Combine discovered helpers with manual whitelist
-        discovered = self.get_discovered_helpers()
+        # Get helper configuration
         whitelist = self.get_helpers_to_export_whitelist()
         blacklist = self.get_helpers_to_export_blacklist()
         helper_modules = self.get_helper_modules()
 
-        # Use discovered helpers if available, otherwise fall back to whitelist
-        helpers_to_export = discovered | whitelist
+        # Determine which helpers to export based on AUTO_EXPORT_DISCOVERED_HELPERS
+        # When False (default), only whitelisted helpers are exported
+        # When True, discovered helpers are also exported (minus blacklist)
+        if self.AUTO_EXPORT_DISCOVERED_HELPERS:
+            discovered = self.get_discovered_helpers()
+            helpers_to_export = discovered | whitelist
+        else:
+            helpers_to_export = whitelist
 
         if not helpers_to_export or not helper_modules:
             return helper_definitions
