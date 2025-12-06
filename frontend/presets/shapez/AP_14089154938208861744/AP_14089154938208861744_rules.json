@@ -324,64 +324,360 @@
             "name": "Using first level building",
             "connected_region": "Levels with 1 building",
             "access_rule": {
-              "type": "helper",
-              "name": "has_logic_list_building",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Cutter",
-                    "Rotator",
-                    "Painter",
-                    "Color Mixer",
-                    "Stacker"
-                  ]
+              "type": "conditional",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": false
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "has_balancer",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "has_tunnel",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Trash"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": false
+              },
+              "if_false": {
+                "type": "conditional",
+                "test": {
+                  "type": "compare",
+                  "left": {
+                    "type": "constant",
+                    "value": "Cutter"
+                  },
+                  "op": "==",
+                  "right": {
+                    "type": "constant",
+                    "value": "Cutter"
+                  }
                 },
-                {
-                  "type": "constant",
-                  "value": 0
+                "if_true": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": 4
+                        },
+                        "op": "<",
+                        "right": {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  "if_true": {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Cutter",
+                          "Quad Cutter"
+                        ]
+                      }
+                    ]
+                  },
+                  "if_false": {
+                    "type": "helper",
+                    "name": "can_cut_half",
+                    "args": []
+                  }
                 },
-                {
-                  "type": "constant",
-                  "value": false
-                },
-                {
-                  "type": "constant",
-                  "value": false
+                "if_false": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "constant",
+                      "value": "Cutter"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": "Rotator"
+                    }
+                  },
+                  "if_true": {
+                    "type": "helper",
+                    "name": "can_rotate_90",
+                    "args": []
+                  },
+                  "if_false": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "compare",
+                      "left": {
+                        "type": "constant",
+                        "value": "Cutter"
+                      },
+                      "op": "==",
+                      "right": {
+                        "type": "constant",
+                        "value": "Stacker"
+                      }
+                    },
+                    "if_true": {
+                      "type": "helper",
+                      "name": "can_stack",
+                      "args": []
+                    },
+                    "if_false": {
+                      "type": "conditional",
+                      "test": {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": "Cutter"
+                        },
+                        "op": "==",
+                        "right": {
+                          "type": "constant",
+                          "value": "Painter"
+                        }
+                      },
+                      "if_true": {
+                        "type": "helper",
+                        "name": "can_paint",
+                        "args": []
+                      },
+                      "if_false": {
+                        "type": "conditional",
+                        "test": {
+                          "type": "compare",
+                          "left": {
+                            "type": "constant",
+                            "value": "Cutter"
+                          },
+                          "op": "==",
+                          "right": {
+                            "type": "constant",
+                            "value": "Color Mixer"
+                          }
+                        },
+                        "if_true": {
+                          "type": "helper",
+                          "name": "can_mix_colors",
+                          "args": []
+                        },
+                        "if_false": null
+                      }
+                    }
+                  }
                 }
-              ]
+              }
             }
           },
           {
             "name": "Using first upgrade building",
             "connected_region": "Upgrades with 1 building",
             "access_rule": {
-              "type": "helper",
-              "name": "has_logic_list_building",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Stacker",
-                    "Cutter",
-                    "Rotator",
-                    "Painter",
-                    "Color Mixer"
-                  ]
+              "type": "conditional",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": false
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "has_balancer",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "has_tunnel",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Trash"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": false
+              },
+              "if_false": {
+                "type": "conditional",
+                "test": {
+                  "type": "compare",
+                  "left": {
+                    "type": "constant",
+                    "value": "Stacker"
+                  },
+                  "op": "==",
+                  "right": {
+                    "type": "constant",
+                    "value": "Cutter"
+                  }
                 },
-                {
-                  "type": "constant",
-                  "value": 0
+                "if_true": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        "op": "<",
+                        "right": {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  "if_true": {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Cutter",
+                          "Quad Cutter"
+                        ]
+                      }
+                    ]
+                  },
+                  "if_false": {
+                    "type": "helper",
+                    "name": "can_cut_half",
+                    "args": []
+                  }
                 },
-                {
-                  "type": "constant",
-                  "value": false
-                },
-                {
-                  "type": "constant",
-                  "value": false
+                "if_false": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "constant",
+                      "value": "Stacker"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": "Rotator"
+                    }
+                  },
+                  "if_true": {
+                    "type": "helper",
+                    "name": "can_rotate_90",
+                    "args": []
+                  },
+                  "if_false": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "compare",
+                      "left": {
+                        "type": "constant",
+                        "value": "Stacker"
+                      },
+                      "op": "==",
+                      "right": {
+                        "type": "constant",
+                        "value": "Stacker"
+                      }
+                    },
+                    "if_true": {
+                      "type": "helper",
+                      "name": "can_stack",
+                      "args": []
+                    },
+                    "if_false": {
+                      "type": "conditional",
+                      "test": {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": "Stacker"
+                        },
+                        "op": "==",
+                        "right": {
+                          "type": "constant",
+                          "value": "Painter"
+                        }
+                      },
+                      "if_true": {
+                        "type": "helper",
+                        "name": "can_paint",
+                        "args": []
+                      },
+                      "if_false": {
+                        "type": "conditional",
+                        "test": {
+                          "type": "compare",
+                          "left": {
+                            "type": "constant",
+                            "value": "Stacker"
+                          },
+                          "op": "==",
+                          "right": {
+                            "type": "constant",
+                            "value": "Color Mixer"
+                          }
+                        },
+                        "if_true": {
+                          "type": "helper",
+                          "name": "can_mix_colors",
+                          "args": []
+                        },
+                        "if_false": null
+                      }
+                    }
+                  }
                 }
-              ]
+              }
             }
           },
           {
@@ -750,32 +1046,180 @@
             "name": "Using second level building",
             "connected_region": "Levels with 2 buildings",
             "access_rule": {
-              "type": "helper",
-              "name": "has_logic_list_building",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Cutter",
-                    "Rotator",
-                    "Painter",
-                    "Color Mixer",
-                    "Stacker"
-                  ]
+              "type": "conditional",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": false
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "has_balancer",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "has_tunnel",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Trash"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": false
+              },
+              "if_false": {
+                "type": "conditional",
+                "test": {
+                  "type": "compare",
+                  "left": {
+                    "type": "constant",
+                    "value": "Rotator"
+                  },
+                  "op": "==",
+                  "right": {
+                    "type": "constant",
+                    "value": "Cutter"
+                  }
                 },
-                {
-                  "type": "constant",
-                  "value": 1
+                "if_true": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": 4
+                        },
+                        "op": "<",
+                        "right": {
+                          "type": "constant",
+                          "value": 1
+                        }
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  "if_true": {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Cutter",
+                          "Quad Cutter"
+                        ]
+                      }
+                    ]
+                  },
+                  "if_false": {
+                    "type": "helper",
+                    "name": "can_cut_half",
+                    "args": []
+                  }
                 },
-                {
-                  "type": "constant",
-                  "value": false
-                },
-                {
-                  "type": "constant",
-                  "value": false
+                "if_false": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "constant",
+                      "value": "Rotator"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": "Rotator"
+                    }
+                  },
+                  "if_true": {
+                    "type": "helper",
+                    "name": "can_rotate_90",
+                    "args": []
+                  },
+                  "if_false": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "compare",
+                      "left": {
+                        "type": "constant",
+                        "value": "Rotator"
+                      },
+                      "op": "==",
+                      "right": {
+                        "type": "constant",
+                        "value": "Stacker"
+                      }
+                    },
+                    "if_true": {
+                      "type": "helper",
+                      "name": "can_stack",
+                      "args": []
+                    },
+                    "if_false": {
+                      "type": "conditional",
+                      "test": {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": "Rotator"
+                        },
+                        "op": "==",
+                        "right": {
+                          "type": "constant",
+                          "value": "Painter"
+                        }
+                      },
+                      "if_true": {
+                        "type": "helper",
+                        "name": "can_paint",
+                        "args": []
+                      },
+                      "if_false": {
+                        "type": "conditional",
+                        "test": {
+                          "type": "compare",
+                          "left": {
+                            "type": "constant",
+                            "value": "Rotator"
+                          },
+                          "op": "==",
+                          "right": {
+                            "type": "constant",
+                            "value": "Color Mixer"
+                          }
+                        },
+                        "if_true": {
+                          "type": "helper",
+                          "name": "can_mix_colors",
+                          "args": []
+                        },
+                        "if_false": null
+                      }
+                    }
+                  }
                 }
-              ]
+              }
             }
           }
         ],
@@ -849,40 +1293,180 @@
             "name": "Using third level building",
             "connected_region": "Levels with 3 buildings",
             "access_rule": {
-              "type": "helper",
-              "name": "has_logic_list_building",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Cutter",
-                    "Rotator",
-                    "Painter",
-                    "Color Mixer",
-                    "Stacker"
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": 2
-                },
-                {
+              "type": "conditional",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "name",
+                    "name": "includeuseful"
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "has_balancer",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "has_tunnel",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Trash"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": false
+              },
+              "if_false": {
+                "type": "conditional",
+                "test": {
                   "type": "compare",
                   "left": {
                     "type": "constant",
-                    "value": "3_buildings"
+                    "value": "Painter"
                   },
                   "op": "==",
                   "right": {
                     "type": "constant",
-                    "value": "3_buildings"
+                    "value": "Cutter"
                   }
                 },
-                {
-                  "type": "constant",
-                  "value": false
+                "if_true": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": 4
+                        },
+                        "op": "<",
+                        "right": {
+                          "type": "constant",
+                          "value": 2
+                        }
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  "if_true": {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Cutter",
+                          "Quad Cutter"
+                        ]
+                      }
+                    ]
+                  },
+                  "if_false": {
+                    "type": "helper",
+                    "name": "can_cut_half",
+                    "args": []
+                  }
+                },
+                "if_false": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "constant",
+                      "value": "Painter"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": "Rotator"
+                    }
+                  },
+                  "if_true": {
+                    "type": "helper",
+                    "name": "can_rotate_90",
+                    "args": []
+                  },
+                  "if_false": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "compare",
+                      "left": {
+                        "type": "constant",
+                        "value": "Painter"
+                      },
+                      "op": "==",
+                      "right": {
+                        "type": "constant",
+                        "value": "Stacker"
+                      }
+                    },
+                    "if_true": {
+                      "type": "helper",
+                      "name": "can_stack",
+                      "args": []
+                    },
+                    "if_false": {
+                      "type": "conditional",
+                      "test": {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": "Painter"
+                        },
+                        "op": "==",
+                        "right": {
+                          "type": "constant",
+                          "value": "Painter"
+                        }
+                      },
+                      "if_true": {
+                        "type": "helper",
+                        "name": "can_paint",
+                        "args": []
+                      },
+                      "if_false": {
+                        "type": "conditional",
+                        "test": {
+                          "type": "compare",
+                          "left": {
+                            "type": "constant",
+                            "value": "Painter"
+                          },
+                          "op": "==",
+                          "right": {
+                            "type": "constant",
+                            "value": "Color Mixer"
+                          }
+                        },
+                        "if_true": {
+                          "type": "helper",
+                          "name": "can_mix_colors",
+                          "args": []
+                        },
+                        "if_false": null
+                      }
+                    }
+                  }
                 }
-              ]
+              }
             }
           }
         ],
@@ -956,32 +1540,180 @@
             "name": "Using fourth level building",
             "connected_region": "Levels with 4 buildings",
             "access_rule": {
-              "type": "helper",
-              "name": "has_logic_list_building",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Cutter",
-                    "Rotator",
-                    "Painter",
-                    "Color Mixer",
-                    "Stacker"
-                  ]
+              "type": "conditional",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": false
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "has_balancer",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "has_tunnel",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Trash"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": false
+              },
+              "if_false": {
+                "type": "conditional",
+                "test": {
+                  "type": "compare",
+                  "left": {
+                    "type": "constant",
+                    "value": "Color Mixer"
+                  },
+                  "op": "==",
+                  "right": {
+                    "type": "constant",
+                    "value": "Cutter"
+                  }
                 },
-                {
-                  "type": "constant",
-                  "value": 3
+                "if_true": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": 4
+                        },
+                        "op": "<",
+                        "right": {
+                          "type": "constant",
+                          "value": 3
+                        }
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  "if_true": {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Cutter",
+                          "Quad Cutter"
+                        ]
+                      }
+                    ]
+                  },
+                  "if_false": {
+                    "type": "helper",
+                    "name": "can_cut_half",
+                    "args": []
+                  }
                 },
-                {
-                  "type": "constant",
-                  "value": false
-                },
-                {
-                  "type": "constant",
-                  "value": false
+                "if_false": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "constant",
+                      "value": "Color Mixer"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": "Rotator"
+                    }
+                  },
+                  "if_true": {
+                    "type": "helper",
+                    "name": "can_rotate_90",
+                    "args": []
+                  },
+                  "if_false": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "compare",
+                      "left": {
+                        "type": "constant",
+                        "value": "Color Mixer"
+                      },
+                      "op": "==",
+                      "right": {
+                        "type": "constant",
+                        "value": "Stacker"
+                      }
+                    },
+                    "if_true": {
+                      "type": "helper",
+                      "name": "can_stack",
+                      "args": []
+                    },
+                    "if_false": {
+                      "type": "conditional",
+                      "test": {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": "Color Mixer"
+                        },
+                        "op": "==",
+                        "right": {
+                          "type": "constant",
+                          "value": "Painter"
+                        }
+                      },
+                      "if_true": {
+                        "type": "helper",
+                        "name": "can_paint",
+                        "args": []
+                      },
+                      "if_false": {
+                        "type": "conditional",
+                        "test": {
+                          "type": "compare",
+                          "left": {
+                            "type": "constant",
+                            "value": "Color Mixer"
+                          },
+                          "op": "==",
+                          "right": {
+                            "type": "constant",
+                            "value": "Color Mixer"
+                          }
+                        },
+                        "if_true": {
+                          "type": "helper",
+                          "name": "can_mix_colors",
+                          "args": []
+                        },
+                        "if_false": null
+                      }
+                    }
+                  }
                 }
-              ]
+              }
             }
           }
         ],
@@ -1055,40 +1787,180 @@
             "name": "Using fifth level building",
             "connected_region": "Levels with 5 buildings",
             "access_rule": {
-              "type": "helper",
-              "name": "has_logic_list_building",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Cutter",
-                    "Rotator",
-                    "Painter",
-                    "Color Mixer",
-                    "Stacker"
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": 4
-                },
-                {
+              "type": "conditional",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "name",
+                    "name": "includeuseful"
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "has_balancer",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "has_tunnel",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Trash"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": false
+              },
+              "if_false": {
+                "type": "conditional",
+                "test": {
                   "type": "compare",
                   "left": {
                     "type": "constant",
-                    "value": "3_buildings"
+                    "value": "Stacker"
                   },
                   "op": "==",
                   "right": {
                     "type": "constant",
-                    "value": "5_buildings"
+                    "value": "Cutter"
                   }
                 },
-                {
-                  "type": "constant",
-                  "value": false
+                "if_true": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": 4
+                        },
+                        "op": "<",
+                        "right": {
+                          "type": "constant",
+                          "value": 4
+                        }
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  "if_true": {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Cutter",
+                          "Quad Cutter"
+                        ]
+                      }
+                    ]
+                  },
+                  "if_false": {
+                    "type": "helper",
+                    "name": "can_cut_half",
+                    "args": []
+                  }
+                },
+                "if_false": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "constant",
+                      "value": "Stacker"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": "Rotator"
+                    }
+                  },
+                  "if_true": {
+                    "type": "helper",
+                    "name": "can_rotate_90",
+                    "args": []
+                  },
+                  "if_false": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "compare",
+                      "left": {
+                        "type": "constant",
+                        "value": "Stacker"
+                      },
+                      "op": "==",
+                      "right": {
+                        "type": "constant",
+                        "value": "Stacker"
+                      }
+                    },
+                    "if_true": {
+                      "type": "helper",
+                      "name": "can_stack",
+                      "args": []
+                    },
+                    "if_false": {
+                      "type": "conditional",
+                      "test": {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": "Stacker"
+                        },
+                        "op": "==",
+                        "right": {
+                          "type": "constant",
+                          "value": "Painter"
+                        }
+                      },
+                      "if_true": {
+                        "type": "helper",
+                        "name": "can_paint",
+                        "args": []
+                      },
+                      "if_false": {
+                        "type": "conditional",
+                        "test": {
+                          "type": "compare",
+                          "left": {
+                            "type": "constant",
+                            "value": "Stacker"
+                          },
+                          "op": "==",
+                          "right": {
+                            "type": "constant",
+                            "value": "Color Mixer"
+                          }
+                        },
+                        "if_true": {
+                          "type": "helper",
+                          "name": "can_mix_colors",
+                          "args": []
+                        },
+                        "if_false": null
+                      }
+                    }
+                  }
                 }
-              ]
+              }
             }
           }
         ],
@@ -1318,32 +2190,180 @@
             "name": "Using second upgrade building",
             "connected_region": "Upgrades with 2 buildings",
             "access_rule": {
-              "type": "helper",
-              "name": "has_logic_list_building",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Stacker",
-                    "Cutter",
-                    "Rotator",
-                    "Painter",
-                    "Color Mixer"
-                  ]
+              "type": "conditional",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": false
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "has_balancer",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "has_tunnel",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Trash"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": false
+              },
+              "if_false": {
+                "type": "conditional",
+                "test": {
+                  "type": "compare",
+                  "left": {
+                    "type": "constant",
+                    "value": "Cutter"
+                  },
+                  "op": "==",
+                  "right": {
+                    "type": "constant",
+                    "value": "Cutter"
+                  }
                 },
-                {
-                  "type": "constant",
-                  "value": 1
+                "if_true": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        "op": "<",
+                        "right": {
+                          "type": "constant",
+                          "value": 1
+                        }
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  "if_true": {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Cutter",
+                          "Quad Cutter"
+                        ]
+                      }
+                    ]
+                  },
+                  "if_false": {
+                    "type": "helper",
+                    "name": "can_cut_half",
+                    "args": []
+                  }
                 },
-                {
-                  "type": "constant",
-                  "value": false
-                },
-                {
-                  "type": "constant",
-                  "value": false
+                "if_false": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "constant",
+                      "value": "Cutter"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": "Rotator"
+                    }
+                  },
+                  "if_true": {
+                    "type": "helper",
+                    "name": "can_rotate_90",
+                    "args": []
+                  },
+                  "if_false": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "compare",
+                      "left": {
+                        "type": "constant",
+                        "value": "Cutter"
+                      },
+                      "op": "==",
+                      "right": {
+                        "type": "constant",
+                        "value": "Stacker"
+                      }
+                    },
+                    "if_true": {
+                      "type": "helper",
+                      "name": "can_stack",
+                      "args": []
+                    },
+                    "if_false": {
+                      "type": "conditional",
+                      "test": {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": "Cutter"
+                        },
+                        "op": "==",
+                        "right": {
+                          "type": "constant",
+                          "value": "Painter"
+                        }
+                      },
+                      "if_true": {
+                        "type": "helper",
+                        "name": "can_paint",
+                        "args": []
+                      },
+                      "if_false": {
+                        "type": "conditional",
+                        "test": {
+                          "type": "compare",
+                          "left": {
+                            "type": "constant",
+                            "value": "Cutter"
+                          },
+                          "op": "==",
+                          "right": {
+                            "type": "constant",
+                            "value": "Color Mixer"
+                          }
+                        },
+                        "if_true": {
+                          "type": "helper",
+                          "name": "can_mix_colors",
+                          "args": []
+                        },
+                        "if_false": null
+                      }
+                    }
+                  }
                 }
-              ]
+              }
             }
           }
         ],
@@ -1417,40 +2437,180 @@
             "name": "Using third upgrade building",
             "connected_region": "Upgrades with 3 buildings",
             "access_rule": {
-              "type": "helper",
-              "name": "has_logic_list_building",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Stacker",
-                    "Cutter",
-                    "Rotator",
-                    "Painter",
-                    "Color Mixer"
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": 2
-                },
-                {
+              "type": "conditional",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "name",
+                    "name": "includeuseful"
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "has_balancer",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "has_tunnel",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Trash"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": false
+              },
+              "if_false": {
+                "type": "conditional",
+                "test": {
                   "type": "compare",
                   "left": {
                     "type": "constant",
-                    "value": "3_buildings"
+                    "value": "Rotator"
                   },
                   "op": "==",
                   "right": {
                     "type": "constant",
-                    "value": "3_buildings"
+                    "value": "Cutter"
                   }
                 },
-                {
-                  "type": "constant",
-                  "value": false
+                "if_true": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        "op": "<",
+                        "right": {
+                          "type": "constant",
+                          "value": 2
+                        }
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  "if_true": {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Cutter",
+                          "Quad Cutter"
+                        ]
+                      }
+                    ]
+                  },
+                  "if_false": {
+                    "type": "helper",
+                    "name": "can_cut_half",
+                    "args": []
+                  }
+                },
+                "if_false": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "constant",
+                      "value": "Rotator"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": "Rotator"
+                    }
+                  },
+                  "if_true": {
+                    "type": "helper",
+                    "name": "can_rotate_90",
+                    "args": []
+                  },
+                  "if_false": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "compare",
+                      "left": {
+                        "type": "constant",
+                        "value": "Rotator"
+                      },
+                      "op": "==",
+                      "right": {
+                        "type": "constant",
+                        "value": "Stacker"
+                      }
+                    },
+                    "if_true": {
+                      "type": "helper",
+                      "name": "can_stack",
+                      "args": []
+                    },
+                    "if_false": {
+                      "type": "conditional",
+                      "test": {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": "Rotator"
+                        },
+                        "op": "==",
+                        "right": {
+                          "type": "constant",
+                          "value": "Painter"
+                        }
+                      },
+                      "if_true": {
+                        "type": "helper",
+                        "name": "can_paint",
+                        "args": []
+                      },
+                      "if_false": {
+                        "type": "conditional",
+                        "test": {
+                          "type": "compare",
+                          "left": {
+                            "type": "constant",
+                            "value": "Rotator"
+                          },
+                          "op": "==",
+                          "right": {
+                            "type": "constant",
+                            "value": "Color Mixer"
+                          }
+                        },
+                        "if_true": {
+                          "type": "helper",
+                          "name": "can_mix_colors",
+                          "args": []
+                        },
+                        "if_false": null
+                      }
+                    }
+                  }
                 }
-              ]
+              }
             }
           }
         ],
@@ -1524,32 +2684,180 @@
             "name": "Using fourth upgrade building",
             "connected_region": "Upgrades with 4 buildings",
             "access_rule": {
-              "type": "helper",
-              "name": "has_logic_list_building",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Stacker",
-                    "Cutter",
-                    "Rotator",
-                    "Painter",
-                    "Color Mixer"
-                  ]
+              "type": "conditional",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "constant",
+                    "value": false
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "has_balancer",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "has_tunnel",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Trash"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": false
+              },
+              "if_false": {
+                "type": "conditional",
+                "test": {
+                  "type": "compare",
+                  "left": {
+                    "type": "constant",
+                    "value": "Painter"
+                  },
+                  "op": "==",
+                  "right": {
+                    "type": "constant",
+                    "value": "Cutter"
+                  }
                 },
-                {
-                  "type": "constant",
-                  "value": 3
+                "if_true": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        "op": "<",
+                        "right": {
+                          "type": "constant",
+                          "value": 3
+                        }
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  "if_true": {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Cutter",
+                          "Quad Cutter"
+                        ]
+                      }
+                    ]
+                  },
+                  "if_false": {
+                    "type": "helper",
+                    "name": "can_cut_half",
+                    "args": []
+                  }
                 },
-                {
-                  "type": "constant",
-                  "value": false
-                },
-                {
-                  "type": "constant",
-                  "value": false
+                "if_false": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "constant",
+                      "value": "Painter"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": "Rotator"
+                    }
+                  },
+                  "if_true": {
+                    "type": "helper",
+                    "name": "can_rotate_90",
+                    "args": []
+                  },
+                  "if_false": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "compare",
+                      "left": {
+                        "type": "constant",
+                        "value": "Painter"
+                      },
+                      "op": "==",
+                      "right": {
+                        "type": "constant",
+                        "value": "Stacker"
+                      }
+                    },
+                    "if_true": {
+                      "type": "helper",
+                      "name": "can_stack",
+                      "args": []
+                    },
+                    "if_false": {
+                      "type": "conditional",
+                      "test": {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": "Painter"
+                        },
+                        "op": "==",
+                        "right": {
+                          "type": "constant",
+                          "value": "Painter"
+                        }
+                      },
+                      "if_true": {
+                        "type": "helper",
+                        "name": "can_paint",
+                        "args": []
+                      },
+                      "if_false": {
+                        "type": "conditional",
+                        "test": {
+                          "type": "compare",
+                          "left": {
+                            "type": "constant",
+                            "value": "Painter"
+                          },
+                          "op": "==",
+                          "right": {
+                            "type": "constant",
+                            "value": "Color Mixer"
+                          }
+                        },
+                        "if_true": {
+                          "type": "helper",
+                          "name": "can_mix_colors",
+                          "args": []
+                        },
+                        "if_false": null
+                      }
+                    }
+                  }
                 }
-              ]
+              }
             }
           }
         ],
@@ -1638,40 +2946,180 @@
             "name": "Using fifth upgrade building",
             "connected_region": "Upgrades with 5 buildings",
             "access_rule": {
-              "type": "helper",
-              "name": "has_logic_list_building",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Stacker",
-                    "Cutter",
-                    "Rotator",
-                    "Painter",
-                    "Color Mixer"
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": 4
-                },
-                {
+              "type": "conditional",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "name",
+                    "name": "includeuseful"
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "has_balancer",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "has_tunnel",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Trash"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": false
+              },
+              "if_false": {
+                "type": "conditional",
+                "test": {
                   "type": "compare",
                   "left": {
                     "type": "constant",
-                    "value": "3_buildings"
+                    "value": "Color Mixer"
                   },
                   "op": "==",
                   "right": {
                     "type": "constant",
-                    "value": "5_buildings"
+                    "value": "Cutter"
                   }
                 },
-                {
-                  "type": "constant",
-                  "value": false
+                "if_true": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        "op": "<",
+                        "right": {
+                          "type": "constant",
+                          "value": 4
+                        }
+                      },
+                      {
+                        "type": "constant",
+                        "value": true
+                      }
+                    ]
+                  },
+                  "if_true": {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Cutter",
+                          "Quad Cutter"
+                        ]
+                      }
+                    ]
+                  },
+                  "if_false": {
+                    "type": "helper",
+                    "name": "can_cut_half",
+                    "args": []
+                  }
+                },
+                "if_false": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "constant",
+                      "value": "Color Mixer"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": "Rotator"
+                    }
+                  },
+                  "if_true": {
+                    "type": "helper",
+                    "name": "can_rotate_90",
+                    "args": []
+                  },
+                  "if_false": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "compare",
+                      "left": {
+                        "type": "constant",
+                        "value": "Color Mixer"
+                      },
+                      "op": "==",
+                      "right": {
+                        "type": "constant",
+                        "value": "Stacker"
+                      }
+                    },
+                    "if_true": {
+                      "type": "helper",
+                      "name": "can_stack",
+                      "args": []
+                    },
+                    "if_false": {
+                      "type": "conditional",
+                      "test": {
+                        "type": "compare",
+                        "left": {
+                          "type": "constant",
+                          "value": "Color Mixer"
+                        },
+                        "op": "==",
+                        "right": {
+                          "type": "constant",
+                          "value": "Painter"
+                        }
+                      },
+                      "if_true": {
+                        "type": "helper",
+                        "name": "can_paint",
+                        "args": []
+                      },
+                      "if_false": {
+                        "type": "conditional",
+                        "test": {
+                          "type": "compare",
+                          "left": {
+                            "type": "constant",
+                            "value": "Color Mixer"
+                          },
+                          "op": "==",
+                          "right": {
+                            "type": "constant",
+                            "value": "Color Mixer"
+                          }
+                        },
+                        "if_true": {
+                          "type": "helper",
+                          "name": "can_mix_colors",
+                          "args": []
+                        },
+                        "if_false": null
+                      }
+                    }
+                  }
                 }
-              ]
+              }
             }
           }
         ],
@@ -4501,6 +5949,175 @@
   },
   "helpers": {
     "1": {
+      "has_tunnel": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Tunnel"
+          },
+          {
+            "type": "item_check",
+            "item": "Tunnel Tier II"
+          }
+        ]
+      },
+      "can_mix_colors": {
+        "type": "item_check",
+        "item": "Color Mixer"
+      },
+      "can_paint": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Double Painter"
+              },
+              {
+                "type": "item_check",
+                "item": "Painter"
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "can_use_quad_painter",
+            "args": []
+          }
+        ]
+      },
+      "can_make_half_half_shape": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "can_stack",
+            "args": []
+          },
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Cutter"
+              },
+              {
+                "type": "item_check",
+                "item": "Quad Cutter"
+              }
+            ]
+          }
+        ]
+      },
+      "can_make_stitched_shape": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "can_stack",
+            "args": []
+          },
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Quad Cutter"
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "name",
+                      "name": "floating"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "helper",
+                    "name": "can_cut_half",
+                    "args": []
+                  },
+                  {
+                    "type": "helper",
+                    "name": "can_rotate_90",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "has_balancer": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Balancer"
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Compact Merger"
+              },
+              {
+                "type": "item_check",
+                "item": "Compact Splitter"
+              }
+            ]
+          }
+        ]
+      },
+      "can_cut_half": {
+        "type": "item_check",
+        "item": "Cutter"
+      },
+      "can_make_east_windmill": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "can_stack",
+            "args": []
+          },
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Quad Cutter"
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "helper",
+                    "name": "can_cut_half",
+                    "args": []
+                  },
+                  {
+                    "type": "helper",
+                    "name": "can_rotate_180",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
       "can_build_mam": {
         "type": "and",
         "conditions": [
@@ -4565,51 +6182,9 @@
           }
         ]
       },
-      "can_make_stitched_shape": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "can_stack",
-            "args": []
-          },
-          {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Quad Cutter"
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "name",
-                      "name": "floating"
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "helper",
-                    "name": "can_cut_half",
-                    "args": []
-                  },
-                  {
-                    "type": "helper",
-                    "name": "can_rotate_90",
-                    "args": []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
+      "can_stack": {
+        "type": "item_check",
+        "item": "Stacker"
       },
       "can_use_quad_painter": {
         "type": "and",
@@ -4642,10 +6217,6 @@
           }
         ]
       },
-      "can_mix_colors": {
-        "type": "item_check",
-        "item": "Color Mixer"
-      },
       "can_rotate_90": {
         "type": "or",
         "conditions": [
@@ -4656,94 +6227,6 @@
           {
             "type": "item_check",
             "item": "Rotator (CCW)"
-          }
-        ]
-      },
-      "can_make_half_half_shape": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "can_stack",
-            "args": []
-          },
-          {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Cutter"
-              },
-              {
-                "type": "item_check",
-                "item": "Quad Cutter"
-              }
-            ]
-          }
-        ]
-      },
-      "can_make_east_windmill": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "can_stack",
-            "args": []
-          },
-          {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Quad Cutter"
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "helper",
-                    "name": "can_cut_half",
-                    "args": []
-                  },
-                  {
-                    "type": "helper",
-                    "name": "can_rotate_180",
-                    "args": []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "can_cut_half": {
-        "type": "item_check",
-        "item": "Cutter"
-      },
-      "can_stack": {
-        "type": "item_check",
-        "item": "Stacker"
-      },
-      "can_paint": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Double Painter"
-              },
-              {
-                "type": "item_check",
-                "item": "Painter"
-              }
-            ]
-          },
-          {
-            "type": "helper",
-            "name": "can_use_quad_painter",
-            "args": []
           }
         ]
       },

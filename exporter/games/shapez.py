@@ -18,9 +18,8 @@ class ShapezGameExportHandler(GenericGameExportHandler):
 
     # Helpers that should NOT be exported as definitions (too complex, need JS implementation)
     # These will remain as helper calls that the frontend JavaScript must handle
-    HELPERS_TO_EXPORT_BLACKLIST = {
-        'has_logic_list_building',  # Uses buildings.index() method call on parameter
-    }
+    # Note: has_logic_list_building is now supported - list.index() is resolved at analysis time
+    HELPERS_TO_EXPORT_BLACKLIST: set[str] = set()
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """
@@ -57,8 +56,8 @@ class ShapezGameExportHandler(GenericGameExportHandler):
         """
         # Preserve helper functions as helper calls so they can be exported as
         # reusable definitions or handled by JavaScript fallback.
-        # Note: has_x_belt_multiplier is NOT preserved - it gets inlined with
-        # imperative rule evaluation (block, for_range, assign, etc.)
+        # Note: has_x_belt_multiplier and has_logic_list_building are NOT preserved -
+        # they get inlined with imperative rule evaluation (block, for_range, assign, etc.)
         shapez_helpers = {
             'can_cut_half',
             'can_rotate_90',
@@ -74,8 +73,6 @@ class ShapezGameExportHandler(GenericGameExportHandler):
             'can_make_east_windmill',
             'can_make_half_half_shape',
             'can_make_half_shape',
-            # has_logic_list_building uses buildings.index() which can't be resolved
-            'has_logic_list_building',
         }
 
         return func_name in shapez_helpers

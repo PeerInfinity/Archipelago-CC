@@ -1070,6 +1070,38 @@ class ASTVisitorMixin:
                 else:
                     logging.debug(f"Could not resolve {obj_name} for can_reach call, falling through to other handlers")
 
+            # Handle list method calls (e.g., buildings.index("Stacker"))
+            # When the object is a constant list, evaluate the method at analysis time
+            elif func_info['object'].get('type') == 'constant' and isinstance(func_info['object'].get('value'), list):
+                list_value = func_info['object']['value']
+                logging.debug(f"Processing list method call: list.{method_name} on {list_value}")
+
+                if method_name == 'index' and len(args) >= 1:
+                    # Evaluate list.index(value) at analysis time
+                    search_arg = args[0]
+                    if search_arg.get('type') == 'constant':
+                        search_value = search_arg['value']
+                        try:
+                            index_result = list_value.index(search_value)
+                            logging.debug(f"Evaluated list.index({search_value}) = {index_result}")
+                            return {'type': 'constant', 'value': index_result}
+                        except ValueError:
+                            logging.debug(f"list.index({search_value}) raised ValueError - value not in list")
+                            # Return -1 for not found (Python raises ValueError, but -1 is more useful)
+                            return {'type': 'constant', 'value': -1}
+                    else:
+                        logging.debug(f"list.index argument is not a constant, keeping as method_call")
+
+                # For other list methods or when we can't evaluate, create a method_call structure
+                result = {
+                    'type': 'method_call',
+                    'object': func_info['object'],
+                    'method': method_name,
+                    'args': args
+                }
+                logging.debug(f"Created method_call result: {result}")
+                return result
+
             # Handle module-based helper calls (e.g., StateLogic.canDig, Rules.method)
             # These are calls to functions from imported modules that should be treated as helpers
             else:
@@ -1196,6 +1228,12 @@ class ASTVisitorMixin:
                 elif isinstance(value, (int, float, str, bool)):
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to constant value: {value}")
                     return {'type': 'constant', 'value': value}
+                # Handle list/tuple values - resolve to constant for method calls like .index()
+                elif isinstance(value, (list, tuple)):
+                    # Convert to list for JSON serialization
+                    list_value = list(value) if isinstance(value, tuple) else value
+                    logging.debug(f"visit_Name: Resolved '{name}' from closure to constant list: {list_value}")
+                    return {'type': 'constant', 'value': list_value}
                 # Handle enum values by extracting their .value attribute
                 elif hasattr(value, 'value') and isinstance(value.value, (int, float, str, bool)):
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to enum constant value: {value.value}")
