@@ -1457,7 +1457,7 @@ def main():
 
             # Print second pass summary
             second_pass_passed = sum(1 for t in templates_for_second_pass
-                                    if results['results'].get(t['filename'], {}).get('second_pass', {}).get('success', False))
+                                    if (results['results'].get(t['filename'], {}).get('second_pass') or {}).get('success', False))
             second_pass_failed = len(templates_for_second_pass) - second_pass_passed
             print(f"\n=== Second Pass Complete ===")
             print(f"Tested: {len(templates_for_second_pass)}, Passed: {second_pass_passed}, Failed: {second_pass_failed}")

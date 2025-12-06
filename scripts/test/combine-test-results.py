@@ -428,15 +428,15 @@ def _process_template_results(template_results: Dict[str, List], combined_result
 
                 # Check if this seed passed
                 seed_passed = False
-                if 'spoiler_test' in result:
+                if 'spoiler_test' in result and result['spoiler_test']:
                     seed_passed = result['spoiler_test'].get('pass_fail') == 'passed'
-                elif 'multiclient_test' in result:
+                elif 'multiclient_test' in result and result['multiclient_test']:
                     seed_passed = result['multiclient_test'].get('success', False)
-                elif 'multiworld_test' in result:
+                elif 'multiworld_test' in result and result['multiworld_test']:
                     seed_passed = result['multiworld_test'].get('success', False)
                 else:
                     # Check generation success
-                    seed_passed = result.get('generation', {}).get('success', False)
+                    seed_passed = (result.get('generation') or {}).get('success', False)
 
                 if seed_passed:
                     seeds_passed += 1
@@ -625,17 +625,17 @@ def _print_template_summary(template_name: str, result: Dict[str, Any], indent: 
     else:
         # Single seed result
         seed = result.get('seed', '1')
-        if 'spoiler_test' in result:
+        if 'spoiler_test' in result and result['spoiler_test']:
             passed = result['spoiler_test'].get('pass_fail') == 'passed'
-        elif 'multiclient_test' in result:
+        elif 'multiclient_test' in result and result['multiclient_test']:
             passed = result['multiclient_test'].get('success', False)
-        elif 'multiworld_test' in result:
+        elif 'multiworld_test' in result and result['multiworld_test']:
             passed = result['multiworld_test'].get('success', False)
-        elif 'original' in result:
+        elif 'original' in result and result['original']:
             # World generator format - check original generation success
-            passed = result.get('original', {}).get('generation', {}).get('success', False)
+            passed = (result['original'].get('generation') or {}).get('success', False)
         else:
-            passed = result.get('generation', {}).get('success', False)
+            passed = (result.get('generation') or {}).get('success', False)
 
         status = "✅" if passed else "❌"
         print(f"{indent}{status} {template_name}: Single seed {seed}")

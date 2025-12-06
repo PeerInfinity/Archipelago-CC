@@ -543,7 +543,7 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
         # Add second pass summary if applicable
         if has_second_pass_data:
             second_pass_count = sum(1 for d in chart_data if d.get('second_pass'))
-            second_pass_passed = sum(1 for d in chart_data if d.get('second_pass', {}).get('success', False))
+            second_pass_passed = sum(1 for d in chart_data if (d.get('second_pass') or {}).get('success', False))
             second_pass_failed = second_pass_count - second_pass_passed
             md_content += f"- **Second Pass Tested:** {second_pass_count}\n"
             md_content += f"- **Second Pass Passed:** {second_pass_passed}\n"
