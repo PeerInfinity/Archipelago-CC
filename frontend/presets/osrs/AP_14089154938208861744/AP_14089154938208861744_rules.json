@@ -37,7 +37,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reach a Level 20",
@@ -51,7 +52,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Total XP 125,000",
@@ -65,8 +67,19 @@
               },
               "op": ">",
               "right": {
-                "type": "constant",
-                "value": 6
+                "type": "attribute",
+                "object": {
+                  "type": "constant",
+                  "value": [
+                    "Total XP 125,000",
+                    "general",
+                    [],
+                    [],
+                    [],
+                    6
+                  ]
+                },
+                "attr": "qp"
               }
             },
             "item": {
@@ -74,7 +87,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Total Level 150",
@@ -88,8 +102,19 @@
               },
               "op": ">",
               "right": {
-                "type": "constant",
-                "value": 2
+                "type": "attribute",
+                "object": {
+                  "type": "constant",
+                  "value": [
+                    "Total Level 150",
+                    "general",
+                    [],
+                    [],
+                    [],
+                    2
+                  ]
+                },
+                "attr": "qp"
               }
             },
             "item": {
@@ -97,7 +122,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Get Prompted to Buy Membership",
@@ -111,7 +137,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Total Level 50",
@@ -125,7 +152,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Burn a Log",
@@ -148,7 +176,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Combat Level 15",
@@ -162,7 +191,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Total XP 25,000",
@@ -176,7 +206,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Activate the \"Protect Item\" Prayer",
@@ -193,8 +224,24 @@
                   },
                   "op": ">",
                   "right": {
-                    "type": "constant",
-                    "value": 2
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": [
+                        "Activate the \"Protect Item\" Prayer",
+                        "prayer",
+                        [],
+                        [
+                          [
+                            "Prayer",
+                            25
+                          ]
+                        ],
+                        [],
+                        2
+                      ]
+                    },
+                    "attr": "qp"
                   }
                 },
                 {
@@ -208,7 +255,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -674,7 +722,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: Cook's Assistant",
@@ -698,7 +747,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Quest: The Restless Ghost",
@@ -760,7 +810,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: The Restless Ghost",
@@ -784,7 +835,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Quest: Rune Mysteries",
@@ -846,7 +898,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: Rune Mysteries",
@@ -870,7 +923,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Quest: X Marks the Spot",
@@ -932,7 +986,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: X Marks the Spot",
@@ -956,7 +1011,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1067,7 +1123,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: Misthalin Mystery",
@@ -1091,7 +1148,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kill a Giant Frog",
@@ -1124,7 +1182,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1324,7 +1383,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: Sheep Shearer",
@@ -1348,7 +1408,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2069,7 +2130,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: Demon Slayer",
@@ -2093,7 +2155,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Quest: Romeo & Juliet",
@@ -2174,7 +2237,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: Romeo & Juliet",
@@ -2198,7 +2262,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Quest: Shield of Arrav",
@@ -2279,7 +2344,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: Shield of Arrav",
@@ -2303,7 +2369,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Have the Apothecary Make a Strength Potion",
@@ -2365,7 +2432,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2942,7 +3010,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3573,7 +3642,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: Ernest the Chicken",
@@ -3597,7 +3667,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3816,7 +3887,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: Doric's Quest",
@@ -3840,7 +3912,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4051,8 +4124,27 @@
                   },
                   "op": ">",
                   "right": {
-                    "type": "constant",
-                    "value": 12
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": [
+                        "Quest: Black Knights' Fortress",
+                        "quest",
+                        [
+                          "Dwarven Mines",
+                          "Falador",
+                          "Monastery",
+                          "Ice Mountain",
+                          "Falador Farms"
+                        ],
+                        [],
+                        [
+                          "Progressive Armor"
+                        ],
+                        12
+                      ]
+                    },
+                    "attr": "qp"
                   }
                 }
               ]
@@ -4062,7 +4154,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: Black Knights' Fortress",
@@ -4086,7 +4179,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Quest: Below Ice Mountain",
@@ -4231,8 +4325,27 @@
                   },
                   "op": ">",
                   "right": {
-                    "type": "constant",
-                    "value": 16
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": [
+                        "Quest: Below Ice Mountain",
+                        "quest",
+                        [
+                          "Dwarven Mines",
+                          "Dwarven Mountain Pass",
+                          "Ice Mountain",
+                          "Barbarian Village",
+                          "Falador",
+                          "Central Varrock",
+                          "Edgeville"
+                        ],
+                        [],
+                        [],
+                        16
+                      ]
+                    },
+                    "attr": "qp"
                   }
                 }
               ]
@@ -4242,7 +4355,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: Below Ice Mountain",
@@ -4266,7 +4380,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4397,7 +4512,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: Goblin Diplomacy",
@@ -4421,7 +4537,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4515,7 +4632,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4905,7 +5023,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: The Knight's Sword",
@@ -4929,7 +5048,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5377,7 +5497,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: Pirate's Treasure",
@@ -5401,7 +5522,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5979,8 +6101,29 @@
                   },
                   "op": ">",
                   "right": {
-                    "type": "constant",
-                    "value": 32
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": [
+                        "Quest: Dragon Slayer",
+                        "goal",
+                        [
+                          "Crandor",
+                          "South of Varrock",
+                          "Edgeville",
+                          "Lumbridge",
+                          "Rimmington",
+                          "Monastery",
+                          "Dwarven Mines",
+                          "Port Sarim",
+                          "Draynor Village"
+                        ],
+                        [],
+                        [],
+                        32
+                      ]
+                    },
+                    "attr": "qp"
                   }
                 }
               ]
@@ -5990,7 +6133,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6203,7 +6347,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: Witch's Potion",
@@ -6227,7 +6372,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Quest: The Corsair Curse",
@@ -6289,7 +6435,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: The Corsair Curse",
@@ -6313,7 +6460,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -7176,7 +7324,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: Vampyre Slayer",
@@ -7200,7 +7349,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Equip an Orange Cape",
@@ -7224,7 +7374,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7298,7 +7449,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: Imp Catcher",
@@ -7322,7 +7474,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -7641,7 +7794,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Points: Prince Ali Rescue",
@@ -7665,7 +7819,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Get Sent to Jail in Shantay Pass",
@@ -7708,7 +7863,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8485,8 +8641,26 @@
                   },
                   "op": ">",
                   "right": {
-                    "type": "constant",
-                    "value": 8
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": [
+                        "Cut a Diamond",
+                        "crafting",
+                        [
+                          "Chisel"
+                        ],
+                        [
+                          [
+                            "Crafting",
+                            43
+                          ]
+                        ],
+                        [],
+                        8
+                      ]
+                    },
+                    "attr": "qp"
                   }
                 }
               ]
@@ -8496,7 +8670,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cut a Ruby",
@@ -8772,8 +8947,26 @@
                   },
                   "op": ">",
                   "right": {
-                    "type": "constant",
-                    "value": 4
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": [
+                        "Cut a Ruby",
+                        "crafting",
+                        [
+                          "Chisel"
+                        ],
+                        [
+                          [
+                            "Crafting",
+                            34
+                          ]
+                        ],
+                        [],
+                        4
+                      ]
+                    },
+                    "attr": "qp"
                   }
                 }
               ]
@@ -8783,7 +8976,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8932,7 +9126,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9007,7 +9202,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9173,8 +9369,31 @@
                   },
                   "op": ">",
                   "right": {
-                    "type": "constant",
-                    "value": 6
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": [
+                        "Smelt a Gold Bar",
+                        "smithing",
+                        [
+                          "Gold Ore",
+                          "Furnace"
+                        ],
+                        [
+                          [
+                            "Smithing",
+                            40
+                          ],
+                          [
+                            "Mining",
+                            40
+                          ]
+                        ],
+                        [],
+                        6
+                      ]
+                    },
+                    "attr": "qp"
                   }
                 }
               ]
@@ -9184,7 +9403,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9269,7 +9489,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9346,8 +9567,26 @@
                   },
                   "op": ">",
                   "right": {
-                    "type": "constant",
-                    "value": 6
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": [
+                        "Catch a Lobster",
+                        "fishing",
+                        [
+                          "Lobster Spot"
+                        ],
+                        [
+                          [
+                            "Fishing",
+                            40
+                          ]
+                        ],
+                        [],
+                        6
+                      ]
+                    },
+                    "attr": "qp"
                   }
                 }
               ]
@@ -9357,7 +9596,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9509,7 +9749,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9782,8 +10023,30 @@
                   },
                   "op": ">",
                   "right": {
-                    "type": "constant",
-                    "value": 6
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": [
+                        "Bake a Cake",
+                        "cooking",
+                        [
+                          "Wheat",
+                          "Windmill",
+                          "Egg",
+                          "Milk",
+                          "Cake Tin"
+                        ],
+                        [
+                          [
+                            "Cooking",
+                            40
+                          ]
+                        ],
+                        [],
+                        6
+                      ]
+                    },
+                    "attr": "qp"
                   }
                 }
               ]
@@ -9793,7 +10056,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9893,7 +10157,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9998,7 +10263,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10047,7 +10313,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10086,7 +10353,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10137,8 +10405,26 @@
                   },
                   "op": ">",
                   "right": {
-                    "type": "constant",
-                    "value": 2
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": [
+                        "Kill a Hill Giant",
+                        "combat",
+                        [
+                          "Hill Giant"
+                        ],
+                        [
+                          [
+                            "Combat",
+                            28
+                          ]
+                        ],
+                        [],
+                        2
+                      ]
+                    },
+                    "attr": "qp"
                   }
                 }
               ]
@@ -10148,7 +10434,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10223,7 +10510,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10292,7 +10580,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10337,7 +10626,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10364,12 +10654,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Lumbridge Swamp": {
         "name": "Area: Lumbridge Swamp",
@@ -10377,12 +10665,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: HAM Hideout": {
         "name": "Area: HAM Hideout",
@@ -10390,12 +10676,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Lumbridge Farms": {
         "name": "Area: Lumbridge Farms",
@@ -10403,12 +10687,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: South of Varrock": {
         "name": "Area: South of Varrock",
@@ -10416,12 +10698,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Lumberyard": {
         "name": "Area: Lumberyard",
@@ -10429,12 +10709,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Central Varrock": {
         "name": "Area: Central Varrock",
@@ -10442,12 +10720,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Varrock Palace": {
         "name": "Area: Varrock Palace",
@@ -10455,12 +10731,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: West Varrock": {
         "name": "Area: West Varrock",
@@ -10468,12 +10742,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Edgeville": {
         "name": "Area: Edgeville",
@@ -10481,12 +10753,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Barbarian Village": {
         "name": "Area: Barbarian Village",
@@ -10494,12 +10764,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Draynor Manor": {
         "name": "Area: Draynor Manor",
@@ -10507,12 +10775,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Falador": {
         "name": "Area: Falador",
@@ -10520,12 +10786,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Dwarven Mines": {
         "name": "Area: Dwarven Mines",
@@ -10533,12 +10797,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Ice Mountain": {
         "name": "Area: Ice Mountain",
@@ -10546,12 +10808,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Monastery": {
         "name": "Area: Monastery",
@@ -10559,12 +10819,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Falador Farms": {
         "name": "Area: Falador Farms",
@@ -10572,12 +10830,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Port Sarim": {
         "name": "Area: Port Sarim",
@@ -10585,12 +10841,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Mudskipper Point": {
         "name": "Area: Mudskipper Point",
@@ -10598,12 +10852,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Karamja": {
         "name": "Area: Karamja",
@@ -10611,12 +10863,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Crandor": {
         "name": "Area: Crandor",
@@ -10624,12 +10874,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Rimmington": {
         "name": "Area: Rimmington",
@@ -10637,12 +10885,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Crafting Guild": {
         "name": "Area: Crafting Guild",
@@ -10650,12 +10896,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Draynor Village": {
         "name": "Area: Draynor Village",
@@ -10663,12 +10907,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Wizard Tower": {
         "name": "Area: Wizard Tower",
@@ -10676,12 +10918,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Corsair Cove": {
         "name": "Area: Corsair Cove",
@@ -10689,12 +10929,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Al Kharid": {
         "name": "Area: Al Kharid",
@@ -10702,12 +10940,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Citharede Abbey": {
         "name": "Area: Citharede Abbey",
@@ -10715,12 +10951,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Area: Wilderness": {
         "name": "Area: Wilderness",
@@ -10728,12 +10962,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Progressive Armor": {
         "name": "Progressive Armor",
@@ -10741,12 +10973,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "progression"
       },
       "Progressive Weapons": {
         "name": "Progressive Weapons",
@@ -10754,12 +10984,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "progression"
       },
       "Progressive Tools": {
         "name": "Progressive Tools",
@@ -10767,12 +10995,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "useful"
       },
       "Progressive Ranged Weapon": {
         "name": "Progressive Ranged Weapon",
@@ -10780,12 +11006,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "useful"
       },
       "Progressive Ranged Armor": {
         "name": "Progressive Ranged Armor",
@@ -10793,12 +11017,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "useful"
       },
       "Progressive Magic Spell": {
         "name": "Progressive Magic Spell",
@@ -10806,12 +11028,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "useful"
       },
       "An Invitation to the Gielinor Games": {
         "name": "An Invitation to the Gielinor Games",
@@ -10819,12 +11039,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Settled's Crossbow": {
         "name": "Settled's Crossbow",
@@ -10832,12 +11050,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "The Stone of Jas": {
         "name": "The Stone of Jas",
@@ -10845,12 +11061,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Nieve's Phone Number": {
         "name": "Nieve's Phone Number",
@@ -10858,12 +11072,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Hannanie's Lost Sanity": {
         "name": "Hannanie's Lost Sanity",
@@ -10871,12 +11083,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "XP Waste": {
         "name": "XP Waste",
@@ -10884,12 +11094,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ten Free Pulls on the Squeal of Fortune": {
         "name": "Ten Free Pulls on the Squeal of Fortune",
@@ -10897,12 +11105,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Project Zanaris Beta Invite": {
         "name": "Project Zanaris Beta Invite",
@@ -10910,12 +11116,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "A Funny Feeling You Would Have Been Followed": {
         "name": "A Funny Feeling You Would Have Been Followed",
@@ -10923,12 +11127,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "An Ominous Prediction From Gnome Child": {
         "name": "An Ominous Prediction From Gnome Child",
@@ -10936,12 +11138,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "A Logic Error": {
         "name": "A Logic Error",
@@ -10949,12 +11149,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "The Warding Skill": {
         "name": "The Warding Skill",
@@ -10962,12 +11160,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "A 1/2500 Chance At Your Very Own Pet Baron Sucellus, Redeemable at your Local Duke, Some Restrictions May Apply": {
         "name": "A 1/2500 Chance At Your Very Own Pet Baron Sucellus, Redeemable at your Local Duke, Some Restrictions May Apply",
@@ -10975,12 +11171,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "A Suspicious Email From Iagex.com Asking for your Password": {
         "name": "A Suspicious Email From Iagex.com Asking for your Password",
@@ -10988,12 +11182,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "A Review on that Pull Request You've Been Waiting On": {
         "name": "A Review on that Pull Request You've Been Waiting On",
@@ -11001,12 +11193,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Fifty Billion RS3 GP (Worthless)": {
         "name": "Fifty Billion RS3 GP (Worthless)",
@@ -11014,12 +11204,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mod Ash's Coffee Cup": {
         "name": "Mod Ash's Coffee Cup",
@@ -11027,12 +11215,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "An Embarrasing Photo of Zammorak at the Christmas Party": {
         "name": "An Embarrasing Photo of Zammorak at the Christmas Party",
@@ -11040,12 +11226,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Another Bug To Report": {
         "name": "Another Bug To Report",
@@ -11053,12 +11237,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "1-Up Mushroom": {
         "name": "1-Up Mushroom",
@@ -11066,12 +11248,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Empty White Hallways": {
         "name": "Empty White Hallways",
@@ -11079,12 +11259,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Area: Menaphos": {
         "name": "Area: Menaphos",
@@ -11092,12 +11270,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "A Ratcatchers Dialogue Rewrite": {
         "name": "A Ratcatchers Dialogue Rewrite",
@@ -11105,12 +11281,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "\"Nostalgia\"": {
         "name": "\"Nostalgia\"",
@@ -11118,12 +11292,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "A Hornless Unicorn": {
         "name": "A Hornless Unicorn",
@@ -11131,12 +11303,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "The Ability To Use ::bank": {
         "name": "The Ability To Use ::bank",
@@ -11144,12 +11314,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Free Haircut at the Falador Hairdresser": {
         "name": "Free Haircut at the Falador Hairdresser",
@@ -11157,12 +11325,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Nothing Interesting Happens": {
         "name": "Nothing Interesting Happens",
@@ -11170,12 +11336,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Why Fletch?": {
         "name": "Why Fletch?",
@@ -11183,12 +11347,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Evolution of Combat": {
         "name": "Evolution of Combat",
@@ -11196,12 +11358,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 10,000 GP": {
         "name": "Care Pack: 10,000 GP",
@@ -11209,12 +11369,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 90 Steel Nails": {
         "name": "Care Pack: 90 Steel Nails",
@@ -11222,12 +11380,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 25 Swordfish": {
         "name": "Care Pack: 25 Swordfish",
@@ -11235,12 +11391,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 50 Lobsters": {
         "name": "Care Pack: 50 Lobsters",
@@ -11248,12 +11402,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 100 Law Runes": {
         "name": "Care Pack: 100 Law Runes",
@@ -11261,12 +11413,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 300 Each Elemental Rune": {
         "name": "Care Pack: 300 Each Elemental Rune",
@@ -11274,12 +11424,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 100 Chaos Runes": {
         "name": "Care Pack: 100 Chaos Runes",
@@ -11287,12 +11435,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 100 Death Runes": {
         "name": "Care Pack: 100 Death Runes",
@@ -11300,12 +11446,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 100 Oak Logs": {
         "name": "Care Pack: 100 Oak Logs",
@@ -11313,12 +11457,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 50 Willow Logs": {
         "name": "Care Pack: 50 Willow Logs",
@@ -11326,12 +11468,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 50 Bronze Bars": {
         "name": "Care Pack: 50 Bronze Bars",
@@ -11339,12 +11479,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 200 Iron Ore": {
         "name": "Care Pack: 200 Iron Ore",
@@ -11352,12 +11490,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 100 Coal Ore": {
         "name": "Care Pack: 100 Coal Ore",
@@ -11365,12 +11501,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 100 Raw Trout": {
         "name": "Care Pack: 100 Raw Trout",
@@ -11378,12 +11512,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 200 Leather": {
         "name": "Care Pack: 200 Leather",
@@ -11391,12 +11523,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 50 Energy Potion (4)": {
         "name": "Care Pack: 50 Energy Potion (4)",
@@ -11404,12 +11534,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 200 Big Bones": {
         "name": "Care Pack: 200 Big Bones",
@@ -11417,12 +11545,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 10 Each Uncut gems": {
         "name": "Care Pack: 10 Each Uncut gems",
@@ -11430,12 +11556,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 3 Rings of Forging": {
         "name": "Care Pack: 3 Rings of Forging",
@@ -11443,12 +11567,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 500 Rune Essence": {
         "name": "Care Pack: 500 Rune Essence",
@@ -11456,12 +11578,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Care Pack: 200 Mind Runes": {
         "name": "Care Pack: 200 Mind Runes",
@@ -11469,12 +11589,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "1 QP (Cook's Assistant)": {
         "name": "1 QP (Cook's Assistant)",
@@ -11482,12 +11600,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "3 QP (Demon Slayer)": {
         "name": "3 QP (Demon Slayer)",
@@ -11495,12 +11611,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "1 QP (The Restless Ghost)": {
         "name": "1 QP (The Restless Ghost)",
@@ -11508,12 +11622,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "5 QP (Romeo & Juliet)": {
         "name": "5 QP (Romeo & Juliet)",
@@ -11521,12 +11633,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "1 QP (Sheep Shearer)": {
         "name": "1 QP (Sheep Shearer)",
@@ -11534,12 +11644,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "1 QP (Shield of Arrav)": {
         "name": "1 QP (Shield of Arrav)",
@@ -11547,12 +11655,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "4 QP (Ernest the Chicken)": {
         "name": "4 QP (Ernest the Chicken)",
@@ -11560,12 +11666,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "3 QP (Vampyre Slayer)": {
         "name": "3 QP (Vampyre Slayer)",
@@ -11573,12 +11677,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "1 QP (Imp Catcher)": {
         "name": "1 QP (Imp Catcher)",
@@ -11586,12 +11688,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "3 QP (Prince Ali Rescue)": {
         "name": "3 QP (Prince Ali Rescue)",
@@ -11599,12 +11699,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "1 QP (Doric's Quest)": {
         "name": "1 QP (Doric's Quest)",
@@ -11612,12 +11710,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "3 QP (Black Knights' Fortress)": {
         "name": "3 QP (Black Knights' Fortress)",
@@ -11625,12 +11721,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "1 QP (Witch's Potion)": {
         "name": "1 QP (Witch's Potion)",
@@ -11638,12 +11732,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "1 QP (The Knight's Sword)": {
         "name": "1 QP (The Knight's Sword)",
@@ -11651,12 +11743,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "5 QP (Goblin Diplomacy)": {
         "name": "5 QP (Goblin Diplomacy)",
@@ -11664,12 +11754,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "2 QP (Pirate's Treasure)": {
         "name": "2 QP (Pirate's Treasure)",
@@ -11677,12 +11765,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "1 QP (Rune Mysteries)": {
         "name": "1 QP (Rune Mysteries)",
@@ -11690,12 +11776,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "1 QP (Misthalin Mystery)": {
         "name": "1 QP (Misthalin Mystery)",
@@ -11703,12 +11787,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "2 QP (The Corsair Curse)": {
         "name": "2 QP (The Corsair Curse)",
@@ -11716,12 +11798,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "1 QP (X Marks The Spot)": {
         "name": "1 QP (X Marks The Spot)",
@@ -11729,12 +11809,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "1 QP (Below Ice Mountain)": {
         "name": "1 QP (Below Ice Mountain)",
@@ -11742,12 +11820,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Victory": {
         "name": "Victory",
@@ -11755,12 +11831,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -11792,41 +11866,41 @@
       "4 QP (Ernest the Chicken)": 1,
       "5 QP (Goblin Diplomacy)": 1,
       "5 QP (Romeo & Juliet)": 1,
-      "Area: Al Kharid": 2,
-      "Area: Barbarian Village": 2,
-      "Area: Central Varrock": 2,
-      "Area: Citharede Abbey": 2,
-      "Area: Corsair Cove": 2,
-      "Area: Crafting Guild": 2,
-      "Area: Crandor": 2,
-      "Area: Draynor Manor": 2,
-      "Area: Draynor Village": 2,
-      "Area: Dwarven Mines": 2,
-      "Area: Edgeville": 2,
-      "Area: Falador": 2,
-      "Area: Falador Farms": 2,
-      "Area: HAM Hideout": 2,
-      "Area: Ice Mountain": 2,
-      "Area: Karamja": 2,
-      "Area: Lumberyard": 2,
+      "Area: Al Kharid": 1,
+      "Area: Barbarian Village": 1,
+      "Area: Central Varrock": 1,
+      "Area: Citharede Abbey": 1,
+      "Area: Corsair Cove": 1,
+      "Area: Crafting Guild": 1,
+      "Area: Crandor": 1,
+      "Area: Draynor Manor": 1,
+      "Area: Draynor Village": 1,
+      "Area: Dwarven Mines": 1,
+      "Area: Edgeville": 1,
+      "Area: Falador": 1,
+      "Area: Falador Farms": 1,
+      "Area: HAM Hideout": 1,
+      "Area: Ice Mountain": 1,
+      "Area: Karamja": 1,
+      "Area: Lumberyard": 1,
       "Area: Lumbridge": 1,
-      "Area: Lumbridge Farms": 2,
-      "Area: Lumbridge Swamp": 2,
-      "Area: Monastery": 2,
-      "Area: Mudskipper Point": 2,
-      "Area: Port Sarim": 2,
-      "Area: Rimmington": 2,
-      "Area: South of Varrock": 2,
-      "Area: Varrock Palace": 2,
-      "Area: West Varrock": 2,
-      "Area: Wilderness": 2,
-      "Area: Wizard Tower": 2,
-      "Progressive Armor": 12,
-      "Progressive Magic Spell": 4,
-      "Progressive Ranged Armor": 6,
-      "Progressive Ranged Weapon": 6,
-      "Progressive Tools": 12,
-      "Progressive Weapons": 12,
+      "Area: Lumbridge Farms": 1,
+      "Area: Lumbridge Swamp": 1,
+      "Area: Monastery": 1,
+      "Area: Mudskipper Point": 1,
+      "Area: Port Sarim": 1,
+      "Area: Rimmington": 1,
+      "Area: South of Varrock": 1,
+      "Area: Varrock Palace": 1,
+      "Area: West Varrock": 1,
+      "Area: Wilderness": 1,
+      "Area: Wizard Tower": 1,
+      "Progressive Armor": 6,
+      "Progressive Magic Spell": 2,
+      "Progressive Ranged Armor": 3,
+      "Progressive Ranged Weapon": 3,
+      "Progressive Tools": 6,
+      "Progressive Weapons": 6,
       "Victory": 1
     }
   },
@@ -11852,5 +11926,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

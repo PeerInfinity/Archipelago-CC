@@ -112,7 +112,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Desert Laser Activated",
@@ -132,7 +133,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Quarry Laser Activated",
@@ -173,7 +175,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Shadows Laser Activated",
@@ -193,18 +196,73 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Keep Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_region",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Keep Tower"
+                  "type": "any_of",
+                  "element_rule": {
+                    "type": "all_of",
+                    "element_rule": {
+                      "type": "helper",
+                      "name": "condition",
+                      "args": []
+                    },
+                    "iterator_info": {
+                      "type": "comprehension_details",
+                      "target": {
+                        "type": "name",
+                        "name": "condition"
+                      },
+                      "iterator": {
+                        "type": "name",
+                        "name": "sub_requirement"
+                      }
+                    }
+                  },
+                  "iterator_info": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "sub_requirement"
+                    },
+                    "iterator": {
+                      "type": "constant",
+                      "value": [
+                        [
+                          "<bound method Region.can_reach of Keep 2nd Maze>",
+                          "<bound method Region.can_reach of Keep 4th Maze>",
+                          "<bound method Region.can_reach of Keep Tower>",
+                          "<bound method Region.can_reach of Keep>",
+                          "<bound method Region.can_reach of Keep 3rd Maze>"
+                        ],
+                        [
+                          "<bound method Region.can_reach of Keep 3rd Pressure Plate>",
+                          "<bound method Region.can_reach of Keep Tower>",
+                          "<bound method Region.can_reach of Keep 4th Pressure Plate>",
+                          "<bound method Region.can_reach of Keep 2nd Pressure Plate>",
+                          "<bound method Region.can_reach of Keep>",
+                          "<function convert_requirement_option.<locals>.<lambda>>"
+                        ]
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "can_reach_region",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Keep Tower"
+                    }
+                  ]
                 }
               ]
             },
@@ -213,7 +271,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Monastery Laser Activated",
@@ -246,7 +305,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Town Laser Activated",
@@ -266,7 +326,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Jungle Laser Activated",
@@ -299,7 +360,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Bunker Laser Activated",
@@ -319,7 +381,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Swamp Laser Activated",
@@ -339,7 +402,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Treehouse Laser Activated",
@@ -359,7 +423,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -424,7 +489,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tutorial Back Left",
@@ -438,7 +504,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tutorial Back Right",
@@ -452,7 +519,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tutorial Gate Open",
@@ -466,7 +534,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Tutorial Patio Floor",
@@ -489,7 +558,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -530,7 +600,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Outside Tutorial Tree Row 9",
@@ -548,7 +619,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -593,7 +665,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -640,7 +713,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -682,7 +756,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -869,7 +944,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -906,7 +982,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Glass Factory Front 3",
@@ -924,7 +1001,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Glass Factory Melting 3",
@@ -942,7 +1020,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1024,7 +1103,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1071,7 +1151,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Symmetry Island Back 6",
@@ -1094,7 +1175,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Symmetry Island Left 7",
@@ -1117,7 +1199,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Symmetry Island Scenery Outlines 5",
@@ -1135,7 +1218,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Symmetry Island Upper Panel",
@@ -1158,7 +1242,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1182,7 +1267,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Symmetry Island Laser Blue 3",
@@ -1200,7 +1286,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Symmetry Island Laser Panel",
@@ -1218,7 +1305,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1269,7 +1357,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Desert Laser Panel",
@@ -1283,7 +1372,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Desert Laser Activated + Redirected Solved",
@@ -1306,7 +1396,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1335,7 +1426,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1364,7 +1456,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1401,7 +1494,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1435,7 +1529,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Desert Elevator Room Bent 3",
@@ -1449,7 +1544,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1521,7 +1617,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Quarry Laser Panel",
@@ -1547,7 +1644,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1558,45 +1656,46 @@
             "name": "Quarry Elevator to Outside Quarry",
             "connected_region": "Outside Quarry",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "can_reach",
-                      "region": "Main Island"
-                    },
-                    {
-                      "type": "can_reach",
-                      "region": "Quarry"
-                    }
-                  ]
+              "type": "any_of",
+              "element_rule": {
+                "type": "all_of",
+                "element_rule": {
+                  "type": "helper",
+                  "name": "condition",
+                  "args": []
                 },
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "can_reach",
-                      "region": "Quarry Stoneworks Upper Floor"
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Colored Squares",
-                            "Eraser",
-                            "Progressive Dots"
-                          ]
-                        }
-                      ]
-                    }
+                "iterator_info": {
+                  "type": "comprehension_details",
+                  "target": {
+                    "type": "name",
+                    "name": "condition"
+                  },
+                  "iterator": {
+                    "type": "name",
+                    "name": "sub_requirement"
+                  }
+                }
+              },
+              "iterator_info": {
+                "type": "comprehension_details",
+                "target": {
+                  "type": "name",
+                  "name": "sub_requirement"
+                },
+                "iterator": {
+                  "type": "constant",
+                  "value": [
+                    [
+                      "<bound method Region.can_reach of Main Island>",
+                      "<bound method Region.can_reach of Quarry>"
+                    ],
+                    [
+                      "<bound method Region.can_reach of Quarry Stoneworks Upper Floor>",
+                      "<function convert_requirement_option.<locals>.<lambda>>"
+                    ]
                   ]
                 }
-              ]
+              }
             }
           },
           {
@@ -1662,7 +1761,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1720,7 +1820,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Quarry Stoneworks Entry Right Panel",
@@ -1738,7 +1839,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1823,7 +1925,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1945,7 +2048,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Quarry Stoneworks Stairs Panel",
@@ -1968,7 +2072,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Quarry Stoneworks Control Room Left",
@@ -1993,7 +2098,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Quarry Stoneworks Control Room Right",
@@ -2017,7 +2123,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2080,7 +2187,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Quarry Boathouse Intro Right",
@@ -2103,7 +2211,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2177,7 +2286,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2239,7 +2349,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Quarry Boathouse Back Second Row 3",
@@ -2263,7 +2374,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2308,7 +2420,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Shadows Far 8",
@@ -2322,7 +2435,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Shadows Near 5",
@@ -2336,7 +2450,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2378,7 +2493,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2465,7 +2581,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Keep Pressure Plates 1",
@@ -2483,7 +2600,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2512,7 +2630,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2549,7 +2668,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2586,7 +2706,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2624,7 +2745,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2689,7 +2811,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2746,7 +2869,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2775,7 +2899,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Keep Laser Panel Pressure Plates",
@@ -2802,7 +2927,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2871,7 +2997,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Monastery Laser Panel",
@@ -2889,7 +3016,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2926,7 +3054,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3062,7 +3191,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Town Desert Laser Redirect Control Solved",
@@ -3076,7 +3206,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Town Wooden Roof Lower Row 5",
@@ -3100,7 +3231,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Town RGB House Entry Panel",
@@ -3123,7 +3255,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Town Church Entry Panel",
@@ -3146,7 +3279,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Town Maze Panel",
@@ -3160,7 +3294,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Town Pet the Dog",
@@ -3174,7 +3309,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3222,7 +3358,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Town Tall Hexagonal",
@@ -3240,7 +3377,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3271,7 +3409,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3309,7 +3448,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3346,7 +3486,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3376,7 +3517,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Town RGB House Upstairs Right",
@@ -3400,7 +3542,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3681,7 +3824,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3726,7 +3870,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3763,7 +3908,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3774,35 +3920,44 @@
             "name": "Theater to Town",
             "connected_region": "Town",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Black/White Squares",
-                        "Eraser"
-                      ]
-                    }
-                  ]
+              "type": "any_of",
+              "element_rule": {
+                "type": "all_of",
+                "element_rule": {
+                  "type": "helper",
+                  "name": "condition",
+                  "args": []
                 },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Black/White Squares",
-                        "Shapers"
-                      ]
-                    }
+                "iterator_info": {
+                  "type": "comprehension_details",
+                  "target": {
+                    "type": "name",
+                    "name": "condition"
+                  },
+                  "iterator": {
+                    "type": "name",
+                    "name": "sub_requirement"
+                  }
+                }
+              },
+              "iterator_info": {
+                "type": "comprehension_details",
+                "target": {
+                  "type": "name",
+                  "name": "sub_requirement"
+                },
+                "iterator": {
+                  "type": "constant",
+                  "value": [
+                    [
+                      "<function convert_requirement_option.<locals>.<lambda>>"
+                    ],
+                    [
+                      "<function convert_requirement_option.<locals>.<lambda>>"
+                    ]
                   ]
                 }
-              ]
+              }
             }
           }
         ],
@@ -3828,7 +3983,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Theater Exit Right Panel",
@@ -3851,7 +4007,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3914,7 +4071,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Jungle Second Row 4",
@@ -3928,7 +4086,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Jungle Popup Wall 6",
@@ -3946,7 +4105,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Jungle Laser Panel",
@@ -3964,7 +4124,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3998,7 +4159,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4043,7 +4205,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4090,7 +4253,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bunker Intro Back 4",
@@ -4113,7 +4277,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4169,7 +4334,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4216,7 +4382,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4235,43 +4402,51 @@
             "name": "Bunker Elevator Section to Bunker Under Elevator",
             "connected_region": "Bunker Under Elevator",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "can_reach",
-                      "region": "Bunker Elevator"
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Black/White Squares",
-                            "Colored Squares"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+              "type": "any_of",
+              "element_rule": {
+                "type": "all_of",
+                "element_rule": {
+                  "type": "helper",
+                  "name": "condition",
+                  "args": []
                 },
-                {
-                  "type": "can_reach",
-                  "region": "Bunker Cyan Room"
-                },
-                {
-                  "type": "can_reach",
-                  "region": "Bunker Green Room"
-                },
-                {
-                  "type": "can_reach",
-                  "region": "Bunker Laser Platform"
+                "iterator_info": {
+                  "type": "comprehension_details",
+                  "target": {
+                    "type": "name",
+                    "name": "condition"
+                  },
+                  "iterator": {
+                    "type": "name",
+                    "name": "sub_requirement"
+                  }
                 }
-              ]
+              },
+              "iterator_info": {
+                "type": "comprehension_details",
+                "target": {
+                  "type": "name",
+                  "name": "sub_requirement"
+                },
+                "iterator": {
+                  "type": "constant",
+                  "value": [
+                    [
+                      "<bound method Region.can_reach of Bunker Green Room>"
+                    ],
+                    [
+                      "<bound method Region.can_reach of Bunker Elevator>",
+                      "<function convert_requirement_option.<locals>.<lambda>>"
+                    ],
+                    [
+                      "<bound method Region.can_reach of Bunker Laser Platform>"
+                    ],
+                    [
+                      "<bound method Region.can_reach of Bunker Cyan Room>"
+                    ]
+                  ]
+                }
+              }
             }
           }
         ],
@@ -4284,43 +4459,51 @@
             "name": "Bunker Under Elevator to Bunker Elevator Section",
             "connected_region": "Bunker Elevator Section",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "can_reach",
-                      "region": "Bunker Elevator"
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Black/White Squares",
-                            "Colored Squares"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+              "type": "any_of",
+              "element_rule": {
+                "type": "all_of",
+                "element_rule": {
+                  "type": "helper",
+                  "name": "condition",
+                  "args": []
                 },
-                {
-                  "type": "can_reach",
-                  "region": "Bunker Cyan Room"
-                },
-                {
-                  "type": "can_reach",
-                  "region": "Bunker Green Room"
-                },
-                {
-                  "type": "can_reach",
-                  "region": "Bunker Laser Platform"
+                "iterator_info": {
+                  "type": "comprehension_details",
+                  "target": {
+                    "type": "name",
+                    "name": "condition"
+                  },
+                  "iterator": {
+                    "type": "name",
+                    "name": "sub_requirement"
+                  }
                 }
-              ]
+              },
+              "iterator_info": {
+                "type": "comprehension_details",
+                "target": {
+                  "type": "name",
+                  "name": "sub_requirement"
+                },
+                "iterator": {
+                  "type": "constant",
+                  "value": [
+                    [
+                      "<bound method Region.can_reach of Bunker Green Room>"
+                    ],
+                    [
+                      "<bound method Region.can_reach of Bunker Elevator>",
+                      "<function convert_requirement_option.<locals>.<lambda>>"
+                    ],
+                    [
+                      "<bound method Region.can_reach of Bunker Laser Platform>"
+                    ],
+                    [
+                      "<bound method Region.can_reach of Bunker Cyan Room>"
+                    ]
+                  ]
+                }
+              }
             }
           }
         ],
@@ -4470,7 +4653,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4515,7 +4699,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4548,7 +4733,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Swamp Intro Back 8",
@@ -4566,7 +4752,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4679,7 +4866,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Swamp Platform Shortcut Right Panel",
@@ -4697,7 +4885,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4753,7 +4942,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4799,7 +4989,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4863,7 +5054,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4936,7 +5128,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5085,7 +5278,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5213,7 +5407,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5242,7 +5437,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5305,7 +5501,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Swamp Laser Shortcut Right Panel",
@@ -5329,7 +5526,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5406,7 +5604,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5443,7 +5642,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5480,7 +5680,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5517,7 +5718,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5602,7 +5804,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5647,7 +5850,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5684,7 +5888,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5733,7 +5938,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5818,7 +6024,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5896,7 +6103,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5986,7 +6194,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6063,7 +6272,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mountaintop Mountain Entry Panel",
@@ -6108,7 +6318,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mountaintop Mountain Entry Panel Solved",
@@ -6153,7 +6364,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6214,7 +6426,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6269,7 +6482,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mountain Floor 1 Left Row 7",
@@ -6295,7 +6509,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mountain Floor 1 Trash Pillar 2",
@@ -6318,7 +6533,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6354,7 +6570,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6424,55 +6641,46 @@
             "name": "Mountain Floor 2 to Mountain Floor 2 Beyond Bridge",
             "connected_region": "Mountain Floor 2 Beyond Bridge",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "can_reach",
-                      "region": "Mountain Floor 2 Light Bridge Room Far"
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_all_counts",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": {
-                            "Eraser": 1,
-                            "Progressive Stars": 2,
-                            "Rotated Shapers": 1
-                          }
-                        }
-                      ]
-                    }
-                  ]
+              "type": "any_of",
+              "element_rule": {
+                "type": "all_of",
+                "element_rule": {
+                  "type": "helper",
+                  "name": "condition",
+                  "args": []
                 },
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "can_reach",
-                      "region": "Mountain Floor 2 Light Bridge Room Near"
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_all_counts",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": {
-                            "Eraser": 1,
-                            "Progressive Stars": 2,
-                            "Rotated Shapers": 1
-                          }
-                        }
-                      ]
-                    }
+                "iterator_info": {
+                  "type": "comprehension_details",
+                  "target": {
+                    "type": "name",
+                    "name": "condition"
+                  },
+                  "iterator": {
+                    "type": "name",
+                    "name": "sub_requirement"
+                  }
+                }
+              },
+              "iterator_info": {
+                "type": "comprehension_details",
+                "target": {
+                  "type": "name",
+                  "name": "sub_requirement"
+                },
+                "iterator": {
+                  "type": "constant",
+                  "value": [
+                    [
+                      "<bound method Region.can_reach of Mountain Floor 2 Light Bridge Room Near>",
+                      "<function convert_requirement_option.<locals>.<lambda>>"
+                    ],
+                    [
+                      "<bound method Region.can_reach of Mountain Floor 2 Light Bridge Room Far>",
+                      "<function convert_requirement_option.<locals>.<lambda>>"
+                    ]
                   ]
                 }
-              ]
+              }
             }
           },
           {
@@ -6550,7 +6758,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6625,7 +6834,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6665,55 +6875,46 @@
             "name": "Mountain Floor 2 Beyond Bridge to Mountain Floor 2",
             "connected_region": "Mountain Floor 2",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "can_reach",
-                      "region": "Mountain Floor 2 Light Bridge Room Far"
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_all_counts",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": {
-                            "Eraser": 1,
-                            "Progressive Stars": 2,
-                            "Rotated Shapers": 1
-                          }
-                        }
-                      ]
-                    }
-                  ]
+              "type": "any_of",
+              "element_rule": {
+                "type": "all_of",
+                "element_rule": {
+                  "type": "helper",
+                  "name": "condition",
+                  "args": []
                 },
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "can_reach",
-                      "region": "Mountain Floor 2 Light Bridge Room Near"
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_all_counts",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": {
-                            "Eraser": 1,
-                            "Progressive Stars": 2,
-                            "Rotated Shapers": 1
-                          }
-                        }
-                      ]
-                    }
+                "iterator_info": {
+                  "type": "comprehension_details",
+                  "target": {
+                    "type": "name",
+                    "name": "condition"
+                  },
+                  "iterator": {
+                    "type": "name",
+                    "name": "sub_requirement"
+                  }
+                }
+              },
+              "iterator_info": {
+                "type": "comprehension_details",
+                "target": {
+                  "type": "name",
+                  "name": "sub_requirement"
+                },
+                "iterator": {
+                  "type": "constant",
+                  "value": [
+                    [
+                      "<bound method Region.can_reach of Mountain Floor 2 Light Bridge Room Near>",
+                      "<function convert_requirement_option.<locals>.<lambda>>"
+                    ],
+                    [
+                      "<bound method Region.can_reach of Mountain Floor 2 Light Bridge Room Far>",
+                      "<function convert_requirement_option.<locals>.<lambda>>"
+                    ]
                   ]
                 }
-              ]
+              }
             }
           }
         ],
@@ -6743,7 +6944,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6773,7 +6975,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6915,7 +7118,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6964,7 +7168,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mountain Bottom Floor Pillars Room Entry Right",
@@ -6987,7 +7192,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7038,7 +7244,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mountain Bottom Floor Left Pillar 4",
@@ -7064,7 +7271,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7097,7 +7305,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -7185,12 +7394,10 @@
           "Everything",
           "Symbols"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Colored Dots": {
         "name": "Colored Dots",
@@ -7199,12 +7406,10 @@
           "Everything",
           "Symbols"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Full Dots": {
         "name": "Full Dots",
@@ -7213,12 +7418,10 @@
           "Everything",
           "Symbols"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Invisible Dots": {
         "name": "Invisible Dots",
@@ -7227,12 +7430,10 @@
           "Everything",
           "Symbols"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Sound Dots": {
         "name": "Sound Dots",
@@ -7241,12 +7442,10 @@
           "Everything",
           "Symbols"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Symmetry": {
         "name": "Symmetry",
@@ -7255,12 +7454,10 @@
           "Everything",
           "Symbols"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Triangles": {
         "name": "Triangles",
@@ -7269,12 +7466,10 @@
           "Everything",
           "Symbols"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Eraser": {
         "name": "Eraser",
@@ -7283,12 +7478,10 @@
           "Everything",
           "Symbols"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Shapers": {
         "name": "Shapers",
@@ -7297,12 +7490,10 @@
           "Everything",
           "Symbols"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Rotated Shapers": {
         "name": "Rotated Shapers",
@@ -7311,12 +7502,10 @@
           "Everything",
           "Symbols"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Negative Shapers": {
         "name": "Negative Shapers",
@@ -7325,12 +7514,10 @@
           "Everything",
           "Symbols"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Stars": {
         "name": "Stars",
@@ -7339,12 +7526,10 @@
           "Everything",
           "Symbols"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Stars + Same Colored Symbol": {
         "name": "Stars + Same Colored Symbol",
@@ -7353,12 +7538,10 @@
           "Everything",
           "Symbols"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Black/White Squares": {
         "name": "Black/White Squares",
@@ -7367,12 +7550,10 @@
           "Everything",
           "Symbols"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Colored Squares": {
         "name": "Colored Squares",
@@ -7381,12 +7562,10 @@
           "Everything",
           "Symbols"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Arrows": {
         "name": "Arrows",
@@ -7395,12 +7574,10 @@
           "Everything",
           "Symbols"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Progressive Dots": {
         "name": "Progressive Dots",
@@ -7409,12 +7586,10 @@
           "Everything",
           "Symbols"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression|useful"
       },
       "Progressive Symmetry": {
         "name": "Progressive Symmetry",
@@ -7423,12 +7598,10 @@
           "Everything",
           "Symbols"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Progressive Stars": {
         "name": "Progressive Stars",
@@ -7437,12 +7610,10 @@
           "Everything",
           "Symbols"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression|useful"
       },
       "Speed Boost": {
         "name": "Speed Boost",
@@ -7450,12 +7621,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 168
+        "max_count": 84,
+        "classification": "filler"
       },
       "Puzzle Skip": {
         "name": "Puzzle Skip",
@@ -7463,12 +7632,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 21
+        "max_count": 11,
+        "classification": "useful"
       },
       "Slowness": {
         "name": "Slowness",
@@ -7476,12 +7643,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 28
+        "max_count": 14,
+        "classification": "trap"
       },
       "Power Surge": {
         "name": "Power Surge",
@@ -7489,12 +7654,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5,
+        "classification": "trap"
       },
       "Bonk": {
         "name": "Bonk",
@@ -7502,12 +7665,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "trap"
       },
       "Functioning Brain": {
         "name": "Functioning Brain",
@@ -7515,12 +7676,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Glass Factory Entry (Panel)": {
         "name": "Glass Factory Entry (Panel)",
@@ -7529,12 +7688,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Outside Tutorial Outpost Entry (Panel)": {
         "name": "Outside Tutorial Outpost Entry (Panel)",
@@ -7543,12 +7700,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Outside Tutorial Outpost Exit (Panel)": {
         "name": "Outside Tutorial Outpost Exit (Panel)",
@@ -7557,12 +7712,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Symmetry Island Lower (Panel)": {
         "name": "Symmetry Island Lower (Panel)",
@@ -7571,12 +7724,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Symmetry Island Upper (Panel)": {
         "name": "Symmetry Island Upper (Panel)",
@@ -7585,12 +7736,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Desert Surface 3 Control (Panel)": {
         "name": "Desert Surface 3 Control (Panel)",
@@ -7599,12 +7748,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Desert Surface 8 Control (Panel)": {
         "name": "Desert Surface 8 Control (Panel)",
@@ -7613,12 +7760,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Desert Light Room Entry (Panel)": {
         "name": "Desert Light Room Entry (Panel)",
@@ -7627,12 +7772,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Desert Flood Controls (Panel)": {
         "name": "Desert Flood Controls (Panel)",
@@ -7641,12 +7784,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Desert Light Control (Panel)": {
         "name": "Desert Light Control (Panel)",
@@ -7655,12 +7796,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Desert Flood Room Entry (Panel)": {
         "name": "Desert Flood Room Entry (Panel)",
@@ -7669,12 +7808,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Desert Elevator Room Hexagonal Control (Panel)": {
         "name": "Desert Elevator Room Hexagonal Control (Panel)",
@@ -7683,12 +7820,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Elevator Control (Panel)": {
         "name": "Quarry Elevator Control (Panel)",
@@ -7697,12 +7832,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Entry 1 (Panel)": {
         "name": "Quarry Entry 1 (Panel)",
@@ -7711,12 +7844,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Entry 2 (Panel)": {
         "name": "Quarry Entry 2 (Panel)",
@@ -7725,12 +7856,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Stoneworks Entry (Panel)": {
         "name": "Quarry Stoneworks Entry (Panel)",
@@ -7739,12 +7868,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Stoneworks Ramp Controls (Panel)": {
         "name": "Quarry Stoneworks Ramp Controls (Panel)",
@@ -7753,12 +7880,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Stoneworks Lift Controls (Panel)": {
         "name": "Quarry Stoneworks Lift Controls (Panel)",
@@ -7767,12 +7892,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Stoneworks Stairs (Panel)": {
         "name": "Quarry Stoneworks Stairs (Panel)",
@@ -7781,12 +7904,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Boathouse Ramp Height Control (Panel)": {
         "name": "Quarry Boathouse Ramp Height Control (Panel)",
@@ -7795,12 +7916,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Boathouse Ramp Horizontal Control (Panel)": {
         "name": "Quarry Boathouse Ramp Horizontal Control (Panel)",
@@ -7809,12 +7928,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Boathouse Hook Control (Panel)": {
         "name": "Quarry Boathouse Hook Control (Panel)",
@@ -7823,12 +7940,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Shadows Door Timer (Panel)": {
         "name": "Shadows Door Timer (Panel)",
@@ -7837,12 +7952,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Hedge Maze 1 (Panel)": {
         "name": "Keep Hedge Maze 1 (Panel)",
@@ -7851,12 +7964,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Hedge Maze 2 (Panel)": {
         "name": "Keep Hedge Maze 2 (Panel)",
@@ -7865,12 +7976,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Hedge Maze 3 (Panel)": {
         "name": "Keep Hedge Maze 3 (Panel)",
@@ -7879,12 +7988,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Hedge Maze 4 (Panel)": {
         "name": "Keep Hedge Maze 4 (Panel)",
@@ -7893,12 +8000,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Monastery Entry Left (Panel)": {
         "name": "Monastery Entry Left (Panel)",
@@ -7907,12 +8012,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Monastery Entry Right (Panel)": {
         "name": "Monastery Entry Right (Panel)",
@@ -7921,12 +8024,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Monastery Shutters Control (Panel)": {
         "name": "Monastery Shutters Control (Panel)",
@@ -7935,12 +8036,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town RGB House Entry (Panel)": {
         "name": "Town RGB House Entry (Panel)",
@@ -7949,12 +8048,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Church Entry (Panel)": {
         "name": "Town Church Entry (Panel)",
@@ -7963,12 +8060,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town RGB Control (Panel)": {
         "name": "Town RGB Control (Panel)",
@@ -7977,12 +8072,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Maze Stairs (Panel)": {
         "name": "Town Maze Stairs (Panel)",
@@ -7991,12 +8084,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Maze Rooftop Bridge (Panel)": {
         "name": "Town Maze Rooftop Bridge (Panel)",
@@ -8005,12 +8096,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Windmill Entry (Panel)": {
         "name": "Windmill Entry (Panel)",
@@ -8019,12 +8108,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Cargo Box Entry (Panel)": {
         "name": "Town Cargo Box Entry (Panel)",
@@ -8033,12 +8120,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Desert Laser Redirect Control (Panel)": {
         "name": "Town Desert Laser Redirect Control (Panel)",
@@ -8047,12 +8132,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Jungle Popup Wall (Panel)": {
         "name": "Jungle Popup Wall (Panel)",
@@ -8061,12 +8144,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Jungle Monastery Garden Shortcut (Panel)": {
         "name": "Jungle Monastery Garden Shortcut (Panel)",
@@ -8075,12 +8156,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bunker Entry (Panel)": {
         "name": "Bunker Entry (Panel)",
@@ -8089,12 +8168,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Windmill Turn Control (Panel)": {
         "name": "Windmill Turn Control (Panel)",
@@ -8103,12 +8180,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bunker Tinted Glass Door (Panel)": {
         "name": "Bunker Tinted Glass Door (Panel)",
@@ -8117,12 +8192,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Theater Entry (Panel)": {
         "name": "Theater Entry (Panel)",
@@ -8131,12 +8204,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Theater Video Input (Panel)": {
         "name": "Theater Video Input (Panel)",
@@ -8145,12 +8216,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bunker Elevator Control (Panel)": {
         "name": "Bunker Elevator Control (Panel)",
@@ -8159,12 +8228,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bunker Drop-Down Door Controls (Panel)": {
         "name": "Bunker Drop-Down Door Controls (Panel)",
@@ -8173,12 +8240,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Theater Exit (Panel)": {
         "name": "Theater Exit (Panel)",
@@ -8187,12 +8252,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Entry (Panel)": {
         "name": "Swamp Entry (Panel)",
@@ -8201,12 +8264,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Sliding Bridge (Panel)": {
         "name": "Swamp Sliding Bridge (Panel)",
@@ -8215,12 +8276,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Platform Shortcut (Panel)": {
         "name": "Swamp Platform Shortcut (Panel)",
@@ -8229,12 +8288,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Rotating Bridge (Panel)": {
         "name": "Swamp Rotating Bridge (Panel)",
@@ -8243,12 +8300,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Long Bridge (Panel)": {
         "name": "Swamp Long Bridge (Panel)",
@@ -8257,12 +8312,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Maze Controls (Panel)": {
         "name": "Swamp Maze Controls (Panel)",
@@ -8271,12 +8324,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Laser Shortcut (Panel)": {
         "name": "Swamp Laser Shortcut (Panel)",
@@ -8285,12 +8336,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treehouse First & Second Doors (Panel)": {
         "name": "Treehouse First & Second Doors (Panel)",
@@ -8299,12 +8348,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treehouse Third Door (Panel)": {
         "name": "Treehouse Third Door (Panel)",
@@ -8313,12 +8360,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treehouse Laser House Door Timer (Panel)": {
         "name": "Treehouse Laser House Door Timer (Panel)",
@@ -8327,12 +8372,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treehouse Drawbridge (Panel)": {
         "name": "Treehouse Drawbridge (Panel)",
@@ -8341,12 +8384,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mountain Floor 1 Light Bridge (Panel)": {
         "name": "Mountain Floor 1 Light Bridge (Panel)",
@@ -8355,12 +8396,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mountain Floor 2 Light Bridge Near (Panel)": {
         "name": "Mountain Floor 2 Light Bridge Near (Panel)",
@@ -8369,12 +8408,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mountain Floor 2 Light Bridge Far (Panel)": {
         "name": "Mountain Floor 2 Light Bridge Far (Panel)",
@@ -8383,12 +8420,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mountain Floor 2 Elevator Control (Panel)": {
         "name": "Mountain Floor 2 Elevator Control (Panel)",
@@ -8397,12 +8432,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Caves Entry (Panel)": {
         "name": "Caves Entry (Panel)",
@@ -8411,12 +8444,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Caves Elevator Controls (Panel)": {
         "name": "Caves Elevator Controls (Panel)",
@@ -8425,12 +8456,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Caves Mountain Shortcut (Panel)": {
         "name": "Caves Mountain Shortcut (Panel)",
@@ -8439,12 +8468,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Caves Swamp Shortcut (Panel)": {
         "name": "Caves Swamp Shortcut (Panel)",
@@ -8453,12 +8480,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Challenge Entry (Panel)": {
         "name": "Challenge Entry (Panel)",
@@ -8467,12 +8492,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Tunnels Entry (Panel)": {
         "name": "Tunnels Entry (Panel)",
@@ -8481,12 +8504,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Tunnels Town Shortcut (Panel)": {
         "name": "Tunnels Town Shortcut (Panel)",
@@ -8495,12 +8516,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Boat": {
         "name": "Boat",
@@ -8509,12 +8528,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Caves Mountain Shortcut (Door)": {
         "name": "Caves Mountain Shortcut (Door)",
@@ -8523,12 +8540,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Symmetry Laser": {
         "name": "Symmetry Laser",
@@ -8537,12 +8552,10 @@
           "Everything",
           "Lasers"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Desert Laser": {
         "name": "Desert Laser",
@@ -8551,12 +8564,10 @@
           "Everything",
           "Lasers"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Laser": {
         "name": "Quarry Laser",
@@ -8565,12 +8576,10 @@
           "Everything",
           "Lasers"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Shadows Laser": {
         "name": "Shadows Laser",
@@ -8579,12 +8588,10 @@
           "Everything",
           "Lasers"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Laser": {
         "name": "Keep Laser",
@@ -8593,12 +8600,10 @@
           "Everything",
           "Lasers"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Monastery Laser": {
         "name": "Monastery Laser",
@@ -8607,12 +8612,10 @@
           "Everything",
           "Lasers"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Laser": {
         "name": "Town Laser",
@@ -8621,12 +8624,10 @@
           "Everything",
           "Lasers"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Jungle Laser": {
         "name": "Jungle Laser",
@@ -8635,12 +8636,10 @@
           "Everything",
           "Lasers"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bunker Laser": {
         "name": "Bunker Laser",
@@ -8649,12 +8648,10 @@
           "Everything",
           "Lasers"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Laser": {
         "name": "Swamp Laser",
@@ -8663,12 +8660,10 @@
           "Everything",
           "Lasers"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treehouse Laser": {
         "name": "Treehouse Laser",
@@ -8677,12 +8672,10 @@
           "Everything",
           "Lasers"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Outside Tutorial Outpost Path (Door)": {
         "name": "Outside Tutorial Outpost Path (Door)",
@@ -8691,12 +8684,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Outside Tutorial Outpost Entry (Door)": {
         "name": "Outside Tutorial Outpost Entry (Door)",
@@ -8705,12 +8696,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Outside Tutorial Outpost Exit (Door)": {
         "name": "Outside Tutorial Outpost Exit (Door)",
@@ -8719,12 +8708,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Glass Factory Entry (Door)": {
         "name": "Glass Factory Entry (Door)",
@@ -8733,12 +8720,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Glass Factory Back Wall (Door)": {
         "name": "Glass Factory Back Wall (Door)",
@@ -8747,12 +8732,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Symmetry Island Lower (Door)": {
         "name": "Symmetry Island Lower (Door)",
@@ -8761,12 +8744,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Symmetry Island Upper (Door)": {
         "name": "Symmetry Island Upper (Door)",
@@ -8775,12 +8756,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Orchard First Gate (Door)": {
         "name": "Orchard First Gate (Door)",
@@ -8789,12 +8768,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Orchard Second Gate (Door)": {
         "name": "Orchard Second Gate (Door)",
@@ -8803,12 +8780,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Desert Light Room Entry (Door)": {
         "name": "Desert Light Room Entry (Door)",
@@ -8817,12 +8792,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Desert Pond Room Entry (Door)": {
         "name": "Desert Pond Room Entry (Door)",
@@ -8831,12 +8804,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Desert Flood Room Entry (Door)": {
         "name": "Desert Flood Room Entry (Door)",
@@ -8845,12 +8816,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Desert Elevator Room Entry (Door)": {
         "name": "Desert Elevator Room Entry (Door)",
@@ -8859,12 +8828,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Desert Elevator (Door)": {
         "name": "Desert Elevator (Door)",
@@ -8873,12 +8840,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Entry 1 (Door)": {
         "name": "Quarry Entry 1 (Door)",
@@ -8887,12 +8852,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Entry 2 (Door)": {
         "name": "Quarry Entry 2 (Door)",
@@ -8901,12 +8864,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Stoneworks Entry (Door)": {
         "name": "Quarry Stoneworks Entry (Door)",
@@ -8915,12 +8876,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Stoneworks Side Exit (Door)": {
         "name": "Quarry Stoneworks Side Exit (Door)",
@@ -8929,12 +8888,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Stoneworks Roof Exit (Door)": {
         "name": "Quarry Stoneworks Roof Exit (Door)",
@@ -8943,12 +8900,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Stoneworks Stairs (Door)": {
         "name": "Quarry Stoneworks Stairs (Door)",
@@ -8957,12 +8912,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Boathouse Dock (Door)": {
         "name": "Quarry Boathouse Dock (Door)",
@@ -8971,12 +8924,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Boathouse First Barrier (Door)": {
         "name": "Quarry Boathouse First Barrier (Door)",
@@ -8985,12 +8936,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Boathouse Second Barrier (Door)": {
         "name": "Quarry Boathouse Second Barrier (Door)",
@@ -8999,12 +8948,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Shadows Timed Door": {
         "name": "Shadows Timed Door",
@@ -9013,12 +8960,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Shadows Laser Entry Right (Door)": {
         "name": "Shadows Laser Entry Right (Door)",
@@ -9027,12 +8972,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Shadows Laser Entry Left (Door)": {
         "name": "Shadows Laser Entry Left (Door)",
@@ -9041,12 +8984,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Shadows Quarry Barrier (Door)": {
         "name": "Shadows Quarry Barrier (Door)",
@@ -9055,12 +8996,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Shadows Ledge Barrier (Door)": {
         "name": "Shadows Ledge Barrier (Door)",
@@ -9069,12 +9008,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Hedge Maze 1 Exit (Door)": {
         "name": "Keep Hedge Maze 1 Exit (Door)",
@@ -9083,12 +9020,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Pressure Plates 1 Exit (Door)": {
         "name": "Keep Pressure Plates 1 Exit (Door)",
@@ -9097,12 +9032,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Hedge Maze 2 Shortcut (Door)": {
         "name": "Keep Hedge Maze 2 Shortcut (Door)",
@@ -9111,12 +9044,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Hedge Maze 2 Exit (Door)": {
         "name": "Keep Hedge Maze 2 Exit (Door)",
@@ -9125,12 +9056,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Hedge Maze 3 Shortcut (Door)": {
         "name": "Keep Hedge Maze 3 Shortcut (Door)",
@@ -9139,12 +9068,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Hedge Maze 3 Exit (Door)": {
         "name": "Keep Hedge Maze 3 Exit (Door)",
@@ -9153,12 +9080,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Hedge Maze 4 Shortcut (Door)": {
         "name": "Keep Hedge Maze 4 Shortcut (Door)",
@@ -9167,12 +9092,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Hedge Maze 4 Exit (Door)": {
         "name": "Keep Hedge Maze 4 Exit (Door)",
@@ -9181,12 +9104,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Pressure Plates 2 Exit (Door)": {
         "name": "Keep Pressure Plates 2 Exit (Door)",
@@ -9195,12 +9116,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Pressure Plates 3 Exit (Door)": {
         "name": "Keep Pressure Plates 3 Exit (Door)",
@@ -9209,12 +9128,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Pressure Plates 4 Exit (Door)": {
         "name": "Keep Pressure Plates 4 Exit (Door)",
@@ -9223,12 +9140,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Shadows Shortcut (Door)": {
         "name": "Keep Shadows Shortcut (Door)",
@@ -9237,12 +9152,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Tower Shortcut (Door)": {
         "name": "Keep Tower Shortcut (Door)",
@@ -9251,12 +9164,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Monastery Laser Shortcut (Door)": {
         "name": "Monastery Laser Shortcut (Door)",
@@ -9265,12 +9176,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Monastery Entry Inner (Door)": {
         "name": "Monastery Entry Inner (Door)",
@@ -9279,12 +9188,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Monastery Entry Outer (Door)": {
         "name": "Monastery Entry Outer (Door)",
@@ -9293,12 +9200,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Monastery Garden Entry (Door)": {
         "name": "Monastery Garden Entry (Door)",
@@ -9307,12 +9212,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Cargo Box Entry (Door)": {
         "name": "Town Cargo Box Entry (Door)",
@@ -9321,12 +9224,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Wooden Roof Stairs (Door)": {
         "name": "Town Wooden Roof Stairs (Door)",
@@ -9335,12 +9236,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town RGB House Entry (Door)": {
         "name": "Town RGB House Entry (Door)",
@@ -9349,12 +9248,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Church Entry (Door)": {
         "name": "Town Church Entry (Door)",
@@ -9363,12 +9260,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Maze Stairs (Door)": {
         "name": "Town Maze Stairs (Door)",
@@ -9377,12 +9272,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Windmill Entry (Door)": {
         "name": "Windmill Entry (Door)",
@@ -9391,12 +9284,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town RGB House Stairs (Door)": {
         "name": "Town RGB House Stairs (Door)",
@@ -9405,12 +9296,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Tower Second (Door)": {
         "name": "Town Tower Second (Door)",
@@ -9419,12 +9308,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Tower First (Door)": {
         "name": "Town Tower First (Door)",
@@ -9433,12 +9320,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Tower Fourth (Door)": {
         "name": "Town Tower Fourth (Door)",
@@ -9447,12 +9332,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Tower Third (Door)": {
         "name": "Town Tower Third (Door)",
@@ -9461,12 +9344,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Theater Entry (Door)": {
         "name": "Theater Entry (Door)",
@@ -9475,12 +9356,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Theater Exit Left (Door)": {
         "name": "Theater Exit Left (Door)",
@@ -9489,12 +9368,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Theater Exit Right (Door)": {
         "name": "Theater Exit Right (Door)",
@@ -9503,12 +9380,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Jungle Laser Shortcut (Door)": {
         "name": "Jungle Laser Shortcut (Door)",
@@ -9517,12 +9392,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Jungle Popup Wall (Door)": {
         "name": "Jungle Popup Wall (Door)",
@@ -9531,12 +9404,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Jungle Monastery Garden Shortcut (Door)": {
         "name": "Jungle Monastery Garden Shortcut (Door)",
@@ -9545,12 +9416,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bunker Entry (Door)": {
         "name": "Bunker Entry (Door)",
@@ -9559,12 +9428,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bunker Tinted Glass Door": {
         "name": "Bunker Tinted Glass Door",
@@ -9573,12 +9440,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bunker UV Room Entry (Door)": {
         "name": "Bunker UV Room Entry (Door)",
@@ -9587,12 +9452,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bunker Elevator Room Entry (Door)": {
         "name": "Bunker Elevator Room Entry (Door)",
@@ -9601,12 +9464,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Entry (Door)": {
         "name": "Swamp Entry (Door)",
@@ -9615,12 +9476,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Between Bridges First Door": {
         "name": "Swamp Between Bridges First Door",
@@ -9629,12 +9488,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Platform Shortcut (Door)": {
         "name": "Swamp Platform Shortcut (Door)",
@@ -9643,12 +9500,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Cyan Water Pump (Door)": {
         "name": "Swamp Cyan Water Pump (Door)",
@@ -9657,12 +9512,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Between Bridges Second Door": {
         "name": "Swamp Between Bridges Second Door",
@@ -9671,12 +9524,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Red Water Pump (Door)": {
         "name": "Swamp Red Water Pump (Door)",
@@ -9685,12 +9536,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Red Underwater Exit (Door)": {
         "name": "Swamp Red Underwater Exit (Door)",
@@ -9699,12 +9548,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Blue Water Pump (Door)": {
         "name": "Swamp Blue Water Pump (Door)",
@@ -9713,12 +9560,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Purple Water Pump (Door)": {
         "name": "Swamp Purple Water Pump (Door)",
@@ -9727,12 +9572,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Laser Shortcut (Door)": {
         "name": "Swamp Laser Shortcut (Door)",
@@ -9741,12 +9584,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treehouse First (Door)": {
         "name": "Treehouse First (Door)",
@@ -9755,12 +9596,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treehouse Second (Door)": {
         "name": "Treehouse Second (Door)",
@@ -9769,12 +9608,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treehouse Third (Door)": {
         "name": "Treehouse Third (Door)",
@@ -9783,12 +9620,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treehouse Drawbridge (Door)": {
         "name": "Treehouse Drawbridge (Door)",
@@ -9797,12 +9632,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treehouse Laser House Entry (Door)": {
         "name": "Treehouse Laser House Entry (Door)",
@@ -9811,12 +9644,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mountain Floor 1 Exit (Door)": {
         "name": "Mountain Floor 1 Exit (Door)",
@@ -9825,12 +9656,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mountain Floor 2 Staircase Near (Door)": {
         "name": "Mountain Floor 2 Staircase Near (Door)",
@@ -9839,12 +9668,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mountain Floor 2 Exit (Door)": {
         "name": "Mountain Floor 2 Exit (Door)",
@@ -9853,12 +9680,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mountain Floor 2 Staircase Far (Door)": {
         "name": "Mountain Floor 2 Staircase Far (Door)",
@@ -9867,12 +9692,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mountain Bottom Floor Giant Puzzle Exit (Door)": {
         "name": "Mountain Bottom Floor Giant Puzzle Exit (Door)",
@@ -9881,12 +9704,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mountain Bottom Floor Pillars Room Entry (Door)": {
         "name": "Mountain Bottom Floor Pillars Room Entry (Door)",
@@ -9895,12 +9716,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mountain Bottom Floor Rock (Door)": {
         "name": "Mountain Bottom Floor Rock (Door)",
@@ -9909,12 +9728,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Caves Entry (Door)": {
         "name": "Caves Entry (Door)",
@@ -9923,12 +9740,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Caves Pillar Door": {
         "name": "Caves Pillar Door",
@@ -9937,12 +9752,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Caves Swamp Shortcut (Door)": {
         "name": "Caves Swamp Shortcut (Door)",
@@ -9951,12 +9764,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Challenge Entry (Door)": {
         "name": "Challenge Entry (Door)",
@@ -9965,12 +9776,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Tunnels Entry (Door)": {
         "name": "Tunnels Entry (Door)",
@@ -9979,12 +9788,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Tunnels Theater Shortcut (Door)": {
         "name": "Tunnels Theater Shortcut (Door)",
@@ -9993,12 +9800,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Tunnels Desert Shortcut (Door)": {
         "name": "Tunnels Desert Shortcut (Door)",
@@ -10007,12 +9812,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Tunnels Town Shortcut (Door)": {
         "name": "Tunnels Town Shortcut (Door)",
@@ -10021,12 +9824,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Outside Tutorial Outpost Doors": {
         "name": "Outside Tutorial Outpost Doors",
@@ -10035,12 +9836,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Glass Factory Doors": {
         "name": "Glass Factory Doors",
@@ -10049,12 +9848,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Symmetry Island Doors": {
         "name": "Symmetry Island Doors",
@@ -10063,12 +9860,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Orchard Gates": {
         "name": "Orchard Gates",
@@ -10077,12 +9872,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Desert Doors & Elevator": {
         "name": "Desert Doors & Elevator",
@@ -10091,12 +9884,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Entry Doors": {
         "name": "Quarry Entry Doors",
@@ -10105,12 +9896,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Stoneworks Doors": {
         "name": "Quarry Stoneworks Doors",
@@ -10119,12 +9908,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Boathouse Doors": {
         "name": "Quarry Boathouse Doors",
@@ -10133,12 +9920,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Shadows Laser Room Doors": {
         "name": "Shadows Laser Room Doors",
@@ -10147,12 +9932,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Shadows Lower Doors": {
         "name": "Shadows Lower Doors",
@@ -10161,12 +9944,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Hedge Maze Doors": {
         "name": "Keep Hedge Maze Doors",
@@ -10175,12 +9956,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Pressure Plates Doors": {
         "name": "Keep Pressure Plates Doors",
@@ -10189,12 +9968,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Shortcuts": {
         "name": "Keep Shortcuts",
@@ -10203,12 +9980,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Monastery Entry Doors": {
         "name": "Monastery Entry Doors",
@@ -10217,12 +9992,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Monastery Shortcuts": {
         "name": "Monastery Shortcuts",
@@ -10231,12 +10004,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Doors": {
         "name": "Town Doors",
@@ -10245,12 +10016,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Tower Doors": {
         "name": "Town Tower Doors",
@@ -10259,12 +10028,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Windmill & Theater Doors": {
         "name": "Windmill & Theater Doors",
@@ -10273,12 +10040,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Jungle Doors": {
         "name": "Jungle Doors",
@@ -10287,12 +10052,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bunker Doors": {
         "name": "Bunker Doors",
@@ -10301,12 +10064,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Doors": {
         "name": "Swamp Doors",
@@ -10315,12 +10076,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Shortcuts": {
         "name": "Swamp Shortcuts",
@@ -10329,12 +10088,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Water Pumps": {
         "name": "Swamp Water Pumps",
@@ -10343,12 +10100,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treehouse Entry Doors": {
         "name": "Treehouse Entry Doors",
@@ -10357,12 +10112,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treehouse Upper Doors": {
         "name": "Treehouse Upper Doors",
@@ -10371,12 +10124,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mountain Floor 1 & 2 Doors": {
         "name": "Mountain Floor 1 & 2 Doors",
@@ -10385,12 +10136,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mountain Bottom Floor Doors": {
         "name": "Mountain Bottom Floor Doors",
@@ -10399,12 +10148,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Caves Doors": {
         "name": "Caves Doors",
@@ -10413,12 +10160,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Caves Shortcuts": {
         "name": "Caves Shortcuts",
@@ -10427,12 +10172,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Tunnels Doors": {
         "name": "Tunnels Doors",
@@ -10441,12 +10184,10 @@
           "Doors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Desert Control Panels": {
         "name": "Desert Control Panels",
@@ -10455,12 +10196,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Stoneworks Control Panels": {
         "name": "Quarry Stoneworks Control Panels",
@@ -10469,12 +10208,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Boathouse Control Panels": {
         "name": "Quarry Boathouse Control Panels",
@@ -10483,12 +10220,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Control Panels": {
         "name": "Town Control Panels",
@@ -10497,12 +10232,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Windmill & Theater Control Panels": {
         "name": "Windmill & Theater Control Panels",
@@ -10511,12 +10244,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bunker Control Panels": {
         "name": "Bunker Control Panels",
@@ -10525,12 +10256,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Control Panels": {
         "name": "Swamp Control Panels",
@@ -10539,12 +10268,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mountain & Caves Control Panels": {
         "name": "Mountain & Caves Control Panels",
@@ -10553,12 +10280,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Symmetry Island Panels": {
         "name": "Symmetry Island Panels",
@@ -10567,12 +10292,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Outside Tutorial Outpost Panels": {
         "name": "Outside Tutorial Outpost Panels",
@@ -10581,12 +10304,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Desert Panels": {
         "name": "Desert Panels",
@@ -10595,12 +10316,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Outside Panels": {
         "name": "Quarry Outside Panels",
@@ -10609,12 +10328,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Stoneworks Panels": {
         "name": "Quarry Stoneworks Panels",
@@ -10623,12 +10340,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Boathouse Panels": {
         "name": "Quarry Boathouse Panels",
@@ -10637,12 +10352,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Keep Hedge Maze Panels": {
         "name": "Keep Hedge Maze Panels",
@@ -10651,12 +10364,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Monastery Panels": {
         "name": "Monastery Panels",
@@ -10665,12 +10376,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Jungle Panels": {
         "name": "Jungle Panels",
@@ -10679,12 +10388,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Church & RGB House Panels": {
         "name": "Town Church & RGB House Panels",
@@ -10693,12 +10400,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Maze Panels": {
         "name": "Town Maze Panels",
@@ -10707,12 +10412,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Dockside House Panels": {
         "name": "Town Dockside House Panels",
@@ -10721,12 +10424,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Windmill & Theater Panels": {
         "name": "Windmill & Theater Panels",
@@ -10735,12 +10436,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treehouse Panels": {
         "name": "Treehouse Panels",
@@ -10749,12 +10448,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bunker Panels": {
         "name": "Bunker Panels",
@@ -10763,12 +10460,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Panels": {
         "name": "Swamp Panels",
@@ -10777,12 +10472,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mountain Panels": {
         "name": "Mountain Panels",
@@ -10791,12 +10484,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Caves Panels": {
         "name": "Caves Panels",
@@ -10805,12 +10496,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Tunnels Panels": {
         "name": "Tunnels Panels",
@@ -10819,12 +10508,10 @@
           "Everything",
           "Panel Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Desert Obelisk Key": {
         "name": "Desert Obelisk Key",
@@ -10833,12 +10520,10 @@
           "Everything",
           "Obelisk Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Monastery Obelisk Key": {
         "name": "Monastery Obelisk Key",
@@ -10847,12 +10532,10 @@
           "Everything",
           "Obelisk Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treehouse Obelisk Key": {
         "name": "Treehouse Obelisk Key",
@@ -10861,12 +10544,10 @@
           "Everything",
           "Obelisk Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mountainside Obelisk Key": {
         "name": "Mountainside Obelisk Key",
@@ -10875,12 +10556,10 @@
           "Everything",
           "Obelisk Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Obelisk Key": {
         "name": "Quarry Obelisk Key",
@@ -10889,12 +10568,10 @@
           "Everything",
           "Obelisk Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Town Obelisk Key": {
         "name": "Town Obelisk Key",
@@ -10903,12 +10580,10 @@
           "Everything",
           "Obelisk Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "+1 Laser": {
         "name": "+1 Laser",
@@ -10916,12 +10591,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 10
+        "max_count": 10,
+        "classification": "progression"
       },
       "+1 Laser (Unredirected)": {
         "name": "+1 Laser (Unredirected)",
@@ -10929,12 +10602,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "+1 Laser (Redirected)": {
         "name": "+1 Laser (Redirected)",
@@ -10942,12 +10613,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Desert Laser Redirection": {
         "name": "Desert Laser Redirection",
@@ -10955,12 +10624,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mountain Entry": {
         "name": "Mountain Entry",
@@ -10968,12 +10635,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Victory": {
         "name": "Victory",
@@ -10981,12 +10646,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -11006,25 +10669,25 @@
       "+1 Laser (Redirected)": 1,
       "+1 Laser (Unredirected)": 1,
       "Black/White Squares": 1,
-      "Boat": 2,
-      "Bonk": 4,
-      "Colored Squares": 2,
+      "Boat": 1,
+      "Bonk": 2,
+      "Colored Squares": 1,
       "Desert Laser Redirection": 1,
-      "Eraser": 2,
-      "Functioning Brain": 2,
+      "Eraser": 1,
+      "Functioning Brain": 1,
       "Mountain Entry": 1,
-      "Negative Shapers": 2,
-      "Power Surge": 10,
-      "Progressive Dots": 4,
-      "Progressive Stars": 4,
-      "Progressive Symmetry": 4,
-      "Puzzle Skip": 21,
-      "Rotated Shapers": 2,
-      "Shapers": 2,
-      "Slowness": 28,
-      "Sound Dots": 2,
-      "Speed Boost": 168,
-      "Triangles": 2,
+      "Negative Shapers": 1,
+      "Power Surge": 5,
+      "Progressive Dots": 2,
+      "Progressive Stars": 2,
+      "Progressive Symmetry": 2,
+      "Puzzle Skip": 11,
+      "Rotated Shapers": 1,
+      "Shapers": 1,
+      "Slowness": 14,
+      "Sound Dots": 1,
+      "Speed Boost": 84,
+      "Triangles": 1,
       "Victory": 1
     }
   },
@@ -11049,5 +10712,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

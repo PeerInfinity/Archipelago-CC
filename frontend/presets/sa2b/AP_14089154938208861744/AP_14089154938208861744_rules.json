@@ -42,7 +42,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "City Escape - 2",
@@ -66,7 +67,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "City Escape - Chao Key 1",
@@ -80,7 +82,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "City Escape - Chao Key 2",
@@ -94,7 +97,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "City Escape - Chao Key 3",
@@ -108,7 +112,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "City Escape - Gold Beetle",
@@ -122,7 +127,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "City Escape - Upgrade",
@@ -145,7 +151,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -165,7 +172,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Metal Harbor - 2",
@@ -198,7 +206,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Metal Harbor - Chao Key 1",
@@ -212,7 +221,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Metal Harbor - Chao Key 2",
@@ -226,7 +236,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Metal Harbor - Chao Key 3",
@@ -240,7 +251,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Metal Harbor - Gold Beetle",
@@ -254,7 +266,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Metal Harbor - Upgrade",
@@ -268,7 +281,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -288,7 +302,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Green Forest - 2",
@@ -312,7 +327,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Green Forest - Chao Key 1",
@@ -326,7 +342,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Green Forest - Chao Key 2",
@@ -340,7 +357,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Green Forest - Chao Key 3",
@@ -354,7 +372,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Green Forest - Gold Beetle",
@@ -368,7 +387,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Green Forest - Upgrade",
@@ -382,7 +402,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -402,7 +423,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Cave - 2",
@@ -426,7 +448,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Cave - Chao Key 1",
@@ -440,7 +463,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Cave - Chao Key 2",
@@ -454,7 +478,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Cave - Chao Key 3",
@@ -481,7 +506,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Cave - Gold Beetle",
@@ -495,7 +521,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Cave - Upgrade",
@@ -509,7 +536,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -542,7 +570,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Crazy Gadget - 2",
@@ -575,7 +604,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Crazy Gadget - Chao Key 1",
@@ -589,7 +619,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Crazy Gadget - Chao Key 2",
@@ -603,7 +634,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Crazy Gadget - Chao Key 3",
@@ -630,7 +662,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Crazy Gadget - Gold Beetle",
@@ -657,7 +690,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Crazy Gadget - Upgrade",
@@ -671,7 +705,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -691,7 +726,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Final Rush - 2",
@@ -715,7 +751,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Final Rush - Chao Key 1",
@@ -729,7 +766,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Final Rush - Chao Key 2",
@@ -743,7 +781,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Final Rush - Chao Key 3",
@@ -757,7 +796,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Final Rush - Gold Beetle",
@@ -771,7 +811,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Final Rush - Upgrade",
@@ -785,7 +826,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -805,7 +847,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Prison Lane - 2",
@@ -829,7 +872,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Prison Lane - Chao Key 1",
@@ -843,7 +887,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Prison Lane - Chao Key 2",
@@ -857,7 +902,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Prison Lane - Chao Key 3",
@@ -871,7 +917,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Prison Lane - Gold Beetle",
@@ -885,7 +932,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Prison Lane - Upgrade",
@@ -899,7 +947,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -919,7 +968,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mission Street - 2",
@@ -952,7 +1002,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mission Street - Chao Key 1",
@@ -966,7 +1017,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mission Street - Chao Key 2",
@@ -980,7 +1032,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mission Street - Chao Key 3",
@@ -994,7 +1047,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mission Street - Gold Beetle",
@@ -1008,7 +1062,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mission Street - Upgrade",
@@ -1022,7 +1077,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1042,7 +1098,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Route 101 - 2",
@@ -1066,7 +1123,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1086,7 +1144,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hidden Base - 2",
@@ -1119,7 +1178,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hidden Base - Chao Key 1",
@@ -1133,7 +1193,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hidden Base - Chao Key 2",
@@ -1147,7 +1208,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hidden Base - Gold Beetle",
@@ -1161,7 +1223,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hidden Base - Upgrade",
@@ -1184,7 +1247,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1213,7 +1277,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Eternal Engine - 2",
@@ -1246,7 +1311,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Eternal Engine - Chao Key 1",
@@ -1260,7 +1326,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Eternal Engine - Chao Key 2",
@@ -1283,7 +1350,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Eternal Engine - Chao Key 3",
@@ -1297,7 +1365,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Eternal Engine - Gold Beetle",
@@ -1320,7 +1389,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Eternal Engine - Upgrade",
@@ -1334,7 +1404,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1354,7 +1425,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Wild Canyon - 2",
@@ -1378,7 +1450,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Wild Canyon - Chao Key 1",
@@ -1392,7 +1465,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Wild Canyon - Chao Key 2",
@@ -1406,7 +1480,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Wild Canyon - Chao Key 3",
@@ -1420,7 +1495,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Wild Canyon - Gold Beetle",
@@ -1434,7 +1510,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Wild Canyon - Upgrade",
@@ -1448,7 +1525,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1468,7 +1546,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pumpkin Hill - 2",
@@ -1492,7 +1571,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pumpkin Hill - Chao Key 1",
@@ -1506,7 +1586,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pumpkin Hill - Chao Key 2",
@@ -1520,7 +1601,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pumpkin Hill - Chao Key 3",
@@ -1534,7 +1616,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pumpkin Hill - Upgrade",
@@ -1548,7 +1631,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1568,7 +1652,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aquatic Mine - 2",
@@ -1592,7 +1677,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aquatic Mine - Chao Key 1",
@@ -1606,7 +1692,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aquatic Mine - Chao Key 2",
@@ -1620,7 +1707,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aquatic Mine - Chao Key 3",
@@ -1634,7 +1722,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aquatic Mine - Gold Beetle",
@@ -1648,7 +1737,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aquatic Mine - Upgrade",
@@ -1662,7 +1752,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1691,7 +1782,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Death Chamber - 2",
@@ -1733,7 +1825,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Death Chamber - Chao Key 1",
@@ -1747,7 +1840,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Death Chamber - Chao Key 2",
@@ -1761,7 +1855,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Death Chamber - Chao Key 3",
@@ -1784,7 +1879,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Death Chamber - Gold Beetle",
@@ -1807,7 +1903,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Death Chamber - Upgrade",
@@ -1821,7 +1918,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1850,7 +1948,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Meteor Herd - 2",
@@ -1874,7 +1973,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Meteor Herd - Chao Key 1",
@@ -1888,7 +1988,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Meteor Herd - Chao Key 2",
@@ -1902,7 +2003,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Meteor Herd - Chao Key 3",
@@ -1916,7 +2018,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Meteor Herd - Gold Beetle",
@@ -1930,7 +2033,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Meteor Herd - Upgrade",
@@ -1944,7 +2048,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1964,7 +2069,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Radical Highway - 2",
@@ -1988,7 +2094,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Radical Highway - Chao Key 1",
@@ -2002,7 +2109,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Radical Highway - Chao Key 2",
@@ -2016,7 +2124,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Radical Highway - Chao Key 3",
@@ -2030,7 +2139,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Radical Highway - Gold Beetle",
@@ -2044,7 +2154,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Radical Highway - Upgrade",
@@ -2058,7 +2169,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2078,7 +2190,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "White Jungle - 2",
@@ -2102,7 +2215,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "White Jungle - Chao Key 1",
@@ -2116,7 +2230,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "White Jungle - Chao Key 2",
@@ -2130,7 +2245,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "White Jungle - Chao Key 3",
@@ -2144,7 +2260,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "White Jungle - Gold Beetle",
@@ -2158,7 +2275,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "White Jungle - Upgrade",
@@ -2172,7 +2290,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2192,7 +2311,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sky Rail - 2",
@@ -2216,7 +2336,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sky Rail - Chao Key 1",
@@ -2230,7 +2351,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sky Rail - Chao Key 2",
@@ -2244,7 +2366,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sky Rail - Chao Key 3",
@@ -2258,7 +2381,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sky Rail - Gold Beetle",
@@ -2272,7 +2396,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sky Rail - Upgrade",
@@ -2286,7 +2411,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2306,7 +2432,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Final Chase - 2",
@@ -2330,7 +2457,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Final Chase - Chao Key 1",
@@ -2344,7 +2472,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Final Chase - Chao Key 2",
@@ -2358,7 +2487,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Final Chase - Chao Key 3",
@@ -2372,7 +2502,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Final Chase - Gold Beetle",
@@ -2386,7 +2517,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Final Chase - Upgrade",
@@ -2400,7 +2532,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2420,7 +2553,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Iron Gate - 2",
@@ -2444,7 +2578,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Iron Gate - Chao Key 1",
@@ -2458,7 +2593,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Iron Gate - Chao Key 2",
@@ -2472,7 +2608,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Iron Gate - Chao Key 3",
@@ -2486,7 +2623,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Iron Gate - Gold Beetle",
@@ -2500,7 +2638,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Iron Gate - Upgrade",
@@ -2514,7 +2653,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2534,7 +2674,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sand Ocean - 2",
@@ -2558,7 +2699,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sand Ocean - Chao Key 1",
@@ -2572,7 +2714,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sand Ocean - Chao Key 2",
@@ -2586,7 +2729,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sand Ocean - Chao Key 3",
@@ -2600,7 +2744,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sand Ocean - Gold Beetle",
@@ -2614,7 +2759,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sand Ocean - Upgrade",
@@ -2628,7 +2774,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2648,7 +2795,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lost Colony - 2",
@@ -2681,7 +2829,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lost Colony - Chao Key 1",
@@ -2695,7 +2844,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lost Colony - Chao Key 2",
@@ -2709,7 +2859,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lost Colony - Chao Key 3",
@@ -2723,7 +2874,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lost Colony - Gold Beetle",
@@ -2737,7 +2889,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lost Colony - Upgrade",
@@ -2751,7 +2904,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2780,7 +2934,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Weapons Bed - 2",
@@ -2822,7 +2977,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Weapons Bed - Chao Key 1",
@@ -2836,7 +2992,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Weapons Bed - Chao Key 2",
@@ -2859,7 +3016,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Weapons Bed - Chao Key 3",
@@ -2882,7 +3040,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Weapons Bed - Upgrade",
@@ -2896,7 +3055,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2916,7 +3076,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cosmic Wall - 2",
@@ -2949,7 +3110,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cosmic Wall - Chao Key 1",
@@ -2963,7 +3125,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cosmic Wall - Chao Key 2",
@@ -2977,7 +3140,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cosmic Wall - Chao Key 3",
@@ -2991,7 +3155,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cosmic Wall - Gold Beetle",
@@ -3005,7 +3170,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cosmic Wall - Upgrade",
@@ -3019,7 +3185,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3039,7 +3206,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dry Lagoon - 2",
@@ -3063,7 +3231,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dry Lagoon - Chao Key 1",
@@ -3077,7 +3246,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dry Lagoon - Chao Key 2",
@@ -3091,7 +3261,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dry Lagoon - Chao Key 3",
@@ -3105,7 +3276,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dry Lagoon - Gold Beetle",
@@ -3132,7 +3304,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dry Lagoon - Upgrade",
@@ -3146,7 +3319,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3166,7 +3340,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Egg Quarters - 2",
@@ -3190,7 +3365,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Egg Quarters - Chao Key 1",
@@ -3204,7 +3380,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Egg Quarters - Chao Key 2",
@@ -3218,7 +3395,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Egg Quarters - Chao Key 3",
@@ -3232,7 +3410,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Egg Quarters - Gold Beetle",
@@ -3246,7 +3425,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Egg Quarters - Upgrade",
@@ -3260,7 +3440,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3280,7 +3461,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Security Hall - 2",
@@ -3313,7 +3495,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Security Hall - Chao Key 1",
@@ -3327,7 +3510,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Security Hall - Chao Key 2",
@@ -3341,7 +3525,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Security Hall - Chao Key 3",
@@ -3355,7 +3540,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Security Hall - Gold Beetle",
@@ -3369,7 +3555,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Security Hall - Upgrade",
@@ -3392,7 +3579,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3412,7 +3600,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Route 280 - 2",
@@ -3436,7 +3625,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3465,7 +3655,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mad Space - 2",
@@ -3498,7 +3689,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mad Space - Chao Key 1",
@@ -3512,7 +3704,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mad Space - Chao Key 2",
@@ -3526,7 +3719,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mad Space - Chao Key 3",
@@ -3540,7 +3734,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mad Space - Gold Beetle",
@@ -3554,7 +3749,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mad Space - Upgrade",
@@ -3568,7 +3764,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3628,7 +3825,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cannon's Core - 2",
@@ -3670,7 +3868,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cannon's Core - Chao Key 1",
@@ -3697,7 +3896,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cannon's Core - Chao Key 2",
@@ -3720,7 +3920,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cannon's Core - Chao Key 3",
@@ -3755,7 +3956,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cannon's Core - Gold Beetle",
@@ -3786,7 +3988,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4089,7 +4292,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4208,7 +4412,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4315,7 +4520,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4335,7 +4541,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       }
@@ -4357,376 +4564,346 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 276
+        "max_count": 138,
+        "classification": "progression_skip_balancing"
       },
       "Sonic - Magic Gloves": {
         "name": "Sonic - Magic Gloves",
+        "hint_text": "Sonic   Magic Gloves",
         "id": 16711681,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Sonic - Light Shoes": {
         "name": "Sonic - Light Shoes",
+        "hint_text": "Sonic   Light Shoes",
         "id": 16711682,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Sonic - Ancient Light": {
         "name": "Sonic - Ancient Light",
+        "hint_text": "Sonic   Ancient Light",
         "id": 16711683,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Sonic - Bounce Bracelet": {
         "name": "Sonic - Bounce Bracelet",
+        "hint_text": "Sonic   Bounce Bracelet",
         "id": 16711684,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Sonic - Flame Ring": {
         "name": "Sonic - Flame Ring",
+        "hint_text": "Sonic   Flame Ring",
         "id": 16711685,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Sonic - Mystic Melody": {
         "name": "Sonic - Mystic Melody",
+        "hint_text": "Sonic   Mystic Melody",
         "id": 16711686,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Tails - Laser Blaster": {
         "name": "Tails - Laser Blaster",
+        "hint_text": "Tails   Laser Blaster",
         "id": 16711687,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Tails - Booster": {
         "name": "Tails - Booster",
+        "hint_text": "Tails   Booster",
         "id": 16711688,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Tails - Mystic Melody": {
         "name": "Tails - Mystic Melody",
+        "hint_text": "Tails   Mystic Melody",
         "id": 16711689,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Tails - Bazooka": {
         "name": "Tails - Bazooka",
+        "hint_text": "Tails   Bazooka",
         "id": 16711690,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Knuckles - Mystic Melody": {
         "name": "Knuckles - Mystic Melody",
+        "hint_text": "Knuckles   Mystic Melody",
         "id": 16711691,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Knuckles - Shovel Claws": {
         "name": "Knuckles - Shovel Claws",
+        "hint_text": "Knuckles   Shovel Claws",
         "id": 16711692,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Knuckles - Air Necklace": {
         "name": "Knuckles - Air Necklace",
+        "hint_text": "Knuckles   Air Necklace",
         "id": 16711693,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Knuckles - Hammer Gloves": {
         "name": "Knuckles - Hammer Gloves",
+        "hint_text": "Knuckles   Hammer Gloves",
         "id": 16711694,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Knuckles - Sunglasses": {
         "name": "Knuckles - Sunglasses",
+        "hint_text": "Knuckles   Sunglasses",
         "id": 16711695,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Shadow - Flame Ring": {
         "name": "Shadow - Flame Ring",
+        "hint_text": "Shadow   Flame Ring",
         "id": 16711696,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Shadow - Air Shoes": {
         "name": "Shadow - Air Shoes",
+        "hint_text": "Shadow   Air Shoes",
         "id": 16711697,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Shadow - Ancient Light": {
         "name": "Shadow - Ancient Light",
+        "hint_text": "Shadow   Ancient Light",
         "id": 16711698,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Shadow - Mystic Melody": {
         "name": "Shadow - Mystic Melody",
+        "hint_text": "Shadow   Mystic Melody",
         "id": 16711699,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Eggman - Laser Blaster": {
         "name": "Eggman - Laser Blaster",
+        "hint_text": "Eggman   Laser Blaster",
         "id": 16711700,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Eggman - Mystic Melody": {
         "name": "Eggman - Mystic Melody",
+        "hint_text": "Eggman   Mystic Melody",
         "id": 16711701,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Eggman - Jet Engine": {
         "name": "Eggman - Jet Engine",
+        "hint_text": "Eggman   Jet Engine",
         "id": 16711702,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Eggman - Large Cannon": {
         "name": "Eggman - Large Cannon",
+        "hint_text": "Eggman   Large Cannon",
         "id": 16711703,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Eggman - Protective Armor": {
         "name": "Eggman - Protective Armor",
+        "hint_text": "Eggman   Protective Armor",
         "id": 16711704,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Rouge - Mystic Melody": {
         "name": "Rouge - Mystic Melody",
+        "hint_text": "Rouge   Mystic Melody",
         "id": 16711705,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Rouge - Pick Nails": {
         "name": "Rouge - Pick Nails",
+        "hint_text": "Rouge   Pick Nails",
         "id": 16711706,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Rouge - Treasure Scope": {
         "name": "Rouge - Treasure Scope",
+        "hint_text": "Rouge   Treasure Scope",
         "id": 16711707,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Rouge - Iron Boots": {
         "name": "Rouge - Iron Boots",
+        "hint_text": "Rouge   Iron Boots",
         "id": 16711708,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Chao Coin": {
         "name": "Chao Coin",
@@ -4734,12 +4911,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Five Rings": {
         "name": "Five Rings",
@@ -4747,12 +4922,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "filler"
       },
       "Ten Rings": {
         "name": "Ten Rings",
@@ -4760,12 +4933,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "filler"
       },
       "Twenty Rings": {
         "name": "Twenty Rings",
@@ -4773,12 +4944,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "filler"
       },
       "Extra Life": {
         "name": "Extra Life",
@@ -4786,12 +4955,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "filler"
       },
       "Shield": {
         "name": "Shield",
@@ -4799,12 +4966,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "filler"
       },
       "Magnetic Shield": {
         "name": "Magnetic Shield",
@@ -4812,12 +4977,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 18
+        "max_count": 9,
+        "classification": "filler"
       },
       "Invincibility": {
         "name": "Invincibility",
@@ -4825,12 +4988,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "filler"
       },
       "OmoTrap": {
         "name": "OmoTrap",
@@ -4839,12 +5000,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Chaos Control Trap": {
         "name": "Chaos Control Trap",
@@ -4853,12 +5012,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Confusion Trap": {
         "name": "Confusion Trap",
@@ -4867,12 +5024,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Tiny Trap": {
         "name": "Tiny Trap",
@@ -4881,12 +5036,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Gravity Trap": {
         "name": "Gravity Trap",
@@ -4895,12 +5048,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Exposition Trap": {
         "name": "Exposition Trap",
@@ -4909,12 +5060,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ice Trap": {
         "name": "Ice Trap",
@@ -4923,12 +5072,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Slow Trap": {
         "name": "Slow Trap",
@@ -4937,12 +5084,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Cutscene Trap": {
         "name": "Cutscene Trap",
@@ -4951,12 +5096,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Reverse Trap": {
         "name": "Reverse Trap",
@@ -4965,12 +5108,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Literature Trap": {
         "name": "Literature Trap",
@@ -4979,12 +5120,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Controller Drift Trap": {
         "name": "Controller Drift Trap",
@@ -4993,12 +5132,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Poison Trap": {
         "name": "Poison Trap",
@@ -5007,12 +5144,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bee Trap": {
         "name": "Bee Trap",
@@ -5021,12 +5156,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "White Chaos Emerald": {
         "name": "White Chaos Emerald",
@@ -5035,12 +5168,10 @@
           "Chaos Emeralds",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Red Chaos Emerald": {
         "name": "Red Chaos Emerald",
@@ -5049,12 +5180,10 @@
           "Chaos Emeralds",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Cyan Chaos Emerald": {
         "name": "Cyan Chaos Emerald",
@@ -5063,12 +5192,10 @@
           "Chaos Emeralds",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Purple Chaos Emerald": {
         "name": "Purple Chaos Emerald",
@@ -5077,12 +5204,10 @@
           "Chaos Emeralds",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Green Chaos Emerald": {
         "name": "Green Chaos Emerald",
@@ -5091,12 +5216,10 @@
           "Chaos Emeralds",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Yellow Chaos Emerald": {
         "name": "Yellow Chaos Emerald",
@@ -5105,12 +5228,10 @@
           "Chaos Emeralds",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Blue Chaos Emerald": {
         "name": "Blue Chaos Emerald",
@@ -5119,12 +5240,10 @@
           "Chaos Emeralds",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Pong Trap": {
         "name": "Pong Trap",
@@ -5133,12 +5252,10 @@
           "Everything",
           "Minigames"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Breakout Trap": {
         "name": "Breakout Trap",
@@ -5147,12 +5264,10 @@
           "Everything",
           "Minigames"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Fishing Trap": {
         "name": "Fishing Trap",
@@ -5161,12 +5276,10 @@
           "Everything",
           "Minigames"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Trivia Trap": {
         "name": "Trivia Trap",
@@ -5175,12 +5288,10 @@
           "Everything",
           "Minigames"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Pokemon Trivia Trap": {
         "name": "Pokemon Trivia Trap",
@@ -5189,12 +5300,10 @@
           "Everything",
           "Minigames"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Pokemon Count Trap": {
         "name": "Pokemon Count Trap",
@@ -5203,12 +5312,10 @@
           "Everything",
           "Minigames"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Number Sequence Trap": {
         "name": "Number Sequence Trap",
@@ -5217,12 +5324,10 @@
           "Everything",
           "Minigames"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Light Up Path Trap": {
         "name": "Light Up Path Trap",
@@ -5231,12 +5336,10 @@
           "Everything",
           "Minigames"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Pinball Trap": {
         "name": "Pinball Trap",
@@ -5245,12 +5348,10 @@
           "Everything",
           "Minigames"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Math Quiz Trap": {
         "name": "Math Quiz Trap",
@@ -5259,12 +5360,10 @@
           "Everything",
           "Minigames"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Snake Trap": {
         "name": "Snake Trap",
@@ -5273,12 +5372,10 @@
           "Everything",
           "Minigames"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Input Sequence Trap": {
         "name": "Input Sequence Trap",
@@ -5287,12 +5384,10 @@
           "Everything",
           "Minigames"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Normal Egg": {
         "name": "Normal Egg",
@@ -5301,12 +5396,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Yellow Mono-Tone Egg": {
         "name": "Yellow Mono-Tone Egg",
@@ -5315,12 +5408,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "White Mono-Tone Egg": {
         "name": "White Mono-Tone Egg",
@@ -5329,12 +5420,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Brown Mono-Tone Egg": {
         "name": "Brown Mono-Tone Egg",
@@ -5343,12 +5432,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Sky Blue Mono-Tone Egg": {
         "name": "Sky Blue Mono-Tone Egg",
@@ -5357,12 +5444,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Pink Mono-Tone Egg": {
         "name": "Pink Mono-Tone Egg",
@@ -5371,12 +5456,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Blue Mono-Tone Egg": {
         "name": "Blue Mono-Tone Egg",
@@ -5385,12 +5468,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Grey Mono-Tone Egg": {
         "name": "Grey Mono-Tone Egg",
@@ -5399,12 +5480,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Green Mono-Tone Egg": {
         "name": "Green Mono-Tone Egg",
@@ -5413,12 +5492,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Red Mono-Tone Egg": {
         "name": "Red Mono-Tone Egg",
@@ -5427,12 +5504,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Lime Green Mono-Tone Egg": {
         "name": "Lime Green Mono-Tone Egg",
@@ -5441,12 +5516,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Purple Mono-Tone Egg": {
         "name": "Purple Mono-Tone Egg",
@@ -5455,12 +5528,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Orange Mono-Tone Egg": {
         "name": "Orange Mono-Tone Egg",
@@ -5469,12 +5540,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Black Mono-Tone Egg": {
         "name": "Black Mono-Tone Egg",
@@ -5483,12 +5552,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Yellow Two-Tone Egg": {
         "name": "Yellow Two-Tone Egg",
@@ -5497,12 +5564,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "White Two-Tone Egg": {
         "name": "White Two-Tone Egg",
@@ -5511,12 +5576,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Brown Two-Tone Egg": {
         "name": "Brown Two-Tone Egg",
@@ -5525,12 +5588,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Sky Blue Two-Tone Egg": {
         "name": "Sky Blue Two-Tone Egg",
@@ -5539,12 +5600,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Pink Two-Tone Egg": {
         "name": "Pink Two-Tone Egg",
@@ -5553,12 +5612,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Blue Two-Tone Egg": {
         "name": "Blue Two-Tone Egg",
@@ -5567,12 +5624,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Grey Two-Tone Egg": {
         "name": "Grey Two-Tone Egg",
@@ -5581,12 +5636,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Green Two-Tone Egg": {
         "name": "Green Two-Tone Egg",
@@ -5595,12 +5648,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Red Two-Tone Egg": {
         "name": "Red Two-Tone Egg",
@@ -5609,12 +5660,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Lime Green Two-Tone Egg": {
         "name": "Lime Green Two-Tone Egg",
@@ -5623,12 +5672,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Purple Two-Tone Egg": {
         "name": "Purple Two-Tone Egg",
@@ -5637,12 +5684,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Orange Two-Tone Egg": {
         "name": "Orange Two-Tone Egg",
@@ -5651,12 +5696,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Black Two-Tone Egg": {
         "name": "Black Two-Tone Egg",
@@ -5665,12 +5708,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Normal Shiny Egg": {
         "name": "Normal Shiny Egg",
@@ -5679,12 +5720,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Yellow Shiny Egg": {
         "name": "Yellow Shiny Egg",
@@ -5693,12 +5732,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "White Shiny Egg": {
         "name": "White Shiny Egg",
@@ -5707,12 +5744,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Brown Shiny Egg": {
         "name": "Brown Shiny Egg",
@@ -5721,12 +5756,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Sky Blue Shiny Egg": {
         "name": "Sky Blue Shiny Egg",
@@ -5735,12 +5768,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Pink Shiny Egg": {
         "name": "Pink Shiny Egg",
@@ -5749,12 +5780,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Blue Shiny Egg": {
         "name": "Blue Shiny Egg",
@@ -5763,12 +5792,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Grey Shiny Egg": {
         "name": "Grey Shiny Egg",
@@ -5777,12 +5804,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Green Shiny Egg": {
         "name": "Green Shiny Egg",
@@ -5791,12 +5816,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Red Shiny Egg": {
         "name": "Red Shiny Egg",
@@ -5805,12 +5828,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Lime Green Shiny Egg": {
         "name": "Lime Green Shiny Egg",
@@ -5819,12 +5840,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Purple Shiny Egg": {
         "name": "Purple Shiny Egg",
@@ -5833,12 +5852,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Orange Shiny Egg": {
         "name": "Orange Shiny Egg",
@@ -5847,12 +5864,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Black Shiny Egg": {
         "name": "Black Shiny Egg",
@@ -5861,12 +5876,10 @@
           "Eggs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Chao Garden Fruit": {
         "name": "Chao Garden Fruit",
@@ -5875,12 +5888,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Hero Garden Fruit": {
         "name": "Hero Garden Fruit",
@@ -5889,12 +5900,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Dark Garden Fruit": {
         "name": "Dark Garden Fruit",
@@ -5903,12 +5912,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Strong Fruit": {
         "name": "Strong Fruit",
@@ -5917,12 +5924,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Tasty Fruit": {
         "name": "Tasty Fruit",
@@ -5931,12 +5936,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Hero Fruit": {
         "name": "Hero Fruit",
@@ -5945,12 +5948,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Dark Fruit": {
         "name": "Dark Fruit",
@@ -5959,12 +5960,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Round Fruit": {
         "name": "Round Fruit",
@@ -5973,12 +5972,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Triangle Fruit": {
         "name": "Triangle Fruit",
@@ -5987,12 +5984,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Square Fruit": {
         "name": "Square Fruit",
@@ -6001,12 +5996,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Heart Fruit": {
         "name": "Heart Fruit",
@@ -6015,12 +6008,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Chao Fruit": {
         "name": "Chao Fruit",
@@ -6029,12 +6020,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Smart Fruit": {
         "name": "Smart Fruit",
@@ -6043,12 +6032,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Orange Fruit": {
         "name": "Orange Fruit",
@@ -6057,12 +6044,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Blue Fruit": {
         "name": "Blue Fruit",
@@ -6071,12 +6056,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Pink Fruit": {
         "name": "Pink Fruit",
@@ -6085,12 +6068,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Green Fruit": {
         "name": "Green Fruit",
@@ -6099,12 +6080,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Purple Fruit": {
         "name": "Purple Fruit",
@@ -6113,12 +6092,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Yellow Fruit": {
         "name": "Yellow Fruit",
@@ -6127,12 +6104,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Red Fruit": {
         "name": "Red Fruit",
@@ -6141,12 +6116,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mushroom": {
         "name": "Mushroom",
@@ -6155,12 +6128,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Super Mushroom": {
         "name": "Super Mushroom",
@@ -6169,12 +6140,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mint Candy": {
         "name": "Mint Candy",
@@ -6183,12 +6152,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Grapes": {
         "name": "Grapes",
@@ -6197,12 +6164,10 @@
           "Everything",
           "Fruits"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Strong Seed": {
         "name": "Strong Seed",
@@ -6211,12 +6176,10 @@
           "Everything",
           "Seeds"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Tasty Seed": {
         "name": "Tasty Seed",
@@ -6225,12 +6188,10 @@
           "Everything",
           "Seeds"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Hero Seed": {
         "name": "Hero Seed",
@@ -6239,12 +6200,10 @@
           "Everything",
           "Seeds"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Dark Seed": {
         "name": "Dark Seed",
@@ -6253,12 +6212,10 @@
           "Everything",
           "Seeds"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Round Seed": {
         "name": "Round Seed",
@@ -6267,12 +6224,10 @@
           "Everything",
           "Seeds"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Triangle Seed": {
         "name": "Triangle Seed",
@@ -6281,12 +6236,10 @@
           "Everything",
           "Seeds"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Square Seed": {
         "name": "Square Seed",
@@ -6295,12 +6248,10 @@
           "Everything",
           "Seeds"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Pumpkin": {
         "name": "Pumpkin",
@@ -6309,12 +6260,10 @@
           "Everything",
           "Hats"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Skull": {
         "name": "Skull",
@@ -6323,12 +6272,10 @@
           "Everything",
           "Hats"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Apple": {
         "name": "Apple",
@@ -6337,12 +6284,10 @@
           "Everything",
           "Hats"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bucket": {
         "name": "Bucket",
@@ -6351,12 +6296,10 @@
           "Everything",
           "Hats"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Empty Can": {
         "name": "Empty Can",
@@ -6365,12 +6308,10 @@
           "Everything",
           "Hats"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Cardboard Box": {
         "name": "Cardboard Box",
@@ -6379,12 +6320,10 @@
           "Everything",
           "Hats"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Flower Pot": {
         "name": "Flower Pot",
@@ -6393,12 +6332,10 @@
           "Everything",
           "Hats"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Paper Bag": {
         "name": "Paper Bag",
@@ -6407,12 +6344,10 @@
           "Everything",
           "Hats"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Pan": {
         "name": "Pan",
@@ -6421,12 +6356,10 @@
           "Everything",
           "Hats"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Stump": {
         "name": "Stump",
@@ -6435,12 +6368,10 @@
           "Everything",
           "Hats"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Watermelon": {
         "name": "Watermelon",
@@ -6449,12 +6380,10 @@
           "Everything",
           "Hats"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Red Wool Beanie": {
         "name": "Red Wool Beanie",
@@ -6463,12 +6392,10 @@
           "Everything",
           "Hats"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Blue Wool Beanie": {
         "name": "Blue Wool Beanie",
@@ -6477,12 +6404,10 @@
           "Everything",
           "Hats"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Black Wool Beanie": {
         "name": "Black Wool Beanie",
@@ -6491,12 +6416,10 @@
           "Everything",
           "Hats"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Pacifier": {
         "name": "Pacifier",
@@ -6505,12 +6428,10 @@
           "Everything",
           "Hats"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Penguin": {
         "name": "Penguin",
@@ -6518,12 +6439,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Seal": {
         "name": "Seal",
@@ -6531,12 +6450,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Otter": {
         "name": "Otter",
@@ -6544,12 +6461,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Rabbit": {
         "name": "Rabbit",
@@ -6557,12 +6472,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Cheetah": {
         "name": "Cheetah",
@@ -6570,12 +6483,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Warthog": {
         "name": "Warthog",
@@ -6583,12 +6494,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bear": {
         "name": "Bear",
@@ -6596,12 +6505,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Tiger": {
         "name": "Tiger",
@@ -6609,12 +6516,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Gorilla": {
         "name": "Gorilla",
@@ -6622,12 +6527,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Peacock": {
         "name": "Peacock",
@@ -6635,12 +6538,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Parrot": {
         "name": "Parrot",
@@ -6648,12 +6549,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Condor": {
         "name": "Condor",
@@ -6661,12 +6560,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Skunk": {
         "name": "Skunk",
@@ -6674,12 +6571,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Sheep": {
         "name": "Sheep",
@@ -6687,12 +6582,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Raccoon": {
         "name": "Raccoon",
@@ -6700,12 +6593,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "HalfFish": {
         "name": "HalfFish",
@@ -6713,12 +6604,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Skeleton Dog": {
         "name": "Skeleton Dog",
@@ -6726,12 +6615,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bat": {
         "name": "Bat",
@@ -6739,12 +6626,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Dragon": {
         "name": "Dragon",
@@ -6752,12 +6637,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Unicorn": {
         "name": "Unicorn",
@@ -6765,12 +6648,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Phoenix": {
         "name": "Phoenix",
@@ -6778,12 +6659,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Yellow Chaos Drive": {
         "name": "Yellow Chaos Drive",
@@ -6791,12 +6670,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Green Chaos Drive": {
         "name": "Green Chaos Drive",
@@ -6804,12 +6681,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Red Chaos Drive": {
         "name": "Red Chaos Drive",
@@ -6817,12 +6692,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Purple Chaos Drive": {
         "name": "Purple Chaos Drive",
@@ -6830,12 +6703,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "What Maria Wanted": {
         "name": "What Maria Wanted",
@@ -6843,12 +6714,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -6866,42 +6735,42 @@
   },
   "itempool_counts": {
     "1": {
-      "Eggman - Jet Engine": 2,
-      "Eggman - Large Cannon": 2,
-      "Eggman - Laser Blaster": 2,
-      "Eggman - Mystic Melody": 2,
-      "Eggman - Protective Armor": 2,
-      "Emblem": 276,
-      "Extra Life": 12,
-      "Five Rings": 14,
-      "Invincibility": 8,
-      "Knuckles - Air Necklace": 2,
-      "Knuckles - Hammer Gloves": 2,
-      "Knuckles - Mystic Melody": 2,
-      "Knuckles - Shovel Claws": 2,
-      "Knuckles - Sunglasses": 2,
-      "Magnetic Shield": 18,
-      "Rouge - Iron Boots": 2,
-      "Rouge - Mystic Melody": 2,
-      "Rouge - Pick Nails": 2,
-      "Rouge - Treasure Scope": 2,
-      "Shadow - Air Shoes": 2,
-      "Shadow - Ancient Light": 2,
-      "Shadow - Flame Ring": 2,
-      "Shadow - Mystic Melody": 2,
-      "Shield": 8,
-      "Sonic - Ancient Light": 2,
-      "Sonic - Bounce Bracelet": 2,
-      "Sonic - Flame Ring": 2,
-      "Sonic - Light Shoes": 2,
-      "Sonic - Magic Gloves": 2,
-      "Sonic - Mystic Melody": 2,
-      "Tails - Bazooka": 2,
-      "Tails - Booster": 2,
-      "Tails - Laser Blaster": 2,
-      "Tails - Mystic Melody": 2,
-      "Ten Rings": 12,
-      "Twenty Rings": 8,
+      "Eggman - Jet Engine": 1,
+      "Eggman - Large Cannon": 1,
+      "Eggman - Laser Blaster": 1,
+      "Eggman - Mystic Melody": 1,
+      "Eggman - Protective Armor": 1,
+      "Emblem": 138,
+      "Extra Life": 6,
+      "Five Rings": 7,
+      "Invincibility": 4,
+      "Knuckles - Air Necklace": 1,
+      "Knuckles - Hammer Gloves": 1,
+      "Knuckles - Mystic Melody": 1,
+      "Knuckles - Shovel Claws": 1,
+      "Knuckles - Sunglasses": 1,
+      "Magnetic Shield": 9,
+      "Rouge - Iron Boots": 1,
+      "Rouge - Mystic Melody": 1,
+      "Rouge - Pick Nails": 1,
+      "Rouge - Treasure Scope": 1,
+      "Shadow - Air Shoes": 1,
+      "Shadow - Ancient Light": 1,
+      "Shadow - Flame Ring": 1,
+      "Shadow - Mystic Melody": 1,
+      "Shield": 4,
+      "Sonic - Ancient Light": 1,
+      "Sonic - Bounce Bracelet": 1,
+      "Sonic - Flame Ring": 1,
+      "Sonic - Light Shoes": 1,
+      "Sonic - Magic Gloves": 1,
+      "Sonic - Mystic Melody": 1,
+      "Tails - Bazooka": 1,
+      "Tails - Booster": 1,
+      "Tails - Laser Blaster": 1,
+      "Tails - Mystic Melody": 1,
+      "Ten Rings": 6,
+      "Twenty Rings": 4,
       "What Maria Wanted": 1
     }
   },
@@ -6925,5 +6794,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

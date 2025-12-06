@@ -75,7 +75,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Get Electric Mixer",
@@ -89,7 +90,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Find Measuring Tools",
@@ -103,7 +105,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -132,7 +135,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Line Baking Sheets",
@@ -146,7 +150,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Soften Butter",
@@ -160,7 +165,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -219,7 +225,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Add Eggs",
@@ -233,7 +240,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Add Vanilla",
@@ -247,7 +255,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -276,7 +285,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Add Baking Soda and Salt",
@@ -290,7 +300,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -327,7 +338,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Fold in Chocolate Chips",
@@ -341,7 +353,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -387,7 +400,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -425,7 +439,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cool on Wire Rack",
@@ -439,7 +454,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       }
@@ -461,12 +477,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Electric Mixer": {
         "name": "Electric Mixer",
@@ -474,12 +488,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Measuring Tools": {
         "name": "Measuring Tools",
@@ -487,12 +499,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Preheated Oven": {
         "name": "Preheated Oven",
@@ -500,12 +510,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Prepared Sheets": {
         "name": "Prepared Sheets",
@@ -513,12 +521,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Softened Butter": {
         "name": "Softened Butter",
@@ -526,12 +532,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Butter Sugar Base": {
         "name": "Butter Sugar Base",
@@ -539,12 +543,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Egg Mixture": {
         "name": "Egg Mixture",
@@ -552,12 +554,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Creamed Mixture": {
         "name": "Creamed Mixture",
@@ -565,12 +565,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Measured Flour": {
         "name": "Measured Flour",
@@ -578,12 +576,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Flour Mixture": {
         "name": "Flour Mixture",
@@ -591,12 +587,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Basic Dough": {
         "name": "Basic Dough",
@@ -604,12 +598,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Cookie Dough": {
         "name": "Cookie Dough",
@@ -617,12 +609,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Shaped Cookies": {
         "name": "Shaped Cookies",
@@ -630,12 +620,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Baked Cookies": {
         "name": "Baked Cookies",
@@ -643,12 +631,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Victory": {
         "name": "Victory",
@@ -656,12 +642,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -672,21 +656,21 @@
   },
   "itempool_counts": {
     "1": {
-      "Baked Cookies": 2,
-      "Basic Dough": 2,
-      "Butter Sugar Base": 2,
-      "Cookie Dough": 2,
-      "Creamed Mixture": 2,
-      "Egg Mixture": 2,
-      "Electric Mixer": 2,
-      "Flour Mixture": 2,
-      "Measured Flour": 2,
-      "Measuring Tools": 2,
-      "Mixing Bowls": 2,
-      "Preheated Oven": 2,
-      "Prepared Sheets": 2,
-      "Shaped Cookies": 2,
-      "Softened Butter": 2,
+      "Baked Cookies": 1,
+      "Basic Dough": 1,
+      "Butter Sugar Base": 1,
+      "Cookie Dough": 1,
+      "Creamed Mixture": 1,
+      "Egg Mixture": 1,
+      "Electric Mixer": 1,
+      "Flour Mixture": 1,
+      "Measured Flour": 1,
+      "Measuring Tools": 1,
+      "Mixing Bowls": 1,
+      "Preheated Oven": 1,
+      "Prepared Sheets": 1,
+      "Shaped Cookies": 1,
+      "Softened Butter": 1,
       "Victory": 1
     }
   },
@@ -710,5 +694,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

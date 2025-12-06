@@ -42,7 +42,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach Hut Seashell",
@@ -56,7 +57,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach Umbrella Seashell",
@@ -70,7 +72,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sid Beach Mound Seashell",
@@ -84,7 +87,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sid Beach Seashell",
@@ -98,7 +102,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Shirley's Point Beach Seashell",
@@ -112,7 +117,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Shirley's Point Rock Seashell",
@@ -126,7 +132,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Visitor's Center Beach Seashell",
@@ -140,7 +147,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "West River Seashell",
@@ -154,7 +162,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "West Riverbank Seashell",
@@ -168,7 +177,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Stone Tower Riverbank Seashell",
@@ -182,7 +192,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "North Beach Seashell",
@@ -196,7 +207,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "North Coast Seashell",
@@ -210,7 +222,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Boat Cliff Seashell",
@@ -224,7 +237,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Boat Isle Mound Seashell",
@@ -238,7 +252,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "East Coast Seashell",
@@ -252,7 +267,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "House North Beach Seashell",
@@ -266,7 +282,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Airstream Island North Seashell",
@@ -280,7 +297,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Airstream Island South Seashell",
@@ -294,7 +312,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Secret Island Beach Seashell",
@@ -308,7 +327,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Meteor Lake Seashell",
@@ -322,7 +342,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Good Creek Path Seashell",
@@ -336,7 +357,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Visitor's Center Shop Golden Feather 1",
@@ -350,7 +372,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Visitor's Center Shop Golden Feather 2",
@@ -364,7 +387,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Visitor's Center Shop Hat",
@@ -378,7 +402,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tough Bird Salesman Golden Feather 1",
@@ -392,7 +417,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tough Bird Salesman Golden Feather 2",
@@ -406,7 +432,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tough Bird Salesman Golden Feather 3",
@@ -420,7 +447,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tough Bird Salesman Golden Feather 4",
@@ -434,7 +462,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tough Bird Salesman (400 Coins)",
@@ -448,7 +477,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beachstickball (10 Hits)",
@@ -462,7 +492,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beachstickball (20 Hits)",
@@ -476,7 +507,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beachstickball (30 Hits)",
@@ -490,7 +522,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Shovel Kid Trade",
@@ -504,7 +537,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Compass Guy",
@@ -518,7 +552,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hawk Peak Bucket Rock",
@@ -532,7 +567,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Orange Islands Bucket Rock",
@@ -546,7 +582,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bill the Walrus Fisherman",
@@ -560,7 +597,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catch 3 Fish Reward",
@@ -574,7 +612,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catch All Fish Reward",
@@ -605,7 +644,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Permit Guy Bribe",
@@ -619,7 +659,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catch Fish with Permit",
@@ -633,7 +674,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Return Camping Permit",
@@ -647,7 +689,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blocked Mine Pickaxe 1",
@@ -661,7 +704,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blocked Mine Pickaxe 2",
@@ -675,7 +719,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blocked Mine Pickaxe 3",
@@ -689,7 +734,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blackwood Trail Lookout Toy Shovel",
@@ -703,7 +749,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Shirley's Point Beach Toy Shovel",
@@ -717,7 +764,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Visitor's Center Beach Toy Shovel",
@@ -731,7 +779,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blackwood Trail Rock Toy Shovel",
@@ -745,7 +794,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach Hut Cliff Toy Shovel",
@@ -759,7 +809,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Secret Island Beach Trail Stick",
@@ -773,7 +824,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Below Lighthouse Walkway Stick",
@@ -787,7 +839,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach Hut Rocky Pool Sand Stick",
@@ -801,7 +854,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cliff Overlooking West River Waterfall Stick",
@@ -815,7 +869,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Trail to Tough Bird Salesman Stick",
@@ -829,7 +884,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "North Beach Stick",
@@ -843,7 +899,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beachstickball Court Stick",
@@ -857,7 +914,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Stick Under Sid Beach Umbrella",
@@ -871,7 +929,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Boat Rental",
@@ -885,7 +944,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Boat Challenge Reward",
@@ -899,7 +959,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Outlook Point Dog Gift",
@@ -913,7 +974,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Collect 15 Seashells",
@@ -931,7 +993,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Return to Shell Kid",
@@ -958,7 +1021,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Taylor the Turtle Headband Gift",
@@ -972,7 +1036,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sue the Rabbit Shoes Reward",
@@ -986,7 +1051,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Purchase Sunhat",
@@ -1000,7 +1066,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blackwood Forest Golden Feather",
@@ -1014,7 +1081,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ranger May Shell Necklace Golden Feather",
@@ -1028,7 +1096,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sand Castle Golden Feather",
@@ -1042,7 +1111,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Artist Golden Feather",
@@ -1056,7 +1126,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Visitor Camp Rock Golden Feather",
@@ -1070,7 +1141,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Outlook Cliff Golden Feather",
@@ -1084,7 +1156,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Meteor Lake Cliff Golden Feather",
@@ -1098,7 +1171,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Secret Island Peak",
@@ -1116,7 +1190,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Wristwatch Trade",
@@ -1130,7 +1205,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lighthouse Golden Chest",
@@ -1170,7 +1246,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Outlook Golden Chest",
@@ -1184,7 +1261,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Stone Tower Golden Chest",
@@ -1198,7 +1276,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "North Cliff Golden Chest",
@@ -1216,7 +1295,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blackwood Cliff Chest",
@@ -1230,7 +1310,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "White Coast Trail Chest",
@@ -1244,7 +1325,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sid Beach Chest",
@@ -1258,7 +1340,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sid Beach Buried Treasure Chest",
@@ -1272,7 +1355,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sid Beach Cliff Chest",
@@ -1286,7 +1370,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Visitor's Center Buried Chest",
@@ -1300,7 +1385,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Visitor's Center Hidden Chest",
@@ -1314,7 +1400,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Shirley's Point Chest",
@@ -1332,7 +1419,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Caravan Cliff Chest",
@@ -1346,7 +1434,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Caravan Arch Chest",
@@ -1360,7 +1449,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "King Buried Treasure Chest",
@@ -1374,7 +1464,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Good Creek Path Buried Chest",
@@ -1388,7 +1479,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Good Creek Path West Chest",
@@ -1402,7 +1494,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Good Creek Path East Chest",
@@ -1416,7 +1509,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "West Waterfall Chest",
@@ -1430,7 +1524,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Stone Tower West Cliff Chest",
@@ -1444,7 +1539,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bucket Path Chest",
@@ -1458,7 +1554,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bucket Cliff Chest",
@@ -1476,7 +1573,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "In Her Shadow Buried Treasure Chest",
@@ -1490,7 +1588,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Meteor Lake Buried Chest",
@@ -1504,7 +1603,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Meteor Lake Chest",
@@ -1518,7 +1618,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "House North Beach Chest",
@@ -1532,7 +1633,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "East Coast Chest",
@@ -1546,7 +1648,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Fisherman's Boat Chest 1",
@@ -1560,7 +1663,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Fisherman's Boat Chest 2",
@@ -1574,7 +1678,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Airstream Island Chest",
@@ -1588,7 +1693,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "West River Waterfall Head Chest",
@@ -1602,7 +1708,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Old Building Chest",
@@ -1616,7 +1723,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Old Building West Chest",
@@ -1630,7 +1738,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Old Building East Chest",
@@ -1644,7 +1753,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hawk Peak West Chest",
@@ -1662,7 +1772,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hawk Peak East Buried Chest",
@@ -1689,7 +1800,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hawk Peak Northeast Chest",
@@ -1707,7 +1819,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Northern East Coast Chest",
@@ -1721,7 +1834,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "North Coast Chest",
@@ -1735,7 +1849,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "North Coast Buried Chest",
@@ -1749,7 +1864,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Small South Island Buried Chest",
@@ -1763,7 +1879,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Secret Island Bottom Chest",
@@ -1777,7 +1894,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Secret Island Treehouse Chest",
@@ -1795,7 +1913,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sunhat Island Buried Chest",
@@ -1809,7 +1928,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Orange Islands South Buried Chest",
@@ -1823,7 +1943,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Orange Islands West Chest",
@@ -1837,7 +1958,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Orange Islands North Buried Chest",
@@ -1886,7 +2008,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Orange Islands East Chest",
@@ -1900,7 +2023,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Orange Islands South Hidden Chest",
@@ -1914,7 +2038,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "A Stormy View Buried Treasure Chest",
@@ -1928,7 +2053,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Orange Islands Ruins Buried Chest",
@@ -1977,7 +2103,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lighthouse Race Reward",
@@ -2017,7 +2144,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Old Building Race Reward",
@@ -2057,7 +2185,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hawk Peak Race Reward",
@@ -2075,7 +2204,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lose Race Gift",
@@ -2089,7 +2219,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       }
@@ -2111,10 +2242,7 @@
         "id": 82003,
         "groups": [
           "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Bucket": {
         "classification": "progression",
@@ -2122,10 +2250,7 @@
         "id": 82005,
         "groups": [
           "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Progressive Fishing Rod": {
         "classification": "progression",
@@ -2133,10 +2258,7 @@
         "id": 82007,
         "groups": [
           "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Shovel": {
         "classification": "progression",
@@ -2144,10 +2266,7 @@
         "id": 82008,
         "groups": [
           "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Shell Necklace": {
         "classification": "progression",
@@ -2155,10 +2274,7 @@
         "id": 82012,
         "groups": [
           "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Wristwatch": {
         "classification": "progression",
@@ -2166,10 +2282,7 @@
         "id": 82013,
         "groups": [
           "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Motorboat Key": {
         "classification": "progression",
@@ -2177,10 +2290,7 @@
         "id": 82014,
         "groups": [
           "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Headband": {
         "classification": "progression",
@@ -2188,10 +2298,7 @@
         "id": 82024,
         "groups": [
           "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Camping Permit": {
         "classification": "progression",
@@ -2199,10 +2306,7 @@
         "id": 82026,
         "groups": [
           "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Stick": {
         "classification": "progression_skip_balancing",
@@ -2210,10 +2314,7 @@
         "id": 82001,
         "groups": [
           "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Seashell": {
         "classification": "progression_skip_balancing",
@@ -2221,10 +2322,7 @@
         "id": 82002,
         "groups": [
           "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Toy Shovel": {
         "classification": "progression_skip_balancing",
@@ -2232,10 +2330,7 @@
         "id": 82009,
         "groups": [
           "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Silver Feather": {
         "classification": "useful",
@@ -2243,10 +2338,7 @@
         "id": 82004,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false
+        ]
       },
       "Compass": {
         "classification": "useful",
@@ -2254,10 +2346,7 @@
         "id": 82010,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false
+        ]
       },
       "Pickaxe": {
         "classification": "useful",
@@ -2265,10 +2354,7 @@
         "id": 82015,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false
+        ]
       },
       "Fishing Journal": {
         "classification": "useful",
@@ -2276,10 +2362,7 @@
         "id": 82016,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false
+        ]
       },
       "Running Shoes": {
         "classification": "useful",
@@ -2287,10 +2370,7 @@
         "id": 82025,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false
+        ]
       },
       "Walkie Talkie": {
         "classification": "useful",
@@ -2298,10 +2378,7 @@
         "id": 82027,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false
+        ]
       },
       "32 Coins": {
         "classification": "useful",
@@ -2310,10 +2387,7 @@
         "groups": [
           "Coins",
           "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false
+        ]
       },
       "33 Coins": {
         "classification": "useful",
@@ -2322,10 +2396,7 @@
         "groups": [
           "Coins",
           "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false
+        ]
       },
       "50 Coins": {
         "classification": "useful",
@@ -2334,10 +2405,7 @@
         "groups": [
           "Coins",
           "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false
+        ]
       },
       "Bait": {
         "classification": "filler",
@@ -2345,10 +2413,7 @@
         "id": 82006,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Medal": {
         "classification": "filler",
@@ -2356,10 +2421,7 @@
         "id": 82011,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "A Stormy View Map": {
         "classification": "filler",
@@ -2368,10 +2430,7 @@
         "groups": [
           "Everything",
           "Maps"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "The King Map": {
         "classification": "filler",
@@ -2380,10 +2439,7 @@
         "groups": [
           "Everything",
           "Maps"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "The Treasure of Sid Beach Map": {
         "classification": "filler",
@@ -2392,10 +2448,7 @@
         "groups": [
           "Everything",
           "Maps"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "In Her Shadow Map": {
         "classification": "filler",
@@ -2404,10 +2457,7 @@
         "groups": [
           "Everything",
           "Maps"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Sunhat": {
         "classification": "filler",
@@ -2415,10 +2465,7 @@
         "id": 82021,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Baseball Cap": {
         "classification": "filler",
@@ -2426,10 +2473,7 @@
         "id": 82022,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Provincial Park Hat": {
         "classification": "filler",
@@ -2437,10 +2481,7 @@
         "id": 82023,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "7 Coins": {
         "classification": "filler",
@@ -2449,10 +2490,7 @@
         "groups": [
           "Coins",
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "13 Coins": {
         "classification": "filler",
@@ -2461,10 +2499,7 @@
         "groups": [
           "Coins",
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "15 Coins": {
         "classification": "filler",
@@ -2473,10 +2508,7 @@
         "groups": [
           "Coins",
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "18 Coins": {
         "classification": "filler",
@@ -2485,10 +2517,7 @@
         "groups": [
           "Coins",
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "21 Coins": {
         "classification": "filler",
@@ -2497,10 +2526,7 @@
         "groups": [
           "Coins",
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "25 Coins": {
         "classification": "filler",
@@ -2509,10 +2535,7 @@
         "groups": [
           "Coins",
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "27 Coins": {
         "classification": "filler",
@@ -2521,10 +2544,7 @@
         "groups": [
           "Coins",
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       }
     }
   },
@@ -2537,43 +2557,43 @@
   },
   "itempool_counts": {
     "1": {
-      "13 Coins": 42,
-      "15 Coins": 2,
-      "18 Coins": 2,
-      "21 Coins": 4,
-      "25 Coins": 14,
-      "27 Coins": 2,
-      "32 Coins": 2,
-      "33 Coins": 12,
-      "50 Coins": 2,
-      "7 Coins": 6,
-      "A Stormy View Map": 2,
-      "Bait": 4,
-      "Baseball Cap": 2,
-      "Bucket": 4,
-      "Camping Permit": 2,
-      "Compass": 2,
-      "Fishing Journal": 2,
-      "Golden Feather": 40,
-      "Headband": 2,
-      "In Her Shadow Map": 2,
-      "Medal": 6,
-      "Motorboat Key": 2,
-      "Pickaxe": 6,
-      "Progressive Fishing Rod": 4,
-      "Provincial Park Hat": 2,
-      "Running Shoes": 2,
-      "Seashell": 46,
-      "Shell Necklace": 2,
-      "Shovel": 2,
-      "Silver Feather": 4,
-      "Stick": 16,
-      "Sunhat": 2,
-      "The King Map": 2,
-      "The Treasure of Sid Beach Map": 2,
-      "Toy Shovel": 10,
-      "Walkie Talkie": 2,
-      "Wristwatch": 2
+      "13 Coins": 21,
+      "15 Coins": 1,
+      "18 Coins": 1,
+      "21 Coins": 2,
+      "25 Coins": 7,
+      "27 Coins": 1,
+      "32 Coins": 1,
+      "33 Coins": 6,
+      "50 Coins": 1,
+      "7 Coins": 3,
+      "A Stormy View Map": 1,
+      "Bait": 2,
+      "Baseball Cap": 1,
+      "Bucket": 2,
+      "Camping Permit": 1,
+      "Compass": 1,
+      "Fishing Journal": 1,
+      "Golden Feather": 20,
+      "Headband": 1,
+      "In Her Shadow Map": 1,
+      "Medal": 3,
+      "Motorboat Key": 1,
+      "Pickaxe": 3,
+      "Progressive Fishing Rod": 2,
+      "Provincial Park Hat": 1,
+      "Running Shoes": 1,
+      "Seashell": 23,
+      "Shell Necklace": 1,
+      "Shovel": 1,
+      "Silver Feather": 2,
+      "Stick": 8,
+      "Sunhat": 1,
+      "The King Map": 1,
+      "The Treasure of Sid Beach Map": 1,
+      "Toy Shovel": 5,
+      "Walkie Talkie": 1,
+      "Wristwatch": 1
     }
   },
   "progression_mapping": {
@@ -2596,5 +2616,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

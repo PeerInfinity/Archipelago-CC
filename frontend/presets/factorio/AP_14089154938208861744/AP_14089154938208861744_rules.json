@@ -31,7 +31,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-349",
@@ -74,7 +75,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-798",
@@ -91,7 +93,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-126",
@@ -134,7 +137,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-328",
@@ -151,7 +155,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-431",
@@ -180,7 +185,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-926",
@@ -209,7 +215,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-757",
@@ -226,7 +233,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-413",
@@ -255,7 +263,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-529",
@@ -298,7 +307,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-416",
@@ -327,7 +337,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-304",
@@ -370,7 +381,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-024",
@@ -413,7 +425,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-946",
@@ -463,7 +476,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "AP-4-169",
@@ -506,7 +520,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-954",
@@ -535,7 +550,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-041",
@@ -571,7 +587,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-822",
@@ -600,7 +617,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-179",
@@ -629,7 +647,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-097",
@@ -646,7 +665,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-634",
@@ -675,7 +695,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-974",
@@ -711,7 +732,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-688",
@@ -740,7 +762,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-499",
@@ -769,7 +792,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-738",
@@ -805,7 +829,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-141",
@@ -822,7 +847,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-683",
@@ -851,7 +877,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-650",
@@ -880,7 +907,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-459",
@@ -897,7 +925,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-055",
@@ -914,7 +943,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "AP-5-117",
@@ -931,7 +961,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-269",
@@ -960,7 +991,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-220",
@@ -1003,7 +1035,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-338",
@@ -1046,7 +1079,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-022",
@@ -1089,7 +1123,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-413",
@@ -1118,7 +1153,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-502",
@@ -1135,7 +1171,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-722",
@@ -1164,7 +1201,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-806",
@@ -1193,7 +1231,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-524",
@@ -1210,7 +1249,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-769",
@@ -1227,7 +1267,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-011",
@@ -1270,7 +1311,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-013",
@@ -1313,7 +1355,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-849",
@@ -1356,7 +1399,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-600",
@@ -1392,7 +1436,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-374",
@@ -1428,7 +1473,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-002",
@@ -1471,7 +1517,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-654",
@@ -1488,7 +1535,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-274",
@@ -1531,7 +1579,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-272",
@@ -1560,7 +1609,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-129",
@@ -1577,7 +1627,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-072",
@@ -1606,7 +1657,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-898",
@@ -1635,7 +1687,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-696",
@@ -1678,7 +1731,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-633",
@@ -1695,7 +1749,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-972",
@@ -1738,7 +1793,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-076",
@@ -1755,7 +1811,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-719",
@@ -1791,7 +1848,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-880",
@@ -1808,7 +1866,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-703",
@@ -1837,7 +1896,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-211",
@@ -1854,7 +1914,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-676",
@@ -1890,7 +1951,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-735",
@@ -1933,7 +1995,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-270",
@@ -1962,7 +2025,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-755",
@@ -1998,7 +2062,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-754",
@@ -2015,7 +2080,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-861",
@@ -2044,7 +2110,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-077",
@@ -2087,7 +2154,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-469",
@@ -2116,7 +2184,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-464",
@@ -2152,7 +2221,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-954",
@@ -2188,7 +2258,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-886",
@@ -2224,7 +2295,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-999",
@@ -2260,7 +2332,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-609",
@@ -2310,7 +2383,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-201",
@@ -2367,7 +2441,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-316",
@@ -2403,7 +2478,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-829",
@@ -2432,7 +2508,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-702",
@@ -2468,7 +2545,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-983",
@@ -2485,7 +2563,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-953",
@@ -2514,7 +2593,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-996",
@@ -2531,7 +2611,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-080",
@@ -2548,7 +2629,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-901",
@@ -2577,7 +2659,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-844",
@@ -2627,7 +2710,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-734",
@@ -2677,7 +2761,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-475",
@@ -2694,7 +2779,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-193",
@@ -2751,7 +2837,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-126",
@@ -2768,7 +2855,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-406",
@@ -2804,7 +2892,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-954",
@@ -2821,7 +2910,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-148",
@@ -2864,7 +2954,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-827",
@@ -2893,7 +2984,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-409",
@@ -2922,7 +3014,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-240",
@@ -2958,7 +3051,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-025",
@@ -2994,7 +3088,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-133",
@@ -3044,7 +3139,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-507",
@@ -3061,7 +3157,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-585",
@@ -3090,7 +3187,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-350",
@@ -3133,7 +3231,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-466",
@@ -3169,7 +3268,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-401",
@@ -3198,7 +3298,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-951",
@@ -3215,7 +3316,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-210",
@@ -3251,7 +3353,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-079",
@@ -3268,7 +3371,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-603",
@@ -3304,7 +3408,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-618",
@@ -3354,7 +3459,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-496",
@@ -3390,7 +3496,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-180",
@@ -3433,7 +3540,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-711",
@@ -3450,7 +3558,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-801",
@@ -3479,7 +3588,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-693",
@@ -3522,7 +3632,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-934",
@@ -3565,7 +3676,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-644",
@@ -3582,7 +3694,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-261",
@@ -3625,7 +3738,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-784",
@@ -3654,7 +3768,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-269",
@@ -3704,7 +3819,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-746",
@@ -3740,7 +3856,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-514",
@@ -3769,7 +3886,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-554",
@@ -3798,7 +3916,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-889",
@@ -3827,7 +3946,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-092",
@@ -3877,7 +3997,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-473",
@@ -3906,7 +4027,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-336",
@@ -3949,7 +4071,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-195",
@@ -3966,7 +4089,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-126",
@@ -4002,7 +4126,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-034",
@@ -4045,7 +4170,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-494",
@@ -4062,7 +4188,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-117",
@@ -4098,7 +4225,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-577",
@@ -4148,7 +4276,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-472",
@@ -4198,7 +4327,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-652",
@@ -4215,7 +4345,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-063",
@@ -4251,7 +4382,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-737",
@@ -4301,7 +4433,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-881",
@@ -4330,7 +4463,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-276",
@@ -4373,7 +4507,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-561",
@@ -4402,7 +4537,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-576",
@@ -4445,7 +4581,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-678",
@@ -4474,7 +4611,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-371",
@@ -4531,7 +4669,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-823",
@@ -4560,7 +4699,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-733",
@@ -4596,7 +4736,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-318",
@@ -4632,7 +4773,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-079",
@@ -4668,7 +4810,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-537",
@@ -4704,7 +4847,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-674",
@@ -4740,7 +4884,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-330",
@@ -4757,7 +4902,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-599",
@@ -4793,7 +4939,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-406",
@@ -4836,7 +4983,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-298",
@@ -4865,7 +5013,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-527",
@@ -4901,7 +5050,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-800",
@@ -4944,7 +5094,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-927",
@@ -4987,7 +5138,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-158",
@@ -5004,7 +5156,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-321",
@@ -5061,7 +5214,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-356",
@@ -5104,7 +5258,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-934",
@@ -5121,7 +5276,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-4-649",
@@ -5164,7 +5320,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-108",
@@ -5181,7 +5338,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-953",
@@ -5224,7 +5382,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-255",
@@ -5253,7 +5412,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-106",
@@ -5289,7 +5449,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-794",
@@ -5318,7 +5479,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-070",
@@ -5375,7 +5537,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-998",
@@ -5418,7 +5581,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-5-075",
@@ -5468,7 +5632,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-031",
@@ -5485,7 +5650,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "AP-3-043",
@@ -5521,7 +5687,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-653",
@@ -5538,7 +5705,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-997",
@@ -5555,7 +5723,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-096",
@@ -5591,7 +5760,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-194",
@@ -5608,7 +5778,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-491",
@@ -5625,7 +5796,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-3-794",
@@ -5661,7 +5833,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-684",
@@ -5711,7 +5884,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-338",
@@ -5728,7 +5902,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-6-685",
@@ -5785,7 +5960,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-763",
@@ -5814,7 +5990,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-1-499",
@@ -5831,7 +6008,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "AP-2-569",
@@ -5848,7 +6026,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Rocket Launch",
@@ -5933,7 +6112,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Automate automation-science-pack",
@@ -5971,7 +6151,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Automate chemical-science-pack",
@@ -6009,7 +6190,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Automate logistic-science-pack",
@@ -6047,7 +6229,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Automate military-science-pack",
@@ -6085,7 +6268,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Automate production-science-pack",
@@ -6123,7 +6307,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Automate utility-science-pack",
@@ -6161,7 +6346,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       }
@@ -6179,29 +6365,27 @@
     "1": {
       "advanced-circuit": {
         "name": "advanced-circuit",
+        "hint_text": "advanced circuit",
         "id": 131072,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "advanced-combinators": {
         "name": "advanced-combinators",
+        "hint_text": "advanced combinators",
         "id": 131073,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "advanced-material-processing": {
         "name": "advanced-material-processing",
@@ -6209,12 +6393,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "advanced-material-processing-2": {
         "name": "advanced-material-processing-2",
@@ -6222,12 +6404,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "advanced-oil-processing": {
         "name": "advanced-oil-processing",
@@ -6235,12 +6415,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "artillery": {
         "name": "artillery",
@@ -6248,12 +6426,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "atomic-bomb": {
         "name": "atomic-bomb",
@@ -6261,12 +6437,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "automated-rail-transportation": {
         "name": "automated-rail-transportation",
@@ -6274,12 +6448,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "automation": {
         "name": "automation",
@@ -6287,12 +6459,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "automation-2": {
         "name": "automation-2",
@@ -6300,12 +6470,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "automation-3": {
         "name": "automation-3",
@@ -6313,12 +6481,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "automation-science-pack": {
         "name": "automation-science-pack",
@@ -6326,12 +6492,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "automobilism": {
         "name": "automobilism",
@@ -6339,12 +6503,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "battery": {
         "name": "battery",
@@ -6352,12 +6514,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "battery-equipment": {
         "name": "battery-equipment",
@@ -6365,12 +6525,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "battery-mk2-equipment": {
         "name": "battery-mk2-equipment",
@@ -6378,25 +6536,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "belt-immunity-equipment": {
         "name": "belt-immunity-equipment",
+        "hint_text": "belt immunity equipment",
         "id": 131088,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "braking-force-1": {
         "name": "braking-force-1",
@@ -6404,12 +6559,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "braking-force-2": {
         "name": "braking-force-2",
@@ -6417,12 +6570,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "braking-force-3": {
         "name": "braking-force-3",
@@ -6430,12 +6581,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "braking-force-4": {
         "name": "braking-force-4",
@@ -6443,12 +6592,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "braking-force-5": {
         "name": "braking-force-5",
@@ -6456,12 +6603,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "braking-force-6": {
         "name": "braking-force-6",
@@ -6469,12 +6614,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "braking-force-7": {
         "name": "braking-force-7",
@@ -6482,12 +6625,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "bulk-inserter": {
         "name": "bulk-inserter",
@@ -6495,12 +6636,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "chemical-science-pack": {
         "name": "chemical-science-pack",
@@ -6508,38 +6647,34 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "circuit-network": {
         "name": "circuit-network",
+        "hint_text": "circuit network",
         "id": 131098,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "cliff-explosives": {
         "name": "cliff-explosives",
+        "hint_text": "cliff explosives",
         "id": 131099,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "coal-liquefaction": {
         "name": "coal-liquefaction",
@@ -6547,12 +6682,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "concrete": {
         "name": "concrete",
@@ -6560,25 +6693,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "construction-robotics": {
         "name": "construction-robotics",
+        "hint_text": "construction robotics",
         "id": 131102,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "defender": {
         "name": "defender",
@@ -6586,12 +6716,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "destroyer": {
         "name": "destroyer",
@@ -6599,25 +6727,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "discharge-defense-equipment": {
         "name": "discharge-defense-equipment",
+        "hint_text": "discharge defense equipment",
         "id": 131105,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "distractor": {
         "name": "distractor",
@@ -6625,25 +6750,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "effect-transmission": {
         "name": "effect-transmission",
+        "hint_text": "effect transmission",
         "id": 131107,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "efficiency-module": {
         "name": "efficiency-module",
@@ -6651,12 +6773,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "efficiency-module-2": {
         "name": "efficiency-module-2",
@@ -6664,12 +6784,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "efficiency-module-3": {
         "name": "efficiency-module-3",
@@ -6677,25 +6795,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "electric-energy-accumulators": {
         "name": "electric-energy-accumulators",
+        "hint_text": "electric energy accumulators",
         "id": 131111,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "electric-energy-distribution-1": {
         "name": "electric-energy-distribution-1",
@@ -6703,12 +6818,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "electric-energy-distribution-2": {
         "name": "electric-energy-distribution-2",
@@ -6716,12 +6829,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "electric-engine": {
         "name": "electric-engine",
@@ -6729,12 +6840,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "electric-mining-drill": {
         "name": "electric-mining-drill",
@@ -6742,12 +6851,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "electronics": {
         "name": "electronics",
@@ -6755,12 +6862,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "energy-shield-equipment": {
         "name": "energy-shield-equipment",
@@ -6768,12 +6873,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "energy-shield-mk2-equipment": {
         "name": "energy-shield-mk2-equipment",
@@ -6781,12 +6884,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "engine": {
         "name": "engine",
@@ -6794,25 +6895,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "exoskeleton-equipment": {
         "name": "exoskeleton-equipment",
+        "hint_text": "exoskeleton equipment",
         "id": 131120,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "explosive-rocketry": {
         "name": "explosive-rocketry",
@@ -6820,12 +6918,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "explosives": {
         "name": "explosives",
@@ -6833,12 +6929,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "fast-inserter": {
         "name": "fast-inserter",
@@ -6846,25 +6940,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "fission-reactor-equipment": {
         "name": "fission-reactor-equipment",
+        "hint_text": "fission reactor equipment",
         "id": 131124,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "flamethrower": {
         "name": "flamethrower",
@@ -6872,12 +6963,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "flammables": {
         "name": "flammables",
@@ -6885,12 +6974,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "fluid-handling": {
         "name": "fluid-handling",
@@ -6898,12 +6985,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "fluid-wagon": {
         "name": "fluid-wagon",
@@ -6911,12 +6996,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "follower-robot-count-1": {
         "name": "follower-robot-count-1",
@@ -6924,12 +7007,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "follower-robot-count-2": {
         "name": "follower-robot-count-2",
@@ -6937,12 +7018,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "follower-robot-count-3": {
         "name": "follower-robot-count-3",
@@ -6950,12 +7029,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "follower-robot-count-4": {
         "name": "follower-robot-count-4",
@@ -6963,12 +7040,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "gate": {
         "name": "gate",
@@ -6976,12 +7051,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "gun-turret": {
         "name": "gun-turret",
@@ -6989,12 +7062,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "heavy-armor": {
         "name": "heavy-armor",
@@ -7002,12 +7073,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "inserter-capacity-bonus-1": {
         "name": "inserter-capacity-bonus-1",
@@ -7015,12 +7084,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "inserter-capacity-bonus-2": {
         "name": "inserter-capacity-bonus-2",
@@ -7028,12 +7095,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "inserter-capacity-bonus-3": {
         "name": "inserter-capacity-bonus-3",
@@ -7041,12 +7106,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "inserter-capacity-bonus-4": {
         "name": "inserter-capacity-bonus-4",
@@ -7054,12 +7117,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "inserter-capacity-bonus-5": {
         "name": "inserter-capacity-bonus-5",
@@ -7067,12 +7128,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "inserter-capacity-bonus-6": {
         "name": "inserter-capacity-bonus-6",
@@ -7080,12 +7139,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "inserter-capacity-bonus-7": {
         "name": "inserter-capacity-bonus-7",
@@ -7093,12 +7150,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "kovarex-enrichment-process": {
         "name": "kovarex-enrichment-process",
@@ -7106,12 +7161,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "lamp": {
         "name": "lamp",
@@ -7119,25 +7172,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "land-mine": {
         "name": "land-mine",
+        "hint_text": "land mine",
         "id": 131145,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "landfill": {
         "name": "landfill",
@@ -7145,12 +7195,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "laser": {
         "name": "laser",
@@ -7158,12 +7206,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "laser-shooting-speed-1": {
         "name": "laser-shooting-speed-1",
@@ -7171,12 +7217,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "laser-shooting-speed-2": {
         "name": "laser-shooting-speed-2",
@@ -7184,12 +7228,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "laser-shooting-speed-3": {
         "name": "laser-shooting-speed-3",
@@ -7197,12 +7239,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "laser-shooting-speed-4": {
         "name": "laser-shooting-speed-4",
@@ -7210,12 +7250,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "laser-shooting-speed-5": {
         "name": "laser-shooting-speed-5",
@@ -7223,12 +7261,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "laser-shooting-speed-6": {
         "name": "laser-shooting-speed-6",
@@ -7236,12 +7272,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "laser-shooting-speed-7": {
         "name": "laser-shooting-speed-7",
@@ -7249,12 +7283,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "laser-turret": {
         "name": "laser-turret",
@@ -7262,12 +7294,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "laser-weapons-damage-1": {
         "name": "laser-weapons-damage-1",
@@ -7275,12 +7305,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "laser-weapons-damage-2": {
         "name": "laser-weapons-damage-2",
@@ -7288,12 +7316,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "laser-weapons-damage-3": {
         "name": "laser-weapons-damage-3",
@@ -7301,12 +7327,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "laser-weapons-damage-4": {
         "name": "laser-weapons-damage-4",
@@ -7314,12 +7338,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "laser-weapons-damage-5": {
         "name": "laser-weapons-damage-5",
@@ -7327,12 +7349,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "laser-weapons-damage-6": {
         "name": "laser-weapons-damage-6",
@@ -7340,25 +7360,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "logistic-robotics": {
         "name": "logistic-robotics",
+        "hint_text": "logistic robotics",
         "id": 131162,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "logistic-science-pack": {
         "name": "logistic-science-pack",
@@ -7366,25 +7383,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "logistic-system": {
         "name": "logistic-system",
+        "hint_text": "logistic system",
         "id": 131164,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "logistics": {
         "name": "logistics",
@@ -7392,12 +7406,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "logistics-2": {
         "name": "logistics-2",
@@ -7405,12 +7417,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "logistics-3": {
         "name": "logistics-3",
@@ -7418,25 +7428,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "low-density-structure": {
         "name": "low-density-structure",
+        "hint_text": "low density structure",
         "id": 131168,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "lubricant": {
         "name": "lubricant",
@@ -7444,12 +7451,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "military": {
         "name": "military",
@@ -7457,12 +7462,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "military-2": {
         "name": "military-2",
@@ -7470,12 +7473,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "military-3": {
         "name": "military-3",
@@ -7483,12 +7484,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "military-4": {
         "name": "military-4",
@@ -7496,12 +7495,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "military-science-pack": {
         "name": "military-science-pack",
@@ -7509,12 +7506,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "mining-productivity-1": {
         "name": "mining-productivity-1",
@@ -7522,12 +7517,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "mining-productivity-2": {
         "name": "mining-productivity-2",
@@ -7535,12 +7528,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "mining-productivity-3": {
         "name": "mining-productivity-3",
@@ -7548,12 +7539,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "modular-armor": {
         "name": "modular-armor",
@@ -7561,12 +7550,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "modules": {
         "name": "modules",
@@ -7574,25 +7561,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "night-vision-equipment": {
         "name": "night-vision-equipment",
+        "hint_text": "night vision equipment",
         "id": 131180,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "nuclear-fuel-reprocessing": {
         "name": "nuclear-fuel-reprocessing",
@@ -7600,38 +7584,34 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "nuclear-power": {
         "name": "nuclear-power",
+        "hint_text": "nuclear power",
         "id": 131182,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "oil-gathering": {
         "name": "oil-gathering",
+        "hint_text": "oil gathering",
         "id": 131183,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "oil-processing": {
         "name": "oil-processing",
@@ -7639,25 +7619,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "personal-laser-defense-equipment": {
         "name": "personal-laser-defense-equipment",
+        "hint_text": "personal laser defense equipment",
         "id": 131185,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "personal-roboport-equipment": {
         "name": "personal-roboport-equipment",
@@ -7665,12 +7642,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "personal-roboport-mk2-equipment": {
         "name": "personal-roboport-mk2-equipment",
@@ -7678,12 +7653,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "physical-projectile-damage-1": {
         "name": "physical-projectile-damage-1",
@@ -7691,12 +7664,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "physical-projectile-damage-2": {
         "name": "physical-projectile-damage-2",
@@ -7704,12 +7675,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "physical-projectile-damage-3": {
         "name": "physical-projectile-damage-3",
@@ -7717,12 +7686,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "physical-projectile-damage-4": {
         "name": "physical-projectile-damage-4",
@@ -7730,12 +7697,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "physical-projectile-damage-5": {
         "name": "physical-projectile-damage-5",
@@ -7743,12 +7708,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "physical-projectile-damage-6": {
         "name": "physical-projectile-damage-6",
@@ -7756,12 +7719,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "plastics": {
         "name": "plastics",
@@ -7769,12 +7730,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "power-armor": {
         "name": "power-armor",
@@ -7782,12 +7741,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "power-armor-mk2": {
         "name": "power-armor-mk2",
@@ -7795,25 +7752,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "processing-unit": {
         "name": "processing-unit",
+        "hint_text": "processing unit",
         "id": 131197,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "production-science-pack": {
         "name": "production-science-pack",
@@ -7821,12 +7775,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "productivity-module": {
         "name": "productivity-module",
@@ -7834,12 +7786,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "productivity-module-2": {
         "name": "productivity-module-2",
@@ -7847,12 +7797,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "productivity-module-3": {
         "name": "productivity-module-3",
@@ -7860,12 +7808,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "radar": {
         "name": "radar",
@@ -7873,12 +7819,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "railway": {
         "name": "railway",
@@ -7886,12 +7830,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "refined-flammables-1": {
         "name": "refined-flammables-1",
@@ -7899,12 +7841,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "refined-flammables-2": {
         "name": "refined-flammables-2",
@@ -7912,12 +7852,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "refined-flammables-3": {
         "name": "refined-flammables-3",
@@ -7925,12 +7863,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "refined-flammables-4": {
         "name": "refined-flammables-4",
@@ -7938,12 +7874,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "refined-flammables-5": {
         "name": "refined-flammables-5",
@@ -7951,12 +7885,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "refined-flammables-6": {
         "name": "refined-flammables-6",
@@ -7964,25 +7896,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "repair-pack": {
         "name": "repair-pack",
+        "hint_text": "repair pack",
         "id": 131210,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "research-speed-1": {
         "name": "research-speed-1",
@@ -7990,12 +7919,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "research-speed-2": {
         "name": "research-speed-2",
@@ -8003,12 +7930,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "research-speed-3": {
         "name": "research-speed-3",
@@ -8016,12 +7941,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "research-speed-4": {
         "name": "research-speed-4",
@@ -8029,12 +7952,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "research-speed-5": {
         "name": "research-speed-5",
@@ -8042,12 +7963,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "research-speed-6": {
         "name": "research-speed-6",
@@ -8055,12 +7974,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "robotics": {
         "name": "robotics",
@@ -8068,38 +7985,34 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "rocket-fuel": {
         "name": "rocket-fuel",
+        "hint_text": "rocket fuel",
         "id": 131218,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "rocket-silo": {
         "name": "rocket-silo",
+        "hint_text": "rocket silo",
         "id": 131219,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "rocketry": {
         "name": "rocketry",
@@ -8107,38 +8020,34 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "solar-energy": {
         "name": "solar-energy",
+        "hint_text": "solar energy",
         "id": 131221,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "solar-panel-equipment": {
         "name": "solar-panel-equipment",
+        "hint_text": "solar panel equipment",
         "id": 131222,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "space-science-pack": {
         "name": "space-science-pack",
@@ -8146,12 +8055,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "speed-module": {
         "name": "speed-module",
@@ -8159,12 +8066,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "speed-module-2": {
         "name": "speed-module-2",
@@ -8172,12 +8077,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "speed-module-3": {
         "name": "speed-module-3",
@@ -8185,12 +8088,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "spidertron": {
         "name": "spidertron",
@@ -8198,12 +8099,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "steam-power": {
         "name": "steam-power",
@@ -8211,25 +8110,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "steel-axe": {
         "name": "steel-axe",
+        "hint_text": "steel axe",
         "id": 131229,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "steel-processing": {
         "name": "steel-processing",
@@ -8237,12 +8133,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "stone-wall": {
         "name": "stone-wall",
@@ -8250,12 +8144,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "stronger-explosives-1": {
         "name": "stronger-explosives-1",
@@ -8263,12 +8155,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "stronger-explosives-2": {
         "name": "stronger-explosives-2",
@@ -8276,12 +8166,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "stronger-explosives-3": {
         "name": "stronger-explosives-3",
@@ -8289,12 +8177,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "stronger-explosives-4": {
         "name": "stronger-explosives-4",
@@ -8302,12 +8188,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "stronger-explosives-5": {
         "name": "stronger-explosives-5",
@@ -8315,12 +8199,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "stronger-explosives-6": {
         "name": "stronger-explosives-6",
@@ -8328,12 +8210,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "sulfur-processing": {
         "name": "sulfur-processing",
@@ -8341,12 +8221,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "tank": {
         "name": "tank",
@@ -8354,12 +8232,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "toolbelt": {
         "name": "toolbelt",
@@ -8367,38 +8243,34 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "uranium-ammo": {
         "name": "uranium-ammo",
+        "hint_text": "uranium ammo",
         "id": 131241,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "uranium-mining": {
         "name": "uranium-mining",
+        "hint_text": "uranium mining",
         "id": 131242,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "uranium-processing": {
         "name": "uranium-processing",
@@ -8406,12 +8278,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "utility-science-pack": {
         "name": "utility-science-pack",
@@ -8419,12 +8289,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "weapon-shooting-speed-1": {
         "name": "weapon-shooting-speed-1",
@@ -8432,12 +8300,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "weapon-shooting-speed-2": {
         "name": "weapon-shooting-speed-2",
@@ -8445,12 +8311,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "weapon-shooting-speed-3": {
         "name": "weapon-shooting-speed-3",
@@ -8458,12 +8322,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "weapon-shooting-speed-4": {
         "name": "weapon-shooting-speed-4",
@@ -8471,12 +8333,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "weapon-shooting-speed-5": {
         "name": "weapon-shooting-speed-5",
@@ -8484,12 +8344,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "weapon-shooting-speed-6": {
         "name": "weapon-shooting-speed-6",
@@ -8497,12 +8355,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "worker-robots-speed-1": {
         "name": "worker-robots-speed-1",
@@ -8510,12 +8366,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "worker-robots-speed-2": {
         "name": "worker-robots-speed-2",
@@ -8523,12 +8377,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "worker-robots-speed-3": {
         "name": "worker-robots-speed-3",
@@ -8536,12 +8388,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "worker-robots-speed-4": {
         "name": "worker-robots-speed-4",
@@ -8549,12 +8399,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "worker-robots-speed-5": {
         "name": "worker-robots-speed-5",
@@ -8562,12 +8410,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "worker-robots-storage-1": {
         "name": "worker-robots-storage-1",
@@ -8575,12 +8421,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "worker-robots-storage-2": {
         "name": "worker-robots-storage-2",
@@ -8588,12 +8432,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "worker-robots-storage-3": {
         "name": "worker-robots-storage-3",
@@ -8601,54 +8443,49 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "progressive-advanced-material-processing": {
         "name": "progressive-advanced-material-processing",
+        "hint_text": "progressive advanced material processing",
         "id": 131260,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "progressive-armor": {
         "name": "progressive-armor",
+        "hint_text": "progressive armor",
         "id": 131261,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "filler"
       },
       "progressive-automation": {
         "name": "progressive-automation",
+        "hint_text": "progressive automation",
         "id": 131262,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 5
+        "max_count": 3,
+        "classification": "progression"
       },
       "progressive-braking-force": {
         "name": "progressive-braking-force",
@@ -8657,138 +8494,127 @@
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "progressive-efficiency-module": {
         "name": "progressive-efficiency-module",
+        "hint_text": "progressive efficiency module",
         "id": 131264,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "progressive-electric-energy-distribution": {
         "name": "progressive-electric-energy-distribution",
+        "hint_text": "progressive electric energy distribution",
         "id": 131265,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "progressive-energy-shield": {
         "name": "progressive-energy-shield",
+        "hint_text": "progressive energy shield",
         "id": 131266,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "progressive-engine": {
         "name": "progressive-engine",
+        "hint_text": "progressive engine",
         "id": 131267,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "progressive-flamethrower": {
         "name": "progressive-flamethrower",
+        "hint_text": "progressive flamethrower",
         "id": 131268,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "progression"
       },
       "progressive-fluid-handling": {
         "name": "progressive-fluid-handling",
+        "hint_text": "progressive fluid handling",
         "id": 131269,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "progressive-follower": {
         "name": "progressive-follower",
+        "hint_text": "progressive follower",
         "id": 131270,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "progressive-follower-robot-count": {
         "name": "progressive-follower-robot-count",
+        "hint_text": "progressive follower robot count",
         "id": 131271,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "filler"
       },
       "progressive-inserter": {
         "name": "progressive-inserter",
+        "hint_text": "progressive inserter",
         "id": 131272,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 18
+        "max_count": 9,
+        "classification": "filler"
       },
       "progressive-inserter-capacity-bonus": {
         "name": "progressive-inserter-capacity-bonus",
@@ -8797,152 +8623,140 @@
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "progressive-laser-shooting-speed": {
         "name": "progressive-laser-shooting-speed",
+        "hint_text": "progressive laser shooting speed",
         "id": 131274,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "filler"
       },
       "progressive-laser-weapons-damage": {
         "name": "progressive-laser-weapons-damage",
+        "hint_text": "progressive laser weapons damage",
         "id": 131275,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "filler"
       },
       "progressive-logistics": {
         "name": "progressive-logistics",
+        "hint_text": "progressive logistics",
         "id": 131276,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 5
+        "max_count": 3,
+        "classification": "filler"
       },
       "progressive-military": {
         "name": "progressive-military",
+        "hint_text": "progressive military",
         "id": 131277,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "progression"
       },
       "progressive-mining-productivity": {
         "name": "progressive-mining-productivity",
+        "hint_text": "progressive mining productivity",
         "id": 131278,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "progressive-personal-battery": {
         "name": "progressive-personal-battery",
+        "hint_text": "progressive personal battery",
         "id": 131279,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "progressive-personal-roboport-equipment": {
         "name": "progressive-personal-roboport-equipment",
+        "hint_text": "progressive personal roboport equipment",
         "id": 131280,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "progressive-physical-projectile-damage": {
         "name": "progressive-physical-projectile-damage",
+        "hint_text": "progressive physical projectile damage",
         "id": 131281,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "filler"
       },
       "progressive-processing": {
         "name": "progressive-processing",
+        "hint_text": "progressive processing",
         "id": 131282,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 16
+        "max_count": 8,
+        "classification": "progression"
       },
       "progressive-productivity-module": {
         "name": "progressive-productivity-module",
+        "hint_text": "progressive productivity module",
         "id": 131283,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression"
       },
       "progressive-refined-flammables": {
         "name": "progressive-refined-flammables",
@@ -8951,180 +8765,166 @@
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "progressive-research-speed": {
         "name": "progressive-research-speed",
+        "hint_text": "progressive research speed",
         "id": 131285,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "filler"
       },
       "progressive-rocketry": {
         "name": "progressive-rocketry",
+        "hint_text": "progressive rocketry",
         "id": 131286,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "progressive-science-pack": {
         "name": "progressive-science-pack",
+        "hint_text": "progressive science pack",
         "id": 131287,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5,
+        "classification": "progression"
       },
       "progressive-speed-module": {
         "name": "progressive-speed-module",
+        "hint_text": "progressive speed module",
         "id": 131288,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "progressive-stronger-explosives": {
         "name": "progressive-stronger-explosives",
+        "hint_text": "progressive stronger explosives",
         "id": 131289,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "filler"
       },
       "progressive-train-network": {
         "name": "progressive-train-network",
+        "hint_text": "progressive train network",
         "id": 131290,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 18
+        "max_count": 9,
+        "classification": "progression"
       },
       "progressive-turret": {
         "name": "progressive-turret",
+        "hint_text": "progressive turret",
         "id": 131291,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "progressive-vehicle": {
         "name": "progressive-vehicle",
+        "hint_text": "progressive vehicle",
         "id": 131292,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "progressive-wall": {
         "name": "progressive-wall",
+        "hint_text": "progressive wall",
         "id": 131293,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "progressive-weapon-shooting-speed": {
         "name": "progressive-weapon-shooting-speed",
+        "hint_text": "progressive weapon shooting speed",
         "id": 131294,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "filler"
       },
       "progressive-worker-robots-speed": {
         "name": "progressive-worker-robots-speed",
+        "hint_text": "progressive worker robots speed",
         "id": 131295,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5,
+        "classification": "filler"
       },
       "progressive-worker-robots-storage": {
         "name": "progressive-worker-robots-storage",
+        "hint_text": "progressive worker robots storage",
         "id": 131296,
         "groups": [
           "Everything",
           "Progressive"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "Attack Trap": {
         "name": "Attack Trap",
@@ -9132,12 +8932,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Evolution Trap": {
         "name": "Evolution Trap",
@@ -9145,12 +8943,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Teleport Trap": {
         "name": "Teleport Trap",
@@ -9158,12 +8954,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Grenade Trap": {
         "name": "Grenade Trap",
@@ -9171,12 +8965,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Cluster Grenade Trap": {
         "name": "Cluster Grenade Trap",
@@ -9184,12 +8976,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Artillery Trap": {
         "name": "Artillery Trap",
@@ -9197,12 +8987,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Atomic Rocket Trap": {
         "name": "Atomic Rocket Trap",
@@ -9210,12 +8998,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Atomic Cliff Remover Trap": {
         "name": "Atomic Cliff Remover Trap",
@@ -9223,12 +9009,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Inventory Spill Trap": {
         "name": "Inventory Spill Trap",
@@ -9236,12 +9020,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Victory": {
         "name": "Victory",
@@ -9249,90 +9031,82 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Automated automation-science-pack": {
         "name": "Automated automation-science-pack",
+        "hint_text": "Automated automation science pack",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Automated chemical-science-pack": {
         "name": "Automated chemical-science-pack",
+        "hint_text": "Automated chemical science pack",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Automated logistic-science-pack": {
         "name": "Automated logistic-science-pack",
+        "hint_text": "Automated logistic science pack",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Automated military-science-pack": {
         "name": "Automated military-science-pack",
+        "hint_text": "Automated military science pack",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Automated production-science-pack": {
         "name": "Automated production-science-pack",
+        "hint_text": "Automated production science pack",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Automated utility-science-pack": {
         "name": "Automated utility-science-pack",
+        "hint_text": "Automated utility science pack",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -9351,79 +9125,79 @@
       "Automated production-science-pack": 1,
       "Automated utility-science-pack": 1,
       "Victory": 1,
-      "advanced-circuit": 2,
-      "advanced-combinators": 2,
-      "artillery": 2,
-      "battery": 2,
-      "belt-immunity-equipment": 2,
-      "circuit-network": 2,
-      "cliff-explosives": 2,
-      "concrete": 2,
-      "construction-robotics": 2,
-      "discharge-defense-equipment": 2,
-      "effect-transmission": 2,
-      "electric-energy-accumulators": 2,
-      "exoskeleton-equipment": 2,
-      "explosives": 2,
-      "fission-reactor-equipment": 2,
-      "lamp": 2,
-      "land-mine": 2,
-      "landfill": 2,
-      "logistic-robotics": 2,
-      "logistic-system": 2,
-      "low-density-structure": 2,
-      "lubricant": 2,
-      "night-vision-equipment": 2,
-      "nuclear-power": 2,
-      "oil-gathering": 2,
-      "personal-laser-defense-equipment": 2,
-      "plastics": 2,
-      "processing-unit": 2,
-      "progressive-advanced-material-processing": 4,
-      "progressive-armor": 8,
-      "progressive-automation": 5,
-      "progressive-efficiency-module": 6,
-      "progressive-electric-energy-distribution": 4,
-      "progressive-energy-shield": 4,
-      "progressive-engine": 4,
-      "progressive-flamethrower": 14,
-      "progressive-fluid-handling": 4,
-      "progressive-follower": 6,
-      "progressive-follower-robot-count": 8,
-      "progressive-inserter": 18,
-      "progressive-laser-shooting-speed": 14,
-      "progressive-laser-weapons-damage": 12,
-      "progressive-logistics": 5,
-      "progressive-military": 8,
-      "progressive-mining-productivity": 6,
-      "progressive-personal-battery": 4,
-      "progressive-personal-roboport-equipment": 4,
-      "progressive-physical-projectile-damage": 12,
-      "progressive-processing": 16,
-      "progressive-productivity-module": 6,
-      "progressive-research-speed": 12,
-      "progressive-rocketry": 6,
-      "progressive-science-pack": 10,
-      "progressive-speed-module": 6,
-      "progressive-stronger-explosives": 12,
-      "progressive-train-network": 18,
-      "progressive-turret": 4,
-      "progressive-vehicle": 6,
-      "progressive-wall": 4,
-      "progressive-weapon-shooting-speed": 12,
-      "progressive-worker-robots-speed": 10,
-      "progressive-worker-robots-storage": 6,
-      "radar": 2,
-      "repair-pack": 2,
-      "robotics": 2,
-      "rocket-fuel": 2,
+      "advanced-circuit": 1,
+      "advanced-combinators": 1,
+      "artillery": 1,
+      "battery": 1,
+      "belt-immunity-equipment": 1,
+      "circuit-network": 1,
+      "cliff-explosives": 1,
+      "concrete": 1,
+      "construction-robotics": 1,
+      "discharge-defense-equipment": 1,
+      "effect-transmission": 1,
+      "electric-energy-accumulators": 1,
+      "exoskeleton-equipment": 1,
+      "explosives": 1,
+      "fission-reactor-equipment": 1,
+      "lamp": 1,
+      "land-mine": 1,
+      "landfill": 1,
+      "logistic-robotics": 1,
+      "logistic-system": 1,
+      "low-density-structure": 1,
+      "lubricant": 1,
+      "night-vision-equipment": 1,
+      "nuclear-power": 1,
+      "oil-gathering": 1,
+      "personal-laser-defense-equipment": 1,
+      "plastics": 1,
+      "processing-unit": 1,
+      "progressive-advanced-material-processing": 2,
+      "progressive-armor": 4,
+      "progressive-automation": 3,
+      "progressive-efficiency-module": 3,
+      "progressive-electric-energy-distribution": 2,
+      "progressive-energy-shield": 2,
+      "progressive-engine": 2,
+      "progressive-flamethrower": 7,
+      "progressive-fluid-handling": 2,
+      "progressive-follower": 3,
+      "progressive-follower-robot-count": 4,
+      "progressive-inserter": 9,
+      "progressive-laser-shooting-speed": 7,
+      "progressive-laser-weapons-damage": 6,
+      "progressive-logistics": 3,
+      "progressive-military": 4,
+      "progressive-mining-productivity": 3,
+      "progressive-personal-battery": 2,
+      "progressive-personal-roboport-equipment": 2,
+      "progressive-physical-projectile-damage": 6,
+      "progressive-processing": 8,
+      "progressive-productivity-module": 3,
+      "progressive-research-speed": 6,
+      "progressive-rocketry": 3,
+      "progressive-science-pack": 5,
+      "progressive-speed-module": 3,
+      "progressive-stronger-explosives": 6,
+      "progressive-train-network": 9,
+      "progressive-turret": 2,
+      "progressive-vehicle": 3,
+      "progressive-wall": 2,
+      "progressive-weapon-shooting-speed": 6,
+      "progressive-worker-robots-speed": 5,
+      "progressive-worker-robots-storage": 3,
+      "radar": 1,
+      "repair-pack": 1,
+      "robotics": 1,
+      "rocket-fuel": 1,
       "rocket-silo": 1,
-      "solar-energy": 2,
-      "solar-panel-equipment": 2,
-      "steel-axe": 2,
-      "toolbelt": 2,
-      "uranium-ammo": 2,
-      "uranium-mining": 2
+      "solar-energy": 1,
+      "solar-panel-equipment": 1,
+      "steel-axe": 1,
+      "toolbelt": 1,
+      "uranium-ammo": 1,
+      "uranium-mining": 1
     }
   },
   "progression_mapping": {
@@ -10950,5 +10724,6 @@
         }
       }
     }
-  }
+  },
+  "helpers": {}
 }

@@ -882,7 +882,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -981,7 +982,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1083,7 +1085,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1250,7 +1253,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1368,7 +1372,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1546,7 +1551,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1588,7 +1594,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1608,7 +1615,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1713,7 +1721,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1953,7 +1962,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2267,7 +2277,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forsaken City A - Crystal Heart",
@@ -2281,7 +2292,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2491,7 +2503,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2636,7 +2649,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2893,7 +2907,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2965,7 +2980,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3015,7 +3031,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3117,7 +3134,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3137,7 +3155,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3182,7 +3201,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3322,7 +3342,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3554,7 +3575,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3733,7 +3755,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3784,7 +3807,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3978,7 +4002,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4107,7 +4132,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4382,7 +4408,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4671,7 +4698,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4721,7 +4749,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5249,7 +5278,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5321,7 +5351,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5366,7 +5397,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5421,7 +5453,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5488,7 +5521,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5614,7 +5648,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5711,7 +5746,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5813,7 +5849,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5898,7 +5935,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5992,7 +6030,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6064,7 +6103,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6268,7 +6308,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6438,7 +6479,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6502,7 +6544,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6595,7 +6638,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6982,7 +7026,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7032,7 +7077,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7635,7 +7681,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -7992,7 +8039,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8129,7 +8177,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8339,7 +8388,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8384,7 +8434,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8472,7 +8523,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -8509,7 +8561,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8676,7 +8729,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8890,7 +8944,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -9185,7 +9240,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9564,7 +9620,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9697,7 +9754,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9942,7 +10000,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9987,7 +10046,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -10067,7 +10127,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10117,7 +10178,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10257,7 +10319,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10413,7 +10476,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -10700,7 +10764,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -10971,7 +11036,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -11225,7 +11291,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11397,7 +11464,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11654,7 +11722,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11734,7 +11803,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11893,7 +11963,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11965,7 +12036,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -12243,7 +12315,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12418,7 +12491,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12558,7 +12632,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -12725,7 +12800,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12775,7 +12851,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -12957,7 +13034,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -13200,7 +13278,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -13250,7 +13329,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -13368,7 +13448,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Celestial Resort A - Room 03-b Strawberry 2",
@@ -13382,7 +13463,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -13523,7 +13605,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -13608,7 +13691,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -13902,7 +13986,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14161,7 +14246,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Celestial Resort A - Room roof06 Strawberry 2",
@@ -14175,7 +14261,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14277,7 +14364,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14449,7 +14537,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14529,7 +14618,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14609,7 +14699,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14728,7 +14819,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14843,7 +14935,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14954,7 +15047,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15155,7 +15249,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15206,7 +15301,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15278,7 +15374,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15298,7 +15395,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -15582,7 +15680,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Golden Ridge A - Room b-01 Strawberry 2",
@@ -15596,7 +15695,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15668,7 +15768,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15840,7 +15941,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15912,7 +16014,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15984,7 +16087,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -16067,7 +16171,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -16147,7 +16252,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -16219,7 +16325,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -16479,7 +16586,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -16521,7 +16629,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -16566,7 +16675,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -16668,7 +16778,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -16880,7 +16991,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -16990,7 +17102,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -17063,7 +17176,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -17258,7 +17372,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -17368,7 +17483,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -17388,7 +17504,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -17559,7 +17676,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -17639,7 +17757,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -17858,7 +17977,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -18038,7 +18158,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -18184,7 +18305,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -18270,7 +18392,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -18377,7 +18500,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -18669,7 +18793,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mirror Temple A - Room a-01 Strawberry 2",
@@ -18683,7 +18808,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -18861,7 +18987,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -18971,7 +19098,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -19068,7 +19196,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -19224,7 +19353,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -19365,7 +19495,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -19416,7 +19547,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -19551,7 +19683,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -19860,7 +19993,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -20029,7 +20163,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -20080,7 +20215,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -20165,7 +20301,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -20289,7 +20426,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -20668,7 +20806,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -20800,7 +20939,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -20837,7 +20977,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -20888,7 +21029,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -21310,7 +21452,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -21361,7 +21504,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -21441,7 +21585,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -21717,7 +21862,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -21968,7 +22114,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -22131,7 +22278,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -22198,7 +22346,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -22253,7 +22402,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -22599,7 +22749,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -22742,7 +22893,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -23084,7 +23236,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -23430,7 +23583,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -24064,7 +24218,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -24109,7 +24264,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -24155,7 +24311,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -24200,7 +24357,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -24730,7 +24888,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mirror Temple A - Search Key 3",
@@ -24753,7 +24912,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -24790,7 +24950,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -24944,7 +25105,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -25128,7 +25290,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -25285,7 +25448,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -25638,7 +25802,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -25987,7 +26152,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -26336,7 +26502,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -26609,7 +26776,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -26691,7 +26859,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -28457,7 +28626,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -28895,7 +29065,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -30229,7 +30400,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -30337,7 +30509,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -30610,7 +30783,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -30868,7 +31042,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Summit A - Room a-04b Strawberry 2",
@@ -30882,7 +31057,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -30932,7 +31108,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -31090,7 +31267,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -31110,7 +31288,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -31305,7 +31484,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -31547,7 +31727,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -31589,7 +31770,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -31790,7 +31972,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -31944,7 +32127,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -32230,7 +32414,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -32349,7 +32534,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -32369,7 +32555,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -32686,7 +32873,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -32861,7 +33049,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -33075,7 +33264,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -33156,7 +33346,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -33323,7 +33514,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -33373,7 +33565,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -33492,7 +33685,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -33512,7 +33706,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -33549,7 +33744,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -33887,7 +34083,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -33976,7 +34173,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -34121,7 +34319,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -34284,7 +34483,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -34334,7 +34534,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -34518,7 +34719,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -34701,7 +34903,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -34781,7 +34984,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -35065,7 +35269,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -35150,7 +35355,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -35531,7 +35737,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -35595,7 +35802,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -35867,7 +36075,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -35983,7 +36192,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -36180,7 +36390,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -36299,7 +36510,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -36350,7 +36562,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -36400,7 +36613,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -36607,7 +36821,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -36627,7 +36842,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -36702,7 +36918,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -36826,7 +37043,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -37054,7 +37272,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -37638,7 +37857,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -37689,7 +37909,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -37877,7 +38098,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -38024,7 +38246,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -38327,7 +38550,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Summit A - Room f-11 Strawberry 2",
@@ -38341,7 +38565,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Summit A - Room f-11 Strawberry 3",
@@ -38355,7 +38580,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -38375,7 +38601,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -38495,7 +38722,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -38532,7 +38760,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -38569,7 +38798,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -38619,7 +38849,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -38723,7 +38954,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -38781,7 +39013,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Summit A - Room g-01 Strawberry 3",
@@ -38795,7 +39028,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -38943,7 +39177,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -38972,7 +39207,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -39014,7 +39250,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -39129,12 +39366,10 @@
           "Collectables",
           "Everything"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 90
+        "max_count": 45,
+        "classification": "progression_skip_balancing"
       },
       "Raspberry": {
         "name": "Raspberry",
@@ -39143,12 +39378,10 @@
           "Collectables",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 210
+        "max_count": 105,
+        "classification": "filler"
       },
       "Granny's House Keys": {
         "name": "Granny's House Keys",
@@ -39156,12 +39389,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "Bald Trap": {
         "name": "Bald Trap",
@@ -39170,12 +39401,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Literature Trap": {
         "name": "Literature Trap",
@@ -39184,12 +39413,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Stun Trap": {
         "name": "Stun Trap",
@@ -39198,12 +39425,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Invisible Trap": {
         "name": "Invisible Trap",
@@ -39212,12 +39437,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Fast Trap": {
         "name": "Fast Trap",
@@ -39226,12 +39449,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Slow Trap": {
         "name": "Slow Trap",
@@ -39240,12 +39461,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ice Trap": {
         "name": "Ice Trap",
@@ -39254,12 +39473,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Reverse Trap": {
         "name": "Reverse Trap",
@@ -39268,12 +39485,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Screen Flip Trap": {
         "name": "Screen Flip Trap",
@@ -39282,12 +39497,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Laughter Trap": {
         "name": "Laughter Trap",
@@ -39296,12 +39509,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Hiccup Trap": {
         "name": "Hiccup Trap",
@@ -39310,12 +39521,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Zoom Trap": {
         "name": "Zoom Trap",
@@ -39324,12 +39533,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Prologue Cassette": {
         "name": "Prologue Cassette",
@@ -39338,12 +39545,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Forsaken City Cassette - A Side": {
         "name": "Forsaken City Cassette - A Side",
@@ -39352,12 +39557,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Forsaken City Cassette - B Side": {
         "name": "Forsaken City Cassette - B Side",
@@ -39366,12 +39569,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Forsaken City Cassette - C Side": {
         "name": "Forsaken City Cassette - C Side",
@@ -39380,12 +39581,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Old Site Cassette - A Side": {
         "name": "Old Site Cassette - A Side",
@@ -39394,12 +39593,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Old Site Cassette - B Side": {
         "name": "Old Site Cassette - B Side",
@@ -39408,12 +39605,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Old Site Cassette - C Side": {
         "name": "Old Site Cassette - C Side",
@@ -39422,12 +39617,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Celestial Resort Cassette - A Side": {
         "name": "Celestial Resort Cassette - A Side",
@@ -39436,12 +39629,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Celestial Resort Cassette - B Side": {
         "name": "Celestial Resort Cassette - B Side",
@@ -39450,12 +39641,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Celestial Resort Cassette - C Side": {
         "name": "Celestial Resort Cassette - C Side",
@@ -39464,12 +39653,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Golden Ridge Cassette - A Side": {
         "name": "Golden Ridge Cassette - A Side",
@@ -39478,12 +39665,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Golden Ridge Cassette - B Side": {
         "name": "Golden Ridge Cassette - B Side",
@@ -39492,12 +39677,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Golden Ridge Cassette - C Side": {
         "name": "Golden Ridge Cassette - C Side",
@@ -39506,12 +39689,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mirror Temple Cassette - A Side": {
         "name": "Mirror Temple Cassette - A Side",
@@ -39520,12 +39701,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mirror Temple Cassette - B Side": {
         "name": "Mirror Temple Cassette - B Side",
@@ -39534,12 +39713,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mirror Temple Cassette - C Side": {
         "name": "Mirror Temple Cassette - C Side",
@@ -39548,12 +39725,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Reflection Cassette - A Side": {
         "name": "Reflection Cassette - A Side",
@@ -39562,12 +39737,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Reflection Cassette - B Side": {
         "name": "Reflection Cassette - B Side",
@@ -39576,12 +39749,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Reflection Cassette - C Side": {
         "name": "Reflection Cassette - C Side",
@@ -39590,12 +39761,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "The Summit Cassette - A Side": {
         "name": "The Summit Cassette - A Side",
@@ -39604,12 +39773,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "The Summit Cassette - B Side": {
         "name": "The Summit Cassette - B Side",
@@ -39618,12 +39785,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "The Summit Cassette - C Side": {
         "name": "The Summit Cassette - C Side",
@@ -39632,12 +39797,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Epilogue Cassette": {
         "name": "Epilogue Cassette",
@@ -39646,12 +39809,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Core Cassette - A Side": {
         "name": "Core Cassette - A Side",
@@ -39660,12 +39821,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Core Cassette - B Side": {
         "name": "Core Cassette - B Side",
@@ -39674,12 +39833,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Core Cassette - C Side": {
         "name": "Core Cassette - C Side",
@@ -39688,12 +39845,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Farewell Cassette": {
         "name": "Farewell Cassette",
@@ -39702,12 +39857,10 @@
           "Cassettes",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Springs": {
         "name": "Springs",
@@ -39716,12 +39869,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Traffic Blocks": {
         "name": "Traffic Blocks",
@@ -39730,12 +39881,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Pink Cassette Blocks": {
         "name": "Pink Cassette Blocks",
@@ -39744,12 +39893,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Blue Cassette Blocks": {
         "name": "Blue Cassette Blocks",
@@ -39758,12 +39905,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Dream Blocks": {
         "name": "Dream Blocks",
@@ -39772,12 +39917,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Coins": {
         "name": "Coins",
@@ -39787,12 +39930,10 @@
           "Interactables",
           "Touch Switches"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Moving Platforms": {
         "name": "Moving Platforms",
@@ -39801,12 +39942,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Blue Boosters": {
         "name": "Blue Boosters",
@@ -39818,12 +39957,10 @@
           "Green Bubbles",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Blue Clouds": {
         "name": "Blue Clouds",
@@ -39832,12 +39969,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Move Blocks": {
         "name": "Move Blocks",
@@ -39846,12 +39981,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Swap Blocks": {
         "name": "Swap Blocks",
@@ -39860,12 +39993,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Red Boosters": {
         "name": "Red Boosters",
@@ -39875,12 +40006,10 @@
           "Interactables",
           "Red Bubbles"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Theo Crystal": {
         "name": "Theo Crystal",
@@ -39889,12 +40018,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Feathers": {
         "name": "Feathers",
@@ -39903,12 +40030,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Bumpers": {
         "name": "Bumpers",
@@ -39917,12 +40042,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Kevins": {
         "name": "Kevins",
@@ -39931,12 +40054,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Pink Clouds": {
         "name": "Pink Clouds",
@@ -39945,12 +40066,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Badeline Boosters": {
         "name": "Badeline Boosters",
@@ -39959,12 +40078,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Fire and Ice Balls": {
         "name": "Fire and Ice Balls",
@@ -39973,12 +40090,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Core Toggles": {
         "name": "Core Toggles",
@@ -39987,12 +40102,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Core Blocks": {
         "name": "Core Blocks",
@@ -40001,12 +40114,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Pufferfish": {
         "name": "Pufferfish",
@@ -40015,12 +40126,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Jellyfish": {
         "name": "Jellyfish",
@@ -40029,12 +40138,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Breaker Boxes": {
         "name": "Breaker Boxes",
@@ -40043,12 +40150,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Dash Refills": {
         "name": "Dash Refills",
@@ -40057,12 +40162,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Double Dash Refills": {
         "name": "Double Dash Refills",
@@ -40071,12 +40174,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Yellow Cassette Blocks": {
         "name": "Yellow Cassette Blocks",
@@ -40085,12 +40186,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Green Cassette Blocks": {
         "name": "Green Cassette Blocks",
@@ -40099,12 +40198,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Dash Switches": {
         "name": "Dash Switches",
@@ -40113,12 +40210,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Seekers": {
         "name": "Seekers",
@@ -40127,12 +40222,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Strawberry Seeds": {
         "name": "Strawberry Seeds",
@@ -40141,12 +40234,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Sinking Platforms": {
         "name": "Sinking Platforms",
@@ -40155,12 +40246,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "White Block": {
         "name": "White Block",
@@ -40169,12 +40258,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Torches": {
         "name": "Torches",
@@ -40183,12 +40270,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Bird": {
         "name": "Bird",
@@ -40197,12 +40282,10 @@
           "Everything",
           "Interactables"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal Heart 1": {
         "name": "Crystal Heart 1",
@@ -40211,12 +40294,10 @@
           "Crystal Hearts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal Heart 2": {
         "name": "Crystal Heart 2",
@@ -40225,12 +40306,10 @@
           "Crystal Hearts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal Heart 3": {
         "name": "Crystal Heart 3",
@@ -40239,12 +40318,10 @@
           "Crystal Hearts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal Heart 4": {
         "name": "Crystal Heart 4",
@@ -40253,12 +40330,10 @@
           "Crystal Hearts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal Heart 5": {
         "name": "Crystal Heart 5",
@@ -40267,12 +40342,10 @@
           "Crystal Hearts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal Heart 6": {
         "name": "Crystal Heart 6",
@@ -40281,12 +40354,10 @@
           "Crystal Hearts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal Heart 7": {
         "name": "Crystal Heart 7",
@@ -40295,12 +40366,10 @@
           "Crystal Hearts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal Heart 8": {
         "name": "Crystal Heart 8",
@@ -40309,12 +40378,10 @@
           "Crystal Hearts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal Heart 9": {
         "name": "Crystal Heart 9",
@@ -40323,12 +40390,10 @@
           "Crystal Hearts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal Heart 10": {
         "name": "Crystal Heart 10",
@@ -40337,12 +40402,10 @@
           "Crystal Hearts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal Heart 11": {
         "name": "Crystal Heart 11",
@@ -40351,12 +40414,10 @@
           "Crystal Hearts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal Heart 12": {
         "name": "Crystal Heart 12",
@@ -40365,12 +40426,10 @@
           "Crystal Hearts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal Heart 13": {
         "name": "Crystal Heart 13",
@@ -40379,12 +40438,10 @@
           "Crystal Hearts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal Heart 14": {
         "name": "Crystal Heart 14",
@@ -40393,12 +40450,10 @@
           "Crystal Hearts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal Heart 15": {
         "name": "Crystal Heart 15",
@@ -40407,12 +40462,10 @@
           "Crystal Hearts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal Heart 16": {
         "name": "Crystal Heart 16",
@@ -40421,40 +40474,36 @@
           "Crystal Hearts",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Forsaken City A - Crossing": {
         "name": "Forsaken City A - Crossing",
+        "hint_text": "Forsaken City A   Crossing",
         "id": 211894272,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Forsaken City A - Chasm": {
         "name": "Forsaken City A - Chasm",
+        "hint_text": "Forsaken City A   Chasm",
         "id": 211894273,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Forsaken City B - Contraption": {
         "name": "Forsaken City B - Contraption",
@@ -40463,12 +40512,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Forsaken City B - Scrap Pit": {
         "name": "Forsaken City B - Scrap Pit",
@@ -40477,40 +40524,36 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Old Site A - Intervention": {
         "name": "Old Site A - Intervention",
+        "hint_text": "Old Site A   Intervention",
         "id": 211894276,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Old Site A - Awake": {
         "name": "Old Site A - Awake",
+        "hint_text": "Old Site A   Awake",
         "id": 211894277,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Old Site B - Combination Lock": {
         "name": "Old Site B - Combination Lock",
@@ -40519,12 +40562,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Old Site B - Dream Altar": {
         "name": "Old Site B - Dream Altar",
@@ -40533,54 +40574,49 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Celestial Resort A - Huge Mess": {
         "name": "Celestial Resort A - Huge Mess",
+        "hint_text": "Celestial Resort A   Huge Mess",
         "id": 211894280,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Celestial Resort A - Elevator Shaft": {
         "name": "Celestial Resort A - Elevator Shaft",
+        "hint_text": "Celestial Resort A   Elevator Shaft",
         "id": 211894281,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Celestial Resort A - Presidential Suite": {
         "name": "Celestial Resort A - Presidential Suite",
+        "hint_text": "Celestial Resort A   Presidential Suite",
         "id": 211894282,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Celestial Resort B - Staff Quarters": {
         "name": "Celestial Resort B - Staff Quarters",
@@ -40589,12 +40625,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Celestial Resort B - Library": {
         "name": "Celestial Resort B - Library",
@@ -40603,12 +40637,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Celestial Resort B - Rooftop": {
         "name": "Celestial Resort B - Rooftop",
@@ -40617,54 +40649,49 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Golden Ridge A - Shrine": {
         "name": "Golden Ridge A - Shrine",
+        "hint_text": "Golden Ridge A   Shrine",
         "id": 211894286,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Golden Ridge A - Old Trail": {
         "name": "Golden Ridge A - Old Trail",
+        "hint_text": "Golden Ridge A   Old Trail",
         "id": 211894287,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Golden Ridge A - Cliff Face": {
         "name": "Golden Ridge A - Cliff Face",
+        "hint_text": "Golden Ridge A   Cliff Face",
         "id": 211894288,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Golden Ridge B - Stepping Stones": {
         "name": "Golden Ridge B - Stepping Stones",
@@ -40673,12 +40700,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Golden Ridge B - Gusty Canyon": {
         "name": "Golden Ridge B - Gusty Canyon",
@@ -40687,12 +40712,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Golden Ridge B - Eye of the Storm": {
         "name": "Golden Ridge B - Eye of the Storm",
@@ -40701,68 +40724,62 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mirror Temple A - Depths": {
         "name": "Mirror Temple A - Depths",
+        "hint_text": "Mirror Temple A   Depths",
         "id": 211894292,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mirror Temple A - Unravelling": {
         "name": "Mirror Temple A - Unravelling",
+        "hint_text": "Mirror Temple A   Unravelling",
         "id": 211894293,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mirror Temple A - Search": {
         "name": "Mirror Temple A - Search",
+        "hint_text": "Mirror Temple A   Search",
         "id": 211894294,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mirror Temple A - Rescue": {
         "name": "Mirror Temple A - Rescue",
+        "hint_text": "Mirror Temple A   Rescue",
         "id": 211894295,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mirror Temple B - Central Chamber": {
         "name": "Mirror Temple B - Central Chamber",
@@ -40771,12 +40788,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mirror Temple B - Through the Mirror": {
         "name": "Mirror Temple B - Through the Mirror",
@@ -40785,12 +40800,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mirror Temple B - Mix Master": {
         "name": "Mirror Temple B - Mix Master",
@@ -40799,68 +40812,62 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Reflection A - Hollows": {
         "name": "Reflection A - Hollows",
+        "hint_text": "Reflection A   Hollows",
         "id": 211894299,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Reflection A - Reflection": {
         "name": "Reflection A - Reflection",
+        "hint_text": "Reflection A   Reflection",
         "id": 211894300,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Reflection A - Rock Bottom": {
         "name": "Reflection A - Rock Bottom",
+        "hint_text": "Reflection A   Rock Bottom",
         "id": 211894301,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Reflection A - Resolution": {
         "name": "Reflection A - Resolution",
+        "hint_text": "Reflection A   Resolution",
         "id": 211894302,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Reflection B - Reflection": {
         "name": "Reflection B - Reflection",
@@ -40869,12 +40876,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Reflection B - Rock Bottom": {
         "name": "Reflection B - Rock Bottom",
@@ -40883,12 +40888,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Reflection B - Reprieve": {
         "name": "Reflection B - Reprieve",
@@ -40897,96 +40900,88 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "The Summit A - 500 M": {
         "name": "The Summit A - 500 M",
+        "hint_text": "The Summit A   500 M",
         "id": 211894306,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "The Summit A - 1000 M": {
         "name": "The Summit A - 1000 M",
+        "hint_text": "The Summit A   1000 M",
         "id": 211894307,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "The Summit A - 1500 M": {
         "name": "The Summit A - 1500 M",
+        "hint_text": "The Summit A   1500 M",
         "id": 211894308,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "The Summit A - 2000 M": {
         "name": "The Summit A - 2000 M",
+        "hint_text": "The Summit A   2000 M",
         "id": 211894309,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "The Summit A - 2500 M": {
         "name": "The Summit A - 2500 M",
+        "hint_text": "The Summit A   2500 M",
         "id": 211894310,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "The Summit A - 3000 M": {
         "name": "The Summit A - 3000 M",
+        "hint_text": "The Summit A   3000 M",
         "id": 211894311,
         "groups": [
           "Checkpoints",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "The Summit B - 500 M": {
         "name": "The Summit B - 500 M",
@@ -40995,12 +40990,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "The Summit B - 1000 M": {
         "name": "The Summit B - 1000 M",
@@ -41009,12 +41002,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "The Summit B - 1500 M": {
         "name": "The Summit B - 1500 M",
@@ -41023,12 +41014,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "The Summit B - 2000 M": {
         "name": "The Summit B - 2000 M",
@@ -41037,12 +41026,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "The Summit B - 2500 M": {
         "name": "The Summit B - 2500 M",
@@ -41051,12 +41038,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "The Summit B - 3000 M": {
         "name": "The Summit B - 3000 M",
@@ -41065,12 +41050,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Core A - Into the Core": {
         "name": "Core A - Into the Core",
@@ -41079,12 +41062,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Core A - Hot and Cold": {
         "name": "Core A - Hot and Cold",
@@ -41093,12 +41074,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Core A - Heart of the Mountain": {
         "name": "Core A - Heart of the Mountain",
@@ -41107,12 +41086,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Core B - Into the Core": {
         "name": "Core B - Into the Core",
@@ -41121,12 +41098,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Core B - Burning or Freezing": {
         "name": "Core B - Burning or Freezing",
@@ -41135,12 +41110,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Core B - Heartbeat": {
         "name": "Core B - Heartbeat",
@@ -41149,12 +41122,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Farewell - Singular": {
         "name": "Farewell - Singular",
@@ -41163,12 +41134,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Farewell - Power Source": {
         "name": "Farewell - Power Source",
@@ -41177,12 +41146,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Farewell - Remembered": {
         "name": "Farewell - Remembered",
@@ -41191,12 +41158,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Farewell - Event Horizon": {
         "name": "Farewell - Event Horizon",
@@ -41205,12 +41170,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Farewell - Determination": {
         "name": "Farewell - Determination",
@@ -41219,12 +41182,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Farewell - Stubbornness": {
         "name": "Farewell - Stubbornness",
@@ -41233,12 +41194,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Farewell - Reconciliation": {
         "name": "Farewell - Reconciliation",
@@ -41247,12 +41206,10 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Farewell - Farewell": {
         "name": "Farewell - Farewell",
@@ -41261,152 +41218,140 @@
           "Checkpoints",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Celestial Resort A - Front Door Key": {
         "name": "Celestial Resort A - Front Door Key",
+        "hint_text": "Celestial Resort A   Front Door Key",
         "id": 211902464,
         "groups": [
           "Everything",
           "Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Celestial Resort A - Hallway Key 1": {
         "name": "Celestial Resort A - Hallway Key 1",
+        "hint_text": "Celestial Resort A   Hallway Key 1",
         "id": 211902465,
         "groups": [
           "Everything",
           "Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Celestial Resort A - Hallway Key 2": {
         "name": "Celestial Resort A - Hallway Key 2",
+        "hint_text": "Celestial Resort A   Hallway Key 2",
         "id": 211902466,
         "groups": [
           "Everything",
           "Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Celestial Resort A - Huge Mess Key": {
         "name": "Celestial Resort A - Huge Mess Key",
+        "hint_text": "Celestial Resort A   Huge Mess Key",
         "id": 211902467,
         "groups": [
           "Everything",
           "Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Celestial Resort A - Presidential Suite Key": {
         "name": "Celestial Resort A - Presidential Suite Key",
+        "hint_text": "Celestial Resort A   Presidential Suite Key",
         "id": 211902468,
         "groups": [
           "Everything",
           "Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mirror Temple A - Entrance Key": {
         "name": "Mirror Temple A - Entrance Key",
+        "hint_text": "Mirror Temple A   Entrance Key",
         "id": 211902469,
         "groups": [
           "Everything",
           "Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mirror Temple A - Depths Key": {
         "name": "Mirror Temple A - Depths Key",
+        "hint_text": "Mirror Temple A   Depths Key",
         "id": 211902470,
         "groups": [
           "Everything",
           "Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mirror Temple A - Search Key 1": {
         "name": "Mirror Temple A - Search Key 1",
+        "hint_text": "Mirror Temple A   Search Key 1",
         "id": 211902471,
         "groups": [
           "Everything",
           "Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mirror Temple A - Search Key 2": {
         "name": "Mirror Temple A - Search Key 2",
+        "hint_text": "Mirror Temple A   Search Key 2",
         "id": 211902472,
         "groups": [
           "Everything",
           "Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mirror Temple A - Search Key 3": {
         "name": "Mirror Temple A - Search Key 3",
+        "hint_text": "Mirror Temple A   Search Key 3",
         "id": 211902473,
         "groups": [
           "Everything",
           "Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mirror Temple B - Central Chamber Key 1": {
         "name": "Mirror Temple B - Central Chamber Key 1",
@@ -41415,12 +41360,10 @@
           "Everything",
           "Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mirror Temple B - Central Chamber Key 2": {
         "name": "Mirror Temple B - Central Chamber Key 2",
@@ -41429,26 +41372,23 @@
           "Everything",
           "Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "The Summit A - 2500 M Key": {
         "name": "The Summit A - 2500 M Key",
+        "hint_text": "The Summit A   2500 M Key",
         "id": 211902476,
         "groups": [
           "Everything",
           "Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Farewell - Power Source Key 1": {
         "name": "Farewell - Power Source Key 1",
@@ -41457,12 +41397,10 @@
           "Everything",
           "Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Farewell - Power Source Key 2": {
         "name": "Farewell - Power Source Key 2",
@@ -41471,12 +41409,10 @@
           "Everything",
           "Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Farewell - Power Source Key 3": {
         "name": "Farewell - Power Source Key 3",
@@ -41485,12 +41421,10 @@
           "Everything",
           "Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Farewell - Power Source Key 4": {
         "name": "Farewell - Power Source Key 4",
@@ -41499,12 +41433,10 @@
           "Everything",
           "Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Farewell - Power Source Key 5": {
         "name": "Farewell - Power Source Key 5",
@@ -41513,135 +41445,124 @@
           "Everything",
           "Keys"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "The Summit A - Gem 1": {
         "name": "The Summit A - Gem 1",
+        "hint_text": "The Summit A   Gem 1",
         "id": 211905024,
         "groups": [
           "Everything",
           "Gems"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "The Summit A - Gem 2": {
         "name": "The Summit A - Gem 2",
+        "hint_text": "The Summit A   Gem 2",
         "id": 211905025,
         "groups": [
           "Everything",
           "Gems"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "The Summit A - Gem 3": {
         "name": "The Summit A - Gem 3",
+        "hint_text": "The Summit A   Gem 3",
         "id": 211905026,
         "groups": [
           "Everything",
           "Gems"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "The Summit A - Gem 4": {
         "name": "The Summit A - Gem 4",
+        "hint_text": "The Summit A   Gem 4",
         "id": 211905027,
         "groups": [
           "Everything",
           "Gems"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "The Summit A - Gem 5": {
         "name": "The Summit A - Gem 5",
+        "hint_text": "The Summit A   Gem 5",
         "id": 211905028,
         "groups": [
           "Everything",
           "Gems"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "The Summit A - Gem 6": {
         "name": "The Summit A - Gem 6",
+        "hint_text": "The Summit A   Gem 6",
         "id": 211905029,
         "groups": [
           "Everything",
           "Gems"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Celestial Resort A - Brown Clutter": {
         "name": "Celestial Resort A - Brown Clutter",
+        "hint_text": "Celestial Resort A   Brown Clutter",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Celestial Resort A - Green Clutter": {
         "name": "Celestial Resort A - Green Clutter",
+        "hint_text": "Celestial Resort A   Green Clutter",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Celestial Resort A - Pink Clutter": {
         "name": "Celestial Resort A - Pink Clutter",
+        "hint_text": "Celestial Resort A   Pink Clutter",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Victory": {
         "name": "Victory",
@@ -41649,12 +41570,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -41678,11 +41597,11 @@
   },
   "itempool_counts": {
     "1": {
-      "Badeline Boosters": 2,
-      "Blue Boosters": 2,
-      "Blue Cassette Blocks": 2,
-      "Blue Clouds": 2,
-      "Bumpers": 2,
+      "Badeline Boosters": 1,
+      "Blue Boosters": 1,
+      "Blue Cassette Blocks": 1,
+      "Blue Clouds": 1,
+      "Bumpers": 1,
       "Celestial Resort A - Brown Clutter": 1,
       "Celestial Resort A - Elevator Shaft": 1,
       "Celestial Resort A - Front Door Key": 1,
@@ -41694,34 +41613,34 @@
       "Celestial Resort A - Pink Clutter": 1,
       "Celestial Resort A - Presidential Suite": 1,
       "Celestial Resort A - Presidential Suite Key": 1,
-      "Coins": 2,
-      "Crystal Heart 1": 2,
-      "Crystal Heart 10": 2,
-      "Crystal Heart 11": 2,
-      "Crystal Heart 12": 2,
-      "Crystal Heart 13": 2,
-      "Crystal Heart 14": 2,
-      "Crystal Heart 15": 2,
-      "Crystal Heart 16": 2,
-      "Crystal Heart 2": 2,
-      "Crystal Heart 3": 2,
-      "Crystal Heart 4": 2,
-      "Crystal Heart 5": 2,
-      "Crystal Heart 6": 2,
-      "Crystal Heart 7": 2,
-      "Crystal Heart 8": 2,
-      "Crystal Heart 9": 2,
-      "Dash Refills": 2,
-      "Dash Switches": 2,
-      "Dream Blocks": 2,
-      "Feathers": 2,
+      "Coins": 1,
+      "Crystal Heart 1": 1,
+      "Crystal Heart 10": 1,
+      "Crystal Heart 11": 1,
+      "Crystal Heart 12": 1,
+      "Crystal Heart 13": 1,
+      "Crystal Heart 14": 1,
+      "Crystal Heart 15": 1,
+      "Crystal Heart 16": 1,
+      "Crystal Heart 2": 1,
+      "Crystal Heart 3": 1,
+      "Crystal Heart 4": 1,
+      "Crystal Heart 5": 1,
+      "Crystal Heart 6": 1,
+      "Crystal Heart 7": 1,
+      "Crystal Heart 8": 1,
+      "Crystal Heart 9": 1,
+      "Dash Refills": 1,
+      "Dash Switches": 1,
+      "Dream Blocks": 1,
+      "Feathers": 1,
       "Forsaken City A - Chasm": 1,
       "Forsaken City A - Crossing": 1,
       "Golden Ridge A - Cliff Face": 1,
       "Golden Ridge A - Old Trail": 1,
       "Golden Ridge A - Shrine": 1,
       "Granny's House Keys": 1,
-      "Kevins": 2,
+      "Kevins": 1,
       "Mirror Temple A - Depths": 1,
       "Mirror Temple A - Depths Key": 1,
       "Mirror Temple A - Entrance Key": 1,
@@ -41731,24 +41650,24 @@
       "Mirror Temple A - Search Key 2": 1,
       "Mirror Temple A - Search Key 3": 1,
       "Mirror Temple A - Unravelling": 1,
-      "Move Blocks": 2,
-      "Moving Platforms": 2,
+      "Move Blocks": 1,
+      "Moving Platforms": 1,
       "Old Site A - Awake": 1,
       "Old Site A - Intervention": 1,
-      "Pink Cassette Blocks": 2,
-      "Pink Clouds": 2,
-      "Raspberry": 210,
-      "Red Boosters": 2,
+      "Pink Cassette Blocks": 1,
+      "Pink Clouds": 1,
+      "Raspberry": 105,
+      "Red Boosters": 1,
       "Reflection A - Hollows": 1,
       "Reflection A - Reflection": 1,
       "Reflection A - Resolution": 1,
       "Reflection A - Rock Bottom": 1,
-      "Seekers": 2,
-      "Sinking Platforms": 2,
-      "Springs": 2,
-      "Strawberry": 90,
-      "Strawberry Seeds": 2,
-      "Swap Blocks": 2,
+      "Seekers": 1,
+      "Sinking Platforms": 1,
+      "Springs": 1,
+      "Strawberry": 45,
+      "Strawberry Seeds": 1,
+      "Swap Blocks": 1,
       "The Summit A - 1000 M": 1,
       "The Summit A - 1500 M": 1,
       "The Summit A - 2000 M": 1,
@@ -41762,11 +41681,11 @@
       "The Summit A - Gem 4": 1,
       "The Summit A - Gem 5": 1,
       "The Summit A - Gem 6": 1,
-      "Theo Crystal": 2,
-      "Torches": 2,
-      "Traffic Blocks": 2,
+      "Theo Crystal": 1,
+      "Torches": 1,
+      "Traffic Blocks": 1,
       "Victory": 1,
-      "White Block": 2
+      "White Block": 1
     }
   },
   "progression_mapping": {
@@ -41789,5 +41708,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

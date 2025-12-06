@@ -352,7 +352,7 @@ def generate_single_mode_report(results: Dict, mode_name: str = None) -> str:
         f"**Mode:** {mode_display}",
         "",
         "This report shows the results of round-trip testing the world generator.",
-        "Each game's rules.json is converted to a `_test` world, and the generated",
+        "Each game's rules.json is converted to a `_worldgen` world, and the generated",
         "world is validated to produce equivalent game logic.",
         "",
         "## Legend",
@@ -367,16 +367,15 @@ def generate_single_mode_report(results: Dict, mode_name: str = None) -> str:
         "",
         "- **Original Gen**: Original world seed generation",
         "- **Original Test**: Spoiler test on original world",
-        "- **World Gen**: World generator created _test world from rules.json",
-        "- **Test Gen**: _test world seed generation",
-        "- **Test Spoiler**: Spoiler test on _test world",
-        "- **Cross-Validation**: Original sphere log validates against _test world",
+        "- **World Gen**: World generator created _worldgen world from rules.json",
+        "- **Test Gen**: _worldgen world seed generation",
+        "- **Test Spoiler**: Spoiler test on _worldgen world",
+        "- **Cross-Validation**: Original sphere log validates against _worldgen world",
         "",
     ]
 
     lines.append(generate_summary_table(results))
     lines.append(generate_results_table(results))
-    lines.append(generate_failures_section(results))
 
     return '\n'.join(lines)
 
@@ -398,7 +397,7 @@ def generate_dual_mode_report(canonical_results: Dict, random_results: Dict) -> 
         f"**Mode:** Both (Canonical and Random)",
         "",
         "This report shows the results of round-trip testing the world generator.",
-        "Each game's rules.json is converted to a `_test` world, and the generated",
+        "Each game's rules.json is converted to a `_worldgen` world, and the generated",
         "world is validated to produce equivalent game logic.",
         "",
         "Tests are run in two modes:",
@@ -417,10 +416,10 @@ def generate_dual_mode_report(canonical_results: Dict, random_results: Dict) -> 
         "",
         "- **Original Gen**: Original world seed generation",
         "- **Original Test**: Spoiler test on original world",
-        "- **World Gen**: World generator created _test world from rules.json",
-        "- **Test Gen**: _test world seed generation",
-        "- **Test Spoiler**: Spoiler test on _test world",
-        "- **Cross-Validation**: Original sphere log validates against _test world",
+        "- **World Gen**: World generator created _worldgen world from rules.json",
+        "- **Test Gen**: _worldgen world seed generation",
+        "- **Test Spoiler**: Spoiler test on _worldgen world",
+        "- **Cross-Validation**: Original sphere log validates against _worldgen world",
         "",
         "---",
         "",
@@ -432,7 +431,6 @@ def generate_dual_mode_report(canonical_results: Dict, random_results: Dict) -> 
 
     lines.append(generate_summary_table(canonical_results, "Canonical Summary"))
     lines.append(generate_results_table(canonical_results, "Canonical Detailed Results"))
-    lines.append(generate_failures_section(canonical_results, "Canonical Failures"))
 
     lines.append("---")
     lines.append("")
@@ -443,7 +441,6 @@ def generate_dual_mode_report(canonical_results: Dict, random_results: Dict) -> 
 
     lines.append(generate_summary_table(random_results, "Random Summary"))
     lines.append(generate_results_table(random_results, "Random Detailed Results"))
-    lines.append(generate_failures_section(random_results, "Random Failures"))
 
     return '\n'.join(lines)
 

@@ -53,7 +53,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Top Middle Chest",
@@ -67,7 +68,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -87,7 +89,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Top Left Room Button",
@@ -101,7 +104,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -121,7 +125,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bottom Right Room Right Chest",
@@ -135,7 +140,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -164,7 +170,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -193,7 +200,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       }
@@ -215,12 +223,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Sword": {
         "name": "Sword",
@@ -228,12 +234,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Shield": {
         "name": "Shield",
@@ -241,12 +245,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Hammer": {
         "name": "Hammer",
@@ -254,12 +256,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Health Upgrade": {
         "name": "Health Upgrade",
@@ -267,12 +267,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "useful"
       },
       "Confetti Cannon": {
         "name": "Confetti Cannon",
@@ -280,12 +278,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Math Trap": {
         "name": "Math Trap",
@@ -293,12 +289,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Top Left Room Button Pressed": {
         "name": "Top Left Room Button Pressed",
@@ -306,12 +300,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Victory": {
         "name": "Victory",
@@ -319,12 +311,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -335,11 +325,11 @@
   },
   "itempool_counts": {
     "1": {
-      "Confetti Cannon": 2,
-      "Health Upgrade": 4,
-      "Key": 2,
-      "Shield": 2,
-      "Sword": 2,
+      "Confetti Cannon": 1,
+      "Health Upgrade": 2,
+      "Key": 1,
+      "Shield": 1,
+      "Sword": 1,
       "Top Left Room Button Pressed": 1,
       "Victory": 1
     }
@@ -364,5 +354,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

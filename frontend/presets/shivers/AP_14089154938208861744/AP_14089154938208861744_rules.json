@@ -73,7 +73,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Puzzle Solved Gears",
@@ -87,7 +88,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Puzzle Solved Stone Henge",
@@ -101,7 +103,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Puzzle Solved Office Elevator",
@@ -145,7 +148,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Puzzle Solved Three Floor Elevator",
@@ -189,7 +193,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Mailbox",
@@ -203,7 +208,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Orange Symbol",
@@ -217,7 +223,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Puzzle Hint Found: Silver Symbol",
@@ -231,7 +238,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Green Symbol",
@@ -245,7 +253,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Puzzle Hint Found: White Symbol",
@@ -259,7 +268,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Brown Symbol",
@@ -273,7 +283,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Tan Symbol",
@@ -287,7 +298,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -354,7 +366,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -383,7 +396,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Windlenot's Body",
@@ -397,7 +411,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -511,7 +527,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Storage: Desk Drawer",
@@ -525,7 +542,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Puzzle Hint Found: Atlantis Map",
@@ -539,7 +557,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Tape Recorder Heard",
@@ -553,7 +572,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Puzzle Solved Bedroom Elevator",
@@ -576,7 +596,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -613,7 +634,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Storage: Workshop Drawers",
@@ -627,7 +649,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Puzzle Hint Found: Basilisk Bone Fragments",
@@ -641,7 +664,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -709,7 +733,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1544,7 +1569,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Flashback Memory Obtained Museum Brochure",
@@ -1558,7 +1584,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Storage: Slide",
@@ -1587,7 +1614,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Storage: Transforming Mask",
@@ -1601,7 +1629,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1646,7 +1675,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Flashback Memory Obtained In Search of the Unexplained",
@@ -1660,7 +1690,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Flashback Memory Obtained South American Pictographs",
@@ -1674,7 +1705,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Flashback Memory Obtained Mythology of the Stars",
@@ -1688,7 +1720,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Flashback Memory Obtained Black Book",
@@ -1702,7 +1735,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Storage: Library Cabinet",
@@ -1716,7 +1750,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Storage: Library Statue",
@@ -1730,7 +1765,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1775,7 +1811,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2157,7 +2194,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beth's Body",
@@ -2171,7 +2209,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2208,7 +2248,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Puzzle Hint Found: Beth's Note",
@@ -2222,7 +2263,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2287,7 +2329,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2352,7 +2395,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Clock Chains",
@@ -2366,7 +2410,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2395,7 +2441,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Storage: Clock Tower",
@@ -2409,7 +2456,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Puzzle Hint Found: Shaman Security Camera",
@@ -2423,7 +2471,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Jukebox",
@@ -2458,7 +2507,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2495,7 +2546,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Viewed Theater Movie",
@@ -2509,7 +2561,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2570,7 +2624,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Set Skull Dial: Prehistoric",
@@ -2584,7 +2639,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2621,7 +2678,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2680,7 +2738,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Puzzle Solved Organ",
@@ -2694,7 +2753,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Flashback Memory Obtained Museum Blueprints",
@@ -2708,7 +2768,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Storage: Ocean",
@@ -2722,7 +2783,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Puzzle Hint Found: Sirens Song Heard",
@@ -2736,7 +2798,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2779,7 +2842,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2913,7 +2977,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Set Skull Dial: Tar River",
@@ -2927,7 +2992,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2986,7 +3053,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Puzzle Solved Burial Door",
@@ -3000,7 +3068,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Storage: Egypt",
@@ -3014,7 +3083,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Puzzle Hint Found: Egyptian Sphinx Heard",
@@ -3028,7 +3098,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Set Skull Dial: Egypt",
@@ -3042,7 +3113,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3095,7 +3168,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Flashback Memory Obtained Merrick's Notebook",
@@ -3109,7 +3183,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Storage: Chinese Solitaire",
@@ -3123,7 +3198,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Set Skull Dial: Burial",
@@ -3137,7 +3213,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3194,7 +3272,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Storage: Shaman Hut",
@@ -3208,7 +3287,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3267,7 +3347,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Puzzle Solved Red Door",
@@ -3287,7 +3368,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Storage: Lyre",
@@ -3301,7 +3383,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Set Skull Dial: Gods Room",
@@ -3315,7 +3398,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3344,7 +3429,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Norse Stone",
@@ -3358,7 +3444,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3409,7 +3497,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Flashback Memory Obtained Ancient Astrology",
@@ -3423,7 +3512,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Storage: Skeleton",
@@ -3437,7 +3527,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Storage: Anansi Music Box",
@@ -3451,7 +3542,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3518,7 +3610,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3651,7 +3745,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3702,7 +3797,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Storage: UFO",
@@ -3722,7 +3818,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3751,7 +3848,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Orrery",
@@ -3765,7 +3863,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3834,7 +3934,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3871,7 +3972,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3900,7 +4002,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Final Riddle: Fortune Teller",
@@ -3914,7 +4017,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Viewed Fortune",
@@ -3928,7 +4032,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3973,7 +4079,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Storage: Alchemy",
@@ -3987,7 +4094,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4041,7 +4149,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Storage: Gallows",
@@ -4055,7 +4164,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Puzzle Hint Found: Gallows Information Plaque",
@@ -4069,7 +4179,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4098,7 +4209,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Guillotine",
@@ -4112,7 +4224,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4149,7 +4263,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Mastermind Information Plaque",
@@ -4163,7 +4278,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4200,7 +4316,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4250,7 +4367,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Puzzle Solved Skull Dial Door",
@@ -4277,7 +4395,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4348,7 +4467,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "progress_type": "PRIORITY"
           }
         ]
       },
@@ -4397,7 +4518,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "progress_type": "PRIORITY"
           }
         ]
       },
@@ -4446,7 +4569,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "progress_type": "PRIORITY"
           }
         ]
       },
@@ -4495,7 +4620,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "progress_type": "PRIORITY"
           }
         ]
       },
@@ -4544,7 +4671,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "progress_type": "PRIORITY"
           }
         ]
       },
@@ -4593,7 +4722,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "progress_type": "PRIORITY"
           }
         ]
       },
@@ -4642,7 +4773,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "progress_type": "PRIORITY"
           }
         ]
       },
@@ -4691,7 +4824,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "progress_type": "PRIORITY"
           }
         ]
       },
@@ -4740,7 +4875,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "progress_type": "PRIORITY"
           }
         ]
       },
@@ -4760,7 +4897,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       }
@@ -4782,12 +4920,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Wax Pot Bottom": {
         "name": "Wax Pot Bottom",
@@ -4795,12 +4931,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ash Pot Bottom": {
         "name": "Ash Pot Bottom",
@@ -4808,12 +4942,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Oil Pot Bottom": {
         "name": "Oil Pot Bottom",
@@ -4821,12 +4953,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Cloth Pot Bottom": {
         "name": "Cloth Pot Bottom",
@@ -4834,12 +4964,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Wood Pot Bottom": {
         "name": "Wood Pot Bottom",
@@ -4847,12 +4975,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Crystal Pot Bottom": {
         "name": "Crystal Pot Bottom",
@@ -4860,12 +4986,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Lightning Pot Bottom": {
         "name": "Lightning Pot Bottom",
@@ -4873,12 +4997,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Sand Pot Bottom": {
         "name": "Sand Pot Bottom",
@@ -4886,12 +5008,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Metal Pot Bottom": {
         "name": "Metal Pot Bottom",
@@ -4899,12 +5019,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Water Pot Top": {
         "name": "Water Pot Top",
@@ -4912,12 +5030,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Wax Pot Top": {
         "name": "Wax Pot Top",
@@ -4925,12 +5041,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ash Pot Top": {
         "name": "Ash Pot Top",
@@ -4938,12 +5052,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Oil Pot Top": {
         "name": "Oil Pot Top",
@@ -4951,12 +5063,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Cloth Pot Top": {
         "name": "Cloth Pot Top",
@@ -4964,12 +5074,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Wood Pot Top": {
         "name": "Wood Pot Top",
@@ -4977,12 +5085,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Crystal Pot Top": {
         "name": "Crystal Pot Top",
@@ -4990,12 +5096,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Lightning Pot Top": {
         "name": "Lightning Pot Top",
@@ -5003,12 +5107,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Sand Pot Top": {
         "name": "Sand Pot Top",
@@ -5016,12 +5118,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Metal Pot Top": {
         "name": "Metal Pot Top",
@@ -5029,12 +5129,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Water Pot Complete": {
         "name": "Water Pot Complete",
@@ -5042,12 +5140,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Wax Pot Complete": {
         "name": "Wax Pot Complete",
@@ -5055,12 +5151,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ash Pot Complete": {
         "name": "Ash Pot Complete",
@@ -5068,12 +5162,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Oil Pot Complete": {
         "name": "Oil Pot Complete",
@@ -5081,12 +5173,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Cloth Pot Complete": {
         "name": "Cloth Pot Complete",
@@ -5094,12 +5184,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Wood Pot Complete": {
         "name": "Wood Pot Complete",
@@ -5107,12 +5195,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal Pot Complete": {
         "name": "Crystal Pot Complete",
@@ -5120,12 +5206,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Lightning Pot Complete": {
         "name": "Lightning Pot Complete",
@@ -5133,12 +5217,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Sand Pot Complete": {
         "name": "Sand Pot Complete",
@@ -5146,12 +5228,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Metal Pot Complete": {
         "name": "Metal Pot Complete",
@@ -5159,12 +5239,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Key for Office Elevator": {
         "name": "Key for Office Elevator",
@@ -5172,12 +5250,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key for Bedroom Elevator": {
         "name": "Key for Bedroom Elevator",
@@ -5185,12 +5261,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key for Three Floor Elevator": {
         "name": "Key for Three Floor Elevator",
@@ -5198,12 +5272,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key for Workshop": {
         "name": "Key for Workshop",
@@ -5211,12 +5283,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key for Office": {
         "name": "Key for Office",
@@ -5224,12 +5294,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key for Prehistoric Room": {
         "name": "Key for Prehistoric Room",
@@ -5237,12 +5305,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key for Greenhouse": {
         "name": "Key for Greenhouse",
@@ -5250,12 +5316,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key for Ocean Room": {
         "name": "Key for Ocean Room",
@@ -5263,12 +5327,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key for Projector Room": {
         "name": "Key for Projector Room",
@@ -5276,12 +5338,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key for Generator Room": {
         "name": "Key for Generator Room",
@@ -5289,12 +5349,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key for Egypt Room": {
         "name": "Key for Egypt Room",
@@ -5302,12 +5360,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key for Library": {
         "name": "Key for Library",
@@ -5315,12 +5371,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key for Shaman Room": {
         "name": "Key for Shaman Room",
@@ -5328,12 +5382,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key for UFO Room": {
         "name": "Key for UFO Room",
@@ -5341,12 +5393,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key for Torture Room": {
         "name": "Key for Torture Room",
@@ -5354,12 +5404,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key for Puzzle Room": {
         "name": "Key for Puzzle Room",
@@ -5367,12 +5415,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key for Bedroom": {
         "name": "Key for Bedroom",
@@ -5380,12 +5426,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key for Underground Lake": {
         "name": "Key for Underground Lake",
@@ -5393,12 +5437,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key for Janitor Closet": {
         "name": "Key for Janitor Closet",
@@ -5406,12 +5448,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key for Front Door": {
         "name": "Key for Front Door",
@@ -5419,12 +5459,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crawling": {
         "name": "Crawling",
@@ -5432,12 +5470,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Easier Lyre": {
         "name": "Easier Lyre",
@@ -5445,12 +5481,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 18
+        "max_count": 9,
+        "classification": "useful"
       },
       "Water Always Available in Lobby": {
         "name": "Water Always Available in Lobby",
@@ -5458,12 +5492,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Wax Always Available in Library": {
         "name": "Wax Always Available in Library",
@@ -5471,12 +5503,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Wax Always Available in Anansi Room": {
         "name": "Wax Always Available in Anansi Room",
@@ -5484,12 +5514,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Wax Always Available in Shaman Room": {
         "name": "Wax Always Available in Shaman Room",
@@ -5497,12 +5525,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ash Always Available in Office": {
         "name": "Ash Always Available in Office",
@@ -5510,12 +5536,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ash Always Available in Burial Room": {
         "name": "Ash Always Available in Burial Room",
@@ -5523,12 +5547,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Oil Always Available in Prehistoric Room": {
         "name": "Oil Always Available in Prehistoric Room",
@@ -5536,12 +5558,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Cloth Always Available in Egypt": {
         "name": "Cloth Always Available in Egypt",
@@ -5549,12 +5569,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Cloth Always Available in Burial Room": {
         "name": "Cloth Always Available in Burial Room",
@@ -5562,12 +5580,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Wood Always Available in Workshop": {
         "name": "Wood Always Available in Workshop",
@@ -5575,12 +5591,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Wood Always Available in Blue Maze": {
         "name": "Wood Always Available in Blue Maze",
@@ -5588,12 +5602,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Wood Always Available in Pegasus Room": {
         "name": "Wood Always Available in Pegasus Room",
@@ -5601,12 +5613,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Wood Always Available in Gods Room": {
         "name": "Wood Always Available in Gods Room",
@@ -5614,12 +5624,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal Always Available in Lobby": {
         "name": "Crystal Always Available in Lobby",
@@ -5627,12 +5635,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal Always Available in Ocean": {
         "name": "Crystal Always Available in Ocean",
@@ -5640,12 +5646,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Sand Always Available in Greenhouse": {
         "name": "Sand Always Available in Greenhouse",
@@ -5653,12 +5657,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Sand Always Available in Ocean": {
         "name": "Sand Always Available in Ocean",
@@ -5666,12 +5668,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Metal Always Available in Projector Room": {
         "name": "Metal Always Available in Projector Room",
@@ -5679,12 +5679,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Metal Always Available in Bedroom": {
         "name": "Metal Always Available in Bedroom",
@@ -5692,12 +5690,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Metal Always Available in Prehistoric": {
         "name": "Metal Always Available in Prehistoric",
@@ -5705,12 +5701,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Heal": {
         "name": "Heal",
@@ -5718,12 +5712,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "filler"
       },
       "Mt. Pleasant Tribune: 44 year Old Mystery Solved!": {
         "name": "Mt. Pleasant Tribune: 44 year Old Mystery Solved!",
@@ -5731,12 +5723,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mt. Pleasant Tribune: 45 year Old Mystery Solved!": {
         "name": "Mt. Pleasant Tribune: 45 year Old Mystery Solved!",
@@ -5744,12 +5734,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mt. Pleasant Tribune: 46 year Old Mystery Solved!": {
         "name": "Mt. Pleasant Tribune: 46 year Old Mystery Solved!",
@@ -5757,12 +5745,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystal Pot Bottom DUPE": {
         "name": "Crystal Pot Bottom DUPE",
@@ -5770,12 +5756,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Metal Pot Bottom DUPE": {
         "name": "Metal Pot Bottom DUPE",
@@ -5783,12 +5767,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ash Pot Bottom DUPE": {
         "name": "Ash Pot Bottom DUPE",
@@ -5796,12 +5778,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Water Pot Top DUPE": {
         "name": "Water Pot Top DUPE",
@@ -5809,12 +5789,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Oil Pot Top DUPE": {
         "name": "Oil Pot Top DUPE",
@@ -5822,12 +5800,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Sand Pot Bottom DUPE": {
         "name": "Sand Pot Bottom DUPE",
@@ -5835,12 +5811,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Empty": {
         "name": "Empty",
@@ -5848,12 +5822,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 3
+        "max_count": 3,
+        "classification": "filler"
       },
       "Water Pot Bottom DUPE": {
         "name": "Water Pot Bottom DUPE",
@@ -5861,12 +5833,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Wax Pot Top DUPE": {
         "name": "Wax Pot Top DUPE",
@@ -5874,12 +5844,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Cloth Pot Top DUPE": {
         "name": "Cloth Pot Top DUPE",
@@ -5887,12 +5855,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Lightning Pot Top DUPE": {
         "name": "Lightning Pot Top DUPE",
@@ -5900,12 +5866,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Wax Pot Bottom DUPE": {
         "name": "Wax Pot Bottom DUPE",
@@ -5913,12 +5877,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Cloth Pot Bottom DUPE": {
         "name": "Cloth Pot Bottom DUPE",
@@ -5926,12 +5888,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Sand Pot Top DUPE": {
         "name": "Sand Pot Top DUPE",
@@ -5939,12 +5899,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Metal Pot Top DUPE": {
         "name": "Metal Pot Top DUPE",
@@ -5952,12 +5910,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Oil Pot Bottom DUPE": {
         "name": "Oil Pot Bottom DUPE",
@@ -5965,12 +5921,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Wood Pot Bottom DUPE": {
         "name": "Wood Pot Bottom DUPE",
@@ -5978,12 +5932,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Lightning Pot Bottom DUPE": {
         "name": "Lightning Pot Bottom DUPE",
@@ -5991,12 +5943,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Wood Pot Top DUPE": {
         "name": "Wood Pot Top DUPE",
@@ -6004,12 +5954,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Crystal Pot Top DUPE": {
         "name": "Crystal Pot Top DUPE",
@@ -6017,12 +5965,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ash Pot Top DUPE": {
         "name": "Ash Pot Top DUPE",
@@ -6030,12 +5976,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Set Skull Dial: Prehistoric": {
         "name": "Set Skull Dial: Prehistoric",
@@ -6043,12 +5987,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Set Skull Dial: Tar River": {
         "name": "Set Skull Dial: Tar River",
@@ -6056,12 +5998,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Set Skull Dial: Egypt": {
         "name": "Set Skull Dial: Egypt",
@@ -6069,12 +6009,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Set Skull Dial: Burial": {
         "name": "Set Skull Dial: Burial",
@@ -6082,12 +6020,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Set Skull Dial: Gods Room": {
         "name": "Set Skull Dial: Gods Room",
@@ -6095,12 +6031,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Set Skull Dial: Werewolf": {
         "name": "Set Skull Dial: Werewolf",
@@ -6108,12 +6042,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Viewed Theater Movie": {
         "name": "Viewed Theater Movie",
@@ -6121,12 +6053,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Set Time": {
         "name": "Set Time",
@@ -6134,12 +6064,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Set Song": {
         "name": "Set Song",
@@ -6147,12 +6075,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Viewed Fortune": {
         "name": "Viewed Fortune",
@@ -6160,12 +6086,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Aligned Planets": {
         "name": "Aligned Planets",
@@ -6173,12 +6097,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Viewed Norse Stone": {
         "name": "Viewed Norse Stone",
@@ -6186,12 +6108,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Viewed Page 17": {
         "name": "Viewed Page 17",
@@ -6199,12 +6119,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Viewed Egyptian Hieroglyphics Explained": {
         "name": "Viewed Egyptian Hieroglyphics Explained",
@@ -6212,12 +6130,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Lost Your Head": {
         "name": "Lost Your Head",
@@ -6225,12 +6141,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -6242,70 +6156,70 @@
   "itempool_counts": {
     "1": {
       "Aligned Planets": 1,
-      "Ash Always Available in Burial Room": 2,
-      "Ash Always Available in Office": 2,
-      "Ash Pot Bottom": 2,
+      "Ash Always Available in Burial Room": 1,
+      "Ash Always Available in Office": 1,
+      "Ash Pot Bottom": 1,
       "Ash Pot Bottom DUPE": 1,
-      "Ash Pot Top": 2,
+      "Ash Pot Top": 1,
       "Ash Pot Top DUPE": 1,
-      "Cloth Always Available in Burial Room": 2,
-      "Cloth Always Available in Egypt": 2,
-      "Cloth Pot Bottom": 2,
+      "Cloth Always Available in Burial Room": 1,
+      "Cloth Always Available in Egypt": 1,
+      "Cloth Pot Bottom": 1,
       "Cloth Pot Bottom DUPE": 1,
-      "Cloth Pot Top": 2,
+      "Cloth Pot Top": 1,
       "Cloth Pot Top DUPE": 1,
-      "Crawling": 2,
-      "Crystal Always Available in Lobby": 2,
-      "Crystal Always Available in Ocean": 2,
-      "Crystal Pot Bottom": 2,
+      "Crawling": 1,
+      "Crystal Always Available in Lobby": 1,
+      "Crystal Always Available in Ocean": 1,
+      "Crystal Pot Bottom": 1,
       "Crystal Pot Bottom DUPE": 1,
-      "Crystal Pot Top": 2,
+      "Crystal Pot Top": 1,
       "Crystal Pot Top DUPE": 1,
-      "Easier Lyre": 18,
+      "Easier Lyre": 9,
       "Empty": 3,
-      "Heal": 12,
-      "Key for Bedroom": 2,
-      "Key for Bedroom Elevator": 2,
+      "Heal": 6,
+      "Key for Bedroom": 1,
+      "Key for Bedroom Elevator": 1,
       "Key for Egypt Room": 1,
-      "Key for Generator Room": 2,
-      "Key for Greenhouse": 2,
-      "Key for Janitor Closet": 2,
-      "Key for Library": 2,
-      "Key for Ocean Room": 2,
-      "Key for Office": 2,
-      "Key for Office Elevator": 2,
-      "Key for Prehistoric Room": 2,
-      "Key for Projector Room": 2,
-      "Key for Puzzle Room": 2,
-      "Key for Shaman Room": 2,
+      "Key for Generator Room": 1,
+      "Key for Greenhouse": 1,
+      "Key for Janitor Closet": 1,
+      "Key for Library": 1,
+      "Key for Ocean Room": 1,
+      "Key for Office": 1,
+      "Key for Office Elevator": 1,
+      "Key for Prehistoric Room": 1,
+      "Key for Projector Room": 1,
+      "Key for Puzzle Room": 1,
+      "Key for Shaman Room": 1,
       "Key for Three Floor Elevator": 1,
-      "Key for Torture Room": 2,
-      "Key for UFO Room": 2,
-      "Key for Underground Lake": 2,
-      "Key for Workshop": 2,
-      "Lightning Pot Bottom": 2,
+      "Key for Torture Room": 1,
+      "Key for UFO Room": 1,
+      "Key for Underground Lake": 1,
+      "Key for Workshop": 1,
+      "Lightning Pot Bottom": 1,
       "Lightning Pot Bottom DUPE": 1,
-      "Lightning Pot Top": 2,
+      "Lightning Pot Top": 1,
       "Lightning Pot Top DUPE": 1,
       "Lost Your Head": 1,
-      "Metal Always Available in Bedroom": 2,
-      "Metal Always Available in Prehistoric": 2,
-      "Metal Always Available in Projector Room": 2,
-      "Metal Pot Bottom": 2,
+      "Metal Always Available in Bedroom": 1,
+      "Metal Always Available in Prehistoric": 1,
+      "Metal Always Available in Projector Room": 1,
+      "Metal Pot Bottom": 1,
       "Metal Pot Bottom DUPE": 1,
-      "Metal Pot Top": 2,
+      "Metal Pot Top": 1,
       "Metal Pot Top DUPE": 1,
       "Mt. Pleasant Tribune: 45 year Old Mystery Solved!": 1,
-      "Oil Always Available in Prehistoric Room": 2,
-      "Oil Pot Bottom": 2,
+      "Oil Always Available in Prehistoric Room": 1,
+      "Oil Pot Bottom": 1,
       "Oil Pot Bottom DUPE": 1,
-      "Oil Pot Top": 2,
+      "Oil Pot Top": 1,
       "Oil Pot Top DUPE": 1,
-      "Sand Always Available in Greenhouse": 2,
-      "Sand Always Available in Ocean": 2,
-      "Sand Pot Bottom": 2,
+      "Sand Always Available in Greenhouse": 1,
+      "Sand Always Available in Ocean": 1,
+      "Sand Pot Bottom": 1,
       "Sand Pot Bottom DUPE": 1,
-      "Sand Pot Top": 2,
+      "Sand Pot Top": 1,
       "Sand Pot Top DUPE": 1,
       "Set Skull Dial: Burial": 1,
       "Set Skull Dial: Egypt": 1,
@@ -6320,25 +6234,25 @@
       "Viewed Norse Stone": 1,
       "Viewed Page 17": 1,
       "Viewed Theater Movie": 1,
-      "Water Always Available in Lobby": 2,
-      "Water Pot Bottom": 2,
+      "Water Always Available in Lobby": 1,
+      "Water Pot Bottom": 1,
       "Water Pot Bottom DUPE": 1,
-      "Water Pot Top": 2,
+      "Water Pot Top": 1,
       "Water Pot Top DUPE": 1,
-      "Wax Always Available in Anansi Room": 2,
-      "Wax Always Available in Library": 2,
-      "Wax Always Available in Shaman Room": 2,
-      "Wax Pot Bottom": 2,
+      "Wax Always Available in Anansi Room": 1,
+      "Wax Always Available in Library": 1,
+      "Wax Always Available in Shaman Room": 1,
+      "Wax Pot Bottom": 1,
       "Wax Pot Bottom DUPE": 1,
-      "Wax Pot Top": 2,
+      "Wax Pot Top": 1,
       "Wax Pot Top DUPE": 1,
-      "Wood Always Available in Blue Maze": 2,
-      "Wood Always Available in Gods Room": 2,
-      "Wood Always Available in Pegasus Room": 2,
-      "Wood Always Available in Workshop": 2,
-      "Wood Pot Bottom": 2,
+      "Wood Always Available in Blue Maze": 1,
+      "Wood Always Available in Gods Room": 1,
+      "Wood Always Available in Pegasus Room": 1,
+      "Wood Always Available in Workshop": 1,
+      "Wood Pot Bottom": 1,
       "Wood Pot Bottom DUPE": 1,
-      "Wood Pot Top": 2,
+      "Wood Pot Top": 1,
       "Wood Pot Top DUPE": 1
     }
   },
@@ -6362,5 +6276,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

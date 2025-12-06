@@ -43,7 +43,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blood Kelp Trench Wreck - Inside Databox",
@@ -72,7 +73,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blood Kelp Trench Wreck - PDA",
@@ -101,7 +103,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bulb Zone West Wreck - Outside Databox",
@@ -130,7 +133,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bulb Zone West Wreck - Under Databox",
@@ -159,7 +163,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bulb Zone West Wreck - Inside Databox",
@@ -188,7 +193,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bulb Zone West Wreck - PDA",
@@ -217,7 +223,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bulb Zone East Wreck - Databox",
@@ -246,7 +253,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dunes North Wreck - Outside Databox",
@@ -275,7 +283,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dunes North Wreck - Office Databox",
@@ -304,7 +313,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dunes North Wreck - PDA",
@@ -333,7 +343,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dunes North Wreck - Cargo Databox",
@@ -362,7 +373,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dunes West Wreck - Databox",
@@ -391,7 +403,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dunes East Wreck - Outside Databox",
@@ -420,7 +433,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dunes East Wreck - Inside Databox",
@@ -449,7 +463,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grand Reef North Wreck - Outside Databox",
@@ -478,7 +493,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grand Reef North Wreck - Elevator Databox",
@@ -507,7 +523,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grand Reef North Wreck - Bottom Databox",
@@ -536,7 +553,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grand Reef North Wreck - Hangar PDA",
@@ -565,7 +583,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grand Reef South Wreck - Trench Databox",
@@ -594,7 +613,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grand Reef South Wreck - Comms Databox",
@@ -623,7 +643,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grand Reef South Wreck - Outside Databox",
@@ -652,7 +673,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grand Reef South Wreck - PDA",
@@ -681,7 +703,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grassy Plateaus South Wreck - Databox",
@@ -710,7 +733,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Grassy Plateaus South Wreck - PDA",
@@ -739,7 +763,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grassy Plateaus East Wreck - Breach Databox",
@@ -768,7 +793,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grassy Plateaus East Wreck - Hangar Databox",
@@ -797,7 +823,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grassy Plateaus West Wreck - Locker PDA",
@@ -826,7 +853,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grassy Plateaus West Wreck - Data Terminal",
@@ -855,7 +883,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grassy Plateaus Southwest Wreck - Databox",
@@ -884,7 +913,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Safe Shallows Wreck - PDA",
@@ -913,7 +943,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kelp Forest Wreck - Databox",
@@ -942,7 +973,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kelp Forest Wreck - PDA",
@@ -971,7 +1003,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mountains West Wreck - Outside Databox",
@@ -1000,7 +1033,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mountains West Wreck - Data Terminal",
@@ -1029,7 +1063,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mountains West Wreck - Hangar Databox",
@@ -1058,7 +1093,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mountains West Wreck - Office Databox",
@@ -1087,7 +1123,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mountains East Wreck - Comms Databox",
@@ -1116,7 +1153,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mountains East Wreck - Outside Databox",
@@ -1145,7 +1183,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Northwestern Mushroom Forest Wreck - Cargo Databox",
@@ -1174,7 +1213,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Northwestern Mushroom Forest Wreck - Office Databox",
@@ -1203,7 +1243,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Northwestern Mushroom Forest Wreck - PDA",
@@ -1232,7 +1273,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sea Treader's Path Wreck - Outside Databox",
@@ -1261,7 +1303,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sea Treader's Path Wreck - Hangar Databox",
@@ -1290,7 +1333,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sea Treader's Path Wreck - Lobby Databox",
@@ -1319,7 +1363,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sea Treader's Path Wreck - PDA",
@@ -1348,7 +1393,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sparse Reef Wreck - Locker Databox",
@@ -1377,7 +1423,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sparse Reef Wreck - Outside Databox",
@@ -1406,7 +1453,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sparse Reef Wreck - Lab Databox",
@@ -1435,7 +1483,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underwater Islands Wreck - Outside Databox",
@@ -1464,7 +1513,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underwater Islands Wreck - Hangar Databox",
@@ -1493,7 +1543,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underwater Islands Wreck - Data Terminal",
@@ -1522,7 +1573,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underwater Islands Wreck - Cable Databox",
@@ -1551,7 +1603,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underwater Islands Wreck - Pipes Databox 1",
@@ -1581,7 +1634,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underwater Islands Wreck - Pipes Databox 2",
@@ -1611,7 +1665,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Deep Grand Reef - Bedroom Databox",
@@ -1640,7 +1695,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Deep Grand Reef - Observatory Databox",
@@ -1669,7 +1725,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Deep Grand Reef - Bedroom PDA",
@@ -1698,7 +1755,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Deep Grand Reef - Outside PDA",
@@ -1727,7 +1785,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Deep Grand Reef - Observatory PDA",
@@ -1756,7 +1815,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Deep Grand Reef - Lab PDA",
@@ -1785,7 +1845,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Floating Island - Lake PDA",
@@ -1814,7 +1875,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Floating Island - Databox",
@@ -1843,7 +1905,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Floating Island - Room PDA",
@@ -1872,7 +1935,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Floating Island - Green Wall PDA",
@@ -1901,7 +1965,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Floating Island - Corridor PDA",
@@ -1930,7 +1995,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Floating Island - North Observatory PDA",
@@ -1959,7 +2025,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Floating Island - South Observatory PDA",
@@ -1988,7 +2055,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Jellyshroom Cave - PDA",
@@ -2017,7 +2085,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Jellyshroom Cave - Bedroom Databox",
@@ -2046,7 +2115,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Jellyshroom Cave - Detached PDA",
@@ -2075,7 +2145,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Jellyshroom Cave - Office PDA",
@@ -2104,7 +2175,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Jellyshroom Cave - Locker PDA",
@@ -2133,7 +2205,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Jellyshroom Cave - Bedroom PDA",
@@ -2162,7 +2235,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Jellyshroom Cave - Observatory PDA",
@@ -2191,7 +2265,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lifepod 2 - Databox",
@@ -2220,7 +2295,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lifepod 2 - PDA",
@@ -2249,7 +2325,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lifepod 3 - Databox",
@@ -2278,7 +2355,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lifepod 3 - PDA",
@@ -2307,7 +2385,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lifepod 4 - Databox",
@@ -2336,7 +2415,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lifepod 4 - PDA",
@@ -2365,7 +2445,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lifepod 6 - Databox",
@@ -2394,7 +2475,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lifepod 6 - Inside PDA",
@@ -2423,7 +2505,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lifepod 6 - Outside PDA",
@@ -2452,7 +2535,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lifepod 7 - PDA",
@@ -2481,7 +2565,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lifepod 12 - Databox",
@@ -2510,7 +2595,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lifepod 12 - PDA",
@@ -2539,7 +2625,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lifepod 13 - Databox",
@@ -2568,7 +2655,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lifepod 13 - PDA",
@@ -2597,7 +2685,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lifepod 17 - PDA",
@@ -2626,7 +2715,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lifepod 19 - Databox",
@@ -2655,7 +2745,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lifepod 19 - Outside PDA",
@@ -2684,7 +2775,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lifepod 19 - Inside PDA",
@@ -2713,7 +2805,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aurora Seamoth Bay - Upgrade Console",
@@ -2743,7 +2836,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aurora Drive Room - Upgrade Console",
@@ -2773,7 +2867,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aurora Prawn Suit Bay - Upgrade Console",
@@ -2803,7 +2898,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aurora - Office PDA",
@@ -2832,7 +2928,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aurora - Corridor PDA",
@@ -2861,7 +2958,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aurora - Cargo Bay PDA",
@@ -2891,7 +2989,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aurora - Seamoth Bay PDA",
@@ -2921,7 +3020,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aurora - Medkit Locker PDA",
@@ -2951,7 +3051,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aurora - Locker PDA",
@@ -2981,7 +3082,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aurora - Canteen PDA",
@@ -3011,7 +3113,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aurora - Cabin 4 PDA",
@@ -3041,7 +3144,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aurora - Cabin 7 PDA",
@@ -3071,7 +3175,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aurora - Cabin 1 PDA",
@@ -3101,7 +3206,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aurora - Captain PDA",
@@ -3131,7 +3237,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aurora - Ring PDA",
@@ -3161,7 +3268,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aurora - Lab PDA",
@@ -3191,7 +3299,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aurora - Office Data Terminal",
@@ -3220,7 +3329,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aurora - Captain Data Terminal",
@@ -3250,7 +3360,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Aurora - Battery Room Data Terminal",
@@ -3280,7 +3391,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aurora - Lab Data Terminal",
@@ -3310,7 +3422,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Quarantine Enforcement Platform's - Upper Alien Data Terminal",
@@ -3339,7 +3452,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Quarantine Enforcement Platform's - Mid Alien Data Terminal",
@@ -3368,7 +3482,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dunes Sanctuary - Alien Data Terminal",
@@ -3397,7 +3512,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Deep Sparse Reef Sanctuary - Alien Data Terminal",
@@ -3426,7 +3542,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Northern Blood Kelp Zone Sanctuary - Alien Data Terminal",
@@ -3455,7 +3572,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lost River Laboratory Cache - Alien Data Terminal",
@@ -3484,7 +3602,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Disease Research Facility - Upper Alien Data Terminal",
@@ -3513,7 +3632,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Disease Research Facility - Mid Alien Data Terminal",
@@ -3542,7 +3662,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Disease Research Facility - Lower Alien Data Terminal",
@@ -3571,7 +3692,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alien Thermal Plant - Entrance Alien Data Terminal",
@@ -3600,7 +3722,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alien Thermal Plant - Green Alien Data Terminal",
@@ -3629,7 +3752,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alien Thermal Plant - Yellow Alien Data Terminal",
@@ -3658,7 +3782,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Primary Containment Facility's Antechamber - Alien Data Terminal",
@@ -3687,7 +3812,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Primary Containment Facility's Egg Laboratory - Alien Data Terminal",
@@ -3716,7 +3842,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Primary Containment Facility's Pipe Room - Alien Data Terminal",
@@ -3745,7 +3872,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grassy Plateaus West Wreck - Beam PDA",
@@ -3774,7 +3902,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Floating Island - Cave Entrance PDA",
@@ -3803,7 +3932,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Degasi Seabase - Jellyshroom Cave - Outside PDA",
@@ -3832,7 +3962,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Neptune Launch",
@@ -3898,7 +4029,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Disable Quarantine",
@@ -3921,7 +4053,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Full Infection",
@@ -3944,7 +4077,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Repair Aurora Drive",
@@ -3968,7 +4102,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       }
@@ -3990,12 +4125,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Lightweight High Capacity Tank": {
         "name": "Lightweight High Capacity Tank",
@@ -4003,12 +4136,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Vehicle Upgrade Console": {
         "name": "Vehicle Upgrade Console",
@@ -4016,12 +4147,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ultra Glide Fins": {
         "name": "Ultra Glide Fins",
@@ -4029,12 +4158,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Cyclops Sonar Upgrade": {
         "name": "Cyclops Sonar Upgrade",
@@ -4042,12 +4169,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Reinforced Dive Suit": {
         "name": "Reinforced Dive Suit",
@@ -4055,12 +4180,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Cyclops Thermal Reactor Module": {
         "name": "Cyclops Thermal Reactor Module",
@@ -4068,12 +4191,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Water Filtration Suit": {
         "name": "Water Filtration Suit",
@@ -4081,12 +4202,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Alien Containment": {
         "name": "Alien Containment",
@@ -4094,12 +4213,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Creature Decoy": {
         "name": "Creature Decoy",
@@ -4107,12 +4224,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Cyclops Fire Suppression System": {
         "name": "Cyclops Fire Suppression System",
@@ -4120,12 +4235,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Swim Charge Fins": {
         "name": "Swim Charge Fins",
@@ -4133,12 +4246,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Repulsion Cannon": {
         "name": "Repulsion Cannon",
@@ -4146,12 +4257,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Cyclops Decoy Tube Upgrade": {
         "name": "Cyclops Decoy Tube Upgrade",
@@ -4159,12 +4268,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Cyclops Shield Generator": {
         "name": "Cyclops Shield Generator",
@@ -4172,12 +4279,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Cyclops Depth Module MK1": {
         "name": "Cyclops Depth Module MK1",
@@ -4185,12 +4290,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Cyclops Docking Bay Repair Module": {
         "name": "Cyclops Docking Bay Repair Module",
@@ -4198,12 +4301,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Battery Charger fragment": {
         "name": "Battery Charger fragment",
@@ -4211,12 +4312,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "useful"
       },
       "Beacon Fragment": {
         "name": "Beacon Fragment",
@@ -4224,12 +4323,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Bioreactor Fragment": {
         "name": "Bioreactor Fragment",
@@ -4237,12 +4334,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "useful"
       },
       "Cyclops Bridge Fragment": {
         "name": "Cyclops Bridge Fragment",
@@ -4250,12 +4345,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5,
+        "classification": "progression"
       },
       "Cyclops Engine Fragment": {
         "name": "Cyclops Engine Fragment",
@@ -4263,12 +4356,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5,
+        "classification": "progression"
       },
       "Cyclops Hull Fragment": {
         "name": "Cyclops Hull Fragment",
@@ -4276,12 +4367,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5,
+        "classification": "progression"
       },
       "Grav Trap Fragment": {
         "name": "Grav Trap Fragment",
@@ -4289,12 +4378,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Laser Cutter Fragment": {
         "name": "Laser Cutter Fragment",
@@ -4302,12 +4389,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "progression"
       },
       "Light Stick Fragment": {
         "name": "Light Stick Fragment",
@@ -4315,12 +4400,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mobile Vehicle Bay Fragment": {
         "name": "Mobile Vehicle Bay Fragment",
@@ -4328,12 +4411,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "progression"
       },
       "Modification Station Fragment": {
         "name": "Modification Station Fragment",
@@ -4341,12 +4422,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "progression"
       },
       "Moonpool Fragment": {
         "name": "Moonpool Fragment",
@@ -4354,12 +4433,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression"
       },
       "Nuclear Reactor Fragment": {
         "name": "Nuclear Reactor Fragment",
@@ -4367,12 +4444,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "useful"
       },
       "Power Cell Charger Fragment": {
         "name": "Power Cell Charger Fragment",
@@ -4380,12 +4455,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "useful"
       },
       "Power Transmitter Fragment": {
         "name": "Power Transmitter Fragment",
@@ -4393,12 +4466,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Prawn Suit Fragment": {
         "name": "Prawn Suit Fragment",
@@ -4406,12 +4477,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "progression"
       },
       "Prawn Suit Drill Arm Fragment": {
         "name": "Prawn Suit Drill Arm Fragment",
@@ -4419,12 +4488,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "useful"
       },
       "Prawn Suit Grappling Arm Fragment": {
         "name": "Prawn Suit Grappling Arm Fragment",
@@ -4432,12 +4499,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "useful"
       },
       "Prawn Suit Propulsion Cannon Fragment": {
         "name": "Prawn Suit Propulsion Cannon Fragment",
@@ -4445,12 +4510,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "useful"
       },
       "Prawn Suit Torpedo Arm Fragment": {
         "name": "Prawn Suit Torpedo Arm Fragment",
@@ -4458,12 +4521,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "useful"
       },
       "Scanner Room Fragment": {
         "name": "Scanner Room Fragment",
@@ -4471,12 +4532,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "useful"
       },
       "Seamoth Fragment": {
         "name": "Seamoth Fragment",
@@ -4484,12 +4543,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "progression"
       },
       "Stasis Rifle Fragment": {
         "name": "Stasis Rifle Fragment",
@@ -4497,12 +4554,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Thermal Plant Fragment": {
         "name": "Thermal Plant Fragment",
@@ -4510,12 +4565,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "useful"
       },
       "Seaglide Fragment": {
         "name": "Seaglide Fragment",
@@ -4523,12 +4576,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "progression"
       },
       "Radiation Suit": {
         "name": "Radiation Suit",
@@ -4536,12 +4587,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Propulsion Cannon Fragment": {
         "name": "Propulsion Cannon Fragment",
@@ -4549,12 +4598,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Neptune Launch Platform": {
         "name": "Neptune Launch Platform",
@@ -4562,12 +4609,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "Ion Power Cell": {
         "name": "Ion Power Cell",
@@ -4575,12 +4620,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Exterior Growbed": {
         "name": "Exterior Growbed",
@@ -4588,12 +4631,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Picture Frame": {
         "name": "Picture Frame",
@@ -4601,12 +4642,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bench": {
         "name": "Bench",
@@ -4614,12 +4653,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Basic Plant Pot": {
         "name": "Basic Plant Pot",
@@ -4627,12 +4664,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Interior Growbed": {
         "name": "Interior Growbed",
@@ -4640,12 +4675,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Plant Shelf": {
         "name": "Plant Shelf",
@@ -4653,12 +4686,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Observatory": {
         "name": "Observatory",
@@ -4666,12 +4697,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Multipurpose Room": {
         "name": "Multipurpose Room",
@@ -4679,12 +4708,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Bulkhead": {
         "name": "Bulkhead",
@@ -4692,12 +4719,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Spotlight": {
         "name": "Spotlight",
@@ -4705,12 +4730,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Desk": {
         "name": "Desk",
@@ -4718,12 +4741,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swivel Chair": {
         "name": "Swivel Chair",
@@ -4731,12 +4752,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Office Chair": {
         "name": "Office Chair",
@@ -4744,12 +4763,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Command Chair": {
         "name": "Command Chair",
@@ -4757,12 +4774,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Counter": {
         "name": "Counter",
@@ -4770,12 +4785,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Single Bed": {
         "name": "Single Bed",
@@ -4783,12 +4796,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Basic Double Bed": {
         "name": "Basic Double Bed",
@@ -4796,12 +4807,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quilted Double Bed": {
         "name": "Quilted Double Bed",
@@ -4809,12 +4818,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Coffee Vending Machine": {
         "name": "Coffee Vending Machine",
@@ -4822,12 +4829,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Trash Can": {
         "name": "Trash Can",
@@ -4835,12 +4840,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Floodlight": {
         "name": "Floodlight",
@@ -4848,12 +4851,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bar Table": {
         "name": "Bar Table",
@@ -4861,12 +4862,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Vending Machine": {
         "name": "Vending Machine",
@@ -4874,12 +4873,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Single Wall Shelf": {
         "name": "Single Wall Shelf",
@@ -4887,12 +4884,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Wall Shelves": {
         "name": "Wall Shelves",
@@ -4900,12 +4895,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Round Plant Pot": {
         "name": "Round Plant Pot",
@@ -4913,12 +4906,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Chic Plant Pot": {
         "name": "Chic Plant Pot",
@@ -4926,12 +4917,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Nuclear Waste Disposal": {
         "name": "Nuclear Waste Disposal",
@@ -4939,12 +4928,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Wall Planter": {
         "name": "Wall Planter",
@@ -4952,12 +4939,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ion Battery": {
         "name": "Ion Battery",
@@ -4965,12 +4950,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Neptune Gantry": {
         "name": "Neptune Gantry",
@@ -4978,12 +4961,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "Neptune Boosters": {
         "name": "Neptune Boosters",
@@ -4991,12 +4972,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "Neptune Fuel Reserve": {
         "name": "Neptune Fuel Reserve",
@@ -5004,12 +4983,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "Neptune Cockpit": {
         "name": "Neptune Cockpit",
@@ -5017,12 +4994,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "Water Filtration Machine": {
         "name": "Water Filtration Machine",
@@ -5030,12 +5005,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ultra High Capacity Tank": {
         "name": "Ultra High Capacity Tank",
@@ -5043,12 +5016,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Large Room": {
         "name": "Large Room",
@@ -5056,12 +5027,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Large Room Glass Dome": {
         "name": "Large Room Glass Dome",
@@ -5069,12 +5038,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Multipurpose Room Glass Dome": {
         "name": "Multipurpose Room Glass Dome",
@@ -5082,12 +5049,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Partition": {
         "name": "Partition",
@@ -5095,12 +5060,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Partition Door": {
         "name": "Partition Door",
@@ -5108,12 +5071,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Furniture": {
         "name": "Furniture",
@@ -5121,12 +5082,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Farming": {
         "name": "Farming",
@@ -5134,12 +5093,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Resources Bundle": {
         "name": "Resources Bundle",
@@ -5147,12 +5104,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Titanium": {
         "name": "Titanium",
@@ -5160,12 +5115,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Copper Ore": {
         "name": "Copper Ore",
@@ -5173,12 +5126,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Silver Ore": {
         "name": "Silver Ore",
@@ -5186,12 +5137,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Gold": {
         "name": "Gold",
@@ -5199,12 +5148,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Lead": {
         "name": "Lead",
@@ -5212,12 +5159,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Diamond": {
         "name": "Diamond",
@@ -5225,12 +5170,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Lithium": {
         "name": "Lithium",
@@ -5238,12 +5181,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ruby": {
         "name": "Ruby",
@@ -5251,12 +5192,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Nickel Ore": {
         "name": "Nickel Ore",
@@ -5264,12 +5203,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Crystalline Sulfur": {
         "name": "Crystalline Sulfur",
@@ -5277,12 +5214,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Salt Deposit": {
         "name": "Salt Deposit",
@@ -5290,12 +5225,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Kyanite": {
         "name": "Kyanite",
@@ -5303,12 +5236,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Magnetite": {
         "name": "Magnetite",
@@ -5316,12 +5247,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Reactor Rod": {
         "name": "Reactor Rod",
@@ -5329,12 +5258,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Victory": {
         "name": "Victory",
@@ -5342,12 +5269,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Disable Quarantine": {
         "name": "Disable Quarantine",
@@ -5355,12 +5280,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Full Infection": {
         "name": "Full Infection",
@@ -5368,12 +5291,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Repair Aurora Drive": {
         "name": "Repair Aurora Drive",
@@ -5381,12 +5302,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -5397,80 +5316,80 @@
   },
   "itempool_counts": {
     "1": {
-      "Alien Containment": 2,
-      "Battery Charger fragment": 4,
-      "Beacon Fragment": 4,
-      "Bioreactor Fragment": 4,
-      "Bulkhead": 2,
-      "Compass": 2,
-      "Creature Decoy": 2,
-      "Crystalline Sulfur": 4,
-      "Cyclops Bridge Fragment": 10,
-      "Cyclops Decoy Tube Upgrade": 2,
-      "Cyclops Depth Module MK1": 2,
-      "Cyclops Docking Bay Repair Module": 2,
-      "Cyclops Engine Fragment": 10,
-      "Cyclops Fire Suppression System": 2,
-      "Cyclops Hull Fragment": 10,
-      "Cyclops Shield Generator": 2,
-      "Cyclops Sonar Upgrade": 2,
-      "Cyclops Thermal Reactor Module": 2,
-      "Diamond": 2,
+      "Alien Containment": 1,
+      "Battery Charger fragment": 2,
+      "Beacon Fragment": 2,
+      "Bioreactor Fragment": 2,
+      "Bulkhead": 1,
+      "Compass": 1,
+      "Creature Decoy": 1,
+      "Crystalline Sulfur": 2,
+      "Cyclops Bridge Fragment": 5,
+      "Cyclops Decoy Tube Upgrade": 1,
+      "Cyclops Depth Module MK1": 1,
+      "Cyclops Docking Bay Repair Module": 1,
+      "Cyclops Engine Fragment": 5,
+      "Cyclops Fire Suppression System": 1,
+      "Cyclops Hull Fragment": 5,
+      "Cyclops Shield Generator": 1,
+      "Cyclops Sonar Upgrade": 1,
+      "Cyclops Thermal Reactor Module": 1,
+      "Diamond": 1,
       "Disable Quarantine": 1,
-      "Exterior Growbed": 4,
-      "Farming": 4,
-      "Floodlight": 2,
+      "Exterior Growbed": 2,
+      "Farming": 2,
+      "Floodlight": 1,
       "Full Infection": 1,
-      "Furniture": 4,
-      "Gold": 2,
-      "Grav Trap Fragment": 4,
-      "Ion Battery": 2,
-      "Ion Power Cell": 2,
-      "Kyanite": 2,
-      "Large Room": 2,
-      "Laser Cutter Fragment": 8,
-      "Lightweight High Capacity Tank": 2,
-      "Lithium": 2,
-      "Mobile Vehicle Bay Fragment": 12,
-      "Modification Station Fragment": 8,
-      "Moonpool Fragment": 6,
-      "Multipurpose Room": 2,
-      "Neptune Boosters": 2,
-      "Neptune Cockpit": 2,
-      "Neptune Fuel Reserve": 2,
-      "Neptune Gantry": 2,
+      "Furniture": 2,
+      "Gold": 1,
+      "Grav Trap Fragment": 2,
+      "Ion Battery": 1,
+      "Ion Power Cell": 1,
+      "Kyanite": 1,
+      "Large Room": 1,
+      "Laser Cutter Fragment": 4,
+      "Lightweight High Capacity Tank": 1,
+      "Lithium": 1,
+      "Mobile Vehicle Bay Fragment": 6,
+      "Modification Station Fragment": 4,
+      "Moonpool Fragment": 3,
+      "Multipurpose Room": 1,
+      "Neptune Boosters": 1,
+      "Neptune Cockpit": 1,
+      "Neptune Fuel Reserve": 1,
+      "Neptune Gantry": 1,
       "Neptune Launch Platform": 1,
-      "Nuclear Reactor Fragment": 6,
-      "Observatory": 2,
-      "Power Cell Charger Fragment": 4,
-      "Power Transmitter Fragment": 2,
-      "Prawn Suit Drill Arm Fragment": 4,
-      "Prawn Suit Fragment": 14,
-      "Prawn Suit Grappling Arm Fragment": 4,
-      "Prawn Suit Propulsion Cannon Fragment": 4,
-      "Prawn Suit Torpedo Arm Fragment": 4,
-      "Propulsion Cannon Fragment": 4,
-      "Radiation Suit": 2,
-      "Reinforced Dive Suit": 2,
+      "Nuclear Reactor Fragment": 3,
+      "Observatory": 1,
+      "Power Cell Charger Fragment": 2,
+      "Power Transmitter Fragment": 1,
+      "Prawn Suit Drill Arm Fragment": 2,
+      "Prawn Suit Fragment": 7,
+      "Prawn Suit Grappling Arm Fragment": 2,
+      "Prawn Suit Propulsion Cannon Fragment": 2,
+      "Prawn Suit Torpedo Arm Fragment": 2,
+      "Propulsion Cannon Fragment": 2,
+      "Radiation Suit": 1,
+      "Reinforced Dive Suit": 1,
       "Repair Aurora Drive": 1,
-      "Repulsion Cannon": 2,
-      "Resources Bundle": 4,
-      "Salt Deposit": 2,
-      "Scanner Room Fragment": 6,
-      "Seaglide Fragment": 8,
-      "Seamoth Fragment": 12,
-      "Silver Ore": 4,
-      "Spotlight": 2,
-      "Stasis Rifle Fragment": 4,
-      "Swim Charge Fins": 2,
-      "Thermal Plant Fragment": 4,
-      "Titanium": 2,
-      "Ultra Glide Fins": 2,
-      "Ultra High Capacity Tank": 2,
-      "Vehicle Upgrade Console": 2,
+      "Repulsion Cannon": 1,
+      "Resources Bundle": 2,
+      "Salt Deposit": 1,
+      "Scanner Room Fragment": 3,
+      "Seaglide Fragment": 4,
+      "Seamoth Fragment": 6,
+      "Silver Ore": 2,
+      "Spotlight": 1,
+      "Stasis Rifle Fragment": 2,
+      "Swim Charge Fins": 1,
+      "Thermal Plant Fragment": 2,
+      "Titanium": 1,
+      "Ultra Glide Fins": 1,
+      "Ultra High Capacity Tank": 1,
+      "Vehicle Upgrade Console": 1,
       "Victory": 1,
-      "Water Filtration Machine": 2,
-      "Water Filtration Suit": 2
+      "Water Filtration Machine": 1,
+      "Water Filtration Suit": 1
     }
   },
   "progression_mapping": {
@@ -5493,5 +5412,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

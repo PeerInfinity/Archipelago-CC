@@ -200,7 +200,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Intro Checkpoint",
@@ -220,7 +221,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -315,7 +317,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "South-East Tower Top Strawberry",
@@ -335,7 +338,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Theo Strawberry",
@@ -355,7 +359,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Fall Through Spike Floor Strawberry",
@@ -375,7 +380,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "South-West Dash Refills Strawberry",
@@ -395,7 +401,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "South-East Tower Side Strawberry",
@@ -415,7 +422,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Theo Tower Lower Cassette Strawberry",
@@ -435,7 +443,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Theo Tower Upper Cassette Strawberry",
@@ -455,7 +464,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "You Are Ready Cassette Strawberry",
@@ -475,7 +485,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Granny Checkpoint",
@@ -495,7 +506,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "South-East Tower Checkpoint",
@@ -515,7 +527,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Climb Sign Checkpoint",
@@ -535,7 +548,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -613,7 +627,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Falling Blocks Strawberry",
@@ -633,7 +648,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Girders Strawberry",
@@ -653,7 +669,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Breakable Blocks Strawberry",
@@ -673,7 +690,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "South End of Bridge Cassette Strawberry",
@@ -693,7 +711,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "North End of Bridge Cassette Strawberry",
@@ -713,7 +732,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Freeway Checkpoint",
@@ -733,7 +753,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Freeway Feather Checkpoint",
@@ -753,7 +774,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -797,7 +819,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -892,7 +915,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Feather Chain Strawberry",
@@ -912,7 +936,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Feather Hidden Strawberry",
@@ -932,7 +957,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Distant Feather Cassette Strawberry",
@@ -952,7 +978,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Feather Arches Cassette Strawberry",
@@ -972,7 +999,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Feather Maze Checkpoint",
@@ -992,7 +1020,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1070,7 +1099,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Double Dash Spike Climb Strawberry",
@@ -1090,7 +1120,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Double Dash Spring Strawberry",
@@ -1110,7 +1141,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cassette Hidden in the House Strawberry",
@@ -1130,7 +1162,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Double Dash House Checkpoint",
@@ -1150,7 +1183,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1245,7 +1279,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Badeline Tower Breakable Bottom Strawberry",
@@ -1265,7 +1300,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1377,7 +1413,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Badeline Tower Checkpoint",
@@ -1397,7 +1434,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1475,7 +1513,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Badeline Island Checkpoint",
@@ -1495,7 +1534,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       }
@@ -1517,12 +1557,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 40
+        "max_count": 20
       },
       "Raspberry": {
         "name": "Raspberry",
@@ -1530,12 +1568,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Dash Refills": {
         "name": "Dash Refills",
@@ -1543,12 +1579,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Double Dash Refills": {
         "name": "Double Dash Refills",
@@ -1556,12 +1590,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Feathers": {
         "name": "Feathers",
@@ -1569,12 +1601,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Coins": {
         "name": "Coins",
@@ -1582,12 +1612,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Cassettes": {
         "name": "Cassettes",
@@ -1595,12 +1623,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Traffic Blocks": {
         "name": "Traffic Blocks",
@@ -1608,12 +1634,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Springs": {
         "name": "Springs",
@@ -1621,12 +1645,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Breakable Blocks": {
         "name": "Breakable Blocks",
@@ -1634,12 +1656,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Ground Dash": {
         "name": "Ground Dash",
@@ -1647,9 +1667,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -1660,9 +1678,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -1673,9 +1689,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -1686,9 +1700,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -1699,9 +1711,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -1712,22 +1722,19 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
       },
       "South-East Tower Checkpoint": {
         "name": "South-East Tower Checkpoint",
+        "hint_text": "South East Tower Checkpoint",
         "id": 13238306,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -1738,9 +1745,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -1751,9 +1756,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -1764,9 +1767,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -1777,9 +1778,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -1790,9 +1789,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -1803,9 +1800,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -1816,9 +1811,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -1835,27 +1828,27 @@
       "Air Dash": 1,
       "Badeline Island Checkpoint": 1,
       "Badeline Tower Checkpoint": 1,
-      "Breakable Blocks": 2,
-      "Cassettes": 2,
+      "Breakable Blocks": 1,
+      "Cassettes": 1,
       "Climb": 1,
       "Climb Sign Checkpoint": 1,
-      "Coins": 2,
-      "Dash Refills": 2,
+      "Coins": 1,
+      "Dash Refills": 1,
       "Double Dash House Checkpoint": 1,
-      "Double Dash Refills": 2,
+      "Double Dash Refills": 1,
       "Feather Maze Checkpoint": 1,
-      "Feathers": 2,
+      "Feathers": 1,
       "Freeway Checkpoint": 1,
       "Freeway Feather Checkpoint": 1,
       "Granny Checkpoint": 1,
       "Ground Dash": 1,
       "Intro Checkpoint": 1,
-      "Raspberry": 4,
+      "Raspberry": 2,
       "Skid Jump": 1,
       "South-East Tower Checkpoint": 1,
-      "Springs": 2,
-      "Strawberry": 40,
-      "Traffic Blocks": 2
+      "Springs": 1,
+      "Strawberry": 20,
+      "Traffic Blocks": 1
     }
   },
   "progression_mapping": {
@@ -2714,5 +2707,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

@@ -932,12 +932,10 @@
           "Everything",
           "Weapons"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Flamethrower": {
         "name": "Flamethrower",
@@ -946,12 +944,10 @@
           "Everything",
           "Weapons"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ice Spreadshot": {
         "name": "Ice Spreadshot",
@@ -960,12 +956,10 @@
           "Everything",
           "Weapons"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Volt Laser": {
         "name": "Volt Laser",
@@ -974,12 +968,10 @@
           "Everything",
           "Weapons"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Life Extension": {
         "name": "Life Extension",
@@ -988,12 +980,10 @@
           "Everything",
           "Upgrades"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "classification": "progression"
       },
       "Clip Extension": {
         "name": "Clip Extension",
@@ -1002,12 +992,10 @@
           "Everything",
           "Upgrades"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "classification": "useful"
       },
       "Faster Reload": {
         "name": "Faster Reload",
@@ -1016,12 +1004,10 @@
           "Everything",
           "Upgrades"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "classification": "progression"
       },
       "Special Extension": {
         "name": "Special Extension",
@@ -1030,12 +1016,10 @@
           "Everything",
           "Upgrades"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Jacket": {
         "name": "Jacket",
@@ -1043,12 +1027,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Cave Key": {
         "name": "Cave Key",
@@ -1057,12 +1039,10 @@
           "Everything",
           "Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Volcanic Key": {
         "name": "Volcanic Key",
@@ -1071,12 +1051,10 @@
           "Everything",
           "Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Arctic Key": {
         "name": "Arctic Key",
@@ -1085,12 +1063,10 @@
           "Everything",
           "Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Swamp Key": {
         "name": "Swamp Key",
@@ -1099,12 +1075,10 @@
           "Everything",
           "Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "System Power": {
         "name": "System Power",
@@ -1112,12 +1086,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Full Heal": {
         "name": "Full Heal",
@@ -1126,12 +1098,10 @@
           "Everything",
           "Filler"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "filler"
       },
       "Quick-fire Mode": {
         "name": "Quick-fire Mode",
@@ -1140,12 +1110,10 @@
           "Everything",
           "Filler"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Active Camouflage": {
         "name": "Active Camouflage",
@@ -1154,12 +1122,10 @@
           "Everything",
           "Filler"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ice Trap": {
         "name": "Ice Trap",
@@ -1168,12 +1134,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "trap"
       },
       "Shake Trap": {
         "name": "Shake Trap",
@@ -1182,12 +1146,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ninja Trap": {
         "name": "Ninja Trap",
@@ -1196,12 +1158,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "trap"
       },
       "PRINCESS": {
         "name": "PRINCESS",
@@ -1209,12 +1169,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -1270,5 +1228,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

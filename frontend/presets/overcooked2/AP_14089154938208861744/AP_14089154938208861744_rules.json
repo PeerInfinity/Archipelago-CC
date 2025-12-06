@@ -1216,7 +1216,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "1-1 Level Completed",
@@ -1240,7 +1241,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "1-1 (1-Star)",
@@ -1264,7 +1266,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "1-1 (2-Star)",
@@ -1288,7 +1291,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "1-1 (3-Star)",
@@ -1312,7 +1316,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1351,7 +1356,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "1-2 Level Completed",
@@ -1375,7 +1381,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "1-2 (1-Star)",
@@ -1399,7 +1406,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "1-2 (2-Star)",
@@ -1423,7 +1431,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "1-2 (3-Star)",
@@ -1447,7 +1456,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1486,7 +1496,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "1-3 Level Completed",
@@ -1510,7 +1521,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "1-3 (1-Star)",
@@ -1534,7 +1546,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "1-3 (2-Star)",
@@ -1558,7 +1571,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "1-3 (3-Star)",
@@ -1582,7 +1596,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1621,7 +1636,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "1-4 Level Completed",
@@ -1645,7 +1661,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "1-4 (1-Star)",
@@ -1669,7 +1686,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "1-4 (2-Star)",
@@ -1693,7 +1711,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "1-4 (3-Star)",
@@ -1717,7 +1736,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1756,7 +1776,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "1-5 Level Completed",
@@ -1780,7 +1801,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "1-5 (1-Star)",
@@ -1804,7 +1826,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "1-5 (2-Star)",
@@ -1828,7 +1851,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "1-5 (3-Star)",
@@ -1852,7 +1876,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1891,7 +1916,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "1-6 Level Completed",
@@ -1915,7 +1941,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "1-6 (1-Star)",
@@ -1939,7 +1966,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "1-6 (2-Star)",
@@ -1963,7 +1991,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "1-6 (3-Star)",
@@ -1987,7 +2016,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2026,7 +2056,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "2-1 Level Completed",
@@ -2050,7 +2081,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "2-1 (1-Star)",
@@ -2074,7 +2106,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "2-1 (2-Star)",
@@ -2098,7 +2131,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "2-1 (3-Star)",
@@ -2122,7 +2156,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2161,7 +2196,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "2-2 Level Completed",
@@ -2185,7 +2221,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "2-2 (1-Star)",
@@ -2209,7 +2246,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "2-2 (2-Star)",
@@ -2233,7 +2271,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "2-2 (3-Star)",
@@ -2257,7 +2296,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2296,7 +2336,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "2-3 Level Completed",
@@ -2320,7 +2361,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "2-3 (1-Star)",
@@ -2344,7 +2386,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "2-3 (2-Star)",
@@ -2368,7 +2411,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "2-3 (3-Star)",
@@ -2392,7 +2436,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2431,7 +2476,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "2-4 Level Completed",
@@ -2455,7 +2501,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "2-4 (1-Star)",
@@ -2479,7 +2526,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "2-4 (2-Star)",
@@ -2503,7 +2551,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "2-4 (3-Star)",
@@ -2527,7 +2576,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2566,7 +2616,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "2-5 Level Completed",
@@ -2590,7 +2641,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "2-5 (1-Star)",
@@ -2614,7 +2666,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "2-5 (2-Star)",
@@ -2638,7 +2691,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "2-5 (3-Star)",
@@ -2662,7 +2716,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2701,7 +2756,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "2-6 Level Completed",
@@ -2725,7 +2781,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "2-6 (1-Star)",
@@ -2749,7 +2806,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "2-6 (2-Star)",
@@ -2773,7 +2831,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "2-6 (3-Star)",
@@ -2797,7 +2856,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2836,7 +2896,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "3-1 Level Completed",
@@ -2860,7 +2921,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "3-1 (1-Star)",
@@ -2884,7 +2946,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "3-1 (2-Star)",
@@ -2908,7 +2971,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "3-1 (3-Star)",
@@ -2932,7 +2996,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2971,7 +3036,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "3-2 Level Completed",
@@ -2995,7 +3061,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "3-2 (1-Star)",
@@ -3019,7 +3086,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "3-2 (2-Star)",
@@ -3043,7 +3111,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "3-2 (3-Star)",
@@ -3067,7 +3136,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3106,7 +3176,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "3-3 Level Completed",
@@ -3130,7 +3201,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "3-3 (1-Star)",
@@ -3154,7 +3226,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "3-3 (2-Star)",
@@ -3178,7 +3251,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "3-3 (3-Star)",
@@ -3202,7 +3276,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3241,7 +3316,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "3-4 Level Completed",
@@ -3265,7 +3341,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "3-4 (1-Star)",
@@ -3289,7 +3366,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "3-4 (2-Star)",
@@ -3313,7 +3391,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "3-4 (3-Star)",
@@ -3337,7 +3416,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3376,7 +3456,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "3-5 Level Completed",
@@ -3400,7 +3481,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "3-5 (1-Star)",
@@ -3424,7 +3506,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "3-5 (2-Star)",
@@ -3448,7 +3531,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "3-5 (3-Star)",
@@ -3472,7 +3556,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3511,7 +3596,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "3-6 Level Completed",
@@ -3535,7 +3621,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "3-6 (1-Star)",
@@ -3559,7 +3646,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "3-6 (2-Star)",
@@ -3583,7 +3671,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "3-6 (3-Star)",
@@ -3607,7 +3696,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3646,7 +3736,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "4-1 Level Completed",
@@ -3670,7 +3761,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "4-1 (1-Star)",
@@ -3694,7 +3786,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "4-1 (2-Star)",
@@ -3718,7 +3811,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "4-1 (3-Star)",
@@ -3742,7 +3836,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3781,7 +3876,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "4-2 Level Completed",
@@ -3805,7 +3901,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "4-2 (1-Star)",
@@ -3829,7 +3926,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "4-2 (2-Star)",
@@ -3853,7 +3951,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "4-2 (3-Star)",
@@ -3877,7 +3976,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3916,7 +4016,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "4-3 Level Completed",
@@ -3940,7 +4041,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "4-3 (1-Star)",
@@ -3964,7 +4066,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "4-3 (2-Star)",
@@ -3988,7 +4091,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "4-3 (3-Star)",
@@ -4012,7 +4116,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4051,7 +4156,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "4-4 Level Completed",
@@ -4075,7 +4181,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "4-4 (1-Star)",
@@ -4099,7 +4206,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "4-4 (2-Star)",
@@ -4123,7 +4231,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "4-4 (3-Star)",
@@ -4147,7 +4256,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4186,7 +4296,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "4-5 Level Completed",
@@ -4210,7 +4321,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "4-5 (1-Star)",
@@ -4234,7 +4346,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "4-5 (2-Star)",
@@ -4258,7 +4371,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "4-5 (3-Star)",
@@ -4282,7 +4396,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4321,7 +4436,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "4-6 Level Completed",
@@ -4345,7 +4461,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "4-6 (1-Star)",
@@ -4369,7 +4486,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "4-6 (2-Star)",
@@ -4393,7 +4511,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "4-6 (3-Star)",
@@ -4417,7 +4536,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4456,7 +4576,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "5-1 Level Completed",
@@ -4480,7 +4601,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "5-1 (1-Star)",
@@ -4504,7 +4626,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "5-1 (2-Star)",
@@ -4528,7 +4651,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "5-1 (3-Star)",
@@ -4552,7 +4676,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4591,7 +4716,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "5-2 Level Completed",
@@ -4615,7 +4741,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "5-2 (1-Star)",
@@ -4639,7 +4766,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "5-2 (2-Star)",
@@ -4663,7 +4791,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "5-2 (3-Star)",
@@ -4687,7 +4816,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4726,7 +4856,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "5-3 Level Completed",
@@ -4750,7 +4881,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "5-3 (1-Star)",
@@ -4774,7 +4906,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "5-3 (2-Star)",
@@ -4798,7 +4931,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "5-3 (3-Star)",
@@ -4822,7 +4956,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4861,7 +4996,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "5-4 Level Completed",
@@ -4885,7 +5021,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "5-4 (1-Star)",
@@ -4909,7 +5046,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "5-4 (2-Star)",
@@ -4933,7 +5071,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "5-4 (3-Star)",
@@ -4957,7 +5096,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4996,7 +5136,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "5-5 Level Completed",
@@ -5020,7 +5161,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "5-5 (1-Star)",
@@ -5044,7 +5186,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "5-5 (2-Star)",
@@ -5068,7 +5211,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "5-5 (3-Star)",
@@ -5092,7 +5236,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5131,7 +5276,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "5-6 Level Completed",
@@ -5155,7 +5301,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "5-6 (1-Star)",
@@ -5179,7 +5326,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "5-6 (2-Star)",
@@ -5203,7 +5351,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "5-6 (3-Star)",
@@ -5227,7 +5376,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5266,7 +5416,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "6-1 Level Completed",
@@ -5290,7 +5441,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "6-1 (1-Star)",
@@ -5314,7 +5466,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "6-1 (2-Star)",
@@ -5338,7 +5491,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "6-1 (3-Star)",
@@ -5362,7 +5516,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5401,7 +5556,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "6-2 Level Completed",
@@ -5425,7 +5581,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "6-2 (1-Star)",
@@ -5449,7 +5606,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "6-2 (2-Star)",
@@ -5473,7 +5631,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "6-2 (3-Star)",
@@ -5497,7 +5656,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5536,7 +5696,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "6-3 Level Completed",
@@ -5560,7 +5721,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "6-3 (1-Star)",
@@ -5584,7 +5746,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5623,7 +5786,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "6-4 Level Completed",
@@ -5647,7 +5811,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "6-4 (1-Star)",
@@ -5671,7 +5836,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "6-4 (2-Star)",
@@ -5695,7 +5861,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "6-4 (3-Star)",
@@ -5719,7 +5886,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5758,7 +5926,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "6-5 Level Completed",
@@ -5782,7 +5951,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "6-5 (1-Star)",
@@ -5806,7 +5976,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "6-5 (2-Star)",
@@ -5830,7 +6001,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "6-5 (3-Star)",
@@ -5854,7 +6026,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5893,7 +6066,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "6-6 (1-Star)",
@@ -5917,7 +6091,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "6-6 (2-Star)",
@@ -5941,7 +6116,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "6-6 (3-Star)",
@@ -5965,7 +6141,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6004,7 +6181,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kevin-1 Level Completed",
@@ -6028,7 +6206,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-1 (1-Star)",
@@ -6052,7 +6231,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-1 (2-Star)",
@@ -6076,7 +6256,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-1 (3-Star)",
@@ -6100,7 +6281,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6139,7 +6321,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kevin-2 Level Completed",
@@ -6163,7 +6346,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-2 (1-Star)",
@@ -6187,7 +6371,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-2 (2-Star)",
@@ -6211,7 +6396,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-2 (3-Star)",
@@ -6235,7 +6421,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6274,7 +6461,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kevin-3 Level Completed",
@@ -6298,7 +6486,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-3 (1-Star)",
@@ -6322,7 +6511,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-3 (2-Star)",
@@ -6346,7 +6536,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-3 (3-Star)",
@@ -6370,7 +6561,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6409,7 +6601,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kevin-4 Level Completed",
@@ -6433,7 +6626,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-4 (1-Star)",
@@ -6457,7 +6651,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6496,7 +6691,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kevin-5 Level Completed",
@@ -6520,7 +6716,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-5 (1-Star)",
@@ -6544,7 +6741,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-5 (2-Star)",
@@ -6568,7 +6766,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-5 (3-Star)",
@@ -6592,7 +6791,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6631,7 +6831,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kevin-6 Level Completed",
@@ -6655,7 +6856,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-6 (1-Star)",
@@ -6679,7 +6881,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-6 (2-Star)",
@@ -6703,7 +6906,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-6 (3-Star)",
@@ -6727,7 +6931,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6766,7 +6971,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kevin-7 Level Completed",
@@ -6790,7 +6996,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-7 (1-Star)",
@@ -6814,7 +7021,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-7 (2-Star)",
@@ -6838,7 +7046,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-7 (3-Star)",
@@ -6862,7 +7071,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6901,7 +7111,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kevin-8 Level Completed",
@@ -6925,7 +7136,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-8 (1-Star)",
@@ -6949,7 +7161,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-8 (2-Star)",
@@ -6973,7 +7186,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kevin-8 (3-Star)",
@@ -6997,7 +7211,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       }
@@ -7019,12 +7234,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Coal Bucket": {
         "name": "Coal Bucket",
@@ -7032,12 +7245,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Spare Plate": {
         "name": "Spare Plate",
@@ -7045,12 +7256,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Fire Extinguisher": {
         "name": "Fire Extinguisher",
@@ -7058,12 +7267,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Bellows": {
         "name": "Bellows",
@@ -7071,12 +7278,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Clean Dishes": {
         "name": "Clean Dishes",
@@ -7084,12 +7289,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Larger Tip Jar": {
         "name": "Larger Tip Jar",
@@ -7097,12 +7300,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Progressive Dash": {
         "name": "Progressive Dash",
@@ -7110,12 +7311,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Progressive Throw/Catch": {
         "name": "Progressive Throw/Catch",
@@ -7123,12 +7322,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Coin Purse": {
         "name": "Coin Purse",
@@ -7136,12 +7333,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Control Stick Batteries": {
         "name": "Control Stick Batteries",
@@ -7149,12 +7344,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Wok Wheels": {
         "name": "Wok Wheels",
@@ -7162,12 +7355,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Dish Scrubber": {
         "name": "Dish Scrubber",
@@ -7175,12 +7366,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Burn Leniency": {
         "name": "Burn Leniency",
@@ -7188,12 +7377,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Sharp Knife": {
         "name": "Sharp Knife",
@@ -7201,12 +7388,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Order Lookahead": {
         "name": "Order Lookahead",
@@ -7214,12 +7399,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "useful"
       },
       "Lightweight Backpack": {
         "name": "Lightweight Backpack",
@@ -7227,12 +7410,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Faster Respawn Time": {
         "name": "Faster Respawn Time",
@@ -7240,12 +7421,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Faster Condiment/Drink Switch": {
         "name": "Faster Condiment/Drink Switch",
@@ -7253,12 +7432,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Guest Patience": {
         "name": "Guest Patience",
@@ -7266,116 +7443,106 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Kevin-1": {
         "name": "Kevin-1",
+        "hint_text": "Kevin 1",
         "id": 213721,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Kevin-2": {
         "name": "Kevin-2",
+        "hint_text": "Kevin 2",
         "id": 213722,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Kevin-3": {
         "name": "Kevin-3",
+        "hint_text": "Kevin 3",
         "id": 213723,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Kevin-4": {
         "name": "Kevin-4",
+        "hint_text": "Kevin 4",
         "id": 213724,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Kevin-5": {
         "name": "Kevin-5",
+        "hint_text": "Kevin 5",
         "id": 213725,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Kevin-6": {
         "name": "Kevin-6",
+        "hint_text": "Kevin 6",
         "id": 213726,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Kevin-7": {
         "name": "Kevin-7",
+        "hint_text": "Kevin 7",
         "id": 213727,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Kevin-8": {
         "name": "Kevin-8",
+        "hint_text": "Kevin 8",
         "id": 213728,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Cooking Emote": {
         "name": "Cooking Emote",
@@ -7383,12 +7550,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Curse Emote": {
         "name": "Curse Emote",
@@ -7396,12 +7561,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Serving Emote": {
         "name": "Serving Emote",
@@ -7409,12 +7572,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Preparing Emote": {
         "name": "Preparing Emote",
@@ -7422,12 +7583,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Washing Up Emote": {
         "name": "Washing Up Emote",
@@ -7435,12 +7594,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ok Emote": {
         "name": "Ok Emote",
@@ -7448,12 +7605,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ramp Button": {
         "name": "Ramp Button",
@@ -7461,12 +7616,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bonus Star": {
         "name": "Bonus Star",
@@ -7474,12 +7627,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "useful"
       },
       "Calmer Unbread": {
         "name": "Calmer Unbread",
@@ -7487,12 +7638,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Green Ramp": {
         "name": "Green Ramp",
@@ -7500,12 +7649,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Yellow Ramp": {
         "name": "Yellow Ramp",
@@ -7513,12 +7660,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Blue Ramp": {
         "name": "Blue Ramp",
@@ -7526,12 +7671,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Pink Ramp": {
         "name": "Pink Ramp",
@@ -7539,12 +7682,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Dark Green Ramp": {
         "name": "Dark Green Ramp",
@@ -7552,12 +7693,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Red Ramp": {
         "name": "Red Ramp",
@@ -7565,12 +7704,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Purple Ramp": {
         "name": "Purple Ramp",
@@ -7578,12 +7715,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Emote Wheel": {
         "name": "Emote Wheel",
@@ -7591,25 +7726,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "1-1 Level Complete": {
         "name": "1-1 Level Complete",
+        "hint_text": "1 1 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "Star": {
         "name": "Star",
@@ -7617,454 +7749,418 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 128
+        "max_count": 128,
+        "classification": "progression_skip_balancing"
       },
       "1-2 Level Complete": {
         "name": "1-2 Level Complete",
+        "hint_text": "1 2 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "1-3 Level Complete": {
         "name": "1-3 Level Complete",
+        "hint_text": "1 3 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "1-4 Level Complete": {
         "name": "1-4 Level Complete",
+        "hint_text": "1 4 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "1-5 Level Complete": {
         "name": "1-5 Level Complete",
+        "hint_text": "1 5 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "1-6 Level Complete": {
         "name": "1-6 Level Complete",
+        "hint_text": "1 6 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "2-1 Level Complete": {
         "name": "2-1 Level Complete",
+        "hint_text": "2 1 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "2-2 Level Complete": {
         "name": "2-2 Level Complete",
+        "hint_text": "2 2 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "2-3 Level Complete": {
         "name": "2-3 Level Complete",
+        "hint_text": "2 3 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "2-4 Level Complete": {
         "name": "2-4 Level Complete",
+        "hint_text": "2 4 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "2-5 Level Complete": {
         "name": "2-5 Level Complete",
+        "hint_text": "2 5 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "2-6 Level Complete": {
         "name": "2-6 Level Complete",
+        "hint_text": "2 6 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "3-1 Level Complete": {
         "name": "3-1 Level Complete",
+        "hint_text": "3 1 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "3-2 Level Complete": {
         "name": "3-2 Level Complete",
+        "hint_text": "3 2 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "3-3 Level Complete": {
         "name": "3-3 Level Complete",
+        "hint_text": "3 3 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "3-4 Level Complete": {
         "name": "3-4 Level Complete",
+        "hint_text": "3 4 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "3-5 Level Complete": {
         "name": "3-5 Level Complete",
+        "hint_text": "3 5 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "3-6 Level Complete": {
         "name": "3-6 Level Complete",
+        "hint_text": "3 6 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "4-1 Level Complete": {
         "name": "4-1 Level Complete",
+        "hint_text": "4 1 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "4-2 Level Complete": {
         "name": "4-2 Level Complete",
+        "hint_text": "4 2 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "4-3 Level Complete": {
         "name": "4-3 Level Complete",
+        "hint_text": "4 3 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "4-4 Level Complete": {
         "name": "4-4 Level Complete",
+        "hint_text": "4 4 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "4-5 Level Complete": {
         "name": "4-5 Level Complete",
+        "hint_text": "4 5 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "4-6 Level Complete": {
         "name": "4-6 Level Complete",
+        "hint_text": "4 6 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "5-1 Level Complete": {
         "name": "5-1 Level Complete",
+        "hint_text": "5 1 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "5-2 Level Complete": {
         "name": "5-2 Level Complete",
+        "hint_text": "5 2 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "5-3 Level Complete": {
         "name": "5-3 Level Complete",
+        "hint_text": "5 3 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "5-4 Level Complete": {
         "name": "5-4 Level Complete",
+        "hint_text": "5 4 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "5-5 Level Complete": {
         "name": "5-5 Level Complete",
+        "hint_text": "5 5 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "5-6 Level Complete": {
         "name": "5-6 Level Complete",
+        "hint_text": "5 6 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "6-1 Level Complete": {
         "name": "6-1 Level Complete",
+        "hint_text": "6 1 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "6-2 Level Complete": {
         "name": "6-2 Level Complete",
+        "hint_text": "6 2 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "6-3 Level Complete": {
         "name": "6-3 Level Complete",
+        "hint_text": "6 3 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "6-4 Level Complete": {
         "name": "6-4 Level Complete",
+        "hint_text": "6 4 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "6-5 Level Complete": {
         "name": "6-5 Level Complete",
+        "hint_text": "6 5 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "Victory": {
         "name": "Victory",
@@ -8072,116 +8168,106 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "Kevin-1 Level Complete": {
         "name": "Kevin-1 Level Complete",
+        "hint_text": "Kevin 1 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "Kevin-2 Level Complete": {
         "name": "Kevin-2 Level Complete",
+        "hint_text": "Kevin 2 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "Kevin-3 Level Complete": {
         "name": "Kevin-3 Level Complete",
+        "hint_text": "Kevin 3 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "Kevin-4 Level Complete": {
         "name": "Kevin-4 Level Complete",
+        "hint_text": "Kevin 4 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "Kevin-5 Level Complete": {
         "name": "Kevin-5 Level Complete",
+        "hint_text": "Kevin 5 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "Kevin-6 Level Complete": {
         "name": "Kevin-6 Level Complete",
+        "hint_text": "Kevin 6 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "Kevin-7 Level Complete": {
         "name": "Kevin-7 Level Complete",
+        "hint_text": "Kevin 7 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "Kevin-8 Level Complete": {
         "name": "Kevin-8 Level Complete",
+        "hint_text": "Kevin 8 Level Complete",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       }
     }
   },
@@ -8227,50 +8313,50 @@
       "6-3 Level Complete": 1,
       "6-4 Level Complete": 1,
       "6-5 Level Complete": 1,
-      "Blue Ramp": 2,
-      "Bonus Star": 12,
-      "Burn Leniency": 2,
-      "Calmer Unbread": 2,
-      "Clean Dishes": 2,
-      "Coin Purse": 2,
-      "Control Stick Batteries": 2,
-      "Dark Green Ramp": 2,
-      "Dish Scrubber": 2,
-      "Emote Wheel": 2,
-      "Faster Condiment/Drink Switch": 2,
-      "Faster Respawn Time": 2,
-      "Fire Extinguisher": 2,
-      "Green Ramp": 2,
-      "Guest Patience": 2,
-      "Kevin-1": 2,
+      "Blue Ramp": 1,
+      "Bonus Star": 6,
+      "Burn Leniency": 1,
+      "Calmer Unbread": 1,
+      "Clean Dishes": 1,
+      "Coin Purse": 1,
+      "Control Stick Batteries": 1,
+      "Dark Green Ramp": 1,
+      "Dish Scrubber": 1,
+      "Emote Wheel": 1,
+      "Faster Condiment/Drink Switch": 1,
+      "Faster Respawn Time": 1,
+      "Fire Extinguisher": 1,
+      "Green Ramp": 1,
+      "Guest Patience": 1,
+      "Kevin-1": 1,
       "Kevin-1 Level Complete": 1,
-      "Kevin-2": 2,
+      "Kevin-2": 1,
       "Kevin-2 Level Complete": 1,
-      "Kevin-3": 2,
+      "Kevin-3": 1,
       "Kevin-3 Level Complete": 1,
-      "Kevin-4": 2,
+      "Kevin-4": 1,
       "Kevin-4 Level Complete": 1,
-      "Kevin-5": 2,
+      "Kevin-5": 1,
       "Kevin-5 Level Complete": 1,
-      "Kevin-6": 2,
+      "Kevin-6": 1,
       "Kevin-6 Level Complete": 1,
-      "Kevin-7": 2,
+      "Kevin-7": 1,
       "Kevin-7 Level Complete": 1,
-      "Kevin-8": 2,
+      "Kevin-8": 1,
       "Kevin-8 Level Complete": 1,
-      "Larger Tip Jar": 4,
-      "Order Lookahead": 4,
-      "Pink Ramp": 2,
-      "Progressive Dash": 4,
-      "Progressive Throw/Catch": 4,
-      "Purple Ramp": 2,
-      "Red Ramp": 2,
-      "Sharp Knife": 2,
-      "Spare Plate": 2,
+      "Larger Tip Jar": 2,
+      "Order Lookahead": 2,
+      "Pink Ramp": 1,
+      "Progressive Dash": 2,
+      "Progressive Throw/Catch": 2,
+      "Purple Ramp": 1,
+      "Red Ramp": 1,
+      "Sharp Knife": 1,
+      "Spare Plate": 1,
       "Star": 128,
       "Victory": 1,
-      "Wok Wheels": 2,
-      "Yellow Ramp": 2
+      "Wok Wheels": 1,
+      "Yellow Ramp": 1
     }
   },
   "progression_mapping": {
@@ -10866,5 +10952,6 @@
         ]
       }
     }
-  }
+  },
+  "helpers": {}
 }

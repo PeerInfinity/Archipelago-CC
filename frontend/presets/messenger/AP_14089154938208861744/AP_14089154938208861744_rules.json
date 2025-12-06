@@ -149,7 +149,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -202,6 +203,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "cost": 27
           },
           {
@@ -224,6 +226,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "cost": 318
           },
           {
@@ -246,6 +249,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "cost": 467
           },
           {
@@ -268,6 +272,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "cost": 675
           },
           {
@@ -290,6 +295,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "cost": 92
           },
           {
@@ -312,6 +318,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "cost": 201
           },
           {
@@ -334,6 +341,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "cost": 546
           },
           {
@@ -356,6 +364,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "cost": 1368
           },
           {
@@ -378,6 +387,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "cost": 1881
           },
           {
@@ -400,6 +410,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "cost": 2140
           },
           {
@@ -422,6 +433,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "cost": 67
           },
           {
@@ -444,6 +456,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "cost": 237
           },
           {
@@ -466,6 +479,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "cost": 743
           },
           {
@@ -488,6 +502,7 @@
               "advancement": false,
               "type": "None"
             },
+            "locked": false,
             "cost": 1124
           },
           {
@@ -510,6 +525,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "cost": 3532
           },
           {
@@ -532,6 +548,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "cost": 56
           },
           {
@@ -554,6 +571,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "cost": 142
           },
           {
@@ -576,6 +594,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "cost": 621
           },
           {
@@ -598,6 +617,7 @@
               "advancement": true,
               "type": "None"
             },
+            "locked": false,
             "cost": 1034
           }
         ]
@@ -618,7 +638,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue Kappa Figurine",
@@ -632,7 +653,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ountarde Figurine",
@@ -646,7 +668,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Red Kappa Figurine",
@@ -660,7 +683,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Demon King Figurine",
@@ -674,7 +698,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Quillshroom Figurine",
@@ -688,7 +713,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Jumping Quillshroom Figurine",
@@ -702,7 +728,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Scurubu Figurine",
@@ -716,7 +743,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Jumping Scurubu Figurine",
@@ -730,7 +758,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Wallaxer Figurine",
@@ -744,7 +773,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Barmath'azel Figurine",
@@ -758,7 +788,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Queen of Quills Figurine",
@@ -772,7 +803,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Demon Hive Figurine",
@@ -786,7 +818,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -806,7 +839,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -826,7 +860,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -880,7 +915,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ninja Village - Astral Seed",
@@ -894,7 +930,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ninja Village Seal - Tree House",
@@ -908,7 +945,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1025,7 +1063,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1078,7 +1117,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Autumn Hills Seal - Trip Saws",
@@ -1092,7 +1132,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1281,7 +1322,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1372,7 +1414,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1453,7 +1496,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1490,7 +1534,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Autumn Hills Seal - Spike Ball Darts",
@@ -1515,7 +1560,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1815,7 +1861,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1916,7 +1963,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1987,7 +2035,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2024,7 +2073,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2135,7 +2185,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2172,7 +2223,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catacombs - Ruxxtin",
@@ -2186,7 +2238,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2283,7 +2336,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catacombs Seal - Dirty Pond",
@@ -2297,7 +2351,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2400,7 +2455,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2459,7 +2515,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bamboo Creek - Claustro",
@@ -2523,7 +2580,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2552,7 +2610,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2707,7 +2766,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2744,7 +2804,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Howling Grotto Seal - Windy Saws and Balls",
@@ -2758,7 +2819,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2863,7 +2925,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2900,7 +2963,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3046,7 +3110,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3187,7 +3252,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3240,7 +3306,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3277,7 +3344,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3314,7 +3382,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3373,7 +3442,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3536,7 +3606,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Searing Crags Portal",
@@ -3550,7 +3621,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3601,7 +3673,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3786,7 +3859,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Searing Crags - Power Thistle",
@@ -3800,7 +3874,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Searing Crags - Astral Tea Leaves",
@@ -3817,7 +3892,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3846,7 +3922,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3901,7 +3978,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3938,7 +4016,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4075,7 +4154,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4112,7 +4192,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4251,7 +4332,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4288,7 +4370,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4381,7 +4464,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4540,7 +4624,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4569,7 +4654,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4898,7 +4984,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4965,7 +5052,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5132,7 +5220,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5183,7 +5272,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5234,7 +5324,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5293,7 +5384,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5364,7 +5456,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Underworld Seal - Fireball Wave",
@@ -5389,7 +5482,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5537,7 +5631,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5637,7 +5732,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5758,7 +5854,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5839,7 +5936,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5930,7 +6028,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5987,7 +6086,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6007,7 +6107,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6102,7 +6203,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6213,7 +6315,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6304,7 +6407,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6347,7 +6451,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6439,7 +6544,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sunken Shrine Portal",
@@ -6453,7 +6559,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6512,7 +6619,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6610,7 +6718,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6661,7 +6770,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6698,7 +6808,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6735,7 +6846,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6772,7 +6884,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       }
@@ -6796,12 +6909,10 @@
           "Keys",
           "Notes"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key of Chaos": {
         "name": "Key of Chaos",
@@ -6811,12 +6922,10 @@
           "Keys",
           "Notes"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key of Courage": {
         "name": "Key of Courage",
@@ -6826,12 +6935,10 @@
           "Keys",
           "Notes"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key of Love": {
         "name": "Key of Love",
@@ -6841,12 +6948,10 @@
           "Keys",
           "Notes"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key of Strength": {
         "name": "Key of Strength",
@@ -6856,12 +6961,10 @@
           "Keys",
           "Notes"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key of Symbiosis": {
         "name": "Key of Symbiosis",
@@ -6871,12 +6974,10 @@
           "Keys",
           "Notes"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Windmill Shuriken": {
         "name": "Windmill Shuriken",
@@ -6884,12 +6985,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Wingsuit": {
         "name": "Wingsuit",
@@ -6897,12 +6996,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Rope Dart": {
         "name": "Rope Dart",
@@ -6910,12 +7007,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Lightfoot Tabi": {
         "name": "Lightfoot Tabi",
@@ -6923,12 +7018,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Candle": {
         "name": "Candle",
@@ -6936,12 +7029,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Seashell": {
         "name": "Seashell",
@@ -6949,12 +7040,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Power Thistle": {
         "name": "Power Thistle",
@@ -6962,12 +7051,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Demon King Crown": {
         "name": "Demon King Crown",
@@ -6975,12 +7062,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ruxxtin's Amulet": {
         "name": "Ruxxtin's Amulet",
@@ -6988,12 +7073,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Magic Firefly": {
         "name": "Magic Firefly",
@@ -7001,12 +7084,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Sun Crest": {
         "name": "Sun Crest",
@@ -7015,12 +7096,10 @@
           "Crest",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Moon Crest": {
         "name": "Moon Crest",
@@ -7029,12 +7108,10 @@
           "Crest",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Necro": {
         "name": "Necro",
@@ -7044,12 +7121,10 @@
           "Phobe",
           "Phobekin"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Pyro": {
         "name": "Pyro",
@@ -7059,12 +7134,10 @@
           "Phobe",
           "Phobekin"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Claustro": {
         "name": "Claustro",
@@ -7074,12 +7147,10 @@
           "Phobe",
           "Phobekin"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Acro": {
         "name": "Acro",
@@ -7089,12 +7160,10 @@
           "Phobe",
           "Phobekin"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Power Seal": {
         "name": "Power Seal",
@@ -7102,12 +7171,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Time Shard": {
         "name": "Time Shard",
@@ -7115,12 +7182,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5,
+        "classification": "filler"
       },
       "Time Shard (10)": {
         "name": "Time Shard (10)",
@@ -7128,12 +7193,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 20
+        "max_count": 10,
+        "classification": "filler"
       },
       "Time Shard (50)": {
         "name": "Time Shard (50)",
@@ -7141,12 +7204,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 26
+        "max_count": 13,
+        "classification": "filler"
       },
       "Time Shard (100)": {
         "name": "Time Shard (100)",
@@ -7154,12 +7215,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 38
+        "max_count": 19,
+        "classification": "progression_skip_balancing"
       },
       "Time Shard (300)": {
         "name": "Time Shard (300)",
@@ -7167,12 +7226,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 28
+        "max_count": 14,
+        "classification": "progression_skip_balancing"
       },
       "Time Shard (500)": {
         "name": "Time Shard (500)",
@@ -7180,12 +7237,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression_skip_balancing"
       },
       "Karuta Plates": {
         "name": "Karuta Plates",
@@ -7193,12 +7248,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Serendipitous Bodies": {
         "name": "Serendipitous Bodies",
@@ -7206,12 +7259,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Path of Resilience": {
         "name": "Path of Resilience",
@@ -7219,12 +7270,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Kusari Jacket": {
         "name": "Kusari Jacket",
@@ -7232,12 +7281,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Energy Shuriken": {
         "name": "Energy Shuriken",
@@ -7245,12 +7292,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Serendipitous Minds": {
         "name": "Serendipitous Minds",
@@ -7258,12 +7303,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Prepared Mind": {
         "name": "Prepared Mind",
@@ -7271,12 +7314,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Meditation": {
         "name": "Meditation",
@@ -7284,12 +7325,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Rejuvenative Spirit": {
         "name": "Rejuvenative Spirit",
@@ -7297,12 +7336,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Centered Mind": {
         "name": "Centered Mind",
@@ -7310,12 +7347,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Strike of the Ninja": {
         "name": "Strike of the Ninja",
@@ -7323,12 +7358,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Second Wind": {
         "name": "Second Wind",
@@ -7336,12 +7369,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Currents Master": {
         "name": "Currents Master",
@@ -7349,12 +7380,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Aerobatics Warrior": {
         "name": "Aerobatics Warrior",
@@ -7362,12 +7391,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Demon's Bane": {
         "name": "Demon's Bane",
@@ -7375,12 +7402,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Devil's Due": {
         "name": "Devil's Due",
@@ -7388,12 +7413,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Time Sense": {
         "name": "Time Sense",
@@ -7401,12 +7424,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Power Sense": {
         "name": "Power Sense",
@@ -7414,12 +7435,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Focused Power Sense": {
         "name": "Focused Power Sense",
@@ -7427,12 +7446,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Green Kappa Figurine": {
         "name": "Green Kappa Figurine",
@@ -7440,12 +7457,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Blue Kappa Figurine": {
         "name": "Blue Kappa Figurine",
@@ -7453,12 +7468,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ountarde Figurine": {
         "name": "Ountarde Figurine",
@@ -7466,12 +7479,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Red Kappa Figurine": {
         "name": "Red Kappa Figurine",
@@ -7479,12 +7490,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Demon King Figurine": {
         "name": "Demon King Figurine",
@@ -7492,12 +7501,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quillshroom Figurine": {
         "name": "Quillshroom Figurine",
@@ -7505,12 +7512,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Jumping Quillshroom Figurine": {
         "name": "Jumping Quillshroom Figurine",
@@ -7518,12 +7523,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Scurubu Figurine": {
         "name": "Scurubu Figurine",
@@ -7531,12 +7534,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Jumping Scurubu Figurine": {
         "name": "Jumping Scurubu Figurine",
@@ -7544,12 +7545,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Wallaxer Figurine": {
         "name": "Wallaxer Figurine",
@@ -7557,12 +7556,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Barmath'azel Figurine": {
         "name": "Barmath'azel Figurine",
@@ -7570,12 +7567,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Queen of Quills Figurine": {
         "name": "Queen of Quills Figurine",
@@ -7583,12 +7578,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Demon Hive Figurine": {
         "name": "Demon Hive Figurine",
@@ -7596,12 +7589,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Money Wrench": {
         "name": "Money Wrench",
@@ -7609,12 +7600,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Teleport Trap": {
         "name": "Teleport Trap",
@@ -7622,12 +7611,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Prophecy Trap": {
         "name": "Prophecy Trap",
@@ -7635,12 +7622,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Do the Thing!": {
         "name": "Do the Thing!",
@@ -7648,12 +7633,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Autumn Hills Portal": {
         "name": "Autumn Hills Portal",
@@ -7661,12 +7644,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Howling Grotto Portal": {
         "name": "Howling Grotto Portal",
@@ -7674,12 +7655,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Searing Crags Portal": {
         "name": "Searing Crags Portal",
@@ -7687,12 +7666,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Glacial Peak Portal": {
         "name": "Glacial Peak Portal",
@@ -7700,12 +7677,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Riviere Turquoise Portal": {
         "name": "Riviere Turquoise Portal",
@@ -7713,12 +7688,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Sunken Shrine Portal": {
         "name": "Sunken Shrine Portal",
@@ -7726,12 +7699,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -7747,61 +7718,61 @@
   },
   "itempool_counts": {
     "1": {
-      "Acro": 2,
-      "Aerobatics Warrior": 2,
+      "Acro": 1,
+      "Aerobatics Warrior": 1,
       "Autumn Hills Portal": 1,
-      "Candle": 2,
-      "Centered Mind": 2,
-      "Claustro": 2,
-      "Currents Master": 2,
-      "Demon King Crown": 2,
-      "Demon's Bane": 2,
-      "Devil's Due": 2,
+      "Candle": 1,
+      "Centered Mind": 1,
+      "Claustro": 1,
+      "Currents Master": 1,
+      "Demon King Crown": 1,
+      "Demon's Bane": 1,
+      "Devil's Due": 1,
       "Do the Thing!": 1,
-      "Energy Shuriken": 2,
-      "Focused Power Sense": 2,
+      "Energy Shuriken": 1,
+      "Focused Power Sense": 1,
       "Glacial Peak Portal": 1,
       "Howling Grotto Portal": 1,
-      "Karuta Plates": 2,
-      "Key of Chaos": 2,
-      "Key of Courage": 2,
-      "Key of Hope": 2,
-      "Key of Love": 2,
-      "Key of Strength": 2,
-      "Key of Symbiosis": 2,
-      "Kusari Jacket": 2,
-      "Lightfoot Tabi": 2,
-      "Magic Firefly": 2,
-      "Meditation": 2,
-      "Money Wrench": 2,
-      "Moon Crest": 2,
-      "Necro": 2,
-      "Path of Resilience": 2,
-      "Power Sense": 2,
-      "Power Thistle": 2,
-      "Prepared Mind": 2,
-      "Pyro": 2,
-      "Rejuvenative Spirit": 2,
+      "Karuta Plates": 1,
+      "Key of Chaos": 1,
+      "Key of Courage": 1,
+      "Key of Hope": 1,
+      "Key of Love": 1,
+      "Key of Strength": 1,
+      "Key of Symbiosis": 1,
+      "Kusari Jacket": 1,
+      "Lightfoot Tabi": 1,
+      "Magic Firefly": 1,
+      "Meditation": 1,
+      "Money Wrench": 1,
+      "Moon Crest": 1,
+      "Necro": 1,
+      "Path of Resilience": 1,
+      "Power Sense": 1,
+      "Power Thistle": 1,
+      "Prepared Mind": 1,
+      "Pyro": 1,
+      "Rejuvenative Spirit": 1,
       "Riviere Turquoise Portal": 1,
-      "Rope Dart": 2,
-      "Ruxxtin's Amulet": 2,
+      "Rope Dart": 1,
+      "Ruxxtin's Amulet": 1,
       "Searing Crags Portal": 1,
-      "Seashell": 2,
-      "Second Wind": 2,
-      "Serendipitous Bodies": 2,
-      "Serendipitous Minds": 2,
-      "Strike of the Ninja": 2,
-      "Sun Crest": 2,
+      "Seashell": 1,
+      "Second Wind": 1,
+      "Serendipitous Bodies": 1,
+      "Serendipitous Minds": 1,
+      "Strike of the Ninja": 1,
+      "Sun Crest": 1,
       "Sunken Shrine Portal": 1,
-      "Time Sense": 2,
-      "Time Shard": 10,
-      "Time Shard (10)": 20,
-      "Time Shard (100)": 38,
-      "Time Shard (300)": 28,
-      "Time Shard (50)": 26,
-      "Time Shard (500)": 6,
-      "Windmill Shuriken": 2,
-      "Wingsuit": 2
+      "Time Sense": 1,
+      "Time Shard": 5,
+      "Time Shard (10)": 10,
+      "Time Shard (100)": 19,
+      "Time Shard (300)": 14,
+      "Time Shard (50)": 13,
+      "Time Shard (500)": 3,
+      "Windmill Shuriken": 1,
+      "Wingsuit": 1
     }
   },
   "progression_mapping": {
@@ -7837,5 +7808,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

@@ -75,7 +75,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "ACDC Bubbler C Trade",
@@ -89,7 +90,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "ACDC Recov120 S Trade",
@@ -103,7 +105,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "ACDC School Desk",
@@ -117,7 +120,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "ACDC Class 5B Bookshelf",
@@ -131,7 +135,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "School 1 Entrance BMD",
@@ -145,7 +150,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "School 1 North Central BMD",
@@ -159,7 +165,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "School 1 Far West BMD 2",
@@ -173,7 +180,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "School 1 KeyDataA BMD",
@@ -187,7 +195,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "School 1 KeyDataB BMD",
@@ -201,7 +210,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "School 1 KeyDataC BMD",
@@ -215,7 +225,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "School 2 South BMD",
@@ -229,7 +240,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "School 2 Entrance BMD",
@@ -243,7 +255,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "School 2 Mainframe BMD",
@@ -257,7 +270,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "School 2 CodeA BMD",
@@ -271,7 +285,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "School 2 CodeB BMD",
@@ -285,7 +300,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "School 2 CodeC BMD",
@@ -299,7 +315,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "ACDC Dog House BMD",
@@ -313,7 +330,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "ACDC Lan's Security Panel BMD",
@@ -327,7 +345,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "ACDC Yai's Phone BMD",
@@ -341,7 +360,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "ACDC NumberMan Display BMD",
@@ -355,7 +375,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "ACDC Tank BMD 1",
@@ -369,7 +390,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "ACDC Tank BMD 2",
@@ -383,7 +405,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "ACDC School Server BMD 1",
@@ -397,7 +420,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "ACDC School Server BMD 2",
@@ -411,7 +435,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "ACDC School Blackboard BMD",
@@ -425,7 +450,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 01",
@@ -439,7 +465,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 02",
@@ -453,7 +480,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 03",
@@ -467,7 +495,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 04",
@@ -481,7 +510,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 05",
@@ -495,7 +525,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 06",
@@ -509,7 +540,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 07",
@@ -523,7 +555,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 08",
@@ -537,7 +570,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 09",
@@ -560,7 +594,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 10",
@@ -583,7 +618,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 11",
@@ -606,7 +642,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 12",
@@ -629,7 +666,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 13",
@@ -652,7 +690,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 14",
@@ -675,7 +714,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 15",
@@ -698,7 +738,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 16",
@@ -721,7 +762,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 17",
@@ -744,7 +786,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 18",
@@ -767,7 +810,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 19",
@@ -790,7 +834,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 20",
@@ -813,7 +858,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 21",
@@ -836,7 +882,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 22",
@@ -859,7 +906,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 23",
@@ -882,7 +930,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 24",
@@ -905,7 +954,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 25",
@@ -928,7 +978,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 26",
@@ -951,7 +1002,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 27",
@@ -974,7 +1026,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 28",
@@ -997,7 +1050,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 29",
@@ -1020,7 +1074,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 30",
@@ -1043,7 +1098,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Numberman Code 31",
@@ -1066,7 +1122,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mayl's HP BMD",
@@ -1080,7 +1137,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Yai's HP BMD 1",
@@ -1094,7 +1152,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Yai's HP BMD 2",
@@ -1108,7 +1167,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dex's HP BMD 1",
@@ -1122,7 +1182,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dex's HP BMD 2",
@@ -1136,7 +1197,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mayl's HP PMD",
@@ -1189,7 +1251,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1288,7 +1351,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "ACDC 1 Northeast BMD",
@@ -1302,7 +1366,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "ACDC 1 PMD",
@@ -1364,7 +1429,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "ACDC 2 Center BMD",
@@ -1378,7 +1444,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "ACDC 2 North BMD",
@@ -1392,7 +1459,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "ACDC 3 Southwest BMD",
@@ -1406,7 +1474,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "ACDC 3 Northeast BMD",
@@ -1420,7 +1489,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1488,7 +1558,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SciLab Garbage Can",
@@ -1502,7 +1573,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SciLab Vending Machine BMD",
@@ -1516,7 +1588,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SciLab Virus Lab Door BMD 1",
@@ -1530,7 +1603,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SciLab Virus Lab Door BMD 2",
@@ -1544,7 +1618,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SciLab Dad's Computer BMD",
@@ -1558,7 +1633,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SciLab Dad's Computer PMD",
@@ -1611,7 +1687,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Please deliver this",
@@ -1646,7 +1723,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: My Navi is sick",
@@ -1660,7 +1738,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Help me with my son!",
@@ -1695,7 +1774,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Transmission error",
@@ -1715,7 +1795,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Chip Prices",
@@ -1750,7 +1831,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: I'm broke?!",
@@ -1785,7 +1867,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Rare chips for cheap!",
@@ -1805,7 +1888,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Be my boyfriend",
@@ -1825,7 +1909,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Will you deliver?",
@@ -1870,7 +1955,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Somebody, please help!",
@@ -1890,7 +1976,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Looking for condor",
@@ -1935,7 +2022,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Help with rehab",
@@ -1955,7 +2043,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Help with rehab bonus",
@@ -1975,7 +2064,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Old Master",
@@ -2010,7 +2100,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Catching gang members",
@@ -2039,7 +2130,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Please adopt a virus!",
@@ -2059,7 +2151,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Legendary Tomes",
@@ -2117,7 +2210,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Legendary Tomes - Treasure",
@@ -2152,7 +2246,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Hide and seek! First Child",
@@ -2172,7 +2267,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Hide and seek! Second Child",
@@ -2192,7 +2288,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Hide and seek! Third Child",
@@ -2212,7 +2309,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Hide and seek! Fourth Child",
@@ -2232,7 +2330,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Hide and seek! Completion",
@@ -2252,7 +2351,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Finding the blue Navi",
@@ -2272,7 +2372,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Give your support",
@@ -2292,7 +2393,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Stamp collecting",
@@ -2357,7 +2459,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Job: Help with a will",
@@ -2432,7 +2535,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2524,7 +2628,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SciLab 1 WWW BMD",
@@ -2538,7 +2643,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SciLab 2 South BMD",
@@ -2552,7 +2658,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SciLab 2 West BMD",
@@ -2566,7 +2673,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2669,7 +2777,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Yoka Quiz Master",
@@ -2683,7 +2792,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Yoka FireSwrd P Trade",
@@ -2697,7 +2807,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Yoka Inn Jars",
@@ -2711,7 +2822,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Yoka Zoo Garbage",
@@ -2725,7 +2837,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Zoo Panda PMD",
@@ -2778,7 +2891,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Zoo 1 East BMD",
@@ -2792,7 +2906,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Zoo 1 North BMD",
@@ -2806,7 +2921,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Zoo 1 Central BMD",
@@ -2820,7 +2936,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Zoo 2 East BMD",
@@ -2834,7 +2951,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Zoo 2 Central BMD",
@@ -2848,7 +2966,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Zoo 2 West BMD",
@@ -2862,7 +2981,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Zoo 3 North BMD",
@@ -2876,7 +2996,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Zoo 3 Central BMD",
@@ -2890,7 +3011,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Zoo 3 Path BMD",
@@ -2904,7 +3026,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Zoo 3 Northwest BMD",
@@ -2918,7 +3041,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Zoo 4 West BMD",
@@ -2932,7 +3056,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Zoo 4 Northwest BMD",
@@ -2946,7 +3071,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Zoo 4 Southeast BMD",
@@ -2960,7 +3086,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Yoka TV BMD",
@@ -2974,7 +3101,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Yoka Armor BMD",
@@ -2988,7 +3116,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Yoka Hot Spring BMD",
@@ -3002,7 +3131,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Yoka Ticket Machine BMD",
@@ -3016,7 +3146,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Yoka Giraffe BMD",
@@ -3030,7 +3161,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Yoka Panda BMD",
@@ -3044,7 +3176,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tamako's HP BMD",
@@ -3058,7 +3191,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tamako's HP PMD",
@@ -3111,7 +3245,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Comedian",
@@ -3125,7 +3260,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 01",
@@ -3139,7 +3275,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 02",
@@ -3153,7 +3290,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 03",
@@ -3167,7 +3305,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 04",
@@ -3181,7 +3320,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 05",
@@ -3195,7 +3335,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 06",
@@ -3209,7 +3350,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 07",
@@ -3223,7 +3365,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 08",
@@ -3237,7 +3380,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 09",
@@ -3251,7 +3395,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 10",
@@ -3265,7 +3410,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 11",
@@ -3279,7 +3425,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 12",
@@ -3293,7 +3440,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 13",
@@ -3307,7 +3455,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 14",
@@ -3321,7 +3470,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 15",
@@ -3335,7 +3485,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 16",
@@ -3349,7 +3500,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 17",
@@ -3363,7 +3515,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 18",
@@ -3377,7 +3530,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 19",
@@ -3391,7 +3545,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 20",
@@ -3405,7 +3560,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 21",
@@ -3419,7 +3575,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 22",
@@ -3433,7 +3590,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 23",
@@ -3447,7 +3605,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 24",
@@ -3461,7 +3620,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 25",
@@ -3475,7 +3635,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 26",
@@ -3489,7 +3650,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 27",
@@ -3503,7 +3665,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 28",
@@ -3517,7 +3680,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 29",
@@ -3531,7 +3695,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 30",
@@ -3545,7 +3710,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 31",
@@ -3559,7 +3725,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chocolate Shop 32",
@@ -3573,7 +3740,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3648,7 +3816,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Yoka 1 WWW BMD",
@@ -3662,7 +3831,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Yoka 1 PMD",
@@ -3724,7 +3894,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Yoka 2 Lower BMD",
@@ -3738,7 +3909,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Yoka 2 Upper BMD",
@@ -3752,7 +3924,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3809,7 +3982,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hades Quiz King",
@@ -3823,7 +3997,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hospital DynaWav V Trade",
@@ -3837,7 +4012,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach DNN WideSwrd C Trade",
@@ -3851,7 +4027,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach DNN HoleMetr H Trade",
@@ -3865,7 +4042,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach DNN Shadow J Trade",
@@ -3879,7 +4057,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hades GrabBack K Trade",
@@ -3893,7 +4072,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach Department Store",
@@ -3907,7 +4087,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach Hospital Plaque",
@@ -3921,7 +4102,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach Hospital Pink Door",
@@ -3935,7 +4117,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach Hospital Tree",
@@ -3949,7 +4132,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach Hospital Hidden Conversation",
@@ -3963,7 +4147,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach Hospital Girl",
@@ -3977,7 +4162,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach DNN Kiosk",
@@ -3991,7 +4177,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach DNN Boxes",
@@ -4005,7 +4192,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach DNN Poster",
@@ -4019,7 +4207,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hades Boat Dock",
@@ -4033,7 +4222,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hades South BMD",
@@ -4047,7 +4237,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hades Gargoyle BMD",
@@ -4061,7 +4252,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hospital 1 North BMD",
@@ -4075,7 +4267,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hospital 1 West BMD",
@@ -4089,7 +4282,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hospital 1 Center BMD",
@@ -4103,7 +4297,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hospital 2 Island BMD",
@@ -4117,7 +4312,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hospital 2 Central BMD",
@@ -4131,7 +4327,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hospital 2 Southwest BMD",
@@ -4145,7 +4342,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hospital 3 West BMD",
@@ -4159,7 +4357,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hospital 3 Central BMD",
@@ -4173,7 +4372,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hospital 3 Northwest BMD",
@@ -4187,7 +4387,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hospital 4 North BMD",
@@ -4201,7 +4402,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hospital 4 Central BMD",
@@ -4215,7 +4417,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hospital 4 Southeast BMD",
@@ -4229,7 +4432,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hospital 5 Island BMD",
@@ -4243,7 +4447,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hospital 5 Northeast BMD",
@@ -4257,7 +4462,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hospital 5 Southwest BMD",
@@ -4271,7 +4477,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach Hospital Bed BMD",
@@ -4285,7 +4492,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach TV BMD",
@@ -4299,7 +4507,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach Vending Machine BMD",
@@ -4313,7 +4522,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach News Van BMD",
@@ -4327,7 +4537,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach Battle Console BMD",
@@ -4341,7 +4552,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach Security System BMD",
@@ -4355,7 +4567,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach Broadcast Computer BMD",
@@ -4369,7 +4582,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach DNN Security Panel PMD",
@@ -4422,7 +4636,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach DNN Main Console PMD",
@@ -4475,7 +4690,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Undernet 6 TV BMD",
@@ -4489,7 +4705,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4599,7 +4816,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach 1 PMD",
@@ -4652,7 +4870,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach 2 East BMD",
@@ -4666,7 +4885,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beach 2 West BMD",
@@ -4680,7 +4900,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Villain",
@@ -4694,7 +4915,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4714,7 +4936,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Undernet 1 WWW BMD",
@@ -4728,7 +4951,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Undernet 2 Lower BMD",
@@ -4742,7 +4966,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Undernet 2 Upper BMD",
@@ -4756,7 +4981,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Undernet 3 South BMD",
@@ -4770,7 +4996,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Undernet 3 Central BMD",
@@ -4784,7 +5011,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Undernet 4 Pillar Prog",
@@ -4798,7 +5026,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Undernet 4 Top North BMD",
@@ -4812,7 +5041,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Undernet 4 Bottom West BMD",
@@ -4826,7 +5056,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Undernet 4 Top Pillar BMD",
@@ -4840,7 +5071,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Undernet 5 Upper BMD",
@@ -4854,7 +5086,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4874,7 +5107,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Undernet 6 East BMD",
@@ -4888,7 +5122,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Undernet 6 Central BMD",
@@ -4902,7 +5137,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Undernet 7 PMD",
@@ -4955,7 +5191,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Undernet 7 West BMD",
@@ -4969,7 +5206,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Undernet 7 Northeast BMD",
@@ -4983,7 +5221,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Undernet 7 Northwest BMD",
@@ -4997,7 +5236,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Undernet 7 Upper BMD",
@@ -5011,7 +5251,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5031,7 +5272,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "WWW Wily's Desk",
@@ -5045,7 +5287,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "WWW Wall BMD",
@@ -5059,7 +5302,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "WWW 1 East BMD",
@@ -5073,7 +5317,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "WWW 1 West BMD",
@@ -5087,7 +5332,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "WWW 1 Central BMD",
@@ -5101,7 +5347,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "WWW 2 East BMD",
@@ -5115,7 +5362,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "WWW 2 Northwest BMD",
@@ -5129,7 +5377,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "WWW 3 East BMD",
@@ -5143,7 +5392,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "WWW 3 North BMD",
@@ -5157,7 +5407,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "WWW 4 Central BMD",
@@ -5171,7 +5422,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "WWW 4 Northwest BMD",
@@ -5185,7 +5437,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Alpha Defeated",
@@ -5199,7 +5452,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5219,7 +5473,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Secret 1 Northeast BMD",
@@ -5233,7 +5489,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Secret 1 Northwest BMD",
@@ -5247,7 +5505,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Secret 2 Island BMD",
@@ -5261,7 +5521,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Secret 2 Lower BMD",
@@ -5275,7 +5537,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Secret 2 Upper BMD",
@@ -5289,7 +5553,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Secret 3 Island BMD",
@@ -5303,7 +5569,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Secret 3 South BMD",
@@ -5317,7 +5585,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Secret 3 BugFrag BMD",
@@ -5331,7 +5601,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "Serenade",
@@ -5345,7 +5617,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           }
         ]
       }
@@ -5368,12 +5642,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 16
+        "max_count": 8,
+        "classification": "progression_skip_balancing"
       },
       "CACDCPas": {
         "name": "CACDCPas",
@@ -5382,12 +5654,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "CSciPass": {
         "name": "CSciPass",
@@ -5396,12 +5666,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "CYokaPas": {
         "name": "CYokaPas",
@@ -5410,12 +5678,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "CBeacPas": {
         "name": "CBeacPas",
@@ -5424,12 +5690,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "WWW ID": {
         "name": "WWW ID",
@@ -5438,12 +5702,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "OrderSys": {
         "name": "OrderSys",
@@ -5452,12 +5714,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "ModTools": {
         "name": "ModTools",
@@ -5466,12 +5726,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "ExpMem": {
         "name": "ExpMem",
@@ -5480,12 +5738,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "useful"
       },
       "SpinWht": {
         "name": "SpinWht",
@@ -5494,12 +5750,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "SpinPink": {
         "name": "SpinPink",
@@ -5508,12 +5762,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "SpinYllw": {
         "name": "SpinYllw",
@@ -5522,12 +5774,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "SpinRed": {
         "name": "SpinRed",
@@ -5536,12 +5786,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "SpinBlue": {
         "name": "SpinBlue",
@@ -5550,12 +5798,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "SpinGrn": {
         "name": "SpinGrn",
@@ -5564,12 +5810,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "SpinOrange": {
         "name": "SpinOrange",
@@ -5578,12 +5822,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "SpinPurple": {
         "name": "SpinPurple",
@@ -5592,12 +5834,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "SpinDark": {
         "name": "SpinDark",
@@ -5606,12 +5846,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "HPMemory": {
         "name": "HPMemory",
@@ -5620,12 +5858,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 46
+        "max_count": 23,
+        "classification": "useful"
       },
       "RegUP1": {
         "name": "RegUP1",
@@ -5634,12 +5870,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "RegUP2": {
         "name": "RegUP2",
@@ -5648,12 +5882,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 26
+        "max_count": 13,
+        "classification": "useful"
       },
       "RegUP3": {
         "name": "RegUP3",
@@ -5662,12 +5894,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "useful"
       },
       "Mr Famous' Wristband": {
         "name": "Mr Famous' Wristband",
@@ -5676,12 +5906,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "SubMem": {
         "name": "SubMem",
@@ -5690,12 +5918,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Unlocker": {
         "name": "Unlocker",
@@ -5704,12 +5930,10 @@
           "Everything",
           "Subchips"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 20
+        "max_count": 10,
+        "classification": "progression"
       },
       "Untrap": {
         "name": "Untrap",
@@ -5718,12 +5942,10 @@
           "Everything",
           "Subchips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "LockEnmy": {
         "name": "LockEnmy",
@@ -5732,12 +5954,10 @@
           "Everything",
           "Subchips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "MiniEnrg": {
         "name": "MiniEnrg",
@@ -5746,12 +5966,10 @@
           "Everything",
           "Subchips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "FullEnrg": {
         "name": "FullEnrg",
@@ -5760,12 +5978,10 @@
           "Everything",
           "Subchips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "AirShoes *": {
         "name": "AirShoes *",
@@ -5774,12 +5990,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "AirShot3 *": {
         "name": "AirShot3 *",
@@ -5788,12 +6002,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "AntiNavi M": {
         "name": "AntiNavi M",
@@ -5802,12 +6014,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "AntiRecv B": {
         "name": "AntiRecv B",
@@ -5816,12 +6026,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "AntiSword Y": {
         "name": "AntiSword Y",
@@ -5830,12 +6038,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Aqua+30 *": {
         "name": "Aqua+30 *",
@@ -5844,12 +6050,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Aura F": {
         "name": "Aura F",
@@ -5858,12 +6062,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "BambooSword N": {
         "name": "BambooSword N",
@@ -5872,12 +6074,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Barr100 E": {
         "name": "Barr100 E",
@@ -5886,12 +6086,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Barr200 E": {
         "name": "Barr200 E",
@@ -5900,12 +6098,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Barrier E": {
         "name": "Barrier E",
@@ -5914,12 +6110,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Barrier L": {
         "name": "Barrier L",
@@ -5928,12 +6122,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "BlkBomb1 P": {
         "name": "BlkBomb1 P",
@@ -5942,12 +6134,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "BlkBomb2 S": {
         "name": "BlkBomb2 S",
@@ -5956,12 +6146,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Cannon C": {
         "name": "Cannon C",
@@ -5970,12 +6158,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "CopyDmg *": {
         "name": "CopyDmg *",
@@ -5984,12 +6170,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "CustSwrd Z": {
         "name": "CustSwrd Z",
@@ -5998,12 +6182,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "DynaWave V": {
         "name": "DynaWave V",
@@ -6012,12 +6194,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "ElecSwrd P": {
         "name": "ElecSwrd P",
@@ -6026,12 +6206,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Fire+30 *": {
         "name": "Fire+30 *",
@@ -6040,12 +6218,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "FireRat H": {
         "name": "FireRat H",
@@ -6054,12 +6230,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "FireSwrd P": {
         "name": "FireSwrd P",
@@ -6068,12 +6242,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "FstGauge *": {
         "name": "FstGauge *",
@@ -6082,12 +6254,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "GaiaBlde *": {
         "name": "GaiaBlde *",
@@ -6096,12 +6266,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Geddon1 *": {
         "name": "Geddon1 *",
@@ -6110,12 +6278,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Geddon1 D": {
         "name": "Geddon1 D",
@@ -6124,12 +6290,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Geddon3 U": {
         "name": "Geddon3 U",
@@ -6138,12 +6302,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Geyser B": {
         "name": "Geyser B",
@@ -6152,12 +6314,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "GrabBack K": {
         "name": "GrabBack K",
@@ -6166,12 +6326,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "GrabRvng A": {
         "name": "GrabRvng A",
@@ -6180,12 +6338,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "GrabRvng Y": {
         "name": "GrabRvng Y",
@@ -6194,12 +6350,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "GtStrght S": {
         "name": "GtStrght S",
@@ -6208,12 +6362,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Guardian O": {
         "name": "Guardian O",
@@ -6222,12 +6374,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "GutImpact H": {
         "name": "GutImpact H",
@@ -6236,12 +6386,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "GutImpct J": {
         "name": "GutImpct J",
@@ -6250,12 +6398,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "GutPunch E": {
         "name": "GutPunch E",
@@ -6264,12 +6410,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "GutPunch B": {
         "name": "GutPunch B",
@@ -6278,12 +6422,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "GutStrgt Q": {
         "name": "GutStrgt Q",
@@ -6292,12 +6434,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Hammer T": {
         "name": "Hammer T",
@@ -6306,12 +6446,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "HeatSide T": {
         "name": "HeatSide T",
@@ -6320,12 +6458,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "HeroSwrd P": {
         "name": "HeroSwrd P",
@@ -6334,12 +6470,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "HiCannon *": {
         "name": "HiCannon *",
@@ -6348,12 +6482,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Hole *": {
         "name": "Hole *",
@@ -6362,12 +6494,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "IceStage *": {
         "name": "IceStage *",
@@ -6376,12 +6506,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Invis *": {
         "name": "Invis *",
@@ -6390,12 +6518,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Jealousy J": {
         "name": "Jealousy J",
@@ -6404,12 +6530,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Lance S": {
         "name": "Lance S",
@@ -6418,12 +6542,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "LongSwrd E": {
         "name": "LongSwrd E",
@@ -6432,12 +6554,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Magnum1 A": {
         "name": "Magnum1 A",
@@ -6446,12 +6566,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Muramasa M": {
         "name": "Muramasa M",
@@ -6460,12 +6578,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Navi+40 *": {
         "name": "Navi+40 *",
@@ -6474,12 +6590,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Panic C": {
         "name": "Panic C",
@@ -6488,12 +6602,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "PanlOut3 *": {
         "name": "PanlOut3 *",
@@ -6502,12 +6614,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Poltergeist G": {
         "name": "Poltergeist G",
@@ -6516,12 +6626,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Prism Q": {
         "name": "Prism Q",
@@ -6530,12 +6638,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Recov10 *": {
         "name": "Recov10 *",
@@ -6544,12 +6650,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Recov120 *": {
         "name": "Recov120 *",
@@ -6558,12 +6662,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Recov120 O": {
         "name": "Recov120 O",
@@ -6572,12 +6674,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Recov120 S": {
         "name": "Recov120 S",
@@ -6586,12 +6686,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Recov150 P": {
         "name": "Recov150 P",
@@ -6600,12 +6698,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Recov200 N": {
         "name": "Recov200 N",
@@ -6614,12 +6710,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Recov30 *": {
         "name": "Recov30 *",
@@ -6628,12 +6722,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Recov300 R": {
         "name": "Recov300 R",
@@ -6642,12 +6734,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Recov50 G": {
         "name": "Recov50 G",
@@ -6656,12 +6746,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Repair *": {
         "name": "Repair *",
@@ -6670,12 +6758,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Repair A": {
         "name": "Repair A",
@@ -6684,12 +6770,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Rockcube *": {
         "name": "Rockcube *",
@@ -6698,12 +6782,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Rook F": {
         "name": "Rook F",
@@ -6712,12 +6794,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Salamndr *": {
         "name": "Salamndr *",
@@ -6726,12 +6806,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "SandStage C": {
         "name": "SandStage C",
@@ -6740,12 +6818,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "SideGun S": {
         "name": "SideGun S",
@@ -6754,12 +6830,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Slasher B": {
         "name": "Slasher B",
@@ -6768,12 +6842,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "SloGauge *": {
         "name": "SloGauge *",
@@ -6782,12 +6854,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Snake D": {
         "name": "Snake D",
@@ -6796,12 +6866,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Snctuary C": {
         "name": "Snctuary C",
@@ -6810,12 +6878,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Spreader *": {
         "name": "Spreader *",
@@ -6824,12 +6890,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Spreader N": {
         "name": "Spreader N",
@@ -6838,12 +6902,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Spreader P": {
         "name": "Spreader P",
@@ -6852,12 +6914,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "StepCross Q": {
         "name": "StepCross Q",
@@ -6866,12 +6926,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "StepCross R": {
         "name": "StepCross R",
@@ -6880,12 +6938,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "StepSwrd M": {
         "name": "StepSwrd M",
@@ -6894,12 +6950,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "StepSwrd N": {
         "name": "StepSwrd N",
@@ -6908,12 +6962,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "StepSwrd O": {
         "name": "StepSwrd O",
@@ -6922,12 +6974,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "StpCross S": {
         "name": "StpCross S",
@@ -6936,12 +6986,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Sword E": {
         "name": "Sword E",
@@ -6950,12 +6998,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Team1 *": {
         "name": "Team1 *",
@@ -6964,12 +7010,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Team2 *": {
         "name": "Team2 *",
@@ -6978,12 +7022,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Thndrblt *": {
         "name": "Thndrblt *",
@@ -6992,12 +7034,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Tornado L": {
         "name": "Tornado L",
@@ -7006,12 +7046,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Fountain *": {
         "name": "Fountain *",
@@ -7020,12 +7058,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "VarSword B": {
         "name": "VarSword B",
@@ -7034,12 +7070,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "VarSword F": {
         "name": "VarSword F",
@@ -7048,12 +7082,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "WideSwrd C": {
         "name": "WideSwrd C",
@@ -7062,12 +7094,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "WideSwrd E": {
         "name": "WideSwrd E",
@@ -7076,12 +7106,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "WideSwrd L": {
         "name": "WideSwrd L",
@@ -7090,12 +7118,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Yo-Yo1 D": {
         "name": "Yo-Yo1 D",
@@ -7104,12 +7130,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "ZeusHammer Z": {
         "name": "ZeusHammer Z",
@@ -7118,12 +7142,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Bass+ X": {
         "name": "Bass+ X",
@@ -7132,12 +7154,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "DeltaRay Z": {
         "name": "DeltaRay Z",
@@ -7146,12 +7166,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Punk P": {
         "name": "Punk P",
@@ -7160,12 +7178,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "DarkAura A": {
         "name": "DarkAura A",
@@ -7174,12 +7190,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "AlphaArm\u03a9 V": {
         "name": "AlphaArm\u03a9 V",
@@ -7188,12 +7202,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Airshoes": {
         "name": "Airshoes",
@@ -7202,12 +7214,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Attack+1 (White)": {
         "name": "Attack+1 (White)",
@@ -7216,12 +7226,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Attack+1 (Pink)": {
         "name": "Attack+1 (Pink)",
@@ -7230,12 +7238,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "BrkChrg": {
         "name": "BrkChrg",
@@ -7244,12 +7250,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Charge+1 (Pink)": {
         "name": "Charge+1 (Pink)",
@@ -7258,12 +7262,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Charge+1 (White)": {
         "name": "Charge+1 (White)",
@@ -7272,12 +7274,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Collect": {
         "name": "Collect",
@@ -7286,12 +7286,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "GigFldr1": {
         "name": "GigFldr1",
@@ -7300,12 +7298,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "HP+100 (Pink)": {
         "name": "HP+100 (Pink)",
@@ -7314,12 +7310,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "HP+100 (Yellow)": {
         "name": "HP+100 (Yellow)",
@@ -7328,12 +7322,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "HP+200 (Yellow)": {
         "name": "HP+200 (Yellow)",
@@ -7342,12 +7334,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "HP+500 (Yellow)": {
         "name": "HP+500 (Yellow)",
@@ -7356,12 +7346,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "HubBatc": {
         "name": "HubBatc",
@@ -7370,12 +7358,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Jungle": {
         "name": "Jungle",
@@ -7384,12 +7370,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "OilBody": {
         "name": "OilBody",
@@ -7398,12 +7382,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "QuickGge": {
         "name": "QuickGge",
@@ -7412,12 +7394,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "SetSand": {
         "name": "SetSand",
@@ -7426,12 +7406,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "SneakRun": {
         "name": "SneakRun",
@@ -7441,12 +7419,10 @@
           "Programs",
           "Subchips"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Speed+1 (Yellow)": {
         "name": "Speed+1 (Yellow)",
@@ -7455,12 +7431,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "WpnLV+1 (White)": {
         "name": "WpnLV+1 (White)",
@@ -7469,12 +7443,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "WpnLV+1 (Pink)": {
         "name": "WpnLV+1 (Pink)",
@@ -7483,12 +7455,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "WpnLV+1 (Yellow)": {
         "name": "WpnLV+1 (Yellow)",
@@ -7497,12 +7467,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Press": {
         "name": "Press",
@@ -7511,12 +7479,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "200z": {
         "name": "200z",
@@ -7525,12 +7491,10 @@
           "Everything",
           "Zenny"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "500z": {
         "name": "500z",
@@ -7539,12 +7503,10 @@
           "Everything",
           "Zenny"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "600z": {
         "name": "600z",
@@ -7553,12 +7515,10 @@
           "Everything",
           "Zenny"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "800z": {
         "name": "800z",
@@ -7567,12 +7527,10 @@
           "Everything",
           "Zenny"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "900z": {
         "name": "900z",
@@ -7581,12 +7539,10 @@
           "Everything",
           "Zenny"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "1000z": {
         "name": "1000z",
@@ -7595,12 +7551,10 @@
           "Everything",
           "Zenny"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "1200z": {
         "name": "1200z",
@@ -7609,12 +7563,10 @@
           "Everything",
           "Zenny"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "1400z": {
         "name": "1400z",
@@ -7623,12 +7575,10 @@
           "Everything",
           "Zenny"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "1600z": {
         "name": "1600z",
@@ -7637,12 +7587,10 @@
           "Everything",
           "Zenny"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "1800z": {
         "name": "1800z",
@@ -7651,12 +7599,10 @@
           "Everything",
           "Zenny"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "2000z": {
         "name": "2000z",
@@ -7665,12 +7611,10 @@
           "Everything",
           "Zenny"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "3000z": {
         "name": "3000z",
@@ -7679,12 +7623,10 @@
           "Everything",
           "Zenny"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "9000z": {
         "name": "9000z",
@@ -7693,12 +7635,10 @@
           "Everything",
           "Zenny"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "10000z": {
         "name": "10000z",
@@ -7707,12 +7647,10 @@
           "Everything",
           "Zenny"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "30000z": {
         "name": "30000z",
@@ -7721,12 +7659,10 @@
           "Everything",
           "Zenny"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "50000z": {
         "name": "50000z",
@@ -7735,12 +7671,10 @@
           "Everything",
           "Zenny"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "30 BugFrags": {
         "name": "30 BugFrags",
@@ -7749,12 +7683,10 @@
           "BugFrags",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "SonicWav W": {
         "name": "SonicWav W",
@@ -7763,12 +7695,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Bubbler C": {
         "name": "Bubbler C",
@@ -7777,12 +7707,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Shake1 S": {
         "name": "Shake1 S",
@@ -7791,12 +7719,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "HoleMetr H": {
         "name": "HoleMetr H",
@@ -7805,12 +7731,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Shadow J": {
         "name": "Shadow J",
@@ -7819,12 +7743,10 @@
           "BattleChips",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "SubPET": {
         "name": "SubPET",
@@ -7833,12 +7755,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Needle": {
         "name": "Needle",
@@ -7847,12 +7767,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "PETCase": {
         "name": "PETCase",
@@ -7861,12 +7779,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "10 BugFrags": {
         "name": "10 BugFrags",
@@ -7875,12 +7791,10 @@
           "BugFrags",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "1 BugFrag": {
         "name": "1 BugFrag",
@@ -7889,12 +7803,10 @@
           "BugFrags",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "filler"
       },
       "UnderSht": {
         "name": "UnderSht",
@@ -7903,12 +7815,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Roll R": {
         "name": "Roll R",
@@ -7918,12 +7828,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Roll V2 R": {
         "name": "Roll V2 R",
@@ -7933,12 +7841,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Roll V3 R": {
         "name": "Roll V3 R",
@@ -7948,12 +7854,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "GutsMan G": {
         "name": "GutsMan G",
@@ -7963,12 +7867,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "GutsMan V2 G": {
         "name": "GutsMan V2 G",
@@ -7978,12 +7880,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "GutsMan V3 G": {
         "name": "GutsMan V3 G",
@@ -7993,12 +7893,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "ProtoMan B": {
         "name": "ProtoMan B",
@@ -8008,12 +7906,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "ProtoMan V2 B": {
         "name": "ProtoMan V2 B",
@@ -8023,12 +7919,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "ProtoMan V3 B": {
         "name": "ProtoMan V3 B",
@@ -8038,12 +7932,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "FlashMan F": {
         "name": "FlashMan F",
@@ -8053,12 +7945,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "FlashMan V2 F": {
         "name": "FlashMan V2 F",
@@ -8068,12 +7958,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "FlashMan V3 F": {
         "name": "FlashMan V3 F",
@@ -8083,12 +7971,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "BeastMan B": {
         "name": "BeastMan B",
@@ -8098,12 +7984,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "BeastMan V2 B": {
         "name": "BeastMan V2 B",
@@ -8113,12 +7997,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "BeastMan V3 B": {
         "name": "BeastMan V3 B",
@@ -8128,12 +8010,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "BubblMan B": {
         "name": "BubblMan B",
@@ -8143,12 +8023,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "BubblMan V2 B": {
         "name": "BubblMan V2 B",
@@ -8158,12 +8036,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "BubblMan V3 B": {
         "name": "BubblMan V3 B",
@@ -8173,12 +8049,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "DesertMan D": {
         "name": "DesertMan D",
@@ -8188,12 +8062,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "DesertMan V2 D": {
         "name": "DesertMan V2 D",
@@ -8203,12 +8075,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "DesertMan V3 D": {
         "name": "DesertMan V3 D",
@@ -8218,12 +8088,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "PlantMan P": {
         "name": "PlantMan P",
@@ -8233,12 +8101,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "PlantMan V2 P": {
         "name": "PlantMan V2 P",
@@ -8248,12 +8114,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "PlantMan V3 P": {
         "name": "PlantMan V3 P",
@@ -8263,12 +8127,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "FlamMan F": {
         "name": "FlamMan F",
@@ -8278,12 +8140,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "FlamMan V2 F": {
         "name": "FlamMan V2 F",
@@ -8293,12 +8153,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "FlamMan V3 F": {
         "name": "FlamMan V3 F",
@@ -8308,12 +8166,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "DrillMan D": {
         "name": "DrillMan D",
@@ -8323,12 +8179,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "DrillMan V2 D": {
         "name": "DrillMan V2 D",
@@ -8338,12 +8192,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "DrillMan V3 D": {
         "name": "DrillMan V3 D",
@@ -8353,12 +8205,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "MetalMan M": {
         "name": "MetalMan M",
@@ -8368,12 +8218,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "MetalMan V2 M": {
         "name": "MetalMan V2 M",
@@ -8383,12 +8231,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "MetalMan V3 M": {
         "name": "MetalMan V3 M",
@@ -8398,12 +8244,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "KingMan K": {
         "name": "KingMan K",
@@ -8413,12 +8257,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "KingMan V2 K": {
         "name": "KingMan V2 K",
@@ -8428,12 +8270,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "KingMan V3 K": {
         "name": "KingMan V3 K",
@@ -8443,12 +8283,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "BowlMan B": {
         "name": "BowlMan B",
@@ -8458,12 +8296,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "BowlMan V2 B": {
         "name": "BowlMan V2 B",
@@ -8473,12 +8309,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "BowlMan V3 B": {
         "name": "BowlMan V3 B",
@@ -8488,12 +8322,10 @@
           "Everything",
           "Navi Chips"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Hammer": {
         "name": "Hammer",
@@ -8502,12 +8334,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Humor": {
         "name": "Humor",
@@ -8516,12 +8346,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "BlckMnd": {
         "name": "BlckMnd",
@@ -8530,12 +8358,10 @@
           "Everything",
           "Programs"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Victory": {
         "name": "Victory",
@@ -8543,12 +8369,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -8566,199 +8390,199 @@
   },
   "itempool_counts": {
     "1": {
-      "1 BugFrag": 12,
-      "10 BugFrags": 6,
-      "10000z": 2,
-      "1000z": 2,
-      "1200z": 2,
-      "1400z": 2,
-      "2000z": 2,
-      "30000z": 2,
-      "3000z": 2,
-      "50000z": 2,
-      "500z": 2,
-      "800z": 4,
-      "AirShoes *": 2,
-      "AirShot3 *": 2,
-      "Airshoes": 2,
-      "AlphaArm\u03a9 V": 2,
-      "AntiNavi M": 2,
-      "AntiRecv B": 2,
-      "AntiSword Y": 2,
-      "Aqua+30 *": 2,
-      "Attack+1 (Pink)": 2,
-      "Attack+1 (White)": 2,
-      "Aura F": 2,
-      "BambooSword N": 2,
-      "Barr100 E": 2,
-      "Barr200 E": 2,
-      "Barrier E": 2,
-      "Barrier L": 2,
-      "Bass+ X": 2,
-      "BeastMan B": 2,
-      "BeastMan V3 B": 2,
-      "BlckMnd": 2,
-      "BlkBomb1 P": 2,
-      "BlkBomb2 S": 2,
-      "BowlMan V2 B": 2,
-      "BowlMan V3 B": 2,
-      "BrkChrg": 2,
-      "BubblMan B": 2,
-      "BubblMan V3 B": 2,
-      "Bubbler C": 2,
-      "CACDCPas": 2,
-      "CBeacPas": 2,
-      "CSciPass": 2,
-      "CYokaPas": 2,
-      "Charge+1 (Pink)": 4,
-      "Charge+1 (White)": 4,
-      "Collect": 2,
-      "CopyDmg *": 6,
-      "CustSwrd Z": 2,
-      "DarkAura A": 2,
-      "DeltaRay Z": 2,
-      "DesertMan V2 D": 2,
-      "DesertMan V3 D": 2,
-      "DrillMan D": 2,
-      "DrillMan V2 D": 2,
-      "DrillMan V3 D": 2,
-      "DynaWave V": 2,
-      "ElecSwrd P": 2,
-      "ExpMem": 4,
-      "Fire+30 *": 2,
-      "FireRat H": 2,
-      "FireSwrd P": 2,
-      "FlamMan F": 2,
-      "FlamMan V2 F": 2,
-      "FlamMan V3 F": 2,
-      "FlashMan F": 2,
-      "FlashMan V2 F": 2,
-      "FlashMan V3 F": 2,
-      "Fountain *": 2,
-      "FstGauge *": 2,
-      "FullEnrg": 6,
-      "GaiaBlde *": 2,
-      "Geddon1 *": 2,
-      "Geddon3 U": 2,
-      "Geyser B": 2,
-      "GigFldr1": 2,
-      "GrabBack K": 2,
-      "GrabRvng A": 2,
-      "GtStrght S": 2,
-      "Guardian O": 2,
-      "GutImpact H": 2,
-      "GutImpct J": 2,
-      "GutPunch B": 2,
-      "GutStrgt Q": 2,
-      "GutsMan G": 2,
-      "GutsMan V2 G": 2,
-      "GutsMan V3 G": 2,
-      "HP+100 (Yellow)": 2,
-      "HP+200 (Yellow)": 2,
-      "HP+500 (Yellow)": 2,
-      "HPMemory": 46,
-      "Hammer": 2,
-      "Hammer T": 2,
-      "HeatSide T": 2,
-      "HeroSwrd P": 2,
-      "HiCannon *": 2,
-      "Hole *": 2,
-      "HoleMetr H": 2,
-      "HubBatc": 2,
-      "Humor": 2,
-      "IceStage *": 2,
-      "Invis *": 2,
-      "Jealousy J": 2,
-      "Jungle": 2,
-      "KingMan K": 2,
-      "KingMan V3 K": 2,
-      "Lance S": 2,
-      "LongSwrd E": 2,
-      "Magnum1 A": 2,
-      "MetalMan V2 M": 2,
-      "MetalMan V3 M": 2,
-      "MiniEnrg": 2,
-      "ModTools": 2,
-      "Mr Famous' Wristband": 2,
-      "Muramasa M": 2,
-      "Navi+40 *": 2,
-      "Needle": 2,
-      "OilBody": 2,
-      "OrderSys": 2,
-      "PETCase": 2,
-      "Panic C": 2,
-      "PlantMan V2 P": 2,
-      "PlantMan V3 P": 2,
-      "Poltergeist G": 2,
-      "Press": 2,
-      "Prism Q": 2,
-      "Progressive Undernet Rank": 16,
-      "ProtoMan V2 B": 2,
-      "ProtoMan V3 B": 2,
-      "Punk P": 2,
-      "QuickGge": 2,
-      "Recov10 *": 2,
-      "Recov120 *": 2,
-      "Recov120 S": 2,
-      "Recov150 P": 2,
-      "Recov30 *": 2,
-      "Recov300 R": 2,
-      "RegUP1": 6,
-      "RegUP2": 26,
-      "RegUP3": 8,
-      "Repair *": 2,
-      "Rockcube *": 2,
-      "Roll R": 2,
-      "Roll V2 R": 2,
-      "Roll V3 R": 2,
-      "Salamndr *": 2,
-      "SandStage C": 2,
-      "SetSand": 2,
-      "Shadow J": 2,
-      "Shake1 S": 2,
-      "SideGun S": 2,
-      "Slasher B": 2,
-      "SloGauge *": 2,
-      "Snake D": 2,
-      "Snctuary C": 2,
-      "SneakRun": 2,
-      "SonicWav W": 2,
-      "Speed+1 (Yellow)": 2,
-      "SpinBlue": 2,
-      "SpinDark": 2,
-      "SpinGrn": 2,
-      "SpinOrange": 2,
-      "SpinPink": 2,
-      "SpinPurple": 2,
-      "SpinRed": 2,
-      "SpinWht": 2,
-      "SpinYllw": 2,
-      "Spreader *": 2,
-      "Spreader N": 2,
-      "Spreader P": 2,
-      "StepCross Q": 2,
-      "StepCross R": 2,
-      "StepSwrd M": 2,
-      "StepSwrd N": 2,
-      "StepSwrd O": 2,
-      "StpCross S": 2,
-      "SubMem": 4,
-      "SubPET": 2,
-      "Team1 *": 2,
-      "Team2 *": 2,
-      "Thndrblt *": 2,
-      "Tornado L": 2,
-      "UnderSht": 2,
-      "Unlocker": 20,
-      "Untrap": 2,
-      "VarSword B": 2,
-      "VarSword F": 2,
+      "1 BugFrag": 6,
+      "10 BugFrags": 3,
+      "10000z": 1,
+      "1000z": 1,
+      "1200z": 1,
+      "1400z": 1,
+      "2000z": 1,
+      "30000z": 1,
+      "3000z": 1,
+      "50000z": 1,
+      "500z": 1,
+      "800z": 2,
+      "AirShoes *": 1,
+      "AirShot3 *": 1,
+      "Airshoes": 1,
+      "AlphaArm\u03a9 V": 1,
+      "AntiNavi M": 1,
+      "AntiRecv B": 1,
+      "AntiSword Y": 1,
+      "Aqua+30 *": 1,
+      "Attack+1 (Pink)": 1,
+      "Attack+1 (White)": 1,
+      "Aura F": 1,
+      "BambooSword N": 1,
+      "Barr100 E": 1,
+      "Barr200 E": 1,
+      "Barrier E": 1,
+      "Barrier L": 1,
+      "Bass+ X": 1,
+      "BeastMan B": 1,
+      "BeastMan V3 B": 1,
+      "BlckMnd": 1,
+      "BlkBomb1 P": 1,
+      "BlkBomb2 S": 1,
+      "BowlMan V2 B": 1,
+      "BowlMan V3 B": 1,
+      "BrkChrg": 1,
+      "BubblMan B": 1,
+      "BubblMan V3 B": 1,
+      "Bubbler C": 1,
+      "CACDCPas": 1,
+      "CBeacPas": 1,
+      "CSciPass": 1,
+      "CYokaPas": 1,
+      "Charge+1 (Pink)": 2,
+      "Charge+1 (White)": 2,
+      "Collect": 1,
+      "CopyDmg *": 3,
+      "CustSwrd Z": 1,
+      "DarkAura A": 1,
+      "DeltaRay Z": 1,
+      "DesertMan V2 D": 1,
+      "DesertMan V3 D": 1,
+      "DrillMan D": 1,
+      "DrillMan V2 D": 1,
+      "DrillMan V3 D": 1,
+      "DynaWave V": 1,
+      "ElecSwrd P": 1,
+      "ExpMem": 2,
+      "Fire+30 *": 1,
+      "FireRat H": 1,
+      "FireSwrd P": 1,
+      "FlamMan F": 1,
+      "FlamMan V2 F": 1,
+      "FlamMan V3 F": 1,
+      "FlashMan F": 1,
+      "FlashMan V2 F": 1,
+      "FlashMan V3 F": 1,
+      "Fountain *": 1,
+      "FstGauge *": 1,
+      "FullEnrg": 3,
+      "GaiaBlde *": 1,
+      "Geddon1 *": 1,
+      "Geddon3 U": 1,
+      "Geyser B": 1,
+      "GigFldr1": 1,
+      "GrabBack K": 1,
+      "GrabRvng A": 1,
+      "GtStrght S": 1,
+      "Guardian O": 1,
+      "GutImpact H": 1,
+      "GutImpct J": 1,
+      "GutPunch B": 1,
+      "GutStrgt Q": 1,
+      "GutsMan G": 1,
+      "GutsMan V2 G": 1,
+      "GutsMan V3 G": 1,
+      "HP+100 (Yellow)": 1,
+      "HP+200 (Yellow)": 1,
+      "HP+500 (Yellow)": 1,
+      "HPMemory": 23,
+      "Hammer": 1,
+      "Hammer T": 1,
+      "HeatSide T": 1,
+      "HeroSwrd P": 1,
+      "HiCannon *": 1,
+      "Hole *": 1,
+      "HoleMetr H": 1,
+      "HubBatc": 1,
+      "Humor": 1,
+      "IceStage *": 1,
+      "Invis *": 1,
+      "Jealousy J": 1,
+      "Jungle": 1,
+      "KingMan K": 1,
+      "KingMan V3 K": 1,
+      "Lance S": 1,
+      "LongSwrd E": 1,
+      "Magnum1 A": 1,
+      "MetalMan V2 M": 1,
+      "MetalMan V3 M": 1,
+      "MiniEnrg": 1,
+      "ModTools": 1,
+      "Mr Famous' Wristband": 1,
+      "Muramasa M": 1,
+      "Navi+40 *": 1,
+      "Needle": 1,
+      "OilBody": 1,
+      "OrderSys": 1,
+      "PETCase": 1,
+      "Panic C": 1,
+      "PlantMan V2 P": 1,
+      "PlantMan V3 P": 1,
+      "Poltergeist G": 1,
+      "Press": 1,
+      "Prism Q": 1,
+      "Progressive Undernet Rank": 8,
+      "ProtoMan V2 B": 1,
+      "ProtoMan V3 B": 1,
+      "Punk P": 1,
+      "QuickGge": 1,
+      "Recov10 *": 1,
+      "Recov120 *": 1,
+      "Recov120 S": 1,
+      "Recov150 P": 1,
+      "Recov30 *": 1,
+      "Recov300 R": 1,
+      "RegUP1": 3,
+      "RegUP2": 13,
+      "RegUP3": 4,
+      "Repair *": 1,
+      "Rockcube *": 1,
+      "Roll R": 1,
+      "Roll V2 R": 1,
+      "Roll V3 R": 1,
+      "Salamndr *": 1,
+      "SandStage C": 1,
+      "SetSand": 1,
+      "Shadow J": 1,
+      "Shake1 S": 1,
+      "SideGun S": 1,
+      "Slasher B": 1,
+      "SloGauge *": 1,
+      "Snake D": 1,
+      "Snctuary C": 1,
+      "SneakRun": 1,
+      "SonicWav W": 1,
+      "Speed+1 (Yellow)": 1,
+      "SpinBlue": 1,
+      "SpinDark": 1,
+      "SpinGrn": 1,
+      "SpinOrange": 1,
+      "SpinPink": 1,
+      "SpinPurple": 1,
+      "SpinRed": 1,
+      "SpinWht": 1,
+      "SpinYllw": 1,
+      "Spreader *": 1,
+      "Spreader N": 1,
+      "Spreader P": 1,
+      "StepCross Q": 1,
+      "StepCross R": 1,
+      "StepSwrd M": 1,
+      "StepSwrd N": 1,
+      "StepSwrd O": 1,
+      "StpCross S": 1,
+      "SubMem": 2,
+      "SubPET": 1,
+      "Team1 *": 1,
+      "Team2 *": 1,
+      "Thndrblt *": 1,
+      "Tornado L": 1,
+      "UnderSht": 1,
+      "Unlocker": 10,
+      "Untrap": 1,
+      "VarSword B": 1,
+      "VarSword F": 1,
       "Victory": 1,
-      "WWW ID": 2,
-      "WideSwrd C": 2,
-      "WideSwrd E": 2,
-      "WpnLV+1 (Pink)": 2,
-      "ZeusHammer Z": 2
+      "WWW ID": 1,
+      "WideSwrd C": 1,
+      "WideSwrd E": 1,
+      "WpnLV+1 (Pink)": 1,
+      "ZeusHammer Z": 1
     }
   },
   "progression_mapping": {
@@ -8781,5 +8605,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

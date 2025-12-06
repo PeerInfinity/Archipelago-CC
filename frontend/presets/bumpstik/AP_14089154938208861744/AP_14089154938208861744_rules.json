@@ -54,7 +54,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 - 500 Points",
@@ -68,7 +69,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 - 750 Points",
@@ -82,7 +84,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 - 1000 Points",
@@ -96,7 +99,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 - 500 Level Points",
@@ -110,7 +114,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 - 1000 Level Points",
@@ -124,7 +129,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 - 1500 Level Points",
@@ -138,7 +144,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 - 2000 Level Points",
@@ -152,7 +159,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 - 25 Level Bumpers",
@@ -166,7 +174,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 - 50 Level Bumpers",
@@ -180,7 +189,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 - 75 Level Bumpers",
@@ -194,7 +204,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 - Combo 5",
@@ -208,7 +219,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bonus Booster 1",
@@ -226,7 +238,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 1",
@@ -244,7 +257,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 2",
@@ -262,7 +276,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 3",
@@ -280,7 +295,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 4",
@@ -298,7 +314,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 5",
@@ -316,7 +333,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 6",
@@ -334,7 +352,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 7",
@@ -352,7 +371,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 8",
@@ -370,7 +390,8 @@
               "player": 1,
               "advancement": false,
               "type": "Trap"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -416,7 +437,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 - 1000 Points",
@@ -430,7 +452,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 - 1500 Points",
@@ -444,7 +467,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 - 2000 Points",
@@ -458,7 +482,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 - 1000 Level Points",
@@ -472,7 +497,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 - 2000 Level Points",
@@ -486,7 +512,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 - 3000 Level Points",
@@ -500,7 +527,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 - 4000 Level Points",
@@ -514,7 +542,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 - 25 Level Bumpers",
@@ -528,7 +557,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 - 50 Level Bumpers",
@@ -542,7 +572,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 - 75 Level Bumpers",
@@ -556,7 +587,8 @@
               "player": 1,
               "advancement": false,
               "type": "Helper"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 - 100 Level Bumpers",
@@ -570,7 +602,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 - Combo 5",
@@ -584,7 +617,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 - Chain x2",
@@ -598,7 +632,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bonus Booster 2",
@@ -616,7 +651,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 9",
@@ -634,7 +670,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 10",
@@ -652,7 +689,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 11",
@@ -670,7 +708,8 @@
               "player": 1,
               "advancement": false,
               "type": "Helper"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 12",
@@ -688,7 +727,8 @@
               "player": 1,
               "advancement": false,
               "type": "Helper"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 13",
@@ -706,7 +746,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 14",
@@ -724,7 +765,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 15",
@@ -742,7 +784,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 16",
@@ -760,7 +803,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -806,7 +850,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 - 1600 Points",
@@ -820,7 +865,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 - 2400 Points",
@@ -834,7 +880,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 - 3200 Points",
@@ -848,7 +895,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 - 2000 Level Points",
@@ -862,7 +910,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 - 4000 Level Points",
@@ -876,7 +925,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 - 6000 Level Points",
@@ -890,7 +940,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 - 8000 Level Points",
@@ -904,7 +955,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 - 25 Level Bumpers",
@@ -918,7 +970,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 - 50 Level Bumpers",
@@ -932,7 +985,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 - 75 Level Bumpers",
@@ -946,7 +1000,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 - 100 Level Bumpers",
@@ -960,7 +1015,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 - 125 Level Bumpers",
@@ -974,7 +1030,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 - Combo 5",
@@ -988,7 +1045,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 - Combo 7",
@@ -1002,7 +1060,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 - Chain x2",
@@ -1016,7 +1075,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 - All Clear, 3 colors",
@@ -1030,7 +1090,8 @@
               "player": 1,
               "advancement": false,
               "type": "Helper"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bonus Booster 3",
@@ -1048,7 +1109,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 17",
@@ -1066,7 +1128,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 18",
@@ -1084,7 +1147,8 @@
               "player": 1,
               "advancement": false,
               "type": "Trap"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 19",
@@ -1102,7 +1166,8 @@
               "player": 1,
               "advancement": false,
               "type": "Helper"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 20",
@@ -1120,7 +1185,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 21",
@@ -1138,7 +1204,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 22",
@@ -1156,7 +1223,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 23",
@@ -1174,7 +1242,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 24",
@@ -1192,7 +1261,8 @@
               "player": 1,
               "advancement": false,
               "type": "Helper"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1238,7 +1308,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 - 3000 Points",
@@ -1252,7 +1323,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 - 4500 Points",
@@ -1266,7 +1338,8 @@
               "player": 1,
               "advancement": false,
               "type": "Helper"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 - 6000 Points",
@@ -1280,7 +1353,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 - 3000 Level Points",
@@ -1294,7 +1368,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 - 6000 Level Points",
@@ -1308,7 +1383,8 @@
               "player": 1,
               "advancement": false,
               "type": "Helper"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 - 9000 Level Points",
@@ -1322,7 +1398,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 - 12000 Level Points",
@@ -1336,7 +1413,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 - 25 Level Bumpers",
@@ -1350,7 +1428,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 - 50 Level Bumpers",
@@ -1364,7 +1443,8 @@
               "player": 1,
               "advancement": false,
               "type": "Trap"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 - 75 Level Bumpers",
@@ -1378,7 +1458,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 - 100 Level Bumpers",
@@ -1392,7 +1473,8 @@
               "player": 1,
               "advancement": false,
               "type": "Trap"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 - 125 Level Bumpers",
@@ -1406,7 +1488,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 - 150 Level Bumpers",
@@ -1420,7 +1503,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 - Combo 5",
@@ -1434,7 +1518,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 - Combo 7",
@@ -1448,7 +1533,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 - Chain x2",
@@ -1462,7 +1548,8 @@
               "player": 1,
               "advancement": false,
               "type": "Trap"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 - Chain x3",
@@ -1476,7 +1563,8 @@
               "player": 1,
               "advancement": false,
               "type": "Helper"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bonus Booster 4",
@@ -1494,7 +1582,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bonus Booster 5",
@@ -1512,7 +1601,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 25",
@@ -1530,7 +1620,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 26",
@@ -1548,7 +1639,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 27",
@@ -1566,7 +1658,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 28",
@@ -1584,7 +1677,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 29",
@@ -1602,7 +1696,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 30",
@@ -1620,7 +1715,8 @@
               "player": 1,
               "advancement": false,
               "type": "Other"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 31",
@@ -1638,7 +1734,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Treasure Bumper 32",
@@ -1656,7 +1753,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1676,7 +1774,8 @@
               "player": 1,
               "advancement": true,
               "type": "Target"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 5 - Cleared all Hazards",
@@ -1694,7 +1793,8 @@
               "player": 1,
               "advancement": false,
               "type": "Helper"
-            }
+            },
+            "locked": false
           }
         ]
       }
@@ -1724,10 +1824,7 @@
         "id": 595001,
         "groups": [
           "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Task Advance": {
         "classification": "useful",
@@ -1736,10 +1833,7 @@
         "groups": [
           "Everything",
           "Helpers"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false
+        ]
       },
       "Starting Turner": {
         "classification": "useful",
@@ -1748,10 +1842,7 @@
         "groups": [
           "Everything",
           "Helpers"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false
+        ]
       },
       "Reserved": {
         "classification": "filler",
@@ -1768,10 +1859,7 @@
         "groups": [
           "Everything",
           "Helpers"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false
+        ]
       },
       "Booster Bumper": {
         "classification": "progression",
@@ -1780,10 +1868,7 @@
         "groups": [
           "Everything",
           "Targets"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Hazard Bumper": {
         "classification": "progression",
@@ -1792,10 +1877,7 @@
         "groups": [
           "Everything",
           "Targets"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Treasure Bumper": {
         "classification": "progression",
@@ -1804,10 +1886,7 @@
         "groups": [
           "Everything",
           "Targets"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Rainbow Trap": {
         "classification": "trap",
@@ -1816,10 +1895,7 @@
         "groups": [
           "Everything",
           "Traps"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": true
+        ]
       },
       "Spinner Trap": {
         "classification": "trap",
@@ -1828,10 +1904,7 @@
         "groups": [
           "Everything",
           "Traps"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": true
+        ]
       },
       "Killer Trap": {
         "classification": "trap",
@@ -1885,5 +1958,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

@@ -52,7 +52,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SV: Free 7 Scout Flies",
@@ -67,7 +68,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "FJ: Free 7 Scout Flies",
@@ -82,7 +84,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SB: Free 7 Scout Flies",
@@ -97,7 +100,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "MI: Free 7 Scout Flies",
@@ -112,7 +116,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "FC: Free 7 Scout Flies",
@@ -127,7 +132,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "RV: Free 7 Scout Flies",
@@ -142,7 +148,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "PB: Free 7 Scout Flies",
@@ -157,7 +164,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "LPC: Free 7 Scout Flies",
@@ -172,7 +180,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "BS: Free 7 Scout Flies",
@@ -187,7 +196,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "MP: Free 7 Scout Flies",
@@ -202,7 +212,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "VC: Free 7 Scout Flies",
@@ -217,7 +228,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SC: Free 7 Scout Flies",
@@ -232,7 +244,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SM: Free 7 Scout Flies",
@@ -247,7 +260,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "LT: Free 7 Scout Flies",
@@ -262,7 +276,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "GMC: Free 7 Scout Flies",
@@ -277,7 +292,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 0
@@ -346,7 +362,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "GR: Open The Precursor Door",
@@ -360,7 +377,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "GR: Scout Fly On Ground, Front",
@@ -374,7 +392,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "GR: Scout Fly On Ground, Back",
@@ -388,7 +407,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "GR: Scout Fly On Left Ledge",
@@ -402,7 +422,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "GR: Scout Fly On Right Ledge",
@@ -416,7 +437,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "GR: Scout Fly On Middle Ledge, Left",
@@ -430,7 +452,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "GR: Scout Fly On Middle Ledge, Right",
@@ -444,7 +467,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "GR: Scout Fly On Top Ledge",
@@ -458,7 +482,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 48
@@ -488,7 +513,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 2
@@ -664,7 +690,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SV: Bring 90 Orbs To The Mayor",
@@ -681,7 +708,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SV: Bring 90 Orbs to Your Uncle",
@@ -698,7 +726,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SV: Scout Fly In Fisherman's House",
@@ -712,7 +741,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SV: Scout Fly In Mayor's House",
@@ -726,7 +756,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SV: Scout Fly Under Bridge",
@@ -740,7 +771,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SV: Scout Fly Behind Sculptor's House",
@@ -754,7 +786,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SV: Scout Fly In Farmer's House",
@@ -808,7 +841,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 26
@@ -838,7 +872,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 15
@@ -886,7 +921,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 3
@@ -919,7 +955,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SV: Bring 120 Orbs To The Oracle (2)",
@@ -945,7 +982,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SV: Scout Fly Near Oracle",
@@ -977,7 +1015,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 6
@@ -1023,7 +1062,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 25
@@ -1086,7 +1126,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "FJ: Open The Locked Temple Door",
@@ -1100,7 +1141,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "FJ: Scout Fly Behind Lurker Machine",
@@ -1114,7 +1156,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 5
@@ -1168,7 +1211,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "FJ: Follow The Canyon To The Sea",
@@ -1182,7 +1226,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "FJ: Scout Fly Near Dark Eco Boxes",
@@ -1196,7 +1241,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "FJ: Scout Fly At End Of River",
@@ -1210,7 +1256,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Fisherman's Boat",
@@ -1224,7 +1271,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Orb Cache in Forbidden Jungle",
@@ -1238,7 +1286,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 42
@@ -1302,7 +1351,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 12
@@ -1332,7 +1382,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "FJ: Scout Fly Around Temple Spire",
@@ -1346,7 +1397,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "FJ: Scout Fly On Top Of Temple",
@@ -1360,7 +1412,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Jungle Elevator",
@@ -1374,7 +1427,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 10
@@ -1404,7 +1458,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue Eco Switch",
@@ -1418,7 +1473,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 17
@@ -1482,7 +1538,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 39
@@ -1673,7 +1730,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SB: Explore The Beach",
@@ -1687,7 +1745,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SB: Climb The Sentinel",
@@ -1701,7 +1760,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SB: Scout Fly At Entrance",
@@ -1715,7 +1775,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SB: Scout Fly Overlooking Locked Boxes",
@@ -1729,7 +1790,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SB: Scout Fly On Path To Flut Flut",
@@ -1743,7 +1805,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SB: Scout Fly Under Wood Pillars",
@@ -1757,7 +1820,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SB: Scout Fly On Sentinel",
@@ -1798,7 +1862,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Orb Cache near Flut Flut Egg",
@@ -1812,7 +1877,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Orb Cache near Pelican's Nest",
@@ -1826,7 +1892,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 128
@@ -1873,7 +1940,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 0
@@ -1916,7 +1984,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Flut Flut",
@@ -1943,7 +2012,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 0
@@ -1990,7 +2060,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 0
@@ -2038,7 +2109,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 5
@@ -2095,7 +2167,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 5
@@ -2142,7 +2215,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 12
@@ -2236,7 +2310,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "MI: Scout Fly Overlooking Entrance",
@@ -2268,7 +2343,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 21
@@ -2307,7 +2383,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "MI: Use Zoomer To Reach Power Cell",
@@ -2321,7 +2398,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "MI: Scout Fly On Zoomer Ramps",
@@ -2335,7 +2413,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 32
@@ -2381,7 +2460,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "MI: Scout Fly On Ship",
@@ -2413,7 +2493,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 10
@@ -2535,7 +2616,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 5
@@ -2573,7 +2655,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 15
@@ -2621,7 +2704,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 10
@@ -2684,7 +2768,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 14
@@ -2740,7 +2825,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "MI: Scout Fly Near Arena Door",
@@ -2772,7 +2858,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 6
@@ -2836,7 +2923,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 7
@@ -2891,7 +2979,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 5
@@ -2921,7 +3010,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "FC: Scout Fly 1",
@@ -2935,7 +3025,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "FC: Scout Fly 2",
@@ -2949,7 +3040,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "FC: Scout Fly 3",
@@ -2963,7 +3055,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "FC: Scout Fly 4",
@@ -2977,7 +3070,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "FC: Scout Fly 5",
@@ -2991,7 +3085,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "FC: Scout Fly 6",
@@ -3005,7 +3100,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "FC: Scout Fly 7",
@@ -3019,7 +3115,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 50
@@ -3085,7 +3182,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "RV: Bring 90 Orbs To The Geologist",
@@ -3102,7 +3200,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "RV: Bring 90 Orbs To The Warrior",
@@ -3119,7 +3218,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "RV: Bring 120 Orbs To The Oracle (1)",
@@ -3136,7 +3236,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "RV: Bring 120 Orbs To The Oracle (2)",
@@ -3162,7 +3263,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "RV: Scout Fly Behind Geologist",
@@ -3176,7 +3278,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "RV: Scout Fly Behind Fiery Boulder",
@@ -3190,7 +3293,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "RV: Scout Fly Behind Sage's Hut",
@@ -3222,7 +3326,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "RV: Scout Fly Near Waterfall",
@@ -3254,7 +3359,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "RV: Scout Fly On Dock",
@@ -3286,7 +3392,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "RV: Scout Fly At Pontoon Bridge",
@@ -3318,7 +3425,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Warrior's Pontoons",
@@ -3332,7 +3440,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 23
@@ -3371,7 +3480,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 20
@@ -3452,7 +3562,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 7
@@ -3497,7 +3608,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "PB: Catch The Flying Lurkers",
@@ -3511,7 +3623,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "PB: Beat Record Time On The Gorge",
@@ -3525,7 +3638,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "PB: Get The Power Cell Over The Lake",
@@ -3539,7 +3653,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "PB: Cure Dark Eco Infected Plants",
@@ -3553,7 +3668,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "PB: Navigate The Purple Precursor Rings",
@@ -3567,7 +3683,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "PB: Navigate The Blue Precursor Rings",
@@ -3581,7 +3698,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "PB: Scout Fly Overlooking Entrance",
@@ -3595,7 +3713,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "PB: Scout Fly Near Mole Hole",
@@ -3609,7 +3728,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "PB: Scout Fly At Purple Ring Start",
@@ -3623,7 +3743,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "PB: Scout Fly Near Dark Eco Plant, Above",
@@ -3637,7 +3758,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "PB: Scout Fly At Blue Ring Start",
@@ -3651,7 +3773,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "PB: Scout Fly Before Big Jump",
@@ -3665,7 +3788,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "PB: Scout Fly Near Dark Eco Plant, Below",
@@ -3679,7 +3803,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 200
@@ -3790,7 +3915,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 0
@@ -3838,7 +3964,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 22
@@ -3894,7 +4021,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 10
@@ -3932,7 +4060,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "LPC: Scout Fly Second Room, Green Pipe",
@@ -3946,7 +4075,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "LPC: Scout Fly Second Room, Blue Pipe",
@@ -3960,7 +4090,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "LPC: Scout Fly Second Room, On Path To Cell",
@@ -3992,7 +4123,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "LPC: Scout Fly Second Room, Near Orb Vent",
@@ -4006,7 +4138,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Orb Cache in Second Sunken Chamber",
@@ -4020,7 +4153,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 28
@@ -4066,7 +4200,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 17
@@ -4113,7 +4248,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 6
@@ -4151,7 +4287,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 3
@@ -4240,7 +4377,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "LPC: Scout Fly Across Steam Vents",
@@ -4254,7 +4392,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 6
@@ -4338,7 +4477,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 31
@@ -4420,7 +4560,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 30
@@ -4477,7 +4618,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 23
@@ -4538,7 +4680,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 0
@@ -4619,7 +4762,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 7
@@ -4664,7 +4808,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 0
@@ -4815,7 +4960,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 0
@@ -4896,7 +5042,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 27
@@ -4943,7 +5090,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 0
@@ -4973,7 +5121,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 9
@@ -5034,7 +5183,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "BS: Scout Fly Overlooking Flut Flut",
@@ -5048,7 +5198,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "BS: Scout Fly On Flut Flut Platforms",
@@ -5062,7 +5213,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 23
@@ -5145,7 +5297,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 7
@@ -5255,7 +5408,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 10
@@ -5442,7 +5596,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 11
@@ -5472,7 +5627,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 0
@@ -5518,7 +5674,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "MP: Scout Fly 1",
@@ -5532,7 +5689,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "MP: Scout Fly 2",
@@ -5546,7 +5704,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "MP: Scout Fly 3",
@@ -5560,7 +5719,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "MP: Scout Fly 4",
@@ -5574,7 +5734,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "MP: Scout Fly 5",
@@ -5588,7 +5749,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "MP: Scout Fly 6",
@@ -5602,7 +5764,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "MP: Scout Fly 7",
@@ -5616,7 +5779,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 50
@@ -5646,7 +5810,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 0
@@ -5696,7 +5861,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "VC: Bring 90 Orbs To The Miners (2)",
@@ -5722,7 +5888,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "VC: Bring 90 Orbs To The Miners (3)",
@@ -5748,7 +5915,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "VC: Bring 90 Orbs To The Miners (4)",
@@ -5774,7 +5942,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "VC: Bring 120 Orbs To The Oracle (1)",
@@ -5791,7 +5960,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "VC: Bring 120 Orbs To The Oracle (2)",
@@ -5817,7 +5987,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "VC: Find The Hidden Power Cell",
@@ -5831,7 +6002,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "VC: Scout Fly In Miner's Cave",
@@ -5863,7 +6035,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "VC: Scout Fly Near Oracle",
@@ -5895,7 +6068,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "VC: Scout Fly On Stone Platforms",
@@ -5927,7 +6101,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "VC: Scout Fly Near Lava Tube",
@@ -5959,7 +6134,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "VC: Scout Fly At Minecart Junction",
@@ -5991,7 +6167,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "VC: Scout Fly Near Spider Cave",
@@ -6023,7 +6200,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "VC: Scout Fly Near Mountain Pass",
@@ -6055,7 +6233,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Snowy Mountain Gondola",
@@ -6069,7 +6248,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 50
@@ -6159,7 +6339,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SC: Climb the Precursor Platforms",
@@ -6173,7 +6354,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SC: Scout Fly Near Dark Cave Entrance",
@@ -6187,7 +6369,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SC: Scout Fly Main Cave, Overlooking Entrance",
@@ -6201,7 +6384,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SC: Scout Fly Main Cave, Near Dark Crystal",
@@ -6215,7 +6399,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SC: Scout Fly Main Cave, Near Robot Cave Entrance",
@@ -6229,7 +6414,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 63
@@ -6285,7 +6471,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 0
@@ -6306,7 +6493,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SC: Scout Fly In Dark Cave",
@@ -6338,7 +6526,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 5
@@ -6464,7 +6653,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 53
@@ -6550,7 +6740,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SC: Scout Fly Robot Cave, At Top Level",
@@ -6564,7 +6755,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 29
@@ -6594,7 +6786,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 18
@@ -6640,7 +6833,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 4
@@ -6794,7 +6988,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 0
@@ -6868,7 +7063,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 0
@@ -6942,7 +7138,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 8
@@ -7135,7 +7332,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 12
@@ -7165,7 +7363,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 8
@@ -7256,7 +7455,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 20
@@ -7286,7 +7486,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Snowy Fort Gate",
@@ -7300,7 +7501,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 15
@@ -7447,7 +7649,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "SM: Scout Fly Under Bridge To Fort",
@@ -7479,7 +7682,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 20
@@ -7568,7 +7772,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 3
@@ -7598,7 +7803,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Yellow Eco Switch",
@@ -7612,7 +7818,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 4
@@ -7736,7 +7943,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Orb Cache in Snowy Fort (1)",
@@ -7750,7 +7958,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Orb Cache in Snowy Fort (2)",
@@ -7764,7 +7973,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Orb Cache in Snowy Fort (3)",
@@ -7778,7 +7988,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 51
@@ -7826,7 +8037,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 0
@@ -7856,7 +8068,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 2
@@ -7886,7 +8099,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "LT: Scout Fly 1",
@@ -7900,7 +8114,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "LT: Scout Fly 2",
@@ -7914,7 +8129,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "LT: Scout Fly 3",
@@ -7928,7 +8144,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "LT: Scout Fly 4",
@@ -7942,7 +8159,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "LT: Scout Fly 5",
@@ -7956,7 +8174,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "LT: Scout Fly 6",
@@ -7970,7 +8189,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "LT: Scout Fly 7",
@@ -7984,7 +8204,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 50
@@ -8058,7 +8279,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 0
@@ -8323,7 +8545,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 8
@@ -8414,7 +8637,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Freed The Yellow Sage",
@@ -8445,7 +8669,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "GMC: Scout Fly At Launch Pad Room",
@@ -8459,7 +8684,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "GMC: Scout Fly Main Room, Left of Robot",
@@ -8527,7 +8753,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Orb Cache at End of Launch Pad Room",
@@ -8541,7 +8768,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Orb Cache at Start of Launch Pad Room",
@@ -8555,7 +8783,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 88
@@ -8602,7 +8831,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Freed The Blue Sage",
@@ -8633,7 +8863,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "GMC: Scout Fly At Blast Furnace",
@@ -8647,7 +8878,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Orb Cache at End of Blast Furnace",
@@ -8661,7 +8893,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 39
@@ -8762,7 +8995,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Freed The Red Sage",
@@ -8793,7 +9027,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "GMC: Scout Fly Before Jumping Lurkers",
@@ -8825,7 +9060,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 45
@@ -8906,7 +9142,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Freed The Green Sage",
@@ -8937,7 +9174,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "GMC: Scout Fly Top Of Rotating Tower",
@@ -8969,7 +9207,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "orb_count": 20
@@ -9008,236 +9247,218 @@
           "Everything",
           "Power Cells"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 202
+        "max_count": 101,
+        "classification": "progression_skip_balancing"
       },
       "Scout Fly - Forbidden Jungle": {
         "name": "Scout Fly - Forbidden Jungle",
+        "hint_text": "Scout Fly   Forbidden Jungle",
         "id": 741001031,
         "groups": [
           "Everything",
           "Scout Flies"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "progression_skip_balancing"
       },
       "Scout Fly - Sentinel Beach": {
         "name": "Scout Fly - Sentinel Beach",
+        "hint_text": "Scout Fly   Sentinel Beach",
         "id": 741001044,
         "groups": [
           "Everything",
           "Scout Flies"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "progression_skip_balancing"
       },
       "Scout Fly - Misty Island": {
         "name": "Scout Fly - Misty Island",
+        "hint_text": "Scout Fly   Misty Island",
         "id": 741001052,
         "groups": [
           "Everything",
           "Scout Flies"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "progression_skip_balancing"
       },
       "Scout Fly - Boggy Swamp": {
         "name": "Scout Fly - Boggy Swamp",
+        "hint_text": "Scout Fly   Boggy Swamp",
         "id": 741001067,
         "groups": [
           "Everything",
           "Scout Flies"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "progression_skip_balancing"
       },
       "Scout Fly - Lost Precursor City": {
         "name": "Scout Fly - Lost Precursor City",
+        "hint_text": "Scout Fly   Lost Precursor City",
         "id": 741001073,
         "groups": [
           "Everything",
           "Scout Flies"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "progression_skip_balancing"
       },
       "Scout Fly - Precursor Basin": {
         "name": "Scout Fly - Precursor Basin",
+        "hint_text": "Scout Fly   Precursor Basin",
         "id": 741001081,
         "groups": [
           "Everything",
           "Scout Flies"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "progression_skip_balancing"
       },
       "Scout Fly - Snowy Mountain": {
         "name": "Scout Fly - Snowy Mountain",
+        "hint_text": "Scout Fly   Snowy Mountain",
         "id": 741001089,
         "groups": [
           "Everything",
           "Scout Flies"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "progression_skip_balancing"
       },
       "Scout Fly - Fire Canyon": {
         "name": "Scout Fly - Fire Canyon",
+        "hint_text": "Scout Fly   Fire Canyon",
         "id": 741001092,
         "groups": [
           "Everything",
           "Scout Flies"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "progression_skip_balancing"
       },
       "Scout Fly - Sandover Village": {
         "name": "Scout Fly - Sandover Village",
+        "hint_text": "Scout Fly   Sandover Village",
         "id": 741001099,
         "groups": [
           "Everything",
           "Scout Flies"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "progression_skip_balancing"
       },
       "Scout Fly - Rock Village": {
         "name": "Scout Fly - Rock Village",
+        "hint_text": "Scout Fly   Rock Village",
         "id": 741001100,
         "groups": [
           "Everything",
           "Scout Flies"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "progression_skip_balancing"
       },
       "Scout Fly - Volcanic Crater": {
         "name": "Scout Fly - Volcanic Crater",
+        "hint_text": "Scout Fly   Volcanic Crater",
         "id": 741001101,
         "groups": [
           "Everything",
           "Scout Flies"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "progression_skip_balancing"
       },
       "Scout Fly - Spider Cave": {
         "name": "Scout Fly - Spider Cave",
+        "hint_text": "Scout Fly   Spider Cave",
         "id": 741001109,
         "groups": [
           "Everything",
           "Scout Flies"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "progression_skip_balancing"
       },
       "Scout Fly - Mountain Pass": {
         "name": "Scout Fly - Mountain Pass",
+        "hint_text": "Scout Fly   Mountain Pass",
         "id": 741001112,
         "groups": [
           "Everything",
           "Scout Flies"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "progression_skip_balancing"
       },
       "Scout Fly - Lava Tube": {
         "name": "Scout Fly - Lava Tube",
+        "hint_text": "Scout Fly   Lava Tube",
         "id": 741001114,
         "groups": [
           "Everything",
           "Scout Flies"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "progression_skip_balancing"
       },
       "Scout Fly - Citadel": {
         "name": "Scout Fly - Citadel",
+        "hint_text": "Scout Fly   Citadel",
         "id": 741001115,
         "groups": [
           "Everything",
           "Scout Flies"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "progression_skip_balancing"
       },
       "Scout Fly - Geyser Rock": {
         "name": "Scout Fly - Geyser Rock",
+        "hint_text": "Scout Fly   Geyser Rock",
         "id": 741001119,
         "groups": [
           "Everything",
           "Scout Flies"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "progression_skip_balancing"
       },
       "Blue Eco Switch": {
         "name": "Blue Eco Switch",
@@ -9246,12 +9467,10 @@
           "Everything",
           "Specials"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Jungle Elevator": {
         "name": "Jungle Elevator",
@@ -9260,12 +9479,10 @@
           "Everything",
           "Specials"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Fisherman's Boat": {
         "name": "Fisherman's Boat",
@@ -9274,12 +9491,10 @@
           "Everything",
           "Specials"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Flut Flut": {
         "name": "Flut Flut",
@@ -9288,12 +9503,10 @@
           "Everything",
           "Specials"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Warrior's Pontoons": {
         "name": "Warrior's Pontoons",
@@ -9302,12 +9515,10 @@
           "Everything",
           "Specials"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Yellow Eco Switch": {
         "name": "Yellow Eco Switch",
@@ -9316,12 +9527,10 @@
           "Everything",
           "Specials"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Snowy Fort Gate": {
         "name": "Snowy Fort Gate",
@@ -9330,12 +9539,10 @@
           "Everything",
           "Specials"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Freed The Green Sage": {
         "name": "Freed The Green Sage",
@@ -9344,12 +9551,10 @@
           "Everything",
           "Specials"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Freed The Blue Sage": {
         "name": "Freed The Blue Sage",
@@ -9358,12 +9563,10 @@
           "Everything",
           "Specials"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Freed The Red Sage": {
         "name": "Freed The Red Sage",
@@ -9372,12 +9575,10 @@
           "Everything",
           "Specials"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Freed The Yellow Sage": {
         "name": "Freed The Yellow Sage",
@@ -9386,12 +9587,10 @@
           "Everything",
           "Specials"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Snowy Mountain Gondola": {
         "name": "Snowy Mountain Gondola",
@@ -9400,12 +9599,10 @@
           "Everything",
           "Specials"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Crouch": {
         "name": "Crouch",
@@ -9414,12 +9611,10 @@
           "Everything",
           "Moves"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Crouch Jump": {
         "name": "Crouch Jump",
@@ -9428,12 +9623,10 @@
           "Everything",
           "Moves"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Double Jump": {
         "name": "Double Jump",
@@ -9442,12 +9635,10 @@
           "Everything",
           "Moves"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Crouch Uppercut": {
         "name": "Crouch Uppercut",
@@ -9456,12 +9647,10 @@
           "Everything",
           "Moves"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Roll": {
         "name": "Roll",
@@ -9470,12 +9659,10 @@
           "Everything",
           "Moves"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Roll Jump": {
         "name": "Roll Jump",
@@ -9484,12 +9671,10 @@
           "Everything",
           "Moves"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Jump Dive": {
         "name": "Jump Dive",
@@ -9498,12 +9683,10 @@
           "Everything",
           "Moves"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Jump Kick": {
         "name": "Jump Kick",
@@ -9512,12 +9695,10 @@
           "Everything",
           "Moves"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Punch": {
         "name": "Punch",
@@ -9526,12 +9707,10 @@
           "Everything",
           "Moves"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Punch Uppercut": {
         "name": "Punch Uppercut",
@@ -9540,12 +9719,10 @@
           "Everything",
           "Moves"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Kick": {
         "name": "Kick",
@@ -9554,12 +9731,10 @@
           "Everything",
           "Moves"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "1 Precursor Orb": {
         "name": "1 Precursor Orb",
@@ -9568,12 +9743,10 @@
           "Everything",
           "Precursor Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "2 Precursor Orbs": {
         "name": "2 Precursor Orbs",
@@ -9582,12 +9755,10 @@
           "Everything",
           "Precursor Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "4 Precursor Orbs": {
         "name": "4 Precursor Orbs",
@@ -9596,12 +9767,10 @@
           "Everything",
           "Precursor Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "5 Precursor Orbs": {
         "name": "5 Precursor Orbs",
@@ -9610,12 +9779,10 @@
           "Everything",
           "Precursor Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "8 Precursor Orbs": {
         "name": "8 Precursor Orbs",
@@ -9624,12 +9791,10 @@
           "Everything",
           "Precursor Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "10 Precursor Orbs": {
         "name": "10 Precursor Orbs",
@@ -9638,12 +9803,10 @@
           "Everything",
           "Precursor Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "16 Precursor Orbs": {
         "name": "16 Precursor Orbs",
@@ -9652,12 +9815,10 @@
           "Everything",
           "Precursor Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "20 Precursor Orbs": {
         "name": "20 Precursor Orbs",
@@ -9666,12 +9827,10 @@
           "Everything",
           "Precursor Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "25 Precursor Orbs": {
         "name": "25 Precursor Orbs",
@@ -9680,12 +9839,10 @@
           "Everything",
           "Precursor Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "40 Precursor Orbs": {
         "name": "40 Precursor Orbs",
@@ -9694,12 +9851,10 @@
           "Everything",
           "Precursor Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "50 Precursor Orbs": {
         "name": "50 Precursor Orbs",
@@ -9708,12 +9863,10 @@
           "Everything",
           "Precursor Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "80 Precursor Orbs": {
         "name": "80 Precursor Orbs",
@@ -9722,12 +9875,10 @@
           "Everything",
           "Precursor Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "100 Precursor Orbs": {
         "name": "100 Precursor Orbs",
@@ -9736,12 +9887,10 @@
           "Everything",
           "Precursor Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "125 Precursor Orbs": {
         "name": "125 Precursor Orbs",
@@ -9750,12 +9899,10 @@
           "Everything",
           "Precursor Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "200 Precursor Orbs": {
         "name": "200 Precursor Orbs",
@@ -9764,12 +9911,10 @@
           "Everything",
           "Precursor Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "250 Precursor Orbs": {
         "name": "250 Precursor Orbs",
@@ -9778,12 +9923,10 @@
           "Everything",
           "Precursor Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "400 Precursor Orbs": {
         "name": "400 Precursor Orbs",
@@ -9792,12 +9935,10 @@
           "Everything",
           "Precursor Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "500 Precursor Orbs": {
         "name": "500 Precursor Orbs",
@@ -9806,12 +9947,10 @@
           "Everything",
           "Precursor Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "1000 Precursor Orbs": {
         "name": "1000 Precursor Orbs",
@@ -9820,12 +9959,10 @@
           "Everything",
           "Precursor Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "2000 Precursor Orbs": {
         "name": "2000 Precursor Orbs",
@@ -9834,12 +9971,10 @@
           "Everything",
           "Precursor Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mirror Trap": {
         "name": "Mirror Trap",
@@ -9848,12 +9983,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Zoomer Trap": {
         "name": "Zoomer Trap",
@@ -9862,12 +9995,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ledge Trap": {
         "name": "Ledge Trap",
@@ -9876,12 +10007,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Health Trap": {
         "name": "Health Trap",
@@ -9890,12 +10019,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ecoless Trap": {
         "name": "Ecoless Trap",
@@ -9904,12 +10031,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Pacifism Trap": {
         "name": "Pacifism Trap",
@@ -9918,12 +10043,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Despair Trap": {
         "name": "Despair Trap",
@@ -9932,12 +10055,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Teleport Trap": {
         "name": "Teleport Trap",
@@ -9946,12 +10067,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Earthquake Trap": {
         "name": "Earthquake Trap",
@@ -9960,12 +10079,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Darkness Trap": {
         "name": "Darkness Trap",
@@ -9974,12 +10091,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Camera Trap": {
         "name": "Camera Trap",
@@ -9988,12 +10103,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Gravity Trap": {
         "name": "Gravity Trap",
@@ -10002,12 +10115,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Slippery Trap": {
         "name": "Slippery Trap",
@@ -10016,12 +10127,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Trip Trap": {
         "name": "Trip Trap",
@@ -10030,12 +10139,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Green Eco Pill": {
         "name": "Green Eco Pill",
@@ -10043,12 +10150,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 28
+        "max_count": 14,
+        "classification": "filler"
       }
     }
   },
@@ -10065,47 +10170,47 @@
   },
   "itempool_counts": {
     "1": {
-      "Blue Eco Switch": 2,
+      "Blue Eco Switch": 1,
       "Crouch": 1,
       "Crouch Jump": 1,
       "Crouch Uppercut": 1,
       "Double Jump": 1,
-      "Fisherman's Boat": 2,
-      "Flut Flut": 2,
-      "Freed The Blue Sage": 2,
-      "Freed The Green Sage": 2,
-      "Freed The Red Sage": 2,
-      "Freed The Yellow Sage": 2,
-      "Green Eco Pill": 28,
+      "Fisherman's Boat": 1,
+      "Flut Flut": 1,
+      "Freed The Blue Sage": 1,
+      "Freed The Green Sage": 1,
+      "Freed The Red Sage": 1,
+      "Freed The Yellow Sage": 1,
+      "Green Eco Pill": 14,
       "Jump Dive": 1,
       "Jump Kick": 1,
-      "Jungle Elevator": 2,
+      "Jungle Elevator": 1,
       "Kick": 1,
-      "Power Cell": 202,
+      "Power Cell": 101,
       "Punch": 1,
       "Punch Uppercut": 1,
       "Roll": 1,
       "Roll Jump": 1,
-      "Scout Fly - Boggy Swamp": 14,
-      "Scout Fly - Citadel": 14,
-      "Scout Fly - Fire Canyon": 14,
-      "Scout Fly - Forbidden Jungle": 14,
-      "Scout Fly - Geyser Rock": 14,
-      "Scout Fly - Lava Tube": 14,
-      "Scout Fly - Lost Precursor City": 14,
-      "Scout Fly - Misty Island": 14,
-      "Scout Fly - Mountain Pass": 14,
-      "Scout Fly - Precursor Basin": 14,
-      "Scout Fly - Rock Village": 14,
-      "Scout Fly - Sandover Village": 14,
-      "Scout Fly - Sentinel Beach": 14,
-      "Scout Fly - Snowy Mountain": 14,
-      "Scout Fly - Spider Cave": 14,
-      "Scout Fly - Volcanic Crater": 14,
-      "Snowy Fort Gate": 2,
-      "Snowy Mountain Gondola": 2,
-      "Warrior's Pontoons": 2,
-      "Yellow Eco Switch": 2
+      "Scout Fly - Boggy Swamp": 7,
+      "Scout Fly - Citadel": 7,
+      "Scout Fly - Fire Canyon": 7,
+      "Scout Fly - Forbidden Jungle": 7,
+      "Scout Fly - Geyser Rock": 7,
+      "Scout Fly - Lava Tube": 7,
+      "Scout Fly - Lost Precursor City": 7,
+      "Scout Fly - Misty Island": 7,
+      "Scout Fly - Mountain Pass": 7,
+      "Scout Fly - Precursor Basin": 7,
+      "Scout Fly - Rock Village": 7,
+      "Scout Fly - Sandover Village": 7,
+      "Scout Fly - Sentinel Beach": 7,
+      "Scout Fly - Snowy Mountain": 7,
+      "Scout Fly - Spider Cave": 7,
+      "Scout Fly - Volcanic Crater": 7,
+      "Snowy Fort Gate": 1,
+      "Snowy Mountain Gondola": 1,
+      "Warrior's Pontoons": 1,
+      "Yellow Eco Switch": 1
     }
   },
   "progression_mapping": {
@@ -10140,5 +10245,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }
