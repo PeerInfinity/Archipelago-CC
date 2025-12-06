@@ -83,6 +83,8 @@ class ExtractedData:
     itempool_counts: Dict[str, int] = field(default_factory=dict)  # item -> count
     locked_placements: Dict[str, str] = field(default_factory=dict)  # location -> item (must be placed via place_locked_item)
     starting_items: Dict[str, int] = field(default_factory=dict)  # item -> count (precollected items)
+    accumulator_rules: List[Dict[str, Any]] = field(default_factory=list)  # Rules for state counters (e.g., coins)
+    prog_items_init: Dict[str, int] = field(default_factory=dict)  # Initial values for prog_items counters
 
 
 def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
@@ -298,57 +300,91 @@ def extract_starting_items(json_data: Dict[str, Any]) -> Dict[str, int]:
     return starting
 
 
-def compute_state_counter_starting_items(
-    json_data: Dict[str, Any],
+def compute_state_counter_accumulator_rules(
     items: Dict[str, 'ItemData'],
-    locked_placements: Dict[str, str]
-) -> Dict[str, int]:
+    original_placements: Dict[str, str]
+) -> Tuple[List[Dict[str, Any]], Dict[str, int]]:
     """
-    Compute starting items needed for state counter patterns.
+    Compute accumulator rules and prog_items_init for state counter patterns.
 
     Some games (like DLCQuest) use state counters where collecting items like
     "60 coins" contributes to a " coins" counter. The rules check Has(" coins", X)
-    which expects X copies of the " coins" item, but the actual items are
-    individual coin amounts.
+    but the actual items collected are "60 coins", "4 coins", etc.
 
-    This function detects such patterns and computes the total count needed
-    as a starting item.
+    Instead of precollecting all items (which breaks sphere progression), this
+    generates accumulator_rules that tell the frontend how to parse item names
+    and accumulate values into counters.
+
+    Returns:
+        Tuple of (accumulator_rules, prog_items_init)
+        - accumulator_rules: List of rule dicts with pattern, extract_value, target
+        - prog_items_init: Dict mapping counter names to initial value (0)
     """
-    starting = {}
+    accumulator_rules = []
+    prog_items_init = {}
 
     # Find items that are used in rules but have id=None (event/counter items)
     # and have a name pattern like " coins" or " coins freemium"
-    counter_items = {}
+    counter_items = set()
     for item_name, item_data in items.items():
         if item_data.item_id is None and item_name.startswith(' '):
             # This looks like a counter item (e.g., " coins")
-            counter_items[item_name] = 0
+            counter_items.add(item_name)
 
     if not counter_items:
-        return starting
+        return accumulator_rules, prog_items_init
 
-    # Calculate total contribution from locked placements
-    # e.g., "60 coins" contributes 60 to " coins"
-    for loc_name, item_name in locked_placements.items():
-        for counter_name in counter_items:
-            suffix = counter_name.strip()  # e.g., "coins" from " coins"
-            if item_name.endswith(suffix):
-                # Try to extract the number from the item name
-                # e.g., "60 coins" -> 60
+    # For each counter, find items that contribute to it and build a regex pattern
+    # Check both the items dict and original_placements for matching items
+    for counter_name in counter_items:
+        suffix = counter_name.strip()  # e.g., "coins" from " coins"
+
+        # Check if there are items matching the pattern "N <suffix>"
+        has_matching_items = False
+
+        # Check in items dict
+        for item_name in items.keys():
+            if item_name.endswith(suffix) and item_name != counter_name:
                 try:
                     parts = item_name.split()
                     if len(parts) >= 2 and parts[-1] == suffix:
-                        count = int(parts[0])
-                        counter_items[counter_name] += count
+                        int(parts[0])  # Verify it's a number
+                        has_matching_items = True
+                        break
                 except (ValueError, IndexError):
                     pass
 
-    # Add non-zero counters as starting items
-    for counter_name, total in counter_items.items():
-        if total > 0:
-            starting[counter_name] = total
+        # Also check in original_placements
+        if not has_matching_items:
+            for loc_name, item_name in original_placements.items():
+                if item_name.endswith(suffix) and item_name != counter_name:
+                    try:
+                        parts = item_name.split()
+                        if len(parts) >= 2 and parts[-1] == suffix:
+                            int(parts[0])  # Verify it's a number
+                            has_matching_items = True
+                            break
+                    except (ValueError, IndexError):
+                        pass
 
-    return starting
+        if has_matching_items:
+            # Generate regex pattern: ^(\d+) suffix$ (handles singular/plural)
+            # Use word boundary or space before suffix to avoid partial matches
+            if suffix.endswith('s'):
+                # e.g., "coins" -> match "coin" or "coins"
+                pattern = f'^(\\d+) {suffix[:-1]}s?$'
+            else:
+                pattern = f'^(\\d+) {suffix}s?$'
+
+            accumulator_rules.append({
+                'pattern': pattern,
+                'extract_value': True,
+                'target': counter_name,
+                'discriminator': None
+            })
+            prog_items_init[counter_name] = 0
+
+    return accumulator_rules, prog_items_init
 
 
 def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
@@ -371,10 +407,34 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
     # Get starting items from JSON
     starting_items = extract_starting_items(json_data)
 
-    # Compute additional starting items for state counter patterns
-    counter_starting = compute_state_counter_starting_items(json_data, items, locked_placements)
-    for item, count in counter_starting.items():
-        starting_items[item] = starting_items.get(item, 0) + count
+    # Compute accumulator rules for state counter patterns (for frontend export)
+    accumulator_rules, prog_items_init = compute_state_counter_accumulator_rules(items, original_placements)
+
+    # For games with state counters, we also need to precollect counter items
+    # for generation to work (rules check Has(" coins", X) which needs items in inventory)
+    # The exporter will filter these out from starting_items since the frontend
+    # uses accumulator_rules instead. But we DO need to set prog_items_init to the
+    # same total so the test world's sphere 0 matches the original sphere log.
+    if accumulator_rules:
+        # Calculate total for each counter from items in original_placements
+        for rule in accumulator_rules:
+            import re
+            pattern = rule['pattern']
+            target = rule['target']
+            total = 0
+            for loc_name, item_name in original_placements.items():
+                match = re.match(pattern, item_name)
+                if match:
+                    try:
+                        value = int(match.group(1))
+                        total += value
+                    except (ValueError, IndexError):
+                        pass
+            if total > 0:
+                starting_items[target] = starting_items.get(target, 0) + total
+                # Also update prog_items_init so the frontend test world matches
+                # the original sphere log (which has the precollected total at sphere 0)
+                prog_items_init[target] = total
 
     return ExtractedData(
         metadata=metadata,
@@ -389,4 +449,6 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
         itempool_counts=itempool_counts,
         locked_placements=locked_placements,
         starting_items=starting_items,
+        accumulator_rules=accumulator_rules,
+        prog_items_init=prog_items_init,
     )

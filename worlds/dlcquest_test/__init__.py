@@ -100,6 +100,17 @@ class DLCQuestTestWorld(RuleWorldMixin, World):
         "coins": frozenset([" coins", " coins freemium", "10 coins", "100 coins", "171 coins", "203 coins", "4 coins", "46 coins", "50 coins", "60 coins", "7 coins", "76 coins", "89 coins", "9 coins"]),
     }
 
+    # Accumulator rules for state counters (e.g., coins)
+    # These tell the exporter how to parse items like "60 coins" -> add 60 to " coins" counter
+    accumulator_rules: ClassVar[list] = [
+        {"pattern": r"^(\\d+) coins?$", "extract_value": True, "target": " coins", "discriminator": None},
+    ]
+
+    # Initial values for prog_items accumulators
+    prog_items_init: ClassVar[dict] = {
+        " coins": 825,
+    }
+
     def generate_early(self) -> None:
         """Push starting items as precollected."""
         self._push_starting_items()

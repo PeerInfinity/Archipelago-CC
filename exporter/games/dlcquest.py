@@ -19,6 +19,7 @@ class DLCQuestGameExportHandler(BaseGameExportHandler):
 
     def get_game_info(self, world):
         """Export DLCQuest game info including accumulator rules."""
+        import re
         game_info = super().get_game_info(world)
 
         # Define accumulator rules for coin items
@@ -33,12 +34,24 @@ class DLCQuestGameExportHandler(BaseGameExportHandler):
             }
         ]
 
-        # Initialize accumulator targets to 0
-        # This ensures they're always defined when access rules check them
-        game_info['prog_items_init'] = {
-            ' coins': 0,
-            ' coins freemium': 0
-        }
+        # Initialize accumulator targets
+        # For TEST worlds (with precollected coins in starting_items), set prog_items_init to total
+        # For ORIGINAL worlds, set prog_items_init to 0 - coins accumulate as items are collected
+
+        # Check if this is a test world with precollected coins (indicated by world.prog_items_init)
+        if hasattr(world, 'prog_items_init') and world.prog_items_init:
+            game_info['prog_items_init'] = dict(world.prog_items_init)
+            # Ensure freemium is also present
+            if ' coins freemium' not in game_info['prog_items_init']:
+                game_info['prog_items_init'][' coins freemium'] = 0
+            logger.info(f"Using world's prog_items_init: {game_info['prog_items_init']}")
+        else:
+            # Original world - coins start at 0 and accumulate via accumulator_rules
+            game_info['prog_items_init'] = {
+                ' coins': 0,
+                ' coins freemium': 0
+            }
+            logger.info("Original world: prog_items_init set to 0 (coins accumulate during play)")
 
         return game_info
 

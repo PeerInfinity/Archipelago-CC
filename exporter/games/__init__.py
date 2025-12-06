@@ -87,7 +87,19 @@ def get_game_export_handler(game_name: str, world=None) -> BaseGameExportHandler
     cache_key = (game_name, id(world) if world else None)
 
     if cache_key not in _handler_cache:
-        handler_class = GAME_HANDLERS.get(game_name, GenericGameExportHandler)
+        handler_class = GAME_HANDLERS.get(game_name)
+
+        # If no exact match, try matching test worlds to their base game handlers
+        # e.g., "DLCQuest Test" -> "DLCQuest" handler
+        if handler_class is None and game_name.endswith(' Test'):
+            base_game_name = game_name[:-5]  # Remove " Test" suffix
+            handler_class = GAME_HANDLERS.get(base_game_name)
+            if handler_class:
+                logger.debug(f"Using '{base_game_name}' handler for test world '{game_name}'")
+
+        # Fall back to generic handler
+        if handler_class is None:
+            handler_class = GenericGameExportHandler
 
         # Try to instantiate with world parameter first, fall back to no params
         try:

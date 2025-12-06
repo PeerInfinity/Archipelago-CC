@@ -428,6 +428,51 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
 
     starting_content = '\n'.join(starting_entries)
 
+    # Build accumulator_rules list (for state counter patterns like coins)
+    accumulator_rules_content = ''
+    if data.accumulator_rules:
+        rules_items = []
+        for rule in data.accumulator_rules:
+            pattern_escaped = rule['pattern'].replace('\\', '\\\\').replace('"', '\\"')
+            target_escaped = rule['target'].replace('\\', '\\\\').replace('"', '\\"')
+            rules_items.append(
+                f'        {{"pattern": r"{pattern_escaped}", "extract_value": {rule["extract_value"]}, '
+                f'"target": "{target_escaped}", "discriminator": None}},'
+            )
+        accumulator_rules_content = '\n'.join(rules_items)
+
+    # Build prog_items_init dictionary (initial values for state counters)
+    prog_items_init_content = ''
+    if data.prog_items_init:
+        init_entries = []
+        for item_name, value in sorted(data.prog_items_init.items()):
+            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+            init_entries.append(f'        "{item_escaped}": {value},')
+        prog_items_init_content = '\n'.join(init_entries)
+
+    # Generate accumulator_rules section (for state counter patterns like coins)
+    if accumulator_rules_content:
+        accumulator_rules_section = f'''
+    # Accumulator rules for state counters (e.g., coins)
+    # These tell the exporter how to parse items like "60 coins" -> add 60 to " coins" counter
+    accumulator_rules: ClassVar[list] = [
+{accumulator_rules_content}
+    ]
+'''
+    else:
+        accumulator_rules_section = ''
+
+    # Generate prog_items_init section (initial counter values)
+    if prog_items_init_content:
+        prog_items_init_section = f'''
+    # Initial values for prog_items accumulators
+    prog_items_init: ClassVar[dict] = {{
+{prog_items_init_content}
+    }}
+'''
+    else:
+        prog_items_init_section = ''
+
     # Count locked items to subtract from itempool_counts
     locked_item_counts: Dict[str, int] = {}
     for loc_name, item_name in data.locked_placements.items():
@@ -522,7 +567,7 @@ class {world_class}(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {{
 {item_name_groups_content}
     }}
-{generate_early_section}
+{accumulator_rules_section}{prog_items_init_section}{generate_early_section}
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
