@@ -1,0 +1,4483 @@
+{
+  "metadata": {
+    "combination_note": "Results combined from parallel seed tests",
+    "combined_from": 2,
+    "created": "2025-12-06T04:41:38.845320",
+    "last_updated": "2025-12-06T04:41:38.845325",
+    "script_version": "1.0.0"
+  },
+  "results": {
+    "A Hat in Time": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "A Hat in Time",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 14.19,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "A Hat in Time.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 24.69,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ahit_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.37,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ahit_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ahit_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 12.85,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "A Hat in Time Test",
+        "test_template_name": "A Hat in Time Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:29:04.888922"
+    },
+    "A Link to the Past": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "A Link to the Past",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 17.1,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "A Link to the Past.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.82,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/alttp_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.48,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/alttp_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/alttp_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 13.98,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "A Link to the Past Test",
+        "test_template_name": "A Link to the Past Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:29:05.607076"
+    },
+    "A Short Hike": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "A Short Hike",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 9.31,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "A Short Hike.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.99,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shorthike_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.56,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shorthike_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shorthike_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.87,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "A Short Hike Test",
+        "test_template_name": "A Short Hike Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:29:03.996827"
+    },
+    "APQuest": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Test world seed generation failed: raise FillError("
+        ]
+      },
+      "game_name": "APQuest",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 9.86,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "APQuest.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "raise FillError(",
+          "preset_dir": null,
+          "processing_time_seconds": 3.17,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "APQuest Test",
+        "test_template_name": "APQuest Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:29:03.418950"
+    },
+    "Adventure": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "Adventure",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 9.06,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Adventure.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.97,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/adventure_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.53,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/adventure_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/adventure_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.8,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Adventure Test",
+        "test_template_name": "Adventure Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:29:12.157788"
+    },
+    "Aquaria": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Aquaria",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 10.54,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Aquaria.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.95,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/aquaria_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.59,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/aquaria_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/aquaria_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 7.82,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Aquaria Test",
+        "test_template_name": "Aquaria Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:28:58.266542"
+    },
+    "Blasphemous": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Blasphemous",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 35.73,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Blasphemous.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Unknown test result: return code -1",
+          "pass_fail": "unknown",
+          "processing_time_seconds": 300.1,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/blasphemous_test/AP_14089154938208861744",
+          "processing_time_seconds": 4.1,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/blasphemous_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/blasphemous_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 12.15,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Blasphemous Test",
+        "test_template_name": "Blasphemous Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:29:03.281914"
+    },
+    "Bomb Rush Cyberfunk": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Bomb Rush Cyberfunk",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 22.38,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Bomb Rush Cyberfunk.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 37.92,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bomb_rush_cyberfunk_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.49,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bomb_rush_cyberfunk_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bomb_rush_cyberfunk_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 17.9,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Bomb Rush Cyberfunk Test",
+        "test_template_name": "Bomb Rush Cyberfunk Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:28:57.643920"
+    },
+    "Bumper Stickers": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "Bumper Stickers",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 13.58,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Bumper Stickers.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.6,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bumpstik_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.17,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bumpstik_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bumpstik_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.61,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Bumper Stickers Test",
+        "test_template_name": "Bumper Stickers Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:29:05.209544"
+    },
+    "Castlevania - Circle of the Moon": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Test world seed generation failed: raise FillError("
+        ]
+      },
+      "game_name": "Castlevania - Circle of the Moon",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 9.39,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Castlevania - Circle of the Moon.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "raise FillError(",
+          "preset_dir": null,
+          "processing_time_seconds": 3.32,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Castlevania - Circle of the Moon Test",
+        "test_template_name": "Castlevania - Circle of the Moon Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:28:59.909019"
+    },
+    "Castlevania 64": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Castlevania 64",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.82,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Castlevania 64.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.75,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cv64_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.29,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cv64_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cv64_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.78,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Castlevania 64 Test",
+        "test_template_name": "Castlevania 64 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:30:00.655590"
+    },
+    "Celeste (Open World)": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "Celeste (Open World)",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 12.89,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Celeste (Open World).yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 12.89,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste_open_world_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.41,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste_open_world_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste_open_world_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 12.89,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Celeste (Open World) Test",
+        "test_template_name": "Celeste (Open World) Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:29:55.650989"
+    },
+    "Celeste 64": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Celeste 64",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.87,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Celeste 64.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 15.34,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste64_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.36,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste64_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/celeste64_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 7.85,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Celeste 64 Test",
+        "test_template_name": "Celeste 64 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:29:35.395386"
+    },
+    "ChecksFinder": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "ChecksFinder",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.76,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "ChecksFinder.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.78,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/checksfinder_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.17,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/checksfinder_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/checksfinder_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.77,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "ChecksFinder Test",
+        "test_template_name": "ChecksFinder Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:29:16.469474"
+    },
+    "ChocolateChipCookies": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "ChocolateChipCookies",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.86,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "ChocolateChipCookies.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.83,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bakingadventure_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.3,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bakingadventure_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/bakingadventure_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.8,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "ChocolateChipCookies Test",
+        "test_template_name": "ChocolateChipCookies Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:29:37.155868"
+    },
+    "Choo-Choo Charles": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "Choo-Choo Charles",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 7.88,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Choo-Choo Charles.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 7.84,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cccharles_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.4,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cccharles_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/cccharles_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 7.82,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Choo-Choo Charles Test",
+        "test_template_name": "Choo-Choo Charles Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:29:35.818462"
+    },
+    "Civilization VI": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "Civilization VI",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.87,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Civilization VI.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.85,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/civ_6_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.28,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/civ_6_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/civ_6_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.82,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Civilization VI Test",
+        "test_template_name": "Civilization VI Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:34:56.005198"
+    },
+    "DLCQuest": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "DLCQuest",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.76,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "DLCQuest.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.69,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dlcquest_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.21,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dlcquest_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dlcquest_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.67,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "test_game_name": "DLCQuest Test",
+        "test_template_name": "DLCQuest Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:30:19.965706"
+    },
+    "DOOM 1993": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "DOOM 1993",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 11.69,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "DOOM 1993.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 11.65,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/doom_1993_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.06,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/doom_1993_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/doom_1993_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 11.64,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "DOOM 1993 Test",
+        "test_template_name": "DOOM 1993 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:29:39.730377"
+    },
+    "DOOM II": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "DOOM II",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 12.96,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "DOOM II.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 12.91,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/doom_ii_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.53,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/doom_ii_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/doom_ii_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 12.95,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "DOOM II Test",
+        "test_template_name": "DOOM II Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:29:12.635390"
+    },
+    "Dark Souls III": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "Dark Souls III",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 10.9,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Dark Souls III.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 10.88,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dark_souls_3_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.37,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dark_souls_3_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dark_souls_3_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 11.88,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Dark Souls III Test",
+        "test_template_name": "Dark Souls III Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:30:32.349478"
+    },
+    "Donkey Kong Country 3": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Donkey Kong Country 3",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 13.85,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Donkey Kong Country 3.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 17.85,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dkc3_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.26,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dkc3_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dkc3_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 13.86,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Donkey Kong Country 3 Test",
+        "test_template_name": "Donkey Kong Country 3 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:30:37.789337"
+    },
+    "Factorio": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Test world seed generation failed: raise FillError("
+        ]
+      },
+      "game_name": "Factorio",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 9.86,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Factorio.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "raise FillError(",
+          "preset_dir": null,
+          "processing_time_seconds": 3.12,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Factorio Test",
+        "test_template_name": "Factorio Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:30:08.853806"
+    },
+    "Faxanadu": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Faxanadu",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.79,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Faxanadu.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.73,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/faxanadu_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.13,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/faxanadu_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/faxanadu_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.77,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Faxanadu Test",
+        "test_template_name": "Faxanadu Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:29:40.583243"
+    },
+    "Final Fantasy Mystic Quest": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Final Fantasy Mystic Quest",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 9.84,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Final Fantasy Mystic Quest.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.85,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ffmq_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.58,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ffmq_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ffmq_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 9.84,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Final Fantasy Mystic Quest Test",
+        "test_template_name": "Final Fantasy Mystic Quest Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:29:57.977622"
+    },
+    "Heretic": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "Heretic",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 12.91,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Heretic.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 12.87,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/heretic_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.55,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/heretic_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/heretic_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 12.97,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Heretic Test",
+        "test_template_name": "Heretic Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:30:02.796212"
+    },
+    "Hylics 2": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "Hylics 2",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.81,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Hylics 2.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.78,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hylics2_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.31,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hylics2_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/hylics2_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.79,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Hylics 2 Test",
+        "test_template_name": "Hylics 2 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:35:25.880931"
+    },
+    "Inscryption": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "Inscryption",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.75,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Inscryption.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.77,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/inscryption_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.15,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/inscryption_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/inscryption_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.77,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Inscryption Test",
+        "test_template_name": "Inscryption Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:30:59.352141"
+    },
+    "Jak and Daxter The Precursor Legacy": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Test world seed generation failed: raise FillError("
+        ]
+      },
+      "game_name": "Jak and Daxter The Precursor Legacy",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.6,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Jak and Daxter The Precursor Legacy.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "raise FillError(",
+          "preset_dir": null,
+          "processing_time_seconds": 2.81,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Jak and Daxter The Precursor Legacy Test",
+        "test_template_name": "Jak and Daxter The Precursor Legacy Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:30:17.812252"
+    },
+    "Kingdom Hearts": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Kingdom Hearts",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 21.92,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Kingdom Hearts.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 17.2,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh1_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.47,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh1_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh1_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 17.94,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Kingdom Hearts Test",
+        "test_template_name": "Kingdom Hearts Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:31:09.410603"
+    },
+    "Kingdom Hearts 2": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Kingdom Hearts 2",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 31.31,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Kingdom Hearts 2.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 215.44,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh2_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.52,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh2_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kh2_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 28.16,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Kingdom Hearts 2 Test",
+        "test_template_name": "Kingdom Hearts 2 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:29:55.653698"
+    },
+    "Kirby's Dream Land 3": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Kirby's Dream Land 3",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 39.87,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Kirby's Dream Land 3.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.8,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kdl3_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.56,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kdl3_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/kdl3_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 55.81,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Kirby's Dream Land 3 Test",
+        "test_template_name": "Kirby's Dream Land 3 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:31:26.649869"
+    },
+    "Landstalker - The Treasures of King Nole": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Landstalker - The Treasures of King Nole",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.89,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Landstalker - The Treasures of King Nole.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.86,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/landstalker_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.43,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/landstalker_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/landstalker_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 16.88,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Landstalker - The Treasures of King Nole Test",
+        "test_template_name": "Landstalker - The Treasures of King Nole Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:30:21.850210"
+    },
+    "Lingo": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Lingo",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.78,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Lingo.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 70.66,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lingo_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.19,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lingo_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lingo_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.76,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Lingo Test",
+        "test_template_name": "Lingo Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:30:14.050293"
+    },
+    "Links Awakening DX": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Test world seed generation failed: raise FillError("
+        ]
+      },
+      "game_name": "Links Awakening DX",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.84,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Links Awakening DX.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "raise FillError(",
+          "preset_dir": null,
+          "processing_time_seconds": 3.17,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Links Awakening DX Test",
+        "test_template_name": "Links Awakening DX Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:30:36.131751"
+    },
+    "Lufia II Ancient Cave": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "Lufia II Ancient Cave",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.79,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Lufia II Ancient Cave.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.84,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lufia2ac_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.45,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lufia2ac_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/lufia2ac_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.82,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Lufia II Ancient Cave Test",
+        "test_template_name": "Lufia II Ancient Cave Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:30:45.119056"
+    },
+    "Mario & Luigi Superstar Saga": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Mario & Luigi Superstar Saga",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.87,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Mario & Luigi Superstar Saga.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 104.62,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mlss_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.31,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mlss_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mlss_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 7.86,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Mario & Luigi Superstar Saga Test",
+        "test_template_name": "Mario & Luigi Superstar Saga Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:35:49.601973"
+    },
+    "MathProof2p2e4": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "MathProof2p2e4",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.75,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "MathProof2p2e4.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.81,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mathadventure_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.23,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mathadventure_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mathadventure_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.79,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "MathProof2p2e4 Test",
+        "test_template_name": "MathProof2p2e4 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:31:22.824316"
+    },
+    "Mega Man 2": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Test world seed generation failed: raise FillError("
+        ]
+      },
+      "game_name": "Mega Man 2",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.62,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Mega Man 2.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "raise FillError(",
+          "preset_dir": null,
+          "processing_time_seconds": 2.8,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Mega Man 2 Test",
+        "test_template_name": "Mega Man 2 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:30:26.236322"
+    },
+    "MegaMan Battle Network 3": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "MegaMan Battle Network 3",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 7.9,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "MegaMan Battle Network 3.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 15.03,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mmbn3_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.41,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mmbn3_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/mmbn3_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 7.87,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "MegaMan Battle Network 3 Test",
+        "test_template_name": "MegaMan Battle Network 3 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:34:34.139882"
+    },
+    "Meritous": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "Meritous",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.82,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Meritous.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.78,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/meritous_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.17,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/meritous_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/meritous_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.79,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Meritous Test",
+        "test_template_name": "Meritous Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:32:09.971794"
+    },
+    "Metamath": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "Metamath",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.77,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Metamath.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.76,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/metamath_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.14,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/metamath_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/metamath_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.76,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Metamath Test",
+        "test_template_name": "Metamath Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:33:20.724838"
+    },
+    "Muse Dash": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Test world seed generation failed: raise FillError("
+        ]
+      },
+      "game_name": "Muse Dash",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 7.83,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Muse Dash.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "raise FillError(",
+          "preset_dir": null,
+          "processing_time_seconds": 3.04,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Muse Dash Test",
+        "test_template_name": "Muse Dash Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:31:05.973254"
+    },
+    "Noita": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "Noita",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.77,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Noita.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.76,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/noita_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.23,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/noita_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/noita_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.76,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Noita Test",
+        "test_template_name": "Noita Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:31:39.463528"
+    },
+    "Old School Runescape": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Test world seed generation failed: AssertionError: item code None should be event, location.address should then also be None. Location:  Points: Cook's Assistant, Item: 1 QP (Cook's Assistant)"
+        ]
+      },
+      "game_name": "Old School Runescape",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.88,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Old School Runescape.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "AssertionError: item code None should be event, location.address should then also be None. Location:  Points: Cook's Assistant, Item: 1 QP (Cook's Assistant)",
+          "preset_dir": null,
+          "processing_time_seconds": 3.09,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Old School Runescape Test",
+        "test_template_name": "Old School Runescape Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:30:45.163682"
+    },
+    "Overcooked! 2": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Overcooked! 2",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 19.9,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Overcooked! 2.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.81,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/overcooked2_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.32,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/overcooked2_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/overcooked2_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 18.93,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Overcooked! 2 Test",
+        "test_template_name": "Overcooked! 2 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:31:06.047218"
+    },
+    "Paint": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Paint",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.83,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Paint.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.8,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/paint_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.35,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/paint_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/paint_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 18.88,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "test_game_name": "Paint Test",
+        "test_template_name": "Paint Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:37:54.316926"
+    },
+    "Pokemon Emerald": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "Pokemon Emerald",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 122.51,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Pokemon Emerald.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 121.24,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/pokemon_emerald_test/AP_14089154938208861744",
+          "processing_time_seconds": 4.35,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/pokemon_emerald_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/pokemon_emerald_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 121.22,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Pokemon Emerald Test",
+        "test_template_name": "Pokemon Emerald Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:31:43.456636"
+    },
+    "Pokemon Red and Blue": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Test world seed generation failed: raise FillError("
+        ]
+      },
+      "game_name": "Pokemon Red and Blue",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 35.88,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Pokemon Red and Blue.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "raise FillError(",
+          "preset_dir": null,
+          "processing_time_seconds": 2.87,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Pokemon Red and Blue Test",
+        "test_template_name": "Pokemon Red and Blue Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:30:35.671964"
+    },
+    "Raft": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Raft",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 7.88,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Raft.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 20.34,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/raft_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.39,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/raft_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/raft_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 7.92,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Raft Test",
+        "test_template_name": "Raft Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:35:08.394456"
+    },
+    "Risk of Rain 2": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Risk of Rain 2",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.79,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Risk of Rain 2.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.82,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ror2_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.27,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ror2_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/ror2_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.82,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Risk of Rain 2 Test",
+        "test_template_name": "Risk of Rain 2 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:32:30.569000"
+    },
+    "SMZ3": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Test world seed generation failed: raise FillError("
+        ]
+      },
+      "game_name": "SMZ3",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 16.88,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "SMZ3.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "raise FillError(",
+          "preset_dir": null,
+          "processing_time_seconds": 3.07,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "SMZ3 Test",
+        "test_template_name": "SMZ3 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:33:41.199872"
+    },
+    "Saving Princess": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Saving Princess",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.8,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Saving Princess.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.79,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/saving_princess_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.33,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/saving_princess_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/saving_princess_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.81,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Saving Princess Test",
+        "test_template_name": "Saving Princess Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:31:16.861311"
+    },
+    "Secret of Evermore": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Secret of Evermore",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.79,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Secret of Evermore.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.75,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/soe_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.18,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/soe_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/soe_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 50.9,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "test_game_name": "Secret of Evermore Test",
+        "test_template_name": "Secret of Evermore Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:32:00.022619"
+    },
+    "Shivers": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Shivers",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 9.81,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Shivers.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.83,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shivers_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.37,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shivers_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shivers_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 9.84,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Shivers Test",
+        "test_template_name": "Shivers Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:30:57.142058"
+    },
+    "Sonic Adventure 2 Battle": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Sonic Adventure 2 Battle",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 12.87,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Sonic Adventure 2 Battle.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.81,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sa2b_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.38,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sa2b_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sa2b_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 15.85,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Sonic Adventure 2 Battle Test",
+        "test_template_name": "Sonic Adventure 2 Battle Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:32:03.057384"
+    },
+    "Starcraft 2": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Starcraft 2",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 35.94,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Starcraft 2.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 27.61,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sc2_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.6,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sc2_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sc2_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 15.95,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Starcraft 2 Test",
+        "test_template_name": "Starcraft 2 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:38:38.215745"
+    },
+    "Stardew Valley": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Test world seed generation failed: raise FillError("
+        ]
+      },
+      "game_name": "Stardew Valley",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 33.9,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Stardew Valley.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "raise FillError(",
+          "preset_dir": null,
+          "processing_time_seconds": 3.2,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Stardew Valley Test",
+        "test_template_name": "Stardew Valley Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:37:52.841407"
+    },
+    "Subnautica": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Subnautica",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 9.65,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Subnautica.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 18.46,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/subnautica_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.07,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/subnautica_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/subnautica_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 9.64,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Subnautica Test",
+        "test_template_name": "Subnautica Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:31:14.430897"
+    },
+    "Super Mario 64": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Super Mario 64",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 12.96,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Super Mario 64.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 15.05,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm64ex_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.41,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm64ex_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/sm64ex_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 12.96,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Super Mario 64 Test",
+        "test_template_name": "Super Mario 64 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:35:47.939882"
+    },
+    "Super Mario Land 2": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Super Mario Land 2",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 9.83,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Super Mario Land 2.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 15.01,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/marioland2_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.32,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/marioland2_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/marioland2_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 7.83,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Super Mario Land 2 Test",
+        "test_template_name": "Super Mario Land 2 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:33:02.301718"
+    },
+    "Super Mario World": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "Super Mario World",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.78,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Super Mario World.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.77,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/smw_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.19,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/smw_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/smw_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.78,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Super Mario World Test",
+        "test_template_name": "Super Mario World Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:34:01.165088"
+    },
+    "Super Metroid": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Test world seed generation failed: AssertionError: item code None should be event, location.address should then also be None. Location:  Ridley, Item: Ridley"
+        ]
+      },
+      "game_name": "Super Metroid",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 10.85,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Super Metroid.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "AssertionError: item code None should be event, location.address should then also be None. Location:  Ridley, Item: Ridley",
+          "preset_dir": null,
+          "processing_time_seconds": 3.06,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Super Metroid Test",
+        "test_template_name": "Super Metroid Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:31:47.654925"
+    },
+    "TOEM original": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "TOEM original",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.76,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "TOEM original.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.66,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_original_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.23,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_original_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_original_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.82,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "TOEM original Test",
+        "test_template_name": "TOEM original Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:33:15.703191"
+    },
+    "TOEM rule builder": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "TOEM rule builder",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.8,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "TOEM rule builder.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.77,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_rule_builder_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.29,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_rule_builder_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_rule_builder_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.83,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "TOEM rule builder Test",
+        "test_template_name": "TOEM rule builder Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:31:35.038640"
+    },
+    "TUNIC": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "TUNIC",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 9.9,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "TUNIC.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 31.93,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tunic_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.48,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tunic_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tunic_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 9.85,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "TUNIC Test",
+        "test_template_name": "TUNIC Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:32:50.000117"
+    },
+    "Terraria": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Terraria",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 18.98,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Terraria.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.81,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/terraria_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.39,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/terraria_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/terraria_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 18.0,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Terraria Test",
+        "test_template_name": "Terraria Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:40:01.383825"
+    },
+    "The Legend of Zelda": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "The Legend of Zelda",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.84,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "The Legend of Zelda.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.85,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tloz_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.29,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tloz_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tloz_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 9.79,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "The Legend of Zelda Test",
+        "test_template_name": "The Legend of Zelda Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:38:29.971477"
+    },
+    "The Messenger": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Test world seed generation failed: raise FillError("
+        ]
+      },
+      "game_name": "The Messenger",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 9.66,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "The Messenger.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "raise FillError(",
+          "preset_dir": null,
+          "processing_time_seconds": 2.9,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "The Messenger Test",
+        "test_template_name": "The Messenger Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:31:55.282713"
+    },
+    "The Wind Waker": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "The Wind Waker",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 9.92,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "The Wind Waker.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 15.04,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tww_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.45,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tww_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tww_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.93,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "The Wind Waker Test",
+        "test_template_name": "The Wind Waker Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:36:32.375810"
+    },
+    "The Witness": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "The Witness",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.8,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "The Witness.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 228.3,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/witness_test/AP_14089154938208861744",
+          "processing_time_seconds": 4.51,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/witness_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/witness_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 140.57,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "The Witness Test",
+        "test_template_name": "The Witness Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:33:38.335503"
+    },
+    "Timespinner": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Timespinner",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.79,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Timespinner.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.76,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/timespinner_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.19,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/timespinner_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/timespinner_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.78,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Timespinner Test",
+        "test_template_name": "Timespinner Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:34:24.732042"
+    },
+    "Undertale": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "Undertale",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.8,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Undertale.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.8,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/undertale_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.25,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/undertale_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/undertale_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.81,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Undertale Test",
+        "test_template_name": "Undertale Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:32:01.585609"
+    },
+    "VVVVVV": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "VVVVVV",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.78,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "VVVVVV.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.87,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/v6_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.23,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/v6_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/v6_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 5.79,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "VVVVVV Test",
+        "test_template_name": "VVVVVV Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:33:48.238887"
+    },
+    "Wargroove": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Wargroove",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.78,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Wargroove.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.85,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/wargroove_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.3,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/wargroove_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/wargroove_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.82,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Wargroove Test",
+        "test_template_name": "Wargroove Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:32:07.786263"
+    },
+    "WebDevJourney": {
+      "errors": {
+        "generation": [],
+        "testing": []
+      },
+      "game_name": "WebDevJourney",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.85,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "WebDevJourney.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.86,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.45,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.85,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "WebDevJourney Test",
+        "test_template_name": "WebDevJourney Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:33:45.194239"
+    },
+    "Yacht Dice": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Test world seed generation failed: AssertionError: item code None should be event, location.address should then also be None. Location:  777 score, Item: Victory"
+        ]
+      },
+      "game_name": "Yacht Dice",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 11.87,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Yacht Dice.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "AssertionError: item code None should be event, location.address should then also be None. Location:  777 score, Item: Victory",
+          "preset_dir": null,
+          "processing_time_seconds": 3.1,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "Yacht Dice Test",
+        "test_template_name": "Yacht Dice Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:40:56.625399"
+    },
+    "Yoshi's Island": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Yoshi's Island",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.83,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Yoshi's Island.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 14.74,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yoshisisland_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.23,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yoshisisland_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yoshisisland_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 8.83,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Yoshi's Island Test",
+        "test_template_name": "Yoshi's Island Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:39:06.794734"
+    },
+    "Yu-Gi-Oh! 2006": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      },
+      "game_name": "Yu-Gi-Oh! 2006",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 159.43,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "Yu-Gi-Oh! 2006.yaml",
+      "test_world": {
+        "cross_validation": {
+          "error": "Spoiler test failed",
+          "pass_fail": "fail",
+          "processing_time_seconds": 15.03,
+          "sphere_reached": 0,
+          "success": false,
+          "total_spheres": 0
+        },
+        "seed_generation": {
+          "error": null,
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yugioh06_test/AP_14089154938208861744",
+          "processing_time_seconds": 3.91,
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yugioh06_test/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yugioh06_test/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 155.31,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        },
+        "test_game_name": "Yu-Gi-Oh! 2006 Test",
+        "test_template_name": "Yu-Gi-Oh! 2006 Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:32:07.849397"
+    },
+    "shapez": {
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Test world seed generation failed: KeyError: 'Achievements needing a MAM'"
+        ]
+      },
+      "game_name": "shapez",
+      "original": {
+        "generation": {
+          "note": "Phase 1",
+          "success": true
+        },
+        "spoiler_test": {
+          "error": null,
+          "pass_fail": "pass",
+          "processing_time_seconds": 6.86,
+          "sphere_reached": 0,
+          "success": true,
+          "total_spheres": 0
+        }
+      },
+      "template": "shapez.yaml",
+      "test_world": {
+        "cross_validation": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "seed_generation": {
+          "error": "KeyError: 'Achievements needing a MAM'",
+          "preset_dir": null,
+          "processing_time_seconds": 3.06,
+          "rules_path": null,
+          "seed_id": "AP_14089154938208861744",
+          "sphere_log_path": null,
+          "success": false
+        },
+        "spoiler_test": {
+          "pass_fail": "unknown",
+          "success": false
+        },
+        "test_game_name": "shapez Test",
+        "test_template_name": "shapez Test.yaml",
+        "world_generation": {
+          "note": "Phase 1",
+          "success": true
+        }
+      },
+      "timestamp": "2025-12-06T04:37:09.746112"
+    }
+  }
+}
