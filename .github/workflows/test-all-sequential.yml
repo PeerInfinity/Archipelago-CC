@@ -64,7 +64,7 @@ on:
         options:
           - 'single-job'
           - 'parallel-10-jobs'
-        default: 'single-job'
+        default: 'parallel-10-jobs'
 
       multitemplate_tests:
         description: 'Multitemplate tests'
@@ -873,6 +873,7 @@ jobs:
           python scripts/test/test-all-templates.py \
             --multiworld \
             --multiworld-bisect-failures \
+            --multiworld-second-pass \
             --output-file scripts/output/multiworld/test-results.json \
             --no-backup \
             -p
@@ -1035,6 +1036,7 @@ jobs:
           python scripts/test/test-all-templates.py \
             --multiworld \
             --multiworld-bisect-failures \
+            --multiworld-second-pass \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
             --output-file scripts/output/multiworld/test-results-split-${{ matrix.split_num }}.json \

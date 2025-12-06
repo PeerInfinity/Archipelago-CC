@@ -218,6 +218,11 @@ def main():
         help='When a multiworld test fails, run bisection tests to find which specific template pair causes the failure'
     )
     parser.add_argument(
+        '--multiworld-second-pass',
+        action='store_true',
+        help='After first pass completes, run a second pass to retest templates that were tested with fewer than max_templates players'
+    )
+    parser.add_argument(
         '--dry-run',
         action='store_true',
         help='Show what would be done without actually making changes (useful for testing)'
@@ -341,6 +346,10 @@ def main():
 
     if args.multiworld_bisect_failures and not args.multiworld:
         print("Error: --multiworld-bisect-failures can only be used with --multiworld")
+        sys.exit(1)
+
+    if args.multiworld_second_pass and not args.multiworld:
+        print("Error: --multiworld-second-pass can only be used with --multiworld")
         sys.exit(1)
 
     if args.multitemplate and not args.templates_dir:
@@ -1358,7 +1367,101 @@ def main():
             templates_tested_so_far = list(results['results'].keys())
             incremental_merged = merge_results(existing_results, results, templates_tested_so_far, update_metadata)
             save_results(incremental_merged, results_file)
-    
+
+    # === MULTIWORLD SECOND PASS ===
+    # After first pass, retest templates that were tested with fewer than max_templates players
+    if args.multiworld and args.multiworld_second_pass:
+        print(f"\n{'='*60}")
+        print(f"=== MULTIWORLD SECOND PASS ===")
+        print(f"{'='*60}")
+
+        # Identify templates that need retesting:
+        # - Passed the first pass (multiworld_test.success == True)
+        # - Were tested with fewer than max_templates players (total_players_in_multiworld < max_templates)
+        templates_for_second_pass = []
+        for template_filename, template_result in results['results'].items():
+            multiworld_test = template_result.get('multiworld_test', {})
+            # Skip templates that failed in the first pass
+            if not multiworld_test.get('success', False):
+                continue
+            # Skip templates that already had a second pass
+            if multiworld_test.get('is_second_pass', False):
+                continue
+            # Check if tested with fewer than max_templates players
+            total_players_in_multiworld = multiworld_test.get('total_players_in_multiworld', 0)
+            if total_players_in_multiworld < args.multiworld_max_templates:
+                templates_for_second_pass.append({
+                    'filename': template_filename,
+                    'first_pass_players': total_players_in_multiworld
+                })
+
+        if not templates_for_second_pass:
+            print("No templates need second pass testing - all were tested with full multiworld")
+        else:
+            print(f"Found {len(templates_for_second_pass)} template(s) to retest with full multiworld:")
+            for t in templates_for_second_pass:
+                print(f"  - {t['filename']} (tested with {t['first_pass_players']} players)")
+
+            # Get current multiworld player count
+            actual_templates = [f for f in os.listdir(multiworld_dir) if f.endswith('.yaml')]
+            current_player_count = len(actual_templates)
+            print(f"\nCurrent multiworld has {current_player_count} templates")
+
+            # Run second pass for each template
+            second_pass_count = 0
+            for template_info in templates_for_second_pass:
+                yaml_file = template_info['filename']
+                second_pass_count += 1
+                print(f"\n[Second Pass {second_pass_count}/{len(templates_for_second_pass)}] Testing {yaml_file}")
+
+                try:
+                    # Run multiworld test in second pass mode
+                    second_pass_result = test_template_multiworld(
+                        yaml_file, templates_dir, project_root, world_mapping,
+                        str(seed_list[0]), multiworld_dir, existing_results,
+                        current_player_count, export_only=args.export_only,
+                        test_only=True,  # Use existing generation output
+                        headed=args.headed,
+                        keep_templates=True,  # Don't modify templates
+                        test_all_players=False,  # Only test this player
+                        require_prerequisites=False,  # Already passed first pass
+                        include_error_details=args.include_error_details,
+                        max_templates=args.multiworld_max_templates,
+                        dry_run=args.dry_run,
+                        is_second_pass=True
+                    )
+
+                    # Store second pass result
+                    # Merge into existing result, preserving first pass data
+                    if yaml_file in results['results']:
+                        results['results'][yaml_file]['second_pass'] = second_pass_result.get('multiworld_test', {})
+                    else:
+                        results['results'][yaml_file] = second_pass_result
+
+                    # Save results incrementally
+                    templates_tested_so_far = list(results['results'].keys())
+                    incremental_merged = merge_results(existing_results, results, templates_tested_so_far, update_metadata)
+                    save_results(incremental_merged, results_file)
+
+                    # Run post-processing if requested
+                    if args.post_process:
+                        run_post_processing_scripts(project_root, results_file, args.multiclient, args.multiworld, args.multitemplate)
+
+                except Exception as e:
+                    print(f"Error in second pass for {yaml_file}: {e}")
+                    if yaml_file in results['results']:
+                        results['results'][yaml_file]['second_pass'] = {
+                            'error': str(e),
+                            'timestamp': datetime.now().isoformat()
+                        }
+
+            # Print second pass summary
+            second_pass_passed = sum(1 for t in templates_for_second_pass
+                                    if results['results'].get(t['filename'], {}).get('second_pass', {}).get('success', False))
+            second_pass_failed = len(templates_for_second_pass) - second_pass_passed
+            print(f"\n=== Second Pass Complete ===")
+            print(f"Tested: {len(templates_for_second_pass)}, Passed: {second_pass_passed}, Failed: {second_pass_failed}")
+
     # Calculate total batch processing time
     batch_end_time = time.time()
     total_batch_time = batch_end_time - batch_start_time
